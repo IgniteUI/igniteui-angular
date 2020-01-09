@@ -167,23 +167,34 @@ export class IgxGridNavigationService {
     }
 
     public movePreviousEditable(rowIndex: number, currentColumnVisibleIndex: number) {
-        const prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
-        if (prevEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
-            //  TODO: make gridAPI visible for internal use and remove cast to any
-            (this.grid as any).gridAPI.submit_value();
-            this.grid.rowEditTabs.last.element.nativeElement.focus();
-            return;
+        let prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
+        if (prevEditableColumnIndex === -1) {
+            if (this.grid.rowEditTabs.length) {
+                //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
+                this.grid.rowEditTabs.last.element.nativeElement.focus();
+                return;
+            } else {
+                // In case when row edit template is empty select last editable cell
+                prevEditableColumnIndex = this.grid.lastEditableColumnIndex;
+            }
+
         }
         this.focusEditableTarget(rowIndex, prevEditableColumnIndex);
     }
 
     public moveNextEditable(rowIndex: number, currentColumnVisibleIndex: number) {
-        const nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
-        if (nextEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
-            //  TODO: make gridAPI visible for internal use and remove cast to any
-            (this.grid as any).gridAPI.submit_value();
-            this.grid.rowEditTabs.first.element.nativeElement.focus();
-            return;
+        let nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
+        if (nextEditableColumnIndex === -1) {
+            if ( this.grid.rowEditTabs.length) {
+                 //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
+                this.grid.rowEditTabs.first.element.nativeElement.focus();
+                return;
+            } else {
+                // In case when row edit template is empty select first editable cell
+                nextEditableColumnIndex = this.grid.firstEditableColumnIndex;
+            }
         }
         this.focusEditableTarget(rowIndex, nextEditableColumnIndex);
     }
@@ -239,15 +250,17 @@ export class IgxGridNavigationService {
     }
 
     public navigateTop(visibleColumnIndex) {
+        const targetIndex = this.findFirstDataRowIndex();
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
-        if (verticalScroll.scrollTop === 0) {
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, false);
+        if (targetScr >= verticalScroll.scrollTop) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             (cells[0] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(0);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : 0);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
@@ -257,17 +270,34 @@ export class IgxGridNavigationService {
         }
     }
 
+    private findFirstDataRowIndex() {
+        const dv = this.grid.dataView;
+        return dv.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+    }
+
+    private findLastDataRowIndex() {
+        let i = this.grid.dataView.length;
+        while (i--) {
+            const rec = this.grid.dataView[i];
+            if (!this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec)) {
+                 return i;
+            }
+        }
+    }
+
     public navigateBottom(visibleColumnIndex) {
+        const targetIndex = this.findLastDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollHeight === 0 ||
-            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            verticalScroll.scrollTop === targetScr) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             (cells[cells.length - 1] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
@@ -355,35 +385,33 @@ export class IgxGridNavigationService {
     }
 
     public goToFirstCell() {
+        const targetIndex = this.findFirstDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, false);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
-        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getScroll();
-        if (verticalScroll.scrollTop === 0) {
+        if (verticalScroll.scrollTop === targetScr) {
             this.onKeydownHome(this.grid.dataRowList.first.index);
         } else {
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                this.navigateTop(0);
-            } else {
-               this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-                this.horizontalScroll(this.grid.dataRowList.first.index).scrollTo(0);
-                this.grid.parentVirtDir.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        this.navigateTop(0);
-                    });
-            }
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : 0);
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    this.onKeydownHome(this.grid.dataRowList.first.index);
+                });
         }
     }
 
     public goToLastCell() {
+        const targetIndex = this.findLastDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         if (verticalScroll.scrollHeight === 0 ||
-            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            verticalScroll.scrollTop === targetScr) {
             const rows = this.getAllRows();
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.getAllRows();

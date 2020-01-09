@@ -522,7 +522,10 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
+
     $cbx-size: rem(20px);
+    $cbx-bs-size: rem(14px);
+
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $left: if-ltr(left, right);
@@ -1461,15 +1464,27 @@
         align-items: center;
         justify-content: center;
         // The min-width here plays the role of padding because of IE11
-        min-width: calc(#{$cbx-size} + (#{$cbx-padding} * 2));
+        @if map-get($theme, 'variant') == 'bootstrap' {
+            min-width: calc(#{$cbx-bs-size} + (#{$cbx-padding} * 2));
+        } @else {
+            min-width: calc(#{$cbx-size} + (#{$cbx-padding} * 2));
+        }
     }
 
     %cbx-padding--cosy {
-        min-width: calc(#{$cbx-size} + (#{$cbx-padding-cosy} * 2));
+        @if map-get($theme, 'variant') == 'bootstrap' {
+            min-width: calc(#{$cbx-bs-size} + (#{$cbx-padding-cosy} * 2));
+        } @else {
+            min-width: calc(#{$cbx-size} + (#{$cbx-padding-cosy} * 2));
+        }
     }
 
     %cbx-padding--compact {
-        min-width: calc(#{$cbx-size} + (#{$cbx-padding-compact} * 2));
+        @if map-get($theme, 'variant') == 'bootstrap' {
+            min-width: calc(#{$cbx-bs-size} + (#{$cbx-padding-compact} * 2));
+        } @else {
+            min-width: calc(#{$cbx-size} + (#{$cbx-padding-compact} * 2));
+        }
     }
 
     %grid__resize-handle {
@@ -2063,6 +2078,10 @@
 
     %igx-grid__loading-outlet {
         z-index: 10003;
+
+        > %overlay-wrapper--modal {
+            background: none;
+        }
 
         %circular-display {
             width: rem(50);

@@ -443,6 +443,6 @@ $_fluent-grid: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-grid
-$_bootstrap-grid: extend($_light-grid);
+$_bootstrap-grid: extend($_light-grid,(variant: 'bootstrap'));
 
 

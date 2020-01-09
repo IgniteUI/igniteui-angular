@@ -60,5 +60,10 @@ $_fluent-dialog: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
-$_bootstrap-dialog: extend($_light-dialog);
+$_bootstrap-dialog: extend(
+    $_light-dialog,
+    (
+        variant: 'bootstrap'
+    )
+);
 

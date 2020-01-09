@@ -75,5 +75,26 @@ $_fluent-radio: extend($_light-radio,(
 
 /// Generates a bootstrap radio schema.
 /// @type {Map}
-$_bootstrap-radio: extend($_light-radio);
+/// @property {map} fill-hover-border-color [igx-color: ('primary', 500)] - The text color used for the label text.
+/// @property {map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @property {map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
+
+$_bootstrap-radio: extend(
+    $_light-radio,
+    (
+        variant: 'bootstrap',
+
+        fill-hover-border-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+    )
+);
 

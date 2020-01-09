@@ -147,7 +147,18 @@ $_fluent-switch: extend(
 
 /// Generates a bootstrap switch schema.
 /// @type {Map}
+/// @property {map} track-on-color [igx-color: ('primary', 500)] - The color of the track when the switch is on.
+///
 /// @requires {function} extend
 /// @requires $_light-switch
-$_bootstrap-switch: extend($_light-switch);
+$_bootstrap-switch: extend(
+    $_fluent-switch,
+    (
+        variant: 'bootstrap',
+
+        track-on-color: (
+            igx-color: ('primary', 500),
+        ),
+    )
+);
 

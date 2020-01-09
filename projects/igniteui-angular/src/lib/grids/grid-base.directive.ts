@@ -132,7 +132,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
-import { IgxRowDragGhostDirective  } from './row-drag.directive';
+import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -154,6 +154,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 export class IgxGridBaseDirective extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
@@ -330,7 +331,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before filtering is performed.
+     * Emitted after filtering is performed.
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * ```typescript
      * filteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -347,7 +348,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Emitted before advanced filtering is performed.
+     * Emitted after advanced filtering is performed.
      * Returns the advanced filtering expressions tree.
      * ```typescript
      * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -497,6 +498,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
@@ -2091,6 +2093,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+        this._customDragIndicatorIconTemplate = val;
+    }
+
+    /**
+     * @hidden
      */
     public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
         const editRowState = this.crudService.row;
@@ -2878,6 +2898,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @hidden
     * @internal
     */
+    public isGroupByRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
     public get hasDetails() {
         return false;
     }
@@ -3017,9 +3045,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridHeight();
-            $event.containerSize = this.calcHeight;
+            const shouldRecalcSize = this.isPercentHeight &&
+             ( !this.calcHeight || this.calcHeight === this.getDataBasedBodyHeight() ||
+              this.calcHeight === this.renderedRowHeight * this._defaultTargetRecordNumber);
+            if (shouldRecalcSize) {
+                this.calculateGridHeight();
+                $event.containerSize = this.calcHeight;
+            }
             this.evaluateLoadingState();
+        });
+
+        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+            // called to recalc all widths that may have changes as a result of
+            // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
         });
 
@@ -5858,6 +5896,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.closeRowEditingOverlay();
     }
 
+    /**
+    * @hidden
+    */
+    public gridOutletKeyboardHandler(event) {
+        // TODO: This should be removed after grid keyboard refactoring
+        // call stopPropagation for keydown event for the outlet not to propagate event to the grid
+        event.stopPropagation();
+    }
+
     // TODO: Refactor
     /**
      * Finishes the row transactions on the current row.
@@ -5981,6 +6028,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
+    }
+
+    public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
+        const context = args.view.context;
+        if (context['templateID'] === 'dataRow') {
+            // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
+            // hence we need to trigger it manually when cell is detached.
+            const row = this.getRowByIndex(context.index);
+            const focusedCell = row.cells.find(x => x.focused);
+            if (focusedCell) {
+                focusedCell.onBlur();
+            }
+        }
     }
 
     /**

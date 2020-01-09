@@ -21,12 +21,12 @@ import {
     Injectable
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
-import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
+import { slideInLeft, fadeIn } from '../animations/main';
 import { IgxSlideComponent, Direction } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -436,7 +436,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private animationPosition = 0;
     private newDuration = 0;
 
-    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers, private builder: AnimationBuilder) {
+    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
+            private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -887,7 +888,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private restartInterval() {
         this.resetInterval();
 
-        if (!isNaN(this.interval) && this.interval > 0) {
+        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
             this.lastInterval = setInterval(() => {
                 const tick = +this.interval;
                 if (this.playing && this.total && !isNaN(tick) && tick > 0) {
