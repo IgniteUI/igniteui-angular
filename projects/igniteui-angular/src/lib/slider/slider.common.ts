@@ -48,7 +48,7 @@ export interface IRangeSliderValue {
     upper: number;
 }
 
-export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
+export interface ISliderValueChangeEventArgs {
     oldValue: number | IRangeSliderValue;
     value: number | IRangeSliderValue;
 }
