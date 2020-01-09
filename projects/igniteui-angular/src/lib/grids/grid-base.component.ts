@@ -544,6 +544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
@@ -5052,6 +5053,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+    * @hidden
+    * @internal
+    */
+    public isGroupByRecord(rec) {
+        return false;
+    }
+
+    /**
      * @hidden
      */
     get headSelectorBaseAriaLabel() {
@@ -5918,6 +5927,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
+    }
+
+    /**
+    * @hidden
+    */
+    public gridOutletKeyboardHandler(event) {
+        // TODO: This should be removed after grid keyboard refactoring
+        // call stopPropagation for keydown event for the outlet not to propagate event to the grid
+        event.stopPropagation();
     }
 
     // TODO: Refactor
