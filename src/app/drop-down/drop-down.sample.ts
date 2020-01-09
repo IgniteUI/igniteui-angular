@@ -159,6 +159,11 @@ export class DropDownSampleComponent implements OnInit {
         event.newSelection = old;
     }
 
+    onSelectionLogger(event) {
+        // event.cancel = true;
+        console.log(event);
+    }
+
     onSelectionMenu(eventArgs) {
         eventArgs.cancel = true;
 

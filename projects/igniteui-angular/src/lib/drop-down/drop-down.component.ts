@@ -568,7 +568,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * ```
      */
     public clearSelection() {
-        if (this.selectedItem) {
+        const oldSelection = this.selectedItem;
+        const newSelection: IgxDropDownItemBaseDirective = null;
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        if (this.selectedItem && !args.cancel) {
+            this.onSelection.emit(args);
             this.selectedItem.selected = false;
             this.selection.clear(this.id);
         }
