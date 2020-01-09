@@ -2624,7 +2624,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify dropdown is opened
-            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).not.toBeNull();
 
             // Click prefix again to close conditions dropdown
@@ -2633,7 +2633,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify dropdown is closed
-            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).toBeNull();
         }));
 
@@ -2656,7 +2656,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify dropdown is opened
-            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+            let dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).not.toBeNull();
 
             // Press Tab key
@@ -2665,7 +2665,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Verify dropdown is closed
-            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+            dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             expect(dropdownList).toBeNull();
         }));
 
