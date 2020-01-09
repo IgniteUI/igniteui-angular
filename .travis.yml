@@ -13,7 +13,7 @@ node_js:
 - '10.12.0'
 before_install:
 - gem install bundler
-- gem install chromedriver-helper -v 2.1.1
+- gem install webdrivers
 - export NG_CLI_ANALYTICS=false
 - export DISPLAY=:99.0
 before_script:
