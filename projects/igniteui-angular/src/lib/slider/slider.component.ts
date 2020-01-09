@@ -796,7 +796,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @HostListener('pointerup', ['$event'])
-    public onPointerUp($event) {
+    public onPointerUp($event: PointerEvent) {
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
