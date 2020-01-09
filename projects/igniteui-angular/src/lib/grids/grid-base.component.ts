@@ -4667,6 +4667,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
+        // When all columns are hidden, return 0px width
+        if (!sumExistingWidths && !columnsToSize) {
+            return '0px';
+        }
+
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
