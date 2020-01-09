@@ -387,14 +387,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
 
-            // clone the filtering expression tree in order to trigger the filtering pipe
-            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
-            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
-            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
-            this._filteringExpressionsTree = filteringExpressionTreeClone;
+            value.type = FilteringExpressionsTreeType.Regular;
+            this._filteringExpressionsTree = value;
+            this._filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
+                !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -410,6 +409,23 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
+     * Emitted after advanced filtering is performed.
+     * Returns the advanced filtering expressions tree.
+     * ```typescript
+     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @Output()
+    public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Returns the advanced filtering state of `IgxGridComponent`.
@@ -446,22 +462,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set advancedFilteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
-            // clone the filtering expression tree in order to trigger the filtering pipe
-            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
-            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Advanced;
-            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
-            this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
+            value.type = FilteringExpressionsTreeType.Advanced;
+            this._advancedFilteringExpressionsTree = value;
+            this._filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
+        this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
-        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree) &&
+            !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
         }
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.markForCheck();
+        this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
@@ -2218,6 +2234,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    get filteringPipeTrigger(): number {
+        return this._filteringPipeTrigger;
+    }
+
+    /**
+     * @hidden
+     */
     get summaryPipeTrigger(): number {
         return this._summaryPipeTrigger;
     }
@@ -2765,6 +2788,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _pipeTrigger = 0;
+    /**
+     * @hidden
+     */
+    protected _filteringPipeTrigger = 0;
     /**
      * @hidden
      */

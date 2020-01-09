@@ -14,7 +14,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
-    IgxGridAdvancedFilteringComponent
+    IgxGridAdvancedFilteringComponent,
+    IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
@@ -28,7 +29,8 @@ describe('IgxGrid - Advanced Filtering', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
-                IgxGridAdvancedFilteringComponent
+                IgxGridAdvancedFilteringComponent,
+                IgxGridAdvancedFilteringBindingComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -353,6 +355,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
@@ -2739,8 +2742,36 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(expectedValues).toEqual(dropdownValues);
         }));
     });
-});
 
+    describe('IgxGrid - Advanced filtering expression tree bindings #grid', () => {
+        let fix, grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', fakeAsync(() => {
+            // Verify initially filtered in Advanced Filtering - 'Downloads > 200'
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Clear filter
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Verify no filtered data
+            expect(grid.filteredData).toBe(null);
+            expect(grid.rowList.length).toBe(8);
+        }));
+    });
+});
 
 function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
