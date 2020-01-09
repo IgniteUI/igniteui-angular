@@ -17,7 +17,7 @@ before_install:
 - export NG_CLI_ANALYTICS=false
 - export DISPLAY=:99.0
 before_script:
-- bundle exec chromedriver-update 78.0.3904.105
+- chromedriver-update 78.0.3904.105
 # more heap mem per https://github.com/angular/angular-cli/issues/12645, https://github.com/npm/npm/issues/12238#issuecomment-367147962
 - export NODE_OPTIONS="--max_old_space_size=4096"
 - npm install -g gulp
