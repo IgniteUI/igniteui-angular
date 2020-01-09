@@ -407,11 +407,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
-        this.parentIsland.children.map((item) => item.key) :
-        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+            this.parentIsland.children.map((item) => item.key) :
+            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
         this.childLayoutList.notifyOnChanges();
-        this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.onRowIslandChange());
+        this.childLayoutList.changes.pipe(takeUntil(this.destroy$)).subscribe(() =>
+            this.onRowIslandChange()
+        );
         super.ngAfterContentInit();
     }
 
