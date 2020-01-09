@@ -342,6 +342,39 @@ describe('IgxDropDown ', () => {
             expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
         }));
 
+        it('Should notify when selection is cleared', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+            fixture.detectChanges();
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const list = fixture.componentInstance.dropdown;
+            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+            spyOn(list.onSelection, 'emit').and.callThrough();
+            spyOn(list.onClosed, 'emit').and.callThrough();
+            spyOn(fixture.componentInstance, 'onSelection');
+
+            list.setSelectedItem(1);
+
+            button.click(mockObj);
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toEqual(list.items[1]);
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
+
+            const selectionArgs: ISelectionEventArgs = {
+                newSelection: null,
+                oldSelection: list.items[1],
+                cancel: false
+            };
+            list.clearSelection();
+            tick();
+            fixture.detectChanges();
+            expect(list.selectedItem).toBeNull();
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(2);
+            expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs);
+        }));
+
         it('Should check if selection event return the proper eventArgs', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
