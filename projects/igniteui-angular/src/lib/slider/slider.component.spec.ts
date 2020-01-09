@@ -1333,23 +1333,23 @@ describe('IgxSlider', () => {
 
             const instance = fix.componentInstance;
             const spyOnValueChanged = spyOn<any>(instance.slider.onValueChanged, 'emit').and.callThrough();
-            const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            instance.slider.getEditElement().dispatchEvent(new Event('focus'));
+            const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
+            sliderEl.triggerEventHandler('focus', null);
             fix.detectChanges();
 
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', {pointerId: 1, clientX: 200}));
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 200, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             let currentValue = instance.slider.value;
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
-            sliderEl.dispatchEvent(new PointerEvent('pointerdown', {pointerId: 1, clientX: 300}));
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 300, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
 
             currentValue = instance.slider.value;
-            sliderEl.dispatchEvent(new PointerEvent('pointerup', {pointerId: 1}));
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(1);
             expect(instance.slider.value).toEqual(currentValue);
