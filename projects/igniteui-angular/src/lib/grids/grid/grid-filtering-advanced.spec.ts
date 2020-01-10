@@ -15,7 +15,8 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
-    IgxGridExternalAdvancedFilteringComponent
+    IgxGridExternalAdvancedFilteringComponent,
+    IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
@@ -30,7 +31,8 @@ describe('IgxGrid - Advanced Filtering', () => {
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
-                IgxGridExternalAdvancedFilteringComponent
+                IgxGridExternalAdvancedFilteringComponent,
+                IgxGridAdvancedFilteringBindingComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -2798,7 +2800,7 @@ describe('IgxGrid - Advanced Filtering', () => {
     describe('IgxGrid - Advanced filtering expression tree bindings #grid', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
-            fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
         }));
