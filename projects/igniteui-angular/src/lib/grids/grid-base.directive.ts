@@ -4618,7 +4618,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
-
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
@@ -4629,12 +4628,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
+        // When all columns are hidden, return 0px width
+        if (!sumExistingWidths && !columnsToSize) {
+            return '0px';
+        }
+
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
             return columnWidth + 'px';
-    }
+        }
 
     /**
      * @hidden
@@ -5963,6 +5967,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
+            rowForOf.cdr.detectChanges();
         }
     }
 
