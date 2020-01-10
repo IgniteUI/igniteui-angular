@@ -1326,6 +1326,34 @@ describe('IgxSlider', () => {
             expect(slider.lowerBound).toEqual(expectedMinVal);
             expect(slider.upperBound).toEqual(expectedMaxVal);
         });
+
+        it('Should emit onValueChanged only when stop interacting with the slider', () => {
+            const fix = TestBed.createComponent(SliderTestComponent);
+            fix.detectChanges();
+
+            const instance = fix.componentInstance;
+            const spyOnValueChanged = spyOn<any>(instance.slider.onValueChanged, 'emit').and.callThrough();
+            const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
+            sliderEl.triggerEventHandler('focus', null);
+            fix.detectChanges();
+
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 200, preventDefault: <any>( ( e: any ) => {  })});
+            fix.detectChanges();
+            let currentValue = instance.slider.value;
+            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(currentValue).toBeGreaterThan(0);
+
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 300, preventDefault: <any>( ( e: any ) => {  })});
+            fix.detectChanges();
+            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(instance.slider.value).toBeGreaterThan(currentValue as number);
+
+            currentValue = instance.slider.value;
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>( ( e: any ) => {  })});
+            fix.detectChanges();
+            expect(spyOnValueChanged).toHaveBeenCalledTimes(1);
+            expect(instance.slider.value).toEqual(currentValue);
+        });
     });
 
     describe('igxSlider ticks', () => {
