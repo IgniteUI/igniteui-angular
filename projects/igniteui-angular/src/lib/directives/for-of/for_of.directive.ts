@@ -329,6 +329,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.nativeElement.scrollLeft = val;
         } else if (this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollTop = val;
+            // Need to set value for scrollAmount here, because
+            // Firefox does not fire the scrollComponent scroll event handler
+            this.scrollComponent.scrollAmount = val;
         }
     }
 
