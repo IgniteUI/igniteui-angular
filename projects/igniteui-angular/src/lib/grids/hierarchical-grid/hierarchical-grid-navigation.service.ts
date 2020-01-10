@@ -609,7 +609,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
             } else {
-                this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
+                const nextGrid = grid || nextParentGrid;
+                this.focusNextRow(next, visibleColumnIndex > nextParentGrid.columnList.length
+                     ? nextParentGrid.columnList.length - 1
+                     : visibleColumnIndex, nextGrid);
             }
         } else if (verticalScroll.scrollTop !==
             verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize && !atLastChunk) {
