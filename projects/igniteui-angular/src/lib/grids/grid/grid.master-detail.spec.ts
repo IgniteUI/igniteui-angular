@@ -504,8 +504,6 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('end', targetCellElement, true, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             const lastRow = grid.getRowByIndex(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
