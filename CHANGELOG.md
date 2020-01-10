@@ -68,6 +68,7 @@ All notable changes for each version of this project will be documented in this 
     - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
     - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
     - `isContinuous` - input has been deleted. The option is not supported anymore.
+    - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction. 
    
 - `IgxCarousel`:
     - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
@@ -81,6 +82,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxSelect`: 
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
+
+- `IgxDropDown`:
+    - `clearSelection` method is added, which can be used to deselect the selected dropdown item
 
 - `IgxCircularProgressBar`:
     - added `IgxProgressBarGradientDirective` to allow providing custom circular progress SVG gradients. Providing a custom gradient via a template is as easy as writing:

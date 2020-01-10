@@ -16,6 +16,7 @@ import { foods } from './foods';
 })
 export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('dropdown3', { static: true }) public igxDropDownSelection: IgxDropDownComponent;
     @ViewChild('button', { static: true }) public button: ElementRef;
 
     @ViewChild(IgxOverlayOutletDirective, { static: true }) public igxOverlayOutlet: IgxOverlayOutletDirective;
@@ -147,11 +148,20 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDown.close();
     }
 
+    public clearSelection() {
+        this.igxDropDownSelection.clearSelection();
+    }
+
     onSelection(event) {
         console.log(event);
         const old = event.oldSelection;
         event.oldSelection = event.newSelection;
         event.newSelection = old;
+    }
+
+    onSelectionLogger(event) {
+        // event.cancel = true;
+        console.log(event);
     }
 
     onSelectionMenu(eventArgs) {
