@@ -738,17 +738,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     protected updateSizes() {
-        this.recalcUpdateSizes();
-        this._applyChanges();
-        this._updateScrollOffset();
-        this.onContentSizeChange.emit();
+        const hasSizeChange = this.recalcUpdateSizes();
+        if (hasSizeChange) {
+            this._applyChanges();
+            this._updateScrollOffset();
+            this.onContentSizeChange.emit();
+        }
     }
 
     /**
      * @hidden
-     * Function that recaculates and updates cache sizes.
+     * Function that recaculates and updates cache sizes and returns if sizes have changed.
      */
-    public recalcUpdateSizes() {
+    public recalcUpdateSizes(): boolean {
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             this.igxForSizePropName : 'height';
         const diffs = [];
@@ -819,6 +821,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
             }
         }
+        return Math.abs(totalDiff) > 0;
     }
 
     /**
