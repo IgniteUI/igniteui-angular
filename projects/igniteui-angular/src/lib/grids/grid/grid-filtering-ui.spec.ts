@@ -103,7 +103,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
 
         // iterate over not unary conditions when input is empty
@@ -276,7 +276,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
 
         // iterate over not unary conditions and fill the input
@@ -427,7 +427,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
 
         verifyFilterUIPosition(filterUIRow, grid);
@@ -693,7 +693,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
 
         verifyFilterUIPosition(filterUIRow, grid);
@@ -813,7 +813,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         verifyFilterUIPosition(filterUIRow, grid);
 
         GridFunctions.selectFilteringCondition('Today', ddList);
@@ -835,7 +835,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         verifyFilterUIPosition(filterUIRow, grid);
 
         GridFunctions.selectFilteringCondition('Yesterday', ddList);
@@ -860,7 +860,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         filterIcon.nativeElement.click();
         tick();
         fix.detectChanges();
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         verifyFilterUIPosition(filterIcon, grid);
         GridFunctions.selectFilteringCondition('This Month', ddList);
         tick(100);
@@ -885,7 +885,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Next Month', ddList);
         tick(100);
         fix.detectChanges();
@@ -909,7 +909,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Last Month', ddList);
         tick(100);
         fix.detectChanges();
@@ -930,7 +930,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Empty', ddList);
         tick(100);
         fix.detectChanges();
@@ -950,7 +950,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Not Empty', ddList);
         tick(100);
         fix.detectChanges();
@@ -971,7 +971,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Null', ddList);
         tick(100);
         fix.detectChanges();
@@ -992,7 +992,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Not Null', ddList);
         tick(100);
         fix.detectChanges();
@@ -1015,7 +1015,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('This Year', ddList);
         tick(100);
         fix.detectChanges();
@@ -1039,7 +1039,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Last Year', ddList);
         tick(100);
         fix.detectChanges();
@@ -1063,7 +1063,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Next Year', ddList);
         tick(100);
         fix.detectChanges();
@@ -1084,7 +1084,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
 
         verifyFilterUIPosition(filterIcon, grid);
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Equals', ddList);
 
         input.nativeElement.click();
@@ -1122,7 +1122,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
 
         verifyFilterUIPosition(filterIcon, grid);
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Does Not Equal', ddList);
 
         input.nativeElement.click();
@@ -1160,7 +1160,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         verifyFilterUIPosition(filterIcon, grid);
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         const ddItems = ddList.nativeElement.children;
         let i;
         for (i = 0; i < ddItems.length; i++) {
@@ -1202,7 +1202,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
 
         verifyFilterUIPosition(filterIcon, grid);
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         GridFunctions.selectFilteringCondition('Before', ddList);
 
         input.nativeElement.click();
@@ -1324,7 +1324,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick();
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         // false condition
         GridFunctions.selectFilteringCondition('False', ddList);
         tick(100);
@@ -1569,7 +1569,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         reset.nativeElement.focus();
         inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
-        await wait(100);
+        await wait(200);
         fix.detectChanges();
 
         expect(filterChip.componentInstance.selected).toBeFalsy();
@@ -1614,7 +1614,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         // Click on the chip to commit it
         clickElemAndBlur(filterChip, input);
-        await wait(100);
+        await wait(200);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
@@ -1636,13 +1636,13 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Click on the chip to commit it
         clickElemAndBlur(filterChip, input);
         fix.detectChanges();
-        await wait(100);
+        await wait(200);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
         filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
-        await wait(100);
+        await wait(200);
 
         let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
@@ -1908,7 +1908,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 filterIcon.nativeElement.click();
                 fix.detectChanges();
 
-                const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+                const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
                 const ddItems = ddList.nativeElement.children;
                 let i;
                 for (i = 0; i < ddItems.length; i++) {
@@ -2033,7 +2033,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
             const input = filteringRow.query(By.directive(IgxInputDirective));
 
             GridFunctions.selectFilteringCondition('Empty', dropdownList);
@@ -2063,7 +2063,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
             const input = filteringRow.query(By.directive(IgxInputDirective));
 
             // Select condition with input
@@ -3413,7 +3413,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Check that the filterRow is opened
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             GridFunctions.openFilterDD(fix.debugElement);
-            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
             GridFunctions.selectFilteringCondition('Empty', dropdownList);
             fix.detectChanges();
             tick(16);
@@ -3948,7 +3948,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -3994,7 +3994,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -4039,7 +4039,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -4083,7 +4083,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[1];
 
             customItem.click();
@@ -4171,7 +4171,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const equalsItem = subMenu.children[0].children[0];
 
             equalsItem.click();
@@ -4210,7 +4210,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const allItem = subMenu.children[0].children[0];
 
             allItem.click();
@@ -4262,7 +4262,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -6174,7 +6174,7 @@ function checkUIForType(type: string, elem: DebugElement) {
             break;
     }
     GridFunctions.openFilterDD(elem);
-    const ddList = elem.query(By.css('div.igx-drop-down__list.igx-toggle'));
+    const ddList = elem.query(By.css('div.igx-drop-down__list-scroll'));
     const ddItems = ddList.nativeElement.children;
     // check drop-down conditions
     for (let i = 0; i < expectedConditions.length; i++) {
