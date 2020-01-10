@@ -13,7 +13,7 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/displayDensity';
-import { UIInteractions, wait} from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 @Component({
@@ -35,15 +35,15 @@ class TestChipComponent {
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' }
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true, density: 'cosy' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren('chipElem', { read: IgxChipComponent})
+    @ViewChildren('chipElem', { read: IgxChipComponent })
     public chips: QueryList<IgxChipComponent>;
 
     chipRemoved(event) {
@@ -70,22 +70,29 @@ class TestChipsLabelAndSuffixComponent {
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true },
-        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true},
+        { id: 'FirstName', text: 'First Name', removable: true, selectable: true, draggable: true },
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren('chipElem', { read: IgxChipComponent})
+    @ViewChildren('chipElem', { read: IgxChipComponent })
     public chips: QueryList<IgxChipComponent>;
 }
 
 
 describe('IgxChip', () => {
-    configureTestSuite();
-    const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
-    const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
+    const CHIP_TEXT_CLASS = '.igx-chip__text';
+    const CHIP_CLASS = '.igx-chip';
+    const CHIP_COMPACT_CLASS = '.igx-chip--compact';
+    const CHIP_COSY_CLASS = '.igx-chip--cosy';
+    const CHIP_ITEM_CLASS = '.igx-chip__item';
+    const CHIP_GHOST_COMP_CLASS = 'igx-chip__ghost--compact';
 
+    let fix;
+    let chipArea;
+
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -97,377 +104,310 @@ describe('IgxChip', () => {
         }).compileComponents();
     }));
 
-    it('should render chip area and chips inside it', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        expect(chipArea.length).toEqual(1);
-        expect(chipArea[0].nativeElement.children.length).toEqual(4);
-        expect(chipArea[0].nativeElement.children[0].tagName).toEqual('IGX-CHIP');
-    });
-
-    it('should render prefix element inside the chip before the content', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-        // For this first chip there are 2 elements. The prefix and content span.
-        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
-        expect(chipElems[0].nativeElement.children[0].children[0].offsetWidth).toEqual(0);
-        expect(chipElems[0].nativeElement.children[0].children[1].tagName).toEqual('IGX-ICON');
-        expect(chipElems[0].nativeElement.children[0].children[1].hasAttribute('igxprefix')).toEqual(true);
-    });
-
-    it('should render remove button when enabled after the content inside the chip', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const chipRemoveButton = chipElems[1].queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
-
-        // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
-        expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
-        expect(chipRemoveButton).toBeTruthy();
-    });
-
-    it('should not trigger onRemove event when a chip is focused and delete button is pressed when not removable', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const firstChipComp = fix.componentInstance.chips.toArray()[0];
-        spyOn(firstChipComp.onRemove, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
-
-        const focusedElems = firstChipComp.elementRef.nativeElement.querySelectorAll(':focus');
-        expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': 'Delete'
-        });
-        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-
-        expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
-    });
-
-    it('should trigger onRemove event when a chip is focused and delete button is pressed when removable', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const secondChipComp = fix.componentInstance.chips.toArray()[1];
-        spyOn(secondChipComp.onRemove, 'emit');
-        secondChipComp.chipArea.nativeElement.focus();
-
-        const focusedElems = secondChipComp.elementRef.nativeElement.querySelectorAll(':focus');
-        expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': 'Delete'
-        });
-        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-
-        expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
-    });
-
-    it('should set text in chips correctly', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const firstChipTextElement = chipElements[0].queryAllNodes(By.css('.igx-chip__text'));
-        const firstChipText = firstChipTextElement[0].nativeNode.innerHTML;
-
-        expect(firstChipText).toContain('Country');
-
-        const secondChipTextElement = chipElements[1].queryAllNodes(By.css('.igx-chip__text'));
-        const secondChipText = secondChipTextElement[0].nativeNode.innerHTML;
-
-        expect(secondChipText).toContain('City');
-    });
-
-    it('should set chips label correctly', () => {
-        const fix = TestBed.createComponent(TestChipsLabelAndSuffixComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const firstChipLabel = chipElements[0].queryAll(By.directive(IgxLabelDirective));
-        const firstChipLabelText = firstChipLabel[0].nativeElement.innerHTML;
-
-        expect(firstChipLabelText).toEqual('label');
-    });
-
-    it('should set chips prefix correctly', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const firstChipPrefix = chipElements[0].queryAll(By.directive(IgxPrefixDirective));
-        const firstChipIconName = firstChipPrefix[0].nativeElement.textContent;
-
-        expect(firstChipIconName).toContain('drag_indicator');
-    });
-
-    it('should set chips suffix correctly', () => {
-        const fix = TestBed.createComponent(TestChipsLabelAndSuffixComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const firstChipSuffix = chipElements[0].queryAll(By.directive(IgxSuffixDirective));
-        const firstChipSuffixText = firstChipSuffix[0].nativeElement.innerHTML;
-
-        expect(firstChipSuffixText).toEqual('suf');
-    });
-
-   it('should make chip comfortable when density is not set', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const firstComponent = components[0];
-
-        expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-
-        // Assert default css class is applied
-        const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));
-
-        expect(comfortableComponents.length).toEqual(2);
-        expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
-    });
-
-    it('should make chip comfortable when density is set to comfortable', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const secondComponent = components[1];
-
-        expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
-
-        // Assert default css class is applied
-        const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));
-
-        expect(comfortableComponents.length).toEqual(2);
-        expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
-    });
-
-    it('should make chip compact when density is set to compact', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const thirdComponent = components[2];
-
-        expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
-
-        // Assert compact css class is added
-        const compactComponents = fix.debugElement.queryAll(By.css('.igx-chip--compact'));
-
-        expect(compactComponents.length).toEqual(1);
-        expect(compactComponents[0].nativeElement).toBe(thirdComponent.nativeElement);
-    });
-
-    it('should make chip cosy when density is set to cosy', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const fourthComponent = components[3];
-
-        expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
-
-        // Assert cosy css class is added
-        const cosyComponents = fix.debugElement.queryAll(By.css('.igx-chip--cosy'));
-
-        expect(cosyComponents.length).toEqual(1);
-        expect(cosyComponents[0].nativeElement).toBe(fourthComponent.nativeElement);
-    });
-
-    it('should set correctly color of chip when color is set through code', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-        const chipColor = 'rgb(255, 0, 0)';
-
-        const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const firstComponent = components[0];
-        const chipAreaElem = firstComponent.queryAll(By.css('.igx-chip__item'))[0];
-
-        firstComponent.componentInstance.color = chipColor;
-
-        expect(chipAreaElem.nativeElement.style.backgroundColor).toEqual(chipColor);
-        expect(firstComponent.componentInstance.color).toEqual(chipColor);
-    });
-
-    it('should delete chip when space button is pressed after chip delete button is focused', () => {
-        const spaceKeyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
-        });
-
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-        expect(chipComponents.length).toEqual(4);
-
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
-        deleteButtonElement.nativeElement.focus();
-
-        // Removes chip with id City, because country chip is unremovable
-        deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
-        fix.detectChanges();
-
-        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        expect(chipComponents.length).toEqual(3);
-
-        const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
-
-        expect(chipComponentsIds.length).toEqual(3);
-        expect(chipComponentsIds).not.toContain('City');
-    });
-
-    it('should delete chip when enter button is pressed after chip delete button is focused', () => {
-        const enterKeyEvent = new KeyboardEvent('keydown', {
-            'key': 'Enter'
-        });
-
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-
-        expect(chipComponents.length).toEqual(4);
-
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
-        deleteButtonElement.nativeElement.focus();
-
-        // Removes chip with id City, because country chip is unremovable
-        deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
-        fix.detectChanges();
-
-        chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        expect(chipComponents.length).toEqual(3);
-
-        const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
-
-        expect(chipComponentsIds.length).toEqual(3);
-        expect(chipComponentsIds).not.toContain('City');
-    });
-
-    it('should affect the ghostElement density when chip has it set to compact', (done) => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const thirdChip = fix.componentInstance.chips.toArray()[2];
-        const thirdChipElem = thirdChip.chipArea.nativeElement;
-
-        const startingTop = thirdChipElem.getBoundingClientRect().top;
-        const startingLeft = thirdChipElem.getBoundingClientRect().left;
-        const startingBottom = thirdChipElem.getBoundingClientRect().bottom;
-        const startingRight = thirdChipElem.getBoundingClientRect().right;
-
-        const startingX = (startingLeft + startingRight) / 2;
-        const startingY = (startingTop + startingBottom) / 2;
-
-        UIInteractions.simulatePointerEvent('pointerdown', thirdChipElem, startingX, startingY);
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
+    describe('Rendering Tests: ', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
+            chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
+        });
+
+        it('should render chip area and chips inside it', () => {
+            expect(chipArea.length).toEqual(1);
+            expect(chipArea[0].nativeElement.children.length).toEqual(4);
+            expect(chipArea[0].nativeElement.children[0].tagName).toEqual('IGX-CHIP');
+        });
+
+        it('should render prefix element inside the chip before the content', () => {
+            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+
+            // For this first chip there are 2 elements. The prefix and content span.
+            expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
+            expect(chipElems[0].nativeElement.children[0].children[0].offsetWidth).toEqual(0);
+            expect(chipElems[0].nativeElement.children[0].children[1].tagName).toEqual('IGX-ICON');
+            expect(chipElems[0].nativeElement.children[0].children[1].hasAttribute('igxprefix')).toEqual(true);
+        });
+
+        it('should render remove button when enabled after the content inside the chip', () => {
+            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const chipRemoveButton = HelperTestFunctions.getDeleteButton(fix);
+
+            // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
+            expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
+            expect(chipRemoveButton).toBeTruthy();
+        });
+
+        it('should set text in chips correctly', () => {
+            const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
+            const firstChipTextElement = chipElements[0].queryAllNodes(By.css(CHIP_TEXT_CLASS));
+            const firstChipText = firstChipTextElement[0].nativeNode.innerHTML;
+
+            expect(firstChipText).toContain('Country');
+
+            const secondChipTextElement = chipElements[1].queryAllNodes(By.css(CHIP_TEXT_CLASS));
+            const secondChipText = secondChipTextElement[0].nativeNode.innerHTML;
+
+            expect(secondChipText).toContain('City');
+        });
+
+        it('should set chips prefix correctly', () => {
+            const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
+            const firstChipPrefix = chipElements[0].queryAll(By.directive(IgxPrefixDirective));
+            const firstChipIconName = firstChipPrefix[0].nativeElement.textContent;
+
+            expect(firstChipIconName).toContain('drag_indicator');
+        });
+
+        it('should make chip comfortable when density is not set or it is set to comfortable', () => {
+            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const firstComponent = components[0];
+            const secondComponent = components[1];
+
+            expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+            expect(secondComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+
+            // Assert default css class is applied
+            const comfortableComponents = fix.debugElement.queryAll(By.css(CHIP_CLASS));
+
+            expect(comfortableComponents.length).toEqual(2);
+            expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
+            expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
+        });
+
+        it('should make chip compact when density is set to compact', () => {
+            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const thirdComponent = components[2];
+
+            expect(thirdComponent.componentInstance.displayDensity).toEqual(DisplayDensity.compact);
+
+            // Assert compact css class is added
+            const compactComponents = fix.debugElement.queryAll(By.css(CHIP_COMPACT_CLASS));
+
+            expect(compactComponents.length).toEqual(1);
+            expect(compactComponents[0].nativeElement).toBe(thirdComponent.nativeElement);
+        });
+
+        it('should make chip cosy when density is set to cosy', () => {
+            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const fourthComponent = components[3];
+
+            expect(fourthComponent.componentInstance.displayDensity).toEqual(DisplayDensity.cosy);
+
+            // Assert cosy css class is added
+            const cosyComponents = fix.debugElement.queryAll(By.css(CHIP_COSY_CLASS));
+
+            expect(cosyComponents.length).toEqual(1);
+            expect(cosyComponents[0].nativeElement).toBe(fourthComponent.nativeElement);
+        });
+
+        it('should set correctly color of chip when color is set through code', () => {
+            const chipColor = 'rgb(255, 0, 0)';
+
+            const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const firstComponent = components[0];
+            const chipAreaElem = firstComponent.queryAll(By.css(CHIP_ITEM_CLASS))[0];
+
+            firstComponent.componentInstance.color = chipColor;
+
+            expect(chipAreaElem.nativeElement.style.backgroundColor).toEqual(chipColor);
+            expect(firstComponent.componentInstance.color).toEqual(chipColor);
+        });
+    });
+
+    describe('Interactions Tests: ', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipComponent);
+            fix.detectChanges();
+        });
+
+        it('should not trigger onRemove event when a chip is focused and delete button is pressed when not removable', () => {
+            const firstChipComp = fix.componentInstance.chips.toArray()[0];
+
+            spyOn(firstChipComp.onRemove, 'emit');
+            UIInteractions.triggerKeyDownEvtUponElem('Delete', firstChipComp.chipArea.nativeElement, true);
+            fix.detectChanges();
+
+            expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
+        });
+
+        it('should trigger onRemove event when a chip is focused and delete button is pressed when removable', () => {
+            const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+            spyOn(secondChipComp.onRemove, 'emit');
+            UIInteractions.triggerKeyDownEvtUponElem('Delete', secondChipComp.chipArea.nativeElement, true);
+            fix.detectChanges();
+
+            expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
+        });
+
+        it('should delete chip when space button is pressed after chip delete button is focused', () => {
+            HelperTestFunctions.verifyChipsCount(fix, 4);
+
+            const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
+            // Removes chip with id City, because country chip is unremovable
+            UIInteractions.triggerKeyDownEvtUponElem(' ', deleteButtonElement.nativeElement, true);
+            fix.detectChanges();
+
+            HelperTestFunctions.verifyChipsCount(fix, 3);
+
+            const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
+            expect(chipComponentsIds.length).toEqual(3);
+            expect(chipComponentsIds).not.toContain('City');
+        });
+
+        it('should delete chip when enter button is pressed after chip delete button is focused', () => {
+            HelperTestFunctions.verifyChipsCount(fix, 4);
+
+            const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
+            // Removes chip with id City, because country chip is unremovable
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', deleteButtonElement.nativeElement, true);
+            fix.detectChanges();
+
+            HelperTestFunctions.verifyChipsCount(fix, 3);
+
+            const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
+            expect(chipComponentsIds.length).toEqual(3);
+            expect(chipComponentsIds).not.toContain('City');
+        });
+
+        it('should affect the ghostElement density when chip has it set to compact', () => {
+            const thirdChip = fix.componentInstance.chips.toArray()[2];
+            const thirdChipElem = thirdChip.chipArea.nativeElement;
+
+            const startingTop = thirdChipElem.getBoundingClientRect().top;
+            const startingLeft = thirdChipElem.getBoundingClientRect().left;
+            const startingBottom = thirdChipElem.getBoundingClientRect().bottom;
+            const startingRight = thirdChipElem.getBoundingClientRect().right;
+
+            const startingX = (startingLeft + startingRight) / 2;
+            const startingY = (startingTop + startingBottom) / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', thirdChipElem, startingX, startingY);
+            fix.detectChanges();
+
             UIInteractions.simulatePointerEvent('pointermove', thirdChipElem, startingX + 10, startingY + 10);
-
-            return fix.whenStable();
-        }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDirective.ghostElement.className).toEqual(CHIP_ITEM + ' igx-chip__ghost--compact');
+            expect(thirdChip.dragDirective.ghostElement.classList.contains(CHIP_GHOST_COMP_CLASS)).toBeTruthy();
+        });
 
-            return fix.whenStable();
-        }).then(() => {
+        it('should fire onSelection event when selectable is true', () => {
+            const secondChipComp = fix.componentInstance.chips.toArray()[1];
+            spyOn(secondChipComp.onSelection, 'emit');
+            spyOn(secondChipComp.onSelectionDone, 'emit');
+
+            UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDirective.ghostElement, startingX + 10, startingY + 10);
+            expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+            expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.onSelection.emit).not.toHaveBeenCalledWith({
+                originalEvent: null,
+                owner: secondChipComp,
+                cancel: false,
+                selected: true
+            });
 
-            done();
+            expect(secondChipComp.onSelection.emit).toHaveBeenCalledWith({
+                originalEvent: jasmine.anything(),
+                owner: secondChipComp,
+                cancel: false,
+                selected: true
+            });
+        });
+
+        it('should fire onSelectionDone event when selectable is true', (async () => {
+            pending('This should be tested in the e2e test');
+            const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+            spyOn(secondChipComp.onSelection, 'emit');
+            spyOn(secondChipComp.onSelectionDone, 'emit');
+            secondChipComp.chipArea.nativeElement.focus();
+
+            UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
+            fix.detectChanges();
+            expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+            expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.onSelection.emit).not.toHaveBeenCalledWith({
+                originalEvent: null,
+                owner: secondChipComp,
+                cancel: false,
+                selected: true
+            });
+
+            await wait(400);
+            expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(1);
+            expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalledWith({
+                originalEvent: null,
+                owner: secondChipComp
+            });
+        }));
+
+        it('should not fire onSelection event when selectable is false', () => {
+            const firstChipComp = fix.componentInstance.chips.toArray()[0];
+
+            spyOn(firstChipComp.onSelection, 'emit');
+            spyOn(firstChipComp.onSelectionDone, 'emit');
+            firstChipComp.elementRef.nativeElement.focus();
+
+            UIInteractions.triggerKeyDownEvtUponElem(' ', firstChipComp.chipArea.nativeElement, true);
+            fix.detectChanges();
+            expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
+            expect(firstChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(0);
+        });
+
+        it('should not fire onSelection event when the remove button is clicked', () => {
+            const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+            spyOn(secondChipComp.onSelection, 'emit');
+            spyOn(secondChipComp.onSelectionDone, 'emit');
+
+            const chipRemoveButton = HelperTestFunctions.getDeleteButton(fix).nativeElement;
+            const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
+            const removeBtnLeft = chipRemoveButton.getBoundingClientRect().left;
+
+            UIInteractions.simulatePointerEvent('pointerdown', chipRemoveButton, removeBtnLeft, removeBtnTop);
+            fix.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', chipRemoveButton, removeBtnLeft, removeBtnTop);
+            fix.detectChanges();
+
+            expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
+            expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
         });
     });
 
-    it('should fire onSelection event when selectable is true', (async() => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const secondChipComp = fix.componentInstance.chips.toArray()[1];
-
-        spyOn(secondChipComp.onSelection, 'emit');
-        spyOn(secondChipComp.onSelectionDone, 'emit');
-        secondChipComp.chipArea.nativeElement.focus();
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
-        });
-        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-        expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
-        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
-        expect(secondChipComp.onSelection.emit).not.toHaveBeenCalledWith({
-            originalEvent: null,
-            owner: secondChipComp,
-            cancel: false,
-            selected: true
+    describe('Chips Label Tests: ', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipsLabelAndSuffixComponent);
+            fix.detectChanges();
+            chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         });
 
-        await wait(400);
-        expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(1);
-        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalledWith({
-            originalEvent: null,
-            owner: secondChipComp
+        it('should set chips label correctly', () => {
+            const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
+            const firstChipLabel = chipElements[0].queryAll(By.directive(IgxLabelDirective));
+            const firstChipLabelText = firstChipLabel[0].nativeElement.innerHTML;
+
+            expect(firstChipLabelText).toEqual('label');
         });
-    }));
 
-    it('should not fire onSelection event when selectable is false', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
+        it('should set chips suffix correctly', () => {
+            const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
+            const firstChipSuffix = chipElements[0].queryAll(By.directive(IgxSuffixDirective));
+            const firstChipSuffixText = firstChipSuffix[0].nativeElement.innerHTML;
 
-        const firstChipComp = fix.componentInstance.chips.toArray()[0];
-
-        spyOn(firstChipComp.onSelection, 'emit');
-        spyOn(firstChipComp.onSelectionDone, 'emit');
-        firstChipComp.elementRef.nativeElement.focus();
-
-        const keyEvent = new KeyboardEvent('keydown', {
-            'key': ' '
+            expect(firstChipSuffixText).toEqual('suf');
         });
-        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
-        fix.detectChanges();
-        expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
-        expect(firstChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(0);
-    });
-
-    it('should not fire onSelection event when the remove button is clicked', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const secondChipComp = fix.componentInstance.chips.toArray()[1];
-
-        spyOn(secondChipComp.onSelection, 'emit');
-        spyOn(secondChipComp.onSelectionDone, 'emit');
-
-        const chipRemoveButton = secondChipComp.elementRef.nativeElement.querySelectorAll('.' + CHIP_REMOVE_BUTTON)[0];
-        const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
-        const removeBtnLeft = chipRemoveButton.getBoundingClientRect().left;
-
-        UIInteractions.simulatePointerEvent('pointerdown', chipRemoveButton, removeBtnLeft, removeBtnTop);
-        fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', chipRemoveButton, removeBtnLeft, removeBtnTop);
-        fix.detectChanges();
-
-        expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
-        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
     });
 });
+
+class HelperTestFunctions {
+    public static CHIP_REMOVE_BUTTON = '.igx-chip__remove';
+
+    public static getDeleteButton(fix, index = 0) {
+        return fix.debugElement.queryAll(By.css(HelperTestFunctions.CHIP_REMOVE_BUTTON))[index];
+    }
+
+    public static verifyChipsCount(fix, count) {
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        expect(chipComponents.length).toEqual(count);
+    }
+}
