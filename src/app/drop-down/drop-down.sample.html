@@ -1,28 +1,40 @@
 <div class="sample-wrapper">
     <app-page-header title="Dropdown menu" description="description for dropdown menu"></app-page-header>
     <section class="sample-content">
-        <div>
-            <button igxButton="raised" igxRipple (click)="open()" style="display: block">
-                Open dropdown
-            </button>
-            <button igxButton="raised" igxRipple (click)="close()" style="display: block">
-                Close dropdown
-            </button>
-            <button #button igxButton="raised" igxRipple (click)="toggleDropDown()"
-                [igxDropDownItemNavigation]="dropdown1" style="display: block">Toggle
-                dropdown</button>
+
+        <div class="sample-button-group">
+            <h5>Action</h5>
+            <igx-buttongroup [multiSelection]="false">
+                <button igxButton #button (click)="toggleDropDown()" [igxDropDownItemNavigation]="dropdown1">Toggle</button>
+                <button igxButton (click)="open()">Open</button>
+                <button igxButton (click)="close()">Close</button>
+            </igx-buttongroup>
+
+            <h5>With Action directive</h5>
+            <igx-buttongroup [multiSelection]="false">
+                <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Drop-down</button>
+                <button igxButton [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">Outlet</button>
+                <button igxButton [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
+                <button igxButton [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
+            </igx-buttongroup>
+
+            <h5>Density types</h5>
+            <igx-buttongroup [multiSelection]="false">
+                <button igxButton [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Comfortable</button>
+                <button igxButton [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy" displayDensity="cosy">Cosy</button>
+                <button igxButton [igxToggleAction]="dropDownCompact" [igxDropDownItemNavigation]="dropDownCompact" displayDensity="compact">Compact</button>
+            </igx-buttongroup>
         </div>
+
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
-                [selected]="item.selected">
+                                [selected]="item.selected">
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
                 </div>
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button igxButton="raised" igxRipple [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">With
-            action directive</button>
         <igx-drop-down #dropdown2 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 <div class="igx-drop-down__item-template">
@@ -31,7 +43,6 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button igxButton="raised" igxRipple [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">igxToggle</button>
         <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
             <div *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
@@ -40,7 +51,6 @@
             </div>
         </div>
 
-        <button igxButton="raised" igxRipple [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
         <igx-drop-down #menu (onSelection)="onSelectionMenu($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 <div class="igx-drop-down__item-template">
@@ -49,8 +59,6 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button igxButton="raised" igxRipple [igxToggleAction]="group"
-            [igxDropDownItemNavigation]="group">Group</button>
         <igx-drop-down #group (onSelection)="onSelection($event)" height='400px'>
             <igx-drop-down-item-group *ngFor="let foodGroup of foods" [label]="foodGroup.name">
                 <igx-drop-down-item *ngFor="let food of foodGroup.entries" [value]='food.refNo'>
@@ -58,29 +66,20 @@
                 </igx-drop-down-item>
             </igx-drop-down-item-group>
         </igx-drop-down>
-        <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-    </section>
-    <section class="sample-content">
-        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownComfortable"
-            [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Display: Comfortable</button>
-        <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)" (onOpening)="onOpening($event)"
-            height='400px' displayDensity="comfortable">
+
+        <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'  displayDensity="comfortable">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 {{ item.field }}
             </igx-drop-down-item>
         </igx-drop-down>
-        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownCosy" [igxDropDownItemNavigation]="dropDownCosy"
-            displayDensity="cosy">Display: Cosy</button>
-        <igx-drop-down #dropDownCosy (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'
-            displayDensity="cosy">
+
+        <igx-drop-down #dropDownCosy (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'  displayDensity="cosy">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 {{ item.field }}
             </igx-drop-down-item>
         </igx-drop-down>
-        <button igxButton="raised" igxRipple [igxToggleAction]="dropDownCompact"
-            [igxDropDownItemNavigation]="dropDownCompact" displayDensity="compact">Display: Compact</button>
-        <igx-drop-down #dropDownCompact (onSelection)="onSelection($event)" (onOpening)="onOpening($event)"
-            height='400px' displayDensity="compact">
+
+        <igx-drop-down #dropDownCompact (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px' displayDensity="compact">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 {{ item.field }}
             </igx-drop-down-item>
@@ -104,3 +103,4 @@
         </button>
     </section>
 </div>
+<div igxOverlayOutlet #outlet="overlay-outlet"></div>
