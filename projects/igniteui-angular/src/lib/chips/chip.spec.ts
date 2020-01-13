@@ -219,7 +219,7 @@ describe('IgxChip', () => {
             fix.detectChanges();
         });
 
-        it('should not trigger onRemove event when a chip is focused and delete button is pressed when not removable', () => {
+        it('should not trigger onRemove event when delete button is pressed when not removable', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
             spyOn(firstChipComp.onRemove, 'emit');
@@ -229,7 +229,7 @@ describe('IgxChip', () => {
             expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
         });
 
-        it('should trigger onRemove event when a chip is focused and delete button is pressed when removable', () => {
+        it('should trigger onRemove event when delete button is pressed when removable', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
             spyOn(secondChipComp.onRemove, 'emit');
@@ -239,7 +239,7 @@ describe('IgxChip', () => {
             expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
         });
 
-        it('should delete chip when space button is pressed after chip delete button is focused', () => {
+        it('should delete chip when space button is pressed on delete button', () => {
             HelperTestFunctions.verifyChipsCount(fix, 4);
 
             const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
@@ -254,7 +254,7 @@ describe('IgxChip', () => {
             expect(chipComponentsIds).not.toContain('City');
         });
 
-        it('should delete chip when enter button is pressed after chip delete button is focused', () => {
+        it('should delete chip when enter button is pressed on delete button', () => {
             HelperTestFunctions.verifyChipsCount(fix, 4);
 
             const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
