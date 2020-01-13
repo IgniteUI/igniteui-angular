@@ -23,7 +23,8 @@ import {
     IgxGridWithEditingAndFeaturesComponent,
     IgxGridRowEditingWithoutEditableColumnsComponent,
     IgxGridCustomOverlayComponent,
-    IgxGridRowEditingWithFeaturesComponent
+    IgxGridRowEditingWithFeaturesComponent,
+    IgxGridEmptyRowEditTemplateComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridTestComponent } from './grid.component.spec';
 
@@ -45,7 +46,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridRowEditingWithoutEditableColumnsComponent,
                 IgxGridTestComponent,
                 IgxGridCustomOverlayComponent,
-                IgxGridRowEditingWithFeaturesComponent
+                IgxGridRowEditingWithFeaturesComponent,
+                IgxGridEmptyRowEditTemplateComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
@@ -1146,7 +1148,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Change page size
             select.click();
             fix.detectChanges();
-            const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+            const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
             selectList.children[2].nativeElement.click();
             tick(16);
             fix.detectChanges();
@@ -1181,7 +1183,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 // Change page size
                 select.click();
                 fix.detectChanges();
-                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
                 selectList.children[0].nativeElement.click();
                 tick(16);
                 fix.detectChanges();
@@ -1912,7 +1914,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(0);
             fix.componentInstance.cellInEditMode.editValue = 'Spiro';
-            fix.componentInstance.moveNext(true);
+            UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
             tick(16);
             fix.detectChanges();
 
@@ -1922,6 +1924,41 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Empty template', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridEmptyRowEditTemplateComponent);
+            fix.detectChanges();
+            tick(16);
+
+            const grid = fix.componentInstance.grid;
+            let cell = grid.getCellByColumn(0, 'ProductName');
+            UIInteractions.triggerKeyDownEvtUponElem('f2', cell.nativeElement, true);
+
+            fix.detectChanges();
+            tick(16);
+
+            cell.editValue = 'Spiro';
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+            tick(16);
+
+            expect(cell.editMode).toBe(false);
+            cell = grid.getCellByColumn(0, 'ReorderLevel');
+            expect(cell.editMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+            tick(16);
+
+            expect(cell.editMode).toBe(false);
+            cell = grid.getCellByColumn(0, 'ProductName');
+            expect(cell.editMode).toBe(true);
         }));
     });
 

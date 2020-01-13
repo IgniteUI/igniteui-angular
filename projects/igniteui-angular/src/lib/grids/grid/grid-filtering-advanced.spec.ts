@@ -15,7 +15,8 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent,
-    IgxGridExternalAdvancedFilteringComponent
+    IgxGridExternalAdvancedFilteringComponent,
+    IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
@@ -30,7 +31,8 @@ describe('IgxGrid - Advanced Filtering', () => {
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
-                IgxGridExternalAdvancedFilteringComponent
+                IgxGridExternalAdvancedFilteringComponent,
+                IgxGridAdvancedFilteringBindingComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -355,6 +357,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
@@ -421,7 +424,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Should correctly filter by a \'number\' column through UI.', fakeAsync(() => {
+        it('Should correctly filter by a \'Greater Than\' with \'number\' column through UI.', fakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
             fix.detectChanges();
@@ -461,6 +464,47 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(grid.rowList.length).toBe(5);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+        }));
+
+        it('Should correctly filter by a \'Equals\' with \'number\' column through UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '127'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(1);
+            expect(grid.rowList.length).toBe(1);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('NetAdvantage');
         }));
 
         it('Should correctly filter by a \'boolean\' column through UI.', fakeAsync(() => {
@@ -2390,6 +2434,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become selected.
                 let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
                 await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
@@ -2399,6 +2446,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become unselected.
                 rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
                 await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
@@ -2746,8 +2796,36 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         }));
     });
-});
 
+    describe('IgxGrid - Advanced filtering expression tree bindings #grid', () => {
+        let fix, grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', fakeAsync(() => {
+            // Verify initially filtered in Advanced Filtering - 'Downloads > 200'
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Clear filter
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Verify no filtered data
+            expect(grid.filteredData).toBe(null);
+            expect(grid.rowList.length).toBe(8);
+        }));
+    });
+});
 
 function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
