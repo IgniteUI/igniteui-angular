@@ -11,10 +11,10 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $background [null] - The background color used for the toast.
-/// @param {Color} $text-color [null] - The text-color used for the toast.
+/// @param {Color} $background [null] - The background color used for the toast.  / @param {Color} $text-color [null] - The text-color used for the toast.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the toast component.
+/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the toast.
 ///
 ///
 /// @requires $default-palette
@@ -34,7 +34,8 @@
 
     $border-radius: null,
     $background: null,
-    $text-color: null
+    $text-color: null,
+    $shadow: null,
 ) {
     $name: 'igx-toast';
     $toast-schema: ();
@@ -51,6 +52,11 @@
         if($border-radius, $border-radius, map-get($toast-schema, 'border-radius')), 0, 26px
     );
 
+    @if not($shadow) {
+        $elevation: map-get($toast-schema, 'elevation');
+        $shadow: igx-elevation($elevations, $elevation);
+    }
+
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
@@ -60,7 +66,8 @@
         palette: $palette,
         background: $background,
         border-radius: $border-radius,
-        text-color: $text-color
+        text-color: $text-color,
+        shadow: $shadow
     ));
 }
 
@@ -72,9 +79,23 @@
 @mixin igx-toast($theme) {
     @include igx-root-css-vars($theme);
 
-    $toast-width: 52px;
-    $toast-padding: rem(16px) rem(24px);
-    $toast-margin: rem(42px) auto;
+    $palette: map-get($theme, 'palette');
+    $width: 52px;
+    $margin: rem(42px) auto;
+
+    $padding: map-get((
+        'material': rem(16px) rem(24px),
+        'fluent': rem(16px) rem(24px),
+        'bootstrap': rem(12px)
+    ),
+    map-get($theme, 'variant'));
+
+    $border: map-get((
+        'material': none,
+        'fluent': none,
+        'bootstrap': 1px solid igx-color($palette, 'grays', 300)
+    ),
+    map-get($theme, 'variant'));
 
     %igx-toast-display {
         position: fixed;
@@ -83,12 +104,15 @@
         align-items: center;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        margin: $toast-margin;
-        padding: $toast-padding;
-        min-width: $toast-width;
+        margin: $margin;
+        padding: $padding;
+        min-width: $width;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
+        border: $border;
         border-radius: --var($theme, 'border-radius');
+        box-shadow: map-get($theme, 'shadow');
+        backdrop-filter: blur(10px);
         opacity: 0;
         z-index: 999999;
     }
