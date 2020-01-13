@@ -249,9 +249,13 @@
     }
 
     %igx-tabs__header-wrapper-fluid {
+        display: inline-flex;
+        align-items: center;
+        min-width: 100%;
+
         @if map-get($theme, 'variant') == 'bootstrap' {
-            &:after {
-                content:'';
+            &::after {
+                content: '';
                 position: absolute;
                 bottom: 0;
                 left: 0;
@@ -261,12 +265,6 @@
                 z-index: 0;
             }
         }
-    }
-
-    %igx-tabs__header-wrapper-fluid {
-        display: inline-flex;
-        align-items: center;
-        min-width: 100%;
     }
 
     %igx-tabs__content-fluid {
@@ -337,8 +335,9 @@
             border-bottom-color: transparent;
             position: relative;
             z-index: 1;
-            &:after {
-                content:'';
+
+            &::after {
+                content: '';
                 position: absolute;
                 bottom: -1px;
                 left: 0;
