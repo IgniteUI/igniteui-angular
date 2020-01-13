@@ -8,20 +8,20 @@
 @include igx-core($direction: ltr);
 
 /* autoprefixer grid: on */
-// .default-theme {
-//     $igx-background-color: #fff;
-//     $igx-foreground-color: text-contrast($igx-background-color);
+ .default-theme {
+     $igx-background-color: #fff;
+     $igx-foreground-color: text-contrast($igx-background-color);
 
-//     background: $igx-background-color;
-//     color: $igx-foreground-color;
+     background: $igx-background-color;
+     color: $igx-foreground-color;
 
-//     @include scrollbar-love();
-//     @include igx-theme($default-palette);
+     @include scrollbar-love();
+     @include igx-theme($default-palette);
 
-//     .nav-header {
-//         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
-//     }
-// }
+     .nav-header {
+         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
+     }
+ }
 
 .bootstrap-theme {
     $igx-background-color: #fff;

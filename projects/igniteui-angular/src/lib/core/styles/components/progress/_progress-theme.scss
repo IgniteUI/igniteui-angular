@@ -290,7 +290,11 @@
 
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
+    $stroke-width: map-get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(8px),
+    ), map-get($theme, variant));
 
     $palette: map-get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);
@@ -317,14 +321,14 @@
     }
 
     %circular-inner {
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         fill: transparent;
         stroke: --var($theme, 'base-circle-color');
     }
 
     %circular-outer {
         fill: transparent;
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
         transform-origin: 50% 50%;
