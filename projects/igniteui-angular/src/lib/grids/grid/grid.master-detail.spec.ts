@@ -307,10 +307,12 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        beforeEach(async(() => {
+        beforeEach(async(async() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            await wait(DEBOUNCETIME * 2);
+            fix.detectChanges();
         }));
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.',
