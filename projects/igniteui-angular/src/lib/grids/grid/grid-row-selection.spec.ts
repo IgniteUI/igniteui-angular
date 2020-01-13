@@ -1689,6 +1689,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 ignoreCase: true
             });
             grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            tick();
             GridSelectionFunctions.headerCheckboxClick(grid);
             fix.detectChanges();
             tick();
