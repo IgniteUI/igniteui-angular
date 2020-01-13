@@ -10,8 +10,14 @@
     width: 100%
 }
 
-button {
-    margin: 5px;
+.sample-button-group {
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+
+    >* {
+        margin-bottom: 16px;
+    }
 }
 
 // Import the IgniteUI themes library first
