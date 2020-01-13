@@ -14,7 +14,7 @@ import { IgxStringFilteringOperand,
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
+import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions #grid', () => {
@@ -660,6 +660,48 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
+    }));
+});
+
+describe('IgxGrid - Filtering expression tree bindings #grid', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridFilteringBindingComponent
+            ],
+            imports: [
+                BrowserAnimationsModule,
+                IgxGridModule]
+        })
+        .compileComponents();
+    }));
+
+    let fix, grid: IgxGridComponent;
+    beforeEach(fakeAsync(() => {
+        fix = TestBed.createComponent(IgxGridFilteringBindingComponent);
+        fix.detectChanges();
+        grid = fix.componentInstance.grid;
+    }));
+
+    it('should correctly filter with \'filteringExpressionsTree\' binding', fakeAsync(() => {
+        // Verify initially filtered 'Downloads > 200'
+        expect(grid.rowList.length).toEqual(3);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
+
+        // Verify filtering expressions tree binding state
+        expect(grid.filteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+        // Clear filter
+        grid.clearFilter('Downloads');
+        fix.detectChanges();
+
+        // Verify filtering expressions tree binding state
+        expect(grid.filteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+        // Verify no filtered data
+        expect(grid.rowList.length).toEqual(8);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 });
 

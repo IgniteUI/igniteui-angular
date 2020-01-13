@@ -112,7 +112,7 @@ describe('IgxPaginator with custom settings', () => {
         const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
         select.click();
         fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
         selectList.children[3].nativeElement.click();
 
         fix.detectChanges();
