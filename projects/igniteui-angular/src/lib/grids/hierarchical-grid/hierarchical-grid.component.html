@@ -85,7 +85,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger
+        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
@@ -110,7 +110,8 @@
             <ng-template
             [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
             [igxTemplateOutletContext]='getContext(rowData)' (onViewCreated)='viewCreatedHandler($event)'
-            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'></ng-template>
+            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'
+            (onBeforeViewDetach)='viewDetachHandler($event)'></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -233,4 +234,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>

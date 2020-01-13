@@ -562,6 +562,23 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
+     * Clears the selection of the dropdown
+     * ```typescript
+     * this.dropdown.clearSelection();
+     * ```
+     */
+    public clearSelection() {
+        const oldSelection = this.selectedItem;
+        const newSelection: IgxDropDownItemBaseDirective = null;
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        this.onSelection.emit(args);
+        if (this.selectedItem && !args.cancel) {
+            this.selectedItem.selected = false;
+            this.selection.clear(this.id);
+        }
+    }
+
+    /**
      * Checks whether the selection is valid
      * `null` - the selection should be emptied
      * Virtual? - the selection should at least have and `index` and `value` property

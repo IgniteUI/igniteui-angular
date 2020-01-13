@@ -107,7 +107,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger
+        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
@@ -123,7 +123,8 @@
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
                 (onCachedViewLoaded)='cachedViewLoaded($event)'
                 (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)'>
+                (onViewMoved)='viewMovedHandler($event)'
+                (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>
@@ -292,4 +293,4 @@
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
-<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
+<div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet (keydown)="gridOutletKeyboardHandler($event)"></div>

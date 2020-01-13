@@ -312,14 +312,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 }
             }
 
-            // clone the filtering expression tree in order to trigger the filtering pipe
-            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
-            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
-            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
-            this._filteringExpressionsTree = filteringExpressionTreeClone;
+            value.type = FilteringExpressionsTreeType.Regular;
+            this._filteringExpressionsTree = value;
+            this._filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
+                !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -399,23 +398,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set advancedFilteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
-            // clone the filtering expression tree in order to trigger the filtering pipe
-            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
-            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Advanced;
-            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
-            this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
+            value.type = FilteringExpressionsTreeType.Advanced;
+            this._advancedFilteringExpressionsTree = value;
+            this._filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
         this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
-        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree) &&
+            !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
         }
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.markForCheck();
+        this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
@@ -498,6 +496,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
@@ -2180,6 +2179,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    get filteringPipeTrigger(): number {
+        return this._filteringPipeTrigger;
+    }
+
+    /**
+     * @hidden
+     */
     get summaryPipeTrigger(): number {
         return this._summaryPipeTrigger;
     }
@@ -2739,6 +2745,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _filteringPipeTrigger = 0;
+    /**
+     * @hidden
+     */
     protected _summaryPipeTrigger = 0;
     /**
      * @hidden
@@ -2877,6 +2887,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @internal
     */
     public isDetailRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public isGroupByRecord(rec) {
         return false;
     }
 
@@ -4606,7 +4624,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const columnsToSize = this.hasColumnLayouts ?
             combinedBlocksSize - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
-
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
@@ -4617,12 +4634,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return prev + currWidth;
             }, 0);
 
+        // When all columns are hidden, return 0px width
+        if (!sumExistingWidths && !columnsToSize) {
+            return '0px';
+        }
+
         const columnWidth = Math.floor(!Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
             return columnWidth + 'px';
-    }
+        }
 
     /**
      * @hidden
@@ -5859,6 +5881,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.closeRowEditingOverlay();
     }
 
+    /**
+    * @hidden
+    */
+    public gridOutletKeyboardHandler(event) {
+        // TODO: This should be removed after grid keyboard refactoring
+        // call stopPropagation for keydown event for the outlet not to propagate event to the grid
+        event.stopPropagation();
+    }
+
     // TODO: Refactor
     /**
      * Finishes the row transactions on the current row.
@@ -5938,6 +5969,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
+            rowForOf.cdr.detectChanges();
         }
     }
 
@@ -5982,6 +6014,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
+    }
+
+    public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
+        const context = args.view.context;
+        if (context['templateID'] === 'dataRow') {
+            // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
+            // hence we need to trigger it manually when cell is detached.
+            const row = this.getRowByIndex(context.index);
+            const focusedCell = row.cells.find(x => x.focused);
+            if (focusedCell) {
+                focusedCell.onBlur();
+            }
+        }
     }
 
     /**
