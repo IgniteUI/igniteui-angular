@@ -158,7 +158,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
         select.click();
         fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
         selectList.children[2].nativeElement.click();
 
         tick();
