@@ -77,7 +77,10 @@
     $item-action-color-active: null,
     $item-thumbnail-color: null,
     $item-thumbnail-color-hover: null,
-    $item-thumbnail-color-active: null
+    $item-thumbnail-color-active: null,
+    // Bootstrap only
+    $list-border-color: null,
+    $list-border-width: null,
 ) {
     $name: 'igx-list';
     $list-schema: ();
@@ -231,7 +234,10 @@
         item-action-color-active: $item-action-color-active,
         item-thumbnail-color: $item-thumbnail-color,
         item-thumbnail-color-hover: $item-thumbnail-color-hover,
-        item-thumbnail-color-active: $item-thumbnail-color-active
+        item-thumbnail-color-active: $item-thumbnail-color-active,
+        // Bootstrap only
+        list-border-color: $list-border-color,
+        list-border-width: $list-border-width,
     ));
 }
 
@@ -289,6 +295,10 @@
         overflow: hidden;
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
+
+        @if map-get($theme, 'variant') == 'bootstrap' {
+            border: --var($theme, 'list-border-width') solid --var($theme, 'list-border-color');
+        }
     }
 
     %igx-list-empty {

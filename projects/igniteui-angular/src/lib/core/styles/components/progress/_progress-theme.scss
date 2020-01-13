@@ -73,9 +73,24 @@
 @mixin igx-progress-linear($theme) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
+    $bar-height: map-get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(16px),
+    ), map-get($theme, variant));
 
-    $bar-height: 4px;
+    $gradient-orientation: map-get((
+        material: -45deg,
+        fluent: -45deg,
+        bootstrap: 45deg,
+    ), map-get($theme, variant));
+
+    $background-size: map-get((
+        material: rem(40px) rem(40px),
+        fluent: rem(40px) rem(40px),
+        bootstrap: rem(16px) rem(16px),
+    ), map-get($theme, variant));
+
     $stripe-color: --var($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
@@ -96,6 +111,7 @@
         height: $bar-height;
         background: --var($theme, 'track-color');
         overflow: hidden;
+        border-radius: 4px;
         z-index: 0;
     }
 
@@ -107,7 +123,7 @@
 
     %linear-indicator--striped {
         background-image: linear-gradient(
-            -45deg,
+            $gradient-orientation,
             $stripe-color 25%,
             transparent 25%,
             transparent 50%,
@@ -116,7 +132,7 @@
             transparent 75%,
             transparent
         );
-        background-size: 40px 40px;
+        background-size: $background-size;
     }
 
     %linear-indicator--indeterminate {
@@ -274,7 +290,11 @@
 
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
+    $stroke-width: map-get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(8px),
+    ), map-get($theme, variant));
 
     $palette: map-get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);
@@ -301,14 +321,14 @@
     }
 
     %circular-inner {
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         fill: transparent;
         stroke: --var($theme, 'base-circle-color');
     }
 
     %circular-outer {
         fill: transparent;
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
         transform-origin: 50% 50%;

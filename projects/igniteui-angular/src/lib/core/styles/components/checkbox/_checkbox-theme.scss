@@ -221,7 +221,6 @@
     %cbx-composite--x--disabled {
         @if map-get($theme, 'variant') == 'bootstrap' {
             background: transparent;
-
         } @else {
             background: --var($theme, 'disabled-color');
         }
