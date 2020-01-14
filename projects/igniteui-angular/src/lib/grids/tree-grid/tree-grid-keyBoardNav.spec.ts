@@ -448,7 +448,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             // Go to the last parent row and expand collapse
             cell = treeGrid.getCellByColumn(0, 'ID');
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(2 * DEBOUNCETIME);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, 'ID');
