@@ -623,12 +623,14 @@
 
     $grid-border-width: map-get((
         material: 0,
-        fluent: 1px
+        fluent: 1px,
+        bootstrap: 0
     ), map-get($theme, variant));
 
     $grid-header-weight: map-get((
         material: 600,
-        fluent: 800
+        fluent: 800,
+        bootstrap: 700
     ), map-get($theme, variant));
 
     %grid-display {
@@ -679,6 +681,11 @@
 
     %grid-thead {
         border-bottom: $grid-header-border;
+
+        @if map-get($theme, variant) == 'bootstrap'{
+            border-bottom-width: 2px;
+        }
+
         z-index: 2;
 
         %grid__group-indentation {
