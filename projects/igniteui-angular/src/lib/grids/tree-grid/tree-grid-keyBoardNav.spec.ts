@@ -568,8 +568,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(2 * DEBOUNCETIME);
             fixture.detectChanges();
+
 
             let newCell = treegrid.getCellByColumn(9, columnName);
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, newCell);
@@ -577,12 +578,11 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(2 * DEBOUNCETIME);
             fixture.detectChanges();
 
             newCell = treegrid.getCellByColumn(0, columnName);
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, newCell);
-            expect(newCell.focused).toEqual(true);
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
             resolve();
         });
