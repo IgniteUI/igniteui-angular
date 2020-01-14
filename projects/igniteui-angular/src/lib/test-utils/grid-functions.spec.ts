@@ -242,7 +242,7 @@ export class GridFunctions {
         columns.forEach(column => {
             expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
             expect(visibleColumns.findIndex((col) => col === column) > -1)
-            .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+                .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
         });
         expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
     }
@@ -582,6 +582,19 @@ export class GridFunctions {
             }
         }
     }
+
+    public static openFilterDDAndSelectCondition(fix: ComponentFixture<any>, index: number) {
+        GridFunctions.openFilterDD(fix.debugElement);
+        tick();
+        fix.detectChanges();
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+        const ddItems = ddList.nativeElement.children;
+        ddItems[index].click();
+        tick(100);
+        fix.detectChanges();
+    }
+
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
@@ -609,9 +622,12 @@ export class GridFunctions {
         tick(100);
     }
 
-    public static typeValueInFilterRowInput(value: string, fix) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const input = filterUIRow.query(By.directive(IgxInputDirective));
+    public static typeValueInFilterRowInput(value, fix, input = null) {
+        if (!input) {
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            input = filterUIRow.query(By.directive(IgxInputDirective));
+        }
+
         input.nativeElement.value = value;
         input.nativeElement.dispatchEvent(new Event('keydown'));
         input.nativeElement.dispatchEvent(new Event('input'));
@@ -1556,7 +1572,7 @@ export class GridFunctions {
     }
 
     public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
-         indicatorText = ['expand_more', 'chevron_right']) {
+        indicatorText = ['expand_more', 'chevron_right']) {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
         expect(group.collapsible).toEqual(collapsible);
         if (collapsible === false) {
