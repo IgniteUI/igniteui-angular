@@ -1,9 +1,9 @@
 import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -604,6 +604,24 @@ describe('igxSelect', () => {
             inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             expect(inputGroupWithRequiredAsterisk).toBeDefined();
         }));
+
+        it('Should have correctly bound focus and blur handlers', () => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            select = fix.componentInstance.select;
+            const input = fix.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+
+            spyOn(select, 'onFocus');
+            spyOn(select, 'onBlur');
+
+            input.triggerEventHandler('focus', {});
+            expect(select.onFocus).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+
+            input.triggerEventHandler('blur', {});
+            expect(select.onBlur).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+        });
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -2245,6 +2263,57 @@ describe('igxSelect', () => {
             const selectInstance = fixture.componentInstance.select;
             expect(selectInstance.getEditElement()).toEqual(inputElement);
         });
+    });
+});
+
+describe('igxSelect ControlValueAccessor Unit', () => {
+    let select: IgxSelectComponent;
+    it('Should correctly implement interface methods', () => {
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
+
+        // init
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select.ngOnInit();
+        select.registerOnChange(mockNgControl.registerOnChangeCb);
+        select.registerOnTouched(mockNgControl.registerOnTouchedCb);
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+
+        // writeValue
+        expect(select.value).toBeUndefined();
+        select.writeValue('test');
+        expect(mockSelection.clear).toHaveBeenCalled();
+        expect(select.value).toBe('test');
+
+        // setDisabledState
+        select.setDisabledState(true);
+        expect(select.disabled).toBe(true);
+        select.setDisabledState(false);
+        expect(select.disabled).toBe(false);
+
+        // OnChange callback
+        const item = new IgxDropDownItemComponent(select, null, null, mockSelection);
+        item.value = 'itemValue';
+        select.selectItem(item);
+        expect(mockSelection.set).toHaveBeenCalledWith(select.id, new Set([item]));
+        expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('itemValue');
+
+        // OnTouched callback
+        select.onFocus();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+        select.input = {} as any;
+        spyOnProperty(select, 'collapsed').and.returnValue(true);
+        select.onBlur();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should correctly handle ngControl validity', () => {
+        pending('Convert existing form test here');
     });
 });
 
