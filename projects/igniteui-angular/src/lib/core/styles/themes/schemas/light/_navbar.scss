@@ -49,5 +49,25 @@ $_fluent-navbar: extend($_light-navbar);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-navbar
-$_bootstrap-navbar: extend($_light-navbar);
+$_bootstrap-navbar: extend(
+    $_light-navbar,
+    $_bootstrap-elevation-navbar,
+    (
+        background: (
+            igx-color: 'surface',
+        ),
+
+        text-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        idle-icon-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        hover-icon-color: (
+            igx-contrast-color: 'surface',
+        ),
+    )
+);
 
