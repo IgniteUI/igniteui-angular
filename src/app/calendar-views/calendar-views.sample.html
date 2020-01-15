@@ -1,7 +1,23 @@
-<div class="sample-wrapper">
+<div class="sample-wrapper calendar-sample-component">
     <app-page-header title="Calendar">Calendar Views</app-page-header>
 
     <section class="sample-content">
+        <article class="sample-column">
+            <div class="calendar-sample">
+                <h4 class="sample-title">Bootstrap Calendar(NO Card wrapper)</h4>
+                <igx-calendar name="calendar" [(ngModel)]="dates" #calendar
+                              [viewDate]="viewDate"
+                              [weekStart]="'1'"
+                              [locale]="locale"
+                              [formatViews]="formatViews"
+                              [formatOptions]="formatOptions"
+                              [specialDates]="specialDates"
+                              [disabledDates]="disabledDates"
+                              [selection]="'multi'"
+                              (onSelection)="onSelection($event)">
+                </igx-calendar>
+            </div>
+        </article>
 
         <article class="sample-column">
             <div class="calendar-sample">
