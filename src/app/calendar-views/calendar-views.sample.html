@@ -4,49 +4,7 @@
     <section class="sample-content">
         <article class="sample-column">
             <div class="calendar-sample">
-                <h4 class="sample-title">Bootstrap Calendar(NO Card wrapper)</h4>
-                <igx-calendar name="calendar" [(ngModel)]="dates" #calendar
-                              [viewDate]="viewDate"
-                              [weekStart]="'1'"
-                              [locale]="locale"
-                              [formatViews]="formatViews"
-                              [formatOptions]="formatOptions"
-                              [specialDates]="specialDates"
-                              [disabledDates]="disabledDates"
-                              [selection]="'multi'"
-                              (onSelection)="onSelection($event)">
-                </igx-calendar>
-            </div>
-        </article>
-
-        <article class="sample-column">
-            <div class="calendar-sample">
-                <h4 class="sample-title">Default Calendar</h4>
-                <div class="calendar-sample-buttons">
-                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
-                    <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
-                </div>
-                <igx-card>
-                    <igx-calendar name="calendar" [(ngModel)]="dates" #calendar
-                        [viewDate]="viewDate"
-                        [weekStart]="'1'"
-                        [locale]="locale"
-                        [formatViews]="formatViews"
-                        [formatOptions]="formatOptions"
-                        [specialDates]="specialDates"
-                        [disabledDates]="disabledDates"
-                        [selection]="'multi'"
-                        (onSelection)="onSelection($event)">
-                    </igx-calendar>
-                </igx-card>
-            </div>
-            {{ dates }}
-        </article>
-
-        <article class="sample-column">
-            <div class="calendar-sample">
                 <h4 class="sample-title">Month Picker</h4>
-                <igx-card>
                     <igx-month-picker [(ngModel)]="date1" #mp
                         [viewDate]="viewDate"
                         [formatViews]="formatViews"
@@ -54,7 +12,6 @@
                         [locale]="localeDe"
                         (onSelection)="onSelection($event)">
                     </igx-month-picker>
-                </igx-card>
             </div>
             {{ date1 }}
         </article>

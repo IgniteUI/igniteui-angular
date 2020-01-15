@@ -420,6 +420,7 @@
             height: auto;
             background: --var($theme, 'calendar-picker-background-color');
             padding-top: $cal-picker-padding;
+            padding-bottom: 0;
         }
         position: relative;
 
@@ -446,7 +447,7 @@
         top: 0;
 
         @if map-get($theme, variant) == 'bootstrap' {
-            top: $cal-picker-padding / 2;
+            top: $cal-picker-padding;
         }
 
         &:focus,
@@ -512,6 +513,7 @@
                 background: --var($theme, 'calendar-picker-background-color');
                 border-bottom: 1px solid --var($theme, 'calendar-border-color');
                 padding-bottom: $cal-picker-padding;
+                padding-top: $cal-picker-padding;
             }
         }
     }
