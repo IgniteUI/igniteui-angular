@@ -157,6 +157,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _itemsMaxHeight = null;
     private _remoteSelection = {};
     private _onChangeCallback: (_: any) => void = noop;
+    private _onTouchedCallback: () => void = noop;
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(),
@@ -1260,11 +1261,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public onBlur() {
         if (this.collapsed) {
+            this._onTouchedCallback();
             if (this.ngControl && !this.ngControl.valid) {
                 this.valid = IgxComboState.INVALID;
            } else {
                 this.valid = IgxComboState.INITIAL;
            }
+        }
+    }
+
+    /** @hidden @internal */
+    public onFocus() {
+        if (this.collapsed) {
+            this._onTouchedCallback();
         }
     }
 
@@ -1333,7 +1342,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {
+        this._onTouchedCallback = fn;
+    }
 
     /**
      * @hidden @internal
@@ -1377,6 +1388,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleClearItems(event: Event): void {
         this.deselectAllItems(true, event);
+        if (this.collapsed) {
+            this.getEditElement().focus();
+        } else {
+            this.focusSearchInput(true);
+        }
         event.stopPropagation();
     }
 
