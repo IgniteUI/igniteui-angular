@@ -13,7 +13,7 @@ import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { wait } from '../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 
 @Component({
     template: `
@@ -109,7 +109,7 @@ class TestChipReorderComponent {
 }
 
 
-fdescribe('IgxChipsArea ', () => {
+describe('IgxChipsArea ', () => {
     configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
     const CHIP_SELECT_ICON = 'igx-chip__select';
@@ -415,7 +415,7 @@ fdescribe('IgxChipsArea ', () => {
             secondChip.onChipKeyDown(spaceKeyEvent);
 
             expect(secondChip.selected).toBeTruthy();
-            HelperTestFunctions.dragDropChip(fix, secondChip, 200, 100);
+            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, 200, 100);
 
             const firstChip = chipComponents[0].componentInstance;
             expect(firstChip.selected).not.toBeTruthy();
@@ -581,7 +581,7 @@ fdescribe('IgxChipsArea ', () => {
             const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
             const firstChip = chipComponents[0].componentInstance;
 
-            HelperTestFunctions.dragDropChip(fix, firstChip, 50, 50, false);
+            UIInteractions.moveDragDirective(fix, firstChip.dragDirective, 50, 50, false);
 
             expect(firstChip.dragDirective.ghostElement).toBeUndefined();
         });
@@ -600,7 +600,7 @@ fdescribe('IgxChipsArea ', () => {
 
             const xDragDifference = 200;
             const yDragDifference = 100;
-            HelperTestFunctions.dragDropChip(fix, secondChip, xDragDifference, yDragDifference, false);
+            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, xDragDifference, yDragDifference, false);
 
             expect(secondChip.dragDirective.ghostElement).toBeTruthy();
 
@@ -627,7 +627,7 @@ fdescribe('IgxChipsArea ', () => {
             const secondChipElem = secondChip.chipArea.nativeElement;
 
             const firstChipLeft = firstChipElem.getBoundingClientRect().left;
-            HelperTestFunctions.dragDropChip(fix, firstChip, 100, 0);
+            UIInteractions.moveDragDirective(fix, firstChip.dragDirective, 100, 0);
 
             const afterDropSecondChipLeft = secondChipElem.getBoundingClientRect().left;
             expect(afterDropSecondChipLeft).toEqual(firstChipLeft);
@@ -652,7 +652,7 @@ fdescribe('IgxChipsArea ', () => {
             const secondChipElem = secondChip.chipArea.nativeElement;
 
             const firstChipLeft = firstChipElem.getBoundingClientRect().left;
-            HelperTestFunctions.dragDropChip(fix, secondChip, -100, 0);
+            UIInteractions.moveDragDirective(fix, secondChip.dragDirective, -100, 0);
 
             const afterDropSecondChipLeft = secondChipElem.getBoundingClientRect().left;
             expect(afterDropSecondChipLeft).toEqual(firstChipLeft);
@@ -668,52 +668,9 @@ fdescribe('IgxChipsArea ', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[1];
             spyOn(firstChipComp.onClick, 'emit');
 
-            HelperTestFunctions.clickChip(fix, firstChipComp);
+            UIInteractions.clickDragDirective(fix, firstChipComp.dragDirective);
 
             expect(firstChipComp.onClick.emit).toHaveBeenCalled();
         });
     });
 });
-
-
-class HelperTestFunctions {
-
-    public static clickChip(fix, chipRef) {
-        chipRef.dragDirective.onPointerDown(new PointerEvent('pointerdown', { pointerId: 1}));
-        chipRef.dragDirective.onPointerUp(new PointerEvent('pointerup'));
-        fix.detectChanges();
-    }
-
-    public static dragDropChip(fix, chipRef, moveX, moveY, triggerPointerUp = false) {
-        const chipElem = chipRef.chipArea.nativeElement;
-        const startingTop = chipElem.getBoundingClientRect().top;
-        const startingLeft = chipElem.getBoundingClientRect().left;
-        const startingBottom = chipElem.getBoundingClientRect().bottom;
-        const startingRight = chipElem.getBoundingClientRect().right;
-
-        const startingX = (startingLeft + startingRight) / 2;
-        const startingY = (startingTop + startingBottom) / 2;
-
-        chipRef.dragDirective.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
-        fix.detectChanges();
-
-        chipRef.dragDirective.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
-        fix.detectChanges();
-
-        chipRef.dragDirective.onPointerMove({
-            pointerId: 1,
-            pageX: startingX + moveX,
-            pageY: startingY + moveY
-        });
-        fix.detectChanges();
-
-        if (triggerPointerUp) {
-            chipRef.dragDirective.onPointerUp({
-                pointerId: 1,
-                pageX: startingX + moveX,
-                pageY: startingY + moveY
-            });
-            fix.detectChanges();
-        }
-    }
-}
