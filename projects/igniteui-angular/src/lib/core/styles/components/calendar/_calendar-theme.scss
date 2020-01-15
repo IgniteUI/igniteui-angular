@@ -290,6 +290,12 @@
 
     $cal-picker-padding: em(16px);
 
+    $cal-value-w: map-get((
+        material: em(40px),
+        fluent: em(40px),
+        bootstrap: em(32px),
+    ), map-get($theme, variant));
+
     $cal-value-w: em(40px);
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
@@ -304,12 +310,14 @@
 
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),
-        fluent:--var($theme, 'date-current-bg-color')
+        fluent:--var($theme, 'date-current-bg-color'),
+        bootstrap:--var($theme, 'date-current-bg-color')
     ), map-get($theme, variant));
 
     $current-text-color-variant: map-get((
         material: --var($theme, 'date-selected-text-color'),
-        fluent:--var($theme, 'date-current-text-color')
+        fluent:--var($theme, 'date-current-text-color'),
+        bootstrap:--var($theme, 'date-current-text-color')
     ), map-get($theme, variant));
 
     $left: if-ltr(left, right);
@@ -645,6 +653,11 @@
         &::before,
         &::after {
             background: transparent;
+        }
+
+        &:hover,
+        &:focus {
+            color: --var($theme, 'date-selected-text-color');
         }
     }
 
