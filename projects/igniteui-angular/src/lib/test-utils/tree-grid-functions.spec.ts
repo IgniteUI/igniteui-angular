@@ -359,14 +359,20 @@ export class TreeGridFunctions {
     }
 
     public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
-        expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
+        expect(cell).toBeDefined();
+        if (cell) {
+            expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
 
-        if (selected) {
-            const selectedCell = treeGrid.selectedCells[0];
-            expect(selectedCell.value).toEqual(cell.value);
-            expect(selectedCell.column.field).toEqual(cell.column.field);
-            expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
-            expect(selectedCell.value).toEqual(cell.value);
+            if (selected) {
+                const selectedCell = treeGrid.selectedCells[0];
+                expect(selectedCell).toBeDefined();
+                if (selectedCell) {
+                    expect(selectedCell.value).toEqual(cell.value);
+                    expect(selectedCell.column.field).toEqual(cell.column.field);
+                    expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
+                    expect(selectedCell.value).toEqual(cell.value);
+                }
+            }
         }
     }
 
