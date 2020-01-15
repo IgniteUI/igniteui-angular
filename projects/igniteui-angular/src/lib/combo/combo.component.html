@@ -25,11 +25,11 @@
             <ng-content select="igx-hint, [igxHint]"></ng-content>
         </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [attr.placeholder]="placeholder"
-        [disabled]="disabled" (blur)="onBlur()" />
+        [disabled]="disabled" (blur)="onBlur()" (focus)="onFocus()"/>
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" igxRipple (click)="handleClearItems($event)">
+    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" (click)="handleClearItems($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
