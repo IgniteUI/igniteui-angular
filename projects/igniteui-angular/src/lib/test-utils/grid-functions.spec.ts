@@ -13,6 +13,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
+import { ControlsFunction } from './controls-functions.spec';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
@@ -567,8 +568,7 @@ export class GridFunctions {
     // Filtering
     public static removeFilterChipByIndex(index: number, filterUIRow) {
         const filterChip = filterUIRow.queryAll(By.css('igx-chip'))[index];
-        const removeButton = filterChip.query(By.css('div.igx-chip__remove'));
-        removeButton.nativeElement.click();
+        ControlsFunction.clickChipRemoveButton(filterChip.nativeElement);
     }
 
     public static selectFilteringCondition(cond: string, ddList) {
@@ -643,19 +643,13 @@ export class GridFunctions {
     }
 
     public static resetFilterRow(fix: ComponentFixture<any>) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
-        const reset = editingBtns.queryAll(By.css('button'))[0];
-        reset.nativeElement.click();
+        fix.componentInstance.grid.filteringRow.onClearClick();
         tick(100);
         fix.detectChanges();
     }
 
     public static closeFilterRow(fix: ComponentFixture<any>) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
-        const close = editingBtns.queryAll(By.css('button'))[1];
-        close.nativeElement.click();
+        fix.componentInstance.grid.filteringRow.close();
         fix.detectChanges();
     }
 
@@ -809,14 +803,8 @@ export class GridFunctions {
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
     */
-    public static clickFilterCellChip(fix: ComponentFixture<any>, columnField: string) {
-        const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-        const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
-        const filterCell = headerGroup.query(By.css('igx-grid-filtering-cell'));
-        const chip = filterCell.query(By.css('igx-chip'));
-
-        chip.nativeElement.click();
-        fix.detectChanges();
+    public static clickFilterCellChip(grid, columnField: string) {
+        grid.getColumnByName(columnField).filterCell.onChipClicked();
     }
 
     /**
@@ -1052,8 +1040,7 @@ export class GridFunctions {
     */
     public static clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
-        const removeIcon = chip.querySelector('.igx-chip__remove');
-        removeIcon.click();
+        ControlsFunction.clickChipRemoveButton(chip.nativeElement);
     }
 
     /**

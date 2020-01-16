@@ -18,6 +18,7 @@ import {
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -2395,7 +2396,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 // Press 'Enter' on the remove icon of the second chip.
                 const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]);
-                const removeIcon = chip.querySelector('.igx-chip__remove');
+                const removeIcon = ControlsFunction.getChipRemoveButton(chip);
                 UIInteractions.simulateKeyDownEvent(removeIcon, 'Enter');
                 tick(200);
                 fix.detectChanges();
