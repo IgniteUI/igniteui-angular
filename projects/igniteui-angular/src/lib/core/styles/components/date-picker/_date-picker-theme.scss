@@ -48,10 +48,22 @@
         %cal-value {
             color: --var($theme, 'content-text-color');
             flex-basis: 14.28%;
+
+            @if map-get($theme, variant) == 'bootstrap' {
+                &:hover,
+                &:focus {
+                    color: --var($theme, 'date-selected-text-color');
+                }
+            }
         }
 
         %cal-value--label {
-            color: --var($theme, 'inactive-text-color');
+            color: --var($theme, 'label-color');
+
+            &:hover,
+            &:focus {
+                color: --var($theme, 'label-color');
+            }
         }
 
         %cal-value--weekend {

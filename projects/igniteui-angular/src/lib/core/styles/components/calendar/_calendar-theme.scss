@@ -365,6 +365,32 @@
         }
     }
 
+    igx-calendar-container {
+        @if map-get($theme, variant) == 'bootstrap' {
+            %cal-display {
+                border: 0;
+                border-radius: 0;
+            }
+
+            margin-bottom: 0;
+
+            %cal-picker-display {
+                padding-bottom: 0;
+            }
+
+            %cal-row-display {
+                &:first-of-type {
+                    padding-top: 0;
+                    padding-bottom: $cal-picker-padding / 2;
+                }
+            }
+
+            %cal-picker-arrow {
+                top: $cal-picker-padding;
+            }
+        }
+    }
+
     %cal-display + %cal-display {
         margin-#{$left}: 1rem;
 
@@ -413,14 +439,13 @@
     %cal-picker-display {
         display: flex;
         height: em(56px);
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding-bottom: $cal-picker-padding;
         @if map-get($theme, variant) == 'bootstrap' {
             height: auto;
             background: --var($theme, 'calendar-picker-background-color');
             padding-top: $cal-picker-padding;
-            padding-bottom: 0;
         }
         position: relative;
 
@@ -447,7 +472,7 @@
         top: 0;
 
         @if map-get($theme, variant) == 'bootstrap' {
-            top: $cal-picker-padding;
+            top: $cal-picker-padding / 2;
         }
 
         &:focus,
@@ -491,6 +516,16 @@
         overflow: hidden;
     }
 
+    igx-years-view,
+    igx-month-picker,
+    igx-months-view {
+        %cal-body-display {
+            @if map-get($theme, variant) == 'bootstrap' {
+                padding-bottom: 0;
+            }
+        }
+    }
+
     %cal-row-display {
         display: flex;
         justify-content: space-between;
@@ -520,6 +555,15 @@
 
     %cal-row-display--wrap {
         flex-wrap: wrap;
+
+        &:first-of-type {
+            @if map-get($theme, variant) == 'bootstrap' {
+                background: transparent;
+                margin-bottom: 0;
+                border-bottom: 0;
+                padding: 0;
+            }
+        }
     }
 
     %cal-column-display {
@@ -577,13 +621,19 @@
 
     %cal-value--label {
         color: --var($theme, 'label-color');
-        cursor: default;
+
+        &:hover,
+        &:focus {
+            color: --var($theme, 'label-color');
+        }
+
         border-radius: 0;
         flex-basis: 14.28%;
         // 100 divided by the number of weekdays
 
         @if map-get($theme, variant) == 'bootstrap' {
             font-style: italic;
+            cursor: default;
         }
     }
 
