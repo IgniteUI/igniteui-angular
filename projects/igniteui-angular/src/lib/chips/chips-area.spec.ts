@@ -169,6 +169,8 @@ describe('IgxChipsArea ', () => {
 
 
     describe('Selection', () => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
+
         it('should be able to select chip using input property', () => {
             fix = TestBed.createComponent(TestChipSelectComponent);
             fix.detectChanges();
@@ -246,12 +248,11 @@ describe('IgxChipsArea ', () => {
             const chipAreaComp = fix.debugElement.query(By.directive(IgxChipsAreaComponent)).componentInstance;
             spyOn(chipAreaComp.onSelection, 'emit');
 
-            const keyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
-            secondChipComp.onChipKeyDown(keyEvent);
+            secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
             expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-                originalEvent: keyEvent,
+                originalEvent: spaceKeyEvent,
                 owner: chipAreaComp,
                 newSelection: [secondChipComp]
             });
@@ -260,11 +261,11 @@ describe('IgxChipsArea ', () => {
             expect(chipsSelectionStates.length).toEqual(1);
             expect(secondChipComp.selected).toBeTruthy();
 
-            secondChipComp.onChipKeyDown(keyEvent);
+            secondChipComp.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
             expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-                originalEvent: keyEvent,
+                originalEvent: spaceKeyEvent,
                 owner: chipAreaComp,
                 newSelection: []
             });
@@ -278,15 +279,12 @@ describe('IgxChipsArea ', () => {
             fix = TestBed.createComponent(TestChipComponent);
             fix.detectChanges();
 
-            let selChips = 0;
             const chipAreaComponent = fix.componentInstance;
 
             chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
             fix.detectChanges();
 
-            spyOn(chipAreaComponent.chipsArea.onSelection, `emit`).and.callFake(function() {
-                selChips++;
-            });
+            spyOn(chipAreaComponent.chipsArea.onSelection, `emit`);
             chipAreaComponent.chipsArea.chipsList.toArray()[1].selected = true;
             fix.detectChanges();
             chipAreaComponent.chipsArea.chipsList.toArray()[2].selected = true;
@@ -294,7 +292,7 @@ describe('IgxChipsArea ', () => {
 
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
             const thirdChipComp = fix.componentInstance.chips.toArray()[2];
-            expect(selChips).toEqual(2);
+            expect(chipAreaComponent.chipsArea.onSelection.emit).toHaveBeenCalledTimes(2);
             expect(chipAreaComponent.chipsArea.onSelection.emit).toHaveBeenCalledWith({
                 originalEvent: null,
                 owner: chipAreaComponent.chipsArea,
@@ -366,8 +364,8 @@ describe('IgxChipsArea ', () => {
             spyOn(chipArea.onMoveStart, 'emit');
             spyOn(chipArea.onMoveEnd, 'emit');
 
-            const keyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
-            secondChip.onChipKeyDown(keyEvent);
+
+            secondChip.onChipKeyDown(spaceKeyEvent);
             fix.detectChanges();
 
             expect(chipArea.onSelection.emit).toHaveBeenCalled();
@@ -410,7 +408,6 @@ describe('IgxChipsArea ', () => {
             const chipComponents = chipArea.queryAll(By.directive(IgxChipComponent));
             const secondChip = chipComponents[1].componentInstance;
 
-            const spaceKeyEvent = new KeyboardEvent('keydown', { 'key': ' ' });
             secondChip.animateOnRelease = false;
             secondChip.onChipKeyDown(spaceKeyEvent);
 
@@ -424,6 +421,10 @@ describe('IgxChipsArea ', () => {
     });
 
     describe('Reorder', () => {
+        const leftKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
+        const rightKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
+        const deleteKeyEvent = new KeyboardEvent('keydown', { 'key': 'Delete' });
+
         beforeEach(() => {
             fix = TestBed.createComponent(TestChipReorderComponent);
             fix.detectChanges();
@@ -431,16 +432,13 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
-            const leftKey = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
-            const rightKey = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
-
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const firstChipAreaElem = chipComponents[0].componentInstance.chipArea.nativeElement;
             const secondChipAreaElem = chipComponents[1].componentInstance.chipArea.nativeElement;
             const firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             const secondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
 
-            firstChipAreaElem.dispatchEvent(rightKey);
+            firstChipAreaElem.dispatchEvent(rightKeyEvent);
             fix.detectChanges();
 
             let newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
@@ -448,7 +446,7 @@ describe('IgxChipsArea ', () => {
             expect(firstChipLeft).toBeLessThan(newFirstChipLeft);
             expect(newSecondChipLeft).toBeLessThan(secondChipLeft);
 
-            firstChipAreaElem.dispatchEvent(leftKey);
+            firstChipAreaElem.dispatchEvent(leftKeyEvent);
             fix.detectChanges();
 
             newFirstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
@@ -459,9 +457,6 @@ describe('IgxChipsArea ', () => {
         });
 
         it('should reorder chips and keeps focus when Shift + Left Arrow is pressed and Shift + Right Arrow is pressed twice', (async() => {
-            const leftKey = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
-            const rightKey = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
-
             chipArea = fix.componentInstance.chipsArea;
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const targetChip = chipComponents[2].componentInstance;
@@ -474,14 +469,14 @@ describe('IgxChipsArea ', () => {
             expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
             expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(rightKey);
+            targetChip.onChipKeyDown(rightKeyEvent);
             fix.detectChanges();
 
             expect(document.activeElement).toBe(targetChipElem);
             expect(chipArea.chipsList.toArray()[2].id).toEqual('FirstName');
             expect(chipArea.chipsList.toArray()[3].id).toEqual('Town');
 
-            targetChip.onChipKeyDown(leftKey);
+            targetChip.onChipKeyDown(leftKeyEvent);
             fix.detectChanges();
             await wait();
 
@@ -489,7 +484,7 @@ describe('IgxChipsArea ', () => {
             expect(chipArea.chipsList.toArray()[2].id).toEqual('Town');
             expect(chipArea.chipsList.toArray()[3].id).toEqual('FirstName');
 
-            targetChip.onChipKeyDown(leftKey);
+            targetChip.onChipKeyDown(leftKeyEvent);
             fix.detectChanges();
             await wait();
 
@@ -503,7 +498,6 @@ describe('IgxChipsArea ', () => {
 
             const firstChipAreaElem = chipComponents[0].componentInstance.chipArea.nativeElement;
             const firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
-            const leftKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowLeft', shiftKey: true });
             firstChipAreaElem.dispatchEvent(leftKeyEvent);
             fix.detectChanges();
 
@@ -516,7 +510,6 @@ describe('IgxChipsArea ', () => {
 
             const lastChipAreaElem = chipComponents[chipComponents.length - 1].componentInstance.chipArea.nativeElement;
             const lastChipLeft = lastChipAreaElem.getBoundingClientRect().left;
-            const rightKeyEvent = new KeyboardEvent('keydown', { 'key': 'ArrowRight', shiftKey: true });
             lastChipAreaElem.dispatchEvent(rightKeyEvent);
             fix.detectChanges();
 
@@ -530,7 +523,6 @@ describe('IgxChipsArea ', () => {
             expect(chipComponents.length).toEqual(4);
 
             const firstChipComp = chipComponents[0].componentInstance;
-            const deleteKeyEvent = new KeyboardEvent('keydown', { 'key': 'Delete' });
             firstChipComp.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
 
@@ -560,8 +552,7 @@ describe('IgxChipsArea ', () => {
             spyOn(chipArea.onMoveEnd, 'emit');
             spyOn(secondChip.onRemove, 'emit');
 
-            const keyEvent = new KeyboardEvent('keydown', { 'key': 'Delete' });
-            secondChip.onChipKeyDown(keyEvent);
+            secondChip.onChipKeyDown(deleteKeyEvent);
             fix.detectChanges();
 
             expect(secondChip.onRemove.emit).toHaveBeenCalled();
