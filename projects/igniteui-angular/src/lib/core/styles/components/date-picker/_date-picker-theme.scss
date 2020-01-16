@@ -81,6 +81,13 @@
 
         %cal-value--year-current {
             color: --var($theme, 'year-current-text-color');
+
+            @if map-get($theme, variant) == 'bootstrap' {
+                &:hover,
+                &:focus {
+                    color: --var($theme, 'year-hover-text-color');
+                }
+            }
         }
 
         %cal-value--year-hover {

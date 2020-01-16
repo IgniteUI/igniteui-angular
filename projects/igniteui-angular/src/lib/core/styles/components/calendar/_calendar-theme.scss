@@ -391,6 +391,15 @@
         }
     }
 
+    igx-month-picker {
+        %cal-picker-display {
+            @if map-get($theme, variant) == 'bootstrap' {
+                border-bottom: 1px solid --var($theme, 'calendar-border-color');
+            }
+        }
+    }
+
+
     %cal-display + %cal-display {
         margin-#{$left}: 1rem;
 
@@ -597,6 +606,20 @@
         }
     }
 
+    %cal-value--hover {
+        @if map-get($theme, variant) == 'bootstrap' {
+            color: --var($theme, 'date-selected-text-color');
+        }
+
+        %cal-value-content::after {
+            background: --var($theme, 'date-hover-background');
+        }
+
+        &%cal-value--selected %cal-value-content::after {
+            background: rgba($selected-hover-color, .18);
+        }
+    }
+
     %cal-value-content {
         position: relative;
         width: $cal-value-w;
@@ -649,6 +672,13 @@
 
     %cal-value--year-current {
         color: --var($theme, 'year-current-text-color');
+
+        @if map-get($theme, variant) == 'bootstrap' {
+            &:hover,
+            &:focus {
+                color: --var($theme, 'year-hover-text-color');
+            }
+        }
     }
 
     %cal-value--year-hover {
@@ -752,16 +782,6 @@
         pointer-events: none;
         cursor: not-allowed;
         color: --var($theme, 'date-disabled-text-color');
-    }
-
-    %cal-value--hover {
-        %cal-value-content::after {
-            background: --var($theme, 'date-hover-background');
-        }
-
-        &%cal-value--selected %cal-value-content::after {
-            background: rgba($selected-hover-color, .18);
-        }
     }
 
     %cal-value--single {
