@@ -2,11 +2,6 @@ sudo: required
 dist: xenial
 addons:
   chrome: stable
-  # apt:
-  #   sources:
-  #     - google-chrome
-  #   packages:
-  #     - google-chrome-stable
 services:
   - xvfb
 language: node_js
