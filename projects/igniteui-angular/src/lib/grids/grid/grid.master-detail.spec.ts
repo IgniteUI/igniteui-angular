@@ -222,7 +222,6 @@ describe('IgxGrid Master Detail #grid', () => {
             newData.splice(1, 1);
 
             grid.data = newData;
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const gridRows = grid.rowList.toArray();
@@ -308,10 +307,12 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        beforeEach(async(() => {
+        beforeEach(async(async() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            await wait(DEBOUNCETIME * 2);
+            fix.detectChanges();
         }));
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.',
@@ -503,8 +504,6 @@ describe('IgxGrid Master Detail #grid', () => {
          it('Should navigate to the last data cell in the grid using Ctrl + End.', async() => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('end', targetCellElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const lastRow = grid.getRowByIndex(52);
