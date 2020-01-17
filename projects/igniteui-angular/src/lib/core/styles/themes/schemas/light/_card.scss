@@ -28,6 +28,8 @@ $_light-card: extend(
     $_default-shape-card,
     $_default-elevation-card,
     (
+        variant: 'material',
+
         background: (
             igx-color: 'surface'
         ),
@@ -81,6 +83,8 @@ $_fluent-card: extend(
     $_fluent-shape-card,
     $_fluent-elevation-card,
     (
+        variant: 'fluent',
+
         outline-color: (
             igx-color: ('grays', 200)
         ),
@@ -93,7 +97,25 @@ $_fluent-card: extend(
 
 /// Generates a bootstrap card schema.
 /// @type {Map}
+/// @prop {Color} background [#fff]- The card background color.
+/// @prop {Map} outline-color [igx-color: ('grays', 300)] - The outline color of an outlined type card.
+/// @prop {map} card-border-color [ igx-color: ('grays', 300)] - The border color of an card.
 /// @requires {function} extend
 /// @requires {map} $_light-card
-$_bootstrap-card: extend($_light-card);
+$_bootstrap-card: extend(
+    $_light-card,
+    $_bootstrap-shape-card,
+    (
+        variant: 'bootstrap',
+        background: #fff,
+
+        outline-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        card-border-color: (
+            igx-color: ('grays', 300)
+        ),
+    )
+);
 

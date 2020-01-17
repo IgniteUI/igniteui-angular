@@ -72,6 +72,14 @@
         $header-text-color: text-contrast($background);
     }
 
+    @if not($outline-color) and $card-border-color {
+        $outline-color: $card-border-color;
+    }
+
+    @if not($card-border-color) and $outline-color {
+        $card-border-color: $outline-color;
+    }
+
     @if not($actions-text-color) and $background {
         @if type-of($background) == 'color' {
             $actions-text-color: rgba(text-contrast($background), .5);
@@ -124,19 +132,48 @@
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
-    $card-title-fz: em(24px, 16px);
-    $card-title-line-height: em(24px, 16px);
-    $card-subtitle-line-height: em(24px, 16px);
-    $card-content-fz: em(14px, 16px);
-    $card-content-lh: (20px, 16px);
+    $card-heading-padding: map-get((
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: rem(20px) rem(20px) 0 rem(20px),
+    ), map-get($theme, variant));
 
-    $card-heading-padding: em(16px, 16px);
-    $card-heading-compact-padding: em(16px, 16px);
-    $card-heading-margin: 0;
-    $card-content-padding: em(16px, 16px);
-    $card-content-margin: 0;
-    $card-actions-padding: em(8px, 16px);
-    $card-subtitle-margin: 0;
+    $card-heading-compact-padding: map-get((
+        material: rem(16px, 16px),
+        fluent: rem(16px, 16px),
+        bootstrap: rem(20px) rem(20px) 0 rem(20px),
+    ), map-get($theme, variant));
+
+    $card-heading-margin: map-get((
+        material: 0,
+        fluent: 0,
+        bootstrap: rem(12px),
+    ), map-get($theme, variant));
+
+    $card-content-padding: map-get((
+        material: rem(16px),
+        fluent: rem(16px),
+        bootstrap: 0 rem(20px) 0 rem(20px),
+    ), map-get($theme, variant));
+
+    $card-content-margin: map-get((
+        material: 0,
+        fluent: 0,
+        bootstrap: rem(20px),
+    ), map-get($theme, variant));
+
+    $card-actions-padding: map-get((
+        material: rem(8px),
+        fluent: rem(8px),
+        bootstrap: 0 rem(20px) rem(20px) rem(20px),
+    ), map-get($theme, variant));
+
+    $card-subtitle-margin: map-get((
+        material: 0,
+        fluent: 0,
+        bootstrap: rem(8px),
+    ), map-get($theme, variant));
+
     $card-tgroup-margin: 0 em(16px);
     $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
     $left: if-ltr(left, right);
@@ -166,7 +203,6 @@
             box-shadow: none;
         }
     }
-
 
     %igx-card--horizontal {
         flex-direction: row;
@@ -228,11 +264,17 @@
     }
 
     %igx-card-header-title {
-        margin: $card-heading-margin;
+        @if map-get($theme, variant) != 'bootstrap' {
+            margin: $card-heading-margin;
+        }
+        margin-bottom: $card-heading-margin;
     }
 
     %igx-card-header-subtitle {
-        margin: $card-subtitle-margin;
+        @if map-get($theme, variant) != 'bootstrap' {
+            margin: $card-subtitle-margin;
+        }
+        margin-bottom: $card-subtitle-margin;
         color: --var($theme, 'subtitle-text-color');
     }
 
@@ -245,10 +287,16 @@
         flex: 1 1 auto;
         padding: $card-content-padding;
         color: --var($theme, 'content-text-color');
+
+        @if map-get($theme, variant) == 'bootstrap' {
+            margin-bottom: $card-content-margin;
+        }
     }
 
     %igx-card-content-text {
-        margin: $card-content-margin;
+        @if map-get($theme, variant) != 'bootstrap' {
+            margin: $card-content-margin;
+        }
     }
 
     %igx-card-media {
@@ -275,6 +323,9 @@
         flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
+        @if map-get($theme, variant) == 'bootstrap' {
+            margin-top: rem(-4px);
+        }
 
         [igxButton] ~ [igxButton] {
             margin-#{$left}: rem(8px);

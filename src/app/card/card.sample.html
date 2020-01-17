@@ -1,4 +1,4 @@
-<div class="sample-wrapper">
+<div class="sample-wrapper card-sample">
     <app-page-header title="Cards">
         A placeholder for images, text, icons and buttons that provide information on a single subject. The card is usually composed
         of a header, a content body and an action section.
@@ -6,10 +6,53 @@
 
     <div class="grid-container grid-container--fit">
         <!-- Google Coffee -->
+
+        <article class="bootstrap-sample">
+            <igx-card type="outlined" class="bootstrap-card">
+                <igx-card-media>
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="188" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
+                </igx-card-media>
+
+                <igx-card-header>
+                    <h3 class="igx-card-header__title">Card title</h3>
+                </igx-card-header>
+
+                <igx-card-content>
+                    <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </igx-card-content>
+
+                <igx-card-actions>
+                    <div class="igx-card-actions__bgroup">
+                        <button igxButton="raised" >Go somewhere</button>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+
+        <article class="bootstrap-sample">
+            <igx-card type="outlined" class="bootstrap-card">
+                <igx-card-header>
+                    <h3 class="igx-card-header__title">Card title</h3>
+                    <h5 class="igx-card-header__subtitle">Card subtitle</h5>
+                </igx-card-header>
+
+                <igx-card-content>
+                    <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </igx-card-content>
+
+                <igx-card-actions>
+                    <div class="igx-card-actions__bgroup">
+                        <a class="card-link">Card link</a>
+                        <a class="card-link">Another link</a>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+
         <article>
             <igx-card>
                 <igx-card-media>
-                    <img  [src]="cards[8].imageUrl">
+                    <img [src]="cards[8].imageUrl">
                 </igx-card-media>
 
                 <igx-card-header>
