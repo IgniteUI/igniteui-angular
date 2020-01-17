@@ -3334,7 +3334,6 @@ describe('Combo ControlValueAccessor Unit', () => {
 
         // OnTouched callback
         spyOnProperty(combo, 'collapsed').and.returnValue(true);
-        spyOnProperty(combo, 'valid', 'set');
 
         combo.onFocus();
         expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
