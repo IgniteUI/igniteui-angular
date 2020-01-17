@@ -26,7 +26,7 @@ describe('Scroll Inertia Directive ', () => {
         }).compileComponents();
     }));
 
-    describe('Fixture', () => {
+    describe('Rendering', () => {
         let fix: ComponentFixture<ScrollInertiaComponent>;
 
         configureTestSuite();
@@ -79,7 +79,7 @@ describe('Scroll Inertia Directive ', () => {
         });
     });
 
-    describe('Unit tests', () => {
+    describe('Scrolling', () => {
         beforeEach(() => {
             const mockZone = jasmine.createSpyObj('NgZone', ['runOutsideAngular']);
             scrollContainerMock = {
