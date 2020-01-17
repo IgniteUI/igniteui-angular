@@ -696,10 +696,16 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 cell.focus({ preventScroll: true });
             }
         } else {
-            const cellElem = elem.querySelector(`${cellSelector}`);
-            const rowIndex = parseInt(cellElem.getAttribute('data-rowindex'), 10);
-            grid.navigation.performHorizontalScrollToCell(rowIndex, visibleColumnIndex);
+            this.horizontalScrollGridToIndex(grid, visibleColumnIndex, () => {
+                this.focusNextRow(elem, visibleColumnIndex, grid, isSummary);
+            });
         }
+    }
+    public getColumnUnpinnedIndex(visibleColumnIndex: number, grid?: IgxHierarchicalGridComponent) {
+        const currGrid = grid || this.grid;
+        const column = currGrid.unpinnedColumns.find((col) => !col.columnGroup && col.visibleIndex === visibleColumnIndex);
+        return currGrid.pinnedColumns.length ? currGrid.unpinnedColumns.filter((c) => !c.columnGroup).indexOf(column) :
+            visibleColumnIndex;
     }
 
     private focusPrevRow(elem, visibleColumnIndex, grid, inChild?, isSummary?) {
@@ -739,7 +745,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     private horizontalScrollGridToIndex(grid, visibleColumnIndex, callBackFunc) {
-        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
+        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex, grid);
         grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(callBackFunc);
