@@ -278,6 +278,7 @@
     %time-picker__item--disabled {
         color: --var($theme, 'disabled-text-color');
         background: --var($theme, 'disabled-item-background');
+        pointer-events: none;
     }
 
     %time-picker__header {
