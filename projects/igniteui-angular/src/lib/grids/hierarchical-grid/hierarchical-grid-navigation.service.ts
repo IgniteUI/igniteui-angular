@@ -675,6 +675,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     private focusNextRow(elem, visibleColumnIndex, grid, isSummary?) {
+        const lastCellIndex = grid.unpinnedColumns[grid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
         const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) || grid.rowList.length === 0) {
             const cell =
@@ -707,6 +709,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     private focusPrevRow(elem, visibleColumnIndex, grid, inChild?, isSummary?) {
+        const lastCellIndex = grid.unpinnedColumns[grid.unpinnedColumns.length - 1].visibleIndex;
+        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex)) {
             const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
             const cells = elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
