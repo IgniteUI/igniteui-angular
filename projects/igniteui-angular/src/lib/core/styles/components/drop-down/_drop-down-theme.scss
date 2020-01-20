@@ -312,6 +312,7 @@
         color: --var($theme, 'focused-item-text-color');
 
         &:hover {
+            color: --var($theme, 'focused-item-text-color');
             background: --var($theme, 'focused-item-background');
         }
     }

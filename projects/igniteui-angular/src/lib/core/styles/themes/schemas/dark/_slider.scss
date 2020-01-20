@@ -33,3 +33,12 @@ $_dark-fluent-slider: extend(
         ),
     )
 );
+
+/// Generates a dark bootstrap slider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-slider
+$_dark-bootstrap-slider: extend(
+    $_bootstrap-slider,
+    ()
+);

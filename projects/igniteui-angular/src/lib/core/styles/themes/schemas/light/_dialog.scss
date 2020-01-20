@@ -63,7 +63,10 @@ $_fluent-dialog: extend(
 $_bootstrap-dialog: extend(
     $_light-dialog,
     (
-        variant: 'bootstrap'
+        variant: 'bootstrap',
+        bootstrap-border-color: (
+            igx-color: ('grays', 300)
+        )
     )
 );
 

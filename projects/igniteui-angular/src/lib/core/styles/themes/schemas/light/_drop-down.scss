@@ -155,7 +155,46 @@ $_fluent-drop-down: extend(
 
 /// Generates a bootstrap drop-down schema.
 /// @type {Map}
+/// @prop {Map} header-text-color [igx-color: ('primary', 500)] - The drop-down header text color.
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
-$_bootstrap-drop-down: extend($_light-drop-down);
+$_bootstrap-drop-down: extend($_light-drop-down, (
+    header-text-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    background-color: #fff,
+
+    item-text-color: #212529,
+
+    hover-item-text-color: #212529,
+
+    hover-item-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    focused-item-background: (
+        igx-color: ('primary', 500)
+    ),
+
+    focused-item-text-color: #fff,
+
+    selected-item-background: (
+        igx-color: ('primary', 500),
+    ),
+
+    selected-item-text-color: #fff,
+
+    selected-hover-item-background: (
+        igx-color: ('primary', 600),
+    ),
+
+    selected-hover-item-text-color: #fff,
+
+    selected-focus-item-background: (
+        igx-color: ('primary', 600),
+    ),
+
+    selected-focus-item-text-color: #fff,
+));
 

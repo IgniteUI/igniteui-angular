@@ -18,3 +18,9 @@ $_dark-combo: extend($_light-combo);
 /// @requires extend
 /// @requires $_fluent-combo
 $_dark-fluent-combo: extend($_fluent-combo);
+
+/// Generates a dark bootstrap combo schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-combo
+$_dark-bootstrap-combo: extend($_bootstrap-combo);

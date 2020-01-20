@@ -26,7 +26,13 @@
     text-align: center;
 }
 
-igx-input-group+igx-input-group {
+
+.igx-bootstrap-dark-theme .sample-column {
+    border-color: #3e3e3e;
+}
+
+
+igx-input-group + igx-input-group {
     margin-top: 24px;
 }
 

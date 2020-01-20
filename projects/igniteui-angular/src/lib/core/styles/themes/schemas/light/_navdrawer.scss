@@ -97,5 +97,5 @@ $_fluent-navdrawer: extend($_light-navdrawer);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-navdrawer
-$_bootstrap-navdrawer: extend($_light-navdrawer);
+$_bootstrap-navdrawer: extend($_light-navdrawer, ());
 

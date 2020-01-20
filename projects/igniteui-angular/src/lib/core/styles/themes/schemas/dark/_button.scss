@@ -60,3 +60,11 @@ $_dark-fluent-button: extend($_fluent-button, (
         igx-color: ('primary', 200)
     ),
 ));
+
+/// Generates a dark bootstrap button schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-button
+$_dark-bootstrap-button: extend($_bootstrap-button, (
+
+));

@@ -18,3 +18,9 @@ $_dark-radio: extend($_light-radio);
 /// @requires {function} extend
 /// @requires $_fluent-radio
 $_dark-fluent-radio: extend($_fluent-radio);
+
+/// Generates a dark bootstrap radio schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-radio
+$_dark-bootstrap-radio: extend($_bootstrap-radio);
