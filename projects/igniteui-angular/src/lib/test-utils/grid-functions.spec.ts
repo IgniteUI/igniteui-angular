@@ -803,8 +803,11 @@ export class GridFunctions {
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
     */
-    public static clickFilterCellChip(grid, columnField: string) {
+    public static clickFilterCellChip(fix, columnField: string) {
+        const grid = fix.componentInstance.grid;
         grid.getColumnByName(columnField).filterCell.onChipClicked();
+
+        fix.detectChanges();
     }
 
     /**
