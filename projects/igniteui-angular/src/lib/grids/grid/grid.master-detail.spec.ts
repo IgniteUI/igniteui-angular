@@ -488,6 +488,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+            await wait(DEBOUNCETIME);
             grid.navigateTo(20, 0);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
