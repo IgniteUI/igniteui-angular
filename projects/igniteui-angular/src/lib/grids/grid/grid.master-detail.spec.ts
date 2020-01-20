@@ -217,6 +217,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             grid.expansionStates = newExpanded;
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const newData = [...grid.data].slice(0, 4);
             newData.splice(1, 1);
