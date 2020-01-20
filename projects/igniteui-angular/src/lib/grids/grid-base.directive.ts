@@ -1950,9 +1950,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
-    /** @hidden */
-    @ViewChild('headerFeatureContainer')
-    public headerFeatureContainer: ElementRef;
+    /**
+     * @hidden
+     */
+    @ViewChild('headerSelectorContainer')
+    public headerSelectorContainer: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('headerDragContainer')
+    public headerDragContainer: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('headerGroupContainer')
+    public headerGroupContainer: ElementRef;
 
     /**
      * @hidden
@@ -3409,12 +3423,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public get featureColumnsWidth() {
+    public featureColumnsWidth(expander?: ElementRef) {
         if (Number.isNaN(this._headerFeaturesWidth)) {
-            this._headerFeaturesWidth = this.headerFeatureContainer ?
-                this.headerFeatureContainer.nativeElement.getBoundingClientRect().width : 0;
+            const rowSelectArea = this.headerSelectorContainer ?
+                this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
+            const rowDragArea = this.rowDraggable && this.headerDragContainer ?
+                this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
+            const groupableArea = this.headerGroupContainer ?
+                this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
+            const expanderWidth = expander ? expander.nativeElement.getBoundingClientRect().width : 0;
+            this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
         }
         return this._headerFeaturesWidth;
     }
@@ -3423,7 +3442,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     get summariesMargin() {
-        return this.featureColumnsWidth;
+        return this.featureColumnsWidth();
     }
 
     /**
@@ -4604,7 +4623,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.featureColumnsWidth;
+        computedWidth -= this.featureColumnsWidth();
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4694,7 +4713,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return null;
         }
         this.cdr.detectChanges();
-        colSum += this.featureColumnsWidth;
+        colSum += this.featureColumnsWidth();
         return colSum;
     }
 
@@ -4845,7 +4864,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        sum += this.featureColumnsWidth;
+        sum += this.featureColumnsWidth();
 
         return sum;
     }

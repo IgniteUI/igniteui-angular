@@ -416,6 +416,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngAfterContentInit();
     }
 
+    /** @hidden */
+    public featureColumnsWidth() {
+        return super.featureColumnsWidth(this.headerHierarchyExpander);
+    }
+
     /**
     * @hidden
     */

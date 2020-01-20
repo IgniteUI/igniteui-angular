@@ -1550,7 +1550,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.getColumnByName('ProductID').hasSummary = true;
             fix.detectChanges();
 
-            expect(grid.summariesMargin).toBe(grid.featureColumnsWidth);
+            expect(grid.summariesMargin).toBe(grid.featureColumnsWidth());
         });
 
         it('Filtering: Should properly check the header checkbox state when filtering, #2469', () => {

@@ -544,10 +544,10 @@ describe('IgxGrid - GroupBy #grid', () => {
         const expndr = groupRows[0].nativeElement.querySelector('.igx-grid__grouping-indicator');
         expect(expndr.innerText).toBe('COLLAPSED');
 
-        expect(grid.headerFeatureContainer.nativeElement.querySelector('.igx-grid__header-indentation').innerText).toBe('EXPANDED');
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('EXPANDED');
         grid.toggleAllGroupRows();
         fix.detectChanges();
-        expect(grid.headerFeatureContainer.nativeElement.querySelector('.igx-grid__header-indentation').innerText).toBe('COLLAPSED');
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('COLLAPSED');
 
     }));
 

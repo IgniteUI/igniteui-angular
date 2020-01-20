@@ -1772,7 +1772,7 @@ export class GridSelectionFunctions {
     public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
-        const scrollStartElement = grid.scr.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
+        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
         const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);

@@ -475,12 +475,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             tick(16);
 
-            const headerFeatureContainer = hierarchicalGrid.headerFeatureContainer;
+            const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
+            const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
             expect(rootSummaryRow.children.length).toEqual(2);
-            expect(rootSummaryIndentation.offsetWidth).toEqual(headerFeatureContainer.nativeElement.offsetWidth);
+            expect(rootSummaryIndentation.offsetWidth)
+                .toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
