@@ -324,6 +324,7 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.onClosed, 'emit');
             spyOn(overlayInstance.onClosing, 'emit');
             spyOn(overlayInstance.onOpened, 'emit');
+            spyOn(overlayInstance.onPositioned, 'emit');
             spyOn(overlayInstance.onOpening, 'emit');
             spyOn(overlayInstance.onAnimation, 'emit');
 
@@ -335,6 +336,7 @@ describe('igxOverlay', () => {
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
+            expect(overlayInstance.onPositioned.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(1);
 
             tick();
@@ -356,6 +358,7 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.onPositioned.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(3);
 
             tick();

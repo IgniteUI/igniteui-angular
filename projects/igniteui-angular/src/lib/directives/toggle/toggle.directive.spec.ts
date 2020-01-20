@@ -78,6 +78,19 @@ describe('IgxToggle', () => {
         expect(toggle.onOpened.emit).toHaveBeenCalled();
     }));
 
+    it('should emit \'onPositioned\' event', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        spyOn(toggle.onPositioned, 'emit');
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onPositioned.emit).toHaveBeenCalled();
+    }));
+
     it('should emit \'onClosing\' and \'onClosed\' events', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
         fixture.detectChanges();

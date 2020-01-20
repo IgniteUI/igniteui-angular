@@ -1062,6 +1062,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
 
             spyOn(componentInstance, 'onToggleOpening');
+            spyOn(componentInstance.dropdown, 'onToggleContentPositioned');
             spyOn(componentInstance, 'onToggleOpened');
             spyOn(componentInstance, 'onToggleClosing');
             spyOn(componentInstance, 'onToggleClosed');
@@ -1073,13 +1074,14 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             expect(componentInstance.onToggleOpening).toHaveBeenCalledTimes(1);
+            expect(componentInstance.dropdown.onToggleContentPositioned).toHaveBeenCalledTimes(1);
             expect(componentInstance.onToggleOpened).toHaveBeenCalledTimes(1);
             button.click({ stopPropagation: () => null });
             tick();
 
             fixture.detectChanges();
             expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
-            expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
+            expect(componentInstance.onToggleClosed).toHaveBeenCalledTimes(1);
         }));
 
         it('Should retain width/height properties', fakeAsync(() => {
@@ -1535,7 +1537,7 @@ describe('IgxDropDown ', () => {
                 button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             }, 200);
         }));
-        it('Should properly preserve selection when scrolled', (done) => {
+        xit('Should properly preserve selection when scrolled', (done) => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
             dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBaseDirective);
@@ -1729,6 +1731,10 @@ class IgxDropDownTestScrollComponent {
     public selectItem5() {
         this.dropdownScroll.setSelectedItem(4);
     }
+
+    public selectItem15() {
+        this.dropdownScroll.setSelectedItem(14);
+    }
 }
 
 @Component({
@@ -1862,6 +1868,10 @@ class IgxDropDownWithScrollComponent implements OnInit {
 
     public selectItem5() {
         this.dropdownScroll.setSelectedItem(4);
+    }
+
+    public selectItem15() {
+        this.dropdownScroll.setSelectedItem(14);
     }
 
     ngOnInit() {
