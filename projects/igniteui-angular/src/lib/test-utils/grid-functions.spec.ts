@@ -1772,13 +1772,11 @@ export class GridSelectionFunctions {
     public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
-        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
         const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
         expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
         if (hScrollbar.scrollWidth) {
-            expect(scrollStartElement.offsetWidth).toEqual(firstRowDiv.offsetWidth + firstRowDiv.offsetLeft);
             expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth + firstRowDiv.offsetLeft);
         }
     }
