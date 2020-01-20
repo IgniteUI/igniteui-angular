@@ -595,6 +595,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.perPage = 5;
             await wait(60);
             fixture.detectChanges();
+            await wait(60);
 
             expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
 
