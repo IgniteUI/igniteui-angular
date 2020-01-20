@@ -302,6 +302,7 @@
     %igx-card-media {
         display: block;
         overflow: hidden;
+        line-height: 0;
 
         > * {
             width: 100%;

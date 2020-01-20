@@ -28,6 +28,8 @@ $_light-time-picker: extend(
     $_default-shape-time-picker,
     $_default-elevation-time-picker,
     (
+        variant: 'material',
+
         text-color: (
             igx-color: 'surface',
             hexrgba: (),
@@ -68,14 +70,33 @@ $_light-time-picker: extend(
 
 /// Generates a fluent time-picker schema.
 /// @type {Map}
+/// @prop {Map} selected-text-color [igx-color: ('primary', 500)] -  The text color of a selected item in time picker.
+/// @prop {Map} hover-text-color [igx-color: ('primary', 500)] - The hover text color of a open time picker.
+/// @prop {Map} header-background [igx-color: ('primary', 500)] - The header background color of a time picker.
 /// @requires {function} extend
 /// @requires $_light-time-picker
 /// @requires $_fluent-shape-time-picker
-$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker);
+$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker, (
+    variant: 'fluent',
+));
 
 /// Generates a bootstrap time-picker schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-time-picker
-$_bootstrap-time-picker: extend($_light-time-picker);
+$_bootstrap-time-picker: extend($_light-time-picker, $_bootstrap-shape-time-picker, (
+    variant: 'bootstrap',
+
+    selected-text-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    hover-text-color: (
+        igx-color: ('primary', 600)
+    ),
+
+    header-background: (
+        igx-color: ('primary', 500)
+    ),
+));
 
