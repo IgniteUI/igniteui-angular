@@ -623,7 +623,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             await wait(30);
             fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-            await wait(100);
+            await wait(30);
             fixture.detectChanges();
 
             // check last row is loaded and is in view
