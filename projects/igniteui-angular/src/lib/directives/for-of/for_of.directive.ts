@@ -404,7 +404,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             });
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(destructor,
-            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), throttleTime(40))
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
+             throttleTime(40, undefined, {leading: true, trailing: true}))
             .subscribe(() => {
                 this._zone.runTask(() => {
                     this.updateSizes();
@@ -1176,6 +1177,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
+                // Need to reset the scrollAmount value here, because
+                // Firefox will not fire the scrollComponent scroll event handler
+                this.scrollComponent.scrollAmount = 0;
             }
         }
         if (scrollable !== this.isScrollable()) {
