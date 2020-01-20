@@ -584,6 +584,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should allow scrolling to the last row after page size has been changed and rows are expanded.', (async() => {
+            await wait(30);
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 20;
             hierarchicalGrid.reflow();
