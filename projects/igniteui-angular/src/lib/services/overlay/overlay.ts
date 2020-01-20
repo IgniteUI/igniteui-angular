@@ -409,12 +409,7 @@ export class IgxOverlayService implements OnDestroy {
         const wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(wrapperElement, info.settings.modal);
         this.getOverlayElement(info).appendChild(wrapperElement);
-        const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
-
-        if (elementScrollTop) {
-            info.elementRef.nativeElement.scrollTop = elementScrollTop;
-        }
     }
 
     private getWrapperElement(): HTMLElement {
