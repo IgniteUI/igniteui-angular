@@ -1537,7 +1537,7 @@ describe('IgxDropDown ', () => {
                 button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
             }, 200);
         }));
-        xit('Should properly preserve selection when scrolled', (done) => {
+        it('Should properly preserve selection when scrolled', (done) => {
             dropdown.toggle();
             expect(dropdown.selectedItem).toBe(null);
             dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBaseDirective);
