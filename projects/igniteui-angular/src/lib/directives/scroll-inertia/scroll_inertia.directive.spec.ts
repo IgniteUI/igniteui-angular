@@ -78,13 +78,6 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     let scrollContainerMock;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                IgxTestScrollInertiaDirective
-            ],
-            imports: [IgxScrollInertiaModule]
-        });
-
         const mockZone = jasmine.createSpyObj('NgZone', ['runOutsideAngular']);
         scrollContainerMock = {
             scrollLeft: 0,
