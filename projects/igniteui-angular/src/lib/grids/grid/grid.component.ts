@@ -1141,21 +1141,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * @hidden
-     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
-     */
-    public getFeatureColumnsWidth() {
-        let width = super.getFeatureColumnsWidth();
-
-        if (this.groupingExpressions.length && this.headerGroupContainer) {
-            width += this.headerGroupContainer.nativeElement.offsetWidth;
-        }
-
-        return width;
-    }
-
-    /**
-     * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
@@ -1243,6 +1228,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.onGroupingDone.pipe(this.destructor).subscribe((args) => {
             this.endEdit(true);
             this.summaryService.updateSummaryCache(args);
+            this._headerFeaturesWidth = NaN;
         });
     }
 
