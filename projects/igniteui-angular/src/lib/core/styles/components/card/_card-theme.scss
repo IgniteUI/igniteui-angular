@@ -324,9 +324,6 @@
         flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
-        @if map-get($theme, variant) == 'bootstrap' {
-            margin-top: rem(-4px);
-        }
 
         [igxButton] ~ [igxButton] {
             margin-#{$left}: rem(8px);

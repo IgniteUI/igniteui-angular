@@ -27,13 +27,12 @@
                                 mattis rhoncus urna neque. Proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.
                             </p>
                         </igx-card-content>
-                        <igx-divider></igx-divider>
                         <igx-card-actions layout="justify">
+                            <igx-radio [value]="opt">Pick choice {{ opt }}</igx-radio>
                             <button igxRipple igxButton="outlined" [disabled]="group.value != opt">
                                 Reserve item
                                 {{ opt }}
                             </button>
-                            <igx-radio [value]="opt">Pick choice {{ opt }}</igx-radio>
                         </igx-card-actions>
                     </igx-card>
                 </div>
