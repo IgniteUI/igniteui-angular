@@ -780,6 +780,46 @@ describe('igxOverlay', () => {
             expect(appRef.attachView).toHaveBeenCalledWith('test');
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
         }));
+
+        it('fix for #6474 - should calculate correctly position', () => {
+            const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
+            const targetRect: ClientRect = {
+                top: 100,
+                bottom: 200,
+                height: 100,
+                left: 100,
+                right: 200,
+                width: 100
+            };
+            const elementRect: ClientRect = {
+                top: 0,
+                bottom: 300,
+                height: 300,
+                left: 0,
+                right: 300,
+                width: 300
+            };
+            const viewPortRect: ClientRect = {
+                top: 1000,
+                bottom: 1300,
+                height: 300,
+                left: 1000,
+                right: 1300,
+                width: 300
+            };
+            spyOn<any>(elastic, 'setStyle').and.returnValue({});
+            spyOn(Util, 'getViewportRect').and.returnValue(viewPortRect);
+            spyOn(Util, 'getTargetRect').and.returnValue(targetRect);
+
+            const element = jasmine.createSpyObj('HTMLElement', ['getBoundingClientRect'] );
+            spyOn(element, 'getBoundingClientRect').and.returnValue(elementRect);
+            element.classList = { add: () => {} };
+            element.style = { width: '', height: ''};
+            elastic.position(element, null, null, true);
+
+            expect(element.style.width).toBe('200px');
+            expect(element.style.height).toBe('100px');
+        });
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
