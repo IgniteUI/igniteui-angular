@@ -171,7 +171,7 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     });
 
-    fdescribe('Unit Tests: ', () => {
+    describe('Unit Tests: ', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -810,8 +810,7 @@ describe('igxOverlay', () => {
             spyOn(Util, 'getViewportRect').and.returnValue(viewPortRect);
             spyOn(Util, 'getTargetRect').and.returnValue(targetRect);
 
-            const element = jasmine.createSpyObj('HTMLElement', []);
-            element.getBoundingClientRect = () => elementRect;
+            const element = jasmine.createSpyObj('HTMLElement', { 'getBoundingClientRect': elementRect });
             element.classList = { add: () => {} };
             element.style = { width: '', height: ''};
             elastic.position(element, null, null, true);
