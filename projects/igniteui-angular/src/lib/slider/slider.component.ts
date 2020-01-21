@@ -219,7 +219,8 @@ export class IgxSliderComponent implements
     public id = `igx-slider-${NEXT_ID++}`;
 
     /**
-     * An @Input property that gets the type of the `IgxSliderComponent`. The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * An @Input property that gets the type of the `IgxSliderComponent`.
+     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -233,7 +234,8 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the type of the `IgxSliderComponent`. The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
+     * An @Input property that sets the type of the `IgxSliderComponent`.
+     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
@@ -572,7 +574,8 @@ export class IgxSliderComponent implements
 
     /**
      * Returns the slider value. If the slider is of type {@link IgxSliderType.SLIDER} the returned value is number.
-     * If the slider type is {@link IgxSliderType.RANGE} the returned value represents an object of {@link lowerValue} and {@link upperValue}.
+     * If the slider type is {@link IgxSliderType.RANGE}.
+     * The returned value represents an object of {@link lowerValue} and {@link upperValue}.
      *```typescript
      *@ViewChild("slider2")
      *public slider: IgxSliderComponent;
@@ -594,7 +597,8 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the slider value.
-     * If the slider is of type {@link IgxSliderType.SLIDER} the argument is number. By default the {@link value} gets the {@link lowerBound}.
+     * If the slider is of type {@link IgxSliderType.SLIDER}.
+     * The argument is number. By default the {@link value} gets the {@link lowerBound}.
      * If the slider type is {@link IgxSliderType.RANGE} the argument
      * represents an object of {@link lowerValue} and {@link upperValue} properties.
      * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
