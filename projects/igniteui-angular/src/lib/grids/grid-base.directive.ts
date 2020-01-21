@@ -2920,6 +2920,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
+     * ```typescript
+     * const gridVirtState = this.grid1.virtualizationState;
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+
+    /**
+     * @hidden
+     */
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
+    }
+
+    /**
     * @hidden
     * @internal
     */
