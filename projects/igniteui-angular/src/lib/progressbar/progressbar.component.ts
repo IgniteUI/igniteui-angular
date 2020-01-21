@@ -28,7 +28,7 @@ export enum IgxTextAlign {
 }
 
 export enum IgxProgressType {
-    DANGER = 'danger',
+    ERROR = 'error',
     INFO = 'info',
     WARNING = 'warning',
     SUCCESS = 'success'
@@ -446,7 +446,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      */
     @HostBinding('class.igx-linear-bar--danger')
     public get danger() {
-        return this.type === IgxProgressType.DANGER;
+        return this.type === IgxProgressType.ERROR;
     }
 
     /**

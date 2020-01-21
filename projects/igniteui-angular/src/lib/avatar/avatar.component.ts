@@ -14,14 +14,13 @@ import { IgxIconModule } from '../icon/index';
 
 let NEXT_ID = 0;
 
-export enum Size {
+export enum IgxAvatarSize {
     SMALL = 'small',
     MEDIUM = 'medium',
     LARGE = 'large'
 }
 
-export enum AvatarType {
-    DEFAULT = 'default',
+export enum IgxAvatarType {
     INITIALS = 'initials',
     IMAGE = 'image',
     ICON = 'icon'
@@ -133,7 +132,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      * @hidden
      */
-    private _size: string | Size = 'small';
+    private _size: string | IgxAvatarSize = IgxAvatarSize.SMALL;
 
     /**
      * Sets the `id` of the avatar. If not set, the first avatar component will have `id` = `"igx-avatar-0"`.
@@ -237,7 +236,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * @memberof IgxAvatarComponent
      */
     @Input()
-    public get size(): string | Size {
+    public get size(): string | IgxAvatarSize {
         return this._size;
     }
 
@@ -251,7 +250,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
-    public set size(value: string | Size) {
+    public set size(value: string | IgxAvatarSize) {
         switch (value) {
             case 'small':
             case 'medium':
@@ -272,20 +271,18 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
-    get type(): AvatarType {
+    get type(): IgxAvatarType {
         if (this.src) {
-            return AvatarType.IMAGE;
+            return IgxAvatarType.IMAGE;
         }
 
         if (this.icon) {
-            return AvatarType.ICON;
+            return IgxAvatarType.ICON;
         }
 
         if (this.initials) {
-            return AvatarType.INITIALS;
+            return IgxAvatarType.INITIALS;
         }
-
-        return AvatarType.DEFAULT;
     }
 
     /**
@@ -299,11 +296,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     get template(): TemplateRef<any> {
         switch (this.type) {
-            case AvatarType.IMAGE:
+            case IgxAvatarType.IMAGE:
                 return this.imageTemplate;
-            case AvatarType.INITIALS:
+            case IgxAvatarType.INITIALS:
                 return this.initialsTemplate;
-            case AvatarType.ICON:
+            case IgxAvatarType.ICON:
                 return this.iconTemplate;
             default:
                 return this.defaultTemplate;
@@ -332,11 +329,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     private getRole(): string {
         switch (this.type) {
-            case AvatarType.IMAGE:
+            case IgxAvatarType.IMAGE:
                 return 'image avatar';
-            case AvatarType.ICON:
+            case IgxAvatarType.ICON:
                 return 'icon avatar';
-            case AvatarType.INITIALS:
+            case IgxAvatarType.INITIALS:
                 return 'initials avatar';
             default:
                 return 'custom avatar';

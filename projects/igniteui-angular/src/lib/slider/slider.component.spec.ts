@@ -5,7 +5,7 @@ import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { SliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
+import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
 import { FormsModule } from '@angular/forms';
 
 declare var Simulator: any;
@@ -65,7 +65,7 @@ describe('IgxSlider', () => {
 
         it(`should have upper value equal to lower bound when
             lower value is not set and slider type is SLIDER`, () => {
-                slider.type = SliderType.SLIDER;
+                slider.type = IgxSliderType.SLIDER;
                 fixture.detectChanges();
 
                 expect(slider.value).toBe(slider.lowerBound);
@@ -175,7 +175,7 @@ describe('IgxSlider', () => {
         it('should not set upper value to outside bounds slider when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -201,7 +201,7 @@ describe('IgxSlider', () => {
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -226,7 +226,7 @@ describe('IgxSlider', () => {
         it('should not set lower value outside bounds slider when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -251,7 +251,7 @@ describe('IgxSlider', () => {
         it('should not set value lower when is more than upper value when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -392,7 +392,7 @@ describe('IgxSlider', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
             fixture.detectChanges();
         });
 
@@ -650,7 +650,7 @@ describe('IgxSlider', () => {
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(ticks).toBeDefined();
             expect(slider.stepDistance).toEqual(sliderWidth / 3);
         });
@@ -774,25 +774,25 @@ describe('IgxSlider', () => {
         });
 
         it('Dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = [];
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(slider.labelsViewEnabled).toBe(false);
 
             let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
             let toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(toThumb).toBeDefined();
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
@@ -914,7 +914,7 @@ describe('IgxSlider', () => {
         });
 
         it('when labels are enabled should not be able to set min/max and step', () => {
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(true);
             slider.step = 5;
             fixture.detectChanges();
@@ -935,7 +935,7 @@ describe('IgxSlider', () => {
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(ticks).not.toBeNull();
             expect(slider.stepDistance).toEqual(sliderWidth / 6);
         });
@@ -1063,13 +1063,13 @@ describe('IgxSlider', () => {
         });
 
         it('dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = [];
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(false);
 
             let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
@@ -1080,12 +1080,12 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
-            slider.type = SliderType.SLIDER;
+            slider.type = IgxSliderType.SLIDER;
             fixture.detectChanges();
 
             fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
             toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(toThumb).toBeDefined();
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
@@ -1126,7 +1126,7 @@ describe('IgxSlider', () => {
             expect(customTemplates).toBeDefined();
             expect(customTemplates.length).toBe(2);
 
-            slider.type = SliderType.SLIDER;
+            slider.type = IgxSliderType.SLIDER;
             fixture.detectChanges();
             customTemplates = fixture.nativeElement.querySelectorAll('span.custom');
 
@@ -1174,7 +1174,7 @@ describe('IgxSlider', () => {
                 fix.detectChanges();
 
                 const slider = fix.componentInstance.slider;
-                slider.type = SliderType.RANGE;
+                slider.type = IgxSliderType.RANGE;
 
                 fix.detectChanges();
 
@@ -1262,7 +1262,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const slider = fixture.componentInstance.slider;
-            fixture.componentInstance.type = SliderType.RANGE;
+            fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             expect(slider.minValue).toBe(0);
@@ -1286,7 +1286,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const slider = fixture.componentInstance.slider;
-            fixture.componentInstance.type = SliderType.RANGE;
+            fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             fixture.componentInstance.slider.value = {
@@ -1559,7 +1559,7 @@ describe('IgxSlider', () => {
         it('Should return correct edit element (range)', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             const instance = fixture.componentInstance.slider;
-            instance.type = SliderType.RANGE;
+            instance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             const editElement = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
@@ -1664,7 +1664,7 @@ class SliderTestComponent {
 
     minValue = 0;
     maxValue = 10;
-    type = SliderType.SLIDER;
+    type = IgxSliderType.SLIDER;
 
     changeMinValue(val: number) {
         this.minValue = val;
@@ -1693,7 +1693,7 @@ class SliderWithLabelsComponent {
 class RangeSliderWithLabelsComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
     public label;
-    public type = SliderType.RANGE;
+    public type = IgxSliderType.RANGE;
 }
 
 @Component({
@@ -1712,5 +1712,5 @@ class RangeSliderWithLabelsComponent {
 })
 class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
-    public type = SliderType.RANGE;
+    public type = IgxSliderType.RANGE;
 }

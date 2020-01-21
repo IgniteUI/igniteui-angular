@@ -26,7 +26,7 @@ import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTe
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
 
-export enum TabsType {
+export enum IgxTabsType {
     FIXED = 'fixed',
     CONTENTFIT = 'contentfit'
 }
@@ -97,13 +97,13 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.
      * By default the header sizing mode is `contentfit`.
      * ```html
-     * <igx-tabs tabsType="fixed">
+     * <igx-tabs type="fixed">
      *     <igx-tabs-group label="HOME">Home</igx-tabs-group>
      * </igx-tabs>
      * ```
      */
-    @Input('tabsType')
-    public tabsType: string | TabsType = 'contentfit';
+    @Input('type')
+    public type: string | IgxTabsType = 'contentfit';
 
     /**
     * @hidden
@@ -242,9 +242,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         const iconStyle = `igx-tabs--icons`;
         const iconLabelFoundInGroups = this.groups.find((group) => group.icon != null && group.label != null);
         const iconLabelFoundInTabs = this.contentTabs.find((tab) => tab.icon != null && tab.label != null);
-        let css;
-        switch (TabsType[this.tabsType.toUpperCase()]) {
-            case TabsType.FIXED: {
+        let css: string;
+        switch (IgxTabsType[this.type.toUpperCase()]) {
+            case IgxTabsType.FIXED: {
                 css = fixedStyle;
                 break;
             }

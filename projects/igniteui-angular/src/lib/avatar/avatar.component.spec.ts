@@ -5,7 +5,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
-import { IgxAvatarComponent, AvatarType, Size } from './avatar.component';
+import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -76,22 +76,22 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.size).toEqual(Size.SMALL);
+        expect(instance.size).toEqual(IgxAvatarSize.SMALL);
         expect(hostEl.classList).toContain(classes.small);
 
-        instance.size = Size.MEDIUM;
+        instance.size = IgxAvatarSize.MEDIUM;
         fixture.detectChanges();
-        expect(instance.size).toEqual(Size.MEDIUM);
+        expect(instance.size).toEqual(IgxAvatarSize.MEDIUM);
         expect(hostEl.classList).not.toContain(classes.medium);
 
-        instance.size = Size.LARGE;
+        instance.size = IgxAvatarSize.LARGE;
         fixture.detectChanges();
-        expect(instance.size).toEqual(Size.LARGE);
+        expect(instance.size).toEqual(IgxAvatarSize.LARGE);
         expect(hostEl.classList).not.toContain(classes.large);
 
         instance.size = 'nonsense';
         fixture.detectChanges();
-        expect(instance.size).toEqual(Size.SMALL);
+        expect(instance.size).toEqual(IgxAvatarSize.SMALL);
         expect(hostEl.classList).toContain(classes.small);
     });
 
@@ -102,7 +102,6 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.type).toEqual(AvatarType.DEFAULT);
         expect(instance.initials).toBeUndefined();
         expect(instance.src).toBeUndefined();
         expect(instance.icon).toBeUndefined();
@@ -119,7 +118,7 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.type).toEqual(AvatarType.INITIALS);
+        expect(instance.type).toEqual(IgxAvatarType.INITIALS);
         expect(instance.initials).toEqual('ZK');
         expect(hostEl.querySelector('span').textContent).toEqual('ZK');
         expect(hostEl.classList).toContain(classes.initials);
@@ -131,7 +130,7 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.type).toEqual(AvatarType.ICON);
+        expect(instance.type).toEqual(IgxAvatarType.ICON);
         expect(instance.icon).toBeTruthy();
         expect(hostEl.classList).toContain(classes.icon);
     });
@@ -142,7 +141,7 @@ describe('Avatar', () => {
         const instance = fixture.componentInstance.avatar;
         const hostEl = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        expect(instance.type).toEqual(AvatarType.IMAGE);
+        expect(instance.type).toEqual(IgxAvatarType.IMAGE);
         expect(instance.image).toBeTruthy();
         expect(instance.image.nativeElement.style.backgroundImage).toBeDefined();
 
