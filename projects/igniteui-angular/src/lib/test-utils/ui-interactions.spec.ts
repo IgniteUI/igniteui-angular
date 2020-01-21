@@ -248,4 +248,43 @@ export class UIInteractions {
     public static unhoverElement(element: HTMLElement, bubbles: boolean = false) {
         element.dispatchEvent(new MouseEvent('mouseleave', { bubbles: bubbles }));
     }
+
+    public static clickDragDirective(fix, dragDir) {
+        dragDir.onPointerDown(new PointerEvent('pointerdown', { pointerId: 1}));
+        dragDir.onPointerUp(new PointerEvent('pointerup'));
+        fix.detectChanges();
+    }
+
+    public static moveDragDirective(fix, dragDir, moveX, moveY, triggerPointerUp = false) {
+        const dragElem = dragDir.element.nativeElement;
+        const startingTop = dragElem.getBoundingClientRect().top;
+        const startingLeft = dragElem.getBoundingClientRect().left;
+        const startingBottom = dragElem.getBoundingClientRect().bottom;
+        const startingRight = dragElem.getBoundingClientRect().right;
+
+        const startingX = (startingLeft + startingRight) / 2;
+        const startingY = (startingTop + startingBottom) / 2;
+
+        dragDir.onPointerDown({ pointerId: 1, pageX: startingX, pageY: startingY });
+        fix.detectChanges();
+
+        dragDir.onPointerMove({ pointerId: 1, pageX: startingX + 10, pageY: startingY + 10 });
+        fix.detectChanges();
+
+        dragDir.onPointerMove({
+            pointerId: 1,
+            pageX: startingX + moveX,
+            pageY: startingY + moveY
+        });
+        fix.detectChanges();
+
+        if (triggerPointerUp) {
+            dragDir.onPointerUp({
+                pointerId: 1,
+                pageX: startingX + moveX,
+                pageY: startingY + moveY
+            });
+            fix.detectChanges();
+        }
+    }
 }
