@@ -18,9 +18,11 @@ import { ControlsFunction } from './controls-functions.spec';
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
+const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
+const FILTER_CHIP_CLASS = '.igx-filtering-chips';
 const BANNER_CLASS = '.igx-banner';
 const BANNER_TEXT_CLASS = '.igx-banner__text';
 const BANNER_ROW_CLASS = '.igx-banner__row';
@@ -566,6 +568,18 @@ export class GridFunctions {
     }
 
     // Filtering
+    public static getFilteringCells(fix) {
+        return fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+    }
+
+    public static getFilteringChips(fix) {
+        return fix.debugElement.queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
+    public static getFilteringChipPerIndex(fix, index) {
+        return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
     public static removeFilterChipByIndex(index: number, filterUIRow) {
         const filterChip = filterUIRow.queryAll(By.css('igx-chip'))[index];
         ControlsFunction.clickChipRemoveButton(filterChip.nativeElement);
@@ -806,7 +820,6 @@ export class GridFunctions {
     public static clickFilterCellChip(fix, columnField: string) {
         const grid = fix.componentInstance.grid;
         grid.getColumnByName(columnField).filterCell.onChipClicked();
-
         fix.detectChanges();
     }
 
