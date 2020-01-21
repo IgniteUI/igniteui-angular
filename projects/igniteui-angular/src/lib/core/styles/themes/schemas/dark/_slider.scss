@@ -38,7 +38,14 @@ $_dark-fluent-slider: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-slider
-$_dark-bootstrap-slider: extend(
-    $_bootstrap-slider,
-    ()
-);
+$_dark-bootstrap-slider: extend($_bootstrap-slider, (
+    track-color: (
+        igx-color: ('grays', 700),
+        hexrgba: #222
+    ),
+
+    thumb-disabled-border-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #222
+    ),
+));

@@ -154,6 +154,15 @@ $_bootstrap-slider: extend(
     $_fluent-slider,
     (
         variant: 'bootstrap',
+
+        label-background-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        thumb-disabled-border-color: (
+            igx-color: ('grays', 400),
+            hexrgba: #fff
+        ),
     )
 );
 
