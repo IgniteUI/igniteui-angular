@@ -28,7 +28,9 @@ Open/Close the directive only through one trigger by exporting it with name **to
 handlers when the toggle is opened and respectively closed. 
 ```html
 <button (click)="toggleRef.toggle()">Toggle</button>
-<div igxToggle #toggleRef="toggle" (onOpening)="eventHandler()" (onOpened)="eventHandler()" (onClosing)="eventHandler()" (onClosed)="eventHandler()">
+<div igxToggle #toggleRef="toggle" 
+    (onOpening)="eventHandler()" (onPositioned)="eventHandler()" (onOpened)="eventHandler()"
+    (onClosing)="eventHandler()" (onClosed)="eventHandler()" >
     <p>Some content that user would like to make it togglable.</p>
 </div>
 ```
@@ -38,10 +40,11 @@ handlers when the toggle is opened and respectively closed.
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `onOpening` | `void` | Emits an event before the toggle container is opened. |
-| `onOpened` | `void` | Emits an event after the toggle container is opened. |
-| `onClosing` | `void` | Emits an event before the toggle container is closed. |
-| `onClosed` | `void` | Emits an event after the toggle container is closed. |
+| `onOpening`    | `void` | Emits an event before the toggle container is opened.            |
+| `onPositioned` | `void` | Emits an event after content is positioned - prior to `onOpened`.|
+| `onOpened`     | `void` | Emits an event after the toggle container is opened.             |
+| `onClosing`    | `void` | Emits an event before the toggle container is closed.            |
+| `onClosed`     | `void` | Emits an event after the toggle container is closed.             |
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
