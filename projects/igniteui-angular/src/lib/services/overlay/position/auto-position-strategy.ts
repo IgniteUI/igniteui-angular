@@ -50,7 +50,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const leftBorder = this.calculateLeft(
             connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
         const rightBorder = leftBorder + connectedFit.contentElementRect.width;
-        return connectedFit.viewPortRect.left < leftBorder && rightBorder < connectedFit.viewPortRect.right;
+        return 0 < leftBorder && rightBorder < connectedFit.viewPortRect.width;
     }
 
     /**
@@ -65,7 +65,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const topBorder = this.calculateTop(
             connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
         const bottomBorder = topBorder + connectedFit.contentElementRect.height;
-        return connectedFit.viewPortRect.top < topBorder && bottomBorder < connectedFit.viewPortRect.bottom;
+        return 0 < topBorder && bottomBorder < connectedFit.viewPortRect.height;
     }
 
     /**
