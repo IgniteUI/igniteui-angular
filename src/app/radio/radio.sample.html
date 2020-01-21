@@ -18,21 +18,14 @@
                                 labore et dolore magna
                                 aliqua. Elit pellentesque habitant morbi tristique senectus et netus et. Aliquet bibendum
                                 enim facilisis gravida. Rutrum
-                                tellus pellentesque eu tincidunt tortor aliquam nulla. Amet consectetur adipiscing elit
-                                pellentesque habitant morbi
-                                tristique. Massa placerat duis ultricies lacus sed. In ornare quam viverra orci sagittis.
-                                Pulvinar elementum integer
-                                enim neque volutpat ac tincidunt. At in tellus integer feugiat scelerisque. Adipiscing vitae
-                                proin sagittis nisl rhoncus
-                                mattis rhoncus urna neque. Proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.
                             </p>
                         </igx-card-content>
-                        <igx-card-actions layout="justify">
-                            <igx-radio [value]="opt">Pick choice {{ opt }}</igx-radio>
+                        <igx-card-actions layout="justify-center">
                             <button igxRipple igxButton="outlined" [disabled]="group.value != opt">
                                 Reserve item
                                 {{ opt }}
                             </button>
+                            <igx-radio class="radio-sample__radio" [value]="opt">Pick choice {{ opt }}</igx-radio>
                         </igx-card-actions>
                     </igx-card>
                 </div>

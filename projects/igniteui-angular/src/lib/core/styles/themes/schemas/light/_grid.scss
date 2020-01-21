@@ -458,7 +458,23 @@ $_bootstrap-grid: extend($_light-grid, (
     header-background: #fff,
     header-text-color: #000,
 
+    cell-active-border-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    row-highlight: (
+        igx-color: ('primary', 500)
+    ),
+
+    row-ghost-background: (
+        igx-color: ('primary', 50)
+    ),
+
     sorted-header-icon-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    sortable-header-icon-hover-color: (
         igx-color: ('primary', 500)
     ),
 
@@ -473,10 +489,18 @@ $_bootstrap-grid: extend($_light-grid, (
     ),
 
     pinned-border-color: (
-        igx-color: ('primary', 200)
+        igx-color: ('grays', 400)
     ),
 
     resize-line-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    drop-indicator-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    edit-mode-color: (
         igx-color: ('primary', 500)
     ),
 ));
