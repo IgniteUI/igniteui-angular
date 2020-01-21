@@ -14,7 +14,6 @@ describe('Avatar', () => {
     const baseClass = 'igx-avatar';
 
     const classes = {
-        default: `${baseClass}--default`,
         round: `${baseClass}--rounded`,
         small: `${baseClass}--small`,
         medium: `${baseClass}--medium`,
@@ -107,7 +106,6 @@ describe('Avatar', () => {
         expect(instance.icon).toBeUndefined();
 
         expect(hostEl.textContent).toEqual('TEST');
-        expect(hostEl.classList).toContain(classes.default);
     });
 
 

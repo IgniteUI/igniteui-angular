@@ -320,8 +320,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     public ngAfterViewInit() {
-        this.elementRef.nativeElement.classList
-            .add(`igx-avatar--${this._size}`, `igx-avatar--${this.type}`);
+        if (this.type) {
+            this.elementRef.nativeElement.classList.add(`igx-avatar--${this.type}`);
+        }
+
+        this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
 
     /**
