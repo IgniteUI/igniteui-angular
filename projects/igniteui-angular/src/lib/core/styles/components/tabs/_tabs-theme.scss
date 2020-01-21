@@ -330,6 +330,24 @@
         outline: 0;
         color: --var($theme, 'item-active-color');
 
+        &:focus {
+            background: --var($theme, 'item-active-background');
+            color: --var($theme, 'item-active-color');
+        }
+
+        &:hover {
+            background: --var($theme, 'item-active-background');
+            color: --var($theme, 'item-active-color');
+        }
+
+        %igx-tabs__header-menu-item-icon {
+            color: --var($theme, 'item-active-icon-color');
+
+            igx-icon {
+                color: --var($theme, 'item-active-icon-color');
+            }
+        }
+
         @if map-get($theme, 'variant') == 'bootstrap' {
             border-color: --var($theme, 'indicator-color');
             border-bottom-color: transparent;
@@ -345,30 +363,10 @@
                 height: 1px;
                 background: --var($theme, 'item-active-background');
             }
-        }
 
-        &:focus {
-            background: --var($theme, 'item-active-background');
-            color: --var($theme, 'item-active-color');
-        }
-
-        &:hover {
-            background: --var($theme, 'item-active-background');
-            color: --var($theme, 'item-active-color');
-        }
-
-        &:hover,
-        &:focus {
-            @if map-get($theme, 'variant') == 'bootstrap' {
-                border-color: --var($theme, 'indicator-color') --var($theme, 'indicator-color') #fff;
-            }
-        }
-
-        %igx-tabs__header-menu-item-icon {
-            color: --var($theme, 'item-active-icon-color');
-
-            igx-icon {
-                color: --var($theme, 'item-active-icon-color');
+            &:hover,
+            &:focus {
+                border-color: --var($theme, 'indicator-color') --var($theme, 'indicator-color') transparent;
             }
         }
     }

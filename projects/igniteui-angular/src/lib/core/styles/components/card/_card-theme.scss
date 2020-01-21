@@ -135,31 +135,31 @@
     $card-heading-padding: map-get((
         material: rem(16px),
         fluent: rem(16px),
-        bootstrap: rem(20px) rem(20px) 0 rem(20px),
+        bootstrap: rem(20px),
     ), map-get($theme, variant));
 
     $card-heading-compact-padding: map-get((
         material: rem(16px, 16px),
         fluent: rem(16px, 16px),
-        bootstrap: rem(20px) rem(20px) 0 rem(20px),
+        bootstrap: rem(20px),
     ), map-get($theme, variant));
 
     $card-heading-margin: map-get((
         material: 0,
         fluent: 0,
-        bootstrap: rem(12px),
+        bootstrap: 0,
     ), map-get($theme, variant));
 
     $card-content-padding: map-get((
         material: rem(16px),
         fluent: rem(16px),
-        bootstrap: 0 rem(20px) 0 rem(20px),
+        bootstrap: 0 rem(20px) rem(20px) rem(20px),
     ), map-get($theme, variant));
 
     $card-content-margin: map-get((
         material: 0,
         fluent: 0,
-        bootstrap: rem(20px),
+        bootstrap: 0,
     ), map-get($theme, variant));
 
     $card-actions-padding: map-get((
@@ -171,7 +171,7 @@
     $card-subtitle-margin: map-get((
         material: 0,
         fluent: 0,
-        bootstrap: rem(8px),
+        bootstrap: 0,
     ), map-get($theme, variant));
 
     $card-tgroup-margin: 0 em(16px);

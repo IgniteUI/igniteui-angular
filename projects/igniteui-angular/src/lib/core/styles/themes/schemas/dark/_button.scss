@@ -66,5 +66,17 @@ $_dark-fluent-button: extend($_fluent-button, (
 /// @requires extend
 /// @requires $_bootstrap-button
 $_dark-bootstrap-button: extend($_bootstrap-button, (
+    disabled-color: (
+        igx-color: ('primary', 900),
+    ),
 
+    disabled-background: (
+        igx-color: ('primary', 900),
+        darken: 5%
+    ),
+
+    outlined-disabled-outline-color: (
+        igx-color: ('primary', 900),
+        darken: 5%
+    ),
 ));

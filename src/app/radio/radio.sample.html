@@ -10,9 +10,8 @@
                         [type]="group.value != opt ? 'outlined' : 'default'"
                         [class.promotion-selected]="group.value == opt">
                         <igx-card-header>
-                            <h6>Reserve your dream vacation at {{ opt }}</h6>
+                            <h6 igxCardHeaderTitle>Reserve your dream vacation at {{ opt }}</h6>
                         </igx-card-header>
-                        <igx-divider></igx-divider>
                         <igx-card-content>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -30,8 +29,10 @@
                         </igx-card-content>
                         <igx-divider></igx-divider>
                         <igx-card-actions layout="justify">
-                            <button igxRipple igxButton="outlined" [disabled]="group.value != opt">Reserve item
-                                {{ opt }}</button>
+                            <button igxRipple igxButton="outlined" [disabled]="group.value != opt">
+                                Reserve item
+                                {{ opt }}
+                            </button>
                             <igx-radio [value]="opt">Pick choice {{ opt }}</igx-radio>
                         </igx-card-actions>
                     </igx-card>
