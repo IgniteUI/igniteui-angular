@@ -1056,7 +1056,7 @@ export class GridFunctions {
     */
     public static clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
-        ControlsFunction.clickChipRemoveButton(chip.nativeElement);
+        ControlsFunction.clickChipRemoveButton(chip);
     }
 
     /**
