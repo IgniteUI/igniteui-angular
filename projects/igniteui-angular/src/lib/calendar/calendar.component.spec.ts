@@ -1158,7 +1158,8 @@ describe('IgxCalendar - ', () => {
             }));
 
             it('Should be able to set disabled and active dates as @Input', () => {
-                expect(calendar.specialDates).toEqual([{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}]);
+                expect(calendar.specialDates).toEqual(
+                    [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}]);
                 expect(calendar.disabledDates).toEqual(
                     [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}]);
                 let specialDates = calendar.daysView.dates.toArray().filter(d => {
