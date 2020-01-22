@@ -1672,6 +1672,34 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
+
+    /**
+     * Emitted when the expanded state of a row gets changed.
+     * ```typescript
+     * rowToggle(event: IRowToggleEventArgs){
+     *  // the id of the row
+     *  const rowID = event.rowID;
+     *  // the new expansion state
+     *  const newExpandedState = event.expanded;
+     *  // the original event that triggered onRowToggle
+     *  const originalEvent = event.event;
+     *  // whether the event should be cancelled
+     *  event.cancel = true;
+     * }
+     * ```
+     * ```html
+     * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
+
+    /**
      * @hidden
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -2826,7 +2854,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
     protected _loadingId;
-
+    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+    protected _defaultExpandState = false;
     // Caches
     private _totalWidth = NaN;
     private _pinnedVisible = [];
@@ -3310,8 +3339,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onColumnVisibilityChanged.emit(args);
     }
 
-    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
-
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
      * ```typescript
@@ -3323,34 +3350,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public get expansionStates() {
         return this._expansionStates;
     }
-
-    /**
-     *@hidden
-     */
-    @Output()
-    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
-
-        /**
-     * Emitted when the expanded state of a row gets changed.
-     * ```typescript
-     * rowToggle(event: IRowToggleEventArgs){
-     *  // the id of the row
-     *  const rowID = event.rowID;
-     *  // the new expansion state
-     *  const newExpandedState = event.expanded;
-     *  // the original event that triggered onRowToggle
-     *  const originalEvent = event.event;
-     *  // whether the event should be cancelled
-     *  event.cancel = true;
-     * }
-     * ```
-     * ```html
-     * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
-    @Output()
-    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
      /**
      * Sets a list of key-value pairs [row ID, expansion state].
@@ -3437,11 +3436,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseDirective
     */
     public toggleRow(rowID: any) {
-        const state = this.expansionStates.get(rowID);
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const state = this.gridAPI.get_row_expansion_state(rec);
         this.gridAPI.set_row_expansion_state(rowID, !state);
     }
-
-    protected _defaultExpandState = false;
 
     public getDefaultExpandState(rec: any) {
         return this._defaultExpandState;

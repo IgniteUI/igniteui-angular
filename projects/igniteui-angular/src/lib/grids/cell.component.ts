@@ -835,15 +835,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleAlt(key: string, event: KeyboardEvent) {
-        if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            if (collapse) {
-                (this.gridAPI as any).set_row_expansion_state(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            } else if (expand) {
-                (this.gridAPI as any).set_row_expansion_state(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            }
-        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
+        if (this.isToggleKey(key)) {
             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
             const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
             if (expand) {

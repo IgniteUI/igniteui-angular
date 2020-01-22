@@ -557,7 +557,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
         const expandedStates = grid.expansionStates;
 
-        if (expandedStates.get(rowID) === expanded) {
+        if (!this.allow_expansion_state_change(rowID, expanded)) {
             return;
         }
 
@@ -575,6 +575,17 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
+    }
+
+    public get_rec_by_id(rowID) {
+        return  this.grid.primaryKey ? this.getRowData(rowID) : rowID;
+    }
+
+    public allow_expansion_state_change(rowID, expanded) {
+        return this.grid.expansionStates.get(rowID) !== expanded;
     }
 
 }

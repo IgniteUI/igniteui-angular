@@ -58,7 +58,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        this.treeGridAPI.set_row_expansion_state(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+        this.treeGridAPI.set_row_expansion_state(this.row.rowID, !this.row.expanded, event);
     }
 
     /**

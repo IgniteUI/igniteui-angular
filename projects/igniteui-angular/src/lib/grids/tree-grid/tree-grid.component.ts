@@ -430,42 +430,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return mapCloned;
     }
 
-    /**
-     * Expands the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be expanded.
-     * ```typescript
-     * this.grid.expandRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public expandRow(rowID: any) {
-        this._gridAPI.expand_row(rowID);
-    }
-
-    /**
-     * Collapses the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be collapsed.
-     * ```typescript
-     * this.grid.collapseRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public collapseRow(rowID: any) {
-        this._gridAPI.collapse_row(rowID);
-    }
-
-    /**
-     * Toggles the expansion state of the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be toggled.
-     * ```typescript
-     * this.grid.toggleRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public toggleRow(rowID: any) {
-        this._gridAPI.toggle_row_expansion(rowID);
-    }
-
     public getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
