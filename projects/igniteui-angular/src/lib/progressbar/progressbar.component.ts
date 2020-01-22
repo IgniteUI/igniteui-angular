@@ -17,7 +17,7 @@ import {
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs } from '../core/utils';
-import { Directionality } from '../core/direction/directionality';
+import { Directionality } from '../services/direction/directionality';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -477,10 +477,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
 
 @Component({
     selector: 'igx-circular-bar',
-    templateUrl: 'templates/circular-bar.component.html',
-    providers: [
-        Directionality
-    ]
+    templateUrl: 'templates/circular-bar.component.html'
 })
 export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 

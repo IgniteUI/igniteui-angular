@@ -29,6 +29,8 @@ export function DIR_DOCUMENT_FACTORY(): Document {
 }
 
 /**
+ * @hidden
+ *
  * Bidirectional service that extracts the value of the direction attribute on the body or html elements.
  *
  * The dir attribute over the body element takes precedence.
