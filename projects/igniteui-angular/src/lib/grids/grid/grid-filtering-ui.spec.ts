@@ -238,7 +238,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'Released');
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-
             const reset = filterUIRow.queryAll(By.css('button'))[0];
             const close = filterUIRow.queryAll(By.css('button'))[1];
             const input = filterUIRow.query(By.directive(IgxInputDirective));

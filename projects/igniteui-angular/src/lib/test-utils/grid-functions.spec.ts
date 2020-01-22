@@ -675,7 +675,7 @@ export class GridFunctions {
     public static openFilterDD(elem: DebugElement) {
         const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
-        filterIcon.triggerEventHandler('click', null);
+        filterIcon.nativeElement.click();
     }
 
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
