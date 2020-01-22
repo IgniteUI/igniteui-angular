@@ -624,7 +624,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        this.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
         fix.detectChanges();
     }
 
@@ -657,7 +657,7 @@ export class GridFunctions {
     public static submitFilterRowInput(fix) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        this.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
         fix.detectChanges();
     }
 
@@ -675,7 +675,7 @@ export class GridFunctions {
     public static openFilterDD(elem: DebugElement) {
         const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
-        filterIcon.nativeElement.click();
+        filterIcon.triggerEventHandler('click', null);
     }
 
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
@@ -874,10 +874,6 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static simulateKeyboardEvent(element, eventName, inputKey) {
-        element.nativeElement.dispatchEvent(new KeyboardEvent(eventName, { key: inputKey }));
-    }
-
     public static getExcelStyleFilteringComponent(fix) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         let excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
@@ -899,7 +895,7 @@ export class GridFunctions {
         return scrollbar;
     }
 
-    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>) {
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
             return header.componentInstance.column.field === columnField;
         });
@@ -922,9 +918,18 @@ export class GridFunctions {
         return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_CONNECTOR));
     }
 
-    public static getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>) {
+    public static getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>): DebugElement[] {
         const columnHeader = this.getColumnHeader(columnField, fix);
         return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_INDICATOR));
+    }
+
+    public static getFilterCellMoreIcon(columnField: string, fix: ComponentFixture<any>) {
+        const columnHeader = this.getColumnHeader(columnField, fix);
+
+        const filterCell = GridFunctions.getFilterCell(fix, columnField);
+        const moreIcon = Array.from(filterCell.queryAll(By.css('igx-icon')))
+                .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
+        return moreIcon;
     }
 
     public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>) {

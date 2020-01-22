@@ -840,7 +840,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
 
                 const clearButton = GridFunctions.getFilterRowInputClearIcon(fix);
-                clearButton.triggerEventHandler('click', null);;
+                clearButton.triggerEventHandler('click', null);
                 tick(100);
                 fix.detectChanges();
 
@@ -972,7 +972,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
             expect(input.componentInstance.value).toEqual('a');
 
-            GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
+            input.triggerEventHandler('keydown', UIInteractions.enterEvent);
             fix.detectChanges();
 
             // Check focus is kept and chips is no longer selected.
@@ -1056,6 +1056,23 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('1');
         });
 
+        it('should select chip when open it from filter cell', fakeAsync(() => {
+            grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('startsWith'));
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const filterChip = filteringRow.query(By.directive(IgxChipComponent));
+            const input = filteringRow.query(By.directive(IgxInputDirective));
+            expect(filterChip).toBeTruthy();
+            expect(filterChip.componentInstance.selected).toBeTruthy();
+            expect(input.componentInstance.value).toEqual('Ignite');
+
+        }));
+
         it('Should allow setting filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
             grid.columns[1].width = '150px';
             fix.detectChanges();
@@ -1090,7 +1107,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
-            GridFunctions.simulateKeyboardEvent(filteringRow, 'keydown', 'Esc');
+            filteringRow.triggerEventHandler('keydown', UIInteractions.escapeEvent);
             fix.detectChanges();
 
             filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -1182,7 +1199,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const input = filteringRow.query(By.directive(IgxInputDirective));
-            input.triggerEventHandler('click', null);;
+            input.triggerEventHandler('click', null);
             tick();
             fix.detectChanges();
 
@@ -1280,7 +1297,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
         }));
 
-        it('should close filter row on Escape key pressed', fakeAsync(() => {
+        it('should close filter row on Escape key pressed on the input', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -1598,7 +1615,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the commit icon.
             const inputCommitIcon = GridFunctions.getFilterRowInputCommitIcon(fix);
-            inputCommitIcon.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            inputCommitIcon.triggerEventHandler('keydown', UIInteractions.enterEvent);
             tick(200);
             fix.detectChanges();
 
@@ -1691,6 +1708,43 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getChipText(filterCellChip)).toBe('e');
         }));
 
+        it('Should focus \'more\' icon when close filter row.', fakeAsync(() => {
+            grid.getColumnByName('ProductName').width = '80px';
+            tick(50);
+            fix.detectChanges();
+
+            // Add initial filtering conditions
+            const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+            const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+            columnsFilteringTree.filteringOperands = [
+                { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
+                { fieldName: 'ProductName', searchVal: 'e', condition: IgxStringFilteringOperand.instance().condition('contains') },
+                { fieldName: 'ProductName', searchVal: 'i', condition: IgxStringFilteringOperand.instance().condition('contains') }
+            ];
+            gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+            grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+            fix.detectChanges();
+
+            // Click more icon
+            let moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            moreIcon.triggerEventHandler('click', null);
+            tick(100);
+            fix.detectChanges();
+
+            // verify first chip is selected
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const filterChip = filteringRow.query(By.directive(IgxChipComponent));
+            expect(filterChip).toBeTruthy();
+            expect(filterChip.componentInstance.selected).toBeTruthy();
+
+            // close filter row
+            GridFunctions.closeFilterRow(fix);
+            tick(50);
+
+            moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            expect(document.activeElement).toBe(moreIcon.nativeElement);
+        }));
+
         it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '350px';
             tick(50);
@@ -1748,7 +1802,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const filterCell = GridFunctions.getFilterCell(fix, 'ProductName');
             const moreIcon: any = Array.from(filterCell.queryAll(By.css('igx-icon')))
                 .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
-            moreIcon.triggerEventHandler('click', null);;
+            moreIcon.triggerEventHandler('click', null);
             tick(100);
             fix.detectChanges();
 
@@ -5186,14 +5240,4 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
-}
-
-function clickElemAndBlur(clickElem, blurElem) {
-    const elementRect = clickElem.nativeElement.getBoundingClientRect();
-    UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
-    blurElem.nativeElement.blur();
-    (clickElem as DebugElement).nativeElement.focus();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
-    UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
-    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
 }
