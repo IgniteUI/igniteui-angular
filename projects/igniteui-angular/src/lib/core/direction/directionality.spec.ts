@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { Directionality, DIR_DOCUMENT } from './directionality';
 
 interface FakeDoc {
-    body: {dir?: string},
-    documentElement: {dir?: string}
+    body: { dir?: string };
+    documentElement: { dir?: string };
 }
 
 describe('Directionality', () => {
@@ -14,7 +14,7 @@ describe('Directionality', () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                InjectsDirectionality
+                InjectsDirectionalityComponent
             ],
             providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDoc}],
         }).compileComponents();
@@ -24,7 +24,7 @@ describe('Directionality', () => {
         const expectedRes = 'rtl';
         fakeDoc.documentElement.dir = expectedRes;
 
-        const fixture = TestBed.createComponent(InjectsDirectionality);
+        const fixture = TestBed.createComponent(InjectsDirectionalityComponent);
         const component = fixture.debugElement.componentInstance;
 
         expect(component.dir.value).toEqual(expectedRes);
@@ -35,7 +35,7 @@ describe('Directionality', () => {
         const expectedRes = 'rtl';
         fakeDoc.body.dir = expectedRes;
 
-        const fixture = TestBed.createComponent(InjectsDirectionality);
+        const fixture = TestBed.createComponent(InjectsDirectionalityComponent);
         const component = fixture.debugElement.componentInstance;
 
         expect(component.dir.value).toEqual(expectedRes);
@@ -44,7 +44,7 @@ describe('Directionality', () => {
     it('should default to ltr if nothing specified', () => {
         const expectedRes = 'ltr';
 
-        const fixture = TestBed.createComponent(InjectsDirectionality);
+        const fixture = TestBed.createComponent(InjectsDirectionalityComponent);
         const component = fixture.debugElement.componentInstance;
 
         expect(component.dir.value).toEqual(expectedRes);
@@ -54,7 +54,7 @@ describe('Directionality', () => {
         fakeDoc.documentElement.dir = 'none';
         fakeDoc.body.dir = 'irrelevant';
 
-        const fixture =TestBed.createComponent(InjectsDirectionality);
+        const fixture = TestBed.createComponent(InjectsDirectionalityComponent);
         const component = fixture.debugElement.componentInstance;
 
         expect(component.dir.value).toEqual('ltr');
@@ -67,7 +67,7 @@ describe('Directionality', () => {
         <div>element</div>
     `
 })
-class InjectsDirectionality {
+class InjectsDirectionalityComponent {
     constructor(public dir: Directionality) { }
 }
 
