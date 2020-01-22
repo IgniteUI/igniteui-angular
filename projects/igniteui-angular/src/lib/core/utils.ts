@@ -329,6 +329,8 @@ export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'e
  * @internal
  *
  * Creates a new ResizeObserver on `target` and returns it as an Observable.
+ * Run the resizeObservable outside angular zone, because it patches the MutationObserver which causes an infinite loop.
+ * Related issue: https://github.com/angular/angular/issues/31712
  */
 export function resizeObservable(target: HTMLElement): Observable<ResizeObserverEntry[]> {
     return new Observable((observer) => {
