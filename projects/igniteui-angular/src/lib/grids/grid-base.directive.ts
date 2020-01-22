@@ -2834,6 +2834,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _unpinnedWidth = NaN;
     private _visibleColumns = [];
     private _columnGroups = false;
+    protected _headerFeaturesWidth = NaN;
 
     private _columnWidth: string;
 
@@ -3089,10 +3090,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridSizes();
+            this.calculateGridSizes(false);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
+            this._headerFeaturesWidth = NaN;
             this.summaryService.summaryHeight = 0;
             this.endEdit(true);
             this.cdr.markForCheck();
@@ -3171,7 +3173,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetCaches() {
+    public resetCaches(recalcFeatureWidth = true) {
+        if (recalcFeatureWidth) {
+            this._headerFeaturesWidth = NaN;
+        }
         this.resetForOfCache();
         this.resetColumnsCaches();
         this.resetColumnCollections();
@@ -3436,17 +3441,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public get featureColumnsWidth() {
-        return this.getFeatureColumnsWidth();
+    public featureColumnsWidth(expander?: ElementRef) {
+        if (Number.isNaN(this._headerFeaturesWidth)) {
+            const rowSelectArea = this.headerSelectorContainer ?
+                this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
+            const rowDragArea = this.rowDraggable && this.headerDragContainer ?
+                this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
+            const groupableArea = this.headerGroupContainer ?
+                this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
+            const expanderWidth = expander ? expander.nativeElement.getBoundingClientRect().width : 0;
+            this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
+        }
+        return this._headerFeaturesWidth;
     }
 
     /**
      * @hidden
      */
     get summariesMargin() {
-        return this.featureColumnsWidth;
+        return this.featureColumnsWidth();
     }
 
     /**
@@ -4627,11 +4641,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.getFeatureColumnsWidth();
-
-        if (this.showDragIcons) {
-            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
-        }
+        computedWidth -= this.featureColumnsWidth();
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4721,7 +4731,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return null;
         }
         this.cdr.detectChanges();
-        colSum += this.getFeatureColumnsWidth();
+        colSum += this.featureColumnsWidth();
         return colSum;
     }
 
@@ -4796,7 +4806,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected calculateGridSizes() {
+    protected calculateGridSizes(recalcFeatureWidth = true) {
         /*
             TODO: (R.K.) This layered lasagne should be refactored
             ASAP. The reason I have to reset the caches so many times is because
@@ -4805,11 +4815,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         this.calculateGridHeight();
 
@@ -4839,7 +4849,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         }
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
     }
 
     private _applyWidthHostBinding() {
@@ -4854,25 +4864,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._hostWidth = width;
         this.cdr.markForCheck();
-    }
-
-
-    /**
-     * @hidden
-     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * Method used to override the calculations.
-     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
-     */
-    public getFeatureColumnsWidth() {
-        let width = 0;
-
-        if (this.isRowSelectable) {
-            width += this.headerSelectorContainer ? this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        if (this.rowDraggable) {
-            width += this.headerDragContainer ? this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        return width;
     }
 
     /**
@@ -4891,7 +4882,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        sum += this.featureColumnsWidth;
+        sum += this.featureColumnsWidth();
 
         return sum;
     }
