@@ -815,7 +815,7 @@ export class GridFunctions {
     }
 
     /**
-     * Click the filter chip for the provided column in order to open the filter row for it.
+     * Open filtering row for a column.
     */
     public static clickFilterCellChip(fix, columnField: string) {
         const grid = fix.componentInstance.grid;
@@ -823,6 +823,17 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
+    /**
+     * Click the filter chip for the provided column in order to open the filter row for it.
+    */
+   public static clickFilterCellChipUI(fix, columnField: string) {
+    const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
+        const filterCell = headerGroup.query(By.css('igx-grid-filtering-cell'));
+        const chip = filterCell.query(By.css('igx-chip'));
+
+        chip.nativeElement.click();
+}
     /**
      * Presuming filter row is opened, click the filter condition chip based on ascending index (left to right).
     */

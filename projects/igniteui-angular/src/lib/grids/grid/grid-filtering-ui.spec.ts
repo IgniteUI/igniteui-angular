@@ -4502,8 +4502,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('Should be able to override getFieldValue method', fakeAsync(() => {
-            GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
-            tick(150);
+            GridFunctions.clickFilterCellChipUI(fix, 'Name'); // Name column contains nasted object as a vulue
+            tick(50);
             fix.detectChanges();
 
             GridFunctions.typeValueInFilterRowInput('ca', fix);
@@ -4535,7 +4535,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should be able to override findMatchByExpression method', fakeAsync(() => {
-            GridFunctions.clickFilterCellChip(fix, 'JobTitle'); // Default strategy is case not sensitive
+            GridFunctions.clickFilterCellChipUI(fix, 'JobTitle'); // Default strategy is case not sensitive
             tick(150);
             fix.detectChanges();
 
