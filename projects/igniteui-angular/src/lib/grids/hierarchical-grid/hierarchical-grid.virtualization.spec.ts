@@ -243,9 +243,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should be able to scroll last row in view after all rows get expanded.', async() => {
         // expand all
-        hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
-            return { rowID: hierarchicalGrid.primaryKey ? rec[hierarchicalGrid.primaryKey] : rec };
-        });
+        hierarchicalGrid.expandAll();
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom
