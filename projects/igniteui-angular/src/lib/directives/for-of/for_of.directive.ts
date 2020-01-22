@@ -142,6 +142,21 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public igxForItemSize: any;
 
     /**
+     * The total count of the virtual data items, when using remote service.
+     * Similar to the property totalItemCount, but this will allow setting the data count into the template.
+     * ```html
+     * <ng-template igxFor let-item [igxForOf]="data | async" [igxForOfTotalItemCount]="count | async"
+     *  [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
+     * ```
+     */
+    @Input()
+    get igxForTotalItemCount(): number {
+        return this.totalItemCount;
+    }
+    set igxForTotalItemCount(value: number) {
+        this.totalItemCount = value;
+    }
+    /**
      * @hidden
      */
     public dc: ComponentRef<DisplayContainerComponent>;
