@@ -97,4 +97,27 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         const childrenForLayout = this.childGrids.get(rowIslandKey);
         return childrenForLayout.get(rowID);
     }
+
+    public get_row_expansion_state(record: any): boolean {
+        let inState;
+        if (record.childGridsData !== undefined) {
+            const ri = record.rowID;
+            const rec = this.grid.primaryKey ? this.get_rec_by_id(ri): ri;
+            inState = !!super.get_row_expansion_state(rec);
+        } else {
+            inState = !!super.get_row_expansion_state(record);
+        }
+        return inState && (this.grid as any).childLayoutList.length !== 0;
+    }
+
+    public allow_expansion_state_change(rowID, expanded) : boolean {
+        const rec = this.get_rec_by_id(rowID);
+        return !!rec && this.grid.expansionStates.get(rowID) !== expanded;
+    }
+
+    public get_rec_by_id(rowID): any {
+        const data = this.get_all_data(false);
+        const index = this.get_row_index_in_data(rowID);
+        return data[index];
+    }
 }
