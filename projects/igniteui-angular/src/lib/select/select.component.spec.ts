@@ -1,9 +1,9 @@
 import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -611,6 +611,24 @@ describe('igxSelect', () => {
             inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             expect(inputGroupWithRequiredAsterisk).toBeDefined();
         }));
+
+        it('Should have correctly bound focus and blur handlers', () => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            select = fix.componentInstance.select;
+            const input = fix.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+
+            spyOn(select, 'onFocus');
+            spyOn(select, 'onBlur');
+
+            input.triggerEventHandler('focus', {});
+            expect(select.onFocus).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+
+            input.triggerEventHandler('blur', {});
+            expect(select.onBlur).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+        });
 
         // Bug #6025 Select does not disable in reactive form
         it('Should disable when form is disabled', fakeAsync(() => {
@@ -2493,6 +2511,58 @@ describe('igxSelect', () => {
             expect(selectCDR.value).toBe('ID');
         });
     });
+});
+
+describe('igxSelect ControlValueAccessor Unit', () => {
+    let select: IgxSelectComponent;
+    it('Should correctly implement interface methods', () => {
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
+
+        // init
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select.ngOnInit();
+        select.registerOnChange(mockNgControl.registerOnChangeCb);
+        select.registerOnTouched(mockNgControl.registerOnTouchedCb);
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+
+        // writeValue
+        expect(select.value).toBeUndefined();
+        select.writeValue('test');
+        expect(mockSelection.clear).toHaveBeenCalled();
+        expect(select.value).toBe('test');
+
+        // setDisabledState
+        select.setDisabledState(true);
+        expect(select.disabled).toBe(true);
+        select.setDisabledState(false);
+        expect(select.disabled).toBe(false);
+
+        // OnChange callback
+        const item = new IgxDropDownItemComponent(select, null, null, mockSelection);
+        item.value = 'itemValue';
+        select.selectItem(item);
+        expect(mockSelection.set).toHaveBeenCalledWith(select.id, new Set([item]));
+        expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('itemValue');
+
+        // OnTouched callback
+        select.onFocus();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+        select.input = {} as any;
+        spyOnProperty(select, 'collapsed').and.returnValue(true);
+        select.onBlur();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should correctly handle ngControl validity', () => {
+        pending('Convert existing form test here');
+    });
+});
 
 @Component({
     template: `
@@ -2820,28 +2890,27 @@ class IgxSelectHeaderFooterComponent implements OnInit {
     }
 }
 
-    @Component({
-        template: `
-            <h4>*ngIf test select for 'expression changed...console Warning'</h4>
-            <div *ngIf="render">
-                <igx-select #selectCDR value="ID">
-                    <label igxLabel>Column</label>
-                    <igx-select-item *ngFor="let column of columns" [value]="column.field">
-                        {{column.field}}
-                    </igx-select-item>
-                </igx-select>
-            </div>
-        `
-    })
-    class IgxSelectCDRComponent {
-        @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
-        public select: IgxSelectComponent;
+@Component({
+    template: `
+        <h4>*ngIf test select for 'expression changed...console Warning'</h4>
+        <div *ngIf="render">
+            <igx-select #selectCDR value="ID">
+                <label igxLabel>Column</label>
+                <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                    {{column.field}}
+                </igx-select-item>
+            </igx-select>
+        </div>
+    `
+})
+class IgxSelectCDRComponent {
+    @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
+    public select: IgxSelectComponent;
 
-        public render = true;
-        public columns: Array<any> = [
-            { field: 'ID',  type: 'string' },
-            { field: 'CompanyName', type: 'string' },
-            { field: 'ContactName', type: 'string' }
-        ];
-    }
-});
+    public render = true;
+    public columns: Array<any> = [
+        { field: 'ID',  type: 'string' },
+        { field: 'CompanyName', type: 'string' },
+        { field: 'ContactName', type: 'string' }
+    ];
+}
