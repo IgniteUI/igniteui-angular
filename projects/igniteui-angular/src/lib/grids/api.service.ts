@@ -13,6 +13,7 @@ import { Transaction, TransactionType, State } from '../services/transaction/tra
 import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
+import { IRowToggleEventArgs } from './common/events';
 /**
  *@hidden
  */
@@ -538,4 +539,42 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public atInexistingPage(): boolean {
         return this.grid.totalPages - 1 > this.grid.page;
     }
+
+    public get_row_expansion_state(record: any): boolean {
+        const grid = this.grid;
+        const states = grid.expansionStates;
+        const rowID = grid.primaryKey ? record[grid.primaryKey] : record;
+        const expanded = states.get(rowID);
+
+        if (expanded !== undefined) {
+            return expanded;
+        } else {
+            return grid.getDefaultExpandState(record);
+        }
+    }
+
+    public set_row_expansion_state(rowID: any, expanded: boolean, event?: Event) {
+        const grid = this.grid;
+        const expandedStates = grid.expansionStates;
+
+        if (expandedStates.get(rowID) === expanded) {
+            return;
+        }
+
+        const args: IRowToggleEventArgs = {
+            rowID: rowID,
+            expanded: expanded,
+            event: event,
+            cancel: false
+        };
+
+        grid.onRowToggle.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+        expandedStates.set(rowID, expanded);
+        grid.expansionStates = expandedStates;
+    }
+
 }

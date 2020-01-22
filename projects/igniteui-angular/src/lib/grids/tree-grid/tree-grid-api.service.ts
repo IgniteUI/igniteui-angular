@@ -2,7 +2,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from './tree-grid.interfaces';
+import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
 import { Injectable } from '@angular/core';
@@ -69,7 +69,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     // TODO: Maybe move the focus logic in the tree cell ?
-    public trigger_row_expansion_toggle(row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
+    public set_row_expansion_state(row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
         const grid = this.grid;
 
         if (row.expanded === expanded ||

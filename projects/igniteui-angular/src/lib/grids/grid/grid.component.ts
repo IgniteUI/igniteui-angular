@@ -530,26 +530,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected summaryTemplate: TemplateRef<any>;
 
 
-    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
-
-    /**
-     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
-     * ```typescript
-     * const expansionStates = this.grid.expansionStates;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public get expansionStates() {
-        return this._expansionStates;
-    }
-
-    /**
-     *@hidden
-     */
-    @Output()
-    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /**
      *@hidden
@@ -558,103 +539,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _focusIn = new  EventEmitter<any>();
     @HostListener('focusin') onFocusIn() {
         this._focusIn.emit();
-    }
-
-    /**
-     * Sets a list of key-value pairs [row ID, expansion state].
-     * ```typescript
-     * const states = new Map<any, boolean>();
-     * states.set(1, true);
-     * this.grid.expansionStates = states;
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
-     * <ng-template igxGridDetail let-dataItem>
-     * <div *ngIf="dataItem.Category">
-     *  <header>{{dataItem.Category?.CategoryName}}</header>
-     * <span>{{dataItem.Category?.Description}}</span>
-     * </div>
-     * </ng-template>
-     * </igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public set expansionStates(value) {
-        this._expansionStates = new Map<any, boolean>(value);
-        this.expansionStatesChange.emit(this._expansionStates);
-        if (this.gridAPI.grid) {
-            this.cdr.detectChanges();
-            this._focusActiveCell();
-        }
-    }
-
-   /**
-     * Expands all master rows.
-     * ```typescript
-     * this.grid.expandAll();
-     * ```
-	 * @memberof IgxGridComponent
-    */
-    public expandAll() {
-        const expandedStates = this.expansionStates;
-        this.data.forEach((rec) => {
-            expandedStates.set(this.primaryKey ? rec[this.primaryKey] : rec, true);
-        });
-        this.expansionStates = expandedStates;
-    }
-
-   /**
-     * Collapses all master rows.
-     * ```typescript
-     * this.grid.collapseAll();
-     * ```
-	 * @memberof IgxGridComponent
-    */
-    public collapseAll() {
-        this.expansionStates = new Map<any, boolean>();
-    }
-
-    /**
-     * Expands the master row by its id. ID is either the primaryKey value or the data record instance.
-     * ```typescript
-     * this.grid.expand(rowID);
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public expand(rowID: any) {
-        const expandedStates = this.expansionStates;
-        expandedStates.set(rowID, true);
-        this.expansionStates = expandedStates;
-    }
-
-    /**
-     * Collapses the master row by its id. ID is either the primaryKey value or the data record instance.
-     * ```typescript
-     * this.grid.collapse(rowID);
-     * ```
-	 * @memberof IgxGridComponent
-    */
-    public collapse(rowID: any) {
-        const expandedStates = this.expansionStates;
-        expandedStates.set(rowID, false);
-        this.expansionStates = expandedStates;
-    }
-
-
-    /**
-     * Toggles the master row by its id. ID is either the primaryKey value or the data record instance.
-     * ```typescript
-     * this.grid.toggle(rowID);
-     * ```
-	 * @memberof IgxGridComponent
-    */
-    public toggleRow(rowID: any) {
-        const expandedStates = this.expansionStates;
-        const state = expandedStates.get(rowID);
-        expandedStates.set(rowID, !state);
-        this.expansionStates = expandedStates;
     }
 
     public getDetailsContext(rowData, index) {
