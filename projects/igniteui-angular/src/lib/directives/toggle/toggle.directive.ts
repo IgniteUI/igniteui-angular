@@ -169,7 +169,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * Emits an event after the toggle container content is positioned.
      *
      * ```typescript
-     * onPositioned(event) {
+     * onPositioned() {
      *  alert("Toggle positioned!");
      * }
      * ```
@@ -177,7 +177,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *   igxToggle
-     *   (onPositioned)='onTogglePositioned($event)'>
+     *   (onPositioned)='onTogglePositioned()'>
      * </div>
      * ```
      */
