@@ -601,7 +601,7 @@ export class GridFunctions {
         this.openFilterDD(fix.debugElement);
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         this.selectFilteringCondition(condition, ddList);
         // fix.detectChanges();
         tick(100);
@@ -679,7 +679,7 @@ export class GridFunctions {
 
     public static clickOperatorFromCascadeMenu(fix: ComponentFixture<any>, operatorIndex: number) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const subMenu = gridNativeElement.querySelector('.igx-drop-down__list');
+        const subMenu = gridNativeElement.querySelector('.igx-drop-down__list-scroll');
         const dropdownItems = subMenu.querySelectorAll('igx-drop-down-item');
         const dropdownItem = dropdownItems[operatorIndex];
         dropdownItem.click();
@@ -1444,7 +1444,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringSelectDropdown(fix: ComponentFixture<any>) {
         const outlet = GridFunctions.getAdvancedFilteringOutlet(fix);
-        const selectDropdown = outlet.querySelector('.igx-drop-down__list--select');
+        const selectDropdown = outlet.querySelector('.igx-drop-down__list-scroll');
         return selectDropdown;
     }
 
@@ -1477,7 +1477,7 @@ export class GridFunctions {
         input.click();
         fix.detectChanges();
 
-        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list')[expressionIndex + 1];
+        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
         const operator = operators.children[itemIndex].children[0];
 
         operator.click();
@@ -1772,14 +1772,12 @@ export class GridSelectionFunctions {
     public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
-        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
         const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
         expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
         if (hScrollbar.scrollWidth) {
-            expect(scrollStartElement.offsetWidth).toEqual(firstRowDiv.offsetWidth);
-            expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth);
+            expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth + firstRowDiv.offsetLeft);
         }
     }
 

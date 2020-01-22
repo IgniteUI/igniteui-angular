@@ -27,19 +27,18 @@
             <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>
-<div igxToggle class="igx-drop-down-wrapper" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
+<div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
     (onOpened)="onToggleOpened()" (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
 
-    <div *ngIf="headerTemplate" class="igx-drop-down-wrapper__header">
+    <div *ngIf="headerTemplate" class="igx-drop-down__select-header">
         <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
     </div>
 
-    <div #scrollContainer class="igx-drop-down__list--select" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
-        <ng-content select="igx-select-item, igx-select-item-group">
-        </ng-content>
+    <div #scrollContainer class="igx-drop-down__list-scroll" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
+        <ng-content select="igx-select-item, igx-select-item-group"></ng-content>
     </div>
 
-    <div *ngIf="footerTemplate" class="igx-drop-down-wrapper__footer">
+    <div *ngIf="footerTemplate" class="igx-drop-down__select-footer">
         <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
     </div>
 </div>

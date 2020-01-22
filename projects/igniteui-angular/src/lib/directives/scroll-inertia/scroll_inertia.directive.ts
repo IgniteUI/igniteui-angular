@@ -61,10 +61,12 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _pointer;
     private _nextX;
     private _nextY;
+    private parentElement;
 
     ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
-            const targetElem = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            this.parentElement = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            const targetElem = this.parentElement;
             targetElem.addEventListener('wheel',
                     (evt) => { this.onWheel(evt); });
             targetElem.addEventListener('touchstart',
@@ -322,7 +324,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         // create gestureObject only one time to prevent overlapping during intertia
         if (!this._gestureObject) {
             this._gestureObject = new MSGesture();
-            this._gestureObject.target = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            this._gestureObject.target = this.parentElement;
         }
         this._gestureObject.addPointer(this._pointer);
     }
@@ -471,7 +473,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this._zone.runOutsideAngular(() => {
-            const targetElem = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            const targetElem = this.parentElement;
             targetElem.removeEventListener('wheel',
                 (evt) => { this.onWheel(evt); });
             targetElem.removeEventListener('touchstart',
