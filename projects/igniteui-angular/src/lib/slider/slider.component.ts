@@ -10,7 +10,8 @@ import {
     ViewChildren,
     QueryList,
     ChangeDetectorRef,
-    OnChanges
+    OnChanges,
+    NgZone
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -775,7 +776,8 @@ export class IgxSliderComponent implements
     constructor(
         private renderer: Renderer2,
         private _el: ElementRef,
-        private _cdr: ChangeDetectorRef) { }
+        private _cdr: ChangeDetectorRef,
+        private _ngZone: NgZone) { }
 
     /**
      * @hidden
@@ -1009,11 +1011,13 @@ export class IgxSliderComponent implements
             this.positionHandler(null, labelFrom, this.lowerValue);
         });
 
-        resizeObservable(this._el.nativeElement).pipe(
-            throttleTime(40),
-            takeUntil(this._destroyer$)).subscribe(() => {
-                this.stepDistance = this.calculateStepDistance();
-            });
+        this._ngZone.runOutsideAngular(() => {
+            resizeObservable(this._el.nativeElement).pipe(
+                throttleTime(40),
+                takeUntil(this._destroyer$)).subscribe(() => this._ngZone.run( () => {
+                    this.stepDistance = this.calculateStepDistance();
+                }));
+        });
     }
 
     /**

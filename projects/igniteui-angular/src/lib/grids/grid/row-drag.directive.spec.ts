@@ -218,9 +218,12 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
             grid.width = '400px';
+            tick(30);
+            fixture.detectChanges();
             grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = false;
-            tick();
+            fixture.detectChanges();
+            tick(30);
             fixture.detectChanges();
             let rowSelectElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
             let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
@@ -231,7 +234,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             // has draggable rows and has no selectable rows
             grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = true;
-            tick();
+            fixture.detectChanges();
+            tick(30);
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
             dragIndicatorElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
