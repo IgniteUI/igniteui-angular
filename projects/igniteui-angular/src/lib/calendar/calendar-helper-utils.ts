@@ -3,6 +3,7 @@ import { By } from '@angular/platform-browser';
 export class HelperTestFunctions {
     public static DAYS_VIEW = 'igx-days-view';
     public static CALENDAR = 'igx-calendar';
+    public static SELECTED_DATE = 'igx-calendar__date--selected';
     public static ICON_CSSCLASS = '.igx-icon';
     public static OVERLAY_CSSCLASS = '.igx-overlay';
     public static MODAL_OVERLAY_CSSCLASS = 'igx-overlay__wrapper--modal';
@@ -141,5 +142,21 @@ export class HelperTestFunctions {
 
     public static getPreviousArrowElement(fixture) {
         return fixture.debugElement.query(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS)).nativeElement;
+    }
+
+    public static verifyDateSelected(el) {
+        expect(
+            el.nativeElement.classList.contains(
+                HelperTestFunctions.SELECTED_DATE
+            )
+        ).toBe(true);
+    }
+
+    public static verifyDateNotSelected(el) {
+        expect(
+            el.nativeElement.classList.contains(
+                HelperTestFunctions.SELECTED_DATE
+            )
+        ).toBe(false);
     }
 }
