@@ -29,12 +29,16 @@
         @extend %time-picker__item !optional;
     }
 
-    @include e(item, $mod: selected) {
+    @include e(item, $m: selected) {
         @extend %time-picker__item--selected !optional;
     }
 
     @include e(item, $m: active) {
         @extend %time-picker__item--active !optional;
+    }
+
+    @include e(item, $m: disabled) {
+        @extend %time-picker__item--disabled !optional;
     }
 
     // HOUR
@@ -77,3 +81,4 @@
         }
     }
 }
+
