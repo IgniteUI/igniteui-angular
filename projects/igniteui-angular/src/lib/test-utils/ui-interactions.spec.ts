@@ -8,6 +8,11 @@ declare var Touch: {
     new(prop): Touch;
 };
 export class UIInteractions {
+    public static enterEvent = { key: 'Enter', stopPropagation: () => { }, preventDefault: () => { } };
+    public static spaceEvent = { key: ' ', stopPropagation: () => { }, preventDefault: () => { } };
+    public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
+    public static arrowDownEvent = { key: 'ArrowDown', stopPropagation: () => { }, preventDefault: () => { } };
+    public static altAndArrowDownEvent = { key: 'ArrowDown', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
 
     public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;

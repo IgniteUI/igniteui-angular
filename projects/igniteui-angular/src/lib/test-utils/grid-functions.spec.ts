@@ -585,6 +585,11 @@ export class GridFunctions {
         ControlsFunction.clickChipRemoveButton(filterChip.nativeElement);
     }
 
+    public static verifyFilteringDropDownIsOpened(fix, opened = true) {
+        const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList !== null).toEqual(opened);
+    }
+
     public static selectFilteringCondition(cond: string, ddList) {
         const ddItems = ddList.nativeElement.children;
         let i;
@@ -826,14 +831,15 @@ export class GridFunctions {
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
     */
-   public static clickFilterCellChipUI(fix, columnField: string) {
-    const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+    public static clickFilterCellChipUI(fix, columnField: string) {
+        const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
-        const filterCell = headerGroup.query(By.css('igx-grid-filtering-cell'));
+        const filterCell = headerGroup.query(By.css(FILTER_UI_CELL));
         const chip = filterCell.query(By.css('igx-chip'));
 
         chip.nativeElement.click();
-}
+        fix.detectChanges();
+    }
     /**
      * Presuming filter row is opened, click the filter condition chip based on ascending index (left to right).
     */
@@ -978,7 +984,7 @@ export class GridFunctions {
     public static getFilterCell(fix, columnKey) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnKey);
-        return headerGroup.query(By.css('igx-grid-filtering-cell'));
+        return headerGroup.query(By.css(FILTER_UI_CELL));
     }
 
     public static getFilterConditionChip(fix, index) {
@@ -988,19 +994,27 @@ export class GridFunctions {
         return conditionChips[index];
     }
 
-    public static getFilterRowInputCommitIcon(fix) {
+    public static getFilterRowPrefix(fix): DebugElement {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+        return inputgroup.query(By.css('igx-prefix'));
+    }
+
+    public static getFilterRowSuffix(fix): DebugElement {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const suffix = inputGroup.query(By.css('igx-suffix'));
+        return inputGroup.query(By.css('igx-suffix'));
+    }
+
+    public static getFilterRowInputCommitIcon(fix) {
+        const suffix = GridFunctions.getFilterRowSuffix(fix);
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'done');
         return commitIcon;
     }
 
     public static getFilterRowInputClearIcon(fix) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const suffix = GridFunctions.getFilterRowSuffix(fix);
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
