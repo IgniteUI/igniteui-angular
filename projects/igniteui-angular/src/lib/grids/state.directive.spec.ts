@@ -9,12 +9,13 @@ import { IGroupingExpression } from '../data-operations/grouping-expression.inte
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IPagingState } from '../data-operations/paging-state.interface';
 import { GridSelectionRange } from './selection/selection.service';
-import { FilteringLogic, DefaultSortingStrategy } from 'igniteui-angular';
 import { IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
