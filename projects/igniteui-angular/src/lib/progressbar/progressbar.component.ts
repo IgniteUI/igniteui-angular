@@ -354,7 +354,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     /**
      *Set the position that defines if the text should be aligned above the progress line. By default is set to false.
      *```html
-     *<igx-linear-bar type="danger" [textTop]="true"></igx-linear-bar>
+     *<igx-linear-bar type="error" [textTop]="true"></igx-linear-bar>
      *```
      */
     @Input()
@@ -370,9 +370,9 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     public text: string;
 
     /**
-     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `danger`.
+     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
      *```html
-     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
+     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="error"></igx-linear-bar>
      *```
      */
 
@@ -445,7 +445,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      * @hidden
      */
     @HostBinding('class.igx-linear-bar--danger')
-    public get danger() {
+    public get error() {
         return this.type === IgxProgressType.ERROR;
     }
 
