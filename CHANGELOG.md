@@ -6,13 +6,18 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - Added support for the Ivy renderer.
-- **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+- **Breaking Changes** The following classes and enumarators have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
     - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
     - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+    - `AvatarType` -> `IgxAvatarType`
+    - `Size` -> `IgxAvatarSize`
+    - `Type` -> `IgxBadgeType`
+    - `SliderType` -> `IgxSliderType`
+    - `TabsType` -> `IgxTabsType`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
@@ -21,6 +26,21 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
+- `IgxAvatar`:
+    - **Breaking Changes** - removed the `default` enumeration member from `IgxAvatarType` (previously `AvatarType`);
+- `IgxBadge`:
+    - **Breaking Changes** - removed the `default` enumeration member from `IgxBadgeType` (previously `Type`);
+- `IgxCard`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `elevated` in `IgxCardType`;
+    - **Breaking Changes** - renamed the `default` enumeration member to `left` in `IgxCardActionsLayout`;
+- `IgxDivider`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `solid` in `IgxDividerType`;
+    - **Breaking Changes** - renamed the `isDefault` getter to `isSolid`;
+- `IgxProgress`:
+    - **Breaking Changes** - renamed the `danger` enumeration member to `error` in `IgxProgresType`;
+    - **Breaking Changes** - renamed the `danger` getter to `error`;
+- `IgxTabs`:
+    - **Breaking Changes** - The `tabsType` input property has been renamed to `type`. It should get renamed in your components via `ng update`;
 
 
 ### New Features
