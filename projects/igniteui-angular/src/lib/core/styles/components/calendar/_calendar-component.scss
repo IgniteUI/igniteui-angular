@@ -47,11 +47,22 @@
 
     @include e(date) {
         @extend %cal-value !optional;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--hover !optional;
+        }
     }
 
     @include e(date, 'inactive') {
         @extend %cal-value !optional;
         @extend %cal-value--inactive !optional;
+    }
+
+    @include e(date, $mods: ('inactive', 'single')) {
+        &:hover {
+            @extend %cal-value--inactive--single--hover !optional;
+        }
     }
 
     @include e(date, 'selected') {

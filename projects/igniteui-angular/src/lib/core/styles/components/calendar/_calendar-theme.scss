@@ -330,14 +330,14 @@
 
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),
-        fluent:--var($theme, 'date-current-bg-color'),
-        bootstrap:--var($theme, 'date-current-bg-color')
+        fluent: --var($theme, 'date-current-bg-color'),
+        bootstrap: --var($theme, 'date-current-bg-color')
     ), map-get($theme, variant));
 
     $current-text-color-variant: map-get((
         material: --var($theme, 'date-selected-text-color'),
-        fluent:--var($theme, 'date-current-text-color'),
-        bootstrap:--var($theme, 'date-current-text-color')
+        fluent: --var($theme, 'date-current-text-color'),
+        bootstrap: --var($theme, 'date-current-text-color')
     ), map-get($theme, variant));
 
     $left: if-ltr(left, right);
@@ -448,7 +448,6 @@
     %cal-picker-display {
         display: flex;
         height: em(56px);
-        justify-content: center;
         align-items: center;
         padding-bottom: $cal-picker-padding;
         @if map-get($theme, variant) == 'bootstrap' {
@@ -599,11 +598,6 @@
         cursor: pointer;
         outline: none;
         // transition: background .15s ease-out;
-
-        &:hover,
-        &:focus {
-            @extend %cal-value--hover;
-        }
     }
 
     %cal-value--hover {
@@ -724,6 +718,10 @@
 
     %cal-value--inactive {
         cursor: pointer;
+        color: --var($theme, 'inactive-text-color');
+    }
+
+    %cal-value--inactive--single--hover {
         color: --var($theme, 'inactive-text-color');
     }
 
