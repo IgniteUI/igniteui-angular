@@ -283,7 +283,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            prefix.triggerEventHandler('click', null);
+            prefix.triggerEventHandler('keydown', UIInteractions.spaceEvent);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
@@ -293,7 +293,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            prefix.triggerEventHandler('click', null);
+            prefix.triggerEventHandler('keydown', UIInteractions.tabEvent);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
@@ -501,15 +501,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
+            const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+            const expression = {
+                fieldName: 'ProductName',
+                searchVal: 'g',
+                condition: IgxStringFilteringOperand.instance().condition('contains')
+            };
+            const expression1 = {
+                fieldName: 'ProductName',
+                searchVal: 'I',
+                condition: IgxStringFilteringOperand.instance().condition('contains')
+            };
+            filteringExpressionsTree.filteringOperands.push(expression);
+            filteringExpressionsTree.filteringOperands.push(expression1);
+            grid.filter('ProductName', null, filteringExpressionsTree);
+            fix.detectChanges();
+
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             verifyFilterUIPosition(filterUIRow, grid);
-
-            GridFunctions.filterBy('Contains', 'I', fix);
-            fix.detectChanges();
-
-            GridFunctions.filterBy('Contains', 'g', fix);
-            fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(2);
             let andButton = fix.debugElement.queryAll(By.css('#operand'));
@@ -1635,7 +1645,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the clear icon.
             const inputClearIcon = GridFunctions.getFilterRowInputClearIcon(fix);
-            inputClearIcon.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            inputClearIcon.triggerEventHandler('keydown', UIInteractions.enterEvent);
             tick(200);
             fix.detectChanges();
 
@@ -1649,7 +1659,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
             const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            filterCellChip.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            filterCellChip.triggerEventHandler('keydown', UIInteractions.enterEvent);
             tick(200);
             fix.detectChanges();
 
@@ -1664,7 +1674,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
-            filterCellChip.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+            filterCellChip.triggerEventHandler('keydown', UIInteractions.tabEvent);
             tick(200);
             fix.detectChanges();
 
@@ -1964,7 +1974,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    describe('Integration scenaroious', () => {
+    describe('Integration scenarios', () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
 
