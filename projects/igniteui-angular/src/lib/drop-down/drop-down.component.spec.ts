@@ -870,9 +870,10 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const toggleElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LIST)).nativeElement;
-            expect(toggleElement.style.width).toEqual('80%');
-            expect(toggleElement.style.height).toEqual('400px');
+            let element = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
+            expect(element.style.height).toEqual('400px');
+            element = fixture.debugElement.query(By.css('.' + CSS_CLASS_LIST)).nativeElement;
+            expect(element.style.width).toEqual('80%');
             expect(fixture.componentInstance.dropdownDisabled.id).toEqual('newDD');
         }));
 
@@ -1034,7 +1035,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('100px');
         }));
@@ -1047,7 +1048,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('700px');
         }));
