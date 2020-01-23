@@ -23,7 +23,8 @@ export enum IgxAvatarSize {
 export enum IgxAvatarType {
     INITIALS = 'initials',
     IMAGE = 'image',
-    ICON = 'icon'
+    ICON = 'icon',
+    CUSTOM = 'custom',
 }
 
 /**
@@ -117,7 +118,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      * Returns the type of the avatar.
-     * The avatar can be: `"initials type avatar"`, `"icon type avatar"` or `"image type avatar"`.
+     * The avatar can be:
+     * - `"initials type avatar"`
+     * - `"icon type avatar"`
+     * - `"image type avatar"`.
+     * - `"custom type avatar"`.
      *
      * ```typescript
      * let avatarDescription = this.avatar.roleDescription;
@@ -125,7 +130,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
-
     @HostBinding('attr.aria-roledescription')
     public roleDescription: string;
 
@@ -283,6 +287,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         if (this.initials) {
             return IgxAvatarType.INITIALS;
         }
+
+        return IgxAvatarType.CUSTOM;
     }
 
     /**
@@ -320,7 +326,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     public ngAfterViewInit() {
-        if (this.type) {
+        if (this.type !== IgxAvatarType.CUSTOM) {
             this.elementRef.nativeElement.classList.add(`igx-avatar--${this.type}`);
         }
 
