@@ -5,6 +5,7 @@ import { IgxIconModule } from '../icon/index';
 let NEXT_ID = 0;
 
 export enum IgxBadgeType {
+    PRIMARY = 'primary',
     INFO = 'info',
     SUCCESS = 'success',
     WARNING = 'warning',
@@ -52,14 +53,14 @@ export class IgxBadgeComponent {
 
     /**
     * An @Input property controlling the type of the badge.
-    * Allowed values are `default`, `info`, `success`, `warning`, `error`.
+    * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
     * ```html
     *<igx-badge type="success" icon="check" class="badge-style"></igx-badge>
     * ```
     */
     @Input()
-    public type: string | IgxBadgeType = '';
+    public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
 
     /**
     * An @Input property that sets the value to be displayed inside the badge.
