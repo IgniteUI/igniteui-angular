@@ -1075,6 +1075,58 @@ describe('IgxForOf directive -', () => {
             }
         });
     });
+
+    describe('remote virtual component with specified igxForOfTotalItemCount', () => {
+        configureTestSuite();
+        let fix: ComponentFixture<RemoteVirtCountComponent>;
+
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    RemoteVirtCountComponent
+                ],
+                imports: [IgxForOfModule]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(RemoteVirtCountComponent);
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+            displayContainer = fix.nativeElement.querySelector('igx-display-container');
+            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+        });
+
+        it('should apply remote virtualization correctly', async () => {
+            // verify data is loaded
+            let rowsRendered = displayContainer.children;
+            let data = fix.componentInstance.data.source.getValue();
+            for (let i = 0; i < rowsRendered.length; i++) {
+                expect(rowsRendered[i].textContent.trim())
+                    .toBe(data[i].toString());
+            }
+
+            // scroll down
+            expect(() => {
+                verticalScroller.scrollTop = 10000;
+                fix.detectChanges();
+                fix.componentRef.hostView.detectChanges();
+            }).not.toThrow();
+
+            await wait();
+
+            // verify data is loaded
+            rowsRendered = displayContainer.children;
+            data = fix.componentInstance.data.source.getValue();
+            for (let i = fix.componentInstance.parentVirtDir.state.startIndex; i < rowsRendered.length; i++) {
+                expect(rowsRendered[i].textContent.trim())
+                    .toBe(data[i].toString());
+            }
+        });
+    });
+
     describe('no width and height component', () => {
         configureTestSuite();
         let fix: ComponentFixture<NoWidthAndHeightComponent>;
@@ -1518,10 +1570,15 @@ export class LocalService {
     private _records: BehaviorSubject<any[]>;
     private dataStore: any[];
 
+    public count: Observable<number>;
+    private _count: BehaviorSubject<number>;
+
     constructor() {
         this.dataStore = [];
         this._records = new BehaviorSubject([]);
         this.records = this._records.asObservable();
+        this._count = new BehaviorSubject(null);
+        this.count = this._count.asObservable();
     }
 
     public getData(data?: IForOfState, cb?: (any) => void): any {
@@ -1532,6 +1589,11 @@ export class LocalService {
         if (cb) {
             cb(count);
         }
+    }
+
+    public getCount() {
+        const count = 1000;
+        this._count.next(count);
     }
 
     public generateData(start, end) {
@@ -1579,6 +1641,51 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         this.localService.getData(this.parentVirtDir.state, (count) => {
             this.parentVirtDir.totalItemCount = count;
         });
+    }
+
+    dataLoading(evt) {
+        this.localService.getData(evt, () => {
+            this.parentVirtDir.cdr.detectChanges();
+        });
+    }
+}
+
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer let-rowData [igxForOf]="data | async" igxForTest
+                [igxForTotalItemCount]="count | async"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='"50px"'
+                (onChunkPreload)="dataLoading($event)">
+                <div [style.display]="'flex'" [style.height]="'50px'">
+                    {{rowData}}
+                </div>
+            </ng-template>
+        </div>
+    `,
+    providers: [LocalService]
+})
+export class RemoteVirtCountComponent implements OnInit, AfterViewInit {
+    public height = '500px';
+    public data;
+    public count: Observable<number>;
+
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
+    public parentVirtDir: TestIgxForOfDirective<any>;
+
+    @ViewChild('container', { read: ViewContainerRef, static: true })
+    public container: ViewContainerRef;
+
+    constructor(private localService: LocalService) { }
+    public ngOnInit(): void {
+        this.data = this.localService.records;
+        this.count = this.localService.count;
+    }
+
+    public ngAfterViewInit() {
+        this.localService.getCount();
+        this.localService.getData(this.parentVirtDir.state);
     }
 
     dataLoading(evt) {
