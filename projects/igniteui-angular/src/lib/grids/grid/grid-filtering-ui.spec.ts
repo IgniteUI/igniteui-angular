@@ -2270,8 +2270,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 
     });
+
     describe(null, () => {
-        let fix, grid;
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
@@ -4519,7 +4521,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe('Load values on demand', () => {
-        let fix, grid;
+        let fix;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
             grid = fix.componentInstance.grid;
@@ -4551,7 +4553,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     });
 
     describe(null, () => {
-        let fix, grid;
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             grid = fix.componentInstance.grid;
@@ -4600,14 +4603,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    describe('IgxGrid - Custom Filtering Strategy #grid', () => {
-        let fix;
-        let grid;
+    describe('IgxGrid - Custom Filtering Strategy', () => {
+        let fix: ComponentFixture<any>;
+        let grid: IgxGridComponent;
 
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(CustomFilteringStrategyComponent);
-            grid = fix.componentInstance.grid;
             fix.detectChanges();
+            grid = fix.componentInstance.grid;
         }));
 
         it('Should be able to set custom filtering strategy', () => {
@@ -4637,7 +4640,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Apply the custom strategy and perform the same filter
             grid.filterStrategy = fix.componentInstance.strategy;
             fix.detectChanges();
-            GridFunctions.clickFilterCellChip(fix, 'Name');
+            GridFunctions.clickFilterCellChipUI(fix, 'Name');
             tick(150);
             fix.detectChanges();
 
@@ -4672,7 +4675,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Apply the custom strategy and perform the same filter
             grid.filterStrategy = fix.componentInstance.strategy;
             fix.detectChanges();
-            GridFunctions.clickFilterCellChip(fix, 'JobTitle');
+            GridFunctions.clickFilterCellChipUI(fix, 'JobTitle');
             tick(150);
             fix.detectChanges();
 
