@@ -392,7 +392,7 @@ $_fluent-button: extend(
 ///
 /// @prop {map} flat-text-color [igx-color: ('primary', 500)] - The idle text color of a flat button.
 /// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
-/// @prop {map} flat-hover-text-color [igx-color: ('primary', 900)] - The hover text color of a flat button.
+/// @prop {map} flat-hover-text-color [igx-color: ('primary', 800)] - The hover text color of a flat button.
 /// @prop {map} flat-focus-background [igx-color: ('grays', 100)] - The focus background color of a flat button.
 /// @prop {map} flat-focus-text-color [igx-color: ('primary', 600)] - The focus text color of a flat button.
 ///
@@ -421,9 +421,9 @@ $_fluent-button: extend(
 /// @prop {map} icon-focus-background [igx-color: ('primary', 600)] - The focus icon color of an icon button.
 /// @prop {Color} icon-focus-color [#fff] - The focus icon color of an icon button.
 ///
-/// @prop {map} disabled-color [igx-color: ('primary', 500)] - the disabled color for flat,outlined and icon buttons.
-/// @prop {map} disabled-background [igx-color: ('primary', 500)] - the disabled background color.
-/// @prop {map} outlined-disabled-outline-color [igx-color: ('primary', 500)] - the border-color for outlined buttons.
+/// @prop {map} disabled-color [igx-color: ('primary', 500), lighten: 20%] - the disabled color for flat,outlined and icon buttons.
+/// @prop {map} disabled-background [igx-color: ('primary', 500), lighten: 35%] - the disabled background color.
+/// @prop {map} outlined-disabled-outline-color [igx-color: ('primary', 500), lighten: 35%] - the border-color for outlined buttons.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-button

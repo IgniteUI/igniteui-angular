@@ -43,7 +43,7 @@ $_light-dialog: extend(
 
 /// Generates a fluent dialog schema.
 /// @type {Map}
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for dialog component.
+/// @prop {Number} border-radius [2px] - The border radius for dialog component.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
@@ -58,10 +58,14 @@ $_fluent-dialog: extend(
 
 /// Generates a bootstrap dialog schema.
 /// @type {Map}
+/// @prop {Number} border-radius [4px] - The border radius for dialog component.
+/// @prop {map} bootstrap-border-color [igx-color: ('grays', 300)] - The border color for dialog component(available only for bootstrap theme).
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
 $_bootstrap-dialog: extend(
     $_light-dialog,
+    $_bootstrap-shape-dialog,
+    $_bootstrap-elevation-dialog,
     (
         variant: 'bootstrap',
         bootstrap-border-color: (

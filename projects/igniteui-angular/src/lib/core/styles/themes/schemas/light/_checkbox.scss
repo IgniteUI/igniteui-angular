@@ -26,10 +26,6 @@ $_light-checkbox: extend(
         variant: 'material',
         tick-color: #fff,
 
-        border-radius: .2,
-
-        border-radius-ripple: 1,
-
         label-color: (
             igx-color: ('grays', 900)
         ),
@@ -57,8 +53,8 @@ $_light-checkbox: extend(
 /// @prop {Map} empty-color [igx-color: ('grays', 900)] - The unchecked border color.
 /// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-10 to be used for checkbox.
-/// @prop {Number} border-radius-ripple [2px] - The border radius fraction, between 0-24 to be used for checkbox ripple.
+/// @prop {Number} border-radius [2px] - The border radius used for checkbox.
+/// @prop {Number} border-radius-ripple [2px] - The border radius used for checkbox ripple.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-checkbox
@@ -73,8 +69,6 @@ $_fluent-checkbox: extend(
             igx-color: ('grays', 900)
         ),
 
-        border-radius: 2px,
-
         fill-color: (
             igx-color: ('primary', 500)
         ),
@@ -87,20 +81,19 @@ $_fluent-checkbox: extend(
 
 /// Generates a bootstrap checkbox schema.
 /// @type {Map}
-/// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
 /// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
+/// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
-/// @prop {Number} border-radius [4px] - The border radius fraction, between 0-10 to be used for checkbox.
+/// @prop {Number} border-radius [4px] - The border radius used for checkbox.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-checkbox
 
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
+    $_bootstrap-shape-checkbox
     (
         variant: 'bootstrap',
-
-        border-radius: 4px,
 
         fill-color: (
             igx-color: ('primary', 500)

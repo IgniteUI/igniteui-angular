@@ -116,7 +116,7 @@ $_light-drop-down: extend(
 /// @prop {Map} selected-focus-item-background [igx-color: ('grays', 200)] - The drop-down selected item focus background color.
 /// @prop {Map} selected-focus-item-text-color [igx-contrast-color: ('grays', 200)] - The drop-down selected item focus text color.
 /// @prop {Number} elevation [4] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for drop-down component.
+/// @prop {Number} border-radius [2px] - The border radius used for drop-down component.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-drop-down
@@ -156,45 +156,65 @@ $_fluent-drop-down: extend(
 /// Generates a bootstrap drop-down schema.
 /// @type {Map}
 /// @prop {Map} header-text-color [igx-color: ('primary', 500)] - The drop-down header text color.
+/// @prop {Color} background-color [#fff] - The drop-down background color.
+/// @prop {Color} item-text-color [#212529] - The drop-down text color.
+/// @prop {Color} hover-item-text-color [#212529] - The drop-down hover text color.
+/// @prop {Map} hover-item-background [igx-color: ('grays', 100)] - The drop-down hover item background color.
+/// @prop {Map} focused-item-background [igx-color: ('primary', 500)] - The drop-down focused item background color.
+/// @prop {Color} focused-item-text-color [#fff] - The drop-down focused item text color.
+/// @prop {Map} selected-item-background [igx-color: ('primary', 500)] - The drop-down selected item background color.
+/// @prop {Color} selected-item-text-color [#fff] - The drop-down selected item text color.
+/// @prop {Map} selected-hover-item-background [igx-color: ('primary', 600)] - The drop-down selected item hover background color.
+/// @prop {Color} selected-hover-item-text-color [#fff] - The drop-down selected item hover text color.
+/// @prop {Map} selected-focus-item-background [igx-color: ('primary', 600)] - The drop-down selected item focus background color.
+/// @prop {Color} selected-focus-item-text-color [#fff] - The drop-down selected item focus text color.
+/// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the badge shadow.
+/// @prop {Number} border-radius [4px] - The border radius used for drop-down component.
+
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
-$_bootstrap-drop-down: extend($_light-drop-down, (
-    header-text-color: (
-        igx-color: ('primary', 500)
-    ),
+$_bootstrap-drop-down: extend(
+    $_light-drop-down,
+    $_bootstrap-shape-drop-down,
+    $_bootstrap-elevation-drop-down,
+    (
+        header-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    background-color: #fff,
+        background-color: #fff,
 
-    item-text-color: #212529,
+        item-text-color: #212529,
 
-    hover-item-text-color: #212529,
+        hover-item-text-color: #212529,
 
-    hover-item-background: (
-        igx-color: ('grays', 100)
-    ),
+        hover-item-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    focused-item-background: (
-        igx-color: ('primary', 500)
-    ),
+        focused-item-background: (
+            igx-color: ('primary', 500)
+        ),
 
-    focused-item-text-color: #fff,
+        focused-item-text-color: #fff,
 
-    selected-item-background: (
-        igx-color: ('primary', 500),
-    ),
+        selected-item-background: (
+            igx-color: ('primary', 500),
+        ),
 
-    selected-item-text-color: #fff,
+        selected-item-text-color: #fff,
 
-    selected-hover-item-background: (
-        igx-color: ('primary', 600),
-    ),
+        selected-hover-item-background: (
+            igx-color: ('primary', 600),
+        ),
 
-    selected-hover-item-text-color: #fff,
+        selected-hover-item-text-color: #fff,
 
-    selected-focus-item-background: (
-        igx-color: ('primary', 600),
-    ),
+        selected-focus-item-background: (
+            igx-color: ('primary', 600),
+        ),
 
-    selected-focus-item-text-color: #fff,
-));
+        selected-focus-item-text-color: #fff,
+    )
+);
 

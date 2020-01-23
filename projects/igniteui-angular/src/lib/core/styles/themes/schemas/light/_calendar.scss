@@ -10,29 +10,38 @@
 /// @type {Map}
 /// @prop {Map} content-background [igx-color: 'surface'] - The main content background color.
 /// @prop {Map} content-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The main content text color.
+///
 /// @prop {Map} header-background [igx-color: ('secondary', 500)] - The header background color.
 /// @prop {Map} header-text-color [igx-contrast-color: ('secondary', 500)] - The header text color.
+///
 /// @prop {Map} picker-arrow-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The idle picker arrow color.
 /// @prop {Map} picker-arrow-hover-color [igx-color: ('secondary', 500)] - The picker hover arrow color.
 /// @prop {Map} picker-text-color [igx-color: 'surface', text-contrast: (), rgba: .74]- The idle picker month/year color.
 /// @prop {Map} picker-text-hover-color [igx-color: ('secondary', 500)]-  The hover picker month/year color.
+///
 /// @prop {Map} inactive-text-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for previous and next month dates.
 /// @prop {Map} $label-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for weekday labels.
 /// @prop {Map} weekend-text-color [igx-color: 'surface', text-contrast: (), rgba: .38] - The text color for weekend days.
+///
 /// @prop {Map} year-current-text-color [igx-color: ('secondary', 500)] - The text color for the current/selected year.
-/// @prop {Map} month-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month.
 /// @prop {Map} year-hover-text-color [igx-color: ('secondary', 500)] - The year hover text color.
+///
+/// @prop {Map} month-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month.
 /// @prop {Map} month-hover-text-color [igx-color: 'surface', text-contrast: ()] - The month hover text color.
 /// @prop {Map} month-hover-background [igx-color: ('grays', 200)] - The month hover text color.
+///
 /// @prop {Map} date-selected-background [igx-color: ('secondary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-contrast-color: ('secondary', 500)] - The text color for the selected date.
 /// @prop {Map} date-current-text-color [igx-color: ('secondary', 500)] - The text color for the current date.
 /// @prop {Color} date-current-bg-color [transparent] - The background color for the current date.
 /// @prop {Map} date-hover-background [igx-color: ('grays', 200)] - The hover date background color.
+
 /// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
+///
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
-/// @prop {Map} date-disabled-background [igx-color: ('grays', 100), hexrgba: ()] - The background color for disabled dates.
+/// @prop {Map} date-disabled-background [igx-color: ('grays', 100)] - The background color for disabled dates.
+///
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
@@ -134,13 +143,6 @@ $_light-calendar: extend(
 
         date-current-bg-color: transparent,
 
-        date-current-bg-hover-color: (
-            igx-contrast-color: ('secondary', 500)
-        ),
-        date-current-bg-focus-color: (
-            igx-contrast-color: ('secondary', 500)
-        ),
-
         date-hover-background: (
             igx-color: ('grays', 200)
         ),
@@ -172,9 +174,9 @@ $_light-calendar: extend(
 /// @prop {map} date-selected-background [igx-color: ('primary', 100), rgba: .5, hexrgba: #fff] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-color: ('primary', 100)] - The text color for the selected date.
 ///
-/// @prop {Number} border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Number} date-border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Number} month-border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} border-radius [0%] - The border radius used for calendar.
+/// @prop {Number} date-border-radius [0%] - The border radius used for calendar dates.
+/// @prop {Number} month-border-radius [0%] - The border radius used for month picker month.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-calendar
@@ -205,29 +207,35 @@ $_fluent-calendar: extend(
 /// Generates a bootstrap calendar schema.
 /// @type {Map}
 ///
-/// @prop {Map} picker-text-hover-color [igx-color: ('secondary', 500)]-  The hover picker month/year color.
+/// @prop {Map} year-hover-text-color [igx-color: ('primary', 500)] - The year hover text color.
+/// @prop {Map} date-special-background [igx-color: ('warn'), rgba:.5] - The background color used for special dates.
+///
+/// @prop {Map} month-hover-text-color [igx-color: ('primary', 500)] - The month hover text color.
+/// @prop {Map} month-hover-background [igx-color: ('grays', 100)] - The month hover text color.
+///
+/// @prop {Map} picker-text-hover-color [igx-color: ('primary', 500)]-  The hover picker month/year color.
 /// @prop {Map} picker-arrow-color [igx-color: ('primary', 500)] - The idle picker arrow color.
 /// @prop {Map} picker-arrow-hover-color [igx-color: ('primary', 800)] - The picker hover arrow color.
 /// @prop {Color} picker-text-color [#000]- The idle picker month/year color.
+///
+/// @prop {Color} $calendar-picker-background-color [igx-color: ('grays', 100)] - The igx-calendar-picker background color (bootstrap theme only!).
+/// @prop {Color} $calendar-border-color [igx-color: ('grays', 300)] - The calendar border color (bootstrap theme only!).
+///
+/// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
+/// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
+///
+/// @prop {Map} $label-color [igx-color: 'info', rgba: .5, hexrgba: #fff] - The text color for weekday labels.
 /// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
+///
 /// @prop {Map} date-hover-background [igx-color: ('primary', 500)] - The hover date background color.
 /// @prop {Map} date-current-bg-color [igx-color: ('primary', 600)] - The background color for the current date.
 /// @prop {Map} date-selected-background [igx-color: ('primary', 500), rgba: .8, hexrgba: #fff] - The background color for the selected date.
 /// @prop {Color} date-selected-text-color [#fff] - The text color for the selected date.
 /// @prop {Color} content-background [#fff] - The main content background color.
-/// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
-/// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
-/// @prop {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Number} date-border-radius [4px] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Number} month-border-radius [4px] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Map} inactive-text-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for weekday labels and other month dates.
-/// @prop {Map} $label-color [igx-color: 'info'] - The text color for weekday labels.
-/// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
-/// @prop {Map} month-hover-text-color [igx-color: ('primary', 500)] - The month hover text color.
-/// @prop {Map} month-hover-background [igx-color: ('grays', 200)] - The month hover text color.
-/// @prop {Color} $calendar-picker-background-color [null] - The igx-calendar-picker background color (bootstrap theme only!).
-/// @prop {Color} $calendar-border-color [null] - The calendar border color (bootstrap theme only!).
-/// @prop {Map} year-hover-text-color [igx-color: ('secondary', 500)] - The year hover text color.
+///
+/// @prop {Number} border-radius [4px] - The border radius for calendar.
+/// @prop {Number} date-border-radius [4px] - The border radius for calendar dates.
+/// @prop {Number} month-border-radius [4px] - The border radius month picker month.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-calendar
@@ -255,6 +263,16 @@ $_bootstrap-calendar: extend($_light-calendar, $_bootstrap-shape-calendar, (
         igx-color: ('primary', 500)
     ),
 
+    picker-arrow-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    picker-arrow-hover-color: (
+        igx-color: ('primary', 800)
+    ),
+
+    picker-text-color: #000,
+
     calendar-picker-background-color: (
         igx-color: ('grays', 100)
     ),
@@ -271,21 +289,11 @@ $_bootstrap-calendar: extend($_light-calendar, $_bootstrap-shape-calendar, (
         igx-color: ('primary', 500)
     ),
 
-    picker-arrow-color: (
-        igx-color: ('primary', 500)
-    ),
-
-    picker-arrow-hover-color: (
-        igx-color: ('primary', 800)
-    ),
-
     label-color: (
         igx-color: 'info',
         rgba: .5,
         hexrgba: #fff
     ),
-
-    picker-text-color: #000,
 
     date-current-text-color: #fff,
 

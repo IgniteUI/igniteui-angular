@@ -444,6 +444,9 @@ $_fluent-grid: extend(
 ///
 /// @prop {Color} header-background [#fff] - The table header background color.
 /// @prop {Color} header-text-color [#000] - The table header text color.
+/// @prop {Map} cell-active-border-color [igx-color: ('primary', 500)] - The active(focused) cell border color.
+/// @prop {map} row-highlight [igx-color: ('primary', 500)] - The grid row highlight color.
+
 /// @prop {Map} sorted-header-icon-color [igx-color: ('primary', 500)] - The sorted table header icon color.
 /// @prop {Map} row-selected-background [ igx-color: ('primary', 50), hexrgba: #fff] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('primary', 100), hexrgba: #fff] - The selected row hover background.
