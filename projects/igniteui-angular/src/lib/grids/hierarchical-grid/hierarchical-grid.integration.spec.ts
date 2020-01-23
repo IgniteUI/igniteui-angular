@@ -498,11 +498,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should render summaries for column inside a column group.', fakeAsync(/** row toggle rAF */() => {
             fixture.componentInstance.rowIsland.childColumns.first.hasSummary = false;
+            tick();
             fixture.detectChanges();
             fixture.componentInstance.rowIsland.childColumns.last.hasSummary = true;
+            tick();
             fixture.detectChanges();
 
             (hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
+            tick();
             fixture.detectChanges();
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));

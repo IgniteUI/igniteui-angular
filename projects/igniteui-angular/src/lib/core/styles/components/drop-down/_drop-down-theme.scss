@@ -210,23 +210,17 @@
         compact: 0 rem(8px)
     );
 
-    %igx-drop-down-wrapper {
-        box-shadow: --var($theme, 'shadow');
-        z-index: 1;
-    }
-
-    %igx-drop-down {
-        max-height: 100%;
-        position: absolute;
-        border-radius: --var($theme, 'border-radius');
-        overflow: hidden;
-    }
-
     %igx-drop-down__list {
-        overflow-y: auto;
+        overflow: hidden;
+        border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background-color');
         box-shadow: --var($theme, 'shadow');
         min-width: rem(128px);
+    }
+
+    %igx-drop-down__list-scroll {
+        overflow-y: auto;
+        position: relative;
 
         &:empty {
             box-shadow: none;
@@ -235,10 +229,6 @@
         igx-input-group {
             margin-top: -16px !important;
         }
-    }
-
-    %igx-drop-down__list--select {
-        box-shadow: none;
     }
 
     %igx-drop-down__header,
@@ -373,13 +363,6 @@
     %igx-drop-down__item {
         @include igx-type-style($type-scale, $item) {
             margin: 0;
-        }
-    }
-
-    %igx-drop-down__list--select {
-        %igx-drop-down__item {
-            @include igx-type-style($type-scale, $select-item);
-            @include ellipsis()
         }
     }
 }

@@ -23,7 +23,8 @@ const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
 const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
-const CSS_CLASS_TOGGLE = 'igx-toggle';
+const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
+const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
 const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
@@ -513,7 +514,7 @@ describe('IgxDropDown ', () => {
             let currentItem = document.getElementsByClassName(CSS_CLASS_FOCUSED)[0] as HTMLElement;
             currentItem.focus();
             expect(currentItem.innerHTML.trim()).toEqual('Item 1');
-            const scrollElement = document.getElementsByClassName(CSS_CLASS_TOGGLE)[0] as HTMLElement;
+            const scrollElement = document.getElementsByClassName(CSS_CLASS_SCROLL)[0] as HTMLElement;
             scrollElement.scrollTop += 150;
             currentItem = document.getElementsByClassName(CSS_CLASS_FOCUSED)[0] as HTMLElement;
             expect(currentItem.innerHTML.trim()).toEqual('Item 1');
@@ -869,9 +870,10 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const toggleElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE)).nativeElement;
-            expect(toggleElement.style.width).toEqual('80%');
-            expect(toggleElement.style.height).toEqual('400px');
+            let element = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
+            expect(element.style.height).toEqual('400px');
+            element = fixture.debugElement.query(By.css('.' + CSS_CLASS_LIST)).nativeElement;
+            expect(element.style.width).toEqual('80%');
             expect(fixture.componentInstance.dropdownDisabled.id).toEqual('newDD');
         }));
 
@@ -1033,7 +1035,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('100px');
         }));
@@ -1046,7 +1048,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('700px');
         }));

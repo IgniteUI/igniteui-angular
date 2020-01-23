@@ -1,9 +1,9 @@
 import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,10 +18,10 @@ import { IgxSelectModule } from './select.module';
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
-const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list--select';
-const CSS_CLASS_DROPDOWN_WRAPPER = 'igx-drop-down-wrapper';
-const CSS_CLASS_DROPDOWN_WRAPPER_HEADER = 'igx-drop-down-wrapper__header';
-const CSS_CLASS_DROPDOWN_WRAPPER_FOOTER = 'igx-drop-down-wrapper__footer';
+const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
+const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWN_SELECT_HEADER = 'igx-drop-down__select-header';
+const CSS_CLASS_DROPDOWN_SELECT_FOOTER = 'igx-drop-down__select-footer';
 const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
@@ -115,8 +115,8 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             tick();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
         it('should initialize the select component properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
@@ -376,8 +376,8 @@ describe('igxSelect', () => {
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
         it('should render aria attributes properly', fakeAsync(() => {
-            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
+            const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(inputElement.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(inputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
@@ -612,6 +612,24 @@ describe('igxSelect', () => {
             expect(inputGroupWithRequiredAsterisk).toBeDefined();
         }));
 
+        it('Should have correctly bound focus and blur handlers', () => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            select = fix.componentInstance.select;
+            const input = fix.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+
+            spyOn(select, 'onFocus');
+            spyOn(select, 'onBlur');
+
+            input.triggerEventHandler('focus', {});
+            expect(select.onFocus).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+
+            input.triggerEventHandler('blur', {});
+            expect(select.onBlur).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+        });
+
         // Bug #6025 Select does not disable in reactive form
         it('Should disable when form is disabled', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
@@ -645,7 +663,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             }));
             it('should select item with mouse click', fakeAsync(() => {
                 let selectedItemIndex = 5;
@@ -1210,7 +1228,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             }));
 
             it('should populate the input with the specified selected item text @input, instead of the selected item element innerText',
@@ -1286,7 +1304,7 @@ describe('igxSelect', () => {
             select = fixture.componentInstance.select;
             fixture.detectChanges();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
         }));
         it('should select group item and close dropdown with mouse click', fakeAsync(() => {
             const groupIndex = 0;
@@ -1362,7 +1380,7 @@ describe('igxSelect', () => {
             select = fixture.componentInstance.select;
             fixture.detectChanges();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
         }));
         it('should toggle dropdown on ALT+ArrowUp/Down keys interaction', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
@@ -2059,7 +2077,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             }));
             it('should display selected item over input and all other items without scroll', fakeAsync(() => {
                 hasScroll = false;
@@ -2162,7 +2180,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 visibleItems = 5;
                 hasScroll = true;
             }));
@@ -2210,7 +2228,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 visibleItems = 5;
                 hasScroll = true;
             }));
@@ -2280,7 +2298,7 @@ describe('igxSelect', () => {
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
                 visibleItems = 5;
                 hasScroll = true;
             }));
@@ -2306,7 +2324,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 tick();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
             }));
             it('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
                 hasScroll = false;
@@ -2436,34 +2454,34 @@ describe('igxSelect', () => {
             select = fixture.componentInstance.select;
             fixture.detectChanges();
             tick();
-            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
         it('Should render header and footer elements where expected', () => {
-            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
-            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_FOOTER));
             // elements exist
             expect(selectHeader).toBeDefined();
             expect(selectFooter).toBeDefined();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
-            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
-            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
+            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
+            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
+            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
+            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
         });
         it('Should NOT render header and footer elements, if template is not defined', fakeAsync(() => {
             select.headerTemplate = null;
             select.footerTemplate = null;
             fixture.detectChanges();
             tick();
-            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
-            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_FOOTER));
             // elements do not exist
             expect(selectHeader).toBeNull();
             expect(selectFooter).toBeNull();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
+            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST_SCROLL);
+            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST_SCROLL);
             expect(selectList.nativeElement.previousElementSibling).toBeNull();
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
@@ -2493,6 +2511,58 @@ describe('igxSelect', () => {
             expect(selectCDR.value).toBe('ID');
         });
     });
+});
+
+describe('igxSelect ControlValueAccessor Unit', () => {
+    let select: IgxSelectComponent;
+    it('Should correctly implement interface methods', () => {
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
+
+        // init
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select.ngOnInit();
+        select.registerOnChange(mockNgControl.registerOnChangeCb);
+        select.registerOnTouched(mockNgControl.registerOnTouchedCb);
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+
+        // writeValue
+        expect(select.value).toBeUndefined();
+        select.writeValue('test');
+        expect(mockSelection.clear).toHaveBeenCalled();
+        expect(select.value).toBe('test');
+
+        // setDisabledState
+        select.setDisabledState(true);
+        expect(select.disabled).toBe(true);
+        select.setDisabledState(false);
+        expect(select.disabled).toBe(false);
+
+        // OnChange callback
+        const item = new IgxDropDownItemComponent(select, null, null, mockSelection);
+        item.value = 'itemValue';
+        select.selectItem(item);
+        expect(mockSelection.set).toHaveBeenCalledWith(select.id, new Set([item]));
+        expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('itemValue');
+
+        // OnTouched callback
+        select.onFocus();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+        select.input = {} as any;
+        spyOnProperty(select, 'collapsed').and.returnValue(true);
+        select.onBlur();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should correctly handle ngControl validity', () => {
+        pending('Convert existing form test here');
+    });
+});
 
 @Component({
     template: `
@@ -2820,28 +2890,27 @@ class IgxSelectHeaderFooterComponent implements OnInit {
     }
 }
 
-    @Component({
-        template: `
-            <h4>*ngIf test select for 'expression changed...console Warning'</h4>
-            <div *ngIf="render">
-                <igx-select #selectCDR value="ID">
-                    <label igxLabel>Column</label>
-                    <igx-select-item *ngFor="let column of columns" [value]="column.field">
-                        {{column.field}}
-                    </igx-select-item>
-                </igx-select>
-            </div>
-        `
-    })
-    class IgxSelectCDRComponent {
-        @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
-        public select: IgxSelectComponent;
+@Component({
+    template: `
+        <h4>*ngIf test select for 'expression changed...console Warning'</h4>
+        <div *ngIf="render">
+            <igx-select #selectCDR value="ID">
+                <label igxLabel>Column</label>
+                <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                    {{column.field}}
+                </igx-select-item>
+            </igx-select>
+        </div>
+    `
+})
+class IgxSelectCDRComponent {
+    @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
+    public select: IgxSelectComponent;
 
-        public render = true;
-        public columns: Array<any> = [
-            { field: 'ID',  type: 'string' },
-            { field: 'CompanyName', type: 'string' },
-            { field: 'ContactName', type: 'string' }
-        ];
-    }
-});
+    public render = true;
+    public columns: Array<any> = [
+        { field: 'ID',  type: 'string' },
+        { field: 'CompanyName', type: 'string' },
+        { field: 'ContactName', type: 'string' }
+    ];
+}

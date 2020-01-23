@@ -33,11 +33,10 @@
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
+                class="igx-grid__scroll-on-drag-left" [style.left.px]="pinnedWidth"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-
             <ng-container *ngIf="groupingExpressions.length > 0">
                 <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
                     [ngClass]="{
@@ -106,7 +105,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger
+        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
