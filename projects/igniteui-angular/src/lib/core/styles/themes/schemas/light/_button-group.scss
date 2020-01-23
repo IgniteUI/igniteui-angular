@@ -158,6 +158,7 @@ $_fluent-button-group: extend(
 /// @requires {map} $_bootstrap-elevation-button-group
 $_bootstrap-button-group: extend(
     $_light-button-group,
+    $_bootstrap-shape-button-group,
     $_bootstrap-elevation-button-group,
     (
         variant: 'bootstrap',

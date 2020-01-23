@@ -55,5 +55,5 @@ $_fluent-tooltip: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-tooltip
-$_bootstrap-tooltip: extend($_light-tooltip);
+$_bootstrap-tooltip: extend($_light-tooltip, $_bootstrap-shape-tooltip);
 

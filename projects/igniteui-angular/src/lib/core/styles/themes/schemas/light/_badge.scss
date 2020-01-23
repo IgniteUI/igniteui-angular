@@ -47,5 +47,5 @@ $_fluent-badge: extend($_light-badge);
 /// @requires {function} extend
 /// @requires $_light-badge
 /// @requires $_bootstrap-elevation-badge
-$_bootstrap-badge: extend($_light-badge, $_bootstrap-elevation-badge);
+$_bootstrap-badge: extend($_light-badge, $_bootstrap-shape-badge, $_bootstrap-elevation-badge);
 

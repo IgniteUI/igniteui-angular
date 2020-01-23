@@ -63,5 +63,5 @@ $_fluent-expansion-panel: extend($_light-expansion-panel);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-expansion-panel
-$_bootstrap-expansion-panel: extend($_light-expansion-panel);
+$_bootstrap-expansion-panel: extend($_light-expansion-panel, $_bootstrap-shape-expansion-panel);
 

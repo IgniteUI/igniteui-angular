@@ -455,7 +455,7 @@ $_fluent-grid: extend(
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-grid
-$_bootstrap-grid: extend($_light-grid, (
+$_bootstrap-grid: extend($_light-grid, $_bootstrap-shape-grid, (
     variant: 'bootstrap',
 
     header-background: #fff,
