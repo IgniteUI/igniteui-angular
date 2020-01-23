@@ -5,7 +5,8 @@ import {
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
     IgxSelectComponent,
-    DisplayDensity
+    DisplayDensity,
+    IButtonGroupEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -22,10 +23,6 @@ export class SelectSampleComponent implements OnInit {
     public selectFruits: IgxSelectComponent;
     @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
     public selectDisplayDensity: IgxSelectComponent;
-
-    public comfortable = DisplayDensity.comfortable;
-    public cosy = DisplayDensity.cosy;
-    public compact = DisplayDensity.compact;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -64,7 +61,7 @@ export class SelectSampleComponent implements OnInit {
     public onSubmitReactive() { }
 
     public selectBanana() {
-        this.selectFruits.selectItem(this.selectFruits.items[3]);
+        this.selectFruits.setSelectedItem(3);
     }
 
     public setToNull() {
@@ -144,8 +141,8 @@ export class SelectSampleComponent implements OnInit {
         }
     }
 
-    setDensity(density: DisplayDensity) {
-        this.selectDisplayDensity.displayDensity = density;
+    setDensity(event: IButtonGroupEventArgs) {
+        this.selectDisplayDensity.displayDensity = event.button.nativeElement.value;
     }
 
     btnClick() {
