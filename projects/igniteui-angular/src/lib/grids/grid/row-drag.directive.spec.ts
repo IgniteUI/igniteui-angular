@@ -818,7 +818,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
 
         it('should be able to drag row on every hierarchical level', (async () => {
             // first level row
-            
             let rowToDrag = dragGrid.getRowByIndex(0);
             let dragIndicatorElement: Element = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
             let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
@@ -880,7 +879,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
             // first level row
-            
             let rowToDrag = dragGrid.getRowByIndex(0);
             let dragIndicatorElement: Element = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
             let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective) as any;
@@ -898,7 +896,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(rowDragDirective.ghostContext.grid).toEqual(dragGrid);
 
             // second level row
-           
             const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
             rowToDrag = childGrid.getRowByIndex(0);
             dragIndicatorElement = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
