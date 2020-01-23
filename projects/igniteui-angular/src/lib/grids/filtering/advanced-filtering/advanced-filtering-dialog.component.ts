@@ -56,6 +56,7 @@ class ExpressionOperandItem extends ExpressionItem {
     inEditMode: boolean;
     inAddMode: boolean;
     hovered: boolean;
+    columnHeader: string;
 }
 
 /**
@@ -301,9 +302,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public commitOperandEdit() {
         if (this.editedExpression) {
             this.editedExpression.expression.fieldName = this.selectedColumn.field;
-            this.editedExpression.expression.headerName = this.selectedColumn.header;
             this.editedExpression.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
             this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedColumn.dataType, this.searchValue);
+            this.editedExpression.columnHeader = this.selectedColumn.header;
 
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
@@ -382,12 +383,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     const filteringExpr = expr as IFilteringExpression;
                     const exprCopy: IFilteringExpression = {
                         fieldName: filteringExpr.fieldName,
-                        headerName: filteringExpr.headerName,
                         condition: filteringExpr.condition,
                         searchVal: filteringExpr.searchVal,
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
+                    const column = this.grid.getColumnByName(filteringExpr.fieldName);
+                    operandItem.columnHeader = column.header;
                     groupItem.children.push(operandItem);
                 }
             }
