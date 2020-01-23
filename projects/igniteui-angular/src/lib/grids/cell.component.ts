@@ -900,6 +900,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         event.stopPropagation();
 
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+
+        // This fixes IME editing issue(#6335) that happens only on IE
+        if (isIE() && keydownArgs.event.keyCode === 229 && event.key === 'Tab') {
+            return;
+        }
+
         this.grid.onGridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel) {
             this.selectionService.clear();
