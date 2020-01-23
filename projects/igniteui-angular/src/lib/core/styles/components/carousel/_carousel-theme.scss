@@ -153,7 +153,12 @@
         width: 46px;
         height: 46px;
         cursor: pointer;
-        border-radius: 50%;
+        @if map-get($theme, variant) != 'bootstrap' {
+            border-radius: 50%;
+        } @else {
+            border-radius: --var($theme, 'border-radius');
+        }
+
         outline-style: none;
         transition: all .15s ease-in-out;
         color: --var($theme, 'button-arrow-color');
