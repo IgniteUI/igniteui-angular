@@ -1674,7 +1674,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
             const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
-            filterCellChip.triggerEventHandler('keydown', UIInteractions.tabEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterCellChip.nativeElement, true );
             tick(200);
             fix.detectChanges();
 
