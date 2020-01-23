@@ -21,8 +21,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
-- Added `Directionality` service providing information about the text direction of the element's content.
-
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
@@ -107,6 +105,9 @@ All notable changes for each version of this project will be documented in this 
 
     @include igx-progress-circular($theme);
     ```
+    - RTL support
+- `IgxLinearProgressBar`:
+    - RTL support
 
 ## 8.2.6
 

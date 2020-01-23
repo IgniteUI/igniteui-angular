@@ -30,7 +30,6 @@ export function DIR_DOCUMENT_FACTORY(): Document {
 
 /**
  * @hidden
- * @dynamic
  *
  * Bidirectional service that extracts the value of the direction attribute on the body or html elements.
  *
@@ -45,6 +44,10 @@ export class IgxDirectionality {
 
     public get value(): Direction {
         return this._dir;
+    }
+
+    public get document() {
+        return this._document;
     }
 
     constructor(@Inject(DIR_DOCUMENT) document) {
