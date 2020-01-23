@@ -10,7 +10,6 @@ export enum FilteringLogic {
  */
 export declare interface IFilteringExpression {
     fieldName: string;
-    headerName?: string;
     condition: IFilteringOperation;
     searchVal?: any;
     ignoreCase?: boolean;
