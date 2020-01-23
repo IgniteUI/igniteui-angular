@@ -262,7 +262,7 @@ export class IgxCardComponent {
 }
 
 export enum IgxCardActionsLayout {
-    LEFT = 'left',
+    START = 'start',
     JUSTIFY = 'justify',
 }
 
@@ -292,7 +292,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      */
     @HostBinding('class.igx-card-actions')
     @Input()
-    public layout: IgxCardActionsLayout | string = IgxCardActionsLayout.LEFT;
+    public layout: IgxCardActionsLayout | string = IgxCardActionsLayout.START;
 
     /**
      * An @Input property that sets the vertical attribute of the actions.

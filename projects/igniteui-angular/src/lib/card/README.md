@@ -60,7 +60,7 @@ Supporting directives and components:
 ## igx-card-actions
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `layout` | IgxCardActionsLayout | Sets the layout type of the area. Can be either `left` or `justify`. |
+| `layout` | IgxCardActionsLayout | Sets the layout type of the area. Can be either `start` or `justify`. |
 | `vertical` | boolean | Sets the layout direction. When set to `true` all buttons in the area will be aligned vertically. |
 | `reverse` | boolean | Reverses the layout of the area. When set to `true` all `igx-icons` and/or `igx-button='icon` will appear before all regular(text) buttons. |
 | `isJustifyLayout` | boolean | Returns true when the layout type is set to `justify`. |

@@ -32,7 +32,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** - renamed the `default` enumeration member to `primary` in `IgxBadgeType`;
 - `IgxCard`:
     - **Breaking Changes** - renamed the `default` enumeration member to `elevated` in `IgxCardType`;
-    - **Breaking Changes** - renamed the `default` enumeration member to `left` in `IgxCardActionsLayout`;
+    - **Breaking Changes** - renamed the `default` enumeration member to `start` in `IgxCardActionsLayout`;
 - `IgxDivider`:
     - **Breaking Changes** - renamed the `default` enumeration member to `solid` in `IgxDividerType`;
     - **Breaking Changes** - renamed the `isDefault` getter to `isSolid`;
