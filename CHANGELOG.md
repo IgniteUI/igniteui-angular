@@ -27,9 +27,9 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
 - `IgxAvatar`:
-    - **Breaking Changes** - removed the `default` enumeration member from `IgxAvatarType` (previously `AvatarType`);
+    - **Breaking Changes** - renamed the `default` enumeration member to `custom` in `IgxAvatarType`;
 - `IgxBadge`:
-    - **Breaking Changes** - removed the `default` enumeration member from `IgxBadgeType` (previously `Type`);
+    - **Breaking Changes** - renamed the `default` enumeration member to `primary` in `IgxBadgeType`;
 - `IgxCard`:
     - **Breaking Changes** - renamed the `default` enumeration member to `elevated` in `IgxCardType`;
     - **Breaking Changes** - renamed the `default` enumeration member to `left` in `IgxCardActionsLayout`;
