@@ -9,7 +9,7 @@ interface FakeDoc {
 
 describe('IgxDirectionality', () => {
     let fakeDoc: FakeDoc;
-    beforeEach(() => {
+    beforeEach(async(() => {
         fakeDoc = {body: {}, documentElement: {}};
 
         TestBed.configureTestingModule({
@@ -70,4 +70,3 @@ describe('IgxDirectionality', () => {
 class InjectsIgxDirectionalityComponent {
     constructor(public dir: IgxDirectionality) { }
 }
-
