@@ -380,6 +380,52 @@ describe('IgxGrid - Advanced Filtering', () => {
                 .toBe(false, 'Button icon indicates there is active filtering.');
         }));
 
+        it('Should correctly display header name in select dropdown and in chip expression.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Open column dropdown and verify header name is displayed for first item
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+            expect(dropdownItems[0].innerText).toBe('HeaderID');
+
+            selectColumnInEditModeExpression(fix, 0); // Select 'HeaderID' column
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'a'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Verify header name in chip text
+            verifyExpressionChipContent(fix, [0], 'HeaderID', 'Contains', 'a');
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Close Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog again.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify header name in chip text
+            verifyExpressionChipContent(fix, [0], 'HeaderID', 'Contains', 'a');
+        }));
+
         it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
@@ -894,7 +940,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
             const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
             expect(dropdownItems.length).toBe(3);
-            expect(dropdownItems[0].innerText).toBe('ID');
+            expect(dropdownItems[0].innerText).toBe('HeaderID');
             expect(dropdownItems[1].innerText).toBe('ProductName');
             expect(dropdownItems[2].innerText).toBe('Another Field');
         }));
