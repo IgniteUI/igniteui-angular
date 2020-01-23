@@ -663,9 +663,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @internal
      */
     public hasExpandedRecords() {
-        const state = this.expansionStates;
-        const hasExpandedEntry = Array.from(state.values()).find(x => x === true);
-        return hasExpandedEntry || this.expandChildren;
+       if (this.expandChildren) {
+            return true;
+       }
+       let hasExpandedEntry = false;
+       this.expansionStates.forEach((value, key) => {
+           if (value) {
+            hasExpandedEntry = value;
+           }
+        });
+        return hasExpandedEntry;
     }
 
     public getDefaultExpandState(record: any) {
