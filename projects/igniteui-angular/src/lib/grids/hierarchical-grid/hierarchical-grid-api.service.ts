@@ -102,7 +102,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         let inState;
         if (record.childGridsData !== undefined) {
             const ri = record.rowID;
-            const rec = this.grid.primaryKey ? this.get_rec_by_id(ri): ri;
+            const rec = this.grid.primaryKey ? this.get_rec_by_id(ri) : ri;
             inState = !!super.get_row_expansion_state(rec);
         } else {
             inState = !!super.get_row_expansion_state(record);
@@ -110,7 +110,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return inState && (this.grid as any).childLayoutList.length !== 0;
     }
 
-    public allow_expansion_state_change(rowID, expanded) : boolean {
+    public allow_expansion_state_change(rowID, expanded): boolean {
         const rec = this.get_rec_by_id(rowID);
         return !!rec && this.grid.expansionStates.get(rowID) !== expanded;
     }
