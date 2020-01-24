@@ -89,7 +89,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      */
     clicked(event): void {
         this.comboAPI.disableTransitions = false;
-        if (!this.shouldSelect) { return; }
+        if (!this.isSelectable) { return; }
         this.dropDown.navigateItem(this.index);
         this.comboAPI.set_selected_item(this.itemID, event);
     }

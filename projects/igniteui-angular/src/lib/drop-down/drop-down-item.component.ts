@@ -23,7 +23,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
             const focusedIndex = focusedItem ? focusedItem.index : -1;
             focusedState = this._index === focusedIndex;
         }
-        return !this.isHeader && !this.disabled && focusedState;
+        return this.isSelectable && focusedState;
     }
 
     /**
@@ -58,7 +58,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      */
     @HostBinding('attr.tabindex')
     get setTabIndex() {
-        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && this.isSelectable;
         if (shouldSetTabIndex) {
             return 0;
         } else {
@@ -70,7 +70,10 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      * @inheritdoc
      */
     clicked(event): void {
-        if (!this.shouldSelect) { return; }
+        if (!this.isSelectable) {
+            this.ensureItemFocus();
+            return;
+        }
         if (this.selection) {
             this.dropDown.selectItem(this, event);
         }
