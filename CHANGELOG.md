@@ -22,7 +22,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
 - `igxOverlay`:
-    - **Behavioural Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed onAppended overlay event and manage/restore the scroll position.
+    - **Behavioural Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed `onAppended` overlay event and manage/restore the scroll position.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
