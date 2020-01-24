@@ -11,11 +11,11 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-                <div #headerHierarchyExpander (click)="toggleAll()" [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
-                    'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
-                    'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
-                    'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
-                }">
+            <div #headerHierarchyExpander (click)="toggleAll()" [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
+                'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
+                'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
+            }">
                 <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
             </div>
             <ng-container *ngIf="rowDraggable">
