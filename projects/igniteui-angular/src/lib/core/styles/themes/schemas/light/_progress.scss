@@ -123,7 +123,7 @@ $_light-progress-circular: extend(
 /// @requires $_light-progress-circular
 $_fluent-progress-circular: extend(
     $_light-progress-circular,(
-        variant: 'fluent'
+        variant: 'fluent',
     )
 );
 
@@ -138,6 +138,10 @@ $_bootstrap-progress-circular: extend(
     $_light-progress-circular,
     (
         variant: 'bootstrap',
+
+        track-color: (
+            igx-color: ('grays', 200)
+        ),
     )
 );
 
