@@ -91,7 +91,7 @@ $_fluent-checkbox: extend(
 
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
-    $_bootstrap-shape-checkbox
+    $_bootstrap-shape-checkbox,
     (
         variant: 'bootstrap',
 
