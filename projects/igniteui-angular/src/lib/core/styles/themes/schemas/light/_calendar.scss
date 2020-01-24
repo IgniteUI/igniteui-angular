@@ -239,80 +239,84 @@ $_fluent-calendar: extend(
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-calendar
-$_bootstrap-calendar: extend($_light-calendar, $_bootstrap-shape-calendar, (
-    variant: 'bootstrap',
+$_bootstrap-calendar: extend(
+    $_light-calendar,
+    $_bootstrap-shape-calendar,
+    (
+        variant: 'bootstrap',
 
-    year-hover-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        year-hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    date-special-background: (
-        igx-color: ('warn'),
-        rgba:.5
-    ),
+        date-special-background: (
+            igx-color: ('warn'),
+            rgba:.5
+        ),
 
-    month-hover-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        month-hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    month-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        month-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    picker-text-hover-color: (
-        igx-color: ('primary', 500)
-    ),
+        picker-text-hover-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    picker-arrow-color: (
-        igx-color: ('primary', 500)
-    ),
+        picker-arrow-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    picker-arrow-hover-color: (
-        igx-color: ('primary', 800)
-    ),
+        picker-arrow-hover-color: (
+            igx-color: ('primary', 800)
+        ),
 
-    picker-text-color: #000,
+        picker-text-color: #000,
 
-    calendar-picker-background-color: (
-        igx-color: ('grays', 100)
-    ),
+        calendar-picker-background-color: (
+            igx-color: ('grays', 100)
+        ),
 
-    calendar-border-color: (
-        igx-color: ('grays', 300)
-    ),
+        calendar-border-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    year-current-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        year-current-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    month-current-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        month-current-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    label-color: (
-        igx-color: 'info',
-        rgba: .5,
-        hexrgba: #fff
-    ),
+        label-color: (
+            igx-color: 'info',
+            rgba: .5,
+            hexrgba: #fff
+        ),
 
-    date-current-text-color: #fff,
+        date-current-text-color: #fff,
 
-    date-hover-background: (
-        igx-color: ('primary', 500)
-    ),
+        date-hover-background: (
+            igx-color: ('primary', 500)
+        ),
 
-    date-current-bg-color: (
-        igx-color: ('primary', 600)
-    ),
+        date-current-bg-color: (
+            igx-color: ('primary', 600)
+        ),
 
-    date-selected-background: (
-        igx-color: ('primary', 500),
-        rgba: .8,
-        hexrgba: #fff
-    ),
+        date-selected-background: (
+            igx-color: ('primary', 500),
+            rgba: .8,
+            hexrgba: #fff
+        ),
 
-    date-selected-text-color: #fff,
+        date-selected-text-color: #fff,
 
-    content-background: #fff,
-));
+        content-background: #fff,
+    )
+);
 
