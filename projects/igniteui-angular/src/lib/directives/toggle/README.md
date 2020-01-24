@@ -40,7 +40,7 @@ handlers when the toggle is opened and respectively closed.
 ### Outputs
 | Name | Return Type | Description |
 |:--:|:---|:---|
-| `onAppended`   | `void` | Emits an event after content is appended to the overlay         .|
+| `onAppended`   | `void` | Emits an event after content is appended to the overlay.         |
 | `onOpening`    | `void` | Emits an event before the toggle container is opened.            |
 | `onOpened`     | `void` | Emits an event after the toggle container is opened.             |
 | `onClosing`    | `void` | Emits an event before the toggle container is closed.            |

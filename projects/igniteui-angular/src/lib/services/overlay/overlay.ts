@@ -317,7 +317,6 @@ export class IgxOverlayService implements OnDestroy {
                 true);
             info.settings.scrollStrategy.initialize(this._document, this, info.id);
             info.settings.scrollStrategy.attach();
-
         }
 
         this.addOutsideClickListener(info);

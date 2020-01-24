@@ -166,7 +166,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Emits an event after the toggle container content is positioned.
+     * Emits an event after the toggle container content is appended.
      *
      * ```typescript
      * onAppended() {
