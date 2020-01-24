@@ -41,7 +41,20 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+     // browsers: ['ChromeHeadless'],
+     browsers: [
+      'ChromeHeadless_custom',
+    ],
+
+    customLaunchers: {
+      'ChromeHeadless_custom': {
+        base: 'ChromeHeadless',
+        flags: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+        ],
+      },
+    },
     singleRun: true
   });
 };

@@ -35,13 +35,27 @@ module.exports = function (config) {
     },
     reporters: ['spec'],
     specReporter: {
-        suppressSkipped: true
+      suppressSkipped: true
     },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    // browsers: ['ChromeHeadless'],
+    browsers: [
+      'ChromeHeadless_custom',
+    ],
+
+    customLaunchers: {
+      'ChromeHeadless_custom': {
+        base: 'ChromeHeadless',
+        flags: [
+          // Also: https://github.com/GoogleChrome/puppeteer/issues/560
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+        ],
+      },
+    },
     singleRun: false
   });
 };
