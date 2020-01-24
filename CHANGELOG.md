@@ -106,8 +106,6 @@ All notable changes for each version of this project will be documented in this 
     @include igx-progress-circular($theme);
     ```
     - RTL support
-- `IgxLinearProgressBar`:
-    - RTL support
 
 ## 8.2.6
 

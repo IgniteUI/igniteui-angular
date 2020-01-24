@@ -762,7 +762,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     private getProgress(percentage: number) {
-        return this._directionality.value === 'rtl' ?
+        return this._directionality.rtl ?
             this._circumference + (percentage * this._circumference / 100) :
             this._circumference - (percentage * this._circumference / 100);
     }

@@ -50,6 +50,10 @@ export class IgxDirectionality {
         return this._document;
     }
 
+    public get rtl() {
+        return this._dir === 'rtl';
+    }
+
     constructor(@Inject(DIR_DOCUMENT) document) {
         this._document = <Document>document;
         const bodyDir = this._document.body ? this._document.body.dir : null;
