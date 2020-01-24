@@ -65,6 +65,7 @@
 
     $tab-ripple-color: null,
     $button-ripple-color: null,
+    $border-radius: null,
 
     $disable-shadow: true
 ) {
@@ -77,6 +78,10 @@
         $tabs-schema: $schema;
     }
 
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($tabs-schema, 'border-radius')), 0, 6px
+    );
+
     $theme: apply-palette($tabs-schema, $palette);
 
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
@@ -86,6 +91,7 @@
     @if map-get($theme, 'variant') == 'bootstrap' {
         $tab-border-color: rgba(map-get($theme, 'indicator-color'), .1);
     }
+
 
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
@@ -192,6 +198,7 @@
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
         tab-border-color: $tab-border-color,
+        border-radius: $border-radius,
     ));
 }
 
@@ -300,8 +307,8 @@
 
         @if map-get($theme, 'variant') == 'bootstrap' {
             border: 1px solid transparent;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
+            border-top-left-radius: --var($theme, 'border-radius');
+            border-top-right-radius: --var($theme, 'border-radius');
         }
 
         &::-moz-focus-inner {
