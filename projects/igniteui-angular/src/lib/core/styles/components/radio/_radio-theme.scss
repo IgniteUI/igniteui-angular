@@ -6,8 +6,7 @@
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
-////
-
+///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
@@ -15,6 +14,8 @@
 /// @param {Color} $empty-color [null] - The unchecked border color.
 /// @param {Color} $fill-color [null] - The checked border and dot colors.
 /// @param {Color} $disabled-color [null] - The disabled border and dot colors.
+/// @param {Color} $fill-color-hover [null] - The checked border and dot colors on hover.
+/// @param {Color} $fill-hover-border-color [null] - The checked dot border color on hover.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -35,8 +36,8 @@
     $fill-color: null,
     $fill-hover-border-color:null,
     $disabled-color: null,
-    $hover-color: null
-
+    $hover-color: null,
+    $fill-color-hover: null,
 ) {
     $name: 'igx-radio';
     $radio-schema: ();
@@ -58,6 +59,7 @@
         fill-hover-border-color: $fill-hover-border-color,
         disabled-color: $disabled-color,
         hover-color: $hover-color,
+        fill-color-hover: $fill-color-hover
     ));
 }
 
@@ -181,12 +183,11 @@
         &::before {
             border: $border-width $border-style --var($theme, 'fill-color');
 
-            @if map-get($theme, 'variant') == 'bootstrap' {
-                background: #fff;
-            } @else {
-                background: --var($theme, 'fill-color');
+            @if map-get($theme, variant) == 'bootstrap' {
+                border-color: --var($theme, 'fill-hover-border-color');
             }
 
+            background: --var($theme, 'fill-color-hover');
             transform: $scale;
         }
 
@@ -201,20 +202,15 @@
 
     %igx-radio-hover__composite {
         &::before {
-            background: --var($theme, 'hover-color');
+            background: --var($theme, 'fill-color-hover');
             transform: $radio-hover-scale;
         }
     }
 
     %igx-radio--checked-active__composite {
         &::before {
-            @if map-get($theme, 'variant') == 'bootstrap' {
-                border-color: --var($theme, 'fill-color');
-                background: #fff;
-            } @else {
-                background: --var($theme, 'fill-hover-border-color');
-                border-color: --var($theme, 'fill-hover-border-color');
-            }
+            background: --var($theme, 'fill-color-hover');
+            border-color: --var($theme, 'fill-hover-border-color');
         }
 
         &::after {
