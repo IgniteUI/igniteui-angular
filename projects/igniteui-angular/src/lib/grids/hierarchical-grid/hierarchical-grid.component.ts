@@ -385,6 +385,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngAfterContentInit();
     }
 
+    /** @hidden */
+    public featureColumnsWidth() {
+        return super.featureColumnsWidth(this.headerHierarchyExpander);
+    }
+
     /**
     * @hidden
     */
@@ -421,7 +426,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
             this.columnList.reset(topCols);
             if (recalcColSizes && this.columnList.length !== colLength) {
-                this.calculateGridSizes();
+                this.calculateGridSizes(false);
             }
         }
     }
@@ -465,32 +470,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         if (this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
-    }
-
-    /**
-     * @hidden
-     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
-     */
-    public getFeatureColumnsWidth() {
-        let width = super.getFeatureColumnsWidth();
-
-        if (this.hasExpandableChildren) {
-            width += this.headerHierarchyExpander.nativeElement.offsetWidth || this.getDefaultExpanderWidth();
-        }
-
-        return width;
-    }
-
-     private getDefaultExpanderWidth(): number {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return 57;
-            case DisplayDensity.compact:
-                return 49;
-            default:
-                return 72;
         }
     }
 
