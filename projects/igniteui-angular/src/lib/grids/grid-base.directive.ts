@@ -3442,7 +3442,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
      */
-    public featureColumnsWidth(expander?) {
+    public featureColumnsWidth(expander?: ElementRef) {
         if (Number.isNaN(this._headerFeaturesWidth)) {
             const rowSelectArea = this.headerSelectorContainer ?
                 this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
