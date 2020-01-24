@@ -14,6 +14,7 @@
 /// @param {Color} $message-color [null] - The dialog message text color.
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 /// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
+/// @param {Color} $border-colors [null] - The border color used for dialog component.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -34,12 +35,12 @@
     $elevations: $elevations,
 
     $border-radius: null,
+    $border-color: null,
 
     $background: null,
     $title-color: null,
     $message-color: null,
     $shadow: null,
-    $bootstrap-border-color: null
 ) {
     $name: 'igx-dialog';
     $dialog-schema: ();
@@ -79,7 +80,7 @@
         title-color: $title-color,
         message-color: $message-color,
         shadow: $shadow,
-        bootstrap-border-color: $bootstrap-border-color
+        border-color: $border-color
     ));
 }
 
@@ -118,6 +119,7 @@
 
     %igx-dialog-display {
         outline-style: none;
+        border: 1px solid --var($theme, 'border-color');
     }
 
     %igx-dialog--hidden {
@@ -146,7 +148,7 @@
         padding: $dialog-title-padding;
 
         @if map-get($theme, 'variant') == 'bootstrap' {
-            border-bottom: 1px solid --var($theme, 'bootstrap-border-color');
+            border-bottom: 1px solid --var($theme, 'border-color');
         }
     }
 
@@ -163,7 +165,7 @@
         padding: $dialog-actions-padding;
 
         @if map-get($theme, 'variant') == 'bootstrap' {
-            border-top: 1px solid --var($theme, 'bootstrap-border-color');
+            border-top: 1px solid --var($theme, 'border-color');
         }
 
         button + button {
