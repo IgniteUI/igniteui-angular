@@ -546,7 +546,7 @@ describe('igxOverlay', () => {
             expect(overlayContentTransform).toEqual(secondTransform);
         }));
 
-        it('fixes 1690 - click on second filter does not close first one.', fakeAsync(() => {
+        it('#1690 - click on second filter does not close first one.', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
             const button2 = fixture.nativeElement.getElementsByClassName('buttonTwo')[0];
@@ -563,7 +563,7 @@ describe('igxOverlay', () => {
             expect(overlayDiv.children.length).toBe(1);
         }));
 
-        it('fixes 1692 - scroll strategy closes overlay when shown component is scrolled.', fakeAsync(() => {
+        it('#1692 - scroll strategy closes overlay when shown component is scrolled.', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleDynamicWithDirectiveComponent);
             const overlaySettings: OverlaySettings = { scrollStrategy: new CloseScrollStrategy() };
             fixture.componentInstance.show(overlaySettings);
@@ -590,7 +590,7 @@ describe('igxOverlay', () => {
         }));
 
         // TODO: refactor utilities to include all exported methods in a class
-        it('fixes 1799 - content div should reposition on window resize.', fakeAsync(() => {
+        it('#1799 - content div should reposition on window resize.', fakeAsync(() => {
             const rect: ClientRect = {
                 bottom: 50,
                 height: 0,
@@ -632,7 +632,7 @@ describe('igxOverlay', () => {
             overlayInstance.hide(id);
         }));
 
-        it('fixes 2475 - An error is thrown for IgxOverlay when showing a component' +
+        it('#2475 - An error is thrown for IgxOverlay when showing a component' +
             'instance that is not attached to the DOM', fakeAsync(() => {
                 const fix = TestBed.createComponent(SimpleRefComponent);
                 fix.detectChanges();
@@ -653,7 +653,7 @@ describe('igxOverlay', () => {
                 expect(contentDiv.classList.contains(CLASS_OVERLAY_CONTENT_MODAL)).toBeTruthy();
             }));
 
-        it('fixes 2486 - filtering dropdown is not correctly positioned', fakeAsync(() => {
+        it('#2486 - filtering dropdown is not correctly positioned', fakeAsync(() => {
             const fix = TestBed.createComponent(WidthTestOverlayComponent);
             fix.debugElement.nativeElement.style.transform = 'translatex(100px)';
 
@@ -673,7 +673,7 @@ describe('igxOverlay', () => {
             expect(fix.componentInstance.customComponent.nativeElement.getBoundingClientRect().left).toBe(400);
         }));
 
-        it('fixes 2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+        it('#2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
             const fix = TestBed.createComponent(SimpleRefComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
@@ -710,7 +710,7 @@ describe('igxOverlay', () => {
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('fixes 3673 - Should not close dropdown in dropdown', fakeAsync(() => {
+        it('#3673 - Should not close dropdown in dropdown', fakeAsync(() => {
             const fix = TestBed.createComponent(EmptyPageComponent);
             const button = fix.componentInstance.buttonElement;
             const overlay = fix.componentInstance.overlay;
@@ -746,7 +746,7 @@ describe('igxOverlay', () => {
             expect(overlayDiv.children[0].localName).toEqual('div');
         }));
 
-        it('fixes 3743 - Reposition correctly resized element.', () => {
+        it('#3743 - Reposition correctly resized element.', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             fixture.detectChanges();
 
@@ -798,7 +798,7 @@ describe('igxOverlay', () => {
             document.body.removeChild(wrapperElement);
         });
 
-        it('Fixes 3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
+        it('#3988 - Should use ngModuleRef to create component', inject([ApplicationRef], (appRef: ApplicationRef) => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             fixture.detectChanges();
@@ -823,7 +823,7 @@ describe('igxOverlay', () => {
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
         }));
 
-        it('fixes #6474 - should calculate correctly position', () => {
+        it('##6474 - should calculate correctly position', () => {
             const elastic: ElasticPositionStrategy = new ElasticPositionStrategy();
             const targetRect: ClientRect = {
                 top: 100,
@@ -2654,7 +2654,7 @@ describe('igxOverlay', () => {
             tick();
         }));
 
-        // Test fixes 1883 #1820
+        // Test #1883 #1820
         it('It should close the component when esc key is pressed and there were other keys pressed prior to esc.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
