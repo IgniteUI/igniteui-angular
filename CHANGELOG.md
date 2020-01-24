@@ -103,6 +103,23 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSelect`: 
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
 
+- `IgxCombo`:
+    - Added `displayText` property to the combo's `onSelectionChange` event args. The property contains the text that will be populated in the combo's text box **after** selection completes. This text can be overwritten in order to display a custom message, e.g. "3 items selected":
+    ```html
+    <igx-combo [data]="people" valueKey="id" displayKey="name" placeholder="Invite friends..." (onSelectionChange)="handleSelection($event)">
+    ```
+    ```typescript
+    export class MyInvitationComponent {
+        public people: { name: string; id: string }[] = [...];
+        ...
+        handleSelection(event: IComboSelectionChangeEventArgs) {
+            const count = event.newSelection.length;
+            event.displayText = count > 0 ? `${count} friend(s) invited!` : `No friends invited :(`;
+        }
+        ...
+    }
+    ```
+
 - `IgxDropDown`:
     - `clearSelection` method is added, which can be used to deselect the selected dropdown item
 
