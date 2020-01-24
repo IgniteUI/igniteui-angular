@@ -121,9 +121,11 @@ $_light-progress-circular: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-progress-circular
-$_fluent-progress-circular: extend($_light-progress-circular,(
-    variant: 'fluent'
-));
+$_fluent-progress-circular: extend(
+    $_light-progress-circular,(
+        variant: 'fluent'
+    )
+);
 
 /// Generates a bootstrap progress-circular schema.
 /// @type {Map}
@@ -132,7 +134,10 @@ $_fluent-progress-circular: extend($_light-progress-circular,(
 ///
 /// @requires {function} extend
 /// @requires $_light-progress-circular
-$_bootstrap-progress-circular: extend($_light-progress-circular,(
-    variant: 'bootstrap',
-));
+$_bootstrap-progress-circular: extend(
+    $_light-progress-circular,
+    (
+        variant: 'bootstrap',
+    )
+);
 
