@@ -1,5 +1,5 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { ViewChild, ElementRef, HostBinding, Directive } from '@angular/core';
+import { ViewChild, ElementRef, HostBinding, Directive, QueryList } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -16,10 +16,15 @@ export enum CalendarView {
 export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
+     * Holds month view index we are operating on.
+     */
+    protected _monthViewIdx = 0;
+
+    /**
      * @hidden
      */
     @ViewChild('yearsBtn')
-    public yearsBtn: ElementRef;
+    public yearsBtn: QueryList<ElementRef>;
 
     /**
      * The default `tabindex` attribute for the component.
@@ -70,24 +75,25 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
         this._activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
+            if (this.yearsBtn) { this.yearsBtn.find((e: ElementRef, idx: number) => idx === this._monthViewIdx).nativeElement.focus(); }
         });
     }
 
     /**
      * @hidden
      */
-    public activeViewDecade(args?: Date): void {
+    public activeViewDecade(monthViewIdx = 0): void {
         this._activeView = CalendarView.DECADE;
+        this._monthViewIdx = monthViewIdx;
     }
 
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, args?: Date) {
+    public activeViewDecadeKB(event, monthViewIdx = 0) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.activeViewDecade(args);
+            this.activeViewDecade(monthViewIdx);
         }
     }
 

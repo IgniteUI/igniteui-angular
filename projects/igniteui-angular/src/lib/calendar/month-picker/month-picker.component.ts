@@ -185,7 +185,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         this.onSelection.emit(this.selectedDates);
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
+            if (this.yearsBtn) { this.yearsBtn.find((e, idx) => idx === this._monthViewIdx).nativeElement.focus(); }
         });
     }
 

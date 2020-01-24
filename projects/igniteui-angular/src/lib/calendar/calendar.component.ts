@@ -79,6 +79,12 @@ let NEXT_ID = 0;
     templateUrl: 'calendar.component.html'
 })
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
+
+    /**
+     * Holds the index of the month view we are operating on.
+     */
+    public _monthViewIndex = 0;
+
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -217,8 +223,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    @ViewChild('monthsBtn')
-    public monthsBtn: ElementRef;
+    @ViewChildren('monthsBtn')
+    public monthsBtns: QueryList<ElementRef>;
 
     /**
      * @hidden
@@ -476,8 +482,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    public activeViewDecade(args: Date) {
-        super.activeViewDecade();
+    public onActiveViewDecade(args: Date, monthViewIdx: number) {
+        super.activeViewDecade(monthViewIdx);
         requestAnimationFrame(() => {
             if (this.dacadeView) {
                 this.dacadeView.date = args;
@@ -489,8 +495,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, args: Date) {
-        super.activeViewDecadeKB(event, args);
+    public onActiveViewDecadeKB(event, args: Date, monthViewIdx: number) {
+        super.activeViewDecadeKB(event, monthViewIdx);
 
         requestAnimationFrame(() => {
             if (this.dacadeView) {
@@ -552,38 +558,43 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeMonth(event: Date) {
-        this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
         this.activeView = CalendarView.DEFAULT;
-
+        this.dayViews = this.dayViews.map((v, index) => { return {
+                value: v.value,
+                viewDate: new Date(event.getFullYear(), event.getMonth() + (index - this._monthViewIndex))
+            };
+        });
         requestAnimationFrame(() => {
-            if (this.monthsBtn) { this.monthsBtn.nativeElement.focus(); }
+            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this._monthViewIndex);
+            if (elem) { elem.nativeElement.focus(); }
         });
     }
 
     /**
      * @hidden
      */
-    public activeViewYear(args: Date, event): void {
+    public onActiveViewYear(args: Date, monthViewIdx: number): void {
         this.activeView = CalendarView.YEAR;
+        this._monthViewIndex = monthViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
-            this.focusMonth(event.target);
+            this.focusMonth(this._monthViewIndex);
         });
     }
 
-    private focusMonth(target: HTMLElement) {
-        const month = this.monthsView.dates.find((date) =>
-            date.index === parseInt(target.parentElement.attributes['data-month'].value, 10));
+    private focusMonth(monthVieiwIdx: number) {
+        const month = this.monthsView.monthsRef.find((e) =>
+            e.index === monthVieiwIdx);
         if (month) { month.nativeElement.focus(); }
     }
 
     /**
      * @hidden
      */
-    public activeViewYearKB(args: Date, event): void {
+    public onActiveViewYearKB(args: Date, event, monthViewIdx: number): void {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.activeViewYear(args, event);
+            this.onActiveViewYear(args, monthViewIdx);
         }
     }
 
@@ -618,7 +629,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public getViewDate(i: number): Date {
-        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
+        const date = this.calendarModel.timedelta(this.dayViews[i].viewDate, 'month', 0);
         return date;
     }
 
@@ -825,8 +836,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     private generateContext(value: Date, i?: number) {
         const formatObject = {
             index: i,
-            monthView: () => this.activeViewYear(value, event),
-            yearView: () => this.activeViewDecade(value),
+            monthView: () => this.onActiveViewYear(value, i),
+            yearView: () => this.onActiveViewDecade(value, i),
             ...this.calendarModel.formatToParts(value, this.locale, this.formatOptions,
                 ['era', 'year', 'month', 'day', 'weekday'])
         };

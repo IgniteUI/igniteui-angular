@@ -4,11 +4,11 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB(getViewDate(obj.index), $event)" (click)="activeViewYear(getViewDate(obj.index), $event)"
+    <span tabindex="0" #monthsBtn (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)" (click)="onActiveViewYear(getViewDate(obj.index), $event, obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index))"
+    <span tabindex="0" #yearsBtn (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)" (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedYear(getViewDate(obj.index)) }}
     </span>
