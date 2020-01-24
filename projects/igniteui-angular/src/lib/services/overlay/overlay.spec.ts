@@ -31,8 +31,7 @@ import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
-import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
@@ -42,6 +41,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
 import { ContainerPositionStrategy } from './position';
+import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -416,7 +416,7 @@ describe('igxOverlay', () => {
             spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => {
                 return {
                     left, top, width, height, right, bottom
-                };
+                } as DOMRect;
             });
 
             const mockItem = document.createElement('div');
