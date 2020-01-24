@@ -53,6 +53,8 @@ module.exports = function (config) {
           // Also: https://github.com/GoogleChrome/puppeteer/issues/560
           '--no-sandbox',
           '--disable-setuid-sandbox',
+          '--disable-web-security',
+          '--disable-gpu'
         ],
         debug: false
       },

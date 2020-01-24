@@ -53,10 +53,13 @@ module.exports = function (config) {
         flags: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
+          '--disable-web-security',
+          '--disable-gpu'
         ],
         debug: false
       },
     },
-    singleRun: true
+    singleRun: true,
+    concurrency: 1
   });
 };
