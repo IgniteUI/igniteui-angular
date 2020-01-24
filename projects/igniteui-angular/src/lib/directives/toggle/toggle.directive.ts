@@ -166,7 +166,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     * Emits an event after the toggle container content is appended.
+     * Emits an event after the toggle element is appended to the overlay container.
      *
      * ```typescript
      * onAppended() {
