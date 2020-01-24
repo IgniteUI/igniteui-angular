@@ -622,7 +622,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
             }
             crud.end();
-            this.grid.notifyChanges();
+            this.grid.sortingExpressions.length ? this.grid.cdr.detectChanges() : this.grid.notifyChanges();
             crud.begin(this);
             return;
         }
