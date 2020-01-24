@@ -18,6 +18,8 @@
 /// @property {color} stripes-color [rgba(#fff, .7)] - The track stripes color.
 /// @property {map} text-color [igx-color: ('grays', 700)] - The track value text color.
 ///
+/// @prop {Number} track-border-radius [0] - The border radius fraction, between 0 - 8 to be used fot the progress bar track.
+///
 /// @see $default-palette
 $_light-progress-linear: extend(
     $_default-shape-progress,
@@ -58,29 +60,37 @@ $_light-progress-linear: extend(
 
 /// Generates a fluent progress-linear schema.
 /// @type {Map}
+/// @prop {Number} track-border-radius [0] - The border radius fraction, between 0 - 8 to be used fot the progress bar track.
 /// @requires {function} extend
 /// @requires $_light-progress-linear
-$_fluent-progress-linear: extend($_light-progress-linear,(
-    variant: 'fluent',
-));
+$_fluent-progress-linear: extend(
+    $_light-progress-linear,
+    $_fluent-shape-progress,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap progress-linear schema.
 /// @type {Map}
 ///
 /// @property {map} track-color [igx-color: ('grays', 200)] - The main track color.
 /// @property {color} stripes-color [rgba(#fff, .15)] - The track stripes color.
+/// @prop {Number} track-border-radius [4px] - The border radius fot the progress bar track.
 ///
 /// @requires {function} extend
 /// @requires $_light-progress-linear
-$_bootstrap-progress-linear: extend($_light-progress-linear,(
-    variant: 'bootstrap',
-
-    track-color: (
-        igx-color: ('grays', 200)
-    ),
-
-    stripes-color: rgba(#fff, .15),
-));
+$_bootstrap-progress-linear: extend(
+    $_light-progress-linear,
+    $_bootstrap-shape-progress,
+    (
+        variant: 'bootstrap',
+        track-color: (
+            igx-color: ('grays', 200)
+        ),
+        stripes-color: rgba(#fff, .15),
+    )
+);
 
 /// Generates a light progress-circular schema.
 /// @type {Map}
