@@ -40,7 +40,7 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: false,
     // browsers: ['ChromeHeadless'],
     browsers: [
       'ChromeHeadless_custom',
@@ -54,6 +54,7 @@ module.exports = function (config) {
           '--no-sandbox',
           '--disable-setuid-sandbox',
         ],
+        debug: false
       },
     },
     singleRun: false
