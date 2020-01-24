@@ -12,7 +12,6 @@ import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
     SelectionWithTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { getIdentifierPositions } from 'projects/igniteui-angular/migrations/common/tsUtils';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
