@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "igniteui-dev-demos": {
+        "igniteui-angular": {
             "root": "",
             "sourceRoot": "src",
             "projectType": "application",
@@ -18,7 +18,7 @@
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "aot": true,
-                        "outputPath": "dist/igniteui-dev-demos",
+                        "outputPath": "dist/igniteui-angular",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -73,23 +73,23 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "igniteui-dev-demos:build"
+                        "browserTarget": "igniteui-angular:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "igniteui-dev-demos:build:production"
+                            "browserTarget": "igniteui-angular:build:production"
                         },
                         "hmr": {
                             "hmr": true,
                             "hmrWarning": false,
-                            "browserTarget": "igniteui-dev-demos:build:hmr"
+                            "browserTarget": "igniteui-angular:build:hmr"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "igniteui-dev-demos:build"
+                        "browserTarget": "igniteui-angular:build"
                     }
                 },
                 "test": {
@@ -123,7 +123,7 @@
                 }
             }
         },
-        "igniteui-dev-demos-e2e": {
+        "igniteui-angular-e2e": {
             "root": "e2e/",
             "projectType": "application",
             "architect": {
@@ -131,7 +131,7 @@
                     "builder": "@angular-devkit/build-angular:protractor",
                     "options": {
                         "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "igniteui-dev-demos:serve"
+                        "devServerTarget": "igniteui-angular:serve"
                     }
                 },
                 "lint": {
@@ -187,5 +187,5 @@
             }
         }
     },
-    "defaultProject": "igniteui-dev-demos"
+    "defaultProject": "igniteui-angular"
 }
