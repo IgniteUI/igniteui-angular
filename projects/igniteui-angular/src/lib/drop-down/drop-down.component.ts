@@ -374,7 +374,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public onToggleContentPositioned() {
+    public onToggleContentAppended() {
         if (!this.virtDir && this.selectedItem) {
            this.scrollToItem(this.selectedItem);
         }

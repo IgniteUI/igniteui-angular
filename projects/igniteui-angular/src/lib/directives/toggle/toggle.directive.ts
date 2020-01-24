@@ -35,7 +35,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
-    private _overlayPositionedSub: Subscription;
+    private _overlayAppendedSub: Subscription;
 
     /**
      * Emits an event after the toggle container is opened.
@@ -169,20 +169,20 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * Emits an event after the toggle container content is positioned.
      *
      * ```typescript
-     * onPositioned() {
-     *  alert("Toggle positioned!");
+     * onAppended() {
+     *  alert("Content appended!");
      * }
      * ```
      *
      * ```html
      * <div
      *   igxToggle
-     *   (onPositioned)='onTogglePositioned()'>
+     *   (onAppended)='onToggleAppended()'>
      * </div>
      * ```
      */
     @Output()
-    public onPositioned = new EventEmitter();
+    public onAppended = new EventEmitter();
 
     /**
      * Opens the toggle.
@@ -218,8 +218,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
 
         this.unsubscribe();
 
-        this._overlayPositionedSub = this.overlayService.onPositioned.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.onPositioned.emit();
+        this._overlayAppendedSub = this.overlayService.onAppended.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.onAppended.emit();
         });
 
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
@@ -344,7 +344,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.clearSubscription(this._overlayOpenedSub);
         this.clearSubscription(this._overlayClosingSub);
         this.clearSubscription(this._overlayClosedSub);
-        this.clearSubscription(this._overlayPositionedSub);
+        this.clearSubscription(this._overlayAppendedSub);
     }
 
     private clearSubscription(subscription: Subscription) {

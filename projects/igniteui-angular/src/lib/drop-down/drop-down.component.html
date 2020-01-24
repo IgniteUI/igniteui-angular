@@ -1,5 +1,5 @@
 <div class="igx-drop-down__list" igxToggle [style.width]="width"
-(onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()" (onPositioned)="onToggleContentPositioned()"
+(onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()" (onAppended)="onToggleContentAppended()"
 (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
     <div class="igx-drop-down__list-scroll" #scrollContainer [attr.id]="this.listId" role="listbox"
     [style.height]="height"

@@ -63,14 +63,14 @@ export class IgxOverlayService implements OnDestroy {
     public onOpening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
-     * Emitted after the component is positioned and before animations are started.
+     * Emitted after the component is appended to the overlay, and before animations are started.
      * ```typescript
-     * onPositioned(event: OverlayEventArgs){
-     *     const onPositioned = event;
+     * onAppended(event: OverlayEventArgs){
+     *     const onAppended = event;
      * }
      * ```
      */
-    public onPositioned = new EventEmitter<OverlayEventArgs>();
+    public onAppended = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted after the component is opened and all animations are finished.
@@ -302,6 +302,9 @@ export class IgxOverlayService implements OnDestroy {
             if (info.componentRef) {
                 info.componentRef.changeDetectorRef.detectChanges();
             }
+
+            this.onAppended.emit({ id: info.id, componentRef: info.componentRef });
+
             this.updateSize(info);
             if (this._overlayInfos.indexOf(info) === -1) {
                 this._overlayInfos.push(info);
@@ -315,7 +318,6 @@ export class IgxOverlayService implements OnDestroy {
             info.settings.scrollStrategy.initialize(this._document, this, info.id);
             info.settings.scrollStrategy.attach();
 
-            this.onPositioned.emit({ id: info.id, componentRef: info.componentRef });
         }
 
         this.addOutsideClickListener(info);

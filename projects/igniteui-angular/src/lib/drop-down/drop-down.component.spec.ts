@@ -1062,7 +1062,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
 
             spyOn(componentInstance, 'onToggleOpening');
-            spyOn(componentInstance.dropdown, 'onToggleContentPositioned');
+            spyOn(componentInstance.dropdown, 'onToggleContentAppended');
             spyOn(componentInstance, 'onToggleOpened');
             spyOn(componentInstance, 'onToggleClosing');
             spyOn(componentInstance, 'onToggleClosed');
@@ -1074,7 +1074,7 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             expect(componentInstance.onToggleOpening).toHaveBeenCalledTimes(1);
-            expect(componentInstance.dropdown.onToggleContentPositioned).toHaveBeenCalledTimes(1);
+            expect(componentInstance.dropdown.onToggleContentAppended).toHaveBeenCalledTimes(1);
             expect(componentInstance.onToggleOpened).toHaveBeenCalledTimes(1);
             button.click({ stopPropagation: () => null });
             tick();
