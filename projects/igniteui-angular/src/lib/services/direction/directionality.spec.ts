@@ -74,7 +74,7 @@ describe('IgxDirectionality', () => {
         fakeDoc.documentElement.dir = 'none';
         fakeDoc.body.dir = 'irrelevant';
 
-        dirInstance = new IgxDirectionality(fakeDoc)
+        dirInstance = new IgxDirectionality(fakeDoc);
         expect(dirInstance.value).toEqual('ltr');
     });
 });
