@@ -483,12 +483,10 @@ $_bootstrap-grid: extend($_light-grid, $_bootstrap-shape-grid, (
 
     row-selected-background: (
         igx-color: ('primary', 50),
-        hexrgba: #fff
     ),
 
     row-selected-hover-background: (
         igx-color: ('primary', 100),
-        hexrgba: #fff
     ),
 
     pinned-border-color: (
