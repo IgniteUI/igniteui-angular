@@ -50,15 +50,12 @@
 
     $ripple-display: map-get((
         material: block,
-        fluent: none,
-        bootstrap: none
+        fluent: none !important,
+        bootstrap: none !important
     ), map-get($theme, variant));
 
     %igx-ripple-display {
         display: $ripple-display;
-        @if map-get($theme, variant) == 'bootstrap' or map-get($theme, variant) == 'fluent'  {
-            display: none !important;
-        }
         position: absolute;
         border-radius: 50%;
         background: --var($theme, 'color');

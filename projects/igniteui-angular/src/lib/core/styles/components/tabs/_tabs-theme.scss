@@ -92,7 +92,6 @@
         $tab-border-color: rgba(map-get($theme, 'indicator-color'), .1);
     }
 
-
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
             $item-text-color: rgba(text-contrast($item-background), .54);

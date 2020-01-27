@@ -115,31 +115,35 @@ $_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
 /// @property {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for list component.
 /// @requires {function} extend
 /// @requires $_light-tabs
-$_bootstrap-tabs: extend($_light-tabs,$_bootstrap-shape-tabs, (
-    variant: 'bootstrap',
+$_bootstrap-tabs: extend(
+    $_light-tabs,
+    $_bootstrap-shape-tabs, 
+    (
+        variant: 'bootstrap',
 
-    item-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-hover-background: #fff,
+        item-hover-background: #fff,
 
-    item-hover-color: (
-        igx-color: ('primary', 700)
-    ),
+        item-hover-color: (
+            igx-color: ('primary', 700)
+        ),
 
-    item-active-color: (
-        igx-color: ('grays', 800)
-    ),
+        item-active-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    item-active-icon-color: (
-        igx-color: ('grays', 800)
-    ),
+        item-active-icon-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    item-active-background: #fff,
+        item-active-background: #fff,
 
-    indicator-color: (
-        igx-color: ('grays', 400)
-    ),
-));
+        indicator-color: (
+            igx-color: ('grays', 400)
+        ),
+    )
+);
 
