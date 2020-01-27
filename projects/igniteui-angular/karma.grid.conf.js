@@ -55,11 +55,12 @@ module.exports = function (config) {
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-web-security',
-          '--disable-gpu'
+          '--headless', '--disable-gpu', '--remote-debugging-port=9222'
         ],
         debug: false
       },
     },
+    captureTimeout: 6000,
     singleRun: false,
     concurrency: 1
   });
