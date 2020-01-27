@@ -57,6 +57,7 @@ $_dark-fluent-switch: extend($_fluent-switch, $_base-dark-switch, (
 /// @requires {function} extend
 /// @requires $_bootstrap-switch
 /// @requires $_base-dark-switch
-$_dark-bootstrap-switch: extend($_bootstrap-switch, $_base-dark-switch, (
-
-));
+$_dark-bootstrap-switch: extend(
+    $_bootstrap-switch,
+    $_base-dark-switch
+);

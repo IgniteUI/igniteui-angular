@@ -52,6 +52,5 @@ $_dark-fluent-input-group: extend(
 /// @requires $_base-dark-input-group
 $_dark-bootstrap-input-group: extend(
     $_bootstrap-input-group,
-    $_base-dark-input-group,
-    ()
+    $_base-dark-input-group
 );

@@ -86,27 +86,35 @@ $_light-time-picker: extend(
 /// @requires {function} extend
 /// @requires $_light-time-picker
 /// @requires $_fluent-shape-time-picker
-$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker, (
-    variant: 'fluent',
-));
+$_fluent-time-picker: extend(
+    $_light-time-picker,
+    $_fluent-shape-time-picker,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap time-picker schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-time-picker
-$_bootstrap-time-picker: extend($_light-time-picker, $_bootstrap-shape-time-picker, (
-    variant: 'bootstrap',
+$_bootstrap-time-picker: extend(
+    $_light-time-picker,§
+    $_bootstrap-shape-time-picker,
+    (
+        variant: 'bootstrap',
 
-    selected-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        selected-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    hover-text-color: (
-        igx-color: ('primary', 600)
-    ),
+        hover-text-color: (
+            igx-color: ('primary', 600)
+        ),
 
-    header-background: (
-        igx-color: ('primary', 500)
-    ),
-));
+        header-background: (
+            igx-color: ('primary', 500)
+        ),
+    )
+);
 

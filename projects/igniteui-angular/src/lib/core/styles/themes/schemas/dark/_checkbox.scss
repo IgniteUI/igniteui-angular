@@ -29,6 +29,4 @@ $_dark-fluent-checkbox: extend($_fluent-checkbox, (
 /// @prop {Color} tick-color [#fff] - The checked mark color.
 /// @requires extend
 /// @requires $_bootstrap-checkbox
-$_dark-bootstrap-checkbox: extend($_bootstrap-checkbox, (
-
-));
+$_dark-bootstrap-checkbox: extend($_bootstrap-checkbox);
