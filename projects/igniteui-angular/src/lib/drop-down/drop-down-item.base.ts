@@ -178,7 +178,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get focused(): boolean {
-        return (!this.isHeader && !this.disabled) && this._focused;
+        return this.isSelectable && this._focused;
     }
 
     /**
@@ -328,5 +328,27 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
                 this.dropDown.selectItem(this);
             }
         }
+    }
+
+    /** Returns true if the items is not a header or disabled  */
+    protected get isSelectable(): boolean {
+        return  !(this.disabled || this.isHeader);
+    }
+
+    /** If `allowItemsFocus` is enabled, keep the browser focus on the active item */
+    protected ensureItemFocus() {
+        if (this.dropDown.allowItemsFocus) {
+            const focusedItem = this.dropDown.items.find((item) => item.focused);
+            if (!focusedItem) { return; }
+            focusedItem.element.nativeElement.focus({ preventScroll: true });
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    clicked(event): void {
     }
 }
