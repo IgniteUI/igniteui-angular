@@ -69,8 +69,8 @@ All notable changes for each version of this project will be documented in this 
     - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
     - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
     - `isContinuous` - input has been deleted. The option is not supported anymore.
-    - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction. 
-   
+    - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction.
+
 - `IgxCarousel`:
     - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
     - `gesturesSupport` input is added, which can be used to enable and disable gestures
@@ -81,7 +81,7 @@ All notable changes for each version of this project will be documented in this 
     - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
     - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
 
-- `IgxSelect`: 
+- `IgxSelect`:
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
 
 - `IgxCombo`:
@@ -124,6 +124,7 @@ All notable changes for each version of this project will be documented in this 
 
     @include igx-progress-circular($theme);
     ```
+    - RTL support
 
 - `IgxForOf`
     - `IgxForTotalItemCount` input is added for the cases when the data is from remote services. This will allow setting the count of the items through the template. And gives the opportunity for the developers to use AsyncPipe for this option:
