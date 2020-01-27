@@ -33,13 +33,21 @@ import { IViewChangingEventArgs } from './days-view/days-view.interface';
 let NEXT_ID = 0;
 
 /**
- * **Ignite UI for Angular Calendar** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/calendar.html)
+ * Calendar provides a way to display date information.
  *
+ * @igxModule IgxCalendarModule
+ *
+ * @igxTheme igx-calendar-theme
+ *
+ * @igxKeywords calendar, datepicker, schedule, date
+ *
+ * @igxGroup scheduling
+ *
+ * @remarks
  * The Ignite UI Calendar provides an easy way to display a calendar and allow users to select dates using single, multiple
  * or range selection.
  *
- * Example:
+ * @example:
  * ```html
  * <igx-calendar selection="range"></igx-calendar>
  * ```
@@ -81,12 +89,13 @@ let NEXT_ID = 0;
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets the `id` of the calendar.
+     *
+     * @remarks
      * If not set, the `id` will have value `"igx-calendar-0"`.
+     *
+     * @example
      * ```html
-     * <igx-calendar id = "my-first-calendar"></igx-calendar>
-     * ```
-     * ```typescript
-     * let calendarId =  this.calendar.id;
+     * <igx-calendar id="my-first-calendar"></igx-calendar>
      * ```
      * @memberof IgxCalendarComponent
      */
@@ -94,17 +103,25 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     @Input()
     public id = `igx-calendar-${NEXT_ID++}`;
 
+    /**
+     * Sets/gets whether the calendar has header.
+     * Default value is `true`.
+     *
+     * @example
+     * ```html
+     * <igx-calendar [hasHeader]="false"></igx-calendar>
+     * ```
+     */
     @Input()
     public hasHeader = true;
 
     /**
      * Sets/gets whether the calendar header will be in vertical position.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      * <igx-calendar [vertical] = "true"></igx-calendar>
-     * ```
-     * ```typescript
-     * let isVertical = this.calendar.vertical;
      * ```
      */
     @Input()
@@ -113,11 +130,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Sets/gets the number of month views displayed.
      * Default value is `1`.
+     *
+     * @example
      * ```html
-     * <igx-calendar [vertical] = "true" [monthsViewNumber]="2"></igx-calendar>
-     * ```
-     * ```typescript
-     * let monthViewsDisplayed = this.calendar.monthsViewNumber;
+     * <igx-calendar [monthsViewNumber]="2"></igx-calendar>
      * ```
      */
     @Input()
@@ -146,23 +162,32 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Apply the different states for the transitions of animateChange
      * @hidden
+     * @internal
      */
     @Input()
     public animationAction: any = '';
 
     /**
+     * Used to apply the active date when the calendar view is changed
+     *
      * @hidden
+     * @internal
      */
     public nextDate: Date;
 
     /**
+     * Denote if the calendar view was changed with the keyboard
+     *
      * @hidden
+     * @internal
      */
     public isKeydownTrigger = false;
 
     /**
      * @hidden
+     * @internal
      */
     public callback: (next) => void;
 
@@ -170,6 +195,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * The default `tabindex` attribute for the component.
      *
      * @hidden
+     * @internal
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -178,6 +204,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * The default aria role attribute for the component.
      *
      * @hidden
+     * @internal
      */
     @HostBinding('attr.role')
     public role = 'grid';
@@ -186,6 +213,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * The default aria lebelled by attribute for the component.
      *
      * @hidden
+     * @internal
      */
     @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy = 'calendar';
@@ -194,6 +222,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * The default css class applied to the component.
      *
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-calendar--vertical')
     get styleVerticalClass(): boolean {
@@ -204,54 +233,76 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * The default css class applied to the component.
      *
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-calendar')
     public styleClass = true;
 
     /**
+     * ViewChild that represents the months view.
+     *
      * @hidden
+     * @internal
      */
     @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**
+     * Month button, that displays the months view.
      * @hidden
+     * @internal
      */
     @ViewChild('monthsBtn')
     public monthsBtn: ElementRef;
 
     /**
+     * ViewChild that represents the decade view.
+     *
      * @hidden
+     * @internal
      */
     @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
     /**
+     * ViewChild that represents the days view.
+     *
      * @hidden
+     * @internal
      */
     @ViewChild('days', { read: IgxDaysViewComponent })
     public daysView: IgxDaysViewComponent;
 
     /**
+     * ViewChildrenden representing all of the rendered days views.
      * @hidden
+     * @internal
      */
     @ViewChildren('days', { read: IgxDaysViewComponent })
     public monthViews: QueryList<IgxDaysViewComponent>;
 
     /**
+     * Button for previous month.
+     *
      * @hidden
+     * @internal
      */
     @ViewChild('prevMonthBtn')
     public prevMonthBtn: ElementRef;
 
     /**
+     * Button for next month.
+     *
      * @hidden
+     * @internal
      */
     @ViewChild('nextMonthBtn')
     public nextMonthBtn: ElementRef;
 
     /**
+     * Denote if the year view is active.
      * @hidden
+     * @internal
      */
     get isYearView(): boolean {
         return this.activeView === CalendarView.YEAR;
@@ -259,6 +310,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Gets the header template.
+     *
+     * @example
      * ```typescript
      * let headerTemplate =  this.calendar.headerTeamplate;
      * ```
@@ -273,6 +326,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Sets the header template.
+     *
+     *  @example
      * ```html
      * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
      * ```
@@ -284,6 +339,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Gets the subheader template.
+     *
+     * @example
      * ```typescript
      * let subheaderTemplate = this.calendar.subheaderTemplate;
      * ```
@@ -297,6 +354,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Sets the subheader template.
+     *
+     * @example
      * ```html
      * <igx-calendar subheaderTemplate = "igxCalendarSubheader"></igx-calendar>
      * ```
@@ -308,6 +367,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Gets the context for the template marked with the `igxCalendarHeader` directive.
+     *
+     * @example
      * ```typescript
      * let headerContext =  this.calendar.headerContext;
      * ```
@@ -320,6 +381,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Gets the context for the template marked with either `igxCalendarSubHeaderMonth`
      * or `igxCalendarSubHeaderYear` directive.
+     *
+     * @example
      * ```typescript
      * let context =  this.calendar.context;
      * ```
@@ -330,7 +393,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Date displayed in header
+     *
      * @hidden
+     * @internal
      */
     get headerDate(): Date {
         return this.selectedDates ? this.selectedDates : new Date();
@@ -338,12 +404,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(forwardRef(() => IgxCalendarHeaderTemplateDirective), { read: IgxCalendarHeaderTemplateDirective, static: true  })
     private headerTemplateDirective: IgxCalendarHeaderTemplateDirective;
 
     /**
      * @hidden
+     * @internal
      */
     // tslint:disable-next-line:max-line-length
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true  })
@@ -368,7 +436,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     };
 
     /**
-     *@hidden
+     * Days which are displayed into the calendar days view
+     *
+     * @hidden
+     * @internal
      */
     public dayViews = [this.defaultDayView];
 
@@ -404,6 +475,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * otherwise returns the default `Date.getMonth()` value.
      *
      * @hidden
+     * @internal
      */
     public formattedMonth(value: Date): string {
         if (this.formatViews.month) {
@@ -413,7 +485,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Change to previous month
+     *
      * @hidden
+     * @internal
      */
     public previousMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
@@ -422,7 +497,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Change to next month
+     *
      * @hidden
+     * @internal
      */
     public nextMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
@@ -589,6 +667,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * Deselects date(s) (based on the selection type).
+     *
+     * @example
      *```typescript
      * this.calendar.deselectDate(new Date(`2018-06-12`));
      *````
