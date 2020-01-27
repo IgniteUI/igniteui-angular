@@ -61,7 +61,7 @@ module.exports = function (config) {
         ],
       },
     },
-    captureTimeout: 10000,
+    captureTimeout: 5000,
     singleRun: false,
   });
 };
