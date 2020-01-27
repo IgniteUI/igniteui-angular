@@ -54,12 +54,15 @@ module.exports = function (config) {
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-web-security',
-          '--headless', '--disable-gpu', '--remote-debugging-port=9222'
+          '--no-proxy-server',
+          '--disable-web-extensions',
+          '--headless',
+          '--disable-gpu',
+          '--remote-debugging-port=9222'
         ],
-        debug: false
       },
     },
-    captureTimeout: 6000,
+    captureTimeout: 10000,
     singleRun: false
   });
 };
