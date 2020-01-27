@@ -106,6 +106,8 @@ export class IgxTemplateOutletDirective implements OnChanges {
             this._viewContainerRef.insert(view, 0);
             this._updateExistingContext(this.igxTemplateOutletContext);
             this.onViewMoved.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
+        } else {
+            this._updateExistingContext(this.igxTemplateOutletContext);
         }
     }
     private _useCachedView() {
