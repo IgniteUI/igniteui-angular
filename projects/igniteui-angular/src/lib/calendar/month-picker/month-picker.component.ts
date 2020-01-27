@@ -3,7 +3,8 @@ import {
     HostListener,
     ViewChild,
     HostBinding,
-    Input
+    Input,
+    ElementRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
@@ -13,6 +14,7 @@ import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBaseDirective, CalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
+import { IgxCalendarNavigationService } from '../days-view/daysview-navigation.service';
 
 let NEXT_ID = 0;
 @Component({
@@ -87,6 +89,12 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
+    @ViewChild('yearsBtn')
+    public yearsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
     public yearAction = '';
 
     /**
@@ -95,6 +103,10 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public animationDone() {
         this.yearAction = '';
     }
+
+    // public constructor(private _navService: IgxCalendarNavigationService) {
+    //     super();
+    // }
 
     /**
      * @hidden
@@ -133,7 +145,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public nextYear() {
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this._navService.getNextYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -156,7 +168,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public previousYear() {
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this._navService.getPrevYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -185,7 +197,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
         this.onSelection.emit(this.selectedDates);
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.find((e, idx) => idx === this._monthViewIdx).nativeElement.focus(); }
+            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
     }
 
@@ -231,7 +243,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this._navService.getPrevYear(this.viewDate);
     }
 
     /**
@@ -241,7 +253,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this._navService.getNextYear(this.viewDate);
     }
 
     /**

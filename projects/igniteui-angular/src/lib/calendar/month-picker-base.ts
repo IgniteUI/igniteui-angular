@@ -21,12 +21,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     protected _monthViewIdx = 0;
 
     /**
-     * @hidden
-     */
-    @ViewChild('yearsBtn')
-    public yearsBtn: QueryList<ElementRef>;
-
-    /**
      * The default `tabindex` attribute for the component.
      *
      * @hidden
@@ -66,18 +60,6 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      *@hidden
      */
     private _activeView = CalendarView.DEFAULT;
-
-    /**
-     * @hidden
-     */
-    public changeYear(event: Date) {
-        this.viewDate = new Date(event.getFullYear(), this.viewDate.getMonth());
-        this._activeView = CalendarView.DEFAULT;
-
-        requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.find((e: ElementRef, idx: number) => idx === this._monthViewIdx).nativeElement.focus(); }
-        });
-    }
 
     /**
      * @hidden

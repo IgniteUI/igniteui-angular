@@ -29,6 +29,7 @@ import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
+import { IgxCalendarNavigationService } from './days-view/daysview-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -50,7 +51,8 @@ let NEXT_ID = 0;
             multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxCalendarComponent
-        }
+        },
+        IgxCalendarNavigationService
     ],
     animations: [
         trigger('animateView', [
@@ -79,11 +81,6 @@ let NEXT_ID = 0;
     templateUrl: 'calendar.component.html'
 })
 export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
-
-    /**
-     * Holds the index of the month view we are operating on.
-     */
-    public _monthViewIndex = 0;
 
     /**
      * Sets/gets the `id` of the calendar.
@@ -132,23 +129,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     set monthsViewNumber(val: number) {
-        if (this._monthsViewNumber === val || val <= 0) {
-            return;
-        } else if (this._monthsViewNumber < val) {
-            for (let i = this._monthsViewNumber; i < val; i++) {
-                const nextMonthDate = new Date(this.viewDate);
-                nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
-                const monthView = {
-                    value: null,
-                    viewDate: nextMonthDate
-                };
-                this.dayViews.push(monthView);
-            }
-            this._monthsViewNumber = val;
-        } else {
-            this.dayViews.splice(val, this.dayViews.length - val);
-            this._monthsViewNumber = val;
-        }
+        this._monthsViewNumber = val;
     }
 
     /**
@@ -225,6 +206,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     @ViewChildren('monthsBtn')
     public monthsBtns: QueryList<ElementRef>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren('yearsBtn')
+    public yearsBtns: QueryList<ElementRef>;
 
     /**
      * @hidden
@@ -373,10 +360,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         viewDate: this.viewDate
     };
 
-    /**
-     *@hidden
-     */
-    public dayViews = [this.defaultDayView];
+    // public constructor() {
+    //     super(super._navService);
+    // }
 
     public ngAfterViewInit() {
         this.setSiblingMonths(this.monthViews);
@@ -422,7 +408,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public previousMonth(isKeydownTrigger = false) {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
+        this.viewDate = this._navService.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -431,7 +417,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public nextMonth(isKeydownTrigger = false) {
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
+        this.viewDate = this._navService.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -558,14 +544,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeMonth(event: Date) {
+        this.viewDate = this._navService.getDatePerMonthView(event, 'month');
         this.activeView = CalendarView.DEFAULT;
-        this.dayViews = this.dayViews.map((v, index) => { return {
-                value: v.value,
-                viewDate: new Date(event.getFullYear(), event.getMonth() + (index - this._monthViewIndex))
-            };
-        });
+
         requestAnimationFrame(() => {
-            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this._monthViewIndex);
+            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this._navService.monthViewIdx);
             if (elem) { elem.nativeElement.focus(); }
         });
     }
@@ -573,12 +556,27 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
+    public changeYear(event: Date) {
+        // const date = new Date(event.getFullYear(), event.getMonth() - this._navService.monthViewIdx);
+        // this.viewDate = date;
+        this.viewDate = this._navService.getDatePerMonthView(event, 'month');
+        this.activeView = CalendarView.DEFAULT;
+
+        requestAnimationFrame(() => {
+            if (this.yearsBtns) { this.yearsBtns.find((e: ElementRef, idx: number) => idx === this._monthViewIdx).nativeElement.focus(); }
+        });
+    }
+
+
+    /**
+     * @hidden
+     */
     public onActiveViewYear(args: Date, monthViewIdx: number): void {
         this.activeView = CalendarView.YEAR;
-        this._monthViewIndex = monthViewIdx;
+        this._navService.monthViewIdx = monthViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
-            this.focusMonth(this._monthViewIndex);
+            this.focusMonth(monthViewIdx);
         });
     }
 
@@ -629,7 +627,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public getViewDate(i: number): Date {
-        const date = this.calendarModel.timedelta(this.dayViews[i].viewDate, 'month', 0);
+        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
         return date;
     }
 
@@ -637,15 +635,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public getMonth(i: number): number {
-        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
-        return date.getMonth();
+        return this.getViewDate(i).getMonth();
     }
 
     /**
      * @hidden
      */
     public getContext(i: number) {
-        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
+        const date = this.getViewDate(i);
         return this.generateContext(date, i);
     }
 

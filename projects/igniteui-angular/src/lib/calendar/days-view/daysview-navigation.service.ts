@@ -2,12 +2,18 @@ import { Injectable } from '@angular/core';
 import { IgxDayItemComponent } from './day-item.component';
 import { IgxDaysViewComponent } from './days-view.component';
 import { ScrollMonth } from '../calendar-base';
+import { Calendar } from '../calendar';
 
 enum Direction {
     Up = 'ArrowUp',
     Down = 'ArrowDown',
     Left = 'ArrowLeft',
     Right = 'ArrowRight',
+}
+
+enum TimeDeltaInterval {
+    Month = 'month',
+    Year = 'year'
 }
 
 const ARROW = 'Arrow';
@@ -178,5 +184,35 @@ export class IgxDaysViewNavigationService {
             }
         }
         return false;
+    }
+}
+
+@Injectable()
+export class IgxCalendarNavigationService {
+    public calendar: Calendar;
+    public monthViewIdx = 0;
+
+    public constructor() {
+        this.calendar = new Calendar();
+    }
+
+    public getDatePerMonthView(date: Date, interval: string) {
+        return this.calendar.timedelta(date, interval, -this.monthViewIdx);
+    }
+
+    public getNextMonth(date: Date) {
+        return this.calendar.timedelta(date, TimeDeltaInterval.Month, 1);
+    }
+
+    public getPrevMonth(date: Date) {
+        return this.calendar.timedelta(date, TimeDeltaInterval.Month, -1);
+    }
+
+    public getNextYear(date: Date) {
+        return this.calendar.timedelta(date, TimeDeltaInterval.Year, 1);
+    }
+
+    public getPrevYear(date: Date) {
+        return this.calendar.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 }
