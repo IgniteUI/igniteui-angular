@@ -1076,7 +1076,7 @@ describe('IgxForOf directive -', () => {
         });
     });
 
-    describe('remote virtual component with specified igxForOfTotalItemCount', () => {
+    describe('remote virtual component with specified igxForTotalItemCount', () => {
         configureTestSuite();
         let fix: ComponentFixture<RemoteVirtCountComponent>;
 
