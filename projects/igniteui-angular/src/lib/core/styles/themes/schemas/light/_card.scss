@@ -18,7 +18,6 @@
 /// @prop {Number} hover-elevation [8] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for card date.
 /// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
-/// @prop {color} card-border-color [transparent] - The border color of an card.
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-card
@@ -58,8 +57,6 @@ $_light-card: extend(
             rgba: .6
         ),
 
-        card-border-color: transparent,
-
         outline-color: (
             igx-color: ('grays', 400)
         )
@@ -69,7 +66,6 @@ $_light-card: extend(
 /// Generates a fluent card schema.
 /// @type {Map}
 /// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
-/// @prop {map} card-border-color [ igx-color: ('grays', 200)] - The border color of an card.
 ///
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
@@ -88,10 +84,6 @@ $_fluent-card: extend(
         outline-color: (
             igx-color: ('grays', 200)
         ),
-
-        card-border-color: (
-            igx-color: ('grays', 200)
-        ),
     )
 );
 
@@ -99,7 +91,6 @@ $_fluent-card: extend(
 /// @type {Map}
 /// @prop {Color} background [#fff]- The card background color.
 /// @prop {Map} outline-color [igx-color: ('grays', 300)] - The outline color of an outlined type card.
-/// @prop {map} card-border-color [ igx-color: ('grays', 300)] - The border color of an card.
 /// @requires {function} extend
 /// @requires {map} $_light-card
 $_bootstrap-card: extend(
@@ -111,10 +102,6 @@ $_bootstrap-card: extend(
         background: #fff,
 
         outline-color: (
-            igx-color: ('grays', 300)
-        ),
-
-        card-border-color: (
             igx-color: ('grays', 300)
         ),
     )
