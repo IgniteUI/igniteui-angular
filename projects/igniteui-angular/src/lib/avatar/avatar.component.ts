@@ -60,7 +60,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @example
      * ```typescript
-     *  let image =  this.avatar.image;
+     *  let image = this.avatar.image;
      * ```
      */
     @ViewChild('image', { static: false })
@@ -126,7 +126,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      * Returns the type of the avatar.
-     * The avatar can be: `"initials type avatar"`, `"icon type avatar"` or `"image type avatar"`.
+     * The avatar can be: `"initials type avatar"`, `"icon type avatar"` or `"image type avatar"`
      *
      * @example
      * ```typescript
@@ -143,7 +143,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     private _size: string | Size = 'small';
 
     /**
-     * Sets the `id` of the avatar. If not set, the first avatar component will have `id` = `"igx-avatar-0"`.
+     * Sets the `id` of the avatar. If not set, the first avatar component will have an `id` = `"igx-avatar-0"`.
      *
      * @example
      * ```html
@@ -160,7 +160,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @example
      * ```html
-     * <igx-avatar roundShape = "true" ></igx-avatar>
+     * <igx-avatar roundShape="true" ></igx-avatar>
      * ```
      */
 
@@ -169,7 +169,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public roundShape = false;
 
     /**
-     * Sets the color of the avatar's `initials` and `icon`.
+     * Sets the color of the avatar's initials or icon.
      *
      * @example
      *```html
@@ -232,7 +232,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @example
      * ```typescript
-     *let avatarSize =  this.avatar.size;
+     * let avatarSize = this.avatar.size;
      * ```
      */
     @Input()
