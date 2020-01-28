@@ -1,6 +1,7 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { ViewChild, ElementRef, HostBinding, Directive, QueryList } from '@angular/core';
+import { HostBinding, Directive } from '@angular/core';
 import { KEYS } from '../core/utils';
+import { IgxCalendarNavigationService } from './navigation.service';
 
 /**
  * Sets the calender view - days, months or years.
@@ -66,7 +67,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     public activeViewDecade(monthViewIdx = 0): void {
         this._activeView = CalendarView.DECADE;
-        this._monthViewIdx = monthViewIdx;
+        this._navService.monthViewIdx = monthViewIdx;
     }
 
     /**

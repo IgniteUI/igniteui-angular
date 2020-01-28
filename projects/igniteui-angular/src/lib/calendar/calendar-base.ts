@@ -4,7 +4,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate } from '../core/utils';
-import { IgxCalendarNavigationService } from './days-view/daysview-navigation.service';
+import { IgxCalendarNavigationService } from './navigation.service';
 
 /**
  * Sets the selction type - single, multi or range.

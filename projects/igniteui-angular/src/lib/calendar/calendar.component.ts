@@ -29,7 +29,6 @@ import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 import { IViewChangingEventArgs } from './days-view/days-view.interface';
-import { IgxCalendarNavigationService } from './days-view/daysview-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -51,8 +50,7 @@ let NEXT_ID = 0;
             multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxCalendarComponent
-        },
-        IgxCalendarNavigationService
+        }
     ],
     animations: [
         trigger('animateView', [
@@ -360,10 +358,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         viewDate: this.viewDate
     };
 
-    // public constructor() {
-    //     super(super._navService);
-    // }
-
     public ngAfterViewInit() {
         this.setSiblingMonths(this.monthViews);
         this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
@@ -534,7 +528,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         this.callback = (next) => {
             const day = this.daysView.dates.find((item) => item.date.date.getTime() === next.getTime());
             if (day) {
-                this.daysView.navService.focusNextDate(day.nativeElement, args.key, true);
+                this.daysView.daysNavService.focusNextDate(day.nativeElement, args.key, true);
             }
         };
         this.viewDate = this.calendarModel.timedelta(this.nextDate, 'month', 0);
@@ -557,13 +551,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeYear(event: Date) {
-        // const date = new Date(event.getFullYear(), event.getMonth() - this._navService.monthViewIdx);
-        // this.viewDate = date;
         this.viewDate = this._navService.getDatePerMonthView(event, 'month');
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtns) { this.yearsBtns.find((e: ElementRef, idx: number) => idx === this._monthViewIdx).nativeElement.focus(); }
+            if (this.yearsBtns) {
+                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this._navService.monthViewIdx).nativeElement.focus();
+            }
         });
     }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { IgxDayItemComponent } from './day-item.component';
-import { IgxDaysViewComponent } from './days-view.component';
-import { ScrollMonth } from '../calendar-base';
+import { IgxDayItemComponent } from './days-view/day-item.component';
+import { IgxDaysViewComponent } from './days-view/days-view.component';
+import { ScrollMonth } from './calendar-base';
 import { Calendar } from '../calendar';
 
 enum Direction {
@@ -18,7 +18,10 @@ enum TimeDeltaInterval {
 
 const ARROW = 'Arrow';
 
-/** @hidden */
+/**
+ * @hidden
+ * This service should be decoupled from the days View Component and it should become global for the whole calendar navigation.
+ * */
 @Injectable()
 export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;
@@ -115,7 +118,7 @@ export class IgxDaysViewNavigationService {
                 day.nativeElement.focus();
                 return;
             }
-            nextMonthView.navService.focusNextDate(day.nativeElement, key);
+            nextMonthView.daysNavService.focusNextDate(day.nativeElement, key);
         }
 
         // if iterating in the visible prev/next moths above found a day that is not focusable, ie is disabled, hidden, etc
@@ -187,6 +190,12 @@ export class IgxDaysViewNavigationService {
     }
 }
 
+/**
+ * @hidden
+ * Temporary service managing the multi view calendar interactions.
+ * https://github.com/IgniteUI/igniteui-angular/issues/6375
+ * TODO: should be combined with @IgxDaysViewNavigationService
+ */
 @Injectable()
 export class IgxCalendarNavigationService {
     public calendar: Calendar;

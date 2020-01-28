@@ -14,7 +14,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
-describe('IgxCalendar - ', () => {
+fdescribe('IgxCalendar - ', () => {
 
     it('Should create proper calendar model', () => {
         const calendar = new Calendar();

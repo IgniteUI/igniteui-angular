@@ -14,7 +14,6 @@ import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBaseDirective, CalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
-import { IgxCalendarNavigationService } from '../days-view/daysview-navigation.service';
 
 let NEXT_ID = 0;
 @Component({
@@ -103,10 +102,6 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public animationDone() {
         this.yearAction = '';
     }
-
-    // public constructor(private _navService: IgxCalendarNavigationService) {
-    //     super();
-    // }
 
     /**
      * @hidden

@@ -8,7 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IgxCalendarModule } from '../calendar.module';
 
-describe('IgxMonthPicker', () => {
+fdescribe('IgxMonthPicker', () => {
     configureTestSuite();
 
     beforeEach(() => {

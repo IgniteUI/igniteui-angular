@@ -17,7 +17,7 @@ import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { IgxDaysViewNavigationService, IgxCalendarNavigationService } from './daysview-navigation.service';
+import { IgxDaysViewNavigationService, IgxCalendarNavigationService } from '../navigation.service';
 
 let NEXT_ID = 0;
 
