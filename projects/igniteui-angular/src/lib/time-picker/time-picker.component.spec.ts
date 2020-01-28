@@ -198,6 +198,28 @@ describe('IgxTimePicker', () => {
         expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
     }));
 
+    it('Should not throw Validation Failed event with null value passed in', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
+        fixture.componentInstance.dateValue = null;
+        fixture.detectChanges();
+
+        const timePicker = fixture.componentInstance.timePicker;
+        const dom = fixture.debugElement;
+        const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+        spyOn(timePicker.onValidationFailed, 'emit');
+
+        UIInteractions.clickElement(timePickerTarget);
+        tick();
+        fixture.detectChanges();
+
+        const cancelButton = dom.query(By.css('.igx-button--flat'));
+        UIInteractions.clickElement(cancelButton);
+        tick();
+        fixture.detectChanges();
+
+        expect(timePicker.onValidationFailed.emit).not.toHaveBeenCalled();
+    }));
+
     it('TimePicker cancel button', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
@@ -1542,34 +1564,34 @@ describe('IgxTimePicker', () => {
         }));
 
         it('When timepicker is closed via outside click, the focus should NOT remain on the input',
-        fakeAsync(() => {
-            fixture.detectChanges();
-            input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-            let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            fakeAsync(() => {
+                fixture.detectChanges();
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
 
-            expect(overlayToggle.length).toEqual(0);
+                expect(overlayToggle.length).toEqual(0);
 
-            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
-            UIInteractions.clickElement(iconTime);
-            tick();
-            fixture.detectChanges();
+                const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+                UIInteractions.clickElement(iconTime);
+                tick();
+                fixture.detectChanges();
 
-            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-            expect(overlayToggle[0]).not.toBeNull();
-            expect(overlayToggle[0]).not.toBeUndefined();
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                expect(overlayToggle[0]).not.toBeNull();
+                expect(overlayToggle[0]).not.toBeUndefined();
 
-            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
-            dummyInput.focus();
-            dummyInput.click();
-            tick();
-            fixture.detectChanges();
+                const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+                dummyInput.focus();
+                dummyInput.click();
+                tick();
+                fixture.detectChanges();
 
-            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-            input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-            expect(overlayToggle[0]).toEqual(undefined);
-            expect(input).not.toEqual(document.activeElement);
-            expect(dummyInput).toEqual(document.activeElement);
-        }));
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                expect(overlayToggle[0]).toEqual(undefined);
+                expect(input).not.toEqual(document.activeElement);
+                expect(dummyInput).toEqual(document.activeElement);
+            }));
     });
 
     describe('Timepicker with outlet', () => {

@@ -1112,7 +1112,7 @@ export class IgxTimePickerComponent implements
     }
 
     private _convertMinMaxValue(value: string): Date {
-        const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
+        const date = this._dateFromModel ? new Date(this._dateFromModel) : this.value ? new Date(this.value) : new Date();
         const sections = value.split(/[\s:]+/);
         let hour, minutes, amPM;
 
@@ -1153,9 +1153,9 @@ export class IgxTimePickerComponent implements
             return false;
         } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     private _isEntryValid(val: string): boolean {
@@ -1294,6 +1294,10 @@ export class IgxTimePickerComponent implements
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
 
+        if (!this.displayValue && this.displayValue === this._formatTime(this.value, this.format)) {
+            return;
+        }
+
         if (this._isValueValid(newVal)) {
             if (!this.value || oldValue.getTime() !== newVal.getTime()) {
                 this.value = newVal;
@@ -1331,7 +1335,6 @@ export class IgxTimePickerComponent implements
         // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
         // against the real value when initializing the component and value is bound via ngModel
         this._dateFromModel = value;
-
         this.value = value;
 
         if (this.mode === InteractionMode.DropDown) {
@@ -1563,7 +1566,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public cancelButtonClick(): void {
-        if (this.mode === InteractionMode.DropDown) {
+        if (this.mode === InteractionMode.DropDown && this.value) {
             this.displayValue = this._formatTime(this.value, this.format);
         }
 
@@ -1795,8 +1798,8 @@ export class IgxTimePickerComponent implements
         }
 
         // minor hack for preventing cursor jumping in IE
-        this._displayValue = this.inputFormat.transform(displayVal);
-        this.input.nativeElement.value = this._displayValue;
+        this.displayValue = this.inputFormat.transform(displayVal);
+        this.input.nativeElement.value = this.displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
