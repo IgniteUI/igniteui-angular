@@ -418,17 +418,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     private subheaderTemplateDirective: IgxCalendarSubheaderTemplateDirective;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _monthsViewNumber = 1;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _monthViewsChanges$: Subscription;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private defaultDayView = {
         value: this.value,
@@ -509,7 +512,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Continious navigation through the previous months
      * @hidden
+     * @internal
      */
     public startPrevMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
@@ -519,7 +524,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Continious navigation through the next months
      * @hidden
+     * @internal
      */
     public startNextMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
@@ -529,7 +536,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Stop continuous navigation
      * @hidden
+     * @internal
      */
     public stopMonthScroll = (event) => {
         event.stopPropagation();
@@ -553,6 +562,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public activeViewDecade(args: Date) {
         super.activeViewDecade();
@@ -566,6 +576,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public activeViewDecadeKB(event, args: Date) {
         super.activeViewDecadeKB(event, args);
@@ -580,6 +591,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public getFormattedDate(): { weekday: string, monthday: string } {
 
@@ -592,7 +604,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Handles invoked on date selection
      * @hidden
+     * @internal
      */
     public childClicked(instance: ICalendarDate) {
         if (instance.isPrevMonth) {
@@ -612,6 +626,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public viewChanging(args: IViewChangingEventArgs) {
         this.animationAction = args.monthAction;
@@ -628,6 +643,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @intenal
      */
     public changeMonth(event: Date) {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
@@ -640,6 +656,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public activeViewYear(args: Date, event): void {
         this.activeView = CalendarView.YEAR;
@@ -657,6 +674,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public activeViewYearKB(args: Date, event): void {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
@@ -687,6 +705,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * Helper method that does deselection for all month views when selection is "multi"
      * If not called, selection in other month views stays
      * @hidden
+     * @internal
      */
     private deselectDateInMonthViews(value: Date) {
         this.monthViews.forEach(m => {
@@ -696,6 +715,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public getViewDate(i: number): Date {
         const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
@@ -704,6 +724,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public getMonth(i: number): number {
         const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
@@ -711,7 +732,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Getter for the context object inside the calendar templates.
      * @hidden
+     * @internal
      */
     public getContext(i: number) {
         const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
@@ -720,6 +743,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public animationDone(event) {
         if (this.monthScrollDirection !== ScrollMonth.NONE) {
@@ -748,7 +772,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Keyboard navigation of the calendar
      * @hidden
+     * @internal
      */
     @HostListener('keydown.pagedown', ['$event'])
     @HostListener('keydown.pageup', ['$event'])
@@ -807,7 +833,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Keyboard navigation of the calendar
      * @hidden
+     * @internal
      */
     @HostListener('keydown.shift.pageup', ['$event'])
     @HostListener('keydown.shift.pagedown', ['$event'])
@@ -859,7 +887,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Keyboard navigation of the calendar
      * @hidden
+     * @internal
      */
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
@@ -869,7 +899,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Keyboard navigation of the calendar
      * @hidden
+     * @internal
      */
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
@@ -879,7 +911,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
+     * Stop continuous navigation on mouseup event
      * @hidden
+     * @internal
      */
     @HostListener('document:mouseup', ['$event'])
     public onMouseUp(event: KeyboardEvent) {
@@ -890,6 +924,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
 
     /**
      * @hidden
+     * @internal
      */
     public ngOnDestroy(): void {
         if (this._monthViewsChanges$) {
@@ -901,6 +936,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * Helper method building and returning the context object inside
      * the calendar templates.
      * @hidden
+     * @internal
      */
     private generateContext(value: Date, i?: number) {
         const formatObject = {
@@ -916,6 +952,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Helper method that sets references for prev/next months for each month in the view
      * @hidden
+     * @internal
      */
     private setSiblingMonths(monthViews: QueryList<IgxDaysViewComponent>) {
         monthViews.forEach((item, index) => {
@@ -929,6 +966,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Helper method returning previous/next day views
      * @hidden
+     * @internal
      */
     private getMonthView(index: number): IgxDaysViewComponent {
         if (index === -1 || index === this.monthViews.length ) {
