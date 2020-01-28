@@ -109,8 +109,9 @@
     <h4 class="sample-title">Sample 4</h4>
     <div class="sample-actions">
         <button igxButton="raised" (click)='LoadMoreColumns()'>Change columns runtime</button>
+        <button igxButton="raised" (click)='changeData()'>Change data runtime</button>
     </div>
-    <igx-hierarchical-grid [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
+    <igx-hierarchical-grid [data]="localData1" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
             <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
             <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
             <igx-column field="ProductName" hasSummary='true'></igx-column>
