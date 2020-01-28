@@ -8,6 +8,8 @@
     [required]="true"
     [placeholder]="'Pick One'"
     [(ngModel)]="value"
+    [ngModelOptions]="{updateOn: 'blur'}" #selectModel="ngModel"
+    required
     (onOpening)="testOnOpening($event)"
     (onOpened)="testOnOpened()"
     (onClosing)="testOnClosing($event)"
@@ -24,12 +26,15 @@
             {{ item.field }}
         </igx-select-item>
     </igx-select>
+    <div>Model: {{selectModel.value}}</div>
 
     <div>
         <h4>Display Density</h4>
-        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === compact" (click)="setDensity(compact)">Compact</button>
-        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
-        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === comfortable" (click)="setDensity(comfortable)">Comfortable</button>
+        <igx-buttongroup (onSelect)="setDensity($event)">
+            <button igxButton value="compact">Compact</button>
+            <button igxButton value="cosy">Cosy</button>
+            <button igxButton value="comfortable">Comfortable</button>
+        </igx-buttongroup>
     </div>
 
     <h4 class="sample-title">Select - declare items in html template</h4>
