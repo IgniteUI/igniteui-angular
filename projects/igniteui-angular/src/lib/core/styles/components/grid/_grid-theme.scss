@@ -634,6 +634,8 @@
         bootstrap: 700
     ), map-get($theme, variant));
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
     %grid-display {
         position: relative;
         display: grid;
@@ -683,7 +685,7 @@
     %grid-thead {
         border-bottom: $grid-header-border;
 
-        @if map-get($theme, variant) == 'bootstrap'{
+        @if $bootstrap-theme {
             border-bottom-width: $bootstrap-header-border-bottom-width;
         }
 

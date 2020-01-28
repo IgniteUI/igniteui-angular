@@ -286,6 +286,8 @@
         compact: 0 rem(8px) 0 0
     );
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
     %igx-list {
         position: relative;
         display: flex;
@@ -296,7 +298,7 @@
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             border: --var($theme, 'list-border-width') solid --var($theme, 'list-border-color');
         }
     }

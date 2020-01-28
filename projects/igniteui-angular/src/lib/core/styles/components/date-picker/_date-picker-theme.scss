@@ -11,6 +11,7 @@
 /// @requires rem
 @mixin igx-date-picker($theme) {
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
 
     %date-picker {
         min-width: 200px;
@@ -49,7 +50,7 @@
             color: --var($theme, 'content-text-color');
             flex-basis: 14.28%;
 
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 &:hover,
                 &:focus {
                     color: --var($theme, 'date-selected-text-color');
@@ -82,7 +83,7 @@
         %cal-value--year-current {
             color: --var($theme, 'year-current-text-color');
 
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 &:hover,
                 &:focus {
                     color: --var($theme, 'year-hover-text-color');

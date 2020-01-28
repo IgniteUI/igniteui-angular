@@ -135,6 +135,7 @@
     $carousel-indicators-padding: 0;
     $carousel-indicator-margin: 0 5px;
     $indicator-border-style: 2px solid;
+    $not-bootstrap-theme: map-get($theme, variant) != 'bootstrap';
 
     %igx-carousel-display {
         display: flex;
@@ -153,7 +154,7 @@
         width: 46px;
         height: 46px;
         cursor: pointer;
-        @if map-get($theme, variant) != 'bootstrap' {
+        @if $not-bootstrap-theme {
             border-radius: 50%;
         } @else {
             border-radius: --var($theme, 'border-radius');

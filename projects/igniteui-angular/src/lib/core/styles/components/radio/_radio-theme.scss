@@ -122,6 +122,9 @@
         $color: --var($theme, 'fill-color')
     );
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+    $not-bootstrap-theme: map-get($theme, variant) != 'bootstrap';
+
     %radio-display {
         position: relative;
         display: inline-flex;
@@ -167,7 +170,7 @@
             backface-visibility: hidden;
             transform: scale3d(0, 0, 0);
 
-            @if map-get($theme, 'variant') != 'bootstrap' {
+            @if $not-bootstrap-theme {
                 transition: $transition;
             }
 
@@ -183,7 +186,7 @@
         &::before {
             border: $border-width $border-style --var($theme, 'fill-color');
 
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 border-color: --var($theme, 'fill-hover-border-color');
             }
 
@@ -194,7 +197,7 @@
         &::after {
             border: $border-width $border-style --var($theme, 'fill-color');
 
-            @if map-get($theme, 'variant') == 'bootstrap' {
+            @if $bootstrap-theme{
                 background: --var($theme, 'fill-color');
             }
         }
@@ -214,7 +217,7 @@
         }
 
         &::after {
-            @if map-get($theme, 'variant') == 'bootstrap' {
+            @if $bootstrap-theme {
                 border-color: --var($theme, 'fill-color');
             } @else {
                 border-color: --var($theme, 'fill-hover-border-color');
@@ -226,7 +229,7 @@
         &::after {
             border: $border-width $border-style --var($theme, 'disabled-color');
 
-            @if map-get($theme, 'variant') == 'bootstrap' {
+            @if $bootstrap-theme {
                 background: transparent;
             }
         }
@@ -284,7 +287,7 @@
         pointer-events: none;
         filter: opacity(1);
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             display: none;
         }
     }

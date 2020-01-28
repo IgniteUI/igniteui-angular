@@ -117,6 +117,8 @@
         bootstrap: rem(16px),
     ), map-get($theme, variant));
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
     %igx-dialog-display {
         outline-style: none;
         border: 1px solid --var($theme, 'border-color');
@@ -147,7 +149,7 @@
         color: --var($theme, 'title-color');
         padding: $dialog-title-padding;
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             border-bottom: 1px solid --var($theme, 'border-color');
         }
     }
@@ -164,7 +166,7 @@
         justify-content: flex-end;
         padding: $dialog-actions-padding;
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             border-top: 1px solid --var($theme, 'border-color');
         }
 

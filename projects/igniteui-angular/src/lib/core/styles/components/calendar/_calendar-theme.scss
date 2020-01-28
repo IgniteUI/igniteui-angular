@@ -345,6 +345,9 @@
     $before: if-ltr(before, after);
     $after: if-ltr(after, before);
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+    $not-bootstrap-theme: map-get($theme, variant) != 'bootstrap';
+
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
@@ -354,19 +357,19 @@
         outline: none;
         border-radius: --var($theme, 'border-radius');
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             border: 1px solid --var($theme, 'border-color');
         }
 
         %cal-display {
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 border: none
             }
         }
     }
 
     igx-calendar-container {
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             %cal-display {
                 border: 0;
                 border-radius: 0;
@@ -393,7 +396,7 @@
 
     igx-month-picker {
         %cal-picker-display {
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 border-bottom: 1px solid --var($theme, 'border-color');
             }
         }
@@ -403,7 +406,7 @@
     %cal-display + %cal-display {
         margin-#{$left}: 1rem;
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             margin: 0;
         }
     }
@@ -421,7 +424,7 @@
         color: --var($theme, 'header-text-color');
         padding: $cal-header-padding;
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             display: none;
         }
     }
@@ -450,7 +453,7 @@
         height: em(56px);
         align-items: center;
         padding-bottom: $cal-picker-padding;
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             height: auto;
             background: --var($theme, 'picker-background-color');
             padding-top: $cal-picker-padding;
@@ -479,7 +482,7 @@
         align-items: center;
         top: 0;
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             top: $cal-picker-padding / 2;
         }
 
@@ -516,7 +519,7 @@
 
     %cal-body-display {
         flex: 1 1 auto;
-        @if map-get($theme, variant) != 'bootstrap' {
+        @if $not-bootstrap-theme {
             padding-top: $cal-picker-padding;
         }
         padding-bottom: $cal-picker-padding;
@@ -528,7 +531,7 @@
     igx-month-picker,
     igx-months-view {
         %cal-body-display {
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 padding-bottom: 0;
             }
         }
@@ -551,7 +554,7 @@
         }
 
         &:first-of-type {
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 margin-top: 0;
                 background: --var($theme, 'picker-background-color');
                 border-bottom: 1px solid --var($theme, 'border-color');
@@ -565,7 +568,7 @@
         flex-wrap: wrap;
 
         &:first-of-type {
-            @if map-get($theme, variant) == 'bootstrap' {
+            @if $bootstrap-theme {
                 background: transparent;
                 margin-bottom: 0;
                 border-bottom: 0;
@@ -601,7 +604,7 @@
     }
 
     %cal-value--hover {
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             color: --var($theme, 'date-selected-text-color');
         }
 
@@ -648,7 +651,7 @@
         flex-basis: 14.28%;
         // 100 divided by the number of weekdays
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             font-style: italic;
             cursor: default;
         }
@@ -667,7 +670,7 @@
     %cal-value--year-current {
         color: --var($theme, 'year-current-text-color');
 
-        @if map-get($theme, variant) == 'bootstrap' {
+        @if $bootstrap-theme {
             &:hover,
             &:focus {
                 color: --var($theme, 'year-hover-text-color');
@@ -728,7 +731,7 @@
     %cal-value--special {
         %cal-value-content {
             background: --var($theme, 'date-special-background');
-            @if map-get($theme, variant) != 'bootstrap'{
+            @if $not-bootstrap-theme {
                 color: --var($theme, 'date-special-text-color');
             }
             font-weight: 900;
