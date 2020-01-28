@@ -217,6 +217,18 @@ export class ScrollsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
+        ` [primaryKey]="'ID'"
+          [width]="'900px'"
+          [height]="'900px'"
+          [columnWidth]="'200px'"`,
+        '', ColumnDefinitions.idNameJobTitleCompany)
+})
+export class NoScrollsComponent extends BasicGridSearchComponent {
+    data = SampleTestData.personIDNameJobCompany();
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
             ` rowSelection = "multiple"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })

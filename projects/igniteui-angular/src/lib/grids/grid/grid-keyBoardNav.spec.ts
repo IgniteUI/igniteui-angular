@@ -18,12 +18,11 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
-    PinOnInitAndSelectionComponent, PinningComponent,
     VirtualGridComponent, ScrollsComponent,
-    GridWithPrimaryKeyComponent, SelectionComponent
+     SelectionComponent, NoScrollsComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode } from '../common/enums';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -34,184 +33,228 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                DefaultGridComponent,
-                CtrlKeyKeyboardNagivationComponent,
+                NoScrollsComponent,
                 VirtualGridComponent,
-                GridWithPrimaryKeyComponent,
                 DefaultGroupBYGridComponent,
                 ScrollsComponent,
-                SelectionComponent,
-                PinOnInitAndSelectionComponent,
-                PinningComponent
+                SelectionComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
     }));
 
-    it('should move selected cell with arrow keys', (async () => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.detectChanges();
 
-        let topLeft;
-        let topRight;
-        let bottomLeft;
-        let bottomRight;
-        [topLeft, topRight, bottomLeft, bottomRight] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+    describe('in not virtualized grid', () => {
+        let fix;
+        let grid: IgxGridComponent;
 
-        topLeft.nativeElement.dispatchEvent(new Event('focus'));
-        await wait();
-        fix.detectChanges();
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(NoScrollsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(1);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
+        it('should move selected cell with arrow keys', () => {
+            let selectedCell: IgxGridCellComponent;
+            const firstCell = GridFunctions.getRowCells(fix, 0)[0];
+            const secondCell = GridFunctions.getRowCells(fix, 1)[0];
+            const thirdCell = GridFunctions.getRowCells(fix, 1)[1];
+            const fourthCell = GridFunctions.getRowCells(fix, 0)[1];
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', topLeft.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            grid.onSelection.subscribe((event: IGridCellEventArgs) => {
+                selectedCell = event.cell;
+            });
+            firstCell.triggerEventHandler('focus', null);
+            fix.detectChanges();
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(2);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
+            expect(selectedCell.value).toEqual(1);
+            expect(selectedCell.column.field).toMatch('ID');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', bottomLeft.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', firstCell);
+            fix.detectChanges();
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(2);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+            expect(selectedCell.value).toEqual(2);
+            expect(selectedCell.column.field).toMatch('ID');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', bottomRight.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', secondCell);
+            fix.detectChanges();
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(1);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+            expect(selectedCell.value).toEqual('Gilberto Todd');
+            expect(selectedCell.column.field).toMatch('Name');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', topRight.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', thirdCell);
+            fix.detectChanges();
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(1);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
-    }));
+            expect(selectedCell.value).toEqual('Casey Houston');
+            expect(selectedCell.column.field).toMatch('Name');
 
-    it('should  jump to first/last cell with Ctrl', (async () => {
-        const fix = TestBed.createComponent(CtrlKeyKeyboardNagivationComponent);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', fourthCell);
+            fix.detectChanges();
 
-        const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
-        const rv2 = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
+            expect(selectedCell.value).toEqual(1);
+            expect(selectedCell.column.field).toMatch('ID');
+        });
 
-        rv.nativeElement.dispatchEvent(new Event('focus'));
-        await wait();
-        fix.detectChanges();
+        it('should  jump to first/last cell with Ctrl', () => {
+            let selectedCell: IgxGridCellComponent;
+            const firstCell = GridFunctions.getRowCells(fix, 1)[0];
+            const lastCell = GridFunctions.getRowCells(fix, 1)[3];
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', rv.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            grid.onSelection.subscribe((event: IGridCellEventArgs) => {
+                selectedCell = event.cell;
+            });
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(1);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('another');
+            firstCell.triggerEventHandler('focus', null);
+            fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', rv2.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', firstCell, false, false, true);
+            fix.detectChanges();
 
-        expect(fix.componentInstance.selectedCell.value).toEqual(1);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
-    }));
+            expect(selectedCell.value).toEqual('Company C');
+            expect(selectedCell.column.field).toMatch('Company');
 
-    it('Should properly blur the focused cell when scroll with mouse wheeel', (async () => {
-        pending('This scenario need to be tested manually');
-        const fix = TestBed.createComponent(ScrollsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.grid;
-        const firstCell = grid.rowList.first.cells.toArray()[0];
 
-        firstCell.nativeElement.dispatchEvent(new Event('focus'));
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', lastCell, false, false, true);
+            fix.detectChanges();
 
-        expect(firstCell.selected).toBeTruthy();
-        expect(firstCell.focused).toBeTruthy();
+            expect(selectedCell.value).toEqual(2);
+            expect(selectedCell.column.field).toMatch('ID');
+        });
 
-        const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
-        const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 500 });
-        displayContainer.dispatchEvent(event);
-        await wait(300);
+        it('Should handle keydown events on cells properly even when primaryKey is specified', () => {
+            expect(grid.primaryKey).toBeTruthy();
+            expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
 
-        expect(firstCell.selected).toBeFalsy();
-        expect(firstCell.focused).toBeFalsy();
-    }));
+            const targetCell = grid.getCellByKey(2, 'Name');
+            const targetCellElement = GridFunctions.getRowCells(fix, 1)[1];
+            spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
+            expect(targetCell.focused).toEqual(false);
 
-    it('Should properly handle TAB / SHIFT + TAB on row selectors', (async () => {
-        const fix = TestBed.createComponent(ScrollsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.grid;
-        setupGridScrollDetection(fix, grid);
+            targetCellElement.triggerEventHandler('focus', null);
+            fix.detectChanges();
 
-        const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
-        const secondRow = grid.getRowByIndex(1);
-        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox');
-        let cell = grid.getCellByColumn(1, 'ID');
+            spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
+            fix.detectChanges();
 
-        cell.nativeElement.dispatchEvent(new Event('focus'));
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
+            expect(targetCell.focused).toEqual(true);
 
-        expect(cell.selected).toBeTruthy();
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', targetCellElement);
+            fix.detectChanges();
 
-        expect(cell.selected).toBeTruthy();
-        expect(secondRow.selected).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+            expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
+            expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
+            expect(targetCell.focused).toEqual(false);
+            expect(grid.selectedCells.length).toEqual(1);
+            expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
+        });
 
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+        it('Should properly handle TAB / SHIFT + TAB on row selectors', fakeAsync(() => {
+            grid.rowSelection = GridSelectionMode.multiple;
+            tick(100);
+            fix.detectChanges();
 
-        expect(cell.selected).toBeTruthy();
-        expect(secondRow.selected).toBeFalsy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+            const firstCell = GridFunctions.getRowCells(fix, 1)[0];
+            const secondCell = GridFunctions.getRowCells(fix, 0)[3];
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
 
-        cell = grid.getCellByColumn(1, 'ID');
-        UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true, false, true);
-        await wait(100);
-        fix.detectChanges();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+            firstCell.triggerEventHandler('focus', null);
+            fix.detectChanges();
 
-        cell = grid.getCellByColumn(0, 'Column 15');
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', firstCell, false, true);
+            tick(100);
+            fix.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            let cell = grid.getCellByColumn(0, 'Company');
+            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyRowCheckboxIsNotFocused(secondRow.nativeElement);
 
-        expect(firstRow.selected).toBeTruthy();
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', secondCell);
+            tick(100);
+            fix.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
+            cell = grid.getCellByColumn(1, 'ID');
+            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyRowCheckboxIsNotFocused(firstRow.nativeElement);
+        }));
 
-        expect(cell.selected).toBeTruthy();
-        expect(firstRow.selected).toBeFalsy();
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+        it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
+            grid.getColumnByName('Name').pinned = true;
+            tick();
+            fix.detectChanges();
+            let selectedCell;
+            const firstCell = GridFunctions.getRowCells(fix, 0)[0];
+            const secondCell = GridFunctions.getRowCells(fix, 1)[0];
 
-        UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+            grid.onSelection.subscribe((event: IGridCellEventArgs) => {
+                selectedCell = event.cell;
+            });
+            firstCell.triggerEventHandler('focus', null);
+            tick(100);
+            fix.detectChanges();
 
-        cell = grid.getCellByColumn(1, 'ID');
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-    }));
+            expect(selectedCell.value).toEqual('Casey Houston');
+            expect(selectedCell.column.field).toMatch('Name');
+
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', firstCell);
+            tick(100);
+            fix.detectChanges();
+
+            expect(selectedCell.value).toEqual('Gilberto Todd');
+            expect(selectedCell.column.field).toMatch('Name');
+
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', secondCell);
+            tick(100);
+            fix.detectChanges();
+
+            expect(selectedCell.value).toEqual('Casey Houston');
+            expect(selectedCell.column.field).toMatch('Name');
+        }));
+
+        it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
+            grid.getColumnByName('Name').pinned = true;
+            grid.getColumnByName('Company').pinned = true;
+            tick();
+            fix.detectChanges();
+
+            let selectedCell;
+            const firstPinnedCell = GridFunctions.getRowCells(fix, 0)[0];
+            const secondPinnedCell = GridFunctions.getRowCells(fix, 0)[1];
+            const firstUnPinnedCell = GridFunctions.getRowCells(fix, 0)[2];
+
+
+            grid.onSelection.subscribe((event: IGridCellEventArgs) => {
+                selectedCell = event.cell;
+            });
+            firstPinnedCell.triggerEventHandler('focus', null);
+            tick(100);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', firstPinnedCell);
+            tick(100);
+            fix.detectChanges();
+
+            expect(selectedCell.value).toEqual('Company A');
+            expect(selectedCell.column.field).toMatch('Company');
+
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', secondPinnedCell);
+            tick(100);
+            fix.detectChanges();
+
+            expect(selectedCell.value).toEqual(1);
+            expect(selectedCell.column.field).toMatch('ID');
+
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', firstUnPinnedCell);
+            tick(100);
+            fix.detectChanges();
+
+            expect(selectedCell.value).toEqual('Company A');
+            expect(selectedCell.column.field).toMatch('Company');
+        }));
+
+    });
+
 
     it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', (async () => {
         const fix = TestBed.createComponent(ScrollsComponent);
@@ -265,40 +308,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
     }));
 
-    it('Should handle keydown events on cells properly even when primaryKey is specified', (async () => {
-        const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
-        expect(grid.primaryKey).toBeTruthy();
-        expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-
-        const targetCell = grid.getCellByKey(2, 'Name');
-        const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
-        spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
-        expect(targetCell.focused).toEqual(false);
-
-        targetCellElement.dispatchEvent(new FocusEvent('focus'));
-        await wait(DEBOUNCETIME);
-
-        spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
-        fix.detectChanges();
-
-        expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
-        expect(targetCell.focused).toEqual(true);
-
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', targetCellElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
-        expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
-        expect(targetCell.focused).toEqual(false);
-        expect(grid.selectedCells.length).toEqual(1);
-        expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
-    }));
-
     it('Should properly move focus when loading new row chunk', (async () => {
         const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
@@ -326,135 +335,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         expect(grid.selectedCells.length).toEqual(1);
     }));
 
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', async () => {
-        const fix = TestBed.createComponent(PinningComponent);
-        fix.detectChanges();
 
-        await wait();
-        const grid = fix.componentInstance.grid;
-        grid.getColumnByName('CompanyName').pinned = true;
-        grid.getColumnByName('ContactName').pinned = true;
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.nativeElement.dispatchEvent(new Event('focus'));
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('030-0076545');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        cell = cells[cells.length - 1];
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        // It won't scroll left since the next selected cell will be in the pinned area
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    });
-
-    it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
-        const fix = TestBed.createComponent(PinningComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.grid;
-
-        fix.detectChanges();
-        tick();
-
-        grid.getColumnByName('CompanyName').pinned = true;
-        grid.getColumnByName('ContactName').pinned = true;
-        fix.detectChanges();
-
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[1];
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        tick();
-
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-        cell = cells[2];
-
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell.triggerEventHandler('blur', {});
-        tick();
-        cell = cells[0];
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        cell = cells[1];
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-    }));
-
-    it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
-        const fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.grid;
-        fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.nativeElement.dispatchEvent(new Event('focus'));
-        // cell.triggerEventHandler('focus', {});
-
-        tick();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
-
-        tick();
-        grid.cdr.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[5];
-
-        UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true);
-
-        tick();
-        grid.cdr.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-    }));
 
     describe('in virtualized grid', () => {
         // configureTestSuite();
@@ -469,16 +350,40 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
         }));
 
+        it('Should properly blur the focused cell when scroll with mouse wheeel', (async () => {
+            pending('This scenario need to be tested manually');
+            const firstCell = grid.rowList.first.cells.toArray()[0];
+
+            firstCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(firstCell.selected).toBeTruthy();
+            expect(firstCell.focused).toBeTruthy();
+
+            const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
+            const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 500 });
+            displayContainer.dispatchEvent(event);
+            await wait(300);
+
+            expect(firstCell.selected).toBeFalsy();
+            expect(firstCell.focused).toBeFalsy();
+        }));
+
         it('should allow navigating down', async () => {
-            const cell = grid.getCellByColumn(4, 'index');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(50);
+            let cell = GridFunctions.getRowCells(fix, 4)[0];
+            cell.triggerEventHandler('focus', null);
+            await wait();
             fix.detectChanges();
-            // navigate down to 50th row.
-            await GridFunctions.navigateVerticallyToIndex(grid, 4, 50);
-            await wait(100);
-            fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(50);
+
+            // Navigate to the 10th row
+            for (let index = 4; index < 10; index++) {
+                cell = GridFunctions.getRowCells(fix, 4)[0];
+                UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', cell);
+                await wait(30);
+                fix.detectChanges();
+            }
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(10);
         });
 
         it('should allow navigating up', async () => {
@@ -487,16 +392,19 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(104, 'index');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(DEBOUNCETIME);
+            let cell = GridFunctions.getRowCells(fix, 0)[0];
+            cell.triggerEventHandler('focus', null);
+            await wait();
             fix.detectChanges();
 
-            await GridFunctions.navigateVerticallyToIndex(grid, 104, 0);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+            // Navigate to the 94th row
+            for (let index = 0; index < 10; index++) {
+                cell = GridFunctions.getRowCells(fix, 0)[0];
+                UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', cell);
+                await wait(30);
+                fix.detectChanges();
+            }
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(94);
         });
 
         it('should allow horizontal navigation', async () => {
@@ -551,36 +459,35 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
+            // Verify columns
+            let cells = grid.getRowByIndex(0).cells.toArray();
+            expect(cells.length).toEqual(5);
+            expect(cells[0].column.field).toEqual('col1');
+            expect(cells[1].column.field).toEqual('col3');
+            expect(cells[3].column.field).toEqual('col8');
+            expect(cells[4].column.field).toEqual('col9');
+
             await GridFunctions.navigateHorizontallyToIndex(grid, fix.componentInstance.selectedCell, 1);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
+
+            cells = grid.getRowByIndex(0).cells.toArray();
+            expect(cells.length).toEqual(5);
+            expect(cells[0].column.field).toEqual('col1');
+            expect(cells[1].column.field).toEqual('col3');
+            expect(cells[2].column.field).toEqual('col0');
+            expect(cells[3].column.field).toEqual('col2');
         });
 
-        it('should allow vertical navigation in virtualized grid with pinned cols.', async () => {
-            grid.pinColumn('index');
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-
-            const cell = grid.getCellByColumn(4, 'index');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(50);
-            fix.detectChanges();
-            // navigate down to 20th row.
-            await GridFunctions.navigateVerticallyToIndex(grid, 4, 20);
-            await wait(50);
-            fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(20);
-        });
-
-        it('should scroll into view the not fully visible cells when navigating down', async () => {
+        fit('should scroll into view the not fully visible cells when navigating down', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
-            const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
-            const cell = rows[3].querySelectorAll('igx-grid-cell')[1];
-            const bottomRowHeight = rows[4].offsetHeight;
+            const rows = GridFunctions.getRows(fix);
+            const cell = GridFunctions.getRowCells(fix, 3)[1].nativeElement;
+            const bottomRowHeight = rows[4].nativeElement.offsetHeight;
             const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % bottomRowHeight;
 
@@ -1477,70 +1384,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
 });
-
-@Component({
-    template: `
-        <igx-grid
-            (onSelection)="cellSelected($event)"
-            (onCellClick)="cellClick($event)"
-            (onContextMenu)="cellRightClick($event)"
-            (onDoubleClick)="doubleClick($event)"
-            [data]="data"
-            [autoGenerate]="true">
-        </igx-grid>
-    `
-})
-export class DefaultGridComponent {
-
-    public data = [
-        { index: 1, value: 1 },
-        { index: 2, value: 2 }
-    ];
-
-    public selectedCell: IgxGridCellComponent;
-    public clickedCell: IgxGridCellComponent;
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
-
-    public cellSelected(event: IGridCellEventArgs) {
-        this.selectedCell = event.cell;
-    }
-
-    public cellClick(evt) {
-        this.clickedCell = evt.cell;
-    }
-
-    public cellRightClick(evt) {
-        this.clickedCell = evt.cell;
-    }
-
-    public doubleClick(evt) {
-        this.clickedCell = evt.cell;
-    }
-}
-
-@Component({
-    template: `
-        <igx-grid (onSelection)="cellSelected($event)" [data]="data" [autoGenerate]="true"></igx-grid>
-    `
-})
-export class CtrlKeyKeyboardNagivationComponent {
-
-    public data = [
-        { index: 1, value: 1, other: 1, another: 1 },
-        { index: 2, value: 2, other: 2, another: 2 }
-    ];
-
-    public selectedCell: IgxGridCellComponent;
-
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
-
-    public cellSelected(event: IGridCellEventArgs) {
-        this.selectedCell = event.cell;
-    }
-}
 
 @Component({
     template: `

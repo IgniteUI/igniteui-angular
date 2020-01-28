@@ -38,8 +38,22 @@ const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
 const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
 const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
+const CELL_CSS_CLASS = '.igx-grid__td';
+const ROW_CSS_CLASS = '.igx-grid__tr';
+const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 
 export class GridFunctions {
+
+    public static getRows(fix): DebugElement[] {
+        const rows: DebugElement[] = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
+        rows.shift();
+        return rows;
+    }
+
+    public static getRowCells(fix, rowIndex: number): DebugElement[]{
+       const allRows = GridFunctions.getRows(fix);
+       return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+    }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
         const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
@@ -1797,6 +1811,11 @@ export class GridSelectionFunctions {
                 expect(rowCheckbox.style.visibility).toEqual('');
             }
         }
+    }
+
+    public static verifyRowCheckboxIsNotFocused(rowDOM: HTMLElement, focused = false) {
+        const rowCheckbox: HTMLElement = GridSelectionFunctions.getRowCheckbox(rowDOM);
+        expect(rowCheckbox.classList.contains(FOCUSED_CHECKBOX_CLASS)).toEqual(focused);
     }
 
     public static verifyHeaderRowHasCheckbox(parent, hasCheckbox = true, hasCheckboxDiv = true) {
