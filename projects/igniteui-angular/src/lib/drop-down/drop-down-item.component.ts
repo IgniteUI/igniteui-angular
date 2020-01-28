@@ -1,6 +1,5 @@
 import {
     Component,
-    HostListener,
     HostBinding
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -24,7 +23,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
             const focusedIndex = focusedItem ? focusedItem.index : -1;
             focusedState = this._index === focusedIndex;
         }
-        return !this.isHeader && !this.disabled && focusedState;
+        return this.isSelectable && focusedState;
     }
 
     /**
@@ -59,7 +58,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
      */
     @HostBinding('attr.tabindex')
     get setTabIndex() {
-        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && this.isSelectable;
         if (shouldSetTabIndex) {
             return 0;
         } else {
@@ -68,15 +67,11 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @hidden @internal
+     * @inheritdoc
      */
-    @HostListener('click', ['$event'])
-    clicked(event) {
-        if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.items.find((item) => item.focused);
-            if (this.dropDown.allowItemsFocus && focusedItem) {
-                focusedItem.element.nativeElement.focus({ preventScroll: true });
-            }
+    clicked(event): void {
+        if (!this.isSelectable) {
+            this.ensureItemFocus();
             return;
         }
         if (this.selection) {
