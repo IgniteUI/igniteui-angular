@@ -63,6 +63,16 @@ export class IgxOverlayService implements OnDestroy {
     public onOpening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
+     * Emitted after the component is appended to the overlay, and before animations are started.
+     * ```typescript
+     * onAppended(event: OverlayEventArgs){
+     *     const onAppended = event;
+     * }
+     * ```
+     */
+    public onAppended = new EventEmitter<OverlayEventArgs>();
+
+    /**
      * Emitted after the component is opened and all animations are finished.
      * ```typescript
      * onOpened(event: OverlayEventArgs){
@@ -292,6 +302,9 @@ export class IgxOverlayService implements OnDestroy {
             if (info.componentRef) {
                 info.componentRef.changeDetectorRef.detectChanges();
             }
+
+            this.onAppended.emit({ id: info.id, componentRef: info.componentRef });
+
             this.updateSize(info);
             if (this._overlayInfos.indexOf(info) === -1) {
                 this._overlayInfos.push(info);
@@ -397,12 +410,7 @@ export class IgxOverlayService implements OnDestroy {
         const wrapperElement = this.getWrapperElement();
         const contentElement = this.getContentElement(wrapperElement, info.settings.modal);
         this.getOverlayElement(info).appendChild(wrapperElement);
-        const elementScrollTop = info.elementRef.nativeElement.scrollTop;
         contentElement.appendChild(info.elementRef.nativeElement);
-
-        if (elementScrollTop) {
-            info.elementRef.nativeElement.scrollTop = elementScrollTop;
-        }
     }
 
     private getWrapperElement(): HTMLElement {

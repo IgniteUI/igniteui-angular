@@ -31,8 +31,7 @@ import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
-import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
@@ -42,6 +41,7 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
 import { ContainerPositionStrategy } from './position';
+import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -324,6 +324,7 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.onClosed, 'emit');
             spyOn(overlayInstance.onClosing, 'emit');
             spyOn(overlayInstance.onOpened, 'emit');
+            spyOn(overlayInstance.onAppended, 'emit');
             spyOn(overlayInstance.onOpening, 'emit');
             spyOn(overlayInstance.onAnimation, 'emit');
 
@@ -335,6 +336,7 @@ describe('igxOverlay', () => {
                 .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
+            expect(overlayInstance.onAppended.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(1);
 
             tick();
@@ -356,6 +358,7 @@ describe('igxOverlay', () => {
             tick();
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.onAppended.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(3);
 
             tick();
@@ -413,7 +416,7 @@ describe('igxOverlay', () => {
             spyOn(mockElement, 'getBoundingClientRect').and.callFake(() => {
                 return {
                     left, top, width, height, right, bottom
-                };
+                } as DOMRect;
             });
 
             const mockItem = document.createElement('div');
