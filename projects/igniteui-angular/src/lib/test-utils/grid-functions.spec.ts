@@ -13,13 +13,16 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
+import { ControlsFunction } from './controls-functions.spec';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
+const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
+const FILTER_CHIP_CLASS = '.igx-filtering-chips';
 const BANNER_CLASS = '.igx-banner';
 const BANNER_TEXT_CLASS = '.igx-banner__text';
 const BANNER_ROW_CLASS = '.igx-banner__row';
@@ -242,7 +245,7 @@ export class GridFunctions {
         columns.forEach(column => {
             expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
             expect(visibleColumns.findIndex((col) => col === column) > -1)
-            .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+                .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
         });
         expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
     }
@@ -565,10 +568,26 @@ export class GridFunctions {
     }
 
     // Filtering
+    public static getFilteringCells(fix) {
+        return fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+    }
+
+    public static getFilteringChips(fix) {
+        return fix.debugElement.queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
+    public static getFilteringChipPerIndex(fix, index) {
+        return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
     public static removeFilterChipByIndex(index: number, filterUIRow) {
         const filterChip = filterUIRow.queryAll(By.css('igx-chip'))[index];
-        const removeButton = filterChip.query(By.css('div.igx-chip__remove'));
-        removeButton.nativeElement.click();
+        ControlsFunction.clickChipRemoveButton(filterChip.nativeElement);
+    }
+
+    public static verifyFilteringDropDownIsOpened(fix, opened = true) {
+        const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        expect(dropdownList !== null).toEqual(opened);
     }
 
     public static selectFilteringCondition(cond: string, ddList) {
@@ -582,6 +601,19 @@ export class GridFunctions {
             }
         }
     }
+
+    public static openFilterDDAndSelectCondition(fix: ComponentFixture<any>, index: number) {
+        GridFunctions.openFilterDD(fix.debugElement);
+        tick();
+        fix.detectChanges();
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+        const ddItems = ddList.nativeElement.children;
+        ddItems[index].click();
+        tick(100);
+        fix.detectChanges();
+    }
+
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
@@ -592,7 +624,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        this.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
         fix.detectChanges();
     }
 
@@ -609,9 +641,12 @@ export class GridFunctions {
         tick(100);
     }
 
-    public static typeValueInFilterRowInput(value: string, fix) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const input = filterUIRow.query(By.directive(IgxInputDirective));
+    public static typeValueInFilterRowInput(value, fix, input = null) {
+        if (!input) {
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            input = filterUIRow.query(By.directive(IgxInputDirective));
+        }
+
         input.nativeElement.value = value;
         input.nativeElement.dispatchEvent(new Event('keydown'));
         input.nativeElement.dispatchEvent(new Event('input'));
@@ -622,24 +657,18 @@ export class GridFunctions {
     public static submitFilterRowInput(fix) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        this.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
         fix.detectChanges();
     }
 
     public static resetFilterRow(fix: ComponentFixture<any>) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
-        const reset = editingBtns.queryAll(By.css('button'))[0];
-        reset.nativeElement.click();
+        fix.componentInstance.grid.filteringRow.onClearClick();
         tick(100);
         fix.detectChanges();
     }
 
     public static closeFilterRow(fix: ComponentFixture<any>) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
-        const close = editingBtns.queryAll(By.css('button'))[1];
-        close.nativeElement.click();
+        fix.componentInstance.grid.filteringRow.close();
         fix.detectChanges();
     }
 
@@ -791,18 +820,26 @@ export class GridFunctions {
     }
 
     /**
+     * Open filtering row for a column.
+    */
+    public static clickFilterCellChip(fix, columnField: string) {
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName(columnField).filterCell.onChipClicked();
+        fix.detectChanges();
+    }
+
+    /**
      * Click the filter chip for the provided column in order to open the filter row for it.
     */
-    public static clickFilterCellChip(fix: ComponentFixture<any>, columnField: string) {
+    public static clickFilterCellChipUI(fix, columnField: string) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
-        const filterCell = headerGroup.query(By.css('igx-grid-filtering-cell'));
+        const filterCell = headerGroup.query(By.css(FILTER_UI_CELL));
         const chip = filterCell.query(By.css('igx-chip'));
 
         chip.nativeElement.click();
         fix.detectChanges();
     }
-
     /**
      * Presuming filter row is opened, click the filter condition chip based on ascending index (left to right).
     */
@@ -837,10 +874,6 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static simulateKeyboardEvent(element, eventName, inputKey) {
-        element.nativeElement.dispatchEvent(new KeyboardEvent(eventName, { key: inputKey }));
-    }
-
     public static getExcelStyleFilteringComponent(fix) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         let excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
@@ -862,7 +895,7 @@ export class GridFunctions {
         return scrollbar;
     }
 
-    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>) {
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
             return header.componentInstance.column.field === columnField;
         });
@@ -885,9 +918,18 @@ export class GridFunctions {
         return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_CONNECTOR));
     }
 
-    public static getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>) {
+    public static getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>): DebugElement[] {
         const columnHeader = this.getColumnHeader(columnField, fix);
         return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_INDICATOR));
+    }
+
+    public static getFilterCellMoreIcon(columnField: string, fix: ComponentFixture<any>) {
+        const columnHeader = this.getColumnHeader(columnField, fix);
+
+        const filterCell = GridFunctions.getFilterCell(fix, columnField);
+        const moreIcon = Array.from(filterCell.queryAll(By.css('igx-icon')))
+                .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
+        return moreIcon;
     }
 
     public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>) {
@@ -947,7 +989,7 @@ export class GridFunctions {
     public static getFilterCell(fix, columnKey) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnKey);
-        return headerGroup.query(By.css('igx-grid-filtering-cell'));
+        return headerGroup.query(By.css(FILTER_UI_CELL));
     }
 
     public static getFilterConditionChip(fix, index) {
@@ -957,19 +999,27 @@ export class GridFunctions {
         return conditionChips[index];
     }
 
-    public static getFilterRowInputCommitIcon(fix) {
+    public static getFilterRowPrefix(fix): DebugElement {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const inputgroup = filterUIRow.query(By.css('igx-input-group'));
+        return inputgroup.query(By.css('igx-prefix'));
+    }
+
+    public static getFilterRowSuffix(fix): DebugElement {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const suffix = inputGroup.query(By.css('igx-suffix'));
+        return inputGroup.query(By.css('igx-suffix'));
+    }
+
+    public static getFilterRowInputCommitIcon(fix) {
+        const suffix = GridFunctions.getFilterRowSuffix(fix);
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'done');
         return commitIcon;
     }
 
     public static getFilterRowInputClearIcon(fix) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const inputGroup = filterUIRow.query(By.css('igx-input-group'));
-        const suffix = inputGroup.query(By.css('igx-suffix'));
+        const suffix = GridFunctions.getFilterRowSuffix(fix);
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
@@ -1036,8 +1086,7 @@ export class GridFunctions {
     */
     public static clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
-        const removeIcon = chip.querySelector('.igx-chip__remove');
-        removeIcon.click();
+        ControlsFunction.clickChipRemoveButton(chip);
     }
 
     /**
@@ -1556,7 +1605,7 @@ export class GridFunctions {
     }
 
     public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
-         indicatorText = ['expand_more', 'chevron_right']) {
+        indicatorText = ['expand_more', 'chevron_right']) {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
         expect(group.collapsible).toEqual(collapsible);
         if (collapsible === false) {
