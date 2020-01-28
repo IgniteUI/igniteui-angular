@@ -20,17 +20,20 @@ import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
-import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
+import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { TestNgZone } from '../../test-utils/helper-utils.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
+    const DISPLAY_CONTAINER = 'igx-display-container';
+    const VERTICAL_SCROLLER = 'igx-virtual-helper';
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
     let horizontalScroller: HTMLElement;
+    let zone: TestNgZone;
 
     let dg: DataGenerator;
 
@@ -48,14 +51,15 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     EmptyVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
         beforeEach(() => {
             fix = TestBed.createComponent(EmptyVirtualComponent);
             fix.detectChanges();
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
         });
 
         it('should initialize empty directive', () => {
@@ -73,7 +77,8 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     HorizontalVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -82,8 +87,8 @@ describe('IgxForOf directive -', () => {
             dg.generateData(300, 5, fix.componentInstance);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
-            displayContainer  = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+            displayContainer  = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
@@ -101,7 +106,7 @@ describe('IgxForOf directive -', () => {
                     .toBe(fix.componentInstance.data[0][i + 1].toString());
             }
 
-            const secondRecChildren = fix.nativeElement.querySelectorAll('igx-display-container')[1].children;
+            const secondRecChildren = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1].children;
             for (let i = 0; i < secondRecChildren.length; i++) {
                 expect(secondRecChildren[i].textContent)
                     .toBe(fix.componentInstance.data[1][i + 1].toString());
@@ -188,7 +193,8 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualNoDataComponent,
                     VerticalVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -197,8 +203,8 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
@@ -208,7 +214,6 @@ describe('IgxForOf directive -', () => {
             expect(horizontalScroller).toBeNull();
             /* The height of the row is set to 50px so scrolling by 100px should render the third record */
             fix.componentInstance.scrollTop(100);
-            await wait();
             fix.detectChanges();
 
             const firstRecChildren = displayContainer.children[0].children;
@@ -222,23 +227,19 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should update vertical scroll offsets if igxForOf changes. ', (done) => {
+        it('should update vertical scroll offsets if igxForOf changes. ', () => {
             fix.componentInstance.scrollTop(5);
             fix.detectChanges();
 
             expect(parseInt(displayContainer.style.top, 10)).toEqual(-5);
 
-
-            fix.componentInstance.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
-                fix.detectChanges();
-                wait().then(() => {
-                    expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
-                    done();
-                });
-            });
+            spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
 
             fix.componentInstance.data = [{ '1': 1, '2': 2, '3': 3, '4': 4 }];
             fix.detectChanges();
+
+            expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
+            expect(fix.componentInstance.parentVirtDir.onChunkLoad.emit).toHaveBeenCalledTimes(1);
         });
 
         it('should apply the changes when itemSize is changed.', () => {
@@ -269,26 +270,25 @@ describe('IgxForOf directive -', () => {
             expect(errorMessage).toBe('');
         });
 
-        it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', async () => {
+        it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', () => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
             expect(() => {
                 fix.detectChanges();
             }).not.toThrow();
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
-            expect(() => {
-                fix.componentInstance.height = '400px';
-                fix.detectChanges();
-                fix.componentInstance.height = '500px';
-                fix.detectChanges();
-            }).not.toThrow();
+
+            fix.componentInstance.height = '400px';
+            fix.detectChanges();
+            fix.componentInstance.height = '500px';
+            fix.detectChanges();
+
             let rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).toBe(0);
             fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
             fix.detectChanges();
-            await wait();
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
         });
@@ -310,7 +310,7 @@ describe('IgxForOf directive -', () => {
                 {  '1': '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await wait();
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 
@@ -328,7 +328,7 @@ describe('IgxForOf directive -', () => {
                 {  '1': '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await wait();
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });
@@ -344,7 +344,8 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     VirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -352,20 +353,19 @@ describe('IgxForOf directive -', () => {
             fix = TestBed.createComponent(VirtualComponent);
             dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
             expect(horizontalScroller).not.toBeNull();
         });
 
-        it('should initialize directive with vertical and horizontal virtualization', async () => {
+        it('should initialize directive with vertical and horizontal virtualization',  () => {
             /* The height of the row is set to 50px so scrolling by 100px should render the third record */
             fix.componentInstance.scrollTop(100);
-            await wait();
 
-            const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
+            const firstInnerDisplayContainer = displayContainer.children[0].querySelector(DISPLAY_CONTAINER);
             expect(firstInnerDisplayContainer).not.toBeNull();
 
             fix.detectChanges();
@@ -377,15 +377,14 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should allow scrolling at certain amount down and then to the top renders correct rows and cols', async () => {
+        it('should allow scrolling at certain amount down and then to the top renders correct rows and cols', () => {
             fix.componentInstance.scrollTop(5000);
             fix.detectChanges();
 
             fix.componentInstance.scrollTop(0);
             fix.detectChanges();
-            await wait();
 
-            const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
+            const firstInnerDisplayContainer = displayContainer.children[0].querySelector(DISPLAY_CONTAINER);
             expect(firstInnerDisplayContainer).not.toBeNull();
 
             const firstRecChildren = firstInnerDisplayContainer.children;
@@ -395,12 +394,11 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should scroll to bottom and correct rows and columns should be rendered', async () => {
+        it('should scroll to bottom and correct rows and columns should be rendered', () => {
             fix.componentInstance.scrollTop(2500000);
-            await wait();
 
             const rows = displayContainer.children;
-            const lastInnerDisplayContainer = rows[rows.length - 1].querySelector('igx-display-container');
+            const lastInnerDisplayContainer = rows[rows.length - 1].querySelector(DISPLAY_CONTAINER);
             expect(lastInnerDisplayContainer).not.toBeNull();
 
             fix.detectChanges();
@@ -416,27 +414,25 @@ describe('IgxForOf directive -', () => {
         it('should scroll to wheel event correctly', async() => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
+            fix.detectChanges();
             await wait();
 
-            const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
+            const firstInnerDisplayContainer = displayContainer.children[0].querySelector(DISPLAY_CONTAINER);
             expect(firstInnerDisplayContainer).not.toBeNull();
+
             const firstRecChildren = firstInnerDisplayContainer.children;
-
-            fix.detectChanges();
-
             for (let i = 0; i < firstRecChildren.length; i++) {
                 expect(firstInnerDisplayContainer.children[i].textContent)
                     .toBe(fix.componentInstance.data[2][i].toString());
             }
         });
 
-        it('should scroll to the far right and last column should be visible', async () => {
+        it('should scroll to the far right and last column should be visible', () => {
             // scroll to the last right pos
             fix.componentInstance.scrollLeft(90000);
             fix.detectChanges();
-            await wait();
 
-            const rowChildren = displayContainer.querySelectorAll('igx-display-container');
+            const rowChildren = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowChildren.length; i++) {
                 expect(rowChildren[i].children.length).toBe(7);
                 expect(rowChildren[i].children[5].textContent)
@@ -447,7 +443,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should detect width change and update initially rendered columns', () => {
-            let rows = displayContainer.querySelectorAll('igx-display-container');
+            let rows = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(rows.length).toBe(9);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
@@ -459,7 +455,7 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.width = '1200px';
             fix.detectChanges();
 
-            rows = displayContainer.querySelectorAll('igx-display-container');
+            rows = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(rows.length).toBe(9);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(9);
@@ -469,7 +465,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should detect height change and update initially rendered rows', () => {
-            let rows = displayContainer.querySelectorAll('igx-display-container');
+            let rows = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(rows.length).toBe(9);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
@@ -481,7 +477,7 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.height = '700px';
             fix.detectChanges();
 
-            rows = displayContainer.querySelectorAll('igx-display-container');
+            rows = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(rows.length).toBe(15);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
@@ -491,7 +487,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should not render vertical scrollbar when number of rows change to 5', () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
 
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
@@ -501,49 +497,43 @@ describe('IgxForOf directive -', () => {
             expect(rowsRendered.length).toBe(9);
 
             /** Step 1. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
-            expect(() => {
-                dg.generateData(300, 5, fix.componentInstance);
-                fix.detectChanges();
+            dg.generateData(300, 5, fix.componentInstance);
+            fix.detectChanges();
 
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(5);
 
             /** Step 2. Scroll to the left. There should be no errors then and everything should be still the same */
-            expect(() => {
-                fix.componentInstance.scrollLeft(1000);
-                fix.detectChanges();
-            }).not.toThrow();
+            fix.componentInstance.scrollLeft(1000);
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(5);
 
-            /** Step 3. Increase the ammout of rows back and vertical scrollbar should be rendered back */
-            expect(() => {
-                dg.generateData300x50000(fix.componentInstance);
-                fix.detectChanges();
+            /** Step 3. Increase the amount of rows back and vertical scrollbar should be rendered back */
+            dg.generateData300x50000(fix.componentInstance);
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(horizontalScroller.scrollLeft).toBe(1000);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(9);
         });
 
-        it('should not render vertical scrollbars when number of rows change to 0 after scrolling down', async () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+        it('should not render vertical scrollbars when number of rows change to 0 after scrolling down', () => {
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
 
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
@@ -555,48 +545,33 @@ describe('IgxForOf directive -', () => {
             dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
 
-            /** Step 1. Scroll to the left. There should be no errors then and everything should be still the same */
+            /** Step 1. Scroll to the bottom. */
             fix.componentInstance.scrollTop(100000);
             fix.detectChanges();
-            await wait();
 
             /** Step 2. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
-            expect(() => {
-                fix.componentInstance.data = [];
-                fix.detectChanges();
+            fix.componentInstance.data = [];
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
-
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(0);
 
-            /** Step 3. Set the ammout of rows back and vertical scrollbar should be rendered back then.
+            /** Step 3. Set the amount of rows back and vertical scrollbar should be rendered back then.
              *  It should reset the scroll position. */
-            expect(() => {
-                dg.generateData300x50000(fix.componentInstance);
-                fix.detectChanges();
+            dg.generateData300x50000(fix.componentInstance);
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
-
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             expect(verticalScroller.scrollTop).toBe(0);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(9);
         });
 
-        it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+        it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async() => {
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             let colsRendered = rowsRendered[0].children;
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
@@ -609,7 +584,7 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
             await wait();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -617,40 +592,25 @@ describe('IgxForOf directive -', () => {
             }
 
             /** Step 2. Lower the amount of cols to 0 so there would be no horizontal scrollbar */
-            expect(() => {
-                dg.generateData(2, 0, fix.componentInstance);
-                fix.detectChanges();
+            fix.componentInstance.data = [];
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
-
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
-            // expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false); To be investigated
             expect(rowsRendered.length).toBe(0);
 
             /** Step 3. Set the data back to and it should render both scrollbars. It should reset the scroll position */
-            expect(() => {
-                dg.generateData300x50000(fix.componentInstance);
-                fix.detectChanges();
-
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
+            dg.generateData300x50000(fix.componentInstance);
+            fix.detectChanges();
             await wait();
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             colsRendered = rowsRendered[0].children;
 
-            // expect(horizontalScroller.scrollLeft).toBe(0); To be investigated
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(9);
-            // expect(colsRendered.length).toBe(4); To be investigated
 
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -659,8 +619,8 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should not render horizontal scrollbars when number of cols change to 3', async () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+        it('should not render horizontal scrollbars when number of cols change to 3', () => {
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             let colsRendered = rowsRendered[0].children;
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
@@ -669,16 +629,13 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(7);
 
             /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
-            expect(() => {
-                dg.generateData(3, 50000, fix.componentInstance);
-                fix.detectChanges();
+            dg.generateData(3, 50000, fix.componentInstance);
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             colsRendered = rowsRendered[0].children;
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
@@ -687,17 +644,14 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(3);
 
             /** Step 2. Scroll down. There should be no errors then and everything should be still the same */
-            expect(() => {
-                fix.componentInstance.scrollTop(1000);
-                fix.detectChanges();
+            fix.componentInstance.scrollTop(1000);
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             colsRendered = rowsRendered[0].children;
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
@@ -706,16 +660,13 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(3);
 
             /** Step 3. Set the data back to have 300 columns and the horizontal scrollbar should render now. */
-            expect(() => {
-                dg.generateData300x50000(fix.componentInstance);
-                fix.detectChanges();
+            dg.generateData300x50000(fix.componentInstance);
+            fix.detectChanges();
 
-                // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            // We trigger scrollTop with the current scroll position because otherwise the scroll events are not fired during a test.
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
+            fix.detectChanges();
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             colsRendered = rowsRendered[0].children;
 
             expect(verticalScroller.scrollTop).toBe(1000);
@@ -726,27 +677,20 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should scroll down when using touch events', async() => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            await expect(async() => {
-                const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-                UIInteractions.simulateTouchStartEvent(
-                    dcElem,
-                    200,
-                    200
-                );
-                UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
-                fix.detectChanges();
-                await wait();
-                fix.detectChanges();
-            }).not.toThrow();
+            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+            UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
+            UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
+            fix.detectChanges();
             await wait();
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -783,24 +727,22 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should scroll left when using touch events', () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            expect(() => {
-                const dcElem = fix.componentInstance.childVirtDirs.first.dc.instance._viewContainer.element.nativeElement;
-                UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
-                UIInteractions.simulateTouchMoveEvent(dcElem, -800, 0);
-                // fix.componentInstance.childVirtDirs.first.testOnTouchMove(1000, 0);
-                // Trigger onScroll
-                fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
-                fix.detectChanges();
-            }).not.toThrow();
+            const dcElem = fix.componentInstance.childVirtDirs.first.dc.instance._viewContainer.element.nativeElement;
+            UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
+            UIInteractions.simulateTouchMoveEvent(dcElem, -800, 0);
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            // Trigger onScroll
+            fix.componentInstance.scrollLeft(horizontalScroller.scrollLeft);
+            fix.detectChanges();
+
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -808,22 +750,19 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should load next row and remove first row when using scrollNext method', async () => {
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+        it('should load next row and remove first row when using scrollNext method', () => {
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            expect(() => {
-                fix.componentInstance.parentVirtDir.testScrollNext();
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
+            fix.componentInstance.parentVirtDir.scrollNext();
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop); // Trigger onScroll manually.
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -831,15 +770,12 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should load previous row and remove last row when using scrollPrev method', async () => {
+        it('should load previous row and remove last row when using scrollPrev method', () => {
             /** Step 1. Scroll down 500px first so we then have what to load previously */
-            expect(() => {
-                fix.componentInstance.scrollTop(500);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait();
+            fix.componentInstance.scrollTop(500);
+            fix.detectChanges();
 
-            let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -847,14 +783,11 @@ describe('IgxForOf directive -', () => {
             }
 
             /** Step 2. Execute scrollPrev to load previous row */
-            expect(() => {
-                fix.componentInstance.parentVirtDir.testScrollPrev();
-                fix.componentInstance.scrollTop(verticalScroller.scrollTop);
-                fix.detectChanges();
-            }).not.toThrow();
-            await wait(10);
+            fix.componentInstance.parentVirtDir.scrollPrev();
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop); // Trigger onScroll manually.
+            fix.detectChanges();
 
-            rowsRendered = displayContainer.querySelectorAll('igx-display-container');
+            rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
                 expect(rowsRendered[i].children[1].textContent)
@@ -862,40 +795,44 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should not wrap around with scrollNext and scrollPrev', async () => {
+        it('should not wrap around with scrollNext and scrollPrev', async() => {
             const forOf = fix.componentInstance.parentVirtDir;
+
             forOf.scrollPrev();
             fix.detectChanges();
             await wait(200);
+
             expect(forOf.state.startIndex).toEqual(0);
+
             forOf.scrollTo(forOf.igxForOf.length - 1);
             fix.detectChanges();
             await wait(200);
+
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
+
             forOf.scrollNext();
             fix.detectChanges();
             await wait(200);
+
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
 
         it('should prevent scrollTo() when called with numbers outside the scope of the data records.', () => {
-            fix.componentInstance.parentVirtDir.testScrollTo(-1);
+            fix.componentInstance.parentVirtDir.scrollTo(-1);
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
 
-            fix.componentInstance.parentVirtDir.testScrollTo(fix.componentInstance.data.length + 1);
+            fix.componentInstance.parentVirtDir.scrollTo(fix.componentInstance.data.length + 1);
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
         });
 
         it('should set correct left offset when scrolling to right, clearing data and then setting new data', async() => {
             /**  Scroll left 1500px */
-            expect(() => {
-                fix.componentInstance.scrollLeft(1500);
-                fix.detectChanges();
-            }).not.toThrow();
+            fix.componentInstance.scrollLeft(1500);
+            fix.detectChanges();
+            await wait();
 
             /** Timeout for scroll event to trigger during test */
-            await wait(200);
-            let firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
+            let firstRowDisplayContainer = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
             dg.generateData(300, 0, fix.componentInstance);
@@ -903,36 +840,37 @@ describe('IgxForOf directive -', () => {
 
             dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
+            await wait();
 
             /** Offset should be equal to the offset before so there is no misalignment */
-            firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
+            firstRowDisplayContainer = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
-
         });
 
-        it('should correctly scroll to the last element when using the scrollTo method', (done) => {
-            fix.componentInstance.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
-                fix.detectChanges();
-                const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
-                for (let i = 0; i < 8; i++) {
-                    expect(rowsRendered[i].children[1].textContent)
-                        .toBe(fix.componentInstance.data[49991 + i][1].toString());
-                }
-                wait().then(done);
-            });
+        it('should correctly scroll to the last element when using the scrollTo method', () => {
+            spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
 
             /**  Scroll to the last 49999 row. */
             fix.componentInstance.parentVirtDir.scrollTo(49999);
+            fix.componentInstance.scrollTop(verticalScroller.scrollTop);
             fix.detectChanges();
+
+            expect(fix.componentInstance.parentVirtDir.onChunkLoad.emit).toHaveBeenCalledTimes(1);
+
+            const rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
+            for (let i = 0; i < 8; i++) {
+                expect(rowsRendered[i].children[1].textContent)
+                .toBe(fix.componentInstance.data[49991 + i][1].toString());
+            }
         });
 
         it('should return correct value for getItemCountInView API. ', async () => {
             /**  Scroll left 1500px and top 105px */
-            expect(() => {
-                fix.componentInstance.scrollLeft(1500);
-                fix.componentInstance.scrollTop(105);
-                fix.detectChanges();
-            }).not.toThrow();
+
+            fix.componentInstance.scrollLeft(1500);
+            fix.componentInstance.scrollTop(105);
+            fix.detectChanges();
+            fix.componentInstance.parentVirtDir.cdr.detectChanges();
             await wait();
 
             expect(fix.componentInstance.parentVirtDir.getItemCountInView()).toBe(7);
@@ -969,7 +907,7 @@ describe('IgxForOf directive -', () => {
             // change size so that chunk size changes
             fix.componentInstance.height = '1500px';
             fix.detectChanges();
-            await wait(100);
+            await wait();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
         });
@@ -995,7 +933,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should update display container classes when content state changes from virtualized to non-virtualzied.', () => {
-            let displayContainerDebugEl: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'));
+            let displayContainerDebugEl: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
             // No size and no data - display container should be inactive
             expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
 
@@ -1003,7 +941,7 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.height = '500px';
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css('igx-display-container'));
+            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
             // Has size but no data - display container should be inactive
             expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
 
@@ -1011,7 +949,7 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(1);
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css('igx-display-container'));
+            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
             // Has size but not enough data to be virtualized - display container should be inactive
             expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
 
@@ -1019,7 +957,7 @@ describe('IgxForOf directive -', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css('igx-display-container'));
+            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
             // Has size and enough data to be virtualized - display container should be active.
             expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
         });
@@ -1044,8 +982,8 @@ describe('IgxForOf directive -', () => {
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
 
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
         });
 
         it('should allow remote virtualization', async () => {
@@ -1058,12 +996,8 @@ describe('IgxForOf directive -', () => {
             }
 
             // scroll down
-            expect(() => {
-                verticalScroller.scrollTop = 10000;
-                fix.detectChanges();
-                fix.componentRef.hostView.detectChanges();
-            }).not.toThrow();
-
+            verticalScroller.scrollTop = 10000;
+            fix.detectChanges();
             await wait();
 
             // verify data is loaded
@@ -1075,6 +1009,7 @@ describe('IgxForOf directive -', () => {
             }
         });
     });
+
     describe('no width and height component', () => {
         configureTestSuite();
         let fix: ComponentFixture<NoWidthAndHeightComponent>;
@@ -1100,6 +1035,7 @@ describe('IgxForOf directive -', () => {
             expect(children.length).toEqual(expectedElementsLength);
         });
     });
+
     describe('even odd first last functions', () => {
         configureTestSuite();
         let fix: ComponentFixture<LocalVariablesComponent>;
@@ -1120,7 +1056,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should differentiate even odd items', () => {
-            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'))[0].children;
+            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER))[0].children;
             expect(allItems.length).toEqual(100);
             for (let i = 0; i < allItems.length; i++) {
                 if (i === 0) {
@@ -1136,10 +1072,7 @@ describe('IgxForOf directive -', () => {
                 }
             }
         });
-
-
     });
-
 });
 
 class DataGenerator {
@@ -1233,18 +1166,6 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         super.onScroll(evt);
     }
 
-    public testScrollPrev() {
-        super.scrollPrev();
-    }
-
-    public testScrollNext() {
-        super.scrollNext();
-    }
-
-    public testScrollTo(index) {
-        super.scrollTo(index);
-    }
-
     public testOnScroll(target) {
         const event = new Event('scroll');
         Object.defineProperty(event, 'target', { value: target, enumerable: true });
@@ -1288,103 +1209,6 @@ export class EmptyVirtualComponent {
     @ViewChild('container', { static: true })public container;
 }
 
-/** Only vertically virtualized component */
-@Component({
-    template: `
-        <div #container [style.width]='width' [style.height]='height'>
-            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
-                [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='height'
-                [igxForItemSize]='itemSize'>
-                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
-                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
-                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
-                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
-                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
-                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
-                </div>
-            </ng-template>
-        </div>
-    `
-})
-export class VerticalVirtualComponent {
-
-    public width = '450px';
-    public height = '300px';
-    public cols = [
-        { field: '1', width: '150px' },
-        { field: '2', width: '70px' },
-        { field: '3', width: '50px' },
-        { field: '4', width: '80px' },
-        { field: '5', width: '100px' }
-    ];
-    public data = [];
-    public itemSize = '50px';
-
-    @ViewChild('container', { static: true })
-    public container;
-
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
-    public parentVirtDir: TestIgxForOfDirective<any>;
-
-    public scrollTop(newScrollTop) {
-        const verticalScrollbar = this.container.nativeElement.querySelector('igx-virtual-helper');
-        verticalScrollbar.scrollTop = newScrollTop;
-
-        this.parentVirtDir.testOnScroll(verticalScrollbar);
-    }
-}
-
-/** Both vertically and horizontally virtualized component */
-@Component({
-    template: `
-        <div [style.width]='width'>
-            <div #container
-                [style.width]='"calc(100% - 18px)"'
-                [style.height]='"calc(100% - 18px)"'
-                [style.overflow]='"hidden"'
-                [style.float]='"left"'
-                [style.position]='"relative"'>
-                <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
-                    <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
-                        [igxForScrollOrientation]="'horizontal'"
-                        [igxForScrollContainer]="scrollContainer"
-                        [igxForContainerSize]='width'>
-                            <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-    `
-})
-export class HorizontalVirtualComponent implements OnInit {
-
-    public width = '800px';
-    public height = '400px';
-    public cols = [];
-    public data = [];
-    public scrollContainer = { _viewContainer: null };
-
-    @ViewChild('container', { read: ViewContainerRef, static: true })
-    public container: ViewContainerRef;
-
-    @ViewChildren('childContainer', { read: TestIgxForOfDirective })
-    public childVirtDirs: QueryList<TestIgxForOfDirective<any>>;
-
-    public ngOnInit(): void {
-        this.scrollContainer._viewContainer = this.container;
-    }
-
-    public scrollLeft(newScrollLeft) {
-        const horizontalScrollbar =
-            this.container.element.nativeElement.parentElement.querySelector('igx-horizontal-virtual-helper');
-        horizontalScrollbar.scrollLeft = newScrollLeft;
-
-        this.childVirtDirs.forEach((item) => {
-            item.testOnHScroll(horizontalScrollbar);
-        });
-    }
-}
 
 /** Both vertically and horizontally virtualized component */
 @Component({
@@ -1455,8 +1279,68 @@ export class VirtualComponent {
          */
         return horizontalScrollbar.offsetHeight >= 16;
     }
+}
 
+/** Only vertically virtualized component */
+@Component({
+    template: `
+        <div #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='itemSize'>
+                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VerticalVirtualComponent extends VirtualComponent {
+    public width = '450px';
+    public height = '300px';
+    public cols = [
+        { field: '1', width: '150px' },
+        { field: '2', width: '70px' },
+        { field: '3', width: '50px' },
+        { field: '4', width: '80px' },
+        { field: '5', width: '100px' }
+    ];
+    public data = [];
+    public itemSize = '50px';
+}
 
+/** Only horizontally virtualized component */
+@Component({
+    template: `
+        <div [style.width]='width'>
+            <div #container
+                [style.width]='"calc(100% - 18px)"'
+                [style.height]='"calc(100% - 18px)"'
+                [style.overflow]='"hidden"'
+                [style.float]='"left"'
+                [style.position]='"relative"'>
+                <div *ngFor="let rowData of data" [style.display]="'flex'" [style.height]="'50px'">
+                    <ng-template #childContainer igxForTest let-col [igxForOf]="cols"
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForScrollContainer]="parentVirtDir"
+                        [igxForContainerSize]='width'>
+                            <div [style.min-width]='col.width + "px"'>{{rowData[col.field]}}</div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    `
+})
+export class HorizontalVirtualComponent extends VirtualComponent {
+    public width = '800px';
+    public height = '400px';
+    public cols = [];
+    public data = [];
 }
 
 /** Only vertically virtualized component */
