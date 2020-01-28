@@ -365,11 +365,18 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (e.cancel) {
             return;
         }
-        if (!this.virtDir && this.selectedItem) {
-            this.scrollToItem(this.selectedItem);
-        }
+
         if (this.virtDir) {
             this.virtDir.scrollPosition = this._scrollPosition;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onToggleContentAppended() {
+        if (!this.virtDir && this.selectedItem) {
+           this.scrollToItem(this.selectedItem);
         }
     }
 
