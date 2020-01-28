@@ -20,11 +20,11 @@ import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
-import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { TestNgZone } from '../../test-utils/helper-utils.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -33,6 +33,7 @@ describe('IgxForOf directive -', () => {
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
     let horizontalScroller: HTMLElement;
+    let zone: TestNgZone;
 
     let dg: DataGenerator;
 
@@ -50,7 +51,8 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     EmptyVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -75,7 +77,8 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     HorizontalVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -190,7 +193,8 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualNoDataComponent,
                     VerticalVirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -306,7 +310,7 @@ describe('IgxForOf directive -', () => {
                 {  '1': '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await wait();
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 
@@ -324,7 +328,7 @@ describe('IgxForOf directive -', () => {
                 {  '1': '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await wait();
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });
@@ -340,7 +344,8 @@ describe('IgxForOf directive -', () => {
                     TestIgxForOfDirective,
                     VirtualComponent
                 ],
-                imports: [IgxForOfModule]
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
 
@@ -902,7 +907,7 @@ describe('IgxForOf directive -', () => {
             // change size so that chunk size changes
             fix.componentInstance.height = '1500px';
             fix.detectChanges();
-            await wait(100);
+            await wait();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
         });
