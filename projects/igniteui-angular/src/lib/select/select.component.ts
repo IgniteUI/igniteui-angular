@@ -202,8 +202,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
+    //#region ControlValueAccessor
+
     /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
+    /** @hidden @internal */
+    private _onTouchedCallback: () => void = noop;
 
     /** @hidden @internal */
     public writeValue = (value: any) => {
@@ -216,7 +220,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {
+        this._onTouchedCallback = fn;
+    }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+    }
+    //#endregion
 
     /** @hidden @internal */
     public getEditElement(): HTMLElement {
@@ -320,6 +332,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public onBlur(): void {
+        this._onTouchedCallback();
         if (this.ngControl && !this.ngControl.valid) {
              this.input.valid = IgxInputState.INVALID;
         } else {
@@ -328,6 +341,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (!this.collapsed) {
             this.toggleDirective.close();
         }
+    }
+
+    /** @hidden @internal */
+    public onFocus(): void {
+        this._onTouchedCallback();
     }
 
     protected onStatusChanged() {
