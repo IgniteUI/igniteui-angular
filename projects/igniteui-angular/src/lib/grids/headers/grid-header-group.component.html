@@ -9,7 +9,7 @@
         <ng-container *ngFor="let child of column.children" >
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
                 [column]="child"
-                [gridID]="child.gridID"
+                [gridID]="child.grid.id"
                 [igxColumnMovingDrag]="child"
                 [ghostHost]="grid.outletDirective.nativeElement"
                 [attr.droppable]="true"

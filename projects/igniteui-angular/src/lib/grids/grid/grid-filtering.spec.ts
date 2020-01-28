@@ -16,6 +16,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingComponent } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
+import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
@@ -661,6 +662,20 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(4);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(254);
     }));
+
+    it('Should disable filtering feature when using NoopFilteringStrategy.', () => {
+        // Use the NoopFilteringStrategy.
+        grid.filterStrategy = NoopFilteringStrategy.instance();
+        fix.detectChanges();
+
+        grid.filter('ProductName' , 'some value', IgxStringFilteringOperand.instance().condition('contains'));
+        fix.detectChanges();
+
+        // Verify the grid is not filtered, because of the noop filter strategy.
+        expect(grid.rowList.length).toBe(8);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+    });
 });
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
