@@ -1,7 +1,12 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
-import { ReorderedColumnsComponent, PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import {
+    ReorderedColumnsComponent,
+    PagingAndEditingComponent,
+    GridIDNameJobTitleComponent,
+    GridWithUndefinedDataComponent
+} from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -21,7 +26,8 @@ describe('IgxGrid - Grid Paging', () => {
                 ReorderedColumnsComponent,
                 PagingComponent,
                 PagingAndEditingComponent,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                GridWithUndefinedDataComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -63,7 +69,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 3, '1', '1 of 4', [true, true, false, false]);
     }));
 
-    it('should paginate data API', fakeAsync (() => {
+    it('should paginate data API', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
 
@@ -214,7 +220,7 @@ describe('IgxGrid - Grid Paging', () => {
         grid.perPage = 5;
         await wait();
         fix.detectChanges();
-        let vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        let vScrollBar = grid.verticalScrollContainer.getScroll();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
         expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
@@ -224,7 +230,7 @@ describe('IgxGrid - Grid Paging', () => {
         grid.perPage = 33;
         await wait();
         fix.detectChanges();
-        vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        vScrollBar = grid.verticalScrollContainer.getScroll();
         // onPagingDone should be emitted only if we have a change in the page number
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1 of 1', [true, true, true, true]);
@@ -281,7 +287,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 2, '9', '3 of 3', []);
     });
 
-    it('activate/deactivate paging',  fakeAsync(() => {
+    it('activate/deactivate paging', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         fix.detectChanges();
@@ -459,6 +465,27 @@ describe('IgxGrid - Grid Paging', () => {
         tick();
         fix.detectChanges();
         expect(gridElement.querySelector(PAGER_CLASS)).not.toBeNull();
+    }));
+
+    it('should not throw error when data is undefined', fakeAsync(() => {
+        let errorMessage = '';
+        const fix = TestBed.createComponent(GridWithUndefinedDataComponent);
+        try {
+            fix.detectChanges();
+        } catch (ex) {
+            errorMessage = ex.message;
+        }
+        expect(errorMessage).toBe('');
+        const grid = fix.componentInstance.grid;
+        let paginator = grid.nativeElement.querySelector(PAGER_CLASS);
+        expect(paginator).toBeNull();
+        expect(grid.rowList.length).toBe(0);
+        tick(305);
+        fix.detectChanges();
+
+        paginator = grid.nativeElement.querySelector(PAGER_CLASS);
+        expect(paginator).toBeDefined();
+        expect(grid.rowList.length).toBe(5);
     }));
 
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {

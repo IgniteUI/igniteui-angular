@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -11,6 +11,7 @@ import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
+import { IgxGridComponent } from '../grids/grid';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -258,12 +259,12 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     public dateSummary = new IgxDateSummaryOperand();
 
     public scrollTop(newTop: number) {
-        const vScrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = this.grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = this.grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 
@@ -305,7 +306,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -861,10 +862,10 @@ export class VirtualGridComponent extends BasicGridComponent {
         this.selectedCell = event.cell;
     }
      public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
      public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
  @Component({
@@ -1118,4 +1119,24 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     data = SampleTestData.contactInfoDataFull();
     width = '800px';
     height = '800px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasic)
+})
+export class GridWithUndefinedDataComponent implements OnInit  {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+    public data ;
+    public perPage = 5;
+    public width = '800px';
+    public height = '600px';
+
+    public ngOnInit(): void {
+        setTimeout(() => {
+           this.data = SampleTestData.foodProductDataExtended();
+        }, 300);
+    }
 }

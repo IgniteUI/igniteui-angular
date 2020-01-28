@@ -41,8 +41,7 @@ import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -70,7 +69,8 @@ let NEXT_ID = 0;
     providers: [
         IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        IgxFilteringService, IgxForOfSyncService, IgxForOfScrollSyncService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
@@ -106,7 +106,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -302,27 +302,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: false })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
-
-    /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.

@@ -24,6 +24,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -253,6 +254,19 @@ describe('IgxForOf directive -', () => {
                 expect(firstRecChildren[i].clientHeight)
                     .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
             }
+        });
+
+        it('should not throw error when itemSize is changed while data is null/undefined.', () => {
+            let errorMessage = '';
+            fix.componentInstance.data = null;
+            fix.detectChanges();
+            try {
+                fix.componentInstance.itemSize = '100px';
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
         });
 
         it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', async () => {
@@ -872,7 +886,7 @@ describe('IgxForOf directive -', () => {
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
         });
 
-        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async(() => {
+        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async() => {
             /**  Scroll left 1500px */
             expect(() => {
                 fix.componentInstance.scrollLeft(1500);
@@ -880,7 +894,7 @@ describe('IgxForOf directive -', () => {
             }).not.toThrow();
 
             /** Timeout for scroll event to trigger during test */
-
+            await wait(200);
             let firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
@@ -894,7 +908,7 @@ describe('IgxForOf directive -', () => {
             firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
-        }));
+        });
 
         it('should correctly scroll to the last element when using the scrollTo method', (done) => {
             fix.componentInstance.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
@@ -1203,8 +1217,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public differs: IterableDiffers,
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
-        public zone: NgZone) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone);
+        public zone: NgZone,
+        protected syncService: IgxForOfScrollSyncService) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService);
     }
     public scrStepArray = [];
     public scrTopArray = [];

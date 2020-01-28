@@ -10,8 +10,11 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
+import { SelectionWithTransactionsComponent } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCETIME = 30;
+const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
+const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell component', () => {
     configureTestSuite();
@@ -28,7 +31,8 @@ describe('IgxGrid - Cell component', () => {
                 CellEditingScrollTestComponent,
                 ConditionalCellStyleTestComponent,
                 ColumnEditablePropertyTestComponent,
-                GridColumnWidthsComponent
+                GridColumnWidthsComponent,
+                SelectionWithTransactionsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -90,9 +94,9 @@ describe('IgxGrid - Cell component', () => {
 
         expect(spy.calls.count()).toEqual(1);
 
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         fix.detectChanges();
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape'}));
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         fix.detectChanges();
 
         expect(spy.calls.count()).toEqual(1);
@@ -189,24 +193,31 @@ describe('IgxGrid - Cell component', () => {
 
     it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOn(PlatformUtil, 'isIOS').and.returnValue(false);
+        const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+        const oldIsIOS = platformUtil.isIOS;
+        platformUtil.isIOS = false;
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
+        // spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
+        expect(addListenerSpy).not.toHaveBeenCalled();
+
+        platformUtil.isIOS = oldIsIOS;
     });
 
     it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOn(PlatformUtil, 'isIOS').and.returnValue(true);
+        const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+        const oldIsIOS = platformUtil.isIOS;
+        platformUtil.isIOS = true;
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const firstCell = grid.getCellByColumn(0, 'index');
 
         // should attach 'doubletap'
         expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: { } });
+        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: {} });
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
 
@@ -224,6 +235,8 @@ describe('IgxGrid - Cell component', () => {
         expect(event.preventDefault).toHaveBeenCalled();
         expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
+
+        platformUtil.isIOS = oldIsIOS;
     });
 
     it('Should blur selected cell when scrolling with mouse wheel', (async () => {
@@ -528,7 +541,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 9);
                 fixture.detectChanges();
 
-                expect (() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
+                expect(() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
             });
 
             it('should exit edit mode on sorting', () => {
@@ -550,7 +563,7 @@ describe('IgxGrid - Cell component', () => {
             });
 
             it('should update correct cell when sorting is applied', () => {
-                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false});
+                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'fullName');
@@ -663,7 +676,7 @@ describe('IgxGrid - Cell component', () => {
             }));
 
             it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
-                const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+                const verticalScroll = grid.verticalScrollContainer.getScroll();
                 const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
@@ -688,7 +701,7 @@ describe('IgxGrid - Cell component', () => {
             });
 
             it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
-                const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+                const verticalScroll = grid.verticalScrollContainer.getScroll();
                 let expectedScroll;
                 let cellElem;
                 fixture.componentInstance.scrollTop(1000);
@@ -882,6 +895,44 @@ describe('IgxGrid - Cell component', () => {
         expect(cell.value).toEqual('New Name');
     });
 
+    it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+
+        grid.primaryKey = 'ID';
+        fixture.detectChanges();
+
+        // update the cell value via updateRow and cancel the event
+        grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+            const rowIndex: number = e.cellID.rowIndex;
+            const row = grid.getRowByIndex(rowIndex);
+            grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
+            e.cancel = true;
+        });
+
+        const cell = grid.getCellByColumn(0, 'Name');
+        const initialValue = cell.value;
+        const firstNewValue = 'New Value';
+        const secondNewValue = 'Very New Value';
+
+        cell.update(firstNewValue);
+        fixture.detectChanges();
+        expect(cell.value).toBe(firstNewValue);
+
+        cell.update(secondNewValue);
+        fixture.detectChanges();
+        expect(cell.value).toBe(secondNewValue);
+
+        grid.transactions.undo();
+        fixture.detectChanges();
+        expect(cell.value).toBe(firstNewValue);
+
+        grid.transactions.undo();
+        fixture.detectChanges();
+        expect(cell.value).toBe(initialValue);
+    });
+
     it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
@@ -959,17 +1010,17 @@ describe('IgxGrid - Cell component', () => {
     }));
 
     it('should not make last column smaller when vertical scrollbar is on the right of last cell',
-    fakeAsync(/** height/width setter rAF */() => {
-        GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
-        const fix = TestBed.createComponent(GridColumnWidthsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
+        fakeAsync(/** height/width setter rAF */() => {
+            GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
+            const fix = TestBed.createComponent(GridColumnWidthsComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
 
-        const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
-        lastColumnCells.forEach(function (item) {
-            expect(item.width).toEqual('30px');
-        });
-    }));
+            const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+            lastColumnCells.forEach(function (item) {
+                expect(item.width).toEqual('30px');
+            });
+        }));
 
     it('should not make last column smaller when vertical scrollbar is on the left of last cell', async () => {
         GridColumnWidthsComponent.COLUMN_WIDTH = '500px';
@@ -977,7 +1028,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-        const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = grid.headerContainer.getScroll();
         scrollbar.scrollLeft = 10000;
         fix.detectChanges();
 
@@ -1024,6 +1075,54 @@ describe('IgxGrid - Cell component', () => {
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
     }));
+
+    // Bug #5855
+    it('should apply proper style on cell editing when new value equals zero or false', () => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('ParentID').hidden = true;
+        grid.getColumnByName('Name').hidden = true;
+        grid.getColumnByName('HireDate').hidden = true;
+        grid.getColumnByName('Age').editable = true;
+        grid.getColumnByName('OnPTO').editable = true;
+        fixture.detectChanges();
+
+        let cell = grid.getCellByColumn(0, 'Age');
+        let cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS_NUMBER_FORMAT))[1];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        let editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+        UIInteractions.sendInput(editTemplate, 0);
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(0);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+
+        cell = grid.getCellByColumn(1, 'OnPTO');
+        cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[5];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        editTemplate = cellDomPK.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
+        editTemplate.nativeElement.click();
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(false);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+    });
 });
 
 @Component({
@@ -1129,11 +1228,11 @@ export class VirtualGridComponent {
     }
 
     public scrollTop(newTop: number) {
-        this.instance.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.instance.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        this.instance.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.instance.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
 
@@ -1230,11 +1329,11 @@ export class CellEditingScrollTestComponent {
     ];
 
     public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
 
@@ -1286,7 +1385,7 @@ export class ConditionalCellStyleTestComponent implements OnInit {
             { field: 'ProductID', width: 100, cellClasses: this.cellClasses },
             { field: 'ProductName', width: 200, cellClasses: this.cellClasses1 },
             { field: 'InStock', width: 150, cellClasses: this.cellClasses1 },
-            { field: 'UnitsInStock', width: 150, cellClasses: {'test1' : true } },
+            { field: 'UnitsInStock', width: 150, cellClasses: { 'test1': true } },
             { field: 'OrderDate', width: 150, cellClasses: this.cellClasses1 }
         ];
         this.data = SampleTestData.foodProductDataExtended();

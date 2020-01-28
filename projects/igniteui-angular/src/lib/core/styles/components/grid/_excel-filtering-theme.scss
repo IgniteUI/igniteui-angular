@@ -12,7 +12,6 @@
 /// @requires --var
 @mixin _excel-filtering($theme, $palette) {
     %grid-excel-filter {
-        height: rem(15px);
         display: block;
     }
 

@@ -1249,6 +1249,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const firstMonth = calendar.querySelector('.igx-calendar__month');
+        const firstMonthText = (firstMonth as HTMLElement).innerText;
         firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
@@ -1256,7 +1257,7 @@ describe('IgxGrid - Filtering actions', () => {
         calendar = outlet.getElementsByClassName('igx-calendar')[0];
         const month = calendar.querySelector('.igx-calendar-picker__date');
 
-        expect(month.innerHTML.trim()).toEqual('Jan');
+        expect(month.innerHTML.trim()).toEqual(firstMonthText);
     }));
 
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
@@ -1818,9 +1819,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             dateCellChip.nativeElement.click();
             fix.detectChanges();
 
-            GridFunctions.filterBy('Today', '', fix);
+            GridFunctions.filterBy('Today', null, fix);
+            tick(100);
             expect(grid.rowList.length).toEqual(1);
-            GridFunctions.filterBy('Null', '', fix);
+            GridFunctions.filterBy('Null', null, fix);
             expect(grid.rowList.length).toEqual(0);
         }));
 
@@ -3386,8 +3388,38 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
             GridFunctions.verifyColumnIsHidden(prodNameCol, true , 5);
         }));
-    });
 
+        it('Unary conditions should be committable', fakeAsync (() => {
+            grid.height = '700px';
+            fix.detectChanges();
+
+            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Check that the filterRow is opened
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.openFilterDD(fix.debugElement);
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            GridFunctions.selectFilteringCondition('Empty', dropdownList);
+            fix.detectChanges();
+            tick(16);
+
+            const chip = filterUIRow.query(By.directive(IgxChipComponent));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            expect(chip.componentInstance.selected).toBeTruthy();
+
+            clickElemAndBlur(chip, input);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeFalsy();
+
+            GridFunctions.clickChip(chip);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeTruthy();
+    }));
+});
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
@@ -3521,7 +3553,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(emptyFilterHeader.componentInstance.column.field).toEqual('Downloads');
 
             // Scroll to the right
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 300;
+            grid.headerContainer.getScroll().scrollLeft = 300;
             await wait();
             fix.detectChanges();
 
@@ -5024,7 +5056,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             await wait(16);
 
             // Scroll a bit to the right, so the ProductName column is not fully visible.
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+            grid.headerContainer.getScroll().scrollLeft = 500;
             await wait(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
@@ -6293,8 +6325,8 @@ function clickElemAndBlur(clickElem, blurElem) {
     const elementRect = clickElem.nativeElement.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
     (clickElem as DebugElement).nativeElement.focus();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
     UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10 , 10);
 }

@@ -46,12 +46,12 @@ export class GridFunctions {
     }
 
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 
     public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.parentVirtDir.getScroll();
         hScrollbar.scrollRight = newRight;
     }
 
@@ -423,8 +423,10 @@ export class GridFunctions {
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
-
-       this.applyFilter(value, fix);
+        // fix.detectChanges();
+        tick(100);
+        this.applyFilter(value, fix);
+        tick(100);
     }
 
     public static typeValueInFilterRowInput(value: string, fix) {

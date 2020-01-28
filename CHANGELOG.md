@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.1.14
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The header text of the columns and the column groups now has the `title` attribute set to the column's `headerText` in order to expose a native browser tooltip.
+
 ## 8.1.4
 - `IgxDialog` - @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 

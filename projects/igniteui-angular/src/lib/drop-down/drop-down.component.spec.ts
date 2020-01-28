@@ -420,6 +420,51 @@ describe('IgxDropDown ', () => {
             expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs1);
         }));
 
+        it('Should be able to change selection when manipulating ISelectionEventArgs', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdownScroll;
+            expect(dropdown.selectedItem).toEqual(null);
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            tick();
+
+            // Overwrite selection args
+            let expectedSelected = dropdown.items[4];
+            const calledSelected = dropdown.items[1];
+            const subscription = dropdown.onSelection.subscribe((e: ISelectionEventArgs) => {
+                expect(e.newSelection).toEqual(calledSelected);
+                e.newSelection = expectedSelected;
+            });
+            dropdown.selectItem(calledSelected);
+            tick();
+            expect(dropdown.selectedItem).toEqual(expectedSelected);
+
+            // Clear selection
+            expectedSelected = null;
+            dropdown.selectItem(calledSelected);
+            tick();
+            expect(dropdown.selectedItem).toEqual(expectedSelected);
+
+            // Set header - error
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+
+            expectedSelected = dropdown.items[4];
+            dropdown.items[4].isHeader = true;
+
+            spyOn(dropdown, 'selectItem').and.callThrough();
+            expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+
+            // Set non-IgxDropDownItemBaseDirective
+            expectedSelected = 7 as any;
+            expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+
+            subscription.unsubscribe();
+        }));
+
         it('Should persist selection through scrolling', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
             fixture.detectChanges();
@@ -1368,7 +1413,7 @@ describe('IgxDropDown ', () => {
             let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(lastItemElement.textContent.trim()).toEqual('Item 11');
             expect(firstItemElement.textContent.trim()).toEqual('Item 1');
-            scroll.getVerticalScroll().scrollTop = scroll.getVerticalScroll().scrollHeight;
+            scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
             setTimeout(() => {
                 fixture.detectChanges();
                 firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
@@ -1453,7 +1498,7 @@ describe('IgxDropDown ', () => {
                     const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
                         - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
                     const acceptableDelta = virtualScroll.igxForItemSize;
-                    const scrollTop = virtualScroll.getVerticalScroll().scrollTop;
+                    const scrollTop = virtualScroll.getScroll().scrollTop;
                     expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
                     done();
                 }, 100);

@@ -210,7 +210,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
              // check total widths sum
-            let horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            let horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             let totalExpected = 7 * 200;
             expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
@@ -231,7 +231,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(horizontalVirtualization.getSizeAt(1)).toBe(4 * 200);
 
              // check total widths sum
-            horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 6 * 200;
             expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
@@ -254,7 +254,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
              // check total widths sum
-            horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            horizonatalScrElem = horizontalVirtualization.getScroll();
             // 7 column span in total
             totalExpected = 9 * 200;
             expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
@@ -606,7 +606,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(horizontalVirtualization.getSizeAt(2)).toBe(4 * 200);
 
             // check total widths sum
-            const horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            const horizonatalScrElem = horizontalVirtualization.getScroll();
             // 9 column span in total
             const totalExpected = 9 * 200;
             expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
@@ -770,7 +770,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(horizontalVirtualization.getSizeAt(0)).toBe(totalExpected);
 
             // check width scrollbar
-            const horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            const horizonatalScrElem = horizontalVirtualization.getScroll();
             expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
         });
     });
@@ -837,16 +837,16 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
-                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
+            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
             grid.verticalScrollContainer.scrollTo(lastIndex);
             await wait(100);
             fixture.detectChanges();
 
-            const scrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
-            const scrollHeight = grid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+            const scrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
+            const scrollHeight = grid.verticalScrollContainer.getScroll().scrollHeight;
             const tbody = fixture.debugElement.query(By.css('.igx-grid__tbody')).nativeElement;
             const scrolledToBottom = Math.round(scrollTop + tbody.scrollHeight) === scrollHeight;
             expect(grid.rowList.length).toEqual(8);
@@ -868,16 +868,16 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
-                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
+            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
             await wait(100);
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
-            expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
-                grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeLessThanOrEqual(0);
+            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+                grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
         });
     });
 

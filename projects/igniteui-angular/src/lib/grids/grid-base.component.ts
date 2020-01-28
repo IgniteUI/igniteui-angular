@@ -244,6 +244,7 @@ export enum GridKeydownTargetType {
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, OnChanges, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
 
     public get scrollWidth() {
@@ -445,7 +446,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Sets the current page index.
+     * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
+     *```
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
      */
     set page(val: number) {
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
@@ -1552,6 +1560,23 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent>;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+    /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+        this._customDragIndicatorIconTemplate = val;
+    }
+
+    /**
      *@hidden
      */
     @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: false })
@@ -1750,7 +1775,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: false })
+    @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
@@ -1839,7 +1864,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get parentRowOutletDirective() {
-        return null;
+        return this.outletDirective;
     }
 
     /**
@@ -2017,7 +2042,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * for the built-in column hiding UI of the`IgxColumnComponent`.
      * ```typescript
      * const hiddenColText = this.grid.hiddenColumnsText;
-     * ``
+     * ```
+	 * @memberof IgxGridBaseComponent
      */
     @WatchChanges()
     @Input()
@@ -2852,12 +2878,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this._vScrollListener = this.verticalScrollHandler.bind(this);
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this._vScrollListener);
         });
 
         this.zone.runOutsideAngular(() => {
             this._hScrollListener = this.horizontalScrollHandler.bind(this);
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
+            this.headerContainer.getScroll().addEventListener('scroll', this._hScrollListener);
         });
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
@@ -2894,8 +2920,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
             this.nativeElement.removeEventListener('keydown', this._keydownListener);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this._hScrollListener);
+            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this._vScrollListener);
+            this.headerContainer.getScroll().removeEventListener('scroll', this._hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
             vertScrDC.removeEventListener('wheel', () => { this.wheelHandler(); });
@@ -3845,7 +3871,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Returns how many times the grid contains the string.
      * ```typescript
      * this.grid.findPrev("financial");
-     * ````
+     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
@@ -4837,8 +4863,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     dragScroll(dir: DragScrollDirection): void {
         const scrollDelta = 48;
-        const horizontal = this.parentVirtDir.getHorizontalScroll();
-        const vertical = this.verticalScrollContainer.getVerticalScroll();
+        const horizontal = this.headerContainer.getScroll();
+        const vertical = this.verticalScrollContainer.getScroll();
         switch (dir) {
             case DragScrollDirection.LEFT:
                 horizontal.scrollLeft -= scrollDelta;
@@ -4995,8 +5021,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public scrollHandler(event) {
-        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
-        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        this.headerContainer.scrollPosition += event.target.scrollLeft;
+        this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
     }
@@ -5064,16 +5090,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
-            if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
-                this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                    () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
-            } else {
-                this.executeCallback(rowIndex, visibleColIndex, cb);
-            }
-        } else {
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        if (shouldScrollVertically) {
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
+                     () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else {
+            this.executeCallback(rowIndex, visibleColIndex, cb);
         }
     }
 
@@ -5656,7 +5682,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // check virtualization state of data record added from cache
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
-        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const gridScrLeft = rowForOf.getScroll().scrollLeft;
         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {

@@ -4,16 +4,19 @@
 
 <div class="sampleWrapper">
     <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
-    <igx-select #select1
+    <igx-select #displayDensitySelect
     [required]="true"
     [placeholder]="'Pick One'"
     [(ngModel)]="value"
+    [ngModelOptions]="{updateOn: 'blur'}" #selectModel="ngModel"
+    required
     (onOpening)="testOnOpening($event)"
     (onOpened)="testOnOpened()"
     (onClosing)="testOnClosing($event)"
     (onClosed)="testOnClosed()"
     (onSelection)="testOnSelection($event)"
-    [disabled]="false">
+    [disabled]="false"
+    [displayDensity]="'cosy'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
             <igx-icon fontSet="material">alarm</igx-icon>
@@ -23,6 +26,16 @@
             {{ item.field }}
         </igx-select-item>
     </igx-select>
+    <div>Model: {{selectModel.value}}</div>
+
+    <div>
+        <h4>Display Density</h4>
+        <igx-buttongroup (onSelect)="setDensity($event)">
+            <button igxButton value="compact">Compact</button>
+            <button igxButton value="cosy">Cosy</button>
+            <button igxButton value="comfortable">Comfortable</button>
+        </igx-buttongroup>
+    </div>
 
     <h4 class="sample-title">Select - declare items in html template</h4>
     <igx-select #select2

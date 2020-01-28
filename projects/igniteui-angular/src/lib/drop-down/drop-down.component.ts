@@ -136,8 +136,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
-            (this.children.find(e => e.index === this._focusedItem.index) || null) :
-            null;
+                (this.children.find(e => e.index === this._focusedItem.index) || null) :
+                null;
         }
         return this._focusedItem;
     }
@@ -315,7 +315,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     private isIndexOutOfBounds(index: number, direction: Navigate) {
         const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getVerticalScroll().scrollTop;
+        const currentPosition = this.virtDir.getScroll().scrollTop;
         const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
         const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
@@ -350,7 +350,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
-        this.virtDir.getVerticalScroll().scrollTop = targetScroll;
+        this.virtDir.getScroll().scrollTop = targetScroll;
     }
 
     /**
@@ -365,7 +365,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this.scrollToItem(this.selectedItem);
         }
         if (this.virtDir) {
-            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+            this.virtDir.scrollPosition = this._scrollPosition;
         }
     }
 
@@ -388,7 +388,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
         if (this.virtDir) {
-            this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
+            this._scrollPosition = this.virtDir.scrollPosition;
         }
     }
 
@@ -538,19 +538,35 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.onSelection.emit(args);
 
         if (!args.cancel) {
-            this.selection.set(this.id, new Set([newSelection]));
-            if (!this.virtDir) {
-                if (oldSelection) {
-                    oldSelection.selected = false;
+            if (this.isSelectionValid(args.newSelection)) {
+                this.selection.set(this.id, new Set([args.newSelection]));
+                if (!this.virtDir) {
+                    if (oldSelection) {
+                        oldSelection.selected = false;
+                    }
+                    if (args.newSelection) {
+                        args.newSelection.selected = true;
+                    }
                 }
-                if (newSelection) {
-                    newSelection.selected = true;
+                if (event) {
+                    this.toggleDirective.close();
                 }
-            }
-            if (event) {
-                this.toggleDirective.close();
+            } else {
+                throw new Error('Please provide a valid drop-down item for the selection!');
             }
         }
+    }
+
+    /**
+     * Checks whether the selection is valid
+     * `null` - the selection should be emptied
+     * Virtual? - the selection should at least have and `index` and `value` property
+     * Non-virtual? - the selection should be a valid drop-down item and **not** be a header
+     */
+    protected isSelectionValid(selection: any): boolean {
+        return selection === null
+        || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+        || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 }
 

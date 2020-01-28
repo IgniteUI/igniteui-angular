@@ -4,7 +4,9 @@ import {
     ISelectionEventArgs, CancelableEventArgs, OverlaySettings,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
-    IgxSelectComponent
+    IgxSelectComponent,
+    DisplayDensity,
+    IButtonGroupEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -19,7 +21,8 @@ export class SelectSampleComponent implements OnInit {
     public select: IgxSelectComponent;
     @ViewChild('model', { read: IgxSelectComponent, static: true })
     public selectFruits: IgxSelectComponent;
-
+    @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
+    public selectDisplayDensity: IgxSelectComponent;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -58,7 +61,7 @@ export class SelectSampleComponent implements OnInit {
     public onSubmitReactive() { }
 
     public selectBanana() {
-        this.selectFruits.selectItem(this.selectFruits.items[3]);
+        this.selectFruits.setSelectedItem(3);
     }
 
     public setToNull() {
@@ -136,5 +139,9 @@ export class SelectSampleComponent implements OnInit {
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
             this.selectComponents.first.open(customOverlaySettings);
         }
+    }
+
+    setDensity(event: IButtonGroupEventArgs) {
+        this.selectDisplayDensity.displayDensity = event.button.nativeElement.value;
     }
 }

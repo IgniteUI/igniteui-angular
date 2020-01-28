@@ -168,38 +168,11 @@
         height: map-get($grid-toolbar-height, 'comfortable');
 
         %igx-button--flat {
-            background: --var($theme, 'button-background');
-            color: --var($theme, 'button-text-color');
             margin-left: rem(8);
-
-            &:hover {
-                background: --var($theme, 'button-hover-background');
-                color: --var($theme, 'button-hover-text-color');
-            }
-
-            &:focus,
-            &:active {
-                background: --var($theme, 'button-focus-background');
-                color: --var($theme, 'button-focus-text-color');
-            }
         }
 
         %igx-button--icon {
-            background: --var($theme, 'button-background');
-            color: --var($theme, 'button-text-color');
             margin-left: rem(8);
-            border-radius: 0;
-
-            &:hover {
-                background: --var($theme, 'button-hover-background');
-                color: --var($theme, 'button-hover-text-color');
-            }
-
-            &:focus,
-            &:active {
-                background: --var($theme, 'button-focus-background');
-                color: --var($theme, 'button-focus-text-color');
-            }
         }
 
         %igx-grid-toolbar__button-space {

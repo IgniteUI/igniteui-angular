@@ -1,6 +1,6 @@
 <button (click)='setterBindingChange()'>Set rowSelectable via binding</button>
 <button (click)='setterChange()'>Set rowSelectable via setter on 1st row island</button>
-<igx-hierarchical-grid #grid1 [data]="remoteData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
+<igx-hierarchical-grid #grid1  displayDensity="cosy" [data]="remoteData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'800px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
     <igx-column field="CustomerID"></igx-column>
     <igx-column field="CompanyName"></igx-column>
     <igx-column field="ContactName"></igx-column>

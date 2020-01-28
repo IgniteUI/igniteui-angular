@@ -28,8 +28,7 @@ import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 let NEXT_ID = 0;
@@ -65,7 +64,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService, IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService
+        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService, IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -139,7 +138,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -425,7 +424,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * <igx-grid [dropAreaTemplate]="dropAreaRef">
      *      <igx-column [groupable]="true" field="ID"></igx-column>
      * </igx-grid>
-     *
      * <ng-template #myDropArea>
      *      <span> Custom drop area! </span>
      * </ng-template>
@@ -471,27 +469,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: false })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
-
-    /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;

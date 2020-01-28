@@ -322,7 +322,8 @@ describe('IgCircularBar', () => {
 
         componentInstance.progressbar.textVisibility = false;
         fixture.detectChanges();
-        expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
+        // Text is not rendered
+        expect(progressBarElem.children[2]).toBeFalsy();
     });
 
     it('When indeterminate mode is on value should not be updated', () => {
@@ -375,8 +376,8 @@ describe('IgCircularBar', () => {
 
             componentInstance.progressbar.textVisibility = false;
             fixture.detectChanges();
-
-            expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
+            // Text is not rendered
+            expect(progressBarElem.children[2]).toBeFalsy();
         }));
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
@@ -449,6 +450,9 @@ describe('IgCircularBar', () => {
             fix.detectChanges();
 
             expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(true);
+
+            // Expect text in indeterminate bar to be hidden;
+            expect(getComputedStyle(bar.querySelector('text').firstElementChild).visibility).toEqual('hidden');
         });
     });
 });
