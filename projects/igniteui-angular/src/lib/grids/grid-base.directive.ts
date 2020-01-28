@@ -3431,7 +3431,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Expands the row by its id. ID is either the primaryKey value or the data record instance.
      * ```typescript
-     * this.grid.expand(rowID);
+     * this.grid.expandRow(rowID);
      * ```
 	 * @memberof IgxGridBaseDirective
      */
@@ -3442,7 +3442,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Collapses the row by its id. ID is either the primaryKey value or the data record instance.
      * ```typescript
-     * this.grid.collapse(rowID);
+     * this.grid.collapseRow(rowID);
      * ```
 	 * @memberof IgxGridBaseDirective
     */
@@ -3454,7 +3454,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Toggles the row by its id. ID is either the primaryKey value or the data record instance.
      * ```typescript
-     * this.grid.toggle(rowID);
+     * this.grid.toggleRow(rowID);
      * ```
 	 * @memberof IgxGridBaseDirective
     */

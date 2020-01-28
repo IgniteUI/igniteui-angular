@@ -111,6 +111,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._data;
     }
 
+    /**
+     *@hidden
+     *@deprecated
+     * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
+    */
     @Input()
     @DeprecateProperty(`'hierarchicalState' property is deprecated. Use 'expansionStates' instead.`)
     public get hierarchicalState() {
@@ -137,6 +142,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      *@hidden
+     *@deprecated
      */
     @Output()
     @DeprecateProperty(`'hierarchicalStateChange' @Output property is deprecated. Use 'expansionStates' instead.`)
@@ -179,7 +185,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     set expandChildren(value: boolean) {
-        this._expandChildren = value;
+        this._defaultExpandState  = value;
         this.expansionStates = new Map<any, boolean>();
     }
 
@@ -192,7 +198,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @memberof IgxHierarchicalGridComponent
      */
     get expandChildren(): boolean {
-        return this._expandChildren;
+        return this._defaultExpandState ;
     }
 
     /**
@@ -613,29 +619,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
    }
 
-   /**
-     * Expands all rows.
-     * ```typescript
-     * this.grid.expandAll();
-     * ```
-	 * @memberof IgxHierarchicalGridComponent
-   */
-   public expandAll() {
-       this._expandChildren = true;
-       this.expansionStates = new Map<any, boolean>();
-   }
-
-    /**
-     * Collapses all rows.
-     * ```typescript
-     * this.grid.collapseAll();
-     * ```
-	 * @memberof IgxHierarchicalGridComponent
-    */
-    public collapseAll() {
-        this._expandChildren = false;
-        this.expansionStates = new Map<any, boolean>();
-    }
 
     /**
      * @hidden

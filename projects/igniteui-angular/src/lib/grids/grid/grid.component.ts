@@ -27,6 +27,7 @@ import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -521,6 +522,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _focusIn = new  EventEmitter<any>();
     @HostListener('focusin') onFocusIn() {
         this._focusIn.emit();
+    }
+
+    /**
+     * @deprecated
+     * @hidden
+     * Expands the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.expand(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    @DeprecateMethod(`'expand' method is deprecated. Use 'expandRow' instead.`)
+    public expand(rowID: any) {
+        super.expandRow(rowID);
+    }
+
+    /**
+     * @deprecated
+     * @hidden
+     * Collapses the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.collapse(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    @DeprecateMethod(`'collapse' method is deprecated. Use 'collapseRow' instead.`)
+    public collapse(rowID: any) {
+        super.collapseRow(rowID);
     }
 
     public getDetailsContext(rowData, index) {
