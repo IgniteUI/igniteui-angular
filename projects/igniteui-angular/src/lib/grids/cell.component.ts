@@ -620,6 +620,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                /* This check is related with the following issue #6517:
+                 * when edit cell that belongs to a column which is sorted and press tab,
+                 * the next cell in edit mode is with wrong value /its context is not updated/;
+                 * So we reapply sorting before the next cell enters edit mode.
+                 * Also we need to keep the notifyChanges below, because of the current
+                 * change detection cycle when we have editing with enabled transactions
+                 */
+                if (this.grid.sortingExpressions.length && this.grid.sortingExpressions.indexOf(editableCell.column.field)) {
+                    this.grid.cdr.detectChanges();
+                }
             }
             crud.end();
             this.grid.notifyChanges();
@@ -900,6 +910,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         event.stopPropagation();
 
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+
+        // This fixes IME editing issue(#6335) that happens only on IE
+        if (isIE() && keydownArgs.event.keyCode === 229 && event.key === 'Tab') {
+            return;
+        }
+
         this.grid.onGridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel) {
             this.selectionService.clear();

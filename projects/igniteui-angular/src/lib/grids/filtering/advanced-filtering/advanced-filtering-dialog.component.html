@@ -99,7 +99,7 @@
                           (onRemove)="onChipRemove(expressionItem)"
                           (onSelectionDone)="onChipSelectionEnd()"
                     >
-                    <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.expression.fieldName }}</span>
+                    <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.columnHeader || expressionItem.expression.fieldName }}</span>
                     <igx-icon
                         igxPrefix
                         fontSet="filtering-icons"

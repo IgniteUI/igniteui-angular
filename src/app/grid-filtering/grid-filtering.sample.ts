@@ -77,15 +77,15 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
 
         this.columns = [
             { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
-            { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'CompanyName', header: 'Company Name', width: 175, resizable: true, movable: true, type: 'string'},
+            { field: 'ContactName', header: 'Contact Name', width: 175, resizable: true, movable: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
+            { field: 'ContactTitle', header: 'Contact Title', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'DateCreated', header: 'Date Created', width: 150, resizable: true, movable: true, type: 'date' },
             { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'PostalCode', header: 'Postal Code', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
