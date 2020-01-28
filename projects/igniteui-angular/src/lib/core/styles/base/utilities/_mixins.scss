@@ -170,15 +170,20 @@
 /// Generates CSS variables for a given palette.
 /// @access private
 /// @param {Map} $palette - The igx palette to use to generate css variables for.
+/// @param {Map} $contrast [false] - Specifies if contrast colors should be generated for each color in the palette.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
 ///   @include css-vars-from-palette($default-palette);
 ///
-@mixin css-vars-from-palette($palette) {
+@mixin css-vars-from-palette($palette, $contrast: false) {
     @each $palette-name, $sub-palette in $palette {
         @each $variant, $color in $sub-palette {
+            @if($contrast) {
+                $color: text-contrast($color);
+            }
+
             @if type-of($color) != 'map' {
-                --igx-#{$palette-name}-#{$variant}: #{$color};
+                --igx-#{$palette-name}-#{$variant}#{if($contrast, -contrast, null)}: #{$color};
             }
         }
     }
@@ -187,16 +192,21 @@
 /// Generates CSS variables for a given palette.
 /// @access public
 /// @param {Map} $palette - The igx palette to use to generate css variables for.
+/// @param {Map} $contrast [false] - Specifies if the mixin outputs contrast colors for each color in the palette.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
 ///   @include css-vars-from-palette($default-palette);
 ///
 /// @requires {mixin} css-vars-from-palette
-@mixin igx-palette-vars($palette) {
+@mixin igx-palette-vars($palette, $contrast: false) {
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
         @include css-vars-from-palette($palette);
+
+        @if($contrast) {
+            @include css-vars-from-palette($palette, $contrast: true);
+        }
     }
 }
 
