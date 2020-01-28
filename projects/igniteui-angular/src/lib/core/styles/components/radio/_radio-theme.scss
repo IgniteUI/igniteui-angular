@@ -1,7 +1,6 @@
 @import '../ripple/ripple-theme';
 @import '../ripple/ripple-component';
-
-////
+///
 /// @group themes
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -86,9 +85,9 @@
     ), map-get($theme, variant));
 
     $scale: map-get((
-        material: scale3d(.5, .5, .5),
-        fluent: scale3d(.5, .5, .5),
-        bootstrap: scale3d(.3, .3, .3),
+        material: scale(.5),
+        fluent: scale(.5),
+        bootstrap: scale(.3),
     ), map-get($theme, variant));
 
     $left: if-ltr(left, right);
@@ -102,7 +101,7 @@
 
     $radio-hover-scale: map-get((
         material: null,
-        fluent: scale3d(.5, .5, .5)
+        fluent: scale(.5)
     ), map-get($theme, variant));
 
     $ripple-display: map-get((
@@ -168,7 +167,7 @@
 
         &::before {
             backface-visibility: hidden;
-            transform: scale3d(0, 0, 0);
+            transform: scale(0);
 
             @if $not-bootstrap-theme {
                 transition: $transition;

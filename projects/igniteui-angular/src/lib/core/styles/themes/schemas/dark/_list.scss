@@ -42,8 +42,12 @@ $_dark-fluent-list: extend($_fluent-list, $_base-dark-list);
 /// @requires {function} extend
 /// @requires $_bootstrap-list
 /// @requires $_base-dark-list
-$_dark-bootstrap-list: extend($_bootstrap-list, $_base-dark-list, (
-    item-background: #222,
-    header-background: #222,
-));
+$_dark-bootstrap-list: extend(
+    $_bootstrap-list,
+    $_base-dark-list,
+    (
+        item-background: #222,
+        header-background: #222,
+    )
+);
 

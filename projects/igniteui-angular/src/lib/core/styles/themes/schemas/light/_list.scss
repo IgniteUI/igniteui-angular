@@ -110,7 +110,11 @@ $_light-list: extend(
 
         item-thumbnail-color-hover: currentColor,
 
-        item-thumbnail-color-active: currentColor
+        item-thumbnail-color-active: currentColor,
+
+        list-border-color: transparent,
+
+        list-border-width: 0,
     )
 );
 
@@ -118,7 +122,13 @@ $_light-list: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-list
-$_fluent-list: extend($_light-list);
+$_fluent-list: extend(
+    $_light-list,
+    (
+        list-border-color: transparent,
+        list-border-width: 0,
+    )
+);
 
 /// Generates a bootstrap list schema.
 /// @type {Map}

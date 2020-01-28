@@ -611,9 +611,13 @@
         %cal-value-content::after {
             background: --var($theme, 'date-hover-background');
         }
+    }
 
-        &%cal-value--selected %cal-value-content::after {
-            background: rgba($selected-hover-color, .18);
+    %cal-value--selected--hover {
+        %cal-value-content {
+            ::after {
+                background: rgba($selected-hover-color, .18);
+            }
         }
     }
 

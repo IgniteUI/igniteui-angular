@@ -29,9 +29,4 @@ $_dark-fluent-overlay: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-overlay
-$_dark-bootstrap-overlay: extend(
-    $_bootstrap-overlay,
-    (
-
-    )
-);
+$_dark-bootstrap-overlay: extend($_bootstrap-overlay);

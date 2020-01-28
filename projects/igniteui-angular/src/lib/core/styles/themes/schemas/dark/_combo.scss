@@ -24,6 +24,9 @@ $_dark-fluent-combo: extend($_fluent-combo);
 /// @prop {Color} empty-list-background [#222] - The combo list background color.
 /// @requires extend
 /// @requires $_bootstrap-combo
-$_dark-bootstrap-combo: extend($_bootstrap-combo, (
-    empty-list-background: #222,
-));
+$_dark-bootstrap-combo: extend(
+    $_bootstrap-combo,
+    (
+        empty-list-background: #222,
+    )
+);

@@ -225,6 +225,31 @@
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
+    $not-bootstrap-theme: map-get($theme, 'variant') != 'bootstrap';
+    $bootstrap-theme: map-get($theme, 'variant') == 'bootstrap';
+
+    %igx-tabs__header-menu-item--selected-bootstrap {
+        border-color: --var($theme, 'indicator-color');
+        border-bottom-color: transparent;
+        position: relative;
+        z-index: 1;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: --var($theme, 'item-active-background');
+        }
+
+        &:hover,
+        &:focus {
+            border-color: --var($theme, 'indicator-color') --var($theme, 'indicator-color') transparent;
+        }
+    }
+
     %igx-tabs {
         display: flex;
         flex-direction: column;
@@ -295,7 +320,7 @@
         cursor: pointer;
         position: relative;
 
-        @if map-get($theme, 'variant') != 'bootstrap' {
+        @if $not-bootstrap-theme {
             transition: all .3s $tabs-animation-function;
         }
 
@@ -304,7 +329,7 @@
         color: --var($theme, 'item-text-color');
         outline: 0;
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             border: 1px solid transparent;
             border-top-left-radius: --var($theme, 'border-radius');
             border-top-right-radius: --var($theme, 'border-radius');
@@ -354,26 +379,8 @@
             }
         }
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
-            border-color: --var($theme, 'indicator-color');
-            border-bottom-color: transparent;
-            position: relative;
-            z-index: 1;
-
-            &::after {
-                content: '';
-                position: absolute;
-                bottom: -1px;
-                left: 0;
-                width: 100%;
-                height: 1px;
-                background: --var($theme, 'item-active-background');
-            }
-
-            &:hover,
-            &:focus {
-                border-color: --var($theme, 'indicator-color') --var($theme, 'indicator-color') transparent;
-            }
+        @if $bootstrap-theme {
+            @extend %igx-tabs__header-menu-item--selected-bootstrap;
         }
     }
 

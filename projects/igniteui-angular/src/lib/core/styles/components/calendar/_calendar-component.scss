@@ -68,6 +68,11 @@
     @include e(date, 'selected') {
         @extend %cal-value !optional;
         @extend %cal-value--selected !optional;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--selected--hover !optional;
+        }
     }
 
     @include e(date, 'current') {

@@ -39,6 +39,9 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for list component.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
 ///
+/// @param {Color} $list-border-width [null] - The list border width.
+/// @param {Number} $list-border-color [null] - The list border color.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -78,7 +81,6 @@
     $item-thumbnail-color: null,
     $item-thumbnail-color-hover: null,
     $item-thumbnail-color-active: null,
-    // Bootstrap only
     $list-border-color: null,
     $list-border-width: null,
 ) {
@@ -235,7 +237,6 @@
         item-thumbnail-color: $item-thumbnail-color,
         item-thumbnail-color-hover: $item-thumbnail-color-hover,
         item-thumbnail-color-active: $item-thumbnail-color-active,
-        // Bootstrap only
         list-border-color: $list-border-color,
         list-border-width: $list-border-width,
     ));
