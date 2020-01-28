@@ -117,7 +117,7 @@ $_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
 /// @requires $_light-tabs
 $_bootstrap-tabs: extend(
     $_light-tabs,
-    $_bootstrap-shape-tabs, 
+    $_bootstrap-shape-tabs,
     (
         variant: 'bootstrap',
 

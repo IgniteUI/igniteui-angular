@@ -20,7 +20,7 @@
 /// @prop {Map} picker-text-hover-color [igx-color: ('secondary', 500)]-  The hover picker month/year color.
 ///
 /// @prop {Map} inactive-text-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for previous and next month dates.
-/// @prop {Map} $label-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for weekday labels.
+/// @prop {Map} label-color [igx-color: 'surface', text-contrast: (), rgba: .26] - The text color for weekday labels.
 /// @prop {Map} weekend-text-color [igx-color: 'surface', text-contrast: (), rgba: .38] - The text color for weekend days.
 ///
 /// @prop {Map} year-current-text-color [igx-color: ('secondary', 500)] - The text color for the current/selected year.
@@ -218,13 +218,13 @@ $_fluent-calendar: extend(
 /// @prop {Map} picker-arrow-hover-color [igx-color: ('primary', 800)] - The picker hover arrow color.
 /// @prop {Color} picker-text-color [#000]- The idle picker month/year color.
 ///
-/// @prop {Color} $calendar-picker-background-color [igx-color: ('grays', 100)] - The igx-calendar-picker background color (bootstrap theme only!).
-/// @prop {Color} $calendar-border-color [igx-color: ('grays', 300)] - The calendar border color (bootstrap theme only!).
+/// @prop {Color} picker-background-color [igx-color: ('grays', 100)] - The igx calendar picker background color (bootstrap theme only!).
+/// @prop {Color} border-color [igx-color: ('grays', 300)] - The calendar border color (bootstrap theme only!).
 ///
 /// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
 /// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
 ///
-/// @prop {Map} $label-color [igx-color: 'info', rgba: .5, hexrgba: #fff] - The text color for weekday labels.
+/// @prop {Map} label-color [igx-color: 'info', rgba: .5, hexrgba: #fff] - The text color for weekday labels.
 /// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
 ///
 /// @prop {Map} date-hover-background [igx-color: ('primary', 500)] - The hover date background color.
@@ -276,11 +276,11 @@ $_bootstrap-calendar: extend(
 
         picker-text-color: #000,
 
-        calendar-picker-background-color: (
+        picker-background-color: (
             igx-color: ('grays', 100)
         ),
 
-        calendar-border-color: (
+        border-color: (
             igx-color: ('grays', 300)
         ),
 

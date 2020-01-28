@@ -121,36 +121,41 @@
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
-    $bs-padding-val: 20px;
+    $not-material-theme: map-get($theme, variant) != 'material';
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
+    // Bootstrap card spacing
+    // if you need to change the spacing for the bootstrap card, please, change only $bs-spacing-val.
+    // All the margin will automatically calculate accordingly in order to keep the right proportion.
+    $bs-spacing-val: rem(20px);
+    $bs-margin-media: $bs-spacing-val;
+    $bs-margin-heading: rem(12px);
+    $bs-margin-heading-difference: calc(#{$bs-spacing-val} - #{$bs-margin-heading});
+    $bs-margin-content: rem(16px);
+    $bs-margin-actions: $bs-spacing-val;
 
     $card-heading-padding: map-get((
         material: rem(16px),
         fluent: rem(16px),
-        bootstrap: rem($bs-padding-val) rem($bs-padding-val) rem(12px) rem($bs-padding-val),
+        bootstrap: 0 $bs-spacing-val,
     ), map-get($theme, variant));
 
     $card-heading-compact-padding: map-get((
         material: rem(16px, 16px),
         fluent: rem(16px, 16px),
-        bootstrap: rem($bs-padding-val) rem($bs-padding-val) rem(12px) rem($bs-padding-val),
+        bootstrap: 0 $bs-spacing-val,
     ), map-get($theme, variant));
 
     $card-content-padding: map-get((
-        material: rem(16px),
-        fluent: rem(16px),
-        bootstrap: 0 rem($bs-padding-val) rem(16px) rem($bs-padding-val),
-    ), map-get($theme, variant));
-
-    $card-content-margin: map-get((
-        material: 0,
-        fluent: 0,
-        bootstrap: 0,
+        material: rem(14px),
+        fluent: rem(14px),
+        bootstrap: 0 $bs-spacing-val,
     ), map-get($theme, variant));
 
     $card-actions-padding: map-get((
         material: rem(8px),
         fluent: rem(8px),
-        bootstrap: 0 rem($bs-padding-val) rem($bs-padding-val) rem($bs-padding-val),
+        bootstrap: 0 $bs-spacing-val,
     ), map-get($theme, variant));
 
     $card-tgroup-margin: 0 em(16px);
@@ -168,7 +173,7 @@
         transition: $card-transitions;
         backface-visibility: hidden;
 
-        @if map-get($theme, variant) == 'bootstrap' or map-get($theme, variant) == 'fluent' {
+        @if $not-material-theme {
             border: 1px solid --var($theme, 'outline-color');
         }
 
@@ -179,7 +184,7 @@
 
     %igx-card--outlined {
         box-shadow: none;
-        border-color: --var($theme, 'outline-color');
+        border: 1px solid --var($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;
@@ -198,10 +203,21 @@
         width: 100%;
         padding: $card-heading-padding;
         color: --var($theme, 'header-text-color');
+        @if $bootstrap-theme {
+            margin-bottom: $bs-margin-heading;
+
+            &:first-child {
+                padding-top: $bs-spacing-val;
+            }
+
+            &:last-child {
+                margin-bottom: calc(#{$bs-margin-heading-difference} + #{$bs-margin-heading});
+            }
+        }
 
         &:empty {
             display: block;
-            min-height: $bs-padding-val;
+            min-height: $bs-spacing-val;
             padding: 0;
         }
     }
@@ -261,14 +277,16 @@
         padding: $card-content-padding;
         color: --var($theme, 'content-text-color');
 
-        @if map-get($theme, variant) == 'bootstrap' {
-            margin-bottom: $card-content-margin;
-        }
-    }
+        @if $bootstrap-theme {
+            margin-bottom: $bs-margin-content;
 
-    %igx-card-content-text {
-        @if map-get($theme, variant) != 'bootstrap' {
-            margin: $card-content-margin;
+            &:first-child {
+                padding-top: $bs-spacing-val;
+            }
+
+            &:last-child {
+                margin-bottom: calc(#{$bs-margin-heading-difference} + #{$bs-margin-heading});
+            }
         }
     }
 
@@ -276,6 +294,13 @@
         display: block;
         overflow: hidden;
         line-height: 0;
+        @if $bootstrap-theme {
+            margin-bottom: $bs-margin-media;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
 
         > * {
             width: 100%;
@@ -297,6 +322,13 @@
         flex: 0 1 auto;
         align-items: center;
         padding: $card-actions-padding;
+        @if $bootstrap-theme {
+            margin-bottom: $bs-margin-actions;
+
+            &:first-child {
+                padding-top: $bs-spacing-val;
+            }
+        }
 
         [igxButton] ~ [igxButton] {
             margin-#{$left}: rem(8px);

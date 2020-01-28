@@ -7,48 +7,6 @@
     <div class="grid-container grid-container--fit">
         <!-- Google Coffee -->
 
-        <article class="bootstrap-sample">
-            <igx-card type="outlined" class="bootstrap-card">
-                <igx-card-media>
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="188" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
-                </igx-card-media>
-
-                <igx-card-header>
-                    <h3 class="igx-card-header__title">Card title</h3>
-                </igx-card-header>
-
-                <igx-card-content>
-                    <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </igx-card-content>
-
-                <igx-card-actions>
-                    <div class="igx-card-actions__bgroup">
-                        <button igxButton="raised" >Go somewhere</button>
-                    </div>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-
-        <article class="bootstrap-sample">
-            <igx-card type="outlined" class="bootstrap-card">
-                <igx-card-header>
-                    <h3 class="igx-card-header__title">Card title</h3>
-                    <h5 class="igx-card-header__subtitle">Card subtitle</h5>
-                </igx-card-header>
-
-                <igx-card-content>
-                    <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </igx-card-content>
-
-                <igx-card-actions>
-                    <div class="igx-card-actions__bgroup">
-                        <a class="card-link">Card link</a>
-                        <a class="card-link">Another link</a>
-                    </div>
-                </igx-card-actions>
-            </igx-card>
-        </article>
-
         <article>
             <igx-card>
                 <igx-card-media>
@@ -189,7 +147,7 @@
         <!--Incepient Dawn Card Begins-->
         <article>
             <igx-card>
-                <div style="overflow: hidden">
+                <div style="overflow: hidden; line-height: 0">
                     <img width="100%" height="100%" [src]="cards[2].imageUrl">
                 </div>
                 <igx-card-header>
@@ -208,7 +166,7 @@
         <!--Monuments Card Begins-->
         <article>
             <igx-card>
-                <div style="overflow: hidden">
+                <div style="overflow: hidden; line-height: 0">
                     <img width="100%" height="100%" [src]="cards[5].imageUrl">
                 </div>
                 <igx-card-actions>
@@ -380,5 +338,71 @@
                 </igx-card-actions>
             </igx-card>
         </article>
+
+        <!-- Bootstrap Card start -->
+        <article class="bootstrap-sample">
+            <igx-card class="bootstrap-card">
+                <igx-card-media>
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="188" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Image cap"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
+                </igx-card-media>
+
+                <igx-card-header>
+                    <h3 class="igx-card-header__title">Bootstrap card 🤘</h3>
+                </igx-card-header>
+
+                <igx-card-content>
+                    <strong>Switch to bootstrap theme to see me how i look</strong>.
+                    <p>Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </igx-card-content>
+
+                <igx-card-actions>
+                    <div class="igx-card-actions__bgroup">
+                        <button igxButton="raised" >Go somewhere</button>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <article class="bootstrap-sample">
+            <igx-card class="bootstrap-card">
+                <igx-card-header>
+                    <h3 class="igx-card-header__title">Bootstrap card 🤘</h3>
+                    <h5 class="igx-card-header__subtitle">Card subtitle</h5>
+                </igx-card-header>
+
+                <igx-card-content>
+                    <p> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </igx-card-content>
+
+                <igx-card-actions>
+                    <div class="igx-card-actions__bgroup">
+                        <a class="card-link">Card link</a>
+                        <a class="card-link">Another link</a>
+                    </div>
+                </igx-card-actions>
+            </igx-card>
+        </article>
+        <article class="bootstrap-sample">
+            <igx-card class="bootstrap-card bootstrap-card--horizontal" [horizontal]="true">
+
+                <div style="display: flex; flex-direction: column; flex: 1 1 auto">
+                    <igx-card-header>
+                        <igx-avatar [src]="cards[4].avatarUrl" roundShape="true"></igx-avatar>
+                        <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
+                        <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
+                    </igx-card-header>
+                    <igx-card-content>
+                        <p> Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </igx-card-content>
+                    <igx-card-actions [vertical]="false">
+                        <button igxButton="outlined" *ngFor="let button of cards[4].buttons">{{ button }}</button>
+                    </igx-card-actions>
+                </div>
+
+                <igx-card-media width="86px" height="224px">
+                    <img [src]="cards[4].imageUrl">
+                </igx-card-media>
+            </igx-card>
+        </article>
+        <!-- Bootstrap Card End -->
     </div>
 </div>

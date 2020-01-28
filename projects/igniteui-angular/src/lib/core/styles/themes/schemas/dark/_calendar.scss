@@ -29,7 +29,10 @@ $_dark-fluent-calendar: extend($_fluent-calendar);
 /// @type {Map}
 /// @requires extend
 /// @requires $_bootstrap-calendar
-$_dark-bootstrap-calendar: extend($_bootstrap-calendar, (
-    content-background: #222,
-    picker-text-color: #fff,
-));
+$_dark-bootstrap-calendar: extend(
+    $_bootstrap-calendar,
+    (
+        content-background: #222,
+        picker-text-color: #fff,
+    )
+);

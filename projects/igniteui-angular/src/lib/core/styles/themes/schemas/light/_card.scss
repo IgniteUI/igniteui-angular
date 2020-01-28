@@ -96,6 +96,7 @@ $_fluent-card: extend(
 $_bootstrap-card: extend(
     $_light-card,
     $_bootstrap-shape-card,
+    $_bootstrap-elevation-card,
     (
         variant: 'bootstrap',
 

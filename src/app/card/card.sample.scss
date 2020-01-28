@@ -191,10 +191,30 @@ article {
     transform: scaleX(-1);
 }
 
-
 // Bootstrap sample start
 .bootstrap-card {
-    max-width: 288px;
+    &.igx-card {
+        display: none;
+    }
+}
+
+.bootstrap-theme {
+    .grid-container {
+        justify-content: flex-start;
+    }
+
+    .igx-card {
+        display: none;
+
+        &.bootstrap-card {
+            max-width: 288px;
+            display: flex;
+
+            &__horizontal {
+                max-width: 355px;
+            }
+        }
+    }
 }
 
 .card-link {

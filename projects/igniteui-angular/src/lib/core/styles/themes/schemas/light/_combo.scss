@@ -46,15 +46,18 @@ $_fluent-combo: extend($_light-combo);
 /// @requires {function} extend
 /// @requires {map} $_light-combo
 /// @see $bootstrap-palette
-$_bootstrap-combo: extend($_light-combo,(
-    empty-list-background: #fff,
+$_bootstrap-combo: extend(
+    $_light-combo,
+    (
+        empty-list-background: #fff,
 
-    search-separator-border-color: (
-        igx-color: ('grays', 400)
-    ),
+        search-separator-border-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    empty-list-placeholder-color: (
-        igx-color: ('grays', 600)
+        empty-list-placeholder-color: (
+            igx-color: ('grays', 600)
+        )
     )
-));
+);
 

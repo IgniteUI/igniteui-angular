@@ -88,7 +88,6 @@ $_fluent-checkbox: extend(
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-checkbox
-
 $_bootstrap-checkbox: extend(
     $_light-checkbox,
     $_bootstrap-shape-checkbox,

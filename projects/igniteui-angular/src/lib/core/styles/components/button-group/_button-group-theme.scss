@@ -87,7 +87,7 @@
         if($border-radius, $border-radius, map-get($button-group-schema, 'border-radius')), 0, 20px
     );
 
-    $shadow-color: transparent;
+    $shadow-color: null;
 
     @if map-get($theme, 'variant') == 'bootstrap' {
         $shadow-color: rgba(map-get($theme, 'item-background'), .5);
@@ -175,15 +175,7 @@
     $right: if-ltr(right, left);
 
     $variant: map-get($theme, 'variant');
-
-    $box-shadow-btn: map-get(
-        (
-            material: null,
-            fluent: null,
-            bootstrap: 0 0 0 rem(3px) --var($theme, 'shadow-color')
-        ),
-        $variant
-    );
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
 
     %igx-group-display {
         display: flex;
@@ -249,7 +241,9 @@
         }
 
         &:focus {
-            box-shadow: $box-shadow-btn;
+            @if $bootstrap-theme {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
+            }
         }
     }
 

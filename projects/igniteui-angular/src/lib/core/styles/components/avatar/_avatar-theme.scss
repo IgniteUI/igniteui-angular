@@ -87,6 +87,8 @@
     $medium-size: 64px;
     $large-size: 88px;
 
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
     $box-shadow-icon: map-get((
         material: null,
         fluent: null,
@@ -105,7 +107,7 @@
         bootstrap: 0 0 0 rem(3px) --var($theme, 'image-background'),
     ), map-get($theme, variant));
 
-    %_igx-avatar-bootstrap-outline {
+    %_igx-avatar-outline {
         position: absolute;
         content: '';
         width: 100%;
@@ -127,8 +129,10 @@
         outline-style: none;
 
         &::after {
-            @extend %_igx-avatar-bootstrap-outline;
-            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+            box-shadow: none;
+            @if $bootstrap-theme {
+                @extend %_igx-avatar-outline;
+            }
             transition: box-shadow .15s $ease-in-out-quad;
         }
     }
