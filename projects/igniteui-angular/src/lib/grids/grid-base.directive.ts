@@ -6070,26 +6070,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
-        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']
-        && this.lastSearchInfo.matchInfoCache.length) {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                const row = this.getRowByIndex(args.context.index);
-                if (row && row.cells) {
-                    row.cells.forEach((c) => {
-                        c.highlightText(
-                            this.lastSearchInfo.searchText,
-                            this.lastSearchInfo.caseSensitive,
-                            this.lastSearchInfo.exactMatch);
-                    });
-                }
-                const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
-                IgxTextHighlightDirective.setActiveHighlight(this.id, {
-                    column: matchInfo.column,
-                    row: matchInfo.row,
-                    index: matchInfo.index,
-                });
-            });
-        }
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;
             const index = args.context.index;
