@@ -41,7 +41,7 @@ let NEXT_ID = 0;
  *
  * @igxKeywords calendar, datepicker, schedule, date
  *
- * @igxGroup scheduling
+ * @igxGroup Scheduling
  *
  * @remarks
  * The Ignite UI Calendar provides an easy way to display a calendar and allow users to select dates using single, multiple
