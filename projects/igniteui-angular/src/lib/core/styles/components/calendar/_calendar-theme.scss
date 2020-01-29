@@ -305,17 +305,21 @@
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
 
+    $variant: map-get($theme, 'variant');
+    $bootstrap-theme: $variant == 'bootstrap';
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     $cal-picker-padding: map-get((
         material: em(16px),
         fluent: em(16px),
         bootstrap: em(8px),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $cal-value-w: map-get((
         material: em(40px),
         fluent: em(40px),
         bootstrap: em(32px),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
@@ -332,21 +336,18 @@
         material: --var($theme, 'date-selected-background'),
         fluent: --var($theme, 'date-current-bg-color'),
         bootstrap: --var($theme, 'date-current-bg-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $current-text-color-variant: map-get((
         material: --var($theme, 'date-selected-text-color'),
         fluent: --var($theme, 'date-current-text-color'),
         bootstrap: --var($theme, 'date-current-text-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
     $before: if-ltr(before, after);
     $after: if-ltr(after, before);
-
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
-    $not-bootstrap-theme: map-get($theme, variant) != 'bootstrap';
 
     %cal-display {
         display: flex;

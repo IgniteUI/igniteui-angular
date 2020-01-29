@@ -93,28 +93,30 @@
 
     // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
     // It is under the name of $cbx-size
-
     $size: em(20px);
     $size-bs: em(14px);
     $checkbox-radius: $size / 2;
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
 
     $size: map-get((
         material: $size,
         fluent: $size,
         bootstrap: $size-bs,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $border-width: map-get((
         material: 2px,
         fluent: 1px,
         bootstrap: 1px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $ripple-display: map-get((
         material: block,
         fluent: none,
         bootstrap: none,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $label-margin: em(8px);
 
@@ -122,13 +124,13 @@
         material: 3,
         fluent: 1,
         bootstrap: 2,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $mark-offset: map-get((
         material: 0,
         fluent: -1px,
         bootstrap: 0,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $mark-length: 24;
     $mark-x-factor: $mark-stroke / $mark-length;
@@ -211,7 +213,7 @@
         border-color: --var($theme, 'disabled-color');
         background: transparent;
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             %cbx-composite-mark {
                 stroke: --var($theme, 'empty-color');
             }
@@ -219,21 +221,21 @@
     }
 
     %cbx-composite--x--disabled {
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             background: transparent;
         } @else {
             background: --var($theme, 'disabled-color');
         }
 
         &::after {
-            @if map-get($theme, 'variant') == 'bootstrap' {
+            @if $bootstrap-theme {
                 background: transparent;
             } @else {
                 background: --var($theme, 'disabled-color');
             }
         }
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             %cbx-composite-mark--x {
                 stroke: --var($theme, 'empty-color');
             }

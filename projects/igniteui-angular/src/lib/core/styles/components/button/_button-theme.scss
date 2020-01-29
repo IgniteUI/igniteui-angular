@@ -461,11 +461,13 @@
         compact: rem(4px, 16px) rem(8px, 16px)
     );
 
+    $variant: map-get($theme, variant);
+
     $button-padding: map-get((
         material: $button-padding-material,
         fluent: $button-padding-fluent,
         bootstrap: $button-padding-bootstrap,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $button--size-material: (
         comfortable: rem(36px),
@@ -489,7 +491,7 @@
         material: $button--size-material,
         fluent: $button--size-fluent,
         bootstrap: $button--size-bootstrap,
-    ), map-get($theme, variant));
+    ), $variant);
 
 
     $button-floating-padding: (
@@ -510,7 +512,7 @@
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $outlined-shadow: map-get((
         material: null,
@@ -522,13 +524,13 @@
         material: --var($theme, 'fab-focus-shadow'),
         fluent: --var($theme, 'fab-focus-shadow'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $icon-shadow: map-get((
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     %igx-button-display {
         position: relative;

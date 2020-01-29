@@ -99,6 +99,8 @@
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -108,7 +110,7 @@
         material: 2px,
         fluent: 4px,
         bootstrap: 5px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     // Slide ticks
     $tick-push: rem(4px);
@@ -121,7 +123,7 @@
         material: 0,
         fluent: 2px,
         bootstrap: 1px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     // Slider Thumb
     $slider-thumb-width: 40px;
@@ -140,13 +142,13 @@
         material: block,
         fluent: none,
         bootstrap: none,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $dot-size: map-get((
         material: 12px,
         fluent: 16px,
         bootstrap: 14px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     %igx-slider-display {
         display: flex;

@@ -175,7 +175,7 @@
     $right: if-ltr(right, left);
 
     $variant: map-get($theme, 'variant');
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
 
     %igx-group-display {
         display: flex;

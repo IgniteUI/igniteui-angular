@@ -248,6 +248,9 @@
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -286,8 +289,6 @@
         cosy: 0 rem(12px) 0 0 ,
         compact: 0 rem(8px) 0 0
     );
-
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
 
     %igx-list {
         position: relative;

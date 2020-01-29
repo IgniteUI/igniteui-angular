@@ -149,6 +149,9 @@
 @mixin igx-time-picker($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, 'variant');
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -158,7 +161,7 @@
         material: rem(8px),
         fluent: rem(8px),
         bootstrap: rem(16px)
-    ), map-get($theme, variant));
+    ), $variant);
 
     %time-picker-display {
         display: flex;
@@ -318,7 +321,7 @@
     %time-picker__buttons {
         display: flex;
         justify-content: flex-end;
-        @if map-get($theme, variant) != bootstrap {
+        @if $not-bootstrap-theme {
             height: rem(52px);
         }
 

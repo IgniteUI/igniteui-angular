@@ -80,6 +80,8 @@
 @mixin igx-toast($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $palette: map-get($theme, 'palette');
     $width: 52px;
     $margin: rem(42px) auto;
@@ -88,15 +90,13 @@
         'material': rem(16px) rem(24px),
         'fluent': rem(16px) rem(24px),
         'bootstrap': rem(12px)
-    ),
-    map-get($theme, 'variant'));
+    ), $variant);
 
     $border: map-get((
         'material': none,
         'fluent': none,
         'bootstrap': 1px solid igx-color($palette, 'grays', 300)
-    ),
-    map-get($theme, 'variant'));
+    ), $variant);
 
     %igx-toast-display {
         position: fixed;

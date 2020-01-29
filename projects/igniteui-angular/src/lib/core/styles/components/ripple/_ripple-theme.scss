@@ -48,11 +48,13 @@
 @mixin igx-ripple($theme, $palette: $default-palette) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $ripple-display: map-get((
         material: block,
         fluent: none !important,
         bootstrap: none !important
-    ), map-get($theme, variant));
+    ), $variant);
 
     %igx-ripple-display {
         display: $ripple-display;

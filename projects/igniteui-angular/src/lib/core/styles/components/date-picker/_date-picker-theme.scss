@@ -11,7 +11,9 @@
 /// @requires rem
 @mixin igx-date-picker($theme) {
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
         min-width: 200px;

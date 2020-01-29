@@ -549,6 +549,9 @@
 
     $grid-header-border: --var($theme, 'header-border-width') --var($theme, 'header-border-style') --var($theme, 'header-border-color');
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $cell-pin: (
         style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
         color: --var($theme, 'pinned-border-color')
@@ -626,15 +629,13 @@
         material: 0,
         fluent: 1px,
         bootstrap: 0
-    ), map-get($theme, variant));
+    ), $variant);
 
     $grid-header-weight: map-get((
         material: 600,
         fluent: 800,
         bootstrap: 700
-    ), map-get($theme, variant));
-
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+    ), $variant);
 
     %grid-display {
         position: relative;

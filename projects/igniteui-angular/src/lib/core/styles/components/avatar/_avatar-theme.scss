@@ -87,25 +87,26 @@
     $medium-size: 64px;
     $large-size: 88px;
 
-    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
 
     $box-shadow-icon: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-background'),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $box-shadow-initials: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'initials-background'),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $box-shadow-image: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'image-background'),
-    ), map-get($theme, variant));
+    ), $variant);
 
     %_igx-avatar-outline {
         position: absolute;

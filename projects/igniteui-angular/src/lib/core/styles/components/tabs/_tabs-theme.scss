@@ -213,6 +213,11 @@
 /// @requires --var
 @mixin igx-tabs($theme) {
     @include igx-root-css-vars($theme);
+
+    $variant: map-get($theme, 'variant');
+    $not-bootstrap-theme: $variant != 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $item-min-width: 90px;
     $item-max-width: 360px;
 
@@ -224,9 +229,6 @@
 
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
-
-    $not-bootstrap-theme: map-get($theme, 'variant') != 'bootstrap';
-    $bootstrap-theme: map-get($theme, 'variant') == 'bootstrap';
 
     %igx-tabs__header-menu-item--selected-bootstrap {
         border-color: --var($theme, 'indicator-color');
@@ -260,7 +262,7 @@
         align-items: center;
         overflow: hidden;
         background: --var($theme, 'item-background');
-        @if map-get($theme, 'variant') != 'bootstrap' {
+        @if $not-bootstrap-theme {
             box-shadow: --var($theme, 'tab-area-shadow');
         }
     }
@@ -284,7 +286,7 @@
         align-items: center;
         min-width: 100%;
 
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             &::after {
                 content: '';
                 position: absolute;
@@ -348,7 +350,7 @@
             background: --var($theme, 'item-hover-background');
             color: --var($theme, 'item-hover-color');
 
-            @if map-get($theme, 'variant') == 'bootstrap' {
+            @if $bootstrap-theme {
                 border-color: --var($theme, 'tab-border-color') --var($theme, 'tab-border-color') transparent;
             }
         }
@@ -413,7 +415,7 @@
         min-width: $item-min-width;
         background: --var($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
-        @if map-get($theme, 'variant') == 'bootstrap' {
+        @if $bootstrap-theme {
             display: none;
         }
     }

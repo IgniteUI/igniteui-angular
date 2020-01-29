@@ -135,7 +135,9 @@
     $carousel-indicators-padding: 0;
     $carousel-indicator-margin: 0 5px;
     $indicator-border-style: 2px solid;
-    $not-bootstrap-theme: map-get($theme, variant) != 'bootstrap';
+
+    $variant: map-get($theme, variant);
+    $not-bootstrap-theme: $variant != 'bootstrap';
 
     %igx-carousel-display {
         display: flex;

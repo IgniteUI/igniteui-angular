@@ -80,23 +80,25 @@
 @mixin igx-progress-linear($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $bar-height: map-get((
         material: rem(4px),
         fluent: rem(4px),
         bootstrap: rem(16px),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $gradient-orientation: map-get((
         material: -45deg,
         fluent: -45deg,
         bootstrap: 45deg,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $background-size: map-get((
         material: rem(40px) rem(40px),
         fluent: rem(40px) rem(40px),
         bootstrap: rem(16px) rem(16px),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $stripe-color: --var($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
@@ -297,11 +299,13 @@
 
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $stroke-width: map-get((
         material: rem(4px),
         fluent: rem(4px),
         bootstrap: rem(8px),
-    ), map-get($theme, variant));
+    ), $variant);
 
     $palette: map-get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);

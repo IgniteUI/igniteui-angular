@@ -152,59 +152,61 @@
     @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
+    $variant: map-get($theme, variant);
+
     $switch-width: map-get((
         material: 36px,
         fluent: 40px,
         bootstrap: 32px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $switch-height: map-get((
         material: 14px,
         fluent: 20px,
         bootstrap: 16px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $switch-thumb-width: map-get((
         material: 20px,
         fluent: 12px,
         bootstrap: 8px,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $switch-on-offset: map-get((
         material: 1px,
         fluent: $switch-thumb-width / 2,
         bootstrap: $switch-thumb-width / 2
-    ), map-get($theme, variant));
+    ), $variant);
 
     $switch-off-offset: map-get((
         material: -1px,
         fluent: $switch-thumb-width / 3,
         bootstrap: $switch-thumb-width / 3
-    ), map-get($theme, variant));
+    ), $variant);
 
     $ripple-display: map-get((
         material: block,
         fluent: none,
         bootstrap: none,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $thumb-resting-shadow: map-get((
         material: --var($theme, 'resting-shadow'),
         fluent: none,
         bootstrap: none
-    ), map-get($theme, variant));
+    ), $variant);
 
     $thumb-hover-shadow: map-get((
         material: --var($theme, 'hover-shadow'),
         fluent: none,
         bootstrap: none,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $thumb-disabled-shadow: map-get((
         material: --var($theme, 'disabled-shadow'),
         fluent: none,
         bootstrap: none,
-    ), map-get($theme, variant));
+    ), $variant);
 
     $switch-thumb-height: $switch-thumb-width ;
 

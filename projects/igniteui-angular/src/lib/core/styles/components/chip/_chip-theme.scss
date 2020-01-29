@@ -232,6 +232,9 @@
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $chip-height-material: (
         comfortable: rem(32px),
         cosy: rem(24px),
@@ -248,7 +251,7 @@
         material: $chip-height-material,
         fluent: $chip-height-fluent,
         bootstrap: $chip-height-material
-    ), map-get($theme, variant));
+    ), $variant);
 
     $chip-padding: (
         comfortable: 0 rem(8px),
@@ -260,7 +263,7 @@
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'hover-background')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $item-padding: 4px;
     $chip-item-padding: 0 rem($item-padding);
@@ -269,7 +272,7 @@
         material: 0,
         fluent: -$item-padding,
         bootstrap: 0
-    ), map-get($theme, variant));
+    ), $variant);
 
     $chip-icon-size: (
         comfortable: rem(18px),
