@@ -68,6 +68,7 @@ When the contents of the iterator changes, `igxForOf` makes the corresponding ch
 | igxForScrollContainer  | string          | Only the strings `vertical` and `horizontal` are valid and specify the scroll orientation                                  |
 | igxForContainerSize    | string          | The px-affixed size of the container along the axis of scrolling                                                           |
 | igxForScrollContainer  | IgxForOf        | Optionally pass the parent `igxForOf` instance to create a virtual template scrolling both horizontally and vertically     |
+| igxForTotalItemCount   | number          | The total count of the virtual data items, when using remote service. This is exposed to allow setting the count of the items through the template |
 
 ### Outputs
 

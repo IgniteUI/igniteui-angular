@@ -10,10 +10,10 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { DateRangeType } from 'igniteui-angular';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxCalendarModule } from '../calendar';
 import { InteractionMode } from '../core/enums';
+import { DateRangeType } from '../core/dates/dateRange';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
