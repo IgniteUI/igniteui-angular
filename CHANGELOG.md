@@ -17,6 +17,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+    - **Breaking Change** - The following input and output have been deprecated for the `igxHierarchicalGrid` and will be removed in future versions:
+        - `hierarchicalState` -> `expansionStates` should be used instead.
+        - `hierarchicalStateChange` -> `expansionStatesChange` should be used instead.
+
     - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
@@ -41,6 +45,8 @@ All notable changes for each version of this project will be documented in this 
     - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
     - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
+    - `expandRow(rowID)`/`collapseRow(rowID)`/`toggleRow(rowID)` API methods are added for the `igxHierarchicalGrid`. They allow expanding/collapsing a row by its id.
+    - `onRowToggle` event is added for the `igxHierarchicalGrid`. It is emitted when the expanded state of a row is changed.
     - `IgxOverlayService`:
         - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
     - `IgxToggleDirective`:
