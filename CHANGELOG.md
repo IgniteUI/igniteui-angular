@@ -132,6 +132,13 @@ All notable changes for each version of this project will be documented in this 
     ```
     - RTL support
 
+- `IgxForOf`
+    - `IgxForTotalItemCount` input is added for the cases when the data is from remote services. This will allow setting the count of the items through the template. And gives the opportunity for the developers to use AsyncPipe for this option:
+    ```html
+    <ng-template igxFor let-item [igxForOf]="data | async" [igxForTotalItemCount]="count | async"
+        [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
+    ```
+
 ## 8.2.6
 
 ### New Features
