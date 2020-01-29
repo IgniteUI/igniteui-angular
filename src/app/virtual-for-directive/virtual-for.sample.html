@@ -80,6 +80,7 @@
             [igxForScrollOrientation]="'vertical'"
             [igxForContainerSize]='"500px"'
             [igxForItemSize]='"50px"'
+            [igxForTotalItemCount]="totalCount | async"
             let-rowIndex="index" #virtDirRemote>
             <div style='height:50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}</div>
             </ng-template>
