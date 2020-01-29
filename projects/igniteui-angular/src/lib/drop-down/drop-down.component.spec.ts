@@ -58,7 +58,7 @@ describe('IgxDropDown ', () => {
                 VirtualizedDropDownComponent,
                 DensityInputComponent,
                 DensityParentComponent,
-                DropDownWithId
+                DropDownWithIdComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -73,7 +73,7 @@ describe('IgxDropDown ', () => {
 
     describe('igxDropDown integration tests', () => {
     it('#6546 - Should render the custom id set', fakeAsync(() => {
-            const fixture = TestBed.createComponent(DropDownWithId);
+            const fixture = TestBed.createComponent(DropDownWithIdComponent);
             const dropdown = fixture.componentInstance.dropdown;
             dropdown.toggle();
             fixture.detectChanges();
@@ -2140,7 +2140,7 @@ class DropDownWithValuesComponent {
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithId extends DropDownWithValuesComponent {}
+class DropDownWithIdComponent extends DropDownWithValuesComponent {}
 
 @Component({
     template: `
