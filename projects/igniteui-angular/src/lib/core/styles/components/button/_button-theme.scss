@@ -156,11 +156,6 @@
 
     $disabled-color: null,
     $disabled-background: null,
-
-    $raised-shadow-color: null,
-    $outlined-shadow-color: null,
-    $icon-shadow-color: null,
-    $fab-shadow-color: null,
 ) {
     $name: 'igx-button';
     $button-schema: ();
@@ -174,6 +169,34 @@
     $theme: apply-palette($button-schema, $palette);
 
     $variant: map-get($theme, 'variant');
+
+    $raised-shadow-color: transparent;
+    $outlined-shadow-color: transparent;
+    $icon-shadow-color: transparent;
+    $fab-shadow-color: transparent;
+
+    @if $variant == 'bootstrap' {
+        $raised-shadow-color: rgba(map-get($theme, 'raised-background'), .5);
+        $outlined-shadow-color: rgba(map-get($theme, 'outlined-focus-background'), .5);
+        $icon-shadow-color: rgba(map-get($theme, 'icon-focus-background'), .5);
+        $fab-shadow-color: rgba(map-get($theme, 'fab-background'), .5);
+
+        @if $raised-background {
+            $raised-shadow-color: rgba($raised-background, .5);
+        }
+
+        @if $outlined-focus-background {
+            $outlined-shadow-color: rgba($outlined-focus-background, .5);
+        }
+
+        @if $icon-focus-background {
+            $icon-shadow-color: rgba($icon-focus-background, .5);
+        }
+
+        @if $fab-background {
+            $fab-shadow-color: rgba($fab-background, .5);
+        }
+    }
 
     $flat-border-radius: round-borders(
         if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
@@ -322,11 +345,7 @@
 
     @if not($raised-focus-shadow) {
         $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
-        @if $variant == 'bootstrap' {
-            $raised-focus-shadow: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color');
-        } @else {
-            $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
-        }
+        $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
     }
 
     @return extend($theme, (
@@ -493,18 +512,42 @@
     $icon-in-button-size: rem(18px);
 
     $raised-shadow: map-get((
+        material: --var($theme, 'raised-resting-shadow'),
+        fluent: --var($theme, 'raised-resting-shadow'),
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+    ), $variant);
+
+    $raised-shadow--focus: map-get((
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
-        bootstrap: --var($theme, 'raised-focus-shadow')
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+    ), $variant);
+
+    $raised-shadow--hover: map-get((
+        material: --var($theme, 'raised-hover-shadow'),
+        fluent: --var($theme, 'raised-hover-shadow'),
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
     ), $variant);
 
     $outlined-shadow: map-get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color')
-    ), map-get($theme, variant));
+    ), $variant);
 
     $fab-shadow: map-get((
+        material: --var($theme, 'fab-resting-shadow'),
+        fluent: --var($theme, 'fab-resting-shadow'),
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+    ), $variant);
+
+    $fab-shadow--hover: map-get((
+        material: --var($theme, 'fab-hover-shadow'),
+        fluent: --var($theme, 'fab-hover-shadow'),
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+    ), $variant);
+
+    $fab-shadow--focus: map-get((
         material: --var($theme, 'fab-focus-shadow'),
         fluent: --var($theme, 'fab-focus-shadow'),
         bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
@@ -615,7 +658,7 @@
     %igx-button--raised {
         color: --var($theme, 'raised-text-color');
         background: --var($theme, 'raised-background');
-        box-shadow: --var($theme, 'raised-resting-shadow');
+        box-shadow: $raised-shadow;
         border-radius: --var($theme, 'raised-border-radius');
         transition: box-shadow 1ms ease-in-out;
 
@@ -626,7 +669,7 @@
         &:hover {
             color: --var($theme, 'raised-hover-text-color');
             background: --var($theme, 'raised-hover-background');
-            box-shadow: --var($theme, 'raised-hover-shadow');
+            box-shadow: $raised-shadow--hover;
 
 
             %igx-icon-display {
@@ -638,7 +681,7 @@
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');
-            box-shadow: $raised-shadow;
+            box-shadow: $raised-shadow--focus;
 
             %igx-icon-display {
                 color: --var($theme, 'raised-focus-icon-color')
@@ -672,13 +715,13 @@
         white-space: nowrap;
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
-        box-shadow: --var($theme, 'fab-resting-shadow');
+        box-shadow: $fab-shadow;
         border-radius: --var($theme, 'fab-border-radius');
 
         &:hover {
             color: --var($theme, 'fab-hover-text-color');
             background: --var($theme, 'fab-hover-background');
-            box-shadow: --var($theme, 'fab-hover-shadow');
+            box-shadow: $fab-shadow;
         }
 
         &:focus,
