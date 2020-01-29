@@ -313,7 +313,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            await wait(DEBOUNCETIME * 2);
+            await wait(DEBOUNCETIME * 4);
             fix.detectChanges();
         }));
 
