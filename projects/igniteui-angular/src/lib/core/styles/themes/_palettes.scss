@@ -77,7 +77,17 @@ $green-palette: igx-palette(
     $secondary: #72da67
 ) !default;
 
-/// Red palette
+/// Green dark palette,
+/// @type {Map}
+/// @group palettes
+$green-dark-palette: igx-palette(
+    $primary: #09f,
+    $secondary: #72da67,
+    $surface: #333,
+    $grays: #fff
+);
+
+/// Purple palette
 /// @type {Map}
 /// @group palettes
 $purple-palette: igx-palette(
@@ -85,6 +95,15 @@ $purple-palette: igx-palette(
     $secondary: #514590
 ) !default;
 
+/// Purple dark palette
+/// @type {Map}
+/// @group palettes
+$purple-dark-palette: igx-palette(
+    $primary: #00b4d6,
+    $secondary: #514590,
+    $surface: #333,
+    $grays: #fff
+) !default;
 
 /// Fluent Excel palette
 /// @type {Map}

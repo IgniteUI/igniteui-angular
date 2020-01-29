@@ -116,7 +116,10 @@
     $input-prefix-color: null,
     $input-prefix-background: null,
     $input-suffix-color: null,
-    $input-suffix-background: null
+    $input-suffix-background: null,
+
+    $label-floated-background: null,
+    $label-floated-disabled-background: null
 ) {
     $name: 'igx-input-group';
     $input-group-schema: ();
@@ -213,7 +216,10 @@
         input-prefix-color: $input-prefix-color,
         input-prefix-background: $input-prefix-background,
         input-suffix-color: $input-suffix-color,
-        input-suffix-background: $input-suffix-background
+        input-suffix-background: $input-suffix-background,
+
+        label-floated-background: $label-floated-background,
+        label-floated-disabled-background: $label-floated-disabled-background
     ));
 }
 
@@ -466,10 +472,6 @@
         box-shadow: inset 0 0 0 1px --var($theme, 'border-color');
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
-
-        %form-group-label--box + %form-group-input--box {
-            transform: translateY(0);
-        }
     }
 
     %form-group-bundle--border-cosy {
@@ -793,7 +795,7 @@
     %form-group-label {
         @include ellipsis();
         position: absolute;
-        width: 100%;
+        // width: 100%;
         transform: translateY(50%); /* 8px, base is 16px */
         line-height: 1 !important;
         height: rem(18px);
@@ -815,10 +817,33 @@
         transform: translateY(0);
     }
 
+    %form-group-label--border {
+        padding: 0 rem(4px);
+        transition: all $transition-timing;
+    }
+
     %form-group-label--float {
         overflow: visible;
         transform: translateY(-50%) scale(.75);
         margin-top: auto;
+    }
+
+    %form-group-label--float-border {
+        // width: auto;
+        transform: translateY(-130%) scale(.75);
+        background: --var($theme, 'label-floated-background', inherit);
+    }
+
+    %form-group-label--float-border-disabled {
+        background: --var($theme, 'label-floated-background', inherit);
+    }
+
+    %form-group-label--float-border-cosy {
+        transform: translateY(-115%) scale(.75);
+    }
+
+    %form-group-label--float-border-compact {
+        transform: translateY(-105%) scale(.75);
     }
 
     %form-group-label--fixed {
