@@ -37,7 +37,7 @@ let NEXT_ID = 0;
  *
  * @igxModule IgxCalendarModule
  *
- * @igxTheme igx-calendar-theme
+ * @igxTheme igx-calendar-theme, igx-icon-theme
  *
  * @igxKeywords calendar, datepicker, schedule, date
  *
