@@ -1546,7 +1546,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
+    public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
