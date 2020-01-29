@@ -5,7 +5,7 @@ import {
     ElementRef,
     forwardRef,
     QueryList,
-    OnInit,
+    OnChanges,
     Input,
     OnDestroy,
     ViewChild,
@@ -52,7 +52,7 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
+export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
@@ -166,7 +166,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this._id;
     }
     set id(value: string) {
-        this.toggleDirective.id = value;
         this.selection.set(value, this.selection.get(this.id));
         this.selection.clear(this.id);
         this.selection.set(value, this.selection.get(`${this.id}-active`));
@@ -460,7 +459,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    ngOnInit() {
+    // temp workaround until fix --> https://github.com/angular/angular/issues/34992
+    ngOnChanges() {
         this.toggleDirective.id = this.id;
     }
 

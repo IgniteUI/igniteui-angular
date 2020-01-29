@@ -57,7 +57,8 @@ describe('IgxDropDown ', () => {
                 GroupDropDownComponent,
                 VirtualizedDropDownComponent,
                 DensityInputComponent,
-                DensityParentComponent
+                DensityParentComponent,
+                DropDownWithId
             ],
             imports: [
                 IgxDropDownModule,
@@ -71,6 +72,15 @@ describe('IgxDropDown ', () => {
     }));
 
     describe('igxDropDown integration tests', () => {
+    it('#6546 - Should render the custom id set', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithId);
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
+            expect(ddList.id).toEqual('my-custom-id-777-list');
+        }));
+
         // configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
@@ -2121,6 +2131,16 @@ class DropDownWithValuesComponent {
         { name: 'Product 4', id: 3 },
     ];
 }
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement id="my-custom-id-777">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithId extends DropDownWithValuesComponent {}
 
 @Component({
     template: `
