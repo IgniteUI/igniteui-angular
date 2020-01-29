@@ -19,6 +19,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -30,7 +31,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const DISABLED_CHIP = 'igx-chip--disabled';
-    const CHIP_REMOVE_ICON = '.igx-chip__remove';
     const CHIP = 'igx-chip';
 
     beforeEach(async(() => {
@@ -1530,7 +1530,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click close button
-        UIInteractions.simulateMouseEvent('click', chips[0].querySelector(CHIP_REMOVE_ICON), 0, 0);
+        UIInteractions.simulateMouseEvent('click', ControlsFunction.getChipRemoveButton(chips[0]), 0, 0);
         tick();
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
@@ -1684,8 +1684,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].className).not.toContain(DISABLED_CHIP);
 
         // check no remove button on disabled chip
-        expect(chips[0].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(0);
-        expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
+        expect( ControlsFunction.getChipRemoveButton(chips[0])).toBeNull();
+        expect( ControlsFunction.getChipRemoveButton(chips[1])).toBeDefined();
 
         // check click does not allow changing sort dir
         chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
