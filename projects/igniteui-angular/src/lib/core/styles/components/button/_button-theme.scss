@@ -156,13 +156,14 @@
 
     $disabled-color: null,
     $disabled-background: null,
+
+    $raised-shadow-color: null,
+    $outlined-shadow-color: null,
+    $icon-shadow-color: null,
+    $fab-shadow-color: null,
 ) {
     $name: 'igx-button';
     $button-schema: ();
-    $raised-shadow-color: transparent;
-    $outlined-shadow-color: transparent;
-    $icon-shadow-color: transparent;
-    $fab-shadow-color: transparent;
 
     @if map-has-key($schema, $name) {
         $button-schema: map-get($schema, $name);
@@ -172,28 +173,7 @@
 
     $theme: apply-palette($button-schema, $palette);
 
-    @if map-get($theme, 'variant') == 'bootstrap' {
-        $raised-shadow-color: rgba(map-get($theme, 'raised-background'), .5);
-        $outlined-shadow-color: rgba(map-get($theme, 'outlined-focus-background'), .5);
-        $icon-shadow-color: rgba(map-get($theme, 'icon-focus-background'), .5);
-        $fab-shadow-color: rgba(map-get($theme, 'fab-background'), .5);
-
-        @if $raised-background {
-            $raised-shadow-color: rgba($raised-background, .5);
-        }
-
-        @if $outlined-focus-background {
-            $outlined-shadow-color: rgba($outlined-focus-background, .5);
-        }
-
-        @if $icon-focus-background {
-            $icon-shadow-color: rgba($icon-focus-background, .5);
-        }
-
-        @if $fab-background {
-            $fab-shadow-color: rgba($fab-background, .5);
-        }
-    }
+    $variant: map-get($theme, 'variant');
 
     $flat-border-radius: round-borders(
         if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
@@ -342,7 +322,11 @@
 
     @if not($raised-focus-shadow) {
         $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
-        $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
+        @if $variant == 'bootstrap' {
+            $raised-focus-shadow: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color');
+        } @else {
+            $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
+        }
     }
 
     @return extend($theme, (
@@ -511,7 +495,7 @@
     $raised-shadow: map-get((
         material: --var($theme, 'raised-focus-shadow'),
         fluent: --var($theme, 'raised-focus-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+        bootstrap: --var($theme, 'raised-focus-shadow')
     ), $variant);
 
     $outlined-shadow: map-get((

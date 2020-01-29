@@ -5,6 +5,11 @@
             "name": "$card-border-color",
             "replaceWith": "$outline-color",
             "owner": "igx-card-theme"
+        },
+        {
+            "name": "$disable-border",
+            "remove": true,
+            "owner": "igx-badge-theme"
         }
     ]
 }

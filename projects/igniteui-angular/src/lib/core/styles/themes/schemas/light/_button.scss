@@ -79,6 +79,11 @@ $_light-button: extend(
     (
         variant: 'material',
 
+        raised-shadow-color: transparent,
+        outlined-shadow-color: transparent,
+        icon-shadow-color: transparent,
+        fab-shadow-color: transparent,
+
         flat-background: transparent,
 
         flat-text-color: (
@@ -456,6 +461,11 @@ $_bootstrap-button: extend(
             igx-color: ('primary', 500)
         ),
 
+        raised-shadow-color: (
+            igx-color: ('primary', 500),
+            rgba: .5
+        ),
+
         raised-hover-background: (
             igx-color: ('primary', 600)
         ),
@@ -486,10 +496,20 @@ $_bootstrap-button: extend(
             igx-color: ('primary', 500)
         ),
 
+        outlined-shadow-color: (
+            igx-color: ('primary', 500),
+            rgba: .5
+        ),
+
         outlined-focus-text-color: #fff,
 
         fab-background: (
             igx-color: ('primary', 500)
+        ),
+
+        fab-shadow-color: (
+            igx-color: ('primary', 500),
+            rgba: .5
         ),
 
         fab-hover-background: (
@@ -518,6 +538,11 @@ $_bootstrap-button: extend(
             igx-color: ('primary', 600)
         ),
 
+        icon-shadow-color: (
+            igx-color: ('primary', 600),
+            rgba: .5
+        ),
+
         icon-focus-color: #fff,
 
         disabled-color: (
@@ -536,4 +561,3 @@ $_bootstrap-button: extend(
         ),
     )
 );
-
