@@ -1,4 +1,3 @@
-import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand } from 'igniteui-angular';
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
@@ -11,13 +10,14 @@ import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxTransactionService } from '../services';
-import { IgxFilteringOperand } from '../data-operations/filtering-condition';
+import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1218,7 +1218,7 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
-        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
