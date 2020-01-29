@@ -28,7 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { IgxGridComponent } from './grid';
+import { IgxGridComponent, ISearchInfo } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -51,6 +51,7 @@ import { IgxGridComponent } from './grid';
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
+    protected _lastSearchInfo: ISearchInfo;
 
     /**
      * Gets the column of the cell.
@@ -300,6 +301,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     get cellSelectionMode() {
         return this._cellSelection;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    set lastSearchInfo(value: ISearchInfo) {
+        this._lastSearchInfo = value;
+        this.highlightText(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
     }
 
     set cellSelectionMode(value) {
