@@ -291,6 +291,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             // transaction service cannot be injected in a derived class in a factory manner
             this._transactions = new IgxTransactionService();
         }
+        this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
+            const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
+            this.hierarchicalStateChange.emit(res);
+        });
         super.ngOnInit();
     }
 
