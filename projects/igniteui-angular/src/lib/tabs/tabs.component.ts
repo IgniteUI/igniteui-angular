@@ -353,10 +353,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
         }
-
-        this._ngZone.runOutsideAngular(() => {
-            this._resizeObserver.disconnect();
-        });
+        if (this.platformUtil.isBrowser) {
+            this._ngZone.runOutsideAngular(() => {
+                this._resizeObserver.disconnect();
+            });
+        }
     }
 
     private resetSelectionOnCollectionChanged(): void {
