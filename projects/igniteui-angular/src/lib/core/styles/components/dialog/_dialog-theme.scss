@@ -123,7 +123,6 @@
 
     %igx-dialog-display {
         outline-style: none;
-        border: 1px solid --var($theme, 'border-color');
     }
 
     %igx-dialog--hidden {
@@ -133,6 +132,7 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
+        border: 1px solid --var($theme, 'border-color');
         border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background');
         box-shadow: --var($theme, 'shadow');
