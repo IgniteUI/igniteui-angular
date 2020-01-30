@@ -93,7 +93,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(true);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(1);
+        expect(hierarchicalGrid.expansionStates.size).toEqual(1);
 
         UIInteractions.clickElement(icon.el);
         fixture.detectChanges();
@@ -105,12 +105,14 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(false);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(0);
+        expect(hierarchicalGrid.expansionStates.size).toEqual(0);
     }));
 
-    it('should allow applying initial expansions state for certain rows through hierarchicalState option', () => {
+    it('should allow applying initial expansions state for certain rows through expansionStates option', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{rowID: fixture.componentInstance.data[0]}];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
@@ -174,14 +176,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow extracting child grids using hgridAPI', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
         expect(row1.expanded).toBe(true);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
         expect(childGrid).not.toBeNull();
-        childGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0].childData[0] }];
+        const childState = new Map<any, boolean>();
+        childState.set(fixture.componentInstance.data[0].childData[0], true);
+        childGrid.expansionStates = childState;
         childGrid.cdr.detectChanges();
         const grandChildGrid = hierarchicalGrid.hgridAPI.getChildGrid([
             { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
@@ -197,7 +203,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow setting expandChildren after bound to data', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         let row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
@@ -225,7 +233,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow setting expandChildren after bound to data to rowIsland', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
