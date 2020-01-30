@@ -13,6 +13,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     search1: string;
     data = [];
     remoteData: any;
+    totalCount: any;
     options = {};
     prevRequest: any;
     itemSize = '100px';
@@ -45,6 +46,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.remoteData = this.remoteService.remoteData;
+        this.totalCount = this.remoteService.totalCount;
         const data = [{
             key: 1,
             avatar: 'assets/images/avatar/1.jpg',
@@ -136,7 +138,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.remoteService.getData(this.virtDirRemote.state, (data) => {
-            this.virtDirRemote.totalItemCount = data['@odata.count'];
+            //this.virtDirRemote.totalItemCount = data['@odata.count'];
         });
     }
     chunkLoading(evt) {
