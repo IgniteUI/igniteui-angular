@@ -33,6 +33,7 @@
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
                 [cellTemplate]="col.bodyTemplate"
+                [lastSearchInfo]="grid.lastSearchInfo"
                 [cellSelectionMode]="grid.cellSelection" #treeCell>
             </igx-grid-cell>
             </ng-template>
@@ -60,6 +61,7 @@
                 [value]="rowData[col.field]"
                 [isLoading]="isLoading"
                 [cellTemplate]="col.bodyTemplate"
+                [lastSearchInfo]="grid.lastSearchInfo"
                 [cellSelectionMode]="grid.cellSelection"  #treeCell>
             </igx-tree-grid-cell>
         </ng-template>
@@ -86,6 +88,7 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
             [cellTemplate]="col.bodyTemplate"
+            [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"  #treeCell>
         </igx-grid-cell>
     </ng-template>
@@ -112,6 +115,7 @@
             [value]="rowData[col.field]"
             [isLoading]="isLoading"
             [cellTemplate]="col.bodyTemplate"
+            [lastSearchInfo]="grid.lastSearchInfo"
             [cellSelectionMode]="grid.cellSelection"  #treeCell>
         </igx-tree-grid-cell>
     </ng-template>
