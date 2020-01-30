@@ -71,7 +71,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      */
     @HostBinding('class.igx-grid__tr--expanded')
     public get expanded() {
-        return this.grid.isExpanded(this.rowData);
+        return this.gridAPI.get_row_expansion_state(this.rowData);
     }
 
     public get hasChildren() {
@@ -106,15 +106,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         }
         const grid = this.gridAPI.grid;
         this.endEdit(grid.rootGrid);
-        const state = this.gridAPI.grid.hierarchicalState;
-        if (!this.expanded) {
-            state.push({ rowID: this.rowID });
-            grid.hierarchicalState = [...state];
-        } else {
-            grid.hierarchicalState = state.filter(v => {
-                return v.rowID !== this.rowID;
-            });
-        }
+        this.gridAPI.set_row_expansion_state(this.rowID, !this.expanded);
         grid.cdr.detectChanges();
     }
 
