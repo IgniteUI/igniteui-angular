@@ -63,7 +63,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *  let image = this.avatar.image;
      * ```
      */
-    @ViewChild('image', { static: false })
+    @ViewChild('image')
     public image: ElementRef;
 
     /**
