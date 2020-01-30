@@ -835,7 +835,7 @@
     }
 
     %form-group-label--float-border-disabled {
-        background: --var($theme, 'label-floated-background', inherit);
+        background: --var($theme, 'label-floated-disabled-background', inherit);
     }
 
     %form-group-label--float-border-cosy {
