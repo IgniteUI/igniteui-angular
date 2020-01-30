@@ -514,7 +514,7 @@
     $raised-shadow: map-get((
         material: --var($theme, 'raised-resting-shadow'),
         fluent: --var($theme, 'raised-resting-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+        bootstrap: --var($theme, 'raised-resting-shadow')
     ), $variant);
 
     $raised-shadow--focus: map-get((
@@ -538,7 +538,7 @@
     $fab-shadow: map-get((
         material: --var($theme, 'fab-resting-shadow'),
         fluent: --var($theme, 'fab-resting-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+        bootstrap: --var($theme, 'fab-resting-shadow')
     ), $variant);
 
     $fab-shadow--hover: map-get((
