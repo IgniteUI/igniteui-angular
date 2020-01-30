@@ -590,12 +590,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 20;
             hierarchicalGrid.reflow();
-            await wait();
+            await wait(60);
             fixture.detectChanges();
             expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
             hierarchicalGrid.perPage = 5;
             await wait(30);
             fixture.detectChanges();
+            await wait(30);
 
             expect(hierarchicalGrid.hasVerticalSroll()).toBeFalsy();
 
@@ -623,8 +624,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             await wait(30);
             fixture.detectChanges();
             hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
-            await wait(30);
+            await wait(60);
             fixture.detectChanges();
+            await wait(60);
 
             // check last row is loaded and is in view
             rows = hierarchicalGrid.rowList.toArray();
