@@ -81,7 +81,10 @@ $_light-tabs: extend(
 
         button-ripple-color: (
             igx-color: ('grays', 100)
-        )
+        ),
+
+        border-color: transparent,
+        border-color--hover: transparent,
     )
 );
 
@@ -120,6 +123,14 @@ $_bootstrap-tabs: extend(
     $_bootstrap-shape-tabs,
     (
         variant: 'bootstrap',
+
+        border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        border-color--hover: (
+            igx-color: ('grays', 200)
+        ),
 
         item-text-color: (
             igx-color: ('primary', 500)

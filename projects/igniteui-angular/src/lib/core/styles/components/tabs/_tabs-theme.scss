@@ -67,6 +67,9 @@
     $button-ripple-color: null,
     $border-radius: null,
 
+    $border-color: null,
+    $border-color--hover: null,
+
     $disable-shadow: true
 ) {
     $name: 'igx-tabs';
@@ -84,13 +87,10 @@
 
     $theme: apply-palette($tabs-schema, $palette);
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'boostrap';
+
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
-
-    $tab-border-color: null;
-
-    @if map-get($theme, 'variant') == 'bootstrap' {
-        $tab-border-color: rgba(map-get($theme, 'indicator-color'), .1);
-    }
 
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
@@ -196,7 +196,7 @@
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
-        tab-border-color: $tab-border-color,
+        border-color: $border-color,
         border-radius: $border-radius,
     ));
 }
@@ -229,28 +229,6 @@
 
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
-
-    %igx-tabs__header-menu-item--selected-bootstrap {
-        border-color: --var($theme, 'indicator-color');
-        border-bottom-color: transparent;
-        position: relative;
-        z-index: 1;
-
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: --var($theme, 'item-active-background');
-        }
-
-        &:hover,
-        &:focus {
-            border-color: --var($theme, 'indicator-color') --var($theme, 'indicator-color') transparent;
-        }
-    }
 
     %igx-tabs {
         display: flex;
@@ -294,7 +272,7 @@
                 left: 0;
                 width: 100%;
                 height: 1px;
-                background: --var($theme, 'indicator-color');
+                background: --var($theme, 'border-color');
                 z-index: 0;
             }
         }
@@ -351,7 +329,16 @@
             color: --var($theme, 'item-hover-color');
 
             @if $bootstrap-theme {
-                border-color: --var($theme, 'tab-border-color') --var($theme, 'tab-border-color') transparent;
+                border-color: --var($theme, 'border-color--hover') --var($theme, 'border-color--hover') transparent;
+            }
+        }
+
+        @if $not-bootstrap-theme {
+            border: 1px solid --var($theme, 'border-color');
+
+            &:hover,
+            &:focus {
+                border: 1px solid --var($theme, 'border-color--hover');
             }
         }
 
@@ -362,6 +349,7 @@
     %igx-tabs__header-menu-item--selected {
         outline: 0;
         color: --var($theme, 'item-active-color');
+
 
         &:focus {
             background: --var($theme, 'item-active-background');
@@ -380,12 +368,31 @@
                 color: --var($theme, 'item-active-icon-color');
             }
         }
-
-        @if $bootstrap-theme {
-            @extend %igx-tabs__header-menu-item--selected-bootstrap;
-        }
     }
 
+    %igx-tabs__header-menu-item--selected-bootstrap {
+        @if $bootstrap-theme {
+            background: --var($theme, 'item-active-background');
+            position: relative;
+            z-index: 1;
+            border-color: --var($theme, 'border-color') --var($theme, 'border-color') --var($theme, 'item-active-background');
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: --var($theme, 'item-active-background');
+            }
+
+            &:hover,
+            &:focus {
+                border-color: --var($theme, 'border-color') --var($theme, 'border-color') transparent;
+            }
+        }
+    }
 
     %igx-tabs__header-menu-item--disabled {
         outline: 0;
