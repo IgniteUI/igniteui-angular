@@ -128,6 +128,9 @@
     }
 
     $theme: apply-palette($calendar-schema, $palette);
+    $variant: map-get($theme, variant);
+    $not-bootstrap-theme: $variant != 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($calendar-schema, 'border-radius')), 0, 20px
@@ -179,18 +182,6 @@
         $picker-text-color: $content-text-color;
     }
 
-    @if not($picker-text-hover-color) and $header-background {
-        $picker-text-hover-color: $header-background;
-    }
-
-    @if not($header-text-color) and $header-background {
-        $header-text-color: text-contrast($header-background);
-    }
-
-    @if not($date-selected-background) and $header-background {
-        $date-selected-background: $header-background;
-    }
-
     @if not($date-selected-text-color) and $date-selected-background {
         $date-selected-text-color: $content-background;
     }
@@ -201,8 +192,36 @@
         }
     }
 
-    @if not($date-current-bg-color) and $header-background {
-        $date-current-bg-color: $header-background;
+    @if $not-bootstrap-theme {
+        @if not($picker-text-hover-color) and $header-background {
+            $picker-text-hover-color: $header-background;
+        }
+
+        @if not($header-text-color) and $header-background {
+            $header-text-color: text-contrast($header-background);
+        }
+
+        @if not($date-selected-background) and $header-background {
+            $date-selected-background: $header-background;
+        }
+
+        @if not($date-current-bg-color) and $header-background {
+            $date-current-bg-color: $header-background;
+        }
+
+        @if not($year-hover-text-color) and $header-background {
+            $year-hover-text-color: $header-background;
+        }
+
+        @if not($year-current-text-color) and $header-background {
+            $year-current-text-color: $header-background;
+        }
+
+        @if not($month-current-text-color) and $header-background {
+            @if $header-background == 'color' {
+                $month-current-text-color: $header-background;
+            }
+        }
     }
 
     @if not($date-current-text-color) and $date-current-bg-color {
@@ -219,23 +238,17 @@
         $date-special-text-color: text-contrast($date-special-background);
     }
 
-    @if not($year-hover-text-color) and $header-background {
-        $year-hover-text-color: $header-background;
+    @if $not-bootstrap-theme {
+        @if not($month-hover-text-color) and $content-background{
+            @if type-of($content-background) == 'color' {
+                $month-hover-text-color: text-contrast($content-background);
+            }
+        }
     }
 
     @if not($month-hover-text-color) and $month-hover-background {
         @if type-of($month-hover-text-color) == 'color' {
             $month-hover-text-color: text-contrast($month-hover-background);
-        }
-    }
-
-    @if not($year-current-text-color) and $header-background {
-        $year-current-text-color: $header-background;
-    }
-
-    @if not($month-current-text-color) and $header-background {
-        @if $header-background == 'color' {
-            $month-current-text-color: $header-background;
         }
     }
 
@@ -364,7 +377,8 @@
 
         %cal-display {
             @if $bootstrap-theme {
-                border: none
+                border: none;
+                border-radius: 0;
             }
         }
     }
@@ -798,9 +812,11 @@
             background: transparent;
         }
 
-        &:hover,
-        &:focus {
-            color: --var($theme, 'date-selected-text-color');
+        @if $bootstrap-theme {
+            &:hover,
+            &:focus {
+                color: --var($theme, 'date-selected-text-color');
+            }
         }
     }
 

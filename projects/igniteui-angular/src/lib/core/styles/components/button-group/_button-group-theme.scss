@@ -95,6 +95,10 @@
         @if $item-background {
             $shadow-color: rgba($item-background, .5);
         }
+
+        @if $item-background and not($item-border-color) {
+            $item-border-color: $item-background;
+        }
     }
 
     @if not($item-text-color) and $item-background {

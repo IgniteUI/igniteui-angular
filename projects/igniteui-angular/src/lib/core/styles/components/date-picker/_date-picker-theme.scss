@@ -107,6 +107,10 @@
 
         %cal-value--inactive {
             color: --var($theme, 'inactive-text-color');
+
+            &:hover {
+                color: --var($theme, 'inactive-text-color');
+            }
         }
 
         %cal-value--selected {
