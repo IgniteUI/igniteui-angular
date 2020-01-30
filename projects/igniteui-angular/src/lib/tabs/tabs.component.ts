@@ -327,18 +327,16 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
                     this.hideIndicator();
                 }
             });
-            if (this.platformUtil.isBrowser) {
-                this._ngZone.runOutsideAngular(() => {
-                    this._resizeObserver = new ResizeObserver(() => {
-                        if (!this.hasContentTabs && this._selectedIndex >= 0 && this._selectedIndex < this.tabs.length) {
-                            const newTab = this.tabs.toArray()[this._selectedIndex];
-                            this.transformContentAnimation(newTab, 0);
-                        }
-                    });
-
-                    this._resizeObserver.observe(this.tabsContainer.nativeElement);
+            this._ngZone.runOutsideAngular(() => {
+                this._resizeObserver = new ResizeObserver(() => {
+                    if (!this.hasContentTabs && this._selectedIndex >= 0 && this._selectedIndex < this.tabs.length) {
+                        const newTab = this.tabs.toArray()[this._selectedIndex];
+                        this.transformContentAnimation(newTab, 0);
+                    }
                 });
-            }
+
+                this._resizeObserver.observe(this.tabsContainer.nativeElement);
+            });
         }
 
         this._groupChanges$ = this.groups.changes.subscribe(() => {
