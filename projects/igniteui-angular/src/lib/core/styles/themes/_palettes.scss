@@ -47,6 +47,17 @@
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
+
+/// Default dark palette
+/// @type {Map}
+/// @group palettes
+$default-dark-palette: extend(
+    $default-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
 /// Global Overlay Color
 /// @group palettes
 /// @type Color
@@ -77,15 +88,15 @@ $green-palette: igx-palette(
     $secondary: #72da67
 ) !default;
 
-/// Green dark palette,
+/// Dark green palette,
 /// @type {Map}
 /// @group palettes
-$green-dark-palette: igx-palette(
-    $primary: #09f,
-    $secondary: #72da67,
-    $surface: #333,
-    $grays: #fff
-);
+$green-dark-palette: extend(
+    $green-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
 
 /// Purple palette
 /// @type {Map}
@@ -95,14 +106,14 @@ $purple-palette: igx-palette(
     $secondary: #514590
 ) !default;
 
-/// Purple dark palette
+/// Dark purple palette
 /// @type {Map}
 /// @group palettes
-$purple-dark-palette: igx-palette(
-    $primary: #00b4d6,
-    $secondary: #514590,
-    $surface: #333,
-    $grays: #fff
+$purple-dark-palette: extend(
+    $purple-palette,
+    (
+        surface: (500: #333)
+    )
 ) !default;
 
 /// Fluent Excel palette
@@ -116,6 +127,16 @@ $fluent-excel-palette: igx-palette(
     $error: #a80000
 ) !default;
 
+/// Fluent Excel dark palette
+/// @type {Map}
+/// @group palettes
+$fluent-excel-dark-palette: extend(
+    $fluent-excel-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
 /// Fluent Word palette
 /// @type {Map}
 /// @group palettes
@@ -124,5 +145,15 @@ $fluent-word-palette: igx-palette(
     $secondary: #2b579a,
     $success: #107c10,
     $warn: #797673,
-    $error: #a80000
+    $error: #a80000,
+) !default;
+
+/// Fluent Word dark palette
+/// @type {Map}
+/// @group palettes
+$fluent-word-dark-palette: extend(
+    $fluent-word-palette,
+    (
+        surface: (500: #222)
+    )
 ) !default;
