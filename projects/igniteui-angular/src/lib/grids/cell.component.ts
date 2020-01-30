@@ -856,24 +856,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleAlt(key: string, event: KeyboardEvent) {
-        if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+        if (this.isToggleKey(key)) {
             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
             const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            if (collapse) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            } else if (expand) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            }
-        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            const expandedStates = this.grid.expansionStates;
             if (expand) {
-                expandedStates.set(this.row.rowID, true);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
             } else if (collapse) {
-                expandedStates.set(this.row.rowID, false);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
             }
-            this.grid.expansionStates = expandedStates;
             this.grid.notifyChanges();
         }
     }

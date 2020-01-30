@@ -57,11 +57,11 @@ export class GridMasterDetailSampleComponent implements OnInit {
     }
 
     public expandFirstRow() {
-        this.grid1.expand(this.data[0]);
+        this.grid1.expandRow(this.data[0]);
     }
 
     public collapseFirstRow() {
-        this.grid1.collapse(this.data[0]);
+        this.grid1.collapseRow(this.data[0]);
     }
 
     public toggleFirstRow() {
