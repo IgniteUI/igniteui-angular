@@ -91,7 +91,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     protected iconTemplate: TemplateRef<any>;
 
     /**
-     * Returns the `aria-label`-attribute of the avatar.
+     * Returns the `aria-label` attribute of the avatar.
      *
      * @example
      * ```typescript
@@ -103,7 +103,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public ariaLabel = 'avatar';
 
     /**
-     * Returns the `role`-attribute of the avatar.
+     * Returns the `role` attribute of the avatar.
      *
      * @example
      * ```typescript
@@ -114,7 +114,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public role = 'img';
 
     /**
-     * Returns the `class`-attribute of the avatar.
+     * Returns the `class` attribute of the avatar.
      *
      * @example
      * ```typescript
