@@ -14,7 +14,8 @@ import {
     Output,
     EventEmitter,
     Optional,
-    Inject
+    Inject,
+    SimpleChanges
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -460,8 +461,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      * @hidden @internal
      */
     // temp workaround until fix --> https://github.com/angular/angular/issues/34992
-    ngOnChanges() {
-        this.toggleDirective.id = this.id;
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.id) {
+            this.toggleDirective.id = changes.id.currentValue;
+        }
     }
 
     ngAfterViewInit() {

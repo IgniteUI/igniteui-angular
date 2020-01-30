@@ -78,7 +78,7 @@ describe('IgxDropDown ', () => {
             dropdown.toggle();
             fixture.detectChanges();
             const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
-            expect(ddList.id).toEqual('my-custom-id-777-list');
+            expect(ddList.id).toEqual('test-id-list');
         }));
 
         // configureTestSuite();
@@ -2134,7 +2134,7 @@ class DropDownWithValuesComponent {
 
 @Component({
     template: `
-    <igx-drop-down #dropdownElement id="my-custom-id-777">
+    <igx-drop-down #dropdownElement id="test-id">
         <igx-drop-down-item *ngFor="let item of items" [value]="item">
             {{ item.field }}
         </igx-drop-down-item>
