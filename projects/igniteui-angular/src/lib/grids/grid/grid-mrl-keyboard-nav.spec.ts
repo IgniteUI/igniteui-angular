@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild, Type, DebugElement, NgZone } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,9 +7,10 @@ import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection, TestNgZone } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -18,17 +19,19 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     configureTestSuite();
+    let zone: TestNgZone;
 
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule]
+            imports: [NoopAnimationsModule, IgxGridModule],
+            providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
         }).compileComponents();
     }));
 
-    it('should navigate through a single layout with right and left arrow keys', (async () => {
+    it('should navigate through a single layout with right and left arrow keys', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.detectChanges();
 
@@ -38,59 +41,45 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let fourthCell;
         [firstCell, secondCell, thirdCell, fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         // reached the end shouldn't stay on the same cell
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+    });
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-    }));
-
-    it('should navigate between column layouts with right arrow key', (async () => {
+    it('should navigate between column layouts with right arrow key', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -111,22 +100,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondCell);
-        await wait();
+        HelperFunctions.simulateCellClick(secondCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
-    it('should navigate between column layouts with left key', (async () => {
+    it('should navigate between column layouts with left key', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -147,22 +134,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(thirdCell);
-        await wait();
+        HelperFunctions.simulateCellClick(thirdCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    }));
+    });
 
-    it('should navigate down and up to a cell from the same column layout from a cell with bigger col span', (async () => {
+    it('should navigate down and up to a cell from the same column layout from a cell with bigger col span', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -178,26 +163,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    }));
+    });
 
-    it('should navigate down and up to a cell from the same column layout to a cell with bigger col span', (async () => {
+    it('should navigate down and up to a cell from the same column layout to a cell with bigger col span', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -213,26 +195,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondCell);
-        await wait();
+        HelperFunctions.simulateCellClick(secondCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    }));
+    });
 
-    it('should navigate down and up to a cell from the same column layout according to its starting location', (async () => {
+    it('should navigate down and up to a cell from the same column layout according to its starting location', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -249,26 +228,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondCell);
-        await wait();
+        HelperFunctions.simulateCellClick(secondCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    }));
+    });
 
-    it('should allow navigating down to a cell from the next row', (async () => {
+    it('should allow navigating down to a cell from the next row', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -284,19 +260,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(thirdCell);
-        await wait();
+        HelperFunctions.simulateCellClick(thirdCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
-    it('should allow navigating down to a cell from the next row with hidden column layout', (async () => {
+    it('should allow navigating down to a cell from the next row with hidden column layout', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -318,19 +292,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(thirdCell);
-        await wait();
+        HelperFunctions.simulateCellClick(thirdCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
-    it('should allow navigating down with scrolling', (async () => {
+    it('should allow navigating down with scrolling', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -347,22 +319,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         const rowIndex = parseInt(secondCell.nativeElement.getAttribute('data-rowindex'), 10);
 
         UIInteractions.clickElement(secondCell);
-        await wait();
         fix.detectChanges();
 
         UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         UIInteractions.triggerKeyDownWithBlur('arrowdown', fix.componentInstance.selectedCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[rowIndex + 1].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    }));
+    });
 
-    it('should retain the focus when the first cell is reached', (async () => {
+    it('should retain the focus when the first cell is reached', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -378,19 +351,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondCell);
-        await wait();
+        HelperFunctions.simulateCellClick(secondCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
-    }));
+    });
 
-    it('should navigate up correctly', (async () => {
+    it('should navigate up correctly', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -406,19 +377,17 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(thirdCell);
-        await wait();
+        HelperFunctions.simulateCellClick(thirdCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    }));
+    });
 
-    it('navigate to right and left with hidden columns', (async () => {
+    it('navigate to right and left with hidden columns', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -440,26 +409,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondCell);
-        await wait();
+        HelperFunctions.simulateCellClick(secondCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
-    it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', (async () => {
+    it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -493,55 +459,90 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix.detectChanges();
         const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-        UIInteractions.clickElement(firstCell);
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
+        fix.detectChanges();
+
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'end');
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home');
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright', false, false, true);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
+
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowleft', false, false, true);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+    });
+
+    it('should navigate to the last cell from the first/last layout by pressing Ctrl + Home/End key', async() => {
+        const fix = TestBed.createComponent(ColumnLayoutTestComponent);
+        fix.componentInstance.colGroups = [{
+            group: 'group1',
+            hidden: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+            ]
+        }, {
+            group: 'group2',
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                { field: 'ContactName', rowStart: 2, colStart: 1 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+            ]
+        }, {
+            group: 'group3',
+            columns: [
+                { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                { field: 'Region', rowStart: 3, colStart: 1 },
+                { field: 'PostalCode', rowStart: 3, colStart: 2 }
+            ]
+        }, {
+            group: 'group4',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1 },
+                { field: 'Phone', rowStart: 1, colStart: 2 },
+                { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+            ]
+        }];
+        fix.detectChanges();
+        const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
+        fix.detectChanges();
+
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'end', false, false, true);
         await wait();
-        fix.detectChanges();
-
-        UIInteractions.triggerKeyDownWithBlur('end', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-
-        UIInteractions.triggerKeyDownWithBlur('home', fix.componentInstance.selectedCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', fix.componentInstance.selectedCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-
-        UIInteractions.triggerKeyDownWithBlur('end', firstCell.nativeElement, true, false, false, true);
-        await wait(100);
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-        UIInteractions.triggerKeyDownWithBlur('home', fix.componentInstance.selectedCell.nativeElement, true, false, false, true);
-        await wait(100);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home', false, false, true);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-    }));
+    });
 
     it(`should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key
-            and keep same rowStart from the first selection when last cell spans more rows`, (async () => {
+            and keep same rowStart from the first selection when last cell spans more rows`, async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -576,55 +577,52 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // last cell from first layout
         const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
-        UIInteractions.clickElement(lastCell);
+        HelperFunctions.simulateCellClick(lastCell.componentInstance);
+        fix.detectChanges();
+
+        HelperFunctions.simulateCellKeydown(lastCell.componentInstance, 'end');
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
+
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home');
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
+
+        HelperFunctions.simulateCellKeydown(lastCell.componentInstance, 'arrowright', false, false, true);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
+
+        HelperFunctions.simulateCellKeydown(lastCell.componentInstance, 'arrowleft', false, false, true);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
+
+        HelperFunctions.simulateCellKeydown(lastCell.componentInstance, 'end', false, false, true);
         await wait();
-        fix.detectChanges();
-
-        UIInteractions.triggerKeyDownWithBlur('end', lastCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        UIInteractions.triggerKeyDownWithBlur('home', fix.componentInstance.selectedCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowright', lastCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', fix.componentInstance.selectedCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
-
-        UIInteractions.triggerKeyDownWithBlur('end', lastCell.nativeElement, true, false, false, true);
-        await wait(100);
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-        UIInteractions.triggerKeyDownWithBlur('home', fix.componentInstance.selectedCell.nativeElement, true, false, false, true);
-        await wait(100);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home', false, false, true);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-    }));
+    });
 
     it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
-        and then Arrow Down + Up to same cell`, (async () => {
+        and then Arrow Down + Up to same cell`, async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -658,34 +656,30 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix.detectChanges();
         const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright', false, false, true);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', fix.componentInstance.selectedCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', fix.componentInstance.selectedCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
     it(`should navigate to the last cell from the layout by pressing Ctrl + Arrow Right key
-        and then Arrow Up + Down to same cell`, (async () => {
+        and then Arrow Up + Down to same cell`, async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -720,34 +714,30 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
         const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
-        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright', false, false, true);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
-        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: false }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: false }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
-    }));
+    });
 
     it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left key
-        and then Arrow Up + Down to same cell`, (async () => {
+        and then Arrow Up + Down to same cell`, async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -783,42 +773,37 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
         const lastCell = firstRowCell[firstRowCell.length - 1];
 
-        UIInteractions.clickElement(lastCell);
-        await wait();
+        HelperFunctions.simulateCellClick(lastCell.componentInstance);
         fix.detectChanges();
 
-        lastCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(lastCell.componentInstance, 'arrowleft', false, false, true);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: false }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
-        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: false }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        fix.componentInstance.selectedCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: false }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-    }));
+    });
 
     it(`Tab Navigation should move through each cell from the row once,
       moving through all cells with same rowStart, following the columnStart and column layout order,
-      before moving on to the next rowStart.`, (async() => {
+      before moving on to the next rowStart.`, () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -858,24 +843,24 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st
         let cell = grid.getCellByColumn(0, 'ID');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
+
         const dataCols = grid.columns.filter(x => !x.columnLayout);
         // tab thorugh all data cols and check cells are selected/focused.
         for (let i = 1; i < dataCols.length; i++) {
-            UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
-            await wait();
+            HelperFunctions.simulateCellKeydown(cell, 'Tab');
             fix.detectChanges();
+
             cell = grid.getCellByColumn(0, order[i]);
             expect(cell.focused).toBe(true);
             expect(cell.visibleColumnIndex).toBe(i);
         }
-    }));
+    });
 
     it(`Shift+Tab Navigation should move through each cell from the row once, moving through all cells with same rowStart,
      following the columnStart and column layout setup order,
-     before moving on to the previous cell with smaller rowStart.`, (async() => {
+     before moving on to the previous cell with smaller rowStart.`, () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -906,24 +891,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus last
         let cell = grid.getCellByColumn(0, 'PostalCode');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
         const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
 
         const dataCols = grid.columns.filter(x => !x.columnLayout);
         // shift+tab through all data cols and check cells are selected/focused.
-        for (let i = dataCols.length - 1; i >= 0; i--) {
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-            await wait();
+        for (let i = dataCols.length - 2; i >= 0; i--) {
+            HelperFunctions.simulateCellKeydown(cell, 'Tab', false, true);
             fix.detectChanges();
+
             cell = grid.getCellByColumn(0, order[i]);
             expect(cell.focused).toBe(true);
             expect(cell.visibleColumnIndex).toBe(i);
         }
-     }));
+     });
 
-     it('Tab/Shift+Tab Navigation should allow moving to next/prev row when at last/first cell.',  (async() => {
+     it('Tab/Shift+Tab Navigation should allow moving to next/prev row when at last/first cell.',  () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -954,13 +938,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st cell in 2nd row
         let cell = grid.getCellByColumn(1, 'ID');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // shift + tab into prev row
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'Tab', false, true);
         fix.detectChanges();
 
         cell = grid.getCellByColumn(0, 'PostalCode');
@@ -968,16 +950,15 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(cell.visibleColumnIndex).toBe(6);
 
         // tab into next row
-        UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'Tab');
         fix.detectChanges();
 
         cell = grid.getCellByColumn(1, 'ID');
         expect(cell.focused).toBe(true);
         expect(cell.visibleColumnIndex).toBe(0);
-     }));
+     });
 
-     it('Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+     it('Tab Navigation should work in grid with horizontal virtualization.',  async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1013,22 +994,24 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st
         let cell = grid.getCellByColumn(0, 'ID');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
+
         const dataCols = grid.columns.filter(x => !x.columnLayout);
         // tab thorugh all data cols and check cells are selected/focused.
         for (let i = 1; i < dataCols.length; i++) {
-           UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
-           await wait(100);
+           HelperFunctions.simulateCellKeydown(cell, 'Tab');
+           await wait();
+           zone.simulateOnStable();
            fix.detectChanges();
+
            cell = grid.getCellByColumn(0, order[i]);
            expect(cell.focused).toBe(true);
            expect(cell.visibleColumnIndex).toBe(i);
        }
-     }));
+     });
 
-     it('Shift+Tab Navigation should work in grid with horizontal virtualization.',  (async() => {
+     it('Shift+Tab Navigation should work in grid with horizontal virtualization.',  async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1059,28 +1042,34 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         grid.columnWidth = '300px';
         grid.width = '300px';
         fix.detectChanges();
+
         const forOfDir = grid.headerContainer;
         forOfDir.scrollTo(2);
-        await wait(200);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
+
         const dataCols = grid.columns.filter(x => !x.columnLayout);
         const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
          // focus last
          let cell = grid.getCellByColumn(0, 'PostalCode');
-         UIInteractions.clickElement(cell);
+         HelperFunctions.simulateCellClick(cell);
          fix.detectChanges();
+
          // shift+tab through all data cols and check cells are selected/focused.
-         for (let j = dataCols.length - 1; j >= 0; j--) {
-             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-             await wait(100);
+         for (let j = dataCols.length - 2; j >= 0; j--) {
+             HelperFunctions.simulateCellKeydown(cell, 'Tab', false, true);
+             await wait(DEBOUNCETIME);
+             zone.simulateOnStable();
              fix.detectChanges();
+
              cell = grid.getCellByColumn(0, order[j]);
              expect(cell.focused).toBe(true);
              expect(cell.visibleColumnIndex).toBe(j);
          }
-     }));
+     });
 
-     it('Shift+Tab Navigation should scroll last cell fully in view.',  async() => {
+     it('Shift+Tab Navigation should scroll last cell fully in view.',  async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1114,14 +1103,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st in 2nd row
         const cell = grid.getCellByColumn(1, 'ID');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // shift + tab
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(100);
+        HelperFunctions.simulateCellKeydown(cell, 'Tab', false, true);
+        await wait();
         fix.detectChanges();
+
         const lastCell = grid.getCellByColumn(0, 'ContactTitle');
         expect(lastCell.focused).toBe(true);
         expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(600);
@@ -1130,7 +1119,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(diff).toBe(0);
      });
 
-    it('should navigate using Arrow Left through bigger cell with same rowStart but bigger row span', async() => {
+    it('should navigate using Arrow Left through bigger cell with same rowStart but bigger row span', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1151,26 +1140,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [thirdCell, secondCell, firstCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
     });
 
-    it('should navigate using Arrow Left through bigger cell with smaller rowStart and bigger rowEnd', async() => {
+    it('should navigate using Arrow Left through bigger cell with smaller rowStart and bigger rowEnd', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1195,27 +1181,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             dummyCell,              firstCell
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowleft');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
     });
 
-    it('should navigate using Arrow Right through bigger cell with same rowStart but bigger row', async() => {
+    it('should navigate using Arrow Right through bigger cell with same rowStart but bigger row', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1236,26 +1218,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         let thirdCell;
         [firstCell, secondCell, thirdCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     });
 
-    it('should scroll focused cell fully in view when navigating with arrow keys and row is partially visible.', (async () => {
+    it('should scroll focused cell fully in view when navigating with arrow keys and row is partially visible.', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
         {
@@ -1291,12 +1270,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 3rd row, first cell
         let cell = grid.getCellByColumn(2, 'ContactName');
-        UIInteractions.clickElement(cell);
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // arrow down
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
-        await wait(DEBOUNCETIME * 2);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowdown');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1308,12 +1288,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st row, 2nd cell
         cell = grid.getCellByColumn(0, 'Phone');
-        UIInteractions.clickElement(cell);
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // arrow up
-        UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true);
-        await wait(DEBOUNCETIME * 2);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowup');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1325,12 +1306,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 3rd row, first cell
         cell = grid.getCellByColumn(2, 'ContactName');
-        UIInteractions.clickElement(cell);
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // arrow right
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        await wait(DEBOUNCETIME * 2);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowright');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1342,12 +1324,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st row, Address
         cell = grid.getCellByColumn(0, 'Address');
-        UIInteractions.clickElement(cell);
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // arrow left
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
-        await wait(DEBOUNCETIME * 2);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowleft');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused and is fully in view
@@ -1356,9 +1339,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
         expect(diff).toBe(0);
-    }));
+    });
 
-    it('should scroll focused cell fully in view when navigating with arrow keys and column is partially visible.', (async () => {
+    it('should scroll focused cell fully in view when navigating with arrow keys and column is partially visible.', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1381,12 +1364,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // focus 1st row, 2nd row cell
         let cell = grid.getCellByColumn(0, 'Phone');
-        UIInteractions.clickElement(cell);
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // arrow right
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowright');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused
@@ -1397,8 +1381,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(diff).toBe(0);
 
         // arrow left
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowleft');
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check next cell is focused
@@ -1407,7 +1392,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
-    }));
+    });
 
     it('should navigate using Arrow Right through bigger cell with smaller rowStart and bigger rowEnd', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -1434,26 +1419,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             firstCell,              dummyCell
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowright');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
     });
 
-    it('should navigate using Arrow Down through cell with same colStart but bigger colEnd', async() => {
+    it('should navigate using Arrow Down through cell with same colStart but bigger colEnd', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1480,37 +1462,32 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             dummyCell, thirdCell, dummyCell
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     });
 
-    it('should navigate using Arrow Down through cell with smaller colStart and bigger colEnd', async() => {
+    it('should navigate using Arrow Down through cell with smaller colStart and bigger colEnd', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1538,37 +1515,32 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             dummyCell, dummyCell, thirdCell
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
     });
 
-    it('should navigate using Arrow Up through cell with smaller colStart and bigger colEnd', async() => {
+    it('should navigate using Arrow Up through cell with smaller colStart and bigger colEnd', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1595,37 +1567,32 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             dummyCell, dummyCell,  firstCell
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', firstCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', thirdCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     });
 
-    it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', (async () => {
+    it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1647,30 +1614,27 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             thirdCell,
         ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(thirdCell);
-        await wait();
+        HelperFunctions.simulateCellClick(thirdCell.componentInstance);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', thirdCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(thirdCell.componentInstance, 'arrowdown', false, false, true);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value)
             .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
-        UIInteractions.triggerKeyDownWithBlur('arrowup', fix.componentInstance.selectedCell.nativeElement, true, false, false, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'arrowup', false, false, true);
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-    }));
+    });
 
-    it('should navigate correctly with column group is hidden.', (async () => {
+    it('should navigate correctly with column group is hidden.', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1709,46 +1673,40 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(2);
         // focus last
         let cell = grid.getCellByColumn(0, 'Address');
-        UIInteractions.clickElement(cell);
-        await wait();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
 
         // shift+tab
-        UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true, false, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'tab', false, true);
         fix.detectChanges();
         // check correct cell has focus
         cell = grid.getCellByColumn(0, 'ID');
         expect(cell.focused).toBe(true);
 
         // tab
-        UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'tab');
         fix.detectChanges();
         // check correct cell has focus
         cell = grid.getCellByColumn(0, 'Address');
         expect(cell.focused).toBe(true);
 
-
         // arrow left
-        UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(cell, 'arrowleft');
         fix.detectChanges();
 
         // check correct cell has focus
         cell = grid.getCellByColumn(0, 'ID');
         expect(cell.focused).toBe(true);
 
-        // arrow rigth
-        UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true);
-        await wait(DEBOUNCETIME);
+        // arrow right
+        HelperFunctions.simulateCellKeydown(cell, 'arrowright');
         fix.detectChanges();
 
         // check correct cell has focus
         expect(grid.getCellByColumn(0, 'Address').focused).toBe(true);
-    }));
+    });
 
-    it('should allow navigation through group rows with arrow keys starting from group row.', async () => {
+    it('should allow navigation through group rows with arrow keys starting from group row.', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1785,14 +1743,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
         fix.detectChanges();
 
-        let groupRow = grid.getRowByIndex(0);
-        groupRow.nativeElement.focus();
-        await wait();
-        fix.detectChanges();
+        let groupRow = (<any>grid.getRowByIndex(0)) as IgxGridGroupByRowComponent;
 
         // arrow down
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', groupRow.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'arrowdown');
         fix.detectChanges();
 
         // check first data cell is focused
@@ -1800,33 +1754,30 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(cell.focused).toBe(true);
 
         // arrow down
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'arrowdown');
         fix.detectChanges();
 
         // check next group row is focused
-        groupRow = grid.getRowByIndex(2);
+        groupRow = (<any>grid.getRowByIndex(2)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
 
         // arrow up
-        UIInteractions.triggerKeyDownWithBlur('arrowup', groupRow.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'arrowup');
         fix.detectChanges();
         // check prev cell is focused
         cell = grid.getCellByColumn(1, 'ID');
         expect(cell.focused).toBe(true);
 
         // arrow up
-        UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(cell, 'arrowup');
         fix.detectChanges();
 
         // check first group row is focused
-        groupRow = grid.getRowByIndex(0);
+        groupRow = (<any>grid.getRowByIndex(0)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
     });
 
-    it('should allow navigation through group rows with arrow keys starting from middle of grid row', async () => {
+    it('should allow navigation through group rows with arrow keys starting from middle of grid row', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1877,22 +1828,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             dummyCell  , dummyCell  ,
             dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-         firstCell.nativeElement.focus();
-        await wait();
+        firstCell.componentInstance.onFocus();
         fix.detectChanges();
 
          // arrow down
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'arrowdown');
         fix.detectChanges();
 
          // check next group row is focused
-        let groupRow = grid.getRowByIndex(2);
+        let groupRow = (<any>grid.getRowByIndex(2)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
 
          // arrow down
-        UIInteractions.triggerKeyDownWithBlur('arrowdown', groupRow.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'arrowdown');
         fix.detectChanges();
 
          // check first data cell is focused
@@ -1901,17 +1849,15 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(document.activeElement).toEqual(secondCell.nativeElement);
 
          // arrow up
-        UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'arrowup');
         fix.detectChanges();
 
          // check group row is focused
-        groupRow = grid.getRowByIndex(2);
+        groupRow = (<any>grid.getRowByIndex(2)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
 
          // arrow up
-        UIInteractions.triggerKeyDownWithBlur('arrowup', groupRow.nativeElement, true);
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'arrowup');
         fix.detectChanges();
 
          // check last cell in group 1 layout is focused
@@ -1920,7 +1866,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(document.activeElement).toEqual(firstCell.nativeElement);
     });
 
-    it('should allow navigation through group rows with Tab/Shift+Tab key', async () => {
+    it('should allow navigation through group rows with Tab/Shift+Tab key', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -1967,22 +1913,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             firstCell               ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
         [   secondCell  ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-         firstCell.nativeElement.focus();
-        await wait();
+        firstCell.componentInstance.onFocus();
         fix.detectChanges();
 
          // Tab
-        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false }));
-        await wait();
+        HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'Tab');
         fix.detectChanges();
 
          // check next group row is focused
-        let groupRow = grid.getRowByIndex(2);
+        let groupRow = (<any>grid.getRowByIndex(2)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
 
          // Tab
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: false }));
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'Tab');
         fix.detectChanges();
 
          // check first data cell is focused
@@ -1991,17 +1934,15 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(document.activeElement).toEqual(secondCell.nativeElement);
 
          // Shift + Tab
-        secondCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait();
+        HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'Tab', false, true);
         fix.detectChanges();
 
          // check group row is focused
-        groupRow = grid.getRowByIndex(2);
+        groupRow = (<any>grid.getRowByIndex(2)) as IgxGridGroupByRowComponent;
         expect(groupRow.focused).toBe(true);
 
          // Shift + Tab
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait();
+        HelperFunctions.simulateGroupRowKeydown(groupRow, 'Tab', false, true);
         fix.detectChanges();
 
          // check last cell in group 1 layout is focused
@@ -2009,7 +1950,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
         expect(document.activeElement).toEqual(firstCell.nativeElement);
     });
-
 
     it('tab navigation should follow correct sequence if a column is moved.', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -2053,11 +1993,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
         expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
         expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
-
     });
 
     it(`should navigate to the last cell from the layout by pressing Ctrl + ArrowLeft/ArrowRight key
-     in grid with horizontal virtualization`, async () => {
+     in grid with horizontal virtualization`, async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [{
             group: 'group1',
@@ -2091,13 +2030,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         let firstCell = grid.getCellByColumn(0, 'ID');
 
-        UIInteractions.clickElement(firstCell);
-        await wait();
+        HelperFunctions.simulateCellClick(firstCell);
         fix.detectChanges();
 
         // ctrl+arrow right
-        firstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(firstCell, 'ArrowRight', false, false, true);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // check correct cell is focused and is fully in view
@@ -2108,8 +2047,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         expect(diff).toBe(0);
 
         // ctrl+arrow left
-        lastCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
-        await wait(DEBOUNCETIME);
+        HelperFunctions.simulateCellKeydown(lastCell, 'ArrowLeft', false, false, true);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // first cell should be focused and is fully in view
@@ -2121,7 +2061,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     });
 
     describe('Pinning', () => {
-        it('should navigate from pinned to unpinned area and backwards', (async () => {
+        it('should navigate from pinned to unpinned area and backwards', async() => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
                 group: 'group1',
@@ -2143,26 +2083,25 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowLeft');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        }));
+        });
 
-        it('when navigating from pinned to unpinned area cell should be fully scrolled in view.', async () => {
+        it('when navigating from pinned to unpinned area cell should be fully scrolled in view.', async() => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
                 group: 'group1',
@@ -2200,19 +2139,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             // scroll right
             grid.headerContainer.getScroll().scrollLeft = 800;
-            await wait(DEBOUNCETIME);
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             // focus first pinned cell
             const firstCell = grid.getCellByColumn(0, 'ID');
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell);
             fix.detectChanges();
 
             // arrow right
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell, 'ArrowRight');
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             // check if first unpinned cell is focused and is in view
@@ -2223,19 +2163,20 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(diff).toBe(0);
 
             // arrow left
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', firstUnpinnedCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstUnpinnedCell, 'ArrowLeft');
             fix.detectChanges();
 
             expect(firstCell.focused).toBe(true);
 
             // scroll right
             grid.headerContainer.getScroll().scrollLeft = 800;
-            await wait(DEBOUNCETIME);
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('tab', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell, 'Tab');
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             firstUnpinnedCell = grid.getCellByColumn(0, 'ContactName');
@@ -2245,7 +2186,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(diff).toBe(0);
         });
 
-        it('should navigate to unpinned area when the column layout is bigger than the display container', (async () => {
+        it('should navigate to unpinned area when the column layout is bigger than the display container', async() => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
                 group: 'group1',
@@ -2268,26 +2209,25 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             fix.detectChanges();
             const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', fix.componentInstance.selectedCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowLeft');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        }));
+        });
 
-        it('should navigate from pinned to unpinned area and backwards using Home/End', (async () => {
+        it('should navigate from pinned to unpinned area and backwards using Home/End', async() => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
                 group: 'group1',
@@ -2309,26 +2249,25 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             fix.detectChanges();
             const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-            UIInteractions.clickElement(secondCell);
-            await wait();
+            HelperFunctions.simulateCellClick(secondCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('End', secondCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'End');
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-            UIInteractions.triggerKeyDownWithBlur('Home', fix.componentInstance.selectedCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'Home');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-        }));
+        });
 
-        it('should navigate from pinned to unpinned area and backwards using Ctrl+Left/Right', (async () => {
+        it('should navigate from pinned to unpinned area and backwards using Ctrl+Left/Right', async() => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [{
                 group: 'group1',
@@ -2350,25 +2289,23 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             fix.detectChanges();
             const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-            UIInteractions.clickElement(secondCell);
-            await wait();
+            HelperFunctions.simulateCellClick(secondCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowRight', false, false, true);
+            await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', fix.componentInstance.selectedCell.nativeElement, true,
-                false, false, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowLeft', false, false, true);
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-        }));
+        });
 
         it('tab navigation should follow correct sequence if a column is pinned runtime.', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
@@ -2411,7 +2348,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(grid.getCellByColumn(0, 'City').visibleColumnIndex).toBe(4);
             expect(grid.getCellByColumn(0, 'ContactTitle').visibleColumnIndex).toBe(5);
             expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(6);
-
         });
 
         it('should navigate to the last block with one pinned group and unpinned area has scrollbar', async() => {
@@ -2459,22 +2395,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
             fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
             await wait();
+            zone.simulateOnStable();
             fix.detectChanges();
 
-            UIInteractions.clickElement(firstCell);
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
+            fix.detectChanges();
+
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
             await wait();
-            fix.detectChanges();
-
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Phone);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
             expect(document.activeElement).toEqual(secondCell.nativeElement);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', secondCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowDown');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
@@ -2482,7 +2418,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(document.activeElement).toEqual(thirdCell.nativeElement);
         });
 
-        it('should navigate left from unpinned to pinned area when pinning second block in template', async() => {
+        it('should navigate left from unpinned to pinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2526,12 +2462,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 firstCell  , dummyCell  ,
                 dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowLeft');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -2539,7 +2473,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(document.activeElement).toEqual(secondCell.nativeElement);
         });
 
-        it('should navigate down to next row inside pinned area when pinning second block in template', async() => {
+        it('should navigate down to next row inside pinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2581,12 +2515,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             [   secondCell               ,
                 dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowDown');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].City);
@@ -2594,7 +2526,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(document.activeElement).toEqual(secondCell.nativeElement);
         });
 
-        it('should navigate down to next row inside unpinned area when pinning second block in template', async() => {
+        it('should navigate down to next row inside unpinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2638,12 +2570,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 dummyCell  , dummyCell  ,
                 dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowDown');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].CompanyName);
@@ -2651,7 +2581,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(document.activeElement).toEqual(secondCell.nativeElement);
         });
 
-        it('should navigate up to next row inside pinned area when pinning second block in template', async() => {
+        it('should navigate up to next row inside pinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2693,12 +2623,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             [   firstCell               ,
                 dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowUp');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Region);
@@ -2707,7 +2635,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
 
 
-        it('should navigate up to next row inside unpinned area when pinning second block in template', async() => {
+        it('should navigate up to next row inside unpinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2751,12 +2679,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 dummyCell  , dummyCell  ,
                 dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowUp');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Address);
@@ -2764,7 +2690,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             expect(document.activeElement).toEqual(secondCell.nativeElement);
         });
 
-        it('should navigate up to next row inside unpinned area when pinning second block in template', async() => {
+        it('should navigate up to next row inside unpinned area when pinning second block in template', () => {
             const fix = TestBed.createComponent(ColumnLayoutTestComponent);
             fix.componentInstance.colGroups = [
                 {
@@ -2811,12 +2737,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 secondCell,
                 dummyCell   ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-            UIInteractions.clickElement(firstCell);
-            await wait();
+            HelperFunctions.simulateCellClick(firstCell.componentInstance);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
@@ -2825,7 +2749,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
     });
 
-    it('shift+tab navigation should go through edit row buttons when navigating in row edit mode. ', async () => {
+    it('shift+tab navigation should go through edit row buttons when navigating in row edit mode. ', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
             {
@@ -2864,14 +2788,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix.detectChanges();
         targetCell.onKeydownEnterEditMode();
         fix.detectChanges();
-        await wait(100);
 
         const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
         const doneButtonElement = rowEditingBannerElement.lastElementChild;
         const cancelButtonElement = rowEditingBannerElement.firstElementChild;
 
         // shift+tab into Done button
-        UIInteractions.triggerKeyDownWithBlur('tab', targetCell.nativeElement, true, false, true);
+        HelperFunctions.simulateCellKeydown(targetCell, 'Tab', false, true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(doneButtonElement);
 
@@ -2881,14 +2804,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // shift+ tab into last cell
         UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
-        await wait(100);
         fix.detectChanges();
 
         targetCell = grid.getCellByColumn(0, 'PostalCode');
         expect(targetCell.focused).toBe(true);
     });
 
-    it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', async () => {
+    it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
             {
@@ -2923,32 +2845,33 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix.detectChanges();
 
         let cell = grid.getCellByColumn(0, 'CompanyName');
-        cell.nativeElement.focus();
+        HelperFunctions.simulateCellClick(cell);
         fix.detectChanges();
+
         cell.onKeydownEnterEditMode();
-        await wait(DEBOUNCETIME);
         fix.detectChanges();
+
         const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];
         // tab through cols and check order is correct - ContactName should be skipped.
         for (let i = 1; i < order.length; i++) {
-            UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(cell, 'Tab');
             fix.detectChanges();
+
             cell = grid.getCellByColumn(0, order[i]);
             expect(cell.editMode).toBe(true);
         }
 
         // shift+tab through  cols and check order is correct - ContactName should be skipped.
         for (let j = order.length - 2; j >= 0; j--) {
-            UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true, false, true);
-            await wait(DEBOUNCETIME);
+            HelperFunctions.simulateCellKeydown(cell, 'Tab', false, true);
             fix.detectChanges();
+
             cell = grid.getCellByColumn(0, order[j]);
             expect(cell.editMode).toBe(true);
         }
     });
 
-    it('Shift + tab navigation should scroll to the appropriate cell', async () => {
+    it('Shift + tab navigation should scroll to the appropriate cell', async() => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);
         fix.componentInstance.colGroups = [
             {
@@ -2984,12 +2907,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         const firstRowCells = rows[1].queryAll(By.css(CELL_CSS_CLASS));
         const secondRowCells = rows[2].queryAll(By.css(CELL_CSS_CLASS));
 
-        UIInteractions.clickElement(secondRowCells[0]);
-        await wait();
+        HelperFunctions.simulateCellClick(secondRowCells[0].componentInstance);
         fix.detectChanges();
 
-        UIInteractions.triggerKeyDownWithBlur('tab', secondRowCells[0].nativeElement, true, false, true);
-        await wait(100);
+        HelperFunctions.simulateCellKeydown(secondRowCells[0].componentInstance, 'Tab', false, true);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
@@ -3035,9 +2958,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // navigate down to cell in a row that is in the DOM but is not in view (half-visible row)
         let col = grid.getColumnByName('ContactTitle');
         grid.navigateTo(2, col.visibleIndex);
-
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
+
         // cell should be at bottom of grid
         let cell =  grid.getCellByColumn(2, 'ContactTitle');
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
@@ -3048,8 +2972,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // navigate up to cell in a row that is in the DOM but is not in view (half-visible row)
         col = grid.getColumnByName('CompanyName');
         grid.navigateTo(0, col.visibleIndex);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
+
         // cell should be at top of grid
         cell =  grid.getCellByColumn(0, 'CompanyName');
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
@@ -3059,8 +2985,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // navigate to cell in a row is not in the DOM
         col = grid.getColumnByName('CompanyName');
         grid.navigateTo(10, col.visibleIndex);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
+
         // cell should be at bottom of grid
         cell =  grid.getCellByColumn(10, 'CompanyName');
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50 * 10);
@@ -3071,9 +2999,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // navigate right to cell in column that is in DOM but is not in view
         col = grid.getColumnByName('City');
         grid.navigateTo(10, col.visibleIndex);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // cell should be at right edge of grid
@@ -3086,9 +3016,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // navigate left to cell in column that is in DOM but is not in view
         col = grid.getColumnByName('CompanyName');
         grid.navigateTo(10, col.visibleIndex);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
 
         // cell should be at left edge of grid
@@ -3102,9 +3034,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         col = grid.getColumnByName('ID');
         grid.navigateTo(9, col.visibleIndex);
-        await wait(DEBOUNCETIME);
+        await wait();
+        zone.simulateOnStable();
         fix.detectChanges();
-        await wait(DEBOUNCETIME);
+        zone.simulateOnStable();
+        await wait();
         fix.detectChanges();
 
         // cell should be at right edge of grid
@@ -3113,7 +3047,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // check if cell right right is visible
         diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
-
     });
 });
 
@@ -3148,5 +3081,38 @@ export class ColumnLayoutTestComponent {
 
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
+    }
+}
+
+class HelperFunctions {
+    public static simulateCellClick(cellElement: IgxGridCellComponent) {
+        cellElement.pointerdown(new PointerEvent('pointerdown'));
+        cellElement.onFocus(new MouseEvent('focus'));
+        cellElement.pointerup(new PointerEvent('pointerup'));
+        cellElement.onClick(new MouseEvent('click'));
+    }
+
+    public static simulateCellKeydown(cellElement: IgxGridCellComponent, keyName: string,
+                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        cellElement.dispatchEvent(keyboardEvent);
+        cellElement.onBlur();
+    }
+
+    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
+                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        rowComp.onKeydown(keyboardEvent);
+        rowComp.onBlur();
     }
 }
