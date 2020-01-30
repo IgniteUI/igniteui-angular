@@ -514,7 +514,7 @@
     $raised-shadow: map-get((
         material: --var($theme, 'raised-resting-shadow'),
         fluent: --var($theme, 'raised-resting-shadow'),
-        bootstrap: --var($theme, 'raised-resting-shadow')
+        bootstrap: none
     ), $variant);
 
     $raised-shadow--focus: map-get((
@@ -526,7 +526,7 @@
     $raised-shadow--hover: map-get((
         material: --var($theme, 'raised-hover-shadow'),
         fluent: --var($theme, 'raised-hover-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
+        bootstrap: none
     ), $variant);
 
     $outlined-shadow: map-get((
@@ -538,13 +538,13 @@
     $fab-shadow: map-get((
         material: --var($theme, 'fab-resting-shadow'),
         fluent: --var($theme, 'fab-resting-shadow'),
-        bootstrap: --var($theme, 'fab-resting-shadow')
+        bootstrap: none
     ), $variant);
 
     $fab-shadow--hover: map-get((
         material: --var($theme, 'fab-hover-shadow'),
         fluent: --var($theme, 'fab-hover-shadow'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+        bootstrap: none
     ), $variant);
 
     $fab-shadow--focus: map-get((
@@ -728,7 +728,7 @@
         &:active {
             color: --var($theme, 'fab-focus-text-color');
             background: --var($theme, 'fab-focus-background');
-            box-shadow: $fab-shadow;
+            box-shadow: $fab-shadow--focus;
         }
     }
 
