@@ -153,7 +153,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 
     | Name | Description | Type | Default value | Valid values |
     | ---- | ----------- | ---- | ------------- | ------------ |
-    | hierarchicalState | An array of record identifiers with expand state that differs from the default.                 | `Array<any>` | `[]` | |
+    | expansionStates | Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.                 | `Map<any, boolean>` | `new Map<any,boolean>()` | |
 
 - `IgxHierarchicalGrid` extends `IgxHierarchicalGridBaseDirective`
 
