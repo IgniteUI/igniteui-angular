@@ -351,7 +351,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
         }
-        if (this.platformUtil.isBrowser) {
+        if (this._resizeObserver) {
             this._ngZone.runOutsideAngular(() => {
                 this._resizeObserver.disconnect();
             });
