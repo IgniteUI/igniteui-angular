@@ -568,7 +568,8 @@
     $surface: igx-color($palette, 'surface');
 
     @include igx-typography(
-        $font-family: '"Helvetica Neue", Arial, sans-serif',
+        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+        $type-scale: $bootstrap-type-scale,
         $base-color: #212529
     );
 
@@ -604,6 +605,7 @@
 
     @include igx-typography(
         $font-family: '"Helvetica Neue", Arial, sans-serif',
+        $type-scale: $bootstrap-type-scale,
         $base-color: #fff
     );
 

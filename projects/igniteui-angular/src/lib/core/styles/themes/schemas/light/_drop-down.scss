@@ -25,6 +25,8 @@
 /// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
 /// @prop {Map} disabled-item-text-color [igx-color: 'surface', text-contrast: (), rgba: .38] - The drop-down disabled item text color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
+/// @prop {Number} $border-width [0] - The border width used for drop-down component.
+/// @prop {Map} $border-color [igx-color: ('grays', 300)] - The border color used for drop-down component.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
 ///
 /// @requires {function} extend
@@ -104,6 +106,12 @@ $_light-drop-down: extend(
             text-contrast: (),
             rgba: .38
         ),
+
+        border-color: (
+            igx-color: ('grays', 300),
+        ),
+
+        border-width: 0
     )
 );
 
@@ -170,6 +178,7 @@ $_fluent-drop-down: extend(
 /// @prop {Color} selected-focus-item-text-color [#fff] - The drop-down selected item focus text color.
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [4px] - The border radius used for drop-down component.
+/// @prop {Number} $border-width [1px] - The border width used for drop-down component.
 
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
@@ -212,6 +221,8 @@ $_bootstrap-drop-down: extend(
         ),
 
         selected-focus-item-text-color: #fff,
+
+        border-width: 1px
     )
 );
 

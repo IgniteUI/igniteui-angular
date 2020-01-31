@@ -33,6 +33,8 @@
 /// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the drop-down.
 ///
+/// @param {Number} $border-width [null] - The border width used for drop-down component.
+/// @param {Color} $border-color [null] - The border color used for drop-down component.
 /// @param {border-radius} $border-radius [null] - The border radius used for drop-down component.
 ///
 /// @requires $default-palette
@@ -72,6 +74,8 @@
 
     $disabled-item-background: null,
     $disabled-item-text-color: null,
+    $border-color: null,
+    $border-width: null,
     $shadow: null
 ) {
     $name: 'igx-drop-down';
@@ -178,6 +182,8 @@
         disabled-item-background: $disabled-item-background,
         disabled-item-text-color: $disabled-item-text-color,
         shadow: $shadow,
+        border-color: $border-color,
+        border-width: $border-width
     ));
 }
 
@@ -216,6 +222,7 @@
         background: --var($theme, 'background-color');
         box-shadow: --var($theme, 'shadow');
         min-width: rem(128px);
+        border: --var($theme, 'border-width') solid --var($theme, 'border-color');
     }
 
     %igx-drop-down__list-scroll {
