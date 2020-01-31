@@ -112,9 +112,9 @@ $_light-list: extend(
 
         item-thumbnail-color-active: currentColor,
 
-        list-border-color: transparent,
+        border-color: transparent,
 
-        list-border-width: 0,
+        border-width: 0,
     )
 );
 
@@ -125,8 +125,8 @@ $_light-list: extend(
 $_fluent-list: extend(
     $_light-list,
     (
-        list-border-color: transparent,
-        list-border-width: 0,
+        border-color: transparent,
+        border-width: 0,
     )
 );
 
@@ -144,9 +144,9 @@ $_bootstrap-list: extend(
     (
         variant: 'bootstrap',
 
-        list-border-width: rem(1px),
+        border-width: rem(1px),
 
-        list-border-color: (
+        border-color: (
             igx-color: ('grays', 300)
         ),
 

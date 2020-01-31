@@ -39,8 +39,8 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for list component.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
 ///
-/// @param {Color} $list-border-width [null] - The list border width.
-/// @param {Number} $list-border-color [null] - The list border color.
+/// @param {Color} $border-width [null] - The list border width.
+/// @param {Number} $border-color [null] - The list border color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -81,8 +81,8 @@
     $item-thumbnail-color: null,
     $item-thumbnail-color-hover: null,
     $item-thumbnail-color-active: null,
-    $list-border-color: null,
-    $list-border-width: null,
+    $border-color: null,
+    $border-width: null,
 ) {
     $name: 'igx-list';
     $list-schema: ();
@@ -237,8 +237,8 @@
         item-thumbnail-color: $item-thumbnail-color,
         item-thumbnail-color-hover: $item-thumbnail-color-hover,
         item-thumbnail-color-active: $item-thumbnail-color-active,
-        list-border-color: $list-border-color,
-        list-border-width: $list-border-width,
+        border-color: $border-color,
+        border-width: $border-width,
     ));
 }
 
@@ -301,7 +301,7 @@
         border-radius: --var($theme, 'border-radius');
 
         @if $bootstrap-theme {
-            border: --var($theme, 'list-border-width') solid --var($theme, 'list-border-color');
+            border: --var($theme, 'border-width') solid --var($theme, 'border-color');
         }
     }
 
