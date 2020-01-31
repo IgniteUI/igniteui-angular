@@ -1637,6 +1637,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             ]
         }];
         fix.detectChanges();
+        await wait(DEBOUNCETIME * 2);
 
         let firstCell;
         let secondCell;

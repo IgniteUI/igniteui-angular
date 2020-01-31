@@ -82,7 +82,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Input()
     set expandChildren(value: boolean) {
-        this._expandChildren = value;
+        this._defaultExpandState  = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
             if (document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
@@ -103,7 +103,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     get expandChildren(): boolean {
-        return this._expandChildren;
+        return this._defaultExpandState;
     }
 
     /**
