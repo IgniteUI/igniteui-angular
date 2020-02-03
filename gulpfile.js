@@ -13,7 +13,6 @@ const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
-const sassdocGulp = require('igniteui-sassdoc-theme/gulpfile');
 const { series } = require('gulp');
 const {spawnSync} = require('child_process');
 const slash = require('slash');
@@ -233,8 +232,6 @@ const sassdocCleanOutputDir = (cb) => {
     cb();
 }
 
-module.exports.sassdocDevMode = sassdocGulp.develop;
-
 function sassdocBuildJson(cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
@@ -323,5 +320,5 @@ module.exports.typedocBuildDocsEN = series(
 module.exports.sassdocCleanOutputDir = sassdocCleanOutputDir;
 module.exports.sassdocImportJson = sassdocImportJson;
 module.exports.sassdocBuildJson = sassdocBuildJson;
-module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildJA);
-module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildEN);
+module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocBuildJA);
+module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocBuildEN);

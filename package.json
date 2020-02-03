@@ -28,7 +28,6 @@
     "build:docs": "sassdoc projects/igniteui-angular/src/lib/core/styles && gulp typedocBuildTheme",
     "lint:lib": "tslint 'projects/igniteui-angular/src/**/*.ts' && stylelint 'projects/igniteui-angular/src/lib/core/styles'",
     "typedoc:dev": "gulp typedocServe",
-    "sassdoc:dev": "gulp sassdocDevMode --output ./dist/igniteui-angular/docs/sass --project ./projects/igniteui-angular/src/lib/core/styles/",
     "typedoc-build:export": "gulp exportTypedocJson ",
     "typedoc-build:import": "gulp importTypedocJson",
     "sassdoc-build:export": "gulp sassdocBuildJson --convert true --exportDir ./extras/sassdoc && gulp sassdocCleanOutputDir",
