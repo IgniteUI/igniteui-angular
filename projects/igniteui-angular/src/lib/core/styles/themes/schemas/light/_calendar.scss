@@ -43,7 +43,8 @@
 /// @prop {Map} date-disabled-background [igx-color: ('grays', 100)] - The background color for disabled dates.
 ///
 ///
-/// @prop {Color} border-color [igx-color: ('grays', 300)] - The calendar border color.
+/// @prop {Color} picker-background-color [transparent] - The igx calendar picker background color.
+/// @prop {Map} border-color [igx-color: ('grays', 300)] - The calendar border color.
 ///
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
@@ -229,7 +230,7 @@ $_fluent-calendar: extend(
 /// @prop {Map} picker-arrow-hover-color [igx-color: ('primary', 800)] - The picker hover arrow color.
 /// @prop {Color} picker-text-color [#000]- The idle picker month/year color.
 ///
-/// @prop {Color} picker-background-color [igx-color: ('grays', 100)] - The igx calendar picker background color.
+/// @prop {Map} picker-background-color [igx-color: ('grays', 100)] - The igx calendar picker background color.
 ///
 /// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
 /// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
