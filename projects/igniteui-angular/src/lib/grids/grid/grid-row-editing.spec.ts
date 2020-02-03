@@ -283,12 +283,11 @@ describe('IgxGrid - Row Editing #grid', () => {
         it('Should properly exit pending state when committing row edit w/o changes', fakeAsync(() => {
             const initialDataLength = grid.data.length;
             const productNameCell = fix.debugElement.queryAll(By.css(CELL_CLASS))[2];
-            const enterEvent = { key: 'enter', stopPropagation: () => { }, preventDefault: () => { } };
-            productNameCell.triggerEventHandler('keydown', enterEvent);
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', productNameCell);
             tick(16);
             fix.detectChanges();
             expect(grid.getCellByKey(1, 'ProductName').editMode).toBeTruthy();
-            productNameCell.triggerEventHandler('keydown', enterEvent);
+            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', productNameCell);
             tick(16);
             fix.detectChanges();
             expect(grid.getCellByKey(1, 'ProductName').editMode).toBeFalsy();

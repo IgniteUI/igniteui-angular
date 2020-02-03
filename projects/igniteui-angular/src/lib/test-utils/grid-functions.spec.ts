@@ -111,40 +111,6 @@ export class GridFunctions {
         vScrollbar.scrollTop = newTop;
     }
 
-    public static navigateVerticallyToIndex = (
-        grid: IgxGridComponent,
-        rowStartIndex: number,
-        rowEndIndex: number,
-        colIndex?: number,
-        shift = false) => new Promise(async (resolve, reject) => {
-            const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
-            const row = grid.getRowByIndex(rowStartIndex);
-            const cIndx = colIndex || 0;
-            const colKey = grid.columnList.toArray()[cIndx].field;
-            const nextIndex = dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
-            let elem;
-            if (row) {
-                elem = row instanceof IgxGridGroupByRowComponent ?
-                    row : grid.getCellByColumn(row.index, colKey);
-            } else {
-                const summariRow = grid.summariesRowList.find(s => s.index === rowStartIndex);
-                if (summariRow) {
-                    elem = summariRow.summaryCells.find(cell => cell.visibleColumnIndex === cIndx);
-                }
-            }
-
-            if (rowStartIndex === rowEndIndex) {
-                resolve();
-                return;
-            }
-
-            UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
-            await wait(40);
-
-            GridFunctions.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
-                .then(() => { resolve(); });
-        })
-
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
         cell: IgxGridCellComponent,
@@ -226,37 +192,6 @@ export class GridFunctions {
         expect(groupRow.focused).toBe(focused);
         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
-
-    public static expandCollapceGroupRow =
-        (fix, groupRow: IgxGridGroupByRowComponent,
-            cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', groupRow.nativeElement, true, true);
-                await wait(300);
-                fix.detectChanges();
-
-                expect(groupRow.expanded).toBe(false);
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowright', groupRow.nativeElement, true, true);
-                await wait(100);
-                fix.detectChanges();
-
-                expect(groupRow.expanded).toBe(true);
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                resolve();
-            })
 
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
@@ -660,7 +595,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+        UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
         fix.detectChanges();
     }
 
@@ -693,7 +628,8 @@ export class GridFunctions {
     public static submitFilterRowInput(fix) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+
+        UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
         fix.detectChanges();
     }
 

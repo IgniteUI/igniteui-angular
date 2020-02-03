@@ -9,20 +9,7 @@ declare var Touch: {
     new(prop): Touch;
 };
 export class UIInteractions {
-    public static enterEvent = { key: 'Enter', stopPropagation: () => { }, preventDefault: () => { } };
-    public static spaceEvent = { key: ' ', stopPropagation: () => { }, preventDefault: () => { }, stopImmediatePropagation: () => { } };
-    public static tabEvent = { key: 'Tab', stopPropagation: () => { }, preventDefault: () => { } };
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
-    public static arrowDownEvent = { key: 'ArrowDown', stopPropagation: () => { }, preventDefault: () => { } };
-    public static altAndArrowDownEvent = { key: 'ArrowDown', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
-
-    public static enterEvent = { key: 'Enter', stopPropagation: () => { }, preventDefault: () => { } };
-    public static spaceEvent = { key: ' ', stopPropagation: () => { }, preventDefault: () => { }, stopImmediatePropagation: () => { } };
-    public static tabEvent = { key: 'Tab', stopPropagation: () => { }, preventDefault: () => { } };
-    public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
-    public static arrowDownEvent = { key: 'ArrowDown', stopPropagation: () => { }, preventDefault: () => { } };
-    public static altAndArrowDownEvent = { key: 'ArrowDown', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
-
 
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
