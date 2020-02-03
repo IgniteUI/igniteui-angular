@@ -13,7 +13,6 @@ const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
-const typedocGulp = require('igniteui-typedoc-theme/gulpfile');
 const sassdocGulp = require('igniteui-sassdoc-theme/gulpfile');
 const { series } = require('gulp');
 const {spawnSync} = require('child_process');
@@ -136,10 +135,10 @@ module.exports.copySchematics = (cb) => {
     cb();
 };
 
-const typedocBuildTheme = series(typedocGulp.typedocBuild, (cb) => {
+const typedocBuildTheme = (cb) => {
     spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
     cb();
-});
+};
 typedocBuildTheme.displayName = 'typedoc-build:theme';
 
 const browserReload = (cb) => {
@@ -167,7 +166,7 @@ function typedocWatchFunc(cb) {
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
         slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
-      ], series(typedocGulp.typedocBuild, typedocBuildTheme, browserReload));
+      ], series(typedocBuildTheme, browserReload));
 
       cb();
 }
@@ -301,20 +300,18 @@ module.exports.createDocsOutputDir = createDocsOutputDirFn;
 module.exports.exportTypedocJson = typedocBuildExportFn;
 module.exports.cleanTypedocOutputDir = cleanTypedocOutputDirFn;
 module.exports.typedocBuildTheme = typedocBuildTheme;
-module.exports.importTypedocJson = series(typedocGulp.typedocBuild, typedocImportJsonFn);
+module.exports.importTypedocJson = typedocImportJsonFn;
 module.exports.typedocServe = series(
     typedocBuildTheme,
     typedocWatchFunc,
     typedocServe
 );
 module.exports.typedocBuildDocsJA = series(
-    typedocGulp.typedocBuild,
     this.createDocsOutputDir,
     this.cleanTypedocOutputDir,
     typedocBuildDocsJA
 );
 module.exports.typedocBuildDocsEN = series(
-    typedocGulp.typedocBuild,
     this.createDocsOutputDir,
     this.cleanTypedocOutputDir,
     typedocBuildDocsEN
