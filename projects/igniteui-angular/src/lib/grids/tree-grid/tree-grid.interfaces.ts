@@ -9,10 +9,3 @@ export interface ITreeGridRecord {
     isFilteredOutParent?: boolean;
     expanded?: boolean;
 }
-
-export interface IRowToggleEventArgs extends IBaseEventArgs {
-    rowID: any;
-    expanded: boolean;
-    event?: Event;
-    cancel: boolean;
-}
