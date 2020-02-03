@@ -91,8 +91,6 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     */
     public childRow: IgxChildGridRowComponent;
 
-    protected _expandChildren = false;
-
     /**
      * @hidden
      * @internal

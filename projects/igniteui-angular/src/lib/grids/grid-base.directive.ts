@@ -121,7 +121,8 @@ import {
     IGridClipboardEvent,
     IGridToolbarExportEventArgs,
     ISearchInfo,
-    ICellPosition
+    ICellPosition,
+    IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -1671,6 +1672,34 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
+
+    /**
+     * Emitted when the expanded state of a row gets changed.
+     * ```typescript
+     * rowToggle(event: IRowToggleEventArgs){
+     *  // the id of the row
+     *  const rowID = event.rowID;
+     *  // the new expansion state
+     *  const newExpandedState = event.expanded;
+     *  // the original event that triggered onRowToggle
+     *  const originalEvent = event.event;
+     *  // whether the event should be cancelled
+     *  event.cancel = true;
+     * }
+     * ```
+     * ```html
+     * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
+
+    /**
      * @hidden
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -2825,7 +2854,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
     protected _loadingId;
-
+    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+    protected _defaultExpandState = false;
     // Caches
     private _totalWidth = NaN;
     private _pinnedVisible = [];
@@ -3324,6 +3354,112 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         col.hidden = args.newValue;
         this.onColumnVisibilityChanged.emit(args);
+    }
+
+    /**
+     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
+     * ```typescript
+     * const expansionStates = this.grid.expansionStates;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get expansionStates() {
+        return this._expansionStates;
+    }
+
+     /**
+     * Sets a list of key-value pairs [row ID, expansion state].
+     * ```typescript
+     * const states = new Map<any, boolean>();
+     * states.set(1, true);
+     * this.grid.expansionStates = states;
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
+     * <ng-template igxGridDetail let-dataItem>
+     * <div *ngIf="dataItem.Category">
+     *  <header>{{dataItem.Category?.CategoryName}}</header>
+     * <span>{{dataItem.Category?.Description}}</span>
+     * </div>
+     * </ng-template>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    public set expansionStates(value) {
+        this._expansionStates = new Map<any, boolean>(value);
+        this.expansionStatesChange.emit(this._expansionStates);
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+            this._focusActiveCell();
+        }
+    }
+
+   /**
+     * Expands all rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public expandAll() {
+        this._defaultExpandState = true;
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+   /**
+     * Collapses all rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public collapseAll() {
+        this._defaultExpandState = false;
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+    /**
+     * Expands the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.expandRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    public expandRow(rowID: any) {
+        this.gridAPI.set_row_expansion_state(rowID, true);
+    }
+
+    /**
+     * Collapses the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.collapseRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public collapseRow(rowID: any) {
+        this.gridAPI.set_row_expansion_state(rowID, false);
+    }
+
+
+    /**
+     * Toggles the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.toggleRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public toggleRow(rowID: any) {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const state = this.gridAPI.get_row_expansion_state(rec);
+        this.gridAPI.set_row_expansion_state(rowID, !state);
+    }
+
+    public getDefaultExpandState(rec: any) {
+        return this._defaultExpandState;
     }
 
     /**

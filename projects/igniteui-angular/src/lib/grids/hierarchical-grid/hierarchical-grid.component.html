@@ -86,7 +86,7 @@
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
+        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -178,7 +178,7 @@
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' [isActive]='true' fontSet="material">unfold_less</igx-icon>
+    <igx-icon role="button" [isActive]='hasExpandedRecords() && hasExpandableChildren' fontSet="material">unfold_less</igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
