@@ -528,8 +528,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.verticalScrollContainer.addScrollTop(5000);
-
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(101, '2');
@@ -538,7 +537,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('home', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, '0');
@@ -551,7 +550,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('end', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(499, '49');
