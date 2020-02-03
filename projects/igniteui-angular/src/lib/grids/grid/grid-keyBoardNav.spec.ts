@@ -813,7 +813,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', grid.groupsRowList.last.nativeElement, true);
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(groupRowIndex + 1, 'Downloads');
