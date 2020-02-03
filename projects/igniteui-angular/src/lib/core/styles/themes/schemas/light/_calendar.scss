@@ -42,6 +42,9 @@
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Map} date-disabled-background [igx-color: ('grays', 100)] - The background color for disabled dates.
 ///
+///
+/// @prop {Color} border-color [igx-color: ('grays', 300)] - The calendar border color.
+///
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
@@ -54,6 +57,14 @@ $_light-calendar: extend(
         variant: 'material',
         content-background: (
             igx-color: 'surface'
+        ),
+
+        picker-background-color: (
+            igx-color: 'surface'
+        ),
+
+        border-color: (
+            igx-color: ('grays', 300)
         ),
 
         content-text-color: (
@@ -218,8 +229,7 @@ $_fluent-calendar: extend(
 /// @prop {Map} picker-arrow-hover-color [igx-color: ('primary', 800)] - The picker hover arrow color.
 /// @prop {Color} picker-text-color [#000]- The idle picker month/year color.
 ///
-/// @prop {Color} picker-background-color [igx-color: ('grays', 100)] - The igx calendar picker background color (bootstrap theme only!).
-/// @prop {Color} border-color [igx-color: ('grays', 300)] - The calendar border color (bootstrap theme only!).
+/// @prop {Color} picker-background-color [igx-color: ('grays', 100)] - The igx calendar picker background color.
 ///
 /// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
 /// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
@@ -244,6 +254,10 @@ $_bootstrap-calendar: extend(
     $_bootstrap-shape-calendar,
     (
         variant: 'bootstrap',
+
+        picker-background-color: (
+            igx-color: ('grays', 100)
+        ),
 
         year-hover-text-color: (
             igx-color: ('primary', 500)
@@ -275,14 +289,6 @@ $_bootstrap-calendar: extend(
         ),
 
         picker-text-color: #000,
-
-        picker-background-color: (
-            igx-color: ('grays', 100)
-        ),
-
-        border-color: (
-            igx-color: ('grays', 300)
-        ),
 
         year-current-text-color: (
             igx-color: ('primary', 500)

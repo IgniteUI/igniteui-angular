@@ -18,8 +18,8 @@
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
 ///
-/// @param {Color} $picker-background-color [null] - The igx-calendar-picker background color (bootstrap theme only!).
-/// @param {Color} $border-color [null] - The calendar border color (bootstrap theme only!).
+/// @param {Color} $picker-background-color [null] - The igx-calendar-picker background color.
+/// @param {Color} $border-color [null] - The calendar border color.
 ///
 /// @param {Color} $header-background [null] - The header background color.
 /// @param {Color} $header-text-color [null] - The header text color.
@@ -115,6 +115,7 @@
     $date-disabled-text-color: null,
     $date-disabled-background: null,
     $border-color: null,
+    $border-width: null,
     $picker-background-color: null,
     $label-color: null
 ) {
@@ -271,6 +272,7 @@
 
         border-color: $border-color,
         picker-background-color: $picker-background-color,
+        border-width: $border-width,
 
         picker-arrow-color: $picker-arrow-color,
         picker-arrow-hover-color: $picker-arrow-hover-color,
@@ -334,6 +336,12 @@
         bootstrap: em(32px),
     ), $variant);
 
+    $border-width: map-get((
+        material: 0,
+        fluent: 0,
+        bootstrap: 1px
+    ), $variant);
+
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
     $cal-value-fw: 600;
@@ -371,9 +379,7 @@
         outline: none;
         border-radius: --var($theme, 'border-radius');
 
-        @if $bootstrap-theme {
-            border: 1px solid --var($theme, 'border-color');
-        }
+        border: $border-width solid --var($theme, 'border-color');
 
         %cal-display {
             @if $bootstrap-theme {
@@ -468,9 +474,10 @@
         height: em(56px);
         align-items: center;
         padding-bottom: $cal-picker-padding;
+        background: --var($theme, 'picker-background-color');
+
         @if $bootstrap-theme {
             height: auto;
-            background: --var($theme, 'picker-background-color');
             padding-top: $cal-picker-padding;
         }
         position: relative;
