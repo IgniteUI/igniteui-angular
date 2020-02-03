@@ -559,14 +559,10 @@
     $thumb-label: map-get($categories, 'thumb-label');
 
     %igx-thumb-label {
-        @include igx-type-style($type-scale, $thumb-label) {
-            margin: 0;
-        }
+        @include igx-type-style($type-scale, $thumb-label)
     }
 
     %igx-slider__tick-label {
-        @include igx-type-style($type-scale, $ticks-label) {
-            margin: 0;
-        }
+        @include igx-type-style($type-scale, $ticks-label)
     }
 }
