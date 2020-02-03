@@ -293,7 +293,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            UIInteractions.triggerEventHandlerKeyDown('tab', prefix);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', prefix);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
@@ -980,7 +980,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
             expect(input.componentInstance.value).toEqual('a');
 
-            UIInteractions.triggerEventHandlerKeyDown('enter', input);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             fix.detectChanges();
 
             // Check focus is kept and chips is no longer selected.
@@ -1298,7 +1298,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
-            UIInteractions.triggerEventHandlerKeyDown('arrowdown', input, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input, true);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
@@ -1347,7 +1347,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset, false);
 
             // submit the input with empty value
-            UIInteractions.triggerEventHandlerKeyDown('enter', input);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             tick(50);
             fix.detectChanges();
 
@@ -1622,7 +1622,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the commit icon.
             const inputCommitIcon = GridFunctions.getFilterRowInputCommitIcon(fix);
-            UIInteractions.triggerEventHandlerKeyDown('enter', inputCommitIcon);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', inputCommitIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1644,7 +1644,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the clear icon.
             const inputClearIcon = GridFunctions.getFilterRowInputClearIcon(fix);
-            UIInteractions.triggerEventHandlerKeyDown('enter', inputClearIcon);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', inputClearIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1658,7 +1658,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
             const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            UIInteractions.triggerEventHandlerKeyDown('enter', filterCellChip);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', filterCellChip);
             tick(200);
             fix.detectChanges();
 

@@ -595,7 +595,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        UIInteractions.triggerEventHandlerKeyDown('enter', input);
+        UIInteractions.triggerEventHandlerKeyDown('Enter', input);
         fix.detectChanges();
     }
 
