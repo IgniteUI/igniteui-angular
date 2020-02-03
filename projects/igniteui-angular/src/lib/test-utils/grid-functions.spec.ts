@@ -595,7 +595,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
+        UIInteractions.triggerEventHandlerKeyDown('enter', input);
         fix.detectChanges();
     }
 
@@ -629,7 +629,7 @@ export class GridFunctions {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
 
-        UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
+        UIInteractions.triggerEventHandlerKeyDown('enter', input);
         fix.detectChanges();
     }
 

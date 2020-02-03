@@ -283,22 +283,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur(' ', prefix);
+            UIInteractions.triggerEventHandlerKeyDown(' ', prefix);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Enter', input);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', prefix);
+            UIInteractions.triggerEventHandlerKeyDown('tab', prefix);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur(' ', input);
+            UIInteractions.triggerEventHandlerKeyDown(' ', input);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
@@ -980,7 +980,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
             expect(input.componentInstance.value).toEqual('a');
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
+            UIInteractions.triggerEventHandlerKeyDown('enter', input);
             fix.detectChanges();
 
             // Check focus is kept and chips is no longer selected.
@@ -1298,7 +1298,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', input, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', input, true);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
@@ -1310,7 +1310,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Escape', input);
+            UIInteractions.triggerEventHandlerKeyDown('Escape', input);
             tick(100);
             fix.detectChanges();
 
@@ -1347,7 +1347,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset, false);
 
             // submit the input with empty value
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', input);
+            UIInteractions.triggerEventHandlerKeyDown('enter', input);
             tick(50);
             fix.detectChanges();
 
@@ -1622,7 +1622,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the commit icon.
             const inputCommitIcon = GridFunctions.getFilterRowInputCommitIcon(fix);
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', inputCommitIcon);
+            UIInteractions.triggerEventHandlerKeyDown('enter', inputCommitIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1644,7 +1644,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the clear icon.
             const inputClearIcon = GridFunctions.getFilterRowInputClearIcon(fix);
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', inputClearIcon);
+            UIInteractions.triggerEventHandlerKeyDown('enter', inputClearIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1658,7 +1658,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
             const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('enter', filterCellChip);
+            UIInteractions.triggerEventHandlerKeyDown('enter', filterCellChip);
             tick(200);
             fix.detectChanges();
 
