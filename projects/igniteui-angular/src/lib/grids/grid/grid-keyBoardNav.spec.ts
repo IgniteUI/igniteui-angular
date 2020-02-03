@@ -504,7 +504,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
             cell = grid.getCellByColumn(999, 'value');
             GridSelectionFunctions.verifyGridCellSelected(fix, cell);
@@ -515,7 +515,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'other');
