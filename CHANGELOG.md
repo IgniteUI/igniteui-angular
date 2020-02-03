@@ -14,6 +14,20 @@ All notable changes for each version of this project will be documented in this 
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
     - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
 
+- **Breaking Changes** The following components require `HammerModule` to be imported in the root module of the application in order for user interactions to work as expected:
+    -	`igxGrid`
+    -	`igxHierarchicalGrid`
+    -	`igxTreeGrid`
+    -	`igxList`
+    -	`igxNavigationDrawer`
+    -	`igxTimePicker`
+    -	`igxMonthPicker`
+    -	`igxSlider`
+    -	`igxCalendar`
+    -	`igxCarosel`
+
+    Due to a breaking change in Angular 9 Hammer providers are no longer included by default. You can find more information at: https://github.com/angular/angular/blob/master/CHANGELOG.md#breaking-changes-9
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
