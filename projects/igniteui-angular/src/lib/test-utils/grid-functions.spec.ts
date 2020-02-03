@@ -629,7 +629,7 @@ export class GridFunctions {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
 
-        UIInteractions.triggerEventHandlerKeyDown('enter', input);
+        UIInteractions.triggerEventHandlerKeyDown('Enter', input);
         fix.detectChanges();
     }
 

@@ -795,7 +795,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         it(`should be able to navigate down to the next row when expand the last group row
     and grid is scrolled to bottom`, (async () => {
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             grid.groupsRowList.last.toggle();
