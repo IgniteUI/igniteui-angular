@@ -200,14 +200,14 @@
         compact: rem(28px)
     );
 
-    $item-padding-comfortable: rem(24px);
-    $item-padding-cosy: rem(20px);
-    $item-padding-compact: rem(16px);
+    $item-padding-comfortable: 0 rem(24px);
+    $item-padding-cosy: 0 rem(20px);
+    $item-padding-compact: 0 rem(16px);
 
     $item-padding: (
-        comfortable: 0 $item-padding-comfortable,
-        cosy: 0 $item-padding-cosy,
-        compact: 0 $item-padding-compact
+        comfortable: $item-padding-comfortable,
+        cosy: $item-padding-cosy,
+        compact: $item-padding-compact
     );
 
     $header-item-padding: (

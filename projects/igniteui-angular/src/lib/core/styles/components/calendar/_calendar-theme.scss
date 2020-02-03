@@ -919,11 +919,13 @@
 @mixin igx-calendar-typography($type-scale, $categories: (
     header-year: 'subtitle-1',
     header-date: 'h4',
+    weekday-label: 'body-1',
     picker-date: 'subtitle-1',
     content: 'body-1')
 ) {
     $header-year: map-get($categories, 'header-year');
     $header-date: map-get($categories, 'header-date');
+    $weekday-label: map-get($categories, 'weekday-labels');
     $picker-date: map-get($categories, 'picker-date');
     $content: map-get($categories, 'content');
 
@@ -946,10 +948,14 @@
         }
     }
 
-    %cal-value {
+    %cal-value-content {
         @include igx-type-style($type-scale, $content) {
             margin: 0;
         }
+    }
+
+    %cal-value--label {
+        @include igx-type-style($type-scale, $weekday-label)
     }
 
     %cal-value--year-current {

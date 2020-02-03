@@ -134,8 +134,6 @@
     $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
     $slider-label-radius: $slider-label-width / 2;
-    $slider-label-font-size: rem(12px);
-    $slider-label-font-weight: 600;
     $slider-label-padding: 0 rem(2px);
 
     $switch-display: map-get((
@@ -429,8 +427,6 @@
         padding: $slider-label-padding;
         border-radius: rem($slider-label-radius);
         margin: 0 auto;
-        font-size: $slider-label-font-size;
-        font-weight: $slider-label-font-weight;
         line-height: rem(18px);
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
@@ -542,5 +538,35 @@
 
     %igx-thumb--active {
         z-index: 1;
+    }
+}
+
+/// Adds typography styles for the igx-slider component.
+/// Uses the 'caption'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-slider-typography(
+    $type-scale,
+    $categories: (
+        ticks-label: 'caption',
+        thumb-label: 'caption',
+    )
+) {
+    $ticks-label: map-get($categories, 'ticks-label');
+    $thumb-label: map-get($categories, 'thumb-label');
+
+    %igx-thumb-label {
+        @include igx-type-style($type-scale, $thumb-label) {
+            margin: 0;
+        }
+    }
+
+    %igx-slider__tick-label {
+        @include igx-type-style($type-scale, $ticks-label) {
+            margin: 0;
+        }
     }
 }

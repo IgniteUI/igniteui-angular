@@ -97,7 +97,32 @@ $bootstrap_button: igx-type-style(
     $margin-bottom: 0
 );
 
-$bootstrap-type-scale: igx-type-scale(
+$bootstrap_caption: igx-type-style(
+    $font-size: rem(12px),
+    $font-weight: 400,
+    $letter-spacing: rem(.4px),
+    $line-height: rem(16px),
+    $text-transform: none
+);
+
+$bootstrap_overline: igx-type-style(
+    $font-size: rem(10px),
+    $font-weight: 400,
+    $letter-spacing: rem(1.5px),
+    $line-height: rem(16px),
+    $text-transform: uppercase
+);
+
+$bootstrap_weekday: igx-type-style(
+    $font-size: rem(13px),
+    $font-weight: 400,
+    $line-height: normal,
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$_bootstrap-scale: igx-type-scale(
     $h1: $bootstrap_h1,
     $h2: $bootstrap_h2,
     $h3: $bootstrap_h3,
@@ -108,5 +133,11 @@ $bootstrap-type-scale: igx-type-scale(
     $subtitle-2: $bootstrap_subtitle-2,
     $body-1: $bootstrap_body-1,
     $body-2: $bootstrap_body-2,
-    $button: $bootstrap_button
+    $button: $bootstrap_button,
+    $caption: $bootstrap_caption,
+    $overline: $bootstrap_overline
 );
+
+$bootstrap-type-scale: extend($_bootstrap-scale, (
+    calendar-labels: $bootstrap_weekday,
+))
