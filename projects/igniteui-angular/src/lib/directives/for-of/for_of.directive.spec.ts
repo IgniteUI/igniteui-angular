@@ -40,54 +40,45 @@ describe('IgxForOf directive -', () => {
     beforeAll(() => {
         dg = new DataGenerator();
     });
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                TestIgxForOfDirective,
+                EmptyVirtualComponent,
+                HorizontalVirtualComponent,
+                VerticalVirtualNoDataComponent,
+                VerticalVirtualComponent,
+                VirtualComponent,
+                VirtualVariableSizeComponent,
+                RemoteVirtualizationComponent,
+                RemoteVirtCountComponent,
+                NoWidthAndHeightComponent,
+                LocalVariablesComponent
+            ],
+            imports: [IgxForOfModule],
+            providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+        }).compileComponents();
+    }));
 
     describe('empty virtual component', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<EmptyVirtualComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    EmptyVirtualComponent
-                ],
-                imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(EmptyVirtualComponent);
+        it('should initialize empty directive', () => {
+            const fix = TestBed.createComponent(EmptyVirtualComponent);
             fix.detectChanges();
             displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
-        });
-
-        it('should initialize empty directive', () => {
             expect(displayContainer).not.toBeNull();
         });
     });
 
     describe('horizontal virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<HorizontalVirtualComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    HorizontalVirtualComponent
-                ],
-                imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
 
         beforeEach(() => {
             fix = TestBed.createComponent(HorizontalVirtualComponent);
             dg.generateData(300, 5, fix.componentInstance);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
-            displayContainer  = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
             verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
@@ -183,20 +174,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<VerticalVirtualComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VerticalVirtualNoDataComponent,
-                    VerticalVirtualComponent
-                ],
-                imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualComponent);
@@ -299,15 +277,15 @@ describe('IgxForOf directive -', () => {
             virtualContainer.igxForSizePropName = 'height';
             fix.componentInstance.data = [
                 { '1': '1', height: '100px' },
-                {  '1': '2', height: '1800px' },
-                {  '1': '3', height: '200px' },
-                {  '1': '4', height: '200px' },
-                {  '1': '5', height: '300px' },
-                {  '1': '6', height: '100px' },
-                {  '1': '7', height: '100px' },
-                {  '1': '8', height: '100px' },
-                {  '1': '9', height: '150px' },
-                {  '1': '10', height: '150px' }
+                { '1': '2', height: '1800px' },
+                { '1': '3', height: '200px' },
+                { '1': '4', height: '200px' },
+                { '1': '5', height: '300px' },
+                { '1': '6', height: '100px' },
+                { '1': '7', height: '100px' },
+                { '1': '8', height: '100px' },
+                { '1': '9', height: '150px' },
+                { '1': '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -316,16 +294,16 @@ describe('IgxForOf directive -', () => {
 
             fix.componentInstance.height = '1900px';
             fix.componentInstance.data = [
-                {  '1': '1', height: '1800px' },
-                {  '1': '2', height: '100px' },
-                {  '1': '3', height: '200px' },
-                {  '1': '4', height: '200px' },
-                {  '1': '5', height: '300px' },
-                {  '1': '6', height: '100px' },
-                {  '1': '7', height: '100px' },
-                {  '1': '8', height: '100px' },
-                {  '1': '9', height: '150px' },
-                {  '1': '10', height: '150px' }
+                { '1': '1', height: '1800px' },
+                { '1': '2', height: '100px' },
+                { '1': '3', height: '200px' },
+                { '1': '4', height: '200px' },
+                { '1': '5', height: '300px' },
+                { '1': '6', height: '100px' },
+                { '1': '7', height: '100px' },
+                { '1': '8', height: '100px' },
+                { '1': '9', height: '150px' },
+                { '1': '10', height: '150px' }
             ];
             fix.detectChanges();
             await wait();
@@ -335,19 +313,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical and horizontal virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<VirtualComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VirtualComponent
-                ],
-                imports: [IgxForOfModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualComponent);
@@ -361,7 +327,7 @@ describe('IgxForOf directive -', () => {
             expect(horizontalScroller).not.toBeNull();
         });
 
-        it('should initialize directive with vertical and horizontal virtualization',  () => {
+        it('should initialize directive with vertical and horizontal virtualization', () => {
             /* The height of the row is set to 50px so scrolling by 100px should render the third record */
             fix.componentInstance.scrollTop(100);
 
@@ -411,7 +377,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should scroll to wheel event correctly', async() => {
+        it('should scroll to wheel event correctly', async () => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             fix.detectChanges();
@@ -570,7 +536,7 @@ describe('IgxForOf directive -', () => {
             expect(rowsRendered.length).toBe(9);
         });
 
-        it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async() => {
+        it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async () => {
             let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             let colsRendered = rowsRendered[0].children;
 
@@ -676,7 +642,7 @@ describe('IgxForOf directive -', () => {
             expect(colsRendered.length).toBe(7);
         });
 
-        it('should scroll down when using touch events', async() => {
+        it('should scroll down when using touch events', async () => {
             let rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -684,7 +650,7 @@ describe('IgxForOf directive -', () => {
                     .toBe(fix.componentInstance.data[i][1].toString());
             }
 
-            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+            const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             UIInteractions.simulateTouchStartEvent(dcElem, 200, 200);
             UIInteractions.simulateTouchMoveEvent(dcElem, 200, -300);
             fix.detectChanges();
@@ -698,8 +664,8 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        xit('should apply inertia when swiping via touch interaction.', async() => {
-            const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
+        xit('should apply inertia when swiping via touch interaction.', async () => {
+            const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(
                 dcElem,
@@ -795,7 +761,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should not wrap around with scrollNext and scrollPrev', async() => {
+        it('should not wrap around with scrollNext and scrollPrev', async () => {
             const forOf = fix.componentInstance.parentVirtDir;
 
             forOf.scrollPrev();
@@ -825,7 +791,7 @@ describe('IgxForOf directive -', () => {
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
         });
 
-        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async() => {
+        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async () => {
             /**  Scroll left 1500px */
             fix.componentInstance.scrollLeft(1500);
             fix.detectChanges();
@@ -860,7 +826,7 @@ describe('IgxForOf directive -', () => {
             const rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < 8; i++) {
                 expect(rowsRendered[i].children[1].textContent)
-                .toBe(fix.componentInstance.data[49991 + i][1].toString());
+                    .toBe(fix.componentInstance.data[49991 + i][1].toString());
             }
         });
 
@@ -914,25 +880,10 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('variable size component', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<VirtualVariableSizeComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    VirtualVariableSizeComponent
-                ],
-                imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(VirtualVariableSizeComponent);
-            fix.detectChanges();
-        });
-
         it('should update display container classes when content state changes from virtualized to non-virtualzied.', () => {
+            const fix = TestBed.createComponent(VirtualVariableSizeComponent);
+            fix.detectChanges();
+
             let displayContainerDebugEl: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
             // No size and no data - display container should be inactive
             expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
@@ -964,29 +915,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<RemoteVirtualizationComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    RemoteVirtualizationComponent
-                ],
-                imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(RemoteVirtualizationComponent);
+        it('should allow remote virtualization', async () => {
+            const fix = TestBed.createComponent(RemoteVirtualizationComponent);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
 
             displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
             verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
-        });
-
-        it('should allow remote virtualization', async () => {
             // verify data is loaded
             let rowsRendered = displayContainer.children;
             let data = fix.componentInstance.data.source.getValue();
@@ -1011,29 +946,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<RemoteVirtCountComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    RemoteVirtCountComponent
-                ],
-                imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(RemoteVirtCountComponent);
+        it('should apply remote virtualization correctly', async () => {
+            const fix = TestBed.createComponent(RemoteVirtCountComponent);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
 
-            displayContainer = fix.nativeElement.querySelector('igx-display-container');
-            verticalScroller = fix.nativeElement.querySelector('igx-virtual-helper');
-        });
-
-        it('should apply remote virtualization correctly', async () => {
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            verticalScroller = fix.nativeElement.querySelector(VERTICAL_SCROLLER);
             // verify data is loaded
             let rowsRendered = displayContainer.children;
             let data = fix.componentInstance.data.source.getValue();
@@ -1043,12 +962,8 @@ describe('IgxForOf directive -', () => {
             }
 
             // scroll down
-            expect(() => {
-                verticalScroller.scrollTop = 10000;
-                fix.detectChanges();
-                fix.componentRef.hostView.detectChanges();
-            }).not.toThrow();
-
+            verticalScroller.scrollTop = 10000;
+            fix.detectChanges();
             await wait();
 
             // verify data is loaded
@@ -1062,21 +977,8 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('no width and height component', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<NoWidthAndHeightComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    NoWidthAndHeightComponent
-                ],
-                imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
-
         it('should use itemSize when no width or height are provided', () => {
-            fix = TestBed.createComponent(NoWidthAndHeightComponent);
+            const fix = TestBed.createComponent(NoWidthAndHeightComponent);
             fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
 
@@ -1088,25 +990,9 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('even odd first last functions', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<LocalVariablesComponent>;
-
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    TestIgxForOfDirective,
-                    LocalVariablesComponent
-                ],
-                imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(LocalVariablesComponent);
-            fix.detectChanges();
-        });
-
         it('should differentiate even odd items', () => {
+            const fix = TestBed.createComponent(LocalVariablesComponent);
+            fix.detectChanges();
             const allItems: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER))[0].children;
             expect(allItems.length).toEqual(100);
             for (let i = 0; i < allItems.length; i++) {
@@ -1131,7 +1017,7 @@ class DataGenerator {
     public data300x50000: any[] = [];
     public cols300: any[] = [];
 
-    constructor() {}
+    constructor() { }
 
     public generateVerticalData(cols) {
         if (this.verticalData.length !== 0) {
@@ -1171,9 +1057,9 @@ class DataGenerator {
 
         if (instance) {
             instance.cols = cols;
-        instance.data = dummyData;
+            instance.data = dummyData;
         } else {
-            return {data: dummyData, cols: cols};
+            return { data: dummyData, cols: cols };
         }
     }
 
@@ -1257,7 +1143,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 export class EmptyVirtualComponent {
     public data = [];
 
-    @ViewChild('container', { static: true })public container;
+    @ViewChild('container', { static: true }) public container;
 }
 
 
@@ -1444,7 +1330,7 @@ export class VirtualVariableSizeComponent {
     `
 })
 export class VerticalVirtualNoDataComponent extends VerticalVirtualComponent implements OnInit {
-    ngOnInit() {}
+    ngOnInit() { }
 }
 
 @Injectable()
@@ -1615,7 +1501,7 @@ export class NoWidthAndHeightComponent {
 
     constructor() {
         for (let i = 0; i < 100; i++) {
-            this.items.push({text: i + ''});
+            this.items.push({ text: i + '' });
         }
     }
 }
@@ -1652,7 +1538,7 @@ export class LocalVariablesComponent {
 
     constructor() {
         for (let i = 0; i < 100; i++) {
-            this.data.push({text: i + ''});
+            this.data.push({ text: i + '' });
         }
     }
 }
