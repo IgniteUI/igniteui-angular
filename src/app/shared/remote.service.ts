@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class RemoteService {
 
+    totalCount: Observable<number>;
+    _totalCount: BehaviorSubject<number>;
     remoteData: Observable<any[]>;
     _remoteData: BehaviorSubject<any[]>;
     url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
@@ -14,6 +16,8 @@ export class RemoteService {
     constructor(private http: HttpClient) {
         this._remoteData = new BehaviorSubject([]);
         this.remoteData = this._remoteData.asObservable();
+        this._totalCount = new BehaviorSubject(null);
+        this.totalCount = this._totalCount.asObservable();
     }
 
     nullData() {
@@ -31,6 +35,7 @@ export class RemoteService {
         )
         .subscribe(d => {
             this._remoteData.next(d['value']);
+            this._totalCount.next(d['@odata.count']);
             if (cb) {
                 cb(d);
             }
