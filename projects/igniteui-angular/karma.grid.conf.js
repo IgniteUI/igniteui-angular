@@ -63,8 +63,7 @@ module.exports = function (config) {
         ],
       },
     },
-    captureTimeout: 5000,
-    singleRun: false,
-    concurrency: 1
+    captureTimeout: 6000,
+    singleRun: false
   });
 };

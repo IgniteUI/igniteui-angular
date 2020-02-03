@@ -63,7 +63,7 @@ module.exports = function (config) {
         ],
       },
     },
-    captureTimeout: 5000,
-    singleRun: true,
+    captureTimeout: 6000,
+    singleRun: true
   });
 };
