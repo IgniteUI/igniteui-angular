@@ -82,26 +82,27 @@
     }
 
     %filter-tree__line--and {
-        background-color: igx-color($palette, 'primary', 300);
+
+        background: --var($theme, 'filtering-background-and');
 
         &-selected {
-            background-color: igx-color($palette, 'primary', 700);
+            background: --var($theme, 'filtering-background-and--focus');
         }
 
         &:focus {
-            box-shadow: inset 0 0 0 2px igx-color($palette, 'primary', 700);
+            box-shadow: inset 0 0 0 2px --var($theme, 'filtering-background-and--focus');
         }
     }
 
     %filter-tree__line--or {
-        background-color: igx-color($palette, 'secondary', 300);
+        background: --var($theme, 'filtering-background-or');
 
         &-selected {
-            background-color: igx-color($palette, 'secondary', 700);
+            background-color: --var($theme, 'filtering-background-or--focus');
         }
 
         &:focus {
-            box-shadow: inset 0 0 0 2px igx-color($palette, 'secondary', 700);
+            box-shadow: inset 0 0 0 2px --var($theme, 'filtering-background-or--focus');
         }
     }
 
@@ -217,11 +218,11 @@
     }
 
     %filter-legend__item--and::before {
-        background-color: igx-color($palette, 'primary', 300);
+        background: --var($theme, 'filtering-background-and');
     }
 
     %filter-legend__item--or::before {
-        background-color: igx-color($palette, 'secondary', 300);
+        background: --var($theme, 'filtering-background-or');
     }
 
     %filter-con-menu {
