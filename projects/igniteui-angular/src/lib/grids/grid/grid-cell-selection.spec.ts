@@ -19,7 +19,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
