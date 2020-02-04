@@ -11,13 +11,6 @@ export enum CalendarView {
     DECADE
 }
 
-/**
- * @hidden
- */
-enum TimeDeltaInterval {
-    Month = 'month',
-    Year = 'year'
-}
 @Directive({
     selector: '[igxMonthPickerBase]'
 })
@@ -98,25 +91,5 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
             return this.formatterYear.format(value);
         }
         return `${value.getFullYear()}`;
-    }
-
-    protected getDatePerMonthView(date: Date, interval: string) {
-        return this.calendarModel.timedelta(date, interval, -this.monthViewIdx);
-    }
-
-    protected getNextMonth(date: Date) {
-        return this.calendarModel.timedelta(date, TimeDeltaInterval.Month, 1);
-    }
-
-    protected getPrevMonth(date: Date) {
-        return this.calendarModel.timedelta(date, TimeDeltaInterval.Month, -1);
-    }
-
-    protected getNextYear(date: Date) {
-        return this.calendarModel.timedelta(date, TimeDeltaInterval.Year, 1);
-    }
-
-    protected getPrevYear(date: Date) {
-        return this.calendarModel.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 }

@@ -1,5 +1,13 @@
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 
+/**
+ * @hidden
+ */
+enum TimeDeltaInterval {
+    Month = 'month',
+    Year = 'year'
+}
+
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
 
@@ -324,6 +332,26 @@ export class Calendar {
             }
         }
         return result;
+    }
+
+    public getDatePerMonthView(date: Date, interval: string, monthViewIdx: number) {
+        return this.timedelta(date, interval, -monthViewIdx);
+    }
+
+    public getNextMonth(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Month, 1);
+    }
+
+    public getPrevMonth(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Month, -1);
+    }
+
+    public getNextYear(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Year, 1);
+    }
+
+    public getPrevYear(date: Date) {
+        return this.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 
     private generateICalendarDate(date: Date, year: number, month: number): ICalendarDate {

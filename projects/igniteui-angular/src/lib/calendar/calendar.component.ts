@@ -406,7 +406,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public previousMonth(isKeydownTrigger = false) {
-        this.viewDate = this.getPrevMonth(this.viewDate);
+        this.viewDate = this.calendarModel.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -415,7 +415,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public nextMonth(isKeydownTrigger = false) {
-        this.viewDate = this.getNextMonth(this.viewDate);
+        this.viewDate = this.calendarModel.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -542,7 +542,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeMonth(event: Date) {
-        this.viewDate = this.getDatePerMonthView(event, 'month');
+        this.viewDate = this.calendarModel.getDatePerMonthView(event, 'month', this.monthViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
@@ -555,7 +555,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeYear(event: Date) {
-        this.viewDate = this.getDatePerMonthView(event, 'month');
+        this.viewDate = this.calendarModel.getDatePerMonthView(event, 'month', this.monthViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
