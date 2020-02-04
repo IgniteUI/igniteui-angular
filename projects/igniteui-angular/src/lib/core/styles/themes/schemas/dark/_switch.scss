@@ -51,3 +51,13 @@ $_dark-fluent-switch: extend($_fluent-switch, $_base-dark-switch, (
         igx-color: ('grays', 200)
     )
 ));
+
+/// Generates a dark bootstrap switch schema based on a mix of $_bootstrap-switch and $_base-dark-switch.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-switch
+/// @requires $_base-dark-switch
+$_dark-bootstrap-switch: extend(
+    $_bootstrap-switch,
+    $_base-dark-switch
+);

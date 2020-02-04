@@ -1,0 +1,48 @@
+#igniteui-demo-app {
+    .list-sample-component {
+        .sample-space {
+            margin-bottom: 16px;
+        }
+
+        .density-chooser {
+            max-width: 400px;
+            margin: 30px auto 0;
+        }
+
+        .igx-list__empty--custom {
+            text-align: center;
+            opacity: .7;
+        }
+
+        .list-sample--add {
+            position: relative;
+        }
+
+        .sample-dialog-content {
+            padding: 8px;
+        }
+
+        .sample-column.bootstrap {
+            display: none;
+        }
+    }
+}
+
+.bootstrap-theme {
+    .bootstrap {
+        max-width: 400px
+    }
+
+    #igniteui-demo-app {
+        .list-sample-component {
+            .sample-column {
+                display: none;
+            }
+
+            .sample-column.bootstrap {
+                display: flex;
+            }
+        }
+    }
+}
+

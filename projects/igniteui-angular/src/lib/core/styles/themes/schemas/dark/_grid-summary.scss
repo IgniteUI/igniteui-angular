@@ -18,3 +18,9 @@ $_dark-grid-summary: extend($_light-grid-summary);
 /// @requires {function} extend
 /// @requires $_fluent-grid-summary
 $_dark-fluent-grid-summary: extend($_fluent-grid-summary);
+
+/// Generates a dark bootstrap grid-summary schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-grid-summary
+$_dark-bootstrap-grid-summary: extend($_bootstrap-grid-summary);
