@@ -582,8 +582,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
-
-        if (event && this.isToggleKey((event as any).key.toLowerCase())) {
+        const eventKey = event && (event as any).key ? (event as any).key.toLowerCase() : null;
+        if (eventKey && this.isToggleKey(eventKey)) {
             (this.grid as any).zone.onStable.pipe(debounceTime(30)).pipe(first()).subscribe(() => {
                 this.focusActiveCell(rowID);
             });

@@ -561,6 +561,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
          // collapse
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
@@ -568,6 +569,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // expand
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
