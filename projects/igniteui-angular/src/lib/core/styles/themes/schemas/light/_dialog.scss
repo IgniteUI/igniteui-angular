@@ -12,6 +12,8 @@
 /// @prop {Map} background [igx-color: 'surface'] - The dialog background color.
 /// @prop {Map} title-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The dialog title text color.
 /// @prop {Map} message-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The dialog message text color.
+/// @prop {map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
+///
 /// @prop {number} elevation [24] - The elevation level for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for dialog component.
 ///
@@ -38,12 +40,14 @@ $_light-dialog: extend(
             text-contrast: (),
             rgba: .6
         ),
+
+        border-color: transparent,
     )
 );
 
 /// Generates a fluent dialog schema.
 /// @type {Map}
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for dialog component.
+/// @prop {Number} border-radius [2px] - The border radius for dialog component.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
@@ -55,3 +59,23 @@ $_fluent-dialog: extend(
         variant: 'fluent',
     )
 );
+
+/// Generates a bootstrap dialog schema.
+/// @type {Map}
+/// @prop {map} border-color [igx-color: ('grays', 300)] - The border color for dialog component.
+/// @prop {number} elevation [0] - The elevation level for the dialog.
+/// @prop {Number} border-radius [4px] - The border radius for dialog component.
+/// @requires {function} extend
+/// @requires {map} $_light-dialog
+$_bootstrap-dialog: extend(
+    $_light-dialog,
+    $_bootstrap-shape-dialog,
+    $_bootstrap-elevation-dialog,
+    (
+        variant: 'bootstrap',
+        border-color: (
+            igx-color: ('grays', 300)
+        )
+    )
+);
+

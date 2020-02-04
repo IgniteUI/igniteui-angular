@@ -31,3 +31,17 @@ $_dark-fluent-drop-down: extend(
         selected-focus-item-text-color: #fff,
     )
 );
+
+/// Generates a dark bootstrap drop-down schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-drop-down
+/// @requires extend
+$_dark-bootstrap-drop-down: extend(
+    $_bootstrap-drop-down,
+    (
+        background-color: #222,
+        item-text-color: #fff,
+        hover-item-text-color: #fff,
+    )
+);

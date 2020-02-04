@@ -17,3 +17,14 @@ $_dark-card: extend($_light-card);
 /// @requires extend
 /// @requires $_fluent-card
 $_dark-fluent-card: extend($_fluent-card);
+
+/// Generates a dark bootstrap card schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-card
+$_dark-bootstrap-card: extend(
+    $_bootstrap-card,
+    (
+        background: #222,
+    )
+);

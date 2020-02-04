@@ -16,6 +16,7 @@
 /// @param {Color} $fill-color-success [null] - The track success fill color.
 /// @param {Color} $stripes-color [null] - The track stripes color.
 /// @param {Color} $text-color [null] - The track value text color.
+/// @param {Number} $track-border-radius [null] - The border radius fraction, between 0 - 8 to be used fot the progress bar track
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -39,7 +40,8 @@
     $fill-color-info: null,
     $fill-color-success: null,
     $stripes-color: null,
-    $text-color: null
+    $text-color: null,
+    $track-border-radius: null,
 ) {
     $name: 'igx-linear-bar';
     $linear-bar-schema: ();
@@ -52,6 +54,10 @@
 
     $theme: apply-palette($linear-bar-schema, $palette);
 
+    $track-border-radius: round-borders(
+        if($track-border-radius, $track-border-radius, map-get($linear-bar-schema, 'track-border-radius')), 0, 8px
+    );
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -62,7 +68,8 @@
         fill-color-info: $fill-color-info,
         fill-color-success: $fill-color-success,
         stripes-color: $stripes-color,
-        text-color: $text-color
+        text-color: $text-color,
+        track-border-radius: $track-border-radius,
     ));
 }
 
@@ -73,9 +80,26 @@
 @mixin igx-progress-linear($theme) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
+    $variant: map-get($theme, variant);
 
-    $bar-height: 4px;
+    $bar-height: map-get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(16px),
+    ), $variant);
+
+    $gradient-orientation: map-get((
+        material: -45deg,
+        fluent: -45deg,
+        bootstrap: 45deg,
+    ), $variant);
+
+    $background-size: map-get((
+        material: rem(40px) rem(40px),
+        fluent: rem(40px) rem(40px),
+        bootstrap: rem(16px) rem(16px),
+    ), $variant);
+
     $stripe-color: --var($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
@@ -96,6 +120,7 @@
         height: $bar-height;
         background: --var($theme, 'track-color');
         overflow: hidden;
+        border-radius: --var($theme, 'track-border-radius');
         z-index: 0;
     }
 
@@ -107,7 +132,7 @@
 
     %linear-indicator--striped {
         background-image: linear-gradient(
-            -45deg,
+            $gradient-orientation,
             $stripe-color 25%,
             transparent 25%,
             transparent 50%,
@@ -116,7 +141,7 @@
             transparent 75%,
             transparent
         );
-        background-size: 40px 40px;
+        background-size: $background-size;
     }
 
     %linear-indicator--indeterminate {
@@ -274,7 +299,13 @@
 
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
+    $variant: map-get($theme, variant);
+
+    $stroke-width: map-get((
+        material: rem(4px),
+        fluent: rem(4px),
+        bootstrap: rem(8px),
+    ), $variant);
 
     $palette: map-get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);
@@ -301,14 +332,14 @@
     }
 
     %circular-inner {
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         fill: transparent;
         stroke: --var($theme, 'base-circle-color');
     }
 
     %circular-outer {
         fill: transparent;
-        stroke-width: 4;
+        stroke-width: $stroke-width;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
         transform-origin: 50% 50%;
@@ -317,7 +348,6 @@
 
     %circular-outer--indeterminate {
         stroke-dasharray: 289;
-
         @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) #{$animation-direction} infinite);
     }
 

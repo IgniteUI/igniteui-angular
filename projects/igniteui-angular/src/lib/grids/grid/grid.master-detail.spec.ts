@@ -217,6 +217,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             grid.expansionStates = newExpanded;
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const newData = [...grid.data].slice(0, 4);
             newData.splice(1, 1);
@@ -308,10 +309,12 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        beforeEach(async(() => {
+        beforeEach(async(async() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            await wait(DEBOUNCETIME * 4);
+            fix.detectChanges();
         }));
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.',
@@ -485,6 +488,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+            await wait(DEBOUNCETIME);
             grid.navigateTo(20, 0);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

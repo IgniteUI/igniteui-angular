@@ -21,7 +21,8 @@
     $letter-spacing: null,
     $text-transform: null,
     $margin-top: null,
-    $margin-bottom: null
+    $margin-bottom: null,
+    //TODO Add font style rule $font-style: null
 ) {
     @return (
         font-family: $font-family,
