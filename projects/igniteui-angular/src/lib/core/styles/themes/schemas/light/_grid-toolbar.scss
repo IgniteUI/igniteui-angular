@@ -68,3 +68,10 @@ $_fluent-grid-toolbar: extend(
         ),
     )
 );
+
+/// Generates a bootstrap grid-toolbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-toolbar
+$_bootstrap-grid-toolbar: extend($_light-grid-toolbar);
+

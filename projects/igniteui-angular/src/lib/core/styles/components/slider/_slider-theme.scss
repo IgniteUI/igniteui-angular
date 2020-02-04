@@ -99,6 +99,8 @@
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -106,8 +108,9 @@
 
     $slider-track-height: map-get((
         material: 2px,
-        fluent: 4px
-    ), map-get($theme, variant));
+        fluent: 4px,
+        bootstrap: 5px,
+    ), $variant);
 
     // Slide ticks
     $tick-push: rem(4px);
@@ -118,8 +121,9 @@
 
     $thumb-border-width: map-get((
         material: 0,
-        fluent: 2px
-    ), map-get($theme, variant));
+        fluent: 2px,
+        bootstrap: 1px,
+    ), $variant);
 
     // Slider Thumb
     $slider-thumb-width: 40px;
@@ -130,19 +134,19 @@
     $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
     $slider-label-radius: $slider-label-width / 2;
-    $slider-label-font-size: rem(12px);
-    $slider-label-font-weight: 600;
     $slider-label-padding: 0 rem(2px);
 
     $switch-display: map-get((
         material: block,
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $dot-size: map-get((
         material: 12px,
-        fluent: 16px
-    ), map-get($theme, variant));
+        fluent: 16px,
+        bootstrap: 14px,
+    ), $variant);
 
     %igx-slider-display {
         display: flex;
@@ -423,8 +427,6 @@
         padding: $slider-label-padding;
         border-radius: rem($slider-label-radius);
         margin: 0 auto;
-        font-size: $slider-label-font-size;
-        font-weight: $slider-label-font-weight;
         line-height: rem(18px);
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
@@ -536,5 +538,31 @@
 
     %igx-thumb--active {
         z-index: 1;
+    }
+}
+
+/// Adds typography styles for the igx-slider component.
+/// Uses the 'caption'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(ticks-label: 'caption', thumb-label: 'caption')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-slider-typography(
+    $type-scale,
+    $categories: (
+        ticks-label: 'caption',
+        thumb-label: 'caption',
+    )
+) {
+    $ticks-label: map-get($categories, 'ticks-label');
+    $thumb-label: map-get($categories, 'thumb-label');
+
+    %igx-thumb-label {
+        @include igx-type-style($type-scale, $thumb-label)
+    }
+
+    %igx-slider__tick-label {
+        @include igx-type-style($type-scale, $ticks-label)
     }
 }

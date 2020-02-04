@@ -6,7 +6,7 @@
         <article class="timepicker-column">
             <h4 class="sample-title">Time Picker with Dropdown</h4>
             <div class="sample-description">{{showDate(date)}}</div>
-            <div class="preview" style="width: 200px">
+            <div class="preview" style="width: 280px">
                 <igx-time-picker #tp (onValueChanged)="valueChanged($event)"
                     (onValidationFailed)="validationFailed($event)" [mode]="mode" [isSpinLoop]="isSpinLoop"
                     [(ngModel)]="date" [itemsDelta]="itemsDelta" [format]="format">
@@ -17,7 +17,7 @@
             <h4 class="sample-title">Time Picker with Dropdown Hour Mode</h4>
             <div class="sample-description">{{showDate(date1)}}</div>
             <div class="sample-description">Mask: {{hourModeTimePicker.mask}}, Format: {{hourModeTimePicker.format}}</div>
-            <div class="preview" style="width: 200px">
+            <div class="preview" style="width: 280px">
                 <igx-time-picker #hourModeTimePicker [mode]="'dropdown'" [(ngModel)]="date1" [format]="'h tt'">
                 </igx-time-picker>
             </div>
