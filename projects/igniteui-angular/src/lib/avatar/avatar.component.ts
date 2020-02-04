@@ -66,27 +66,19 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @ViewChild('image')
     public image: ElementRef;
 
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     @ViewChild('defaultTemplate', { read: TemplateRef, static: true })
     protected defaultTemplate: TemplateRef<any>;
 
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     @ViewChild('imageTemplate', { read: TemplateRef, static: true })
     protected imageTemplate: TemplateRef<any>;
 
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     @ViewChild('initialsTemplate', { read: TemplateRef, static: true })
     protected initialsTemplate: TemplateRef<any>;
 
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     @ViewChild('iconTemplate', { read: TemplateRef, static: true })
     protected iconTemplate: TemplateRef<any>;
 
@@ -114,12 +106,10 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     public role = 'img';
 
     /**
-     * Returns the `class` attribute of the avatar.
+     * Host `class.igx-avatar` binding.
      *
-     * @example
-     * ```typescript
-     * let avatarCLass =  this.avatar.cssClass;
-     * ```
+     * @hidden
+     * @internal
      */
     @HostBinding('class.igx-avatar')
     public cssClass = 'igx-avatar';
@@ -136,11 +126,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     @HostBinding('attr.aria-roledescription')
     public roleDescription: string;
-
-    /**
-     * @hidden
-     */
-    private _size: string | Size = 'small';
 
     /**
      * Sets the `id` of the avatar. If not set, the first avatar component will have an `id` = `"igx-avatar-0"`.
@@ -188,6 +173,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```html
      * <igx-avatar bgColor="yellow"></igx-avatar>
      * ```
+     * @igxFriendlyName Background color
      */
 
     @HostBinding('style.background')
@@ -227,6 +213,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @Input()
     public src: string;
 
+    private _size: string | Size = 'small';
     /**
      * Returns the size of the avatar.
      *
@@ -288,10 +275,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /**
      * Returns the template of the avatar.
      *
-     * @example
-     * ```typescript
-     * let template = this.avatar.template;
-     * ```
+     * @hidden
+     * @internal
      */
     get template(): TemplateRef<any> {
         switch (this.type) {
@@ -308,24 +293,18 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     constructor(public elementRef: ElementRef) { }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
     }
 
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public ngAfterViewInit() {
         this.elementRef.nativeElement.classList
             .add(`igx-avatar--${this._size}`, `igx-avatar--${this.type}`);
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     private getRole(): string {
         switch (this.type) {
             case AvatarType.IMAGE:
@@ -340,12 +319,10 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Returns the url of the image.
+     * Returns the css url of the image.
      *
-     * @example
-     * ```typescript
-     * let imageSourceUrl = this.avatar.getSrcUrl();
-     * ```
+     * @hidden
+     * @internal
      */
     public getSrcUrl() {
         return `url(${this.src})`;
