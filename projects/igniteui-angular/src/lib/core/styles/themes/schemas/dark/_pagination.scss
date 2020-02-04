@@ -29,3 +29,10 @@ $_dark-pagination: extend($_light-pagination, $_base-dark-pagination);
 /// @requires $_fluent-pagination
 /// @requires $_base-dark-pagination
 $_dark-fluent-pagination: extend($_fluent-pagination, $_base-dark-pagination);
+
+/// Generates a dark bootstrap pagination schema based on a mix of $_bootstrap-pagination and $_base-dark-pagination.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-pagination
+/// @requires $_base-dark-pagination
+$_dark-bootstrap-pagination: extend($_bootstrap-pagination, $_base-dark-pagination);

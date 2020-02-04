@@ -23,3 +23,10 @@ $_dark-checkbox: extend($_light-checkbox, (
 $_dark-fluent-checkbox: extend($_fluent-checkbox, (
     tick-color: #fff
 ));
+
+/// Generates a dark bootstrap checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#fff] - The checked mark color.
+/// @requires extend
+/// @requires $_bootstrap-checkbox
+$_dark-bootstrap-checkbox: extend($_bootstrap-checkbox);
