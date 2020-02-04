@@ -171,3 +171,13 @@ $bootstrap-palette: igx-palette(
     $surface: #f8f9fa
 ) !default;
 
+/// Bootstrap dark palette
+/// @type {Map}
+/// @group palettes
+$bootstrap-dark-palette: extend(
+    $bootstrap-palette,
+    (
+        surface: (500: #333)
+    )
+) !default;
+
