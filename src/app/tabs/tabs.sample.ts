@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
     selector: 'app-tabs-sample',
-    styleUrls: ['tabs.sample.css'],
-    templateUrl: 'tabs.sample.html'
+    styleUrls: ['tabs.sample.scss'],
+    templateUrl: 'tabs.sample.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsSampleComponent {
 

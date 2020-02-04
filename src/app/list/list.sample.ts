@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxDialogComponent, IgxFilterOptions, IgxListComponent } from 'igniteui-angular';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {IgxDialogComponent, IgxFilterOptions, IgxListComponent} from 'igniteui-angular';
 
 interface Employee {
     imageURL: string;
@@ -10,8 +10,9 @@ interface Employee {
 
 @Component({
     selector: 'app-list-sample',
-    styleUrls: ['list.sample.css'],
-    templateUrl: 'list.sample.html'
+    styleUrls: ['list.sample.scss'],
+    templateUrl: 'list.sample.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class ListSampleComponent implements OnInit {
     @ViewChild('contactsList', { static: true })

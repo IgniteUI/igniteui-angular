@@ -123,6 +123,7 @@ $_base-dark-grid: (
 );
 
 /// Generates a dark grid schema based on a mix of $_light-grid and $_base-dark-grid.
+/// @type {Map}
 /// @requires extend
 /// @requires $_light-grid
 /// @requires $_base-dark-grid
@@ -131,6 +132,12 @@ $_dark-grid: extend($_light-grid, $_base-dark-grid);
 
 
 /// Generates a dark fluent grid schema based on a mix of $_fluent-grid and $_base-dark-grid.
+/// @type {Map}
+///
+/// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
+/// @prop {Map} row-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The selected row background color.
+/// @prop {Map} row-selected-hover-background [igx-color: ('grays', 300), hexrgba: #222] - The selected row background color on hover.
+///
 /// @requires extend
 /// @requires $_fluent-grid
 /// @requires $_base-dark-grid
@@ -152,5 +159,24 @@ $_dark-fluent-grid: extend(
             igx-color: ('grays', 300),
             hexrgba: #222
         ),
+    )
+);
+
+
+/// Generates a dark bootstrap grid schema based on a mix of $_bootstrap-grid and $_base-dark-grid.
+/// @type {Map}
+///
+/// @prop {Color} header-background [#222] - The table header background color.
+/// @prop {Color} header-text-color [#fff] - The table header text color.
+///
+/// @requires {function} extend
+/// @requires $_bootstrap-grid
+/// @requires $_base-dark-grid
+$_dark-bootstrap-grid: extend(
+    $_bootstrap-grid,
+    $_base-dark-grid,
+    (
+        header-background: #222,
+        header-text-color: #fff,
     )
 );

@@ -15,6 +15,7 @@
 /// @param {Color} $hover-text-color [null] - The chip text hover color.
 /// @param {Color} $hover-background [null] - The chip hover background color.
 /// @param {Color} $hover-border-color [null] - The chip hover border color.
+/// @param {color} $focus-border-color [null] - The chip focus border color.
 ///
 /// @param {color} $selected-text-color [null] - The selected chip text color.
 /// @param {color} $selected-background [null] - The selected chip background color.
@@ -231,6 +232,9 @@
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $chip-height-material: (
         comfortable: rem(32px),
         cosy: rem(24px),
@@ -245,8 +249,9 @@
 
     $chip-height: map-get((
         material: $chip-height-material,
-        fluent: $chip-height-fluent
-    ), map-get($theme, variant));
+        fluent: $chip-height-fluent,
+        bootstrap: $chip-height-material
+    ), $variant);
 
     $chip-padding: (
         comfortable: 0 rem(8px),
@@ -254,13 +259,20 @@
         compact: 0 rem(2px)
     );
 
+    $box-shadow: map-get((
+        material: null,
+        fluent: null,
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'hover-background')
+    ), $variant);
+
     $item-padding: 4px;
     $chip-item-padding: 0 rem($item-padding);
 
     $chip-avatar-inset: map-get((
         material: 0,
-        fluent: -$item-padding
-    ), map-get($theme, variant));
+        fluent: -$item-padding,
+        bootstrap: 0
+    ), $variant);
 
     $chip-icon-size: (
         comfortable: rem(18px),
@@ -489,6 +501,7 @@
         background: --var($theme, 'focus-background');
         border-color: --var($theme, 'focus-border-color');
         outline-style: none;
+        box-shadow: $box-shadow;
     }
 
     %igx-chip__item--selected {

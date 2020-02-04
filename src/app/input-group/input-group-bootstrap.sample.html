@@ -1,0 +1,135 @@
+<form class="form fluent-form">
+    <h3 class="sample-title">Bootstrap Style</h3>
+    <div class="fluent-form__buttons">
+        <button igxButton="raised" (click)="changeDisplayDensity()">Change density</button>
+    </div>
+
+    <div class="fluent-form-btn-label">
+        <span><b>Current density: </b></span>
+        <span>{{ddOptions.displayDensity}}</span>
+    </div>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <input #input igxInput placeholder="Search"/>
+        <igx-prefix>
+            <igx-icon>search</igx-icon>
+        </igx-prefix>
+        <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <input igxInput placeholder="Search" disabled="disabled"/>
+        <igx-prefix>
+            <igx-icon>search</igx-icon>
+        </igx-prefix>
+    </igx-input-group>
+
+    <br>
+
+    <igx-select #select1
+                placeholder="Pick One"
+                value="value"
+                [disabled]="false"
+                type="bootstrap">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix>
+            <igx-icon>favorite</igx-icon>
+        </igx-prefix>
+        <igx-select-item>None</igx-select-item>
+        <igx-select-item [value]="1">Sofia</igx-select-item>
+        <igx-select-item [value]="2">London</igx-select-item>
+        <igx-select-item [value]="3">Paris</igx-select-item>
+        <igx-select-item [value]="4">New York</igx-select-item>
+    </igx-select>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <igx-prefix>
+            <igx-icon>attach_money</igx-icon>
+        </igx-prefix>
+        <igx-prefix>0.00</igx-prefix>
+        <label igxLabel for="bootstrapFName">Text Field</label>
+        <input name="firstName" id="bootstrapFName" igxInput [(ngModel)]="user.firstName" required/>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <igx-prefix>
+            <igx-icon>phone</igx-icon>
+        </igx-prefix>
+        <label igxLabel for="bootstrapPhone">Phone</label>
+        <input name="phone" id="bootstrapPhone" igxInput value="+35987772117" disabled="true"/>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <igx-prefix>
+            <label for="bootstrapTextArea">Text Area</label>
+        </igx-prefix>
+        <textarea id="bootstrapTextArea" igxInput></textarea>
+        <igx-suffix>
+            <igx-icon>data_usage</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <input placeholder="I am a placeholder" igxInput [(ngModel)]="user.lastName" name="lastName" required/>
+        <igx-hint>This one has no label</igx-hint>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <label igxLabel>Web address</label>
+        <igx-prefix>
+           http://
+        </igx-prefix>
+        <input igxInput type="tel" />
+        <igx-suffix>
+            .com
+        </igx-suffix>
+        <igx-hint>Type you web address</igx-hint>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <label igxLabel>Message</label>
+        <textarea igxInput></textarea>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <label igxLabel>Select car</label>
+        <select igxInput>
+            <option value="BMW E46">BMW E46 320</option>
+            <option value="BMW E46">BMW E46 330</option>
+            <option value="BMW E46">BMW E46 330 cd</option>
+        </select>
+    </igx-input-group>
+
+    <br>
+
+    <igx-input-group type="bootstrap">
+        <label igxLabel>Phone</label>
+        <input igxInput type="tel" value="123456789" disabled="disabled" />
+        <igx-suffix>
+            <igx-icon>phone</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+
+    <br>
+</form>
+
