@@ -34,12 +34,16 @@
         @extend %igx-avatar--large !optional;
     }
 
+    @include m(image) {
+        @extend %igx-avatar--image !optional;
+    }
+
     @include m(icon) {
-        @extend %igx-avatar-icon !optional;
+        @extend %igx-avatar--icon !optional;
     }
 
     @include m(initials) {
-        @extend %igx-avatar-initials !optional;
+        @extend %igx-avatar--initials !optional;
         @extend %igx-avatar-initials--small !optional;
     }
 

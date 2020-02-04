@@ -14,6 +14,7 @@
 /// @param {Color} $message-color [null] - The dialog message text color.
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 /// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
+/// @param {Color} $border-color [null] - The border color used for dialog component.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -34,11 +35,12 @@
     $elevations: $elevations,
 
     $border-radius: null,
+    $border-color: null,
 
     $background: null,
     $title-color: null,
     $message-color: null,
-    $shadow: null
+    $shadow: null,
 ) {
     $name: 'igx-dialog';
     $dialog-schema: ();
@@ -77,7 +79,8 @@
         background: $background,
         title-color: $title-color,
         message-color: $message-color,
-        shadow: $shadow
+        shadow: $shadow,
+        border-color: $border-color
     ));
 }
 
@@ -90,25 +93,33 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    $variant: map-get($theme, variant);
+
     $dialog-min-width: map-get((
         material: rem(280px),
-        fluent: rem(288px)
-    ), map-get($theme, variant));
+        fluent: rem(288px),
+        bootstrap: rem(288px),
+    ), $variant);
 
     $dialog-title-padding: map-get((
         material: rem(24px) rem(24px) rem(12px) rem(24px),
-        fluent: rem(16px) rem(24px) rem(24px) rem(24px)
-    ), map-get($theme, variant));
+        fluent: rem(16px) rem(24px) rem(24px) rem(24px),
+        bootstrap: rem(16px),
+    ), $variant);
 
     $dialog-message-padding: map-get((
         material: rem(12px) rem(24px),
-        fluent: 0 rem(24px) rem(20px) rem(24px)
-    ), map-get($theme, variant));
+        fluent: 0 rem(24px) rem(20px) rem(24px),
+        bootstrap: rem(16px),
+    ), $variant);
 
     $dialog-actions-padding: map-get((
         material: rem(8px),
-        fluent: 0 rem(24px) rem(24px) rem(24px)
-    ), map-get($theme, variant));
+        fluent: 0 rem(24px) rem(24px) rem(24px),
+        bootstrap: rem(16px),
+    ), $variant);
+
+    $bootstrap-theme: map-get($theme, variant) == 'bootstrap';
 
     %igx-dialog-display {
         outline-style: none;
@@ -121,6 +132,7 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
+        border: 1px solid --var($theme, 'border-color');
         border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background');
         box-shadow: --var($theme, 'shadow');
@@ -138,6 +150,10 @@
     %igx-dialog-title {
         color: --var($theme, 'title-color');
         padding: $dialog-title-padding;
+
+        @if $bootstrap-theme {
+            border-bottom: 1px solid --var($theme, 'border-color');
+        }
     }
 
     %igx-dialog-content {
@@ -151,6 +167,10 @@
         flex-flow: row nowrap;
         justify-content: flex-end;
         padding: $dialog-actions-padding;
+
+        @if $bootstrap-theme {
+            border-top: 1px solid --var($theme, 'border-color');
+        }
 
         button + button {
             margin-#{$left}: rem(8px);
