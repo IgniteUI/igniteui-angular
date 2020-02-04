@@ -111,3 +111,10 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragDirective: IgxDragDirective;
     dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
 }
+
+export interface IRowToggleEventArgs extends IBaseEventArgs {
+    rowID: any;
+    expanded: boolean;
+    event?: Event;
+    cancel: boolean;
+}

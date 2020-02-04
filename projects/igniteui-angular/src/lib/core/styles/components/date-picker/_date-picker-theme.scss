@@ -12,6 +12,9 @@
 @mixin igx-date-picker($theme) {
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     %date-picker {
         min-width: 200px;
         box-shadow: igx-elevation($elevations, 24);
@@ -48,10 +51,22 @@
         %cal-value {
             color: --var($theme, 'content-text-color');
             flex-basis: 14.28%;
+
+            @if $bootstrap-theme {
+                &:hover,
+                &:focus {
+                    color: --var($theme, 'date-selected-text-color');
+                }
+            }
         }
 
         %cal-value--label {
-            color: --var($theme, 'inactive-text-color');
+            color: --var($theme, 'label-color');
+
+            &:hover,
+            &:focus {
+                color: --var($theme, 'label-color');
+            }
         }
 
         %cal-value--weekend {
@@ -69,6 +84,13 @@
 
         %cal-value--year-current {
             color: --var($theme, 'year-current-text-color');
+
+            @if $bootstrap-theme {
+                &:hover,
+                &:focus {
+                    color: --var($theme, 'year-hover-text-color');
+                }
+            }
         }
 
         %cal-value--year-hover {
@@ -85,6 +107,10 @@
 
         %cal-value--inactive {
             color: --var($theme, 'inactive-text-color');
+
+            &:hover {
+                color: --var($theme, 'inactive-text-color');
+            }
         }
 
         %cal-value--selected {

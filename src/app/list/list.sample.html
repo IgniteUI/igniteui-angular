@@ -1,4 +1,4 @@
-<div class="sample-wrapper">
+<div class="sample-wrapper list-sample-component">
     <app-page-header title="List">
         Displays rows of identical items. Each list can contain one or more header items.
     </app-page-header>
@@ -8,6 +8,27 @@
     </div>
 
     <section class="sample-content">
+
+        <article class="sample-column bootstrap">
+            <div class="list-sample">
+                <igx-list [displayDensity]="density">
+                    <igx-list-item>
+                        <p igxListLineTitle>Cras justo odio</p>
+                        <igx-badge igxListAction value="14"></igx-badge>
+                    </igx-list-item>
+                    <igx-divider></igx-divider>
+                    <igx-list-item>
+                        <p igxListLineTitle>Dapibus ac facilisis in </p>
+                        <igx-badge igxListAction value="2"></igx-badge>
+                    </igx-list-item>
+                    <igx-divider></igx-divider>
+                    <igx-list-item>
+                        <p igxListLineTitle>Morbi leo risus </p>
+                        <igx-badge igxListAction value="1"></igx-badge>
+                    </igx-list-item>
+                </igx-list>
+            </div>
+        </article>
 
         <article class="sample-column">
             <div class="list-sample">

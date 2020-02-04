@@ -55,6 +55,7 @@
     @include e(header-menu-item, $m: selected) {
         @extend %igx-tabs__header-menu-item !optional;
         @extend %igx-tabs__header-menu-item--selected !optional;
+        @extend %igx-tabs__header-menu-item--selected-bootstrap !optional;
     }
 
     @include e(header-menu-item, $m: disabled) {

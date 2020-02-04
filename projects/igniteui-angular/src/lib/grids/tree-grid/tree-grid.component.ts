@@ -18,7 +18,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from './tree-grid.interfaces';
+import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -265,49 +265,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.notifyChanges();
     }
 
-    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
-
-    /**
-     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
-     * ```typescript
-     * const expansionStates = this.grid.expansionStates;
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    @Input()
-    public get expansionStates() {
-        return this._expansionStates;
-    }
-
-    /**
-     * Sets a list of key-value pairs [row ID, expansion state].
-     * ```typescript
-     * const states = new Map<any, boolean>();
-     * states.set(1, true);
-     * this.grid.expansionStates = states;
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [(expansionStates)]="model.expansionStates">
-     * </igx-tree-grid>
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public set expansionStates(value) {
-        this._expansionStates = this.cloneMap(value);
-        this.expansionStatesChange.emit(this._expansionStates);
-        if (this.gridAPI.grid) {
-            this.cdr.detectChanges();
-        }
-    }
-
-    /**
-     *@hidden
-     */
-    @Output()
-    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
-
     /**
      * @hidden
      */
@@ -353,28 +310,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     @Input()
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
-
-    /**
-     * Emitted when the expanded state of a row gets changed.
-     * ```typescript
-     * rowToggle(event: IRowToggleEventArgs){
-     *  // the id of the row
-     *  const rowID = event.rowID;
-     *  // the new expansion state
-     *  const newExpandedState = event.expanded;
-     *  // the original event that triggered onRowToggle
-     *  const originalEvent = event.event;
-     *  // whether the event should be cancelled
-     *  event.cancel = true;
-     * }
-     * ```
-     * ```html
-     * <igx-tree-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-tree-grid>
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    @Output()
-    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
      * @hidden
@@ -495,40 +430,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return mapCloned;
     }
 
-    /**
-     * Expands the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be expanded.
-     * ```typescript
-     * this.grid.expandRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public expandRow(rowID: any) {
-        this._gridAPI.expand_row(rowID);
-    }
-
-    /**
-     * Collapses the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be collapsed.
-     * ```typescript
-     * this.grid.collapseRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public collapseRow(rowID: any) {
-        this._gridAPI.collapse_row(rowID);
-    }
-
-    /**
-     * Toggles the expansion state of the `IgxTreeGridRowComponent` with the specified rowID.
-     * @param rowID The identifier of the row to be toggled.
-     * ```typescript
-     * this.grid.toggleRow(2);
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    public toggleRow(rowID: any) {
-        this._gridAPI.toggle_row_expansion(rowID);
+    public getDefaultExpandState(record: ITreeGridRecord) {
+        return record.children && record.children.length && record.level < this.expansionDepth;
     }
 
     /**

@@ -2,7 +2,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from './tree-grid.interfaces';
+import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
 import { Injectable } from '@angular/core';
@@ -33,81 +33,15 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return data;
     }
 
-    public expand_row(rowID: any) {
+    public allow_expansion_state_change(rowID, expanded): boolean {
         const grid = this.grid;
-        const expandedStates = grid.expansionStates;
-        expandedStates.set(rowID, true);
-        grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-    }
-
-    public collapse_row(rowID: any) {
-        const grid = this.grid;
-        const expandedStates = grid.expansionStates;
-        expandedStates.set(rowID, false);
-        grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-    }
-
-    public toggle_row_expansion(rowID: any) {
-        const grid = this.grid;
-        const expandedStates = grid.expansionStates;
-        const treeRecord = grid.records.get(rowID);
-
-        if (treeRecord) {
-            const isExpanded = this.get_row_expansion_state(treeRecord);
-            expandedStates.set(rowID, !isExpanded);
-            grid.expansionStates = expandedStates;
-        }
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-    }
-
-    // TODO: Maybe move the focus logic in the tree cell ?
-    public trigger_row_expansion_toggle(row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
-        const grid = this.grid;
-
+        const row = grid.records.get(rowID);
         if (row.expanded === expanded ||
             ((!row.children || !row.children.length) && (!grid.loadChildrenOnDemand ||
             (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
-            return;
+            return false;
         }
-
-        const args: IRowToggleEventArgs = {
-            rowID: row.rowID,
-            expanded: expanded,
-            event: event,
-            cancel: false
-        };
-        grid.onRowToggle.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
-        visibleColumnIndex = visibleColumnIndex ? visibleColumnIndex : 0;
-        const expandedStates = grid.expansionStates;
-        expandedStates.set(row.rowID, expanded);
-        grid.expansionStates = expandedStates;
-
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-
-        // TODO: Leave it to grid observer
-        requestAnimationFrame(() => {
-            const el = this.grid.selectionService.activeElement;
-            if (el) {
-                const cell = this.get_cell_by_visible_index(el.row, el.column);
-                if (cell) {
-                    cell.nativeElement.focus();
-                }
-            }
-        });
+        return true;
     }
 
     public expand_path_to_record(record: ITreeGridRecord) {
@@ -266,6 +200,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public row_deleted_transaction(rowID: any): boolean {
         return this.row_deleted_parent(rowID) || super.row_deleted_transaction(rowID);
+    }
+
+    public get_rec_by_id(rowID) {
+        return this.grid.records.get(rowID);
     }
 
     private row_deleted_parent(rowID: any): boolean {

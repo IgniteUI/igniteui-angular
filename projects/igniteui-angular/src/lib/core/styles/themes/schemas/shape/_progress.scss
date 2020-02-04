@@ -3,6 +3,23 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-$_default-shape-progress: ();
-$_round-shape-progress: ();
-$_square-shape-progress: ();
+$_default-shape-progress: (
+    track-border-radius: 0
+);
+
+$_round-shape-progress: (
+    track-border-radius: 0
+);
+
+$_square-shape-progress: (
+    track-border-radius: 0
+);
+
+$_fluent-shape-progress: (
+    track-border-radius: 0
+);
+
+$_bootstrap-shape-progress: (
+    track-border-radius: 4px
+);
+
