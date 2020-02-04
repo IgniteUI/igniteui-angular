@@ -24,3 +24,15 @@ $_dark-calendar: extend($_light-calendar, (
 /// @requires extend
 /// @requires $_fluent-calendar
 $_dark-fluent-calendar: extend($_fluent-calendar);
+
+/// Generates a dark bootstrap calendar schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-calendar
+$_dark-bootstrap-calendar: extend(
+    $_bootstrap-calendar,
+    (
+        content-background: #222,
+        picker-text-color: #fff,
+    )
+);

@@ -16,8 +16,15 @@ $_light-divider: (
     )
 );
 
-/// Generates a light divider schema.
+/// Generates a fluent divider schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-divider
 $_fluent-divider: extend($_light-divider);
+
+/// Generates a bootstrap divider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-divider
+$_bootstrap-divider: extend($_light-divider);
+

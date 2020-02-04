@@ -97,3 +97,10 @@ $_dark-fluent-button-group: extend(
         disabled-background-color: #222,
     )
 );
+
+/// Generates a dark bootstrap button-group schema based on a mix of $_bootstrap-button-group
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires $_bootstrap-button-group
+$_dark-bootstrap-button-group: extend($_bootstrap-button-group);

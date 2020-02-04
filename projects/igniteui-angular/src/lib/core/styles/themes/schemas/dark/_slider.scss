@@ -33,3 +33,19 @@ $_dark-fluent-slider: extend(
         ),
     )
 );
+
+/// Generates a dark bootstrap slider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-slider
+$_dark-bootstrap-slider: extend($_bootstrap-slider, (
+    track-color: (
+        igx-color: ('grays', 700),
+        hexrgba: #222
+    ),
+
+    thumb-disabled-border-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #222
+    ),
+));
