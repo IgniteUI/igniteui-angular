@@ -17,3 +17,9 @@ $_dark-avatar: extend($_light-avatar);
 /// @requires {function} extend
 /// @requires $_fluent-avatar
 $_dark-fluent-avatar: extend($_fluent-avatar);
+
+/// Generates a dark bootstrap avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-avatar
+$_dark-bootstrap-avatar: extend($_bootstrap-avatar);

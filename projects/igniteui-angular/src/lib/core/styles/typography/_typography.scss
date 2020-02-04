@@ -23,6 +23,7 @@
 @import '../components/list/list-theme';
 @import '../components/radio/radio-theme';
 @import '../components/snackbar/snackbar-theme';
+@import '../components/slider/slider-theme';
 @import '../components/switch/switch-theme';
 @import '../components/tabs/tabs-theme';
 @import '../components/time-picker/time-picker-theme';
@@ -115,6 +116,7 @@
         @include igx-radio-typography($type-scale);
         @include igx-snackbar-typography($type-scale);
         @include igx-switch-typography($type-scale);
+        @include igx-slider-typography($type-scale);
         @include igx-tabs-typography($type-scale);
         @include igx-time-picker-typography($type-scale);
         @include igx-toast-typography($type-scale);

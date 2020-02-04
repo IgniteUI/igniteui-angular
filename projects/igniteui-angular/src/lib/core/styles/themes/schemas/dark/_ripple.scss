@@ -18,3 +18,9 @@ $_dark-ripple: extend($_light-ripple);
 /// @requires {function} extend
 /// @requires $_fluent-ripple
 $_dark-fluent-ripple: extend($_fluent-ripple);
+
+/// Generates a dark bootstrap ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-ripple
+$_dark-bootstrap-ripple: extend($_bootstrap-ripple);
