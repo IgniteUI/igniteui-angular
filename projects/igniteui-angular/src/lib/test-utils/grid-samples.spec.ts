@@ -1587,7 +1587,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         </ng-template>
     `
 })
-export class IgxGridGroupByComponent extends DataParent implements OnInit{
+export class IgxGridGroupByComponent extends DataParent implements OnInit {
     public width = '600px';
     public height = '600px';
 
