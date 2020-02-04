@@ -16,6 +16,8 @@
 /// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
 /// @param {Color} $selected-text-color [null] -  The text color of a selected item in time picker.
 /// @param {Color} $active-item-background [null] - The background color for current item in focused column inside the time picker.
+/// @param {Color} $disabled-text-color [null] - The text color for disabled values.
+/// @param {Color} $disabled-item-background [null] - The background color for disabled values .
 /// @param {Color} $header-background [null] - The header background color of a time picker.
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
 /// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
@@ -52,6 +54,8 @@
     $hover-text-color: null,
     $selected-text-color: null,
     $active-item-background: null,
+    $disabled-text-color: null,
+    $disabled-item-background: null,
     $header-background: null,
     $header-hour-text-color: null,
     $header-time-period-color: null,
@@ -102,6 +106,12 @@
         }
     }
 
+    @if not($disabled-text-color) and $disabled-item-background {
+        @if type-of($disabled-item-background) == 'color' {
+            $disabled-text-color: rgba(text-contrast($disabled-item-background), .6);
+        }
+    }
+
     @if not($modal-shadow) {
         $elevation: map-get($time-picker-schema, 'modal-elevation');
         $modal-shadow: igx-elevation($elevations, $elevation);
@@ -119,6 +129,8 @@
         hover-text-color: $hover-text-color,
         selected-text-color: $selected-text-color,
         active-item-background: $active-item-background,
+        disabled-text-color: $disabled-text-color,
+        disabled-item-background: $disabled-item-background,
         header-background: $header-background,
         header-hour-text-color: $header-hour-text-color,
         header-time-period-color: $header-time-period-color,
@@ -137,10 +149,19 @@
 @mixin igx-time-picker($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, 'variant');
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
     $vertical-header-width: rem(168px);
+
+    $picker-buttons-padding: map-get((
+        material: rem(8px),
+        fluent: rem(8px),
+        bootstrap: rem(16px)
+    ), $variant);
 
     %time-picker-display {
         display: flex;
@@ -263,6 +284,12 @@
         background: --var($theme, 'active-item-background');
     }
 
+    %time-picker__item--disabled {
+        color: --var($theme, 'disabled-text-color');
+        background: --var($theme, 'disabled-item-background');
+        pointer-events: none;
+    }
+
     %time-picker__header {
         background: --var($theme, 'header-background');
         padding: rem(24px) rem(16px);
@@ -294,8 +321,11 @@
     %time-picker__buttons {
         display: flex;
         justify-content: flex-end;
-        height: rem(52px);
-        padding: rem(8px);
+        @if $not-bootstrap-theme {
+            height: rem(52px);
+        }
+
+        padding: $picker-buttons-padding;
 
         [igxButton] + [igxButton] {
             margin-#{$left}: rem(8px);
@@ -334,3 +364,4 @@
         }
     }
 }
+

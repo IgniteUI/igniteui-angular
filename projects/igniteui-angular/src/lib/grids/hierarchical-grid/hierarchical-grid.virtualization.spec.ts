@@ -6,10 +6,12 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
@@ -243,9 +245,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should be able to scroll last row in view after all rows get expanded.', async() => {
         // expand all
-        hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
-            return { rowID: hierarchicalGrid.primaryKey ? rec[hierarchicalGrid.primaryKey] : rec };
-        });
+        hierarchicalGrid.expandAll();
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom

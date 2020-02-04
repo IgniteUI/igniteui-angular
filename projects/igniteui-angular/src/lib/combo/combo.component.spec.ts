@@ -2796,6 +2796,66 @@ describe('igxCombo', () => {
     });
 });
 
+describe('Combo ControlValueAccessor Unit', () => {
+    let combo: IgxComboComponent;
+    it('should correctly implement interface methods', () => {
+        const mockSelection: {
+                [key: string]: jasmine.Spy
+            } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
+        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck']);
+        const mockComboService = jasmine.createSpyObj('IgxComboAPIService', ['register']);
+        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
+        mockSelection.get.and.returnValue(new Set([]));
+
+        // init
+        combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
+        combo.ngOnInit();
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+        combo.registerOnChange(mockNgControl.registerOnChangeCb);
+        combo.registerOnTouched(mockNgControl.registerOnTouchedCb);
+
+        // writeValue
+        expect(combo.value).toBe('');
+        mockSelection.add_items.and.returnValue(new Set(['test']));
+        spyOnProperty(combo, 'isRemote').and.returnValue(false);
+        combo.writeValue(['test']);
+        // TODO: Uncomment after fix for write value going through entire selection process
+        // expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
+        expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['test'], true);
+        expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['test'], true);
+        expect(combo.value).toBe('test');
+
+        // setDisabledState
+        combo.setDisabledState(true);
+        expect(combo.disabled).toBe(true);
+        combo.setDisabledState(false);
+        expect(combo.disabled).toBe(false);
+
+        // OnChange callback
+        mockSelection.add_items.and.returnValue(new Set(['simpleValue']));
+        combo.selectItems(['simpleValue']);
+        expect(mockSelection.add_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], undefined);
+        expect(mockSelection.select_items).toHaveBeenCalledWith(combo.id, ['simpleValue'], true);
+        expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(['simpleValue']);
+
+        // OnTouched callback
+        spyOnProperty(combo, 'collapsed').and.returnValue(true);
+        spyOnProperty(combo, 'valid', 'set');
+
+        combo.onFocus();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+        combo.onBlur();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+    });
+
+    it('should correctly handle ngControl validity', () => {
+        pending('Convert existing form test here');
+    });
+});
 @Component({
     template: `
 <igx-combo #combo
@@ -2906,7 +2966,12 @@ class IgxComboScrollTestComponent {
 `
 })
 class IgxComboSampleComponent {
-
+    /**
+     * TODO
+     * Test that use this component should properly call `selectItems` method
+     * IF a `valueKey` is defined, calls should be w/ the items' valueKey property value
+     * IF no `valueKey` is defined, calls should be w/ object references to the items
+     */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
 

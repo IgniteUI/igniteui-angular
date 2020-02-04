@@ -29,3 +29,10 @@ $_dark-chip: extend($_light-chip, $_base-dark-chip);
 /// @requires $_fluent-chip
 /// @requires $_base-dark-chip
 $_dark-fluent-chip: extend($_fluent-chip, $_base-dark-chip);
+
+/// Generates a dark bootstrap chip schema based on a mix of $_bootstrap-chip and $_base-dark-chip.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-chip
+/// @requires $_base-dark-chip
+$_dark-bootstrap-chip: extend($_bootstrap-chip, $_base-dark-chip);

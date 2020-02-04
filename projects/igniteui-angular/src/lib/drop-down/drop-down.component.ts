@@ -5,7 +5,7 @@ import {
     ElementRef,
     forwardRef,
     QueryList,
-    OnInit,
+    OnChanges,
     Input,
     OnDestroy,
     ViewChild,
@@ -14,7 +14,8 @@ import {
     Output,
     EventEmitter,
     Optional,
-    Inject
+    Inject,
+    SimpleChanges
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
@@ -52,7 +53,7 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
+export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
@@ -166,7 +167,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this._id;
     }
     set id(value: string) {
-        this.toggleDirective.id = value;
         this.selection.set(value, this.selection.get(this.id));
         this.selection.clear(this.id);
         this.selection.set(value, this.selection.get(`${this.id}-active`));
@@ -365,11 +365,18 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         if (e.cancel) {
             return;
         }
-        if (!this.virtDir && this.selectedItem) {
-            this.scrollToItem(this.selectedItem);
-        }
+
         if (this.virtDir) {
             this.virtDir.scrollPosition = this._scrollPosition;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onToggleContentAppended() {
+        if (!this.virtDir && this.selectedItem) {
+           this.scrollToItem(this.selectedItem);
         }
     }
 
@@ -453,8 +460,11 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    ngOnInit() {
-        this.toggleDirective.id = this.id;
+    // temp workaround until fix --> https://github.com/angular/angular/issues/34992
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.id) {
+            this.toggleDirective.id = changes.id.currentValue;
+        }
     }
 
     ngAfterViewInit() {

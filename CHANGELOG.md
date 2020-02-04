@@ -17,11 +17,16 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+    - **Breaking Change** - The following input and output have been deprecated for the `igxHierarchicalGrid` and will be removed in future versions:
+        - `hierarchicalState` -> `expansionStates` should be used instead.
+        - `hierarchicalStateChange` -> `expansionStatesChange` should be used instead.
+
     - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
-
+- `igxOverlay`:
+    - **Behavioural Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed `onAppended` overlay event and manage/restore the scroll position.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
@@ -40,6 +45,8 @@ All notable changes for each version of this project will be documented in this 
     - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
     - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
+    - `expandRow(rowID)`/`collapseRow(rowID)`/`toggleRow(rowID)` API methods are added for the `igxHierarchicalGrid`. They allow expanding/collapsing a row by its id.
+    - `onRowToggle` event is added for the `igxHierarchicalGrid`. It is emitted when the expanded state of a row is changed.
     - `IgxOverlayService`:
         - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
     - `IgxToggleDirective`:
@@ -68,8 +75,8 @@ All notable changes for each version of this project will be documented in this 
     - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
     - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
     - `isContinuous` - input has been deleted. The option is not supported anymore.
-    - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction. 
-   
+    - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction.
+
 - `IgxCarousel`:
     - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
     - `gesturesSupport` input is added, which can be used to enable and disable gestures
@@ -80,8 +87,25 @@ All notable changes for each version of this project will be documented in this 
     - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
     - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
 
-- `IgxSelect`: 
+- `IgxSelect`:
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
+
+- `IgxCombo`:
+    - Added `displayText` property to the combo's `onSelectionChange` event args. The property contains the text that will be populated in the combo's text box **after** selection completes. This text can be overwritten in order to display a custom message, e.g. "3 items selected":
+    ```html
+    <igx-combo [data]="people" valueKey="id" displayKey="name" placeholder="Invite friends..." (onSelectionChange)="handleSelection($event)">
+    ```
+    ```typescript
+    export class MyInvitationComponent {
+        public people: { name: string; id: string }[] = [...];
+        ...
+        handleSelection(event: IComboSelectionChangeEventArgs) {
+            const count = event.newSelection.length;
+            event.displayText = count > 0 ? `${count} friend(s) invited!` : `No friends invited :(`;
+        }
+        ...
+    }
+    ```
 
 - `IgxDropDown`:
     - `clearSelection` method is added, which can be used to deselect the selected dropdown item
@@ -105,6 +129,14 @@ All notable changes for each version of this project will be documented in this 
     );
 
     @include igx-progress-circular($theme);
+    ```
+    - RTL support
+
+- `IgxForOf`
+    - `IgxForTotalItemCount` input is added for the cases when the data is from remote services. This will allow setting the count of the items through the template. And gives the opportunity for the developers to use AsyncPipe for this option:
+    ```html
+    <ng-template igxFor let-item [igxForOf]="data | async" [igxForTotalItemCount]="count | async"
+        [igxForContainerSize]="'500px'" [igxForItemSize]="'50px'"></ng-template>
     ```
 
 ## 8.2.6

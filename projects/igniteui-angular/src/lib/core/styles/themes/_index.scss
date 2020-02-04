@@ -122,7 +122,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -130,7 +130,7 @@
         @include igx-bottom-nav(igx-bottom-nav-theme(
             $palette,
             $schema,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -143,12 +143,12 @@
             $outlined-border-radius: $roundness,
             $fab-border-radius: $roundness,
             $icon-border-radius: $roundness,
-            $raised-resting-shadow: if($elevation == false, 0, null),
-            $raised-hover-shadow: if($elevation == false, 0, null),
-            $raised-focus-shadow: if($elevation == false, 0, null),
-            $fab-resting-shadow: if($elevation == false, 0, null),
-            $fab-hover-shadow: if($elevation == false, 0, null),
-            $fab-focus-shadow: if($elevation == false, 0, null),
+            $raised-resting-shadow: if($elevation == false, none, null),
+            $raised-hover-shadow: if($elevation == false, none, null),
+            $raised-focus-shadow: if($elevation == false, none, null),
+            $fab-resting-shadow: if($elevation == false, none, null),
+            $fab-hover-shadow: if($elevation == false, none, null),
+            $fab-focus-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -157,7 +157,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, 'none', null),
         ));
     }
 
@@ -183,8 +183,8 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $resting-shadow: if($elevation == false, 0, null),
-            $hover-shadow: if($elevation == false, 0, null),
+            $resting-shadow: if($elevation == false, none, null),
+            $hover-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -193,7 +193,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $button-shadow: if($elevation == false, 0, null),
+            $button-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -211,7 +211,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $ghost-shadow: if($elevation == false, 0, null),
+            $ghost-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -236,7 +236,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -249,7 +249,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -266,8 +266,8 @@
             $palette,
             $schema,
             $drop-area-border-radius: $roundness,
-            $grid-shadow: if($elevation == false, 0, null),
-            $drag-shadow: if($elevation == false, 0, null),
+            $grid-shadow: if($elevation == false, none, null),
+            $drag-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -294,9 +294,9 @@
             $box-border-radius: $roundness,
             $border-border-radius: $roundness,
             $search-border-radius: $roundness,
-            $search-resting-shadow: if($elevation == false, 0, null),
-            $search-hover-shadow: if($elevation == false, 0, null),
-            $search-disabled-shadow: if($elevation == false, 0, null),
+            $search-resting-shadow: if($elevation == false, none, null),
+            $search-hover-shadow: if($elevation == false, none, null),
+            $search-disabled-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -313,7 +313,7 @@
         @include igx-navbar(igx-navbar-theme(
             $palette,
             $schema,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -323,7 +323,7 @@
             $schema,
             $border-radius: $roundness,
             $item-border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -356,7 +356,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $shadow: if($elevation == false, 0, null),
+            $shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -367,9 +367,9 @@
             $border-radius-track: $roundness,
             $border-radius-thumb: $roundness,
             $border-radius-ripple: $roundness,
-            $resting-shadow: if($elevation == false, 0, null),
-            $hover-shadow: if($elevation == false, 0, null),
-            $disabled-shadow: if($elevation == false, 0, null),
+            $resting-shadow: if($elevation == false, none, null),
+            $hover-shadow: if($elevation == false, none, null),
+            $disabled-shadow: if($elevation == false, none, null),
         ));
     }
 
@@ -403,8 +403,8 @@
             $schema,
             $border-radius: $roundness,
             $active-item-border-radius: $roundness,
-            $modal-shadow: if($elevation == false, 0, null),
-            $dropdown-shadow: if($elevation == false, 0, null),
+            $modal-shadow: if($elevation == false, none, null),
+            $dropdown-shadow: if($elevation == false, none, null),
         ));
     }
 }
@@ -550,3 +550,125 @@
         $elevation: $elevation,
     );
 }
+
+
+/// Creates a global bootstrap-like theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-bootstrap-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+        $type-scale: $bootstrap-type-scale,
+        $base-color: #212529
+    );
+
+    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
+        weekday-labels: 'calendar-labels',
+        card-title: 'card-title',
+    ));
+
+    @include igx-card-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+        subtitle: 'body-1',
+        content: 'body-1'
+    ));
+
+    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+    ));
+
+    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
+        header: 'subtitle-1',
+        item: 'subtitle-1',
+        select-item: 'subtitle-1'
+    ));
+
+    @include igx-list-typography($bootstrap-type-scale, $categories: (
+        item: 'body-2',
+        title: 'body-1',
+        subtitle: 'subtitle-1'
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
+            $grays: #212529
+        ),
+        $schema: $light-bootstrap-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// Creates a global bootstrap-like theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-bootstrap-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+        $type-scale: $bootstrap-type-scale,
+        $base-color: #fff
+    );
+
+    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
+        weekday-labels: 'calendar-labels',
+        card-title: 'card-title',
+    ));
+
+    @include igx-card-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+        subtitle: 'body-1',
+        content: 'body-1'
+    ));
+
+    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+    ));
+
+    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
+        header: 'subtitle-1',
+        item: 'subtitle-1',
+        select-item: 'subtitle-1'
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #f8f9fa, $surface, #222),
+            $grays: #fff
+        ),
+        $schema: $dark-bootstrap-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
