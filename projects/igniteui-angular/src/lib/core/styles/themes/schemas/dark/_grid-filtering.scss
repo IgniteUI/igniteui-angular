@@ -17,3 +17,9 @@ $_dark-grid-filtering: extend($_light-grid-filtering);
 /// @requires extend
 /// @requires $_fluent-grid-filtering
 $_dark-fluent-grid-filtering: extend($_fluent-grid-filtering);
+
+/// Generates a dark bootstrap grid-filtering schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-grid-filtering
+$_dark-bootstrap-grid-filtering: extend($_bootstrap-grid-filtering);

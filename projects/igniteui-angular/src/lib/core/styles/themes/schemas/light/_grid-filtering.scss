@@ -72,3 +72,10 @@ $_fluent-grid-filtering: extend(
         ),
     )
 );
+
+/// Generates a bootstrap grid-filtering schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-filtering
+$_bootstrap-grid-filtering: extend($_light-grid-filtering);
+

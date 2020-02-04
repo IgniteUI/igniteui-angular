@@ -16,3 +16,9 @@ $_dark-divider: extend($_light-divider);
 /// @requires {function} extend
 /// @requires$_fluent-divider
 $_dark-fluent-divider: extend($_fluent-divider);
+
+/// Generates a dark bootstrap divider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires$_bootstrap-divider
+$_dark-bootstrap-divider: extend($_bootstrap-divider);

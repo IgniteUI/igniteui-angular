@@ -6,28 +6,39 @@
     <ng-content select="igx-hint,[igxHint]"></ng-content>
 </div>
 
-<ng-template #material>
+<ng-template #label>
     <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
-<ng-template #bundle>
+<ng-template #input>
+    <ng-content select="[igxInput]"></ng-content>
+</ng-template>
 
-<!--    <ng-content *ngIf="isTypeFluent" select="[igxLabel]"></ng-content>-->
-    <ng-container *ngIf="isTypeFluent">
-        <ng-container *ngTemplateOutlet="material"></ng-container>
+<ng-template #inputBundle>
+    <ng-container *ngIf="!isNotMaterial">
+        <ng-container *ngTemplateOutlet="label"></ng-container>
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="input"></ng-container>
+</ng-template>
+
+<ng-template #bundle>
+    <ng-container *ngIf="isNotMaterial">
+        <ng-container *ngTemplateOutlet="label"></ng-container>
     </ng-container>
 
     <div class="igx-input-group__bundle">
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
-        <div class="igx-input-group__bundle-main">
 
-                <ng-container *ngIf="!isTypeFluent">
-                    <ng-container *ngTemplateOutlet="material"></ng-container>
-                </ng-container>
-<!--            <ng-content *ngIf="!isTypeFluent" select="[igxLabel]"></ng-content>-->
+        <div *ngIf="!isTypeBootstrap; else inputBundle" class="igx-input-group__bundle-main">
 
-            <ng-content select="[igxInput]"></ng-content>
+            <ng-container *ngIf="!isNotMaterial">
+                <ng-container *ngTemplateOutlet="label"></ng-container>
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="input"></ng-container>
         </div>
+
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
     </div>
     <div class="igx-input-group__border" *ngIf="hasBorder"></div>

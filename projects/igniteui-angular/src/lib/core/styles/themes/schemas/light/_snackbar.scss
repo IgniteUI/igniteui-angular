@@ -19,8 +19,6 @@ $_light-snackbar: extend(
     $_default-shape-snackbar,
     $_default-elevation-snackbar,
     (
-        border-radius: .17,
-
         background: (
             igx-color: ('grays', 900)
         ),
@@ -42,3 +40,27 @@ $_light-snackbar: extend(
 /// @requires $_light-snackbar
 /// @requires $_fluent-shape-snackbar
 $_fluent-snackbar: extend($_light-snackbar, $_fluent-shape-snackbar);
+
+/// Generates a bootstrap snackbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-snackbar
+$_bootstrap-snackbar: extend(
+    $_light-snackbar,
+    $_bootstrap-shape-snackbar,
+    $_bootstrap-elevation-snackbar,
+    (
+        background: (
+            igx-color: ('surface')
+        ),
+
+        text-color: (
+            igx-contrast-color: ('surface')
+        ),
+
+        button-color: (
+            igx-color: ('primary', 500)
+        ),
+    )
+);
+
