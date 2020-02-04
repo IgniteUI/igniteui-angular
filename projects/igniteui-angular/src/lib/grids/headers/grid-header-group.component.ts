@@ -122,6 +122,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         const classList = {
             'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__th--pinned-first': this.isFirstPinned,
             'igx-grid__drag-col-header': this.isHeaderDragged,
             'igx-grid__th--filtering': this.isFiltered
         };
@@ -169,6 +170,14 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
     }
 
+    /**
+     * Gets whether the header group is stored in the first column of the right pinned area.
+     * @memberof IgxGridHeaderGroupComponent
+     */
+    get isFirstPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
+    }
+
     @HostBinding('style.display')
     get groupDisplayStyle(): string {
         return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
@@ -179,7 +188,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isPinned(): boolean {
-        return this.column.pinned;
+        return this.column.pinned || this.column.pinnedToRight;
     }
 
     /**
@@ -195,6 +204,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get hasLastPinnedChildColumn(): boolean {
         return this.column.allChildren.some(child => child.isLastPinned);
+    }
+
+    /**
+     * @hidden
+     */
+    get hasFirstPinnedChildColumn(): boolean {
+        return this.column.allChildren.some(child => child.isFirstPinned);
     }
 
     /**

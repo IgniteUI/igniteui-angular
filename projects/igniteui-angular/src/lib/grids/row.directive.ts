@@ -149,6 +149,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
+    get pinnedRightColumns(): IgxColumnComponent[] {
+        return this.grid.pinnedRightColumns;
+    }
+
+    /**
+     * @hidden
+     */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this.grid.unpinnedColumns;
     }

@@ -83,6 +83,12 @@
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
                     [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
+            <ng-container *ngIf="pinnedRightColumns.length > 0">
+                <ng-template ngFor let-col [ngForOf]="pinnedRightColumns | igxTopLevel">
+                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
+                        [style.flex-basis]="getHeaderGroupWidth(col)" [style.left]="col.rightPinnedOffset"></igx-grid-header-group>
+                </ng-template>
+            </ng-container>
         </div>
         <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible"
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
@@ -187,6 +193,7 @@
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
         </ng-template>
     </div>
+    <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='rightPinnedWidth' [style.min-width.px]='rightPinnedWidth' [hidden]="rightPinnedWidth === 0"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>

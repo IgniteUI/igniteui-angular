@@ -591,6 +591,46 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
+     * Gets whether the column is `pinnedToRight`.
+     * ```typescript
+     * let isPinnedToRight = this.column.pinnedToRight;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @WatchColumnChanges()
+    @Input()
+    public get pinnedToRight(): boolean {
+        return this._pinnedToRight;
+    }
+    /**
+     * Sets whether the column is pinned.
+     * Default value is `false`.
+     * ```html
+     * <igx-column [pinnedToRight] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(pinnedToRight)] = "model.columns[0].isPinnedToRight"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set pinnedToRight(value: boolean) {
+        if (this._pinnedToRight !== value) {
+            if (this.grid && this.width && !isNaN(parseInt(this.width, 10))) {
+                value ? this.pinToRight() : this.unpin();
+                return;
+            }
+            /* No grid/width available at initialization. `initPinning` in the grid
+               will re-init the group (if present)
+            */
+            this._unpinnedIndex = this.grid ? this.grid.columns.filter(x => !x._pinnedToRight).indexOf(this) : 0;
+            this._pinnedToRight = value;
+            this.pinnedChange.emit(this._pinnedToRight);
+        }
+    }
+
+    /**
      *@hidden
      */
     @Output()
@@ -904,6 +944,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
+        const pinnedRightColumns = this.grid.pinnedRightColumns.filter(c => !c.columnGroup);
         let col = this;
         let vIndex = -1;
 
@@ -914,11 +955,14 @@ export class IgxColumnComponent implements AfterContentInit {
             return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
         }
 
-        if (!this.pinned) {
+        if (!this.pinned && !this.pinnedToRight) {
             const indexInCollection = unpinnedColumns.indexOf(col);
             vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
-        } else {
+        } else if (this.pinned) {
             vIndex = pinnedColumns.indexOf(col);
+        } else {
+            const indexInCollection = pinnedRightColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + unpinnedColumns.length + indexInCollection;
         }
         this._vIndex = vIndex;
         return vIndex;
@@ -988,6 +1032,17 @@ export class IgxColumnComponent implements AfterContentInit {
     get isLastPinned(): boolean {
         return this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
+
+    get isFirstPinned(): boolean {
+        return this.grid.pinnedRightColumns[0] === this;
+    }
+
+    get rightPinnedOffset(): string {
+        return this.pinnedToRight ?
+            -(this.grid.pinnedWidth + this.grid.rightPinnedWidth) + 'px' :
+            null;
+    }
+
     get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
@@ -1127,6 +1182,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _pinned = false;
+    /**
+     *@hidden
+     */
+    protected _pinnedToRight = false;
     /**
      *@hidden
      */
@@ -1546,6 +1605,73 @@ export class IgxColumnComponent implements AfterContentInit {
         return true;
     }
     /**
+     * Pins the column at the provided index in the pinned area to the right. Defaults to index `0` if not provided.
+     * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
+     * Column cannot be pinned if:
+     * - Is already pinned
+     * - index argument is out of range
+     * - The pinned area exceeds 80% of the grid width
+     * ```typescript
+     * let success = this.column.pin();
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public pinToRight(index?: number): boolean {
+        if (this.grid) {
+            this.grid.endEdit(true);
+        }
+        if (this._pinnedToRight) {
+            return false;
+        }
+
+        if (this.parent && !this.parent.pinnedToRight) {
+            return this.topLevelParent.pinToRight(index);
+        }
+
+        const grid = (this.grid as any);
+        const hasIndex = index !== undefined;
+        if (hasIndex && (index < 0 || index >= grid.pinnedToRightColumns.length)) {
+            return false;
+        }
+
+        if (!this.parent && !this.pinnable) {
+            return false;
+        }
+
+        this._pinnedToRight = true;
+        this.pinnedChange.emit(this._pinnedToRight);
+        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
+        index = index !== undefined ? index : grid._pinnedRightColumns.length;
+        const targetColumn = grid._pinnedRightColumns[index];
+        const args = { column: this, insertAtIndex: index, isPinned: true };
+        grid.onColumnPinning.emit(args);
+
+        if (grid._pinnedRightColumns.indexOf(this) === -1) {
+            grid._pinnedRightColumns.splice(args.insertAtIndex, 0, this);
+
+            if (grid._unpinnedColumns.indexOf(this) !== -1) {
+                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1);
+            }
+        }
+
+        if (hasIndex) {
+            grid._moveColumns(this, targetColumn);
+        }
+
+        if (this.columnGroup) {
+            this.allChildren.forEach(child => child.pinToRight());
+            grid.reinitPinStates();
+        }
+
+        grid.resetCaches();
+        grid.notifyChanges();
+        if (this.columnLayoutChild) {
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+        }
+        this.grid.filteringService.refreshExpressions();
+        return true;
+    }
+    /**
      * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
      * Returns `true` if the column is successfully unpinned. Returns `false` if the column cannot be unpinned.
      * Column cannot be unpinned if:
@@ -1560,7 +1686,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.grid) {
             this.grid.endEdit(true);
         }
-        if (!this._pinned) {
+        if (!this._pinned && !this._pinnedToRight) {
             return false;
         }
 
@@ -1577,6 +1703,7 @@ export class IgxColumnComponent implements AfterContentInit {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
+        this._pinnedToRight = false;
         this.pinnedChange.emit(this._pinned);
 
         const targetColumn = grid._unpinnedColumns[index];
@@ -1584,6 +1711,9 @@ export class IgxColumnComponent implements AfterContentInit {
         grid._unpinnedColumns.splice(index, 0, this);
         if (grid._pinnedColumns.indexOf(this) !== -1) {
             grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+        }
+        if (grid._pinnedRightColumns.indexOf(this) !== -1) {
+            grid._pinnedRightColumns.splice(grid._pinnedRightColumns.indexOf(this), 1);
         }
 
         if (hasIndex) {

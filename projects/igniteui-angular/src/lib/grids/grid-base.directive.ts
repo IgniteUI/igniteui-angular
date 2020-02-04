@@ -2804,6 +2804,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _pinnedRightColumns: IgxColumnComponent[] = [];
+    /**
+     * @hidden
+     */
     protected _unpinnedColumns: IgxColumnComponent[] = [];
     /**
      * @hidden
@@ -2859,6 +2863,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     // Caches
     private _totalWidth = NaN;
     private _pinnedVisible = [];
+    private _pinnedRightVisible = [];
     private _unpinnedVisible = [];
     private _pinnedWidth = NaN;
     private _unpinnedWidth = NaN;
@@ -3186,6 +3191,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public resetColumnCollections() {
         this._visibleColumns.length = 0;
         this._pinnedVisible.length = 0;
+        this._pinnedRightVisible.length = 0;
         this._unpinnedVisible.length = 0;
     }
 
@@ -3557,6 +3563,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the current width of the container for the pinned `IgxColumnComponent`s.
+     * ```typescript
+     * const rightPinnedWidth = this.grid.rightPinnedWidth;
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    get rightPinnedWidth() {
+        const fc = this.pinnedRightColumns;
+        let sum = 0;
+        for (let i = 0; i < fc.length; i++) {
+            sum += parseInt(fc[i].width, 10);
+        }
+        return sum;
+    }
+
+    /**
      * Returns the current width of the container for the unpinned `IgxColumnComponent`s.
      * ```typescript
      * const unpinnedWidth = this.grid.getUnpinnedWidth;
@@ -3611,7 +3633,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns an array of the pinned `IgxColumnComponent`s.
+     * Returns an array of the pinned to left `IgxColumnComponent`s.
      * ```typescript
      * const pinnedColumns = this.grid.pinnedColumns.
      * ```
@@ -3623,6 +3645,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._pinnedVisible = this._pinnedColumns.filter(col => !col.hidden);
         return this._pinnedVisible;
+    }
+
+    /**
+     * Returns an array of the pinned to right `IgxColumnComponent`s.
+     * ```typescript
+     * const pinnedColumns = this.grid.pinnedColumns.
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    get pinnedRightColumns(): IgxColumnComponent[] {
+        if (this._pinnedRightVisible.length) {
+            return this._pinnedRightVisible;
+        }
+        this._pinnedRightVisible = this._pinnedRightColumns.filter(col => !col.hidden);
+        return this._pinnedRightVisible;
     }
 
     /**
@@ -5024,6 +5061,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets calculated width of the pinned area to the right.
+     * ```typescript
+     * const pinnedWidth = this.grid.getPinnedWidth();
+     * ```
+     * @param takeHidden If we should take into account the hidden columns in the pinned area.
+     * @memberof IgxGridBaseDirective
+     */
+    public getRightPinnedWidth(takeHidden = false) {
+        const fc = takeHidden ? this._pinnedRightColumns : this.pinnedRightColumns;
+        let sum = 0;
+        for (const col of fc) {
+            if (col.level === 0) {
+                sum += parseInt(col.calcWidth, 10);
+            }
+        }
+
+        return sum;
+    }
+
+    /**
      * @hidden
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
@@ -5033,10 +5090,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let width = this.isPercentWidth ?
             this.calcWidth :
             parseInt(this.width, 10) ||  parseInt(this.hostWidth, 10) || this.calcWidth;
-        if (this.hasVerticalSroll() && !this.isPercentWidth) {
+        if (this.hasVerticalSroll() && !this.isPercentWidth && this.getRightPinnedWidth(takeHidden) !== 0) {
             width -= this.scrollWidth;
         }
-        return width - this.getPinnedWidth(takeHidden);
+        return width - this.getPinnedWidth(takeHidden) - this.getRightPinnedWidth(takeHidden);
     }
 
     /**
@@ -5181,8 +5238,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected reinitPinStates() {
         this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
             this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-        this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
-        this.columnList.filter((c) => !c.pinned)
+        this._pinnedRightColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinnedToRight) :
+            this.columnList.filter((c) => c.pinnedToRight)
+                .sort((a, b) => this._pinnedRightColumns.indexOf(a) - this._pinnedRightColumns.indexOf(b));
+        this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned && !c.pinnedToRight) :
+        this.columnList.filter((c) => !c.pinned && !c.pinnedToRight)
         .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
     }
 
@@ -5773,6 +5833,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    private _pinAllChildren(parents) {
+        parents.forEach(col => {
+            if (col.parent) {
+                col.parent.pinned = true;
+            }
+            if (col.columnGroup) {
+                col.children.forEach(child => child.pinned = true);
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     */
     protected initPinning() {
         let currentPinnedWidth = 0;
         const pinnedColumns = [];
@@ -5781,14 +5855,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.calculateGridWidth();
         this.resetCaches();
         // When a column is a group or is inside a group, pin all related.
-        this._pinnedColumns.forEach(col => {
-            if (col.parent) {
-                col.parent.pinned = true;
-            }
-            if (col.columnGroup) {
-                col.children.forEach(child => child.pinned = true);
-            }
-        });
+        this._pinAllChildren(this._pinnedColumns);
+        this._pinAllChildren(this._pinnedRightColumns);
 
         // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
         // We take into account top level columns (top level groups and non groups).

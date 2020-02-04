@@ -18,16 +18,16 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '5%', hidden: false },
-            { field: 'CompanyName', width: '5%' },
-            { field: 'ContactName', width: '5%', pinned: false },
-            { field: 'ContactTitle', width: '25%', pinned: false },
-            { field: 'Address', width: '10%' },
-            { field: 'City', width: '10%' },
-            { field: 'Region', width: '10%' },
-            { field: 'PostalCode', width: '10%' },
-            { field: 'Phone', width: '10%' },
-            { field: 'Fax', width: '10%' }
+            { field: 'ID', width: '200px', hidden: false },
+            { field: 'CompanyName', width: '200px' },
+            { field: 'ContactName', width: '200px', pinned: false },
+            { field: 'ContactTitle', width: '200px', pinned: false },
+            { field: 'Address', width: '300px' },
+            { field: 'City', width: '300px' },
+            { field: 'Region', width: '200px' },
+            { field: 'PostalCode', width: '200px' },
+            { field: 'Phone', width: '200px' },
+            { field: 'Fax', width: '200px' }
         ];
 
         this.data = [
@@ -66,6 +66,11 @@ export class GridColumnPinningSampleComponent implements OnInit {
     toggleColumn(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
+    }
+
+    togglePinningToRight(name: string) {
+        const col = this.grid1.getColumnByName(name);
+        col.pinnedToRight = !col.pinnedToRight;
     }
 
     toggleVisibility(name: string) {
