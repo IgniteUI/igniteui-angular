@@ -11,6 +11,9 @@
 /// @requires rem
 /// @requires --var
 @mixin _advanced-filtering($theme, $palette) {
+    $variant: map-get($theme, variant);
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     $vertical-space-comfortable: rem(16px);
     $vertical-space-cosy: rem(12px);
     $vertical-space-compact: rem(8px);
@@ -274,7 +277,9 @@
 
         &:hover,
         &:focus {
-            background-color: --var($theme, 'filtering-row-background');
+            @if $not-bootstrap-theme {
+                background-color: --var($theme, 'filtering-row-background');
+            }
         }
     }
 
