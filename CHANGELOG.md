@@ -27,7 +27,7 @@ All notable changes for each version of this project will be documented in this 
     - `igxMonthPicker`
     - `igxSlider`
     - `igxCalendar`
-    - `igxCarosel`
+    - `igxCarousel`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
