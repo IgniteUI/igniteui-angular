@@ -152,50 +152,61 @@
     @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
+    $variant: map-get($theme, variant);
+
     $switch-width: map-get((
         material: 36px,
         fluent: 40px,
-    ), map-get($theme, variant));
+        bootstrap: 32px,
+    ), $variant);
 
     $switch-height: map-get((
         material: 14px,
-        fluent: 20px
-    ), map-get($theme, variant));
+        fluent: 20px,
+        bootstrap: 16px,
+    ), $variant);
 
     $switch-thumb-width: map-get((
         material: 20px,
-        fluent: 12px
-    ), map-get($theme, variant));
+        fluent: 12px,
+        bootstrap: 8px,
+    ), $variant);
 
     $switch-on-offset: map-get((
         material: 1px,
-        fluent: $switch-thumb-width / 2
-    ), map-get($theme, variant));
+        fluent: $switch-thumb-width / 2,
+        bootstrap: $switch-thumb-width / 2
+    ), $variant);
 
     $switch-off-offset: map-get((
         material: -1px,
-        fluent: $switch-thumb-width / 3
-    ), map-get($theme, variant));
+        fluent: $switch-thumb-width / 3,
+        bootstrap: $switch-thumb-width / 3
+    ), $variant);
 
     $ripple-display: map-get((
         material: block,
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $thumb-resting-shadow: map-get((
         material: --var($theme, 'resting-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none
+    ), $variant);
 
     $thumb-hover-shadow: map-get((
         material: --var($theme, 'hover-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $thumb-disabled-shadow: map-get((
         material: --var($theme, 'disabled-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $switch-thumb-height: $switch-thumb-width ;
 

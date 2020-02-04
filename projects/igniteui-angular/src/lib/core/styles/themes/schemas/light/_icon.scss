@@ -27,3 +27,9 @@ $_light-icon: (
 /// @requires {function} extend
 /// @requires {map} $_light-icon
 $_fluent-icon: extend($_light-icon);
+
+/// Generates a bootstrap icon schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-icon
+$_bootstrap-icon: extend($_light-icon);

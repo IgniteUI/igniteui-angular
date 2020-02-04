@@ -38,3 +38,9 @@ $_light-highlight: (
 /// @requires $_light-highlight
 $_fluent-highlight: extend($_light-highlight);
 
+/// Generates a bootstrap highlight schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-highlight
+$_bootstrap-highlight: extend($_light-highlight);
+

@@ -64,3 +64,13 @@ $_light-carousel: extend(
 /// @requires {map} $_fluent-elevation-carousel
 /// @see $default-palette
 $_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel, $_fluent-elevation-carousel);
+
+/// Generates a bootstrap carousel schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-carousel
+/// @see $bootstrap-palette
+$_bootstrap-carousel: extend($_light-carousel, $_bootstrap-shape-carousel, $_fluent-elevation-carousel, (
+    variant: 'bootstrap'
+));
+
