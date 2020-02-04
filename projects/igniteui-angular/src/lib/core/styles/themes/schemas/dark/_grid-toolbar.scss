@@ -28,3 +28,10 @@ $_dark-grid-toolbar: extend($_light-grid-toolbar, $_base-dark-grid-toolbar);
 /// @requires $_fluent-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
 $_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $_base-dark-grid-toolbar);
+
+/// Generates a dark bootstrap grid-toolbar schema based on a mix of $_bootstrap-grid-toolbar and $_base-dark-grid-toolbar..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-grid-toolbar
+/// @requires $_base-dark-grid-toolbar
+$_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid-toolbar);

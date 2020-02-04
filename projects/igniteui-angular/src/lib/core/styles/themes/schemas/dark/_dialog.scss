@@ -17,3 +17,9 @@ $_dark-dialog: extend($_light-dialog);
 /// @requires extend
 /// @requires $_fluent-dialog
 $_dark-fluent-dialog: extend($_fluent-dialog);
+
+/// Generates a dark bootstrap dialog schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-dialog
+$_dark-bootstrap-dialog: extend($_bootstrap-dialog);

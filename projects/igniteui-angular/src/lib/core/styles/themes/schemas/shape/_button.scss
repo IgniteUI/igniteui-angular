@@ -34,3 +34,11 @@ $_fluent-shape-button: (
     fab-border-radius: 1,
     icon-border-radius: 0,
 );
+
+$_bootstrap-shape-button: (
+    flat-border-radius: 4px,
+    raised-border-radius: 4px,
+    outlined-border-radius: 4px,
+    fab-border-radius: 1,
+    icon-border-radius: 4px,
+);

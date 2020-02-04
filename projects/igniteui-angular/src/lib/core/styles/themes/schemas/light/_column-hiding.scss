@@ -23,3 +23,9 @@ $_light-column-hiding: (
 /// @requires {function} extend
 /// @requires {map} $_light-column-hiding
 $_fluent-column-hiding: extend($_light-column-hiding);
+
+/// Generates a bootstrap column hiding schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-column-hiding
+$_bootstrap-column-hiding: extend($_light-column-hiding);

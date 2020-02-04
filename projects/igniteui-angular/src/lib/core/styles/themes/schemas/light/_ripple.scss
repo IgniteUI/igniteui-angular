@@ -15,6 +15,8 @@
 $_light-ripple: extend(
     $_default-shape-ripple,
     (
+        variant: 'material',
+
         color: (
             igx-color: ('grays', 800)
         )
@@ -25,4 +27,15 @@ $_light-ripple: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-ripple
-$_fluent-ripple: extend($_light-ripple);
+$_fluent-ripple: extend($_light-ripple, (
+    variant: 'fluent'
+));
+
+/// Generates a bootstrap ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-ripple
+$_bootstrap-ripple: extend($_light-ripple, (
+    variant: 'bootstrap'
+));
+

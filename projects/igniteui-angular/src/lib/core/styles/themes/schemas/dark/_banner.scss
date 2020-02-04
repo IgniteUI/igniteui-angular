@@ -17,3 +17,9 @@ $_dark-banner: extend($_light-banner);
 /// @requires extend
 /// @requires $_fluent-banner
 $_dark-fluent-banner: extend($_fluent-banner);
+
+/// Generates a dark bootstrap banner schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-banner
+$_dark-bootstrap-banner: extend($_bootstrap-banner);
