@@ -11,11 +11,6 @@ enum Direction {
     Right = 'ArrowRight',
 }
 
-enum TimeDeltaInterval {
-    Month = 'month',
-    Year = 'year'
-}
-
 const ARROW = 'Arrow';
 
 /**
@@ -187,41 +182,5 @@ export class IgxDaysViewNavigationService {
             }
         }
         return false;
-    }
-}
-
-/**
- * @hidden
- * Temporary service managing the multi view calendar interactions.
- * https://github.com/IgniteUI/igniteui-angular/issues/6375
- * TODO: should be combined with @IgxDaysViewNavigationService
- */
-@Injectable()
-export class IgxCalendarNavigationService {
-    public calendar: Calendar;
-    public monthViewIdx = 0;
-
-    public constructor() {
-        this.calendar = new Calendar();
-    }
-
-    public getDatePerMonthView(date: Date, interval: string) {
-        return this.calendar.timedelta(date, interval, -this.monthViewIdx);
-    }
-
-    public getNextMonth(date: Date) {
-        return this.calendar.timedelta(date, TimeDeltaInterval.Month, 1);
-    }
-
-    public getPrevMonth(date: Date) {
-        return this.calendar.timedelta(date, TimeDeltaInterval.Month, -1);
-    }
-
-    public getNextYear(date: Date) {
-        return this.calendar.timedelta(date, TimeDeltaInterval.Year, 1);
-    }
-
-    public getPrevYear(date: Date) {
-        return this.calendar.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 }

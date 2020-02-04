@@ -17,7 +17,7 @@ import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { IgxDaysViewNavigationService, IgxCalendarNavigationService } from '../navigation.service';
+import { IgxDaysViewNavigationService } from '../navigation.service';
 
 let NEXT_ID = 0;
 
@@ -98,8 +98,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    constructor(public daysNavService: IgxDaysViewNavigationService, public calendarNavService: IgxCalendarNavigationService) {
-        super(calendarNavService);
+    constructor(public daysNavService: IgxDaysViewNavigationService) {
+        super();
     }
 
     /**

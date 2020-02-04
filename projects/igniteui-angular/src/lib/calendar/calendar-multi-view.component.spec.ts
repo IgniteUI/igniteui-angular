@@ -49,7 +49,7 @@ fdescribe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
         });
 
-        it('should  render properly if set monthsViewNumber to a value < 1', () => {
+        fit('should  render properly if set monthsViewNumber to a value < 1', () => {
             expect(calendar.monthsViewNumber).toBe(3);
             HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
 
@@ -840,7 +840,7 @@ fdescribe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(arrowRight);
         })));
 
-        it('When select a new month - should come at correct position', fakeAsync(() => {
+        fit('When select a new month - should come at correct position', fakeAsync(() => {
             const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[2];
             UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
@@ -881,7 +881,7 @@ fdescribe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
         }));
 
-        it('When select a new year - should come at correct position', fakeAsync(() => {
+        fit('When select a new year - should come at correct position', fakeAsync(() => {
             calendar.viewDate = new Date('2019-12-12');
             tick();
             fixture.detectChanges();

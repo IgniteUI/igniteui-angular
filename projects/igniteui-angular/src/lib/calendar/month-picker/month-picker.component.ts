@@ -140,7 +140,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public nextYear() {
         this.yearAction = 'next';
-        this.viewDate = this._navService.getNextYear(this.viewDate);
+        this.viewDate = this.getNextYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -163,7 +163,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public previousYear() {
         this.yearAction = 'prev';
-        this.viewDate = this._navService.getPrevYear(this.viewDate);
+        this.viewDate = this.getPrevYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -238,7 +238,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'prev';
-        this.viewDate = this._navService.getPrevYear(this.viewDate);
+        this.viewDate = this.getPrevYear(this.viewDate);
     }
 
     /**
@@ -248,7 +248,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'next';
-        this.viewDate = this._navService.getNextYear(this.viewDate);
+        this.viewDate = this.getNextYear(this.viewDate);
     }
 
     /**

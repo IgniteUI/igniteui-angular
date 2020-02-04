@@ -127,6 +127,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     set monthsViewNumber(val: number) {
+        if (val < 1 ) {
+            return;
+        }
+
         this._monthsViewNumber = val;
     }
 
@@ -402,7 +406,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public previousMonth(isKeydownTrigger = false) {
-        this.viewDate = this._navService.getPrevMonth(this.viewDate);
+        this.viewDate = this.getPrevMonth(this.viewDate);
         this.animationAction = ScrollMonth.PREV;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -411,7 +415,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public nextMonth(isKeydownTrigger = false) {
-        this.viewDate = this._navService.getNextMonth(this.viewDate);
+        this.viewDate = this.getNextMonth(this.viewDate);
         this.animationAction = ScrollMonth.NEXT;
         this.isKeydownTrigger = isKeydownTrigger;
     }
@@ -538,11 +542,11 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeMonth(event: Date) {
-        this.viewDate = this._navService.getDatePerMonthView(event, 'month');
+        this.viewDate = this.getDatePerMonthView(event, 'month');
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this._navService.monthViewIdx);
+            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.monthViewIdx);
             if (elem) { elem.nativeElement.focus(); }
         });
     }
@@ -551,12 +555,12 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      */
     public changeYear(event: Date) {
-        this.viewDate = this._navService.getDatePerMonthView(event, 'month');
+        this.viewDate = this.getDatePerMonthView(event, 'month');
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
             if (this.yearsBtns) {
-                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this._navService.monthViewIdx).nativeElement.focus();
+                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.monthViewIdx).nativeElement.focus();
             }
         });
     }
@@ -567,16 +571,16 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     public onActiveViewYear(args: Date, monthViewIdx: number): void {
         this.activeView = CalendarView.YEAR;
-        this._navService.monthViewIdx = monthViewIdx;
+        this.monthViewIdx = monthViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
             this.focusMonth(monthViewIdx);
         });
     }
 
-    private focusMonth(monthVieiwIdx: number) {
+    private focusMonth(monthViewIdx: number) {
         const month = this.monthsView.monthsRef.find((e) =>
-            e.index === monthVieiwIdx);
+            e.index === monthViewIdx);
         if (month) { month.nativeElement.focus(); }
     }
 

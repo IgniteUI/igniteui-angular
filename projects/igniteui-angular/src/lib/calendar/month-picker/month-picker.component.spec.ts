@@ -314,7 +314,7 @@ fdescribe('IgxMonthPicker', () => {
         expect(year.nativeElement.textContent.trim()).toMatch('2018');
     });
 
-    it('should navigate through and select a month via KB.', () => {
+    fit('should navigate through and select a month via KB.', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
 

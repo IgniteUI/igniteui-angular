@@ -1,7 +1,6 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { HostBinding, Directive } from '@angular/core';
 import { KEYS } from '../core/utils';
-import { IgxCalendarNavigationService } from './navigation.service';
 
 /**
  * Sets the calender view - days, months or years.
@@ -11,6 +10,14 @@ export enum CalendarView {
     YEAR,
     DECADE
 }
+
+/**
+ * @hidden
+ */
+enum TimeDeltaInterval {
+    Month = 'month',
+    Year = 'year'
+}
 @Directive({
     selector: '[igxMonthPickerBase]'
 })
@@ -19,7 +26,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * Holds month view index we are operating on.
      */
-    protected _monthViewIdx = 0;
+    protected monthViewIdx = 0;
 
     /**
      * The default `tabindex` attribute for the component.
@@ -67,7 +74,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     public activeViewDecade(monthViewIdx = 0): void {
         this._activeView = CalendarView.DECADE;
-        this._navService.monthViewIdx = monthViewIdx;
+        this.monthViewIdx = monthViewIdx;
     }
 
     /**
@@ -91,5 +98,25 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
             return this.formatterYear.format(value);
         }
         return `${value.getFullYear()}`;
+    }
+
+    protected getDatePerMonthView(date: Date, interval: string) {
+        return this.calendarModel.timedelta(date, interval, -this.monthViewIdx);
+    }
+
+    protected getNextMonth(date: Date) {
+        return this.calendarModel.timedelta(date, TimeDeltaInterval.Month, 1);
+    }
+
+    protected getPrevMonth(date: Date) {
+        return this.calendarModel.timedelta(date, TimeDeltaInterval.Month, -1);
+    }
+
+    protected getNextYear(date: Date) {
+        return this.calendarModel.timedelta(date, TimeDeltaInterval.Year, 1);
+    }
+
+    protected getPrevYear(date: Date) {
+        return this.calendarModel.timedelta(date, TimeDeltaInterval.Year, -1);
     }
 }

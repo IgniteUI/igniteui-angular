@@ -4,7 +4,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
 import { isDate } from '../core/utils';
-import { IgxCalendarNavigationService } from './navigation.service';
 
 /**
  * Sets the selction type - single, multi or range.
@@ -23,7 +22,7 @@ export enum ScrollMonth {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxCalendarBase]'
+    selector: '[igxCalendarBase]',
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
@@ -357,7 +356,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    constructor(protected _navService: IgxCalendarNavigationService) {
+    constructor() {
         this.calendarModel = new Calendar();
 
         this.viewDate = this.viewDate ? this.viewDate : new Date();

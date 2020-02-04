@@ -1613,7 +1613,7 @@ fdescribe('IgxCalendar - ', () => {
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
             });
 
-            it('Should open months view, navigate through and select a month via KB.', () => {
+            fit('Should open months view, navigate through and select a month via KB.', () => {
                 const month = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[0];
                 month.nativeElement.focus();
 
