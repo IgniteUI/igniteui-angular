@@ -14,6 +14,10 @@ import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IRowToggleEventArgs } from './common/events';
+import {
+    ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
+} from '../core/utils';
+import { first, debounceTime } from 'rxjs/operators';
 /**
  *@hidden
  */
@@ -578,6 +582,12 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
+
+        if (event && this.isToggleKey((event as any).key.toLowerCase())) {
+            (this.grid as any).zone.onStable.pipe(debounceTime(30)).pipe(first()).subscribe(() => {
+                this.focusActiveCell(rowID);
+            });
+        }
     }
 
     public get_rec_by_id(rowID) {
@@ -586,6 +596,22 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public allow_expansion_state_change(rowID, expanded) {
         return this.grid.expansionStates.get(rowID) !== expanded;
+    }
+
+    private isToggleKey(key: string): boolean {
+        return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    }
+
+    private focusActiveCell(rowID) {
+        // persist focused cell
+        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const el = this.grid.selectionService.activeElement;
+        if (isVirtualized && el) {
+            const cell = this.get_cell_by_key(rowID, this.grid.visibleColumns[el.column].field);
+            if (cell) {
+                cell.nativeElement.focus();
+            }
+        }
     }
 
 }
