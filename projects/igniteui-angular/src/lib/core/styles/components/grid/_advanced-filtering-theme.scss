@@ -13,6 +13,7 @@
 @mixin _advanced-filtering($theme, $palette) {
     $variant: map-get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
 
     $vertical-space-comfortable: rem(16px);
     $vertical-space-cosy: rem(12px);
@@ -261,10 +262,19 @@
 
     %filter-con-menu__delete-btn {
         color: igx-color($palette, 'error');
+        @if $bootstrap-theme {
+            border-color: igx-color($palette, 'error');
+        }
 
         &:hover,
         &:focus {
-            color: igx-color($palette, 'error');
+            @if $bootstrap-theme {
+                background: igx-color($palette, 'error');
+                border-color: igx-color($palette, 'error');
+                color: hexrgba(igx-color($palette, 'grays', 100));
+            } @else {
+                color: igx-color($palette, 'error');
+            }
         }
     }
 
