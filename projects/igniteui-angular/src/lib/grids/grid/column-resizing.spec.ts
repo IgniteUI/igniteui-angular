@@ -22,7 +22,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const COLUMN_FILTER_CELL_SELECTOR = 'igx-grid-filtering-cell';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,

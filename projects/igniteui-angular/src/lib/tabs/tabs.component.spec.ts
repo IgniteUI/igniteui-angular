@@ -25,7 +25,7 @@ describe('IgxTabs', () => {
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
 
         const testRoutes = [
             { path: 'view1', component: TabsRoutingView1Component },
