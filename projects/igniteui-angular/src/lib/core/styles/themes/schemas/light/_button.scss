@@ -20,10 +20,11 @@
 /// @prop {Color} flat-hover-icon-color [currentColor] - The hover color of a flat button icon.
 /// @prop {Color} flat-focus-icon-color [currentColor] - The focus color of a flat button icon.
 ///
+/// @prop {Color} outlined-background [transparent] - The background color of an outlined button
 /// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
 /// @prop {Map} outlined-outline-color [igx-color: ('grays', 300)] - The border color of an outlined button.
 /// @prop {Map} outlined-disabled-outline-color [igx-color: ('grays', 300)] - The border color of an outlined button.
-/// @prop {Color} outlined-hover-background [igx-color: ('secondary', 500), rgba: .05] - The hover background color of an outlined button.
+/// @prop {Map} outlined-hover-background [igx-color: ('secondary', 500), rgba: .05] - The hover background color of an outlined button.
 /// @prop {Map} outlined-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of an outlined button.
 /// @prop {Map} outlined-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of an outlined button.
 /// @prop {Map} outlined-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of an outlined button.
@@ -54,8 +55,8 @@
 /// @prop {Map} icon-hover-background [igx-color: ('grays', 100)] - The hover background color of an icon button.
 /// @prop {Map} icon-focus-color [igx-color: ('grays', 800)] - The focus icon color of an icon button.
 /// @prop {Map} icon-focus-background [igx-color: ('grays', 400] - The focus background color an icon button.
-/// @prop {Color} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
-/// @prop {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
+/// @prop {Map} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
 ///
 /// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
@@ -66,7 +67,7 @@
 ///
 /// @prop {Number} flat-border-radius [.2] - The border radius fraction used for flat button.
 /// @prop {Number} raised-border-radius [.2] - The border radius fraction used for raised button.
-/// @prop {Number} outlined-border-radius [1] - The border radius fraction used for outlined button.
+/// @prop {Number} outlined-border-radius [.2] - The border radius fraction used for outlined button.
 /// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
 /// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
 /// @requires {function} extend
@@ -241,8 +242,8 @@ $_light-button: extend(
 /// @prop {Map} flat-focus-text-color [igx-color: ('primary', 500)] - The focus text color of a flat button.
 ///
 /// @prop {Map} outlined-outline-color [igx-color: ('grays', 800)] - The border color of an outlined button.
-/// @prop {Map} outlined-text-color [igx-color: ('grays', 000)] - The idle text color of an outlined button.
-/// @prop {Color} outlined-hover-background [igx-color: ('grays', 100)] - The hover background color of an outlined button.
+/// @prop {Map} outlined-text-color [igx-color: ('grays', 900)] - The idle text color of an outlined button.
+/// @prop {Map} outlined-hover-background [igx-color: ('grays', 100)] - The hover background color of an outlined button.
 /// @prop {Map} outlined-hover-text-color [igx-color: ('grays', 900)] - The hover text color of an outlined button.
 /// @prop {Map} outlined-focus-background [igx-color: ('grays', 100)] - The focus background color of an outlined button.
 /// @prop {Map} outlined-focus-text-color [igx-color: ('grays', 900)] - The focus text color of an outlined button.
@@ -274,7 +275,8 @@ $_light-button: extend(
 /// @prop {Number} flat-border-radius [0] - The border radius fraction used for flat button.
 /// @prop {Number} raised-border-radius [2px] - The border radius fraction used for raised button.
 /// @prop {Number} outlined-border-radius [2px] - The border radius fraction used for outlined button.
-/// @prop {Number} icon-border-radius [2px] - The border radius fraction used for icon button.
+/// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
+/// @prop {Number} icon-border-radius [0] - The border radius fraction used for icon button.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-button

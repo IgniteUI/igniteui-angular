@@ -10,7 +10,7 @@
 /// @type {Map}
 ///
 /// @property {Color} background-color [inherit] - The summaries background color is inherited form igx-grid__tfoot.
-/// @property {Color} focus-background-color [igx-color] - The background color when a summary item is on focus.
+/// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
 /// @property {map} label-color [igx-color: ('primary', 500)] - The summaries label color.
 /// @property {map} label-hover-color [igx-color: ('primary', 700)] - The summaries hover label color.
 /// @property {Color} result-color [currentColor] - The summaries value/result color.

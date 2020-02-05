@@ -115,7 +115,7 @@
 /// @access public
 /// @requires {function} to-string
 /// @param {Color} $rgba - The rgba color to convert.
-/// @param {Color} $background - The background color to convert against.
+/// @param {Color} $background [#fff] - The background color to convert against.
 /// @return {Color} - The hexidecimal representation of the rgba value.
 @function hexrgba($rgba, $background: #fff) {
     @if type-of($rgba) == color {
@@ -155,7 +155,7 @@
 /// @group Palettes
 /// @param {Map} $palette - The source palette map.
 /// @param {string} $color - The target color from the color palette.
-/// @param {number|variant} $variant - The target color shade from the color palette.
+/// @param {number|variant} $variant [500] - The target color shade from the color palette.
 /// @requires igx-color
 /// @requires text-contrast
 /// @requires hexrgba
@@ -181,7 +181,7 @@
 /// Test if a component, or list of components
 /// is in the list of known components.
 /// @access private
-/// @param {String|List} $excludes - The components list to check in.
+/// @param {String|List} $items - The components list to check in.
 /// @return {List} - The list of passed items.
 @function is-component($items) {
     $register: map-keys($components);
@@ -196,7 +196,7 @@
 /// Converts numbers to HEX value strings.
 /// @access private
 /// @param {number} $num - The number to convert.
-/// @param {radix} $radix - The base radix to use for the conversion.
+/// @param {radix} $radix [16] - The base radix to use for the conversion.
 /// @return {String} - The resulting string.
 @function to-string($num, $radix: 16) {
     $chars: '0123456789abcdef';
