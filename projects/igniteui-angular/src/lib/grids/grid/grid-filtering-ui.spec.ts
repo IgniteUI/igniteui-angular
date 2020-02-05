@@ -3222,13 +3222,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            // Verify there are no filtered-in results and that apply button is disabled.
+            // Verify there are no filtered-in results and that apply button is enabled.
             let listItems = searchComponent.querySelectorAll('igx-list-item');
             let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             let raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
             let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
             expect(listItems.length).toBe(0, 'ESF search result should be empty');
-            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(false);
 
             // Clear filtering.
             const icons = Array.from(searchComponent.querySelectorAll('igx-icon'));
@@ -3244,6 +3244,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
             expect(listItems.length).toBe(6, 'ESF search result should NOT be empty');
             expect(applyButton.classList.contains('igx-button--disabled')).toBe(false);
+
+            // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
+            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+            checkbox[0].click(); // Select All
+            tick();
+            fix.detectChanges();
+            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
         }));
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
