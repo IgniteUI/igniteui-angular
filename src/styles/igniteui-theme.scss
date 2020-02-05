@@ -24,14 +24,15 @@
 }
 
 // .dark-theme {
-//     $igx-background-color: igx-color($fluent-word-dark-palette, 'surface');
+//     $igx-background-color: igx-color($green-dark-palette, 'surface');
 //     $igx-foreground-color: text-contrast($igx-background-color);
 
 //     background: $igx-background-color;
 //     color: $igx-foreground-color;
 
 //     @include scrollbar-love(lighten($igx-background-color, 15%));
-//     @include igx-dark-theme($green-palette);
+//     @include igx-dark-theme($green-dark-palette);
+//     @include igx-typography($font-family: 'sans-serif', $base-color: gray);
 
 //     .nav-header {
 //         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
