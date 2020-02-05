@@ -14,7 +14,7 @@ describe('General igxDrag/igxDrop', () => {
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestDragDropComponent
@@ -1179,7 +1179,7 @@ describe('General igxDrag/igxDrop', () => {
 
 describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestDragDropLinkedSingleComponent,

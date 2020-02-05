@@ -14,7 +14,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -795,7 +795,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxHierarchicalGridTestComplexComponent
@@ -951,7 +951,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
@@ -1112,7 +1112,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSmallerChildComponent

@@ -522,7 +522,18 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
-    $cbx-size: rem(20px);
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
+    $bootstrap-header-border-bottom-width: --var($theme, 'header-border-width') * 2;
+    $cbx-size: map-get((
+        material: rem(20px),
+        fluent: rem(20px),
+        bootstrap: rem(14px),
+    ), $variant);
+    $cbx-bs-size: rem(14px);
+
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $left: if-ltr(left, right);
@@ -620,13 +631,15 @@
 
     $grid-border-width: map-get((
         material: 0,
-        fluent: 1px
-    ), map-get($theme, variant));
+        fluent: 1px,
+        bootstrap: 0
+    ), $variant);
 
     $grid-header-weight: map-get((
         material: 600,
-        fluent: 800
-    ), map-get($theme, variant));
+        fluent: 800,
+        bootstrap: 700
+    ), $variant);
 
     %grid-display {
         position: relative;
@@ -640,7 +653,7 @@
         border: $grid-border-width solid --var($theme, 'grid-border-color');
 
         %cbx-display {
-            min-width: rem(20px);
+            min-width: $cbx-size;
         }
     }
 
@@ -676,6 +689,11 @@
 
     %grid-thead {
         border-bottom: $grid-header-border;
+
+        @if $bootstrap-theme {
+            border-bottom-width: $bootstrap-header-border-bottom-width;
+        }
+
         z-index: 2;
 
         %grid__group-indentation {

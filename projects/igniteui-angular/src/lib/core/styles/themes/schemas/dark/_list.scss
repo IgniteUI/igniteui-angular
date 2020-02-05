@@ -37,3 +37,17 @@ $_dark-list: extend($_light-list, $_base-dark-list);
 /// @requires $_base-dark-list
 $_dark-fluent-list: extend($_fluent-list, $_base-dark-list);
 
+/// Generates a base dark bootstrap list schema based on a mix of $_bootstrap-list and $_base-dark-list..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-list
+/// @requires $_base-dark-list
+$_dark-bootstrap-list: extend(
+    $_bootstrap-list,
+    $_base-dark-list,
+    (
+        item-background: #222,
+        header-background: #222,
+    )
+);
+

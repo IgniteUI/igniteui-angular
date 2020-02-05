@@ -58,3 +58,10 @@ $_light-expansion-panel: extend(
 /// @requires {function} extend
 /// @requires {Map} $_light-expansion-panel
 $_fluent-expansion-panel: extend($_light-expansion-panel);
+
+/// Generates a bootstrap expansion panel schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-expansion-panel
+$_bootstrap-expansion-panel: extend($_light-expansion-panel, $_bootstrap-shape-expansion-panel);
+

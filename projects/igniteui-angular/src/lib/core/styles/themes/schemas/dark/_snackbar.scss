@@ -18,3 +18,9 @@ $_dark-snackbar: extend($_light-snackbar);
 /// @requires {function} extend
 /// @requires $_fluent-snackbar
 $_dark-fluent-snackbar: extend($_fluent-snackbar);
+
+/// Generates a dark bootstrap snackbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-snackbar
+$_dark-bootstrap-snackbar: extend($_bootstrap-snackbar);

@@ -29,7 +29,7 @@ describe('igxBanner', () => {
     let bannerRowElement: DebugElement = null;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxBannerEmptyComponent,
