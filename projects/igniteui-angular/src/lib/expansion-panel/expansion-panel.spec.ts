@@ -33,7 +33,7 @@ const enum IconPositionClass {
 
 describe('igxExpansionPanel', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxExpansionPanelGridComponent,

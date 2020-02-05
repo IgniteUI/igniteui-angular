@@ -170,12 +170,12 @@ describe('IgxCalendar - ', () => {
 
     describe('', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [IgxCalendarSampleComponent, IgxCalendarRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
                 imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
             }).compileComponents();
-        });
+        }));
 
         describe('Rendered Component - ', () => {
             let fixture, calendar, dom;

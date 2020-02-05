@@ -17,7 +17,7 @@ import { DateRangeType } from '../core/dates/dateRange';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,

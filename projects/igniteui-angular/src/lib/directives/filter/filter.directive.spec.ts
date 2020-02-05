@@ -9,7 +9,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Filter', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             imports: [IgxFilterModule, IgxListModule],
