@@ -94,7 +94,7 @@ describe('IgxChip', () => {
     let chipArea;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,

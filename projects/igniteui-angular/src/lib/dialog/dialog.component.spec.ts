@@ -16,7 +16,7 @@ const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AlertComponent,

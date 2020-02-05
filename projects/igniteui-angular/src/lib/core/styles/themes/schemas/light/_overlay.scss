@@ -32,3 +32,10 @@ $_fluent-overlay: extend(
         background-color: rgba(255, 255, 255, .4)
     )
 );
+
+/// Generates a bootstrap overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-overlay
+$_bootstrap-overlay: extend($_light-overlay);
+
