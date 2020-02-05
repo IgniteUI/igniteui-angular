@@ -18,16 +18,16 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '200px', hidden: false },
-            { field: 'CompanyName', width: '200px' },
-            { field: 'ContactName', width: '200px', pinned: false },
+            { field: 'ID', width: '200px', hidden: false, pinned: false },
+            { field: 'CompanyName', width: '200px', pinned: false },
+            { field: 'ContactName', width: '200px', pinned: true },
             { field: 'ContactTitle', width: '200px', pinned: false },
-            { field: 'Address', width: '300px' },
-            { field: 'City', width: '300px' },
-            { field: 'Region', width: '200px' },
-            { field: 'PostalCode', width: '200px' },
-            { field: 'Phone', width: '200px' },
-            { field: 'Fax', width: '200px' }
+            { field: 'Address', width: '300px', pinned: false },
+            { field: 'City', width: '300px', pinned: false },
+            { field: 'Region', width: '200px', pinned: false },
+            { field: 'PostalCode', width: '200px', pinned: false },
+            { field: 'Phone', width: '200px', pinned: false },
+            { field: 'Fax', width: '200px', pinned: false }
         ];
 
         this.data = [
@@ -61,6 +61,10 @@ export class GridColumnPinningSampleComponent implements OnInit {
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
         // tslint:enable:max-line-length
+    }
+
+    ngAfterViewInit() {
+        this.togglePinningToRight('CompanyName');
     }
 
     toggleColumn(name: string) {
