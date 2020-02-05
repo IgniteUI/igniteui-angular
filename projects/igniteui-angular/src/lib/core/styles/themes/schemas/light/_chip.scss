@@ -22,6 +22,7 @@
 /// @prop {Color} selected-border-color [transparent] The selected chip border color.
 /// @prop {Map} focus-background [igx-color: ('grays', 400)] The focused chip background color.
 /// @prop {Map} focus-text-color [igx-color: ('grays', 700)] The focused chip text color.
+/// @prop {Color} focus-border-color [transparent] - The chip focus border color.
 /// @prop {Map} hover-selected-text-color [igx-color: ('grays', 700)] - The selected chip hover text color.
 /// @prop {Map} hover-selected-background [igx-color: ('grays', 400)] - The selected chip hover background color.
 /// @prop {Map} hover-selected-border-color [transparent] - The selected chip hover border color.
@@ -46,7 +47,6 @@ $_light-chip: extend(
         remove-icon-color-focus: (
             igx-color: ('error')
         ),
-
 
         text-color: (
             igx-color: ('grays', 700)
@@ -129,6 +129,7 @@ $_light-chip: extend(
 /// @prop {Map} focus-selected-text-color [igx-contrast-color: ('primary', 500)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('primary', 500)] - The selected chip focus background color.
 /// @prop {Number} ghost-elevation [2] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for chip component.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-chip

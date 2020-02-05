@@ -10,6 +10,11 @@
 /// Generates a light input-group schema.
 /// @type {Map}
 ///
+/// @prop {map} input-prefix-color [igx-color: ('grays', 600)] - The text color of an input prefix of type line, box and border.
+/// @prop {Color} input-prefix-background [transparent] - The background color of an input prefix of type line, box and border.
+/// @prop {map} input-suffix-color [igx-color: ('grays', 600)] - The text color of an input sufix of type line, box and border.
+/// @prop {Color} input-suffix-background [transparent] - The background color of an input sufix of type line, box and border.
+///
 /// @prop {map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
 /// @prop {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
 /// @prop {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
@@ -19,8 +24,6 @@
 /// @prop {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
 /// @prop {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
 ///
-/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for inputs with border.
-
 /// @prop {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
 /// @prop {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
 /// @prop {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
@@ -28,7 +31,7 @@
 /// @prop {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
 ///
 /// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
-/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 900)] - The hover input border for input groups of type border and fluent.
 /// @prop {map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
 /// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
 ///
@@ -39,7 +42,7 @@
 /// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
 /// @prop {Color} search-background [#fff] - The background color of an input group of type search.
-/// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
+/// @prop {map} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
 ///
 /// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
 /// @prop {Number} search-hover-elevation [2] - The elevation level, between 0-24, to be used for the hover state of the search input.
@@ -48,6 +51,9 @@
 /// @prop {map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
 /// @prop {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
 /// @prop {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
+///
+/// @prop {map} placeholder-color [igx-color: ('grays', 500)] - The placeholder color of an input group.
+/// @prop {map} disabled-placeholder-color [igx-color: ('grays', 400)] - The disabled placeholder color of an input group.
 ///
 /// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius fraction, between 0-1 to be used for box input .
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .

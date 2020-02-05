@@ -10,7 +10,7 @@
 /// Generates a light navdrawer schema.
 /// @type {Map}
 ///
-/// @prop {Color} background [#fff] - The navigation drawer background color.
+/// @prop {map} background [igx-color: 'surface'] - The navigation drawer background color.
 /// @prop {Color} border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
 /// @prop {map} item-header-text-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The header's idle text color.
 /// @prop {map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .54] - The item's idle text color.
