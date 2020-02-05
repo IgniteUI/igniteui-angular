@@ -1529,23 +1529,27 @@ describe('IgxDropDown ', () => {
             expect(firstItemElement.textContent.trim()).toEqual('Item 1989');
             expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
         });
-        it('Should properly handle keyboard navigation when virtualized', async(() => {
+        it('Should properly handle keyboard navigation when virtualized', (async () => {
             expect(dropdown).toBeDefined();
             dropdown.toggle();
+            await wait();
             fixture.detectChanges();
             dropdown.navigateFirst();
             expect(scroll.state.startIndex).toEqual(0);
             expect(items.first.focused).toEqual(true);
             dropdown.navigateLast();
-            setTimeout(() => {
-                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
-                expect(items.last.focused).toEqual(true);
-                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
-                expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
-                dropdown.focusedItem = items.toArray()[2];
-                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
-            }, 200);
+            fixture.detectChanges();
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+            expect(items.last.focused).toEqual(true);
+            button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            fixture.detectChanges();
+            await wait();
+            fixture.detectChanges();
+            expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+            expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
         }));
         it('Should properly preserve selection when scrolled', (done) => {
             dropdown.toggle();
