@@ -40,7 +40,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowDraggableComponent,

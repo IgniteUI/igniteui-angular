@@ -9,7 +9,7 @@ import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxToast', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ToastInitializeTestComponent

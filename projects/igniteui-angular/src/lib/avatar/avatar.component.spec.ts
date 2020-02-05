@@ -24,7 +24,7 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitAvatarComponent,
