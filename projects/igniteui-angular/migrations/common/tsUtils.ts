@@ -146,11 +146,8 @@ export function getLanguageService(filePaths: string[], host: Tree, options: ts.
 function patchHostOverwrite(host: Tree, fileVersions: Map<string, number>) {
     const original = host.overwrite;
     host.overwrite = (path: string, content: Buffer | string) => {
-        if (!fileVersions.has(path)) {
-            fileVersions.set(path, 1);
-        } else {
-            fileVersions.set(path, fileVersions.get(path) + 1);
-        }
+        const version = fileVersions.get(path) || 0;
+        fileVersions.set(path, version + 1);
         original.call(host, path, content);
     };
 }
