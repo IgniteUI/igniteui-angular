@@ -33,7 +33,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,

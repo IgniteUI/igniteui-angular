@@ -18,7 +18,7 @@ describe('IgxTooltip', () => {
     let tooltipTarget: IgxTooltipTargetDirective;
     let button;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTooltipSingleTargetComponent,

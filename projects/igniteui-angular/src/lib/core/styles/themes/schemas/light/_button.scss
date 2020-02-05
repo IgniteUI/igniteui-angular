@@ -224,7 +224,7 @@ $_light-button: extend(
 
         disabled-background: (
             igx-color: ('grays', 100)
-        )
+        ),
     )
 );
 
@@ -383,6 +383,156 @@ $_fluent-button: extend(
 
         icon-focus-background: (
             igx-color: ('grays', 100)
+        ),
+    )
+);
+
+/// Generates a bootstrap button schema.
+/// @type {Map}
+///
+/// @prop {map} flat-text-color [igx-color: ('primary', 500)] - The idle text color of a flat button.
+/// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
+/// @prop {map} flat-hover-text-color [igx-color: ('primary', 800)] - The hover text color of a flat button.
+/// @prop {map} flat-focus-background [igx-color: ('grays', 100)] - The focus background color of a flat button.
+/// @prop {map} flat-focus-text-color [igx-color: ('primary', 600)] - The focus text color of a flat button.
+///
+/// @prop {map} raised-background [igx-color: ('primary', 500)] - The background color of an raised button.
+/// @prop {map} raised-hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
+/// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
+/// @prop {map} raised-focus-background [igx-color: ('primary', 600)] -  The focus background color of a raised button.
+/// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
+///
+/// @prop {map} outlined-outline-color [igx-color: ('primary', 500)] - The border color of an outlined button.
+/// @prop {map} outlined-hover-background [igx-color: ('primary', 500)] - The hover background color of an outlined button.
+/// @prop {map} outlined-text-color [ igx-color: ('primary', 500)] - The idle text color of an outlined button.
+/// @prop {Color} outlined-hover-text-color [#fff] - The hover text color of an outlined button.
+/// @prop {map} outlined-focus-background [igx-color: ('primary', 500)] - The focus background color of an outlined button.
+/// @prop {Color} outlined-focus-text-color [#fff] - The focus text color of an outlined button.
+///
+/// @prop {map} fab-background [igx-color: ('primary', 500)] - The background color of a floating action button.
+/// @prop {map} fab-hover-background [igx-color: ('primary', 600)] - The hover background color of a floating action button.
+/// @prop {Color} fab-hover-text-color [#fff] - The hover text color of a floating action button.
+/// @prop {map} fab-focus-background [igx-color: ('primary', 600)] - The focus background color of floating action button.
+/// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
+///
+/// @prop {map} icon-color [igx-color: ('primary', 500)] - The icon color of an icon button.
+/// @prop {map} icon-hover-background [igx-color: ('primary', 500)] - The hover background color of an icon button.
+/// @prop {Color} icon-hover-color [#fff] - The hover icon color of an icon button.
+/// @prop {map} icon-focus-background [igx-color: ('primary', 600)] - The focus icon color of an icon button.
+/// @prop {Color} icon-focus-color [#fff] - The focus icon color of an icon button.
+///
+/// @prop {map} disabled-color [igx-color: ('primary', 500), lighten: 20%] - the disabled color for flat,outlined and icon buttons.
+/// @prop {map} disabled-background [igx-color: ('primary', 500), lighten: 35%] - the disabled background color.
+/// @prop {map} outlined-disabled-outline-color [igx-color: ('primary', 500), lighten: 35%] - the border-color for outlined buttons.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-button
+$_bootstrap-button: extend(
+    $_light-button,
+    $_bootstrap-shape-button,
+    $_bootstrap-elevation-button,
+    (
+        variant: 'bootstrap',
+
+        flat-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        flat-hover-background: transparent,
+
+        flat-hover-text-color: (
+            igx-color: ('primary', 800)
+        ),
+
+        flat-focus-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        flat-focus-text-color: (
+            igx-color: ('primary', 600)
+        ),
+
+        raised-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        raised-hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        raised-hover-text-color:  #fff,
+
+        raised-focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        raised-focus-text-color: #fff,
+
+        outlined-outline-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        outlined-hover-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        outlined-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        outlined-hover-text-color: #fff,
+
+        outlined-focus-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        outlined-focus-text-color: #fff,
+
+        fab-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        fab-hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        fab-hover-text-color: #fff,
+
+        fab-focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        fab-focus-text-color: #fff,
+
+        icon-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        icon-hover-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        icon-hover-color: #fff,
+
+        icon-focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        icon-focus-color: #fff,
+
+        disabled-color: (
+            igx-color: ('primary', 500),
+            lighten: 20%
+        ),
+
+        disabled-background: (
+            igx-color: ('primary', 500),
+            lighten: 35%
+        ),
+
+        outlined-disabled-outline-color: (
+            igx-color: ('primary', 500),
+            lighten: 35%
         ),
     )
 );
