@@ -24,3 +24,9 @@ $_dark-fluent-overlay: extend(
         background-color: rgba(0, 0, 0, .4)
     )
 );
+
+/// Generates a dark bootstrap overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-overlay
+$_dark-bootstrap-overlay: extend($_bootstrap-overlay);

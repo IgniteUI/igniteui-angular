@@ -26,3 +26,10 @@ $_fluent-shape-calendar: (
     date-border-radius: 0%,
     month-border-radius: 0%,
 );
+
+$_bootstrap-shape-calendar: (
+    border-radius: 4px,
+    date-border-radius: 4px,
+    month-border-radius: 4px,
+);
+

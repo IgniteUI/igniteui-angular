@@ -12,8 +12,14 @@
 /// @see $default-palette
 $_dark-column-hiding: extend($_light-column-hiding);
 
-/// Generates a dark column hiding schema.
+/// Generates a dark fluent column hiding schema.
 /// @type {Map}
 /// @requires extend
 /// @requires $_fluent-column-hiding
 $_dark-fluent-column-hiding: extend($_fluent-column-hiding);
+
+/// Generates a dark bootstrap column hiding schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-column-hiding
+$_dark-bootstrap-column-hiding: extend($_bootstrap-column-hiding);

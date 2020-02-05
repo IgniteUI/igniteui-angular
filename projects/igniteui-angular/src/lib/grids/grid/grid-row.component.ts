@@ -55,8 +55,6 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
     }
 
     get expanded() {
-        const pk = this.grid.primaryKey;
-        const rowID = pk ? this.rowData[pk] : this.rowData;
-        return this.grid.expansionStates.get(rowID);
+        return this.gridAPI.get_row_expansion_state(this.rowData);
     }
 }
