@@ -697,14 +697,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public getMonth(i: number): number {
-        return this.getViewDate(i).getMonth();
-    }
-
-    /**
      * Getter for the context object inside the calendar templates.
      * @hidden
      * @internal
