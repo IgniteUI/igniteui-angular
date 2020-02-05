@@ -11,7 +11,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Badge', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitBadgeComponent,

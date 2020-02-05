@@ -50,3 +50,21 @@ $_fluent-tooltip: extend(
         )
     )
 );
+
+/// Generates a bootstrap tooltip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tooltip
+$_bootstrap-tooltip: extend(
+    $_light-tooltip,
+    $_bootstrap-shape-tooltip,
+    (
+        background: (
+            igx-color: ('grays', 900)
+        ),
+        text-color: (
+            igx-contrast-color: ('grays', 900)
+        ),
+    )
+);
+

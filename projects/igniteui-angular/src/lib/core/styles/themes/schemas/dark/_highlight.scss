@@ -32,3 +32,11 @@ $_dark-fluent-highlight: extend($_fluent-highlight, (
     ),
 ));
 
+/// Generates a dark bootstrap highlight schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-highlight
+$_dark-bootstrap-highlight: extend($_bootstrap-highlight, (
+
+));
+

@@ -17,7 +17,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 
     public transform(
         collection: any,
-        state = [],
+        state = new Map<any, boolean>(),
         id: string,
         primaryKey: any,
         childKeys: string[],
@@ -42,7 +42,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 const childData = v[childKey] ? v[childKey] : null;
                 childGridsData[childKey] = childData;
             });
-            if (grid.isExpanded(v)) {
+            if (grid.gridAPI.get_row_expansion_state(v)) {
                 result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData: childGridsData});
             }
         });

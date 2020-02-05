@@ -1,0 +1,143 @@
+$bootstrap_h1: igx-type-style(
+    $font-size: rem(40px),
+    $font-weight: 500,
+    $line-height: rem(48px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_h2: igx-type-style(
+    $font-size: rem(32px),
+    $font-weight: 500,
+    $line-height: rem(38.4px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_h3: igx-type-style(
+    $font-size: rem(28px),
+    $font-weight: 500,
+    $line-height: rem(33.6px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_h4: igx-type-style(
+    $font-size: rem(24px),
+    $font-weight: 500,
+    $line-height: rem(28.8px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_h5: igx-type-style(
+    $font-size: rem(20px),
+    $font-weight: 500,
+    $line-height: rem(24px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_h6: igx-type-style(
+    $font-size: rem(16px),
+    $font-weight: 400,
+    $line-height: rem(19.2px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: rem(8px)
+);
+
+$bootstrap_body-1: igx-type-style(
+    $font-size: rem(16px),
+    $font-weight: 400,
+    $line-height: rem(24px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$bootstrap_body-2: igx-type-style(
+    $font-size: rem(14.4px),
+    $font-weight: 400,
+    $line-height: rem(24px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$bootstrap_subtitle-1: igx-type-style(
+    $font-size: rem(14px),
+    $font-weight: 400,
+    $line-height: rem(24px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$bootstrap_subtitle-2: igx-type-style(
+    $font-size: rem(14.4px),
+    $font-weight: 400,
+    $line-height: rem(21.6px),
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$bootstrap_button: igx-type-style(
+    $font-size: rem(16px),
+    $font-weight: 500,
+    $line-height: rem(24px),
+    $text-transform: capitalize,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$bootstrap_caption: igx-type-style(
+    $font-size: rem(12px),
+    $font-weight: 400,
+    $letter-spacing: rem(.4px),
+    $line-height: rem(16px),
+    $text-transform: none
+);
+
+$bootstrap_overline: igx-type-style(
+    $font-size: rem(10px),
+    $font-weight: 400,
+    $letter-spacing: rem(1.5px),
+    $line-height: rem(16px),
+    $text-transform: uppercase
+);
+
+$bootstrap_weekday: igx-type-style(
+    $font-size: rem(13px),
+    $font-weight: 400,
+    $line-height: normal,
+    $text-transform: none,
+    $margin-top: 0,
+    $margin-bottom: 0
+);
+
+$_bootstrap-scale: igx-type-scale(
+    $h1: $bootstrap_h1,
+    $h2: $bootstrap_h2,
+    $h3: $bootstrap_h3,
+    $h4: $bootstrap_h4,
+    $h5: $bootstrap_h5,
+    $h6: $bootstrap_h6,
+    $subtitle-1: $bootstrap_subtitle-1,
+    $subtitle-2: $bootstrap_subtitle-2,
+    $body-1: $bootstrap_body-1,
+    $body-2: $bootstrap_body-2,
+    $button: $bootstrap_button,
+    $caption: $bootstrap_caption,
+    $overline: $bootstrap_overline
+);
+
+$bootstrap-type-scale: extend($_bootstrap-scale, (
+    calendar-labels: $bootstrap_weekday,
+))

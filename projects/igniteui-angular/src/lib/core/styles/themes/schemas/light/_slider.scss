@@ -148,3 +148,22 @@ $_fluent-slider: extend($_light-slider, (
     ),
 ));
 
+/// Generates a bootstrap slider schema.
+/// @type {Map}
+$_bootstrap-slider: extend(
+    $_fluent-slider,
+    (
+        variant: 'bootstrap',
+
+        label-background-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        thumb-disabled-border-color: (
+            igx-color: ('grays', 400),
+            hexrgba: #fff
+        ),
+    )
+);
+
+

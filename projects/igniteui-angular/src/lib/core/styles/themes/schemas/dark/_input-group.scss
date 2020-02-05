@@ -43,3 +43,14 @@ $_dark-fluent-input-group: extend(
         ),
     )
 );
+
+
+/// Generates a dark bootstrap input-group schema based on a mix of $_bootstrap-input-group and $_base-dark-input-group.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-input-group
+/// @requires $_base-dark-input-group
+$_dark-bootstrap-input-group: extend(
+    $_bootstrap-input-group,
+    $_base-dark-input-group
+);

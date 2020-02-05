@@ -19,3 +19,9 @@ $_dark-toast: extend($_light-toast);
 /// @requires $_fluent-toast
 $_dark-fluent-toast: extend($_fluent-toast);
 
+/// Generates a dark bootstrap toast schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-toast
+$_dark-bootstrap-toast: extend($_bootstrap-toast);
+

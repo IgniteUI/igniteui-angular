@@ -78,3 +78,10 @@ $_fluent-grid-summary: extend(
         ),
     )
 );
+
+/// Generates a bootstrap grid-summary schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-summary
+$_bootstrap-grid-summary: extend($_light-grid-summary);
+

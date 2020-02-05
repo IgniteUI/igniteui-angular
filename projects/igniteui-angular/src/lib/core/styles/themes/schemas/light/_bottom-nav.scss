@@ -39,3 +39,10 @@ $_light-bottom-nav: extend(
 /// @requires {map} $_light-bottom-nav
 /// @requires {map} $_fluent-elevation-bottom-nav
 $_fluent-bottom-nav: extend($_light-bottom-nav, $_fluent-elevation-bottom-nav);
+
+/// Generates a bootstrap bottom navigation schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-bottom-nav
+/// @requires {map} $_fluent-elevation-bottom-nav
+$_bootstrap-bottom-nav: extend($_light-bottom-nav);

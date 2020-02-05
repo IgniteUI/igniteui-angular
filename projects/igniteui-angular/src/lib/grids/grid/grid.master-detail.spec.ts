@@ -24,7 +24,7 @@ describe('IgxGrid Master Detail #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,
@@ -217,6 +217,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             grid.expansionStates = newExpanded;
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             const newData = [...grid.data].slice(0, 4);
             newData.splice(1, 1);
@@ -235,15 +236,15 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(thirdDetail.querySelector('.addressArea').innerText).toEqual('120 Hanover Sq.');
         }));
 
-        it('Should expand and collapse a row in view by using the expand(rowID) and collapse(rowID) methods.', () => {
-            grid.expand(fix.componentInstance.data[0].ID);
+        it('Should expand and collapse a row in view by using the expandRow(rowID) and collapseRow(rowID) methods.', () => {
+            grid.expandRow(fix.componentInstance.data[0].ID);
             fix.detectChanges();
             let firstRowIcon = grid.rowList.first.element.nativeElement.querySelector('igx-icon');
             expect(grid.expansionStates.size).toEqual(1);
             expect(grid.expansionStates.has(grid.rowList.first.rowID)).toBeTruthy();
             expect(grid.rowList.toArray()[0].expanded).toBeTruthy();
             expect(firstRowIcon.innerText).toEqual(EXPANDED_ICON_NAME);
-            grid.collapse(fix.componentInstance.data[0].ID);
+            grid.collapseRow(fix.componentInstance.data[0].ID);
             fix.detectChanges();
             firstRowIcon = grid.rowList.first.element.nativeElement.querySelector('igx-icon');
             expect(grid.expansionStates.get(fix.componentInstance.data[0].ID)).toBeFalsy();
@@ -251,21 +252,21 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(firstRowIcon.innerText).toEqual(COLLAPSED_ICON_NAME);
         });
 
-        it('Should expand a row out of view by using the collapse() method and update expansionStates.', () => {
+        it('Should expand a row out of view by using the collapseRow() method and update expansionStates.', () => {
             const lastIndex = fix.componentInstance.data.length - 1;
             const lastDataRecID = fix.componentInstance.data[lastIndex].ID;
-            grid.expand(lastDataRecID);
+            grid.expandRow(lastDataRecID);
             fix.detectChanges();
             expect(grid.expansionStates.size).toEqual(1);
             expect(grid.expansionStates.get(lastDataRecID)).toBeTruthy();
         });
 
-        it('Should collapse a row out of view by using the collapse() method and update expansionStates.', () => {
+        it('Should collapse a row out of view by using the collapseRow() method and update expansionStates.', () => {
             GridFunctions.setAllExpanded(grid, fix.componentInstance.data);
             fix.detectChanges();
             const lastIndex = fix.componentInstance.data.length - 1;
             const lastDataRecID = fix.componentInstance.data[lastIndex].ID;
-            grid.collapse(lastDataRecID);
+            grid.collapseRow(lastDataRecID);
             fix.detectChanges();
             expect(grid.expansionStates.size).toEqual(fix.componentInstance.data.length);
             expect(grid.expansionStates.get(lastDataRecID)).toBeFalsy();
@@ -286,7 +287,7 @@ describe('IgxGrid Master Detail #grid', () => {
         it('Should expand all rows using the expandAll() method and the expansion state should be updated.', () => {
             grid.expandAll();
             fix.detectChanges();
-            expect(grid.expansionStates.size).toEqual(fix.componentInstance.data.length);
+            expect(grid.expansionStates.size).toEqual(0);
             grid.rowList.toArray().forEach(row => {
                 expect(row.expanded).toBeTruthy();
             });
@@ -308,10 +309,12 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        beforeEach(async(() => {
+        beforeEach(async(async() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            await wait(DEBOUNCETIME * 4);
+            fix.detectChanges();
         }));
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.',
@@ -485,6 +488,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+            await wait(DEBOUNCETIME);
             grid.navigateTo(20, 0);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -607,7 +611,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
                 const initialTotalRecords = grid.pagingState.metadata.countRecords;
-                grid.expand(fix.componentInstance.data[0].ID);
+                grid.expandRow(fix.componentInstance.data[0].ID);
                 fix.detectChanges();
                 expect(grid.pagingState.metadata.countRecords).toEqual(initialTotalRecords);
             });
@@ -618,7 +622,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.componentInstance.perPage = 5;
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-                grid.expand(fix.componentInstance.data[4].ID);
+                grid.expandRow(fix.componentInstance.data[4].ID);
                 fix.detectChanges();
                 // click the template checkbox
                 let checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
@@ -665,7 +669,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
                 grid.columnList.last.pin();
-                grid.expand(fix.componentInstance.data[0].ID);
+                grid.expandRow(fix.componentInstance.data[0].ID);
                 fix.detectChanges();
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
 
@@ -699,7 +703,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-                grid.expand(fix.componentInstance.data[2].ID);
+                grid.expandRow(fix.componentInstance.data[2].ID);
                 const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
                 const startCell =  grid.getCellByColumn(1, 'ContactName');
                 const endCell =  grid.getCellByColumn(6, 'CompanyName');
@@ -743,7 +747,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 fix.componentInstance.rowSelectable = true;
                 fix.detectChanges();
-                grid.expand(fix.componentInstance.data[2].ID);
+                grid.expandRow(fix.componentInstance.data[2].ID);
                 const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
                 expect(rowDetail.querySelector('[class*="__cbx-selection"]')).toBeNull();
             });
@@ -753,7 +757,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 fix.componentInstance.rowSelectable = true;
                 fix.detectChanges();
-                grid.expand(fix.componentInstance.data[2].ID);
+                grid.expandRow(fix.componentInstance.data[2].ID);
 
                 const row = grid.rowList.toArray()[2];
                 const checkbox = row.nativeElement.querySelector('.igx-checkbox__composite');
@@ -1001,6 +1005,7 @@ describe('IgxGrid Master Detail #grid', () => {
             it(`Should correctly position summary rows when summary row position is top
             after grouping by and detail views for the group rows are expanded.`, () => {
                grid.expandAll();
+               fix.detectChanges();
                grid.summaryPosition = GridSummaryPosition.top;
                fix.detectChanges();
                const allRows = grid.tbody.nativeElement

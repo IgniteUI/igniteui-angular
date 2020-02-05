@@ -92,3 +92,10 @@ $_light-navdrawer: extend(
 /// @requires {function} extend
 /// @requires $_light-navdrawer
 $_fluent-navdrawer: extend($_light-navdrawer);
+
+/// Generates a bootstrap navdrawer schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navdrawer
+$_bootstrap-navdrawer: extend($_light-navdrawer);
+

@@ -17,3 +17,8 @@ $_square-shape-list: (
     border-radius: 0%,
     item-border-radius: 0%,
 );
+
+$_bootstrap-shape-list: (
+    border-radius: rem(4px),
+    item-border-radius: 0%,
+);

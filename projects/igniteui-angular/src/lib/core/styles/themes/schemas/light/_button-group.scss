@@ -34,6 +34,8 @@ $_light-button-group: extend(
     $_default-shape-button-group,
     $_default-elevation-button-group,
     (
+        variant: 'material',
+
         item-background: #fff,
 
         item-border-color: (
@@ -90,7 +92,7 @@ $_light-button-group: extend(
 /// @prop {map} item-text-color [igx-color: ('grays', 900)]- The text color for button group items.
 ///
 /// @prop {map} item-hover-text-color [igx-color: ('primary', 200)] - The hover text color for button group items.
-/// @prop {map} item-hover-background [transparent] - The hover background color for button group items.
+/// @prop {Color} item-hover-background [transparent] - The hover background color for button group items.
 /// @prop {map} item-selected-background [igx-color: ('grays', 100)] - The background color for a selected item in the button group.
 /// @prop {map} item-selected-hover-background [igx-color: ('grays', 100)] - The background color for a selected item in hover or focus state in the button group.
 /// @prop {map} item-selected-text-color [igx-color: ('primary', 200)]- The text color for a selected item in the button group.
@@ -108,6 +110,8 @@ $_fluent-button-group: extend(
     $_fluent-shape-button-group,
     $_fluent-elevation-button-group,
     (
+        variant: 'fluent',
+
         item-text-color: (
             igx-color: ('grays', 900)
         ),
@@ -133,3 +137,78 @@ $_fluent-button-group: extend(
         disabled-background-color: transparent,
     )
 );
+
+/// Generates a bootstrap button group schema.
+/// @type {Map}
+/// @prop {map} item-background [igx-color: ('primary', 500)] - The background color for button group items.
+/// @prop {Color} item-text-color [#fff]- The text color for button group items.
+/// @prop {map} item-border-color [igx-color: ('primary', 500)] - The border color between button group items.
+/// @prop {map} item-hover-background [igx-color: ('primary', 600)] - The hover background color for button group items.
+/// @prop {Color} item-hover-text-color [#fff] - The hover text color for button group items.
+/// @prop {map} item-selected-background [igx-color: ('primary', 500), darken: 10%] - The background color for a selected item in the button group.
+/// @prop {Color} item-selected-text-color [#fff]- The text color for a selected item in the button group.
+/// @prop {map} item-selected-border-color [igx-color: ('primary', 500), darken: 10%] - The border color for a selected item from the button group.
+/// @prop {map} item-selected-hover-background [igx-color: ('primary', 500), darken: 15%] - The background color for a selected item in hover or focus state in the button group.
+/// @prop {map} disabled-background-color [igx-color: ('primary', 500), lighten: 35%] - The background color for a disabled item in the button group.
+/// @prop {map} disabled-text-color [igx-color: ('primary', 500), lighten: 20%]- The text/icon color for a disabled item in the button group.
+/// @prop {map} item-disabled-border [igx-color: ('primary', 500), lighten: 35%] - The border color for a disabled item in the button group.
+
+/// @requires {function} extend
+/// @requires {map} $_light-button-group
+/// @requires {map} $_bootstrap-elevation-button-group
+$_bootstrap-button-group: extend(
+    $_light-button-group,
+    $_bootstrap-shape-button-group,
+    $_bootstrap-elevation-button-group,
+    (
+        variant: 'bootstrap',
+
+        item-background: (
+            igx-color: ('primary', 500),
+        ),
+
+        item-text-color: #fff,
+
+        item-border-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        item-hover-background: (
+            igx-color: ('primary', 600),
+        ),
+
+        item-hover-text-color: #fff,
+
+        item-selected-background: (
+            igx-color: ('primary', 500),
+            darken: 10%
+        ),
+
+        item-selected-text-color: #fff,
+
+        item-selected-border-color: (
+            igx-color: ('primary', 500),
+            darken: 10%
+        ),
+
+        item-selected-hover-background: (
+            igx-color: ('primary', 500),
+            darken: 15%
+        ),
+
+        disabled-background-color: (
+            igx-color: ('primary', 500),
+            lighten: 35%
+        ),
+
+        disabled-text-color: (
+            igx-color: ('primary', 500),
+            lighten: 20%
+        ),
+
+        item-disabled-border: (
+            igx-color: ('primary', 500), lighten: 35%
+        ),
+    )
+);
+

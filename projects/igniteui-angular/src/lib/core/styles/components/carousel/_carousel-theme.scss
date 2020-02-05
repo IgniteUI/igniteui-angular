@@ -137,6 +137,9 @@
     $carousel-indicator-margin: 0 5px;
     $indicator-border-style: 2px solid;
 
+    $variant: map-get($theme, variant);
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     %igx-carousel-display {
         display: flex;
         position: relative;
@@ -154,7 +157,12 @@
         width: 46px;
         height: 46px;
         cursor: pointer;
-        border-radius: 50%;
+        @if $not-bootstrap-theme {
+            border-radius: 50%;
+        } @else {
+            border-radius: --var($theme, 'border-radius');
+        }
+
         outline-style: none;
         transition: all .15s ease-in-out;
         color: --var($theme, 'button-arrow-color');

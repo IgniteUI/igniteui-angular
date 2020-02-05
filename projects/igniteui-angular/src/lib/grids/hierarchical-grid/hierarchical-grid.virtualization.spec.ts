@@ -17,7 +17,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -245,9 +245,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should be able to scroll last row in view after all rows get expanded.', async() => {
         // expand all
-        hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
-            return { rowID: hierarchicalGrid.primaryKey ? rec[hierarchicalGrid.primaryKey] : rec };
-        });
+        hierarchicalGrid.expandAll();
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom
@@ -370,7 +368,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,

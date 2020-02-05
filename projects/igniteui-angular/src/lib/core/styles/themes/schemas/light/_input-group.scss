@@ -258,3 +258,46 @@ $_fluent-input-group: extend(
         ),
     )
 );
+
+/// Generates a bootstrap input-group schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-input-group
+$_bootstrap-input-group: extend(
+    $_light-input-group,
+    $_bootstrap-shape-input-group,
+    (
+        variant: 'bootstrap',
+
+        border-color: (
+            igx-color: ('grays', 400),
+            hexrgba: #fff
+        ),
+
+        input-prefix-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        idle-secondary-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        input-suffix-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        input-prefix-background: (
+            igx-color: ('grays', 300)
+        ),
+
+        input-suffix-background: (
+            igx-color: ('grays', 300)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 300),
+            hexrgba: #fff
+        )
+    )
+);
+

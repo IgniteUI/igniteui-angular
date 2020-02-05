@@ -81,12 +81,80 @@ $_light-tabs: extend(
 
         button-ripple-color: (
             igx-color: ('grays', 100)
-        )
+        ),
+
+        border-color: transparent,
+        border-color--hover: transparent,
     )
 );
 
 /// Generates a fluent tabs schema.
 /// @type {Map}
+///
+/// @property {map} item-text-color [igx-color: ('primary', 500)] - The color used for the tab text color.
+/// @property {Color} item-hover-background [#fff] - The background used for the tabs on hover.
+/// @property {map} item-hover-color [igx-color: ('primary', 700)] - The text color used for the tabs on hover.
+///
+/// @property {Color} item-active-color [#fff] - The color used for the active tabs text.
+/// @property {map} item-active-icon-color [igx-color: ('grays', 800)] - The color used for the active tabs icon.
+/// @property {Color} item-active-background [#fff] - The color used for the active/focused tab background.
+///
+/// @property {map} indicator-color [igx-color: ('grays', 400)] - The color used for the tabs borders.
+///
 /// @requires {function} extend
 /// @requires $_light-tabs
-$_fluent-tabs: extend($_light-tabs);
+$_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
+
+/// Generates a bootstrap tabs schema.
+/// @type {Map}
+/// @property {map} item-text-color [igx-color: ('primary', 500)] - The color used for the tab text color.
+/// @property {Color} item-hover-background [#fff] - The background used for the tabs on hover.
+/// @property {map} item-hover-color [igx-color: ('primary', 700)] - The text color used for the tabs on hover.
+/// @property {map} item-active-color [igx-color: ('grays', 800)] - The color used for the active tabs text.
+/// @property {map} item-active-icon-color [igx-color: ('grays', 800)] - The color used for the active tabs icon.
+/// @property {Color} item-active-background [#fff] - The color used for the active/focused tab background.
+/// @property {map} indicator-color [igx-color: ('grays', 400)] - The color used for the tabs borders.
+
+/// @property {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for list component.
+/// @requires {function} extend
+/// @requires $_light-tabs
+$_bootstrap-tabs: extend(
+    $_light-tabs,
+    $_bootstrap-shape-tabs,
+    (
+        variant: 'bootstrap',
+
+        border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        border-color--hover: (
+            igx-color: ('grays', 200)
+        ),
+
+        item-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        item-hover-background: #fff,
+
+        item-hover-color: (
+            igx-color: ('primary', 700)
+        ),
+
+        item-active-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        item-active-icon-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        item-active-background: #fff,
+
+        indicator-color: (
+            igx-color: ('grays', 400)
+        ),
+    )
+);
+
