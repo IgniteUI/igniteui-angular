@@ -212,12 +212,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    @ViewChildren('yearsBtn')
-    public yearsBtns: QueryList<ElementRef>;
-
-    /**
-     * @hidden
-     */
     @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
@@ -354,14 +348,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      */
     private _monthViewsChanges$: Subscription;
 
-    /**
-     *@hidden
-     */
-    private defaultDayView = {
-        value: this.value,
-        viewDate: this.viewDate
-    };
-
     public ngAfterViewInit() {
         this.setSiblingMonths(this.monthViews);
         this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
@@ -466,8 +452,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    public onActiveViewDecade(args: Date, monthViewIdx: number) {
-        super.activeViewDecade(monthViewIdx);
+    public onActiveViewDecade(args: Date, activeViewIdx: number) {
+        super.activeViewDecade(activeViewIdx);
         requestAnimationFrame(() => {
             if (this.dacadeView) {
                 this.dacadeView.date = args;
@@ -479,8 +465,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    public onActiveViewDecadeKB(event, args: Date, monthViewIdx: number) {
-        super.activeViewDecadeKB(event, monthViewIdx);
+    public onActiveViewDecadeKB(event, args: Date, activeViewIdx: number) {
+        super.activeViewDecadeKB(event, activeViewIdx);
 
         requestAnimationFrame(() => {
             if (this.dacadeView) {
@@ -535,18 +521,18 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
                 this.daysView.daysNavService.focusNextDate(day.nativeElement, args.key, true);
             }
         };
-        this.viewDate = this.calendarModel.timedelta(this.nextDate, 'month', 0);
+        this.viewDate = this.nextDate;
     }
 
     /**
      * @hidden
      */
     public changeMonth(event: Date) {
-        this.viewDate = this.calendarModel.getDatePerMonthView(event, 'month', this.monthViewIdx);
+        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.monthViewIdx);
+            const elem = this.monthsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx);
             if (elem) { elem.nativeElement.focus(); }
         });
     }
@@ -554,43 +540,28 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * @hidden
      */
-    public changeYear(event: Date) {
-        this.viewDate = this.calendarModel.getDatePerMonthView(event, 'month', this.monthViewIdx);
-        this.activeView = CalendarView.DEFAULT;
-
-        requestAnimationFrame(() => {
-            if (this.yearsBtns) {
-                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.monthViewIdx).nativeElement.focus();
-            }
-        });
-    }
-
-
-    /**
-     * @hidden
-     */
-    public onActiveViewYear(args: Date, monthViewIdx: number): void {
+    public onActiveViewYear(args: Date, activeViewIdx: number, event?): void {
         this.activeView = CalendarView.YEAR;
-        this.monthViewIdx = monthViewIdx;
+        this.activeViewIdx = activeViewIdx;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
-            this.focusMonth(monthViewIdx);
+            this.focusMonth(event.target);
         });
     }
 
-    private focusMonth(monthViewIdx: number) {
+    private focusMonth(target: HTMLElement) {
         const month = this.monthsView.monthsRef.find((e) =>
-            e.index === monthViewIdx);
+            e.index === parseInt(target.parentElement.attributes['data-month'].value, 10));
         if (month) { month.nativeElement.focus(); }
     }
 
     /**
      * @hidden
      */
-    public onActiveViewYearKB(args: Date, event, monthViewIdx: number): void {
+    public onActiveViewYearKB(args: Date, event, activeViewIdx: number): void {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.onActiveViewYear(args, monthViewIdx);
+            this.onActiveViewYear(args, activeViewIdx, event);
         }
     }
 

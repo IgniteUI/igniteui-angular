@@ -9,7 +9,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date
 import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
-fdescribe('Multi-View Calendar - ', () => {
+describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
     configureTestSuite();
 
@@ -49,7 +49,7 @@ fdescribe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
         });
 
-        fit('should  render properly if set monthsViewNumber to a value < 1', () => {
+        it('should  render properly if set monthsViewNumber to a value < 1', () => {
             expect(calendar.monthsViewNumber).toBe(3);
             HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
 
@@ -840,10 +840,10 @@ fdescribe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(arrowRight);
         })));
 
-        fit('When select a new month - should come at correct position', fakeAsync(() => {
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+        it('When select a new month - should come at correct position', fakeAsync(() => {
+            const secondMonthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[2];
-            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            UIInteractions.simulateKeyDownEvent(secondMonthPicker, 'Enter');
             fixture.detectChanges();
             tick(100);
             const months = HelperTestFunctions.getMonthsFromMonthView(fixture);
@@ -878,18 +878,18 @@ fdescribe('Multi-View Calendar - ', () => {
             UIInteractions.simulateKeyDownEvent(months[11], 'Enter');
             fixture.detectChanges();
             tick(100);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-11-12'), new Date('2019-12-1'), new Date('2020-1-2')]);
         }));
 
-        fit('When select a new year - should come at correct position', fakeAsync(() => {
+        it('When select a new year - should come at correct position', fakeAsync(() => {
             calendar.viewDate = new Date('2019-12-12');
             tick();
             fixture.detectChanges();
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
 
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+            const secondYearPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[3];
-            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            UIInteractions.simulateKeyDownEvent(secondYearPicker, 'Enter');
             fixture.detectChanges();
             tick(150);
             fixture.detectChanges();
@@ -920,7 +920,7 @@ fdescribe('Multi-View Calendar - ', () => {
             tick(100);
             fixture.detectChanges();
 
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2021-12-12'), new Date('2022-1-1'), new Date('2022-2-2')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2020-12-12'), new Date('2021-1-1'), new Date('2021-2-2')]);
         }));
 
     });

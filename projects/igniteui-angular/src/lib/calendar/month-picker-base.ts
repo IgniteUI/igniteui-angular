@@ -1,5 +1,5 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { HostBinding, Directive } from '@angular/core';
+import { HostBinding, Directive, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -19,7 +19,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * Holds month view index we are operating on.
      */
-    protected monthViewIdx = 0;
+    protected activeViewIdx = 0;
 
     /**
      * The default `tabindex` attribute for the component.
@@ -28,6 +28,13 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren('yearsBtn')
+    public yearsBtns: QueryList<ElementRef>;
+
 
     /**
      * Gets the current active view.
@@ -65,18 +72,32 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecade(monthViewIdx = 0): void {
-        this._activeView = CalendarView.DECADE;
-        this.monthViewIdx = monthViewIdx;
+    public changeYear(event: Date) {
+        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.activeView = CalendarView.DEFAULT;
+
+        requestAnimationFrame(() => {
+            if (this.yearsBtns && this.yearsBtns.length) {
+                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx).nativeElement.focus();
+            }
+        });
     }
 
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, monthViewIdx = 0) {
+    public activeViewDecade(activeViewIdx = 0): void {
+        this._activeView = CalendarView.DECADE;
+        this.activeViewIdx = activeViewIdx;
+    }
+
+    /**
+     * @hidden
+     */
+    public activeViewDecadeKB(event, activeViewIdx = 0) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.activeViewDecade(monthViewIdx);
+            this.activeViewDecade(activeViewIdx);
         }
     }
 

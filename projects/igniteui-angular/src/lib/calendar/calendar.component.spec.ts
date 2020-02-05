@@ -14,7 +14,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
-fdescribe('IgxCalendar - ', () => {
+describe('IgxCalendar - ', () => {
 
     it('Should create proper calendar model', () => {
         const calendar = new Calendar();
@@ -1613,7 +1613,7 @@ fdescribe('IgxCalendar - ', () => {
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
             });
 
-            fit('Should open months view, navigate through and select a month via KB.', () => {
+            it('Should open months view, navigate through and select a month via KB.', () => {
                 const month = dom.queryAll(By.css(HelperTestFunctions.CALENDAR_DATE_CSSCLASS))[0];
                 month.nativeElement.focus();
 

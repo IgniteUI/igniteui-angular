@@ -8,7 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxMonthPickerComponent } from './month-picker.component';
 import { IgxCalendarModule } from '../calendar.module';
 
-fdescribe('IgxMonthPicker', () => {
+describe('IgxMonthPicker', () => {
     configureTestSuite();
 
     beforeEach(() => {
@@ -314,7 +314,7 @@ fdescribe('IgxMonthPicker', () => {
         expect(year.nativeElement.textContent.trim()).toMatch('2018');
     });
 
-    fit('should navigate through and select a month via KB.', () => {
+    it('should navigate through and select a month via KB.', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();
 

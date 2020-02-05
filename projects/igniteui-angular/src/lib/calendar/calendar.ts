@@ -334,8 +334,8 @@ export class Calendar {
         return result;
     }
 
-    public getDatePerMonthView(date: Date, interval: string, monthViewIdx: number) {
-        return this.timedelta(date, interval, -monthViewIdx);
+    public getFirstViewDate(date: Date, interval: string, activeViewIdx: number) {
+        return this.timedelta(date, interval, -activeViewIdx);
     }
 
     public getNextMonth(date: Date) {
