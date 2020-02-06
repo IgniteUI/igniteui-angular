@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
 import { UpdateChanges } from './UpdateChanges';
+import * as tsUtils from './tsUtils';
 
 describe('UpdateChanges', () => {
     let appTree: UnitTestTree;
@@ -226,7 +227,8 @@ describe('UpdateChanges', () => {
         });
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
-        const fileContent = `import { igxClass } from ""; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        const fileContent =
+            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -236,7 +238,7 @@ describe('UpdateChanges', () => {
 
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace } from ""; export class Test { prop: igxReplace; prop2: igxSecond; }`);
+            `import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
 
         done();
     });
@@ -268,13 +270,13 @@ describe('UpdateChanges', () => {
 
         const fileContent =
         `import { Component, Injectable, ViewChild } from "@angular/core";` +
-        `import { IgxGridComponent } from "../../lib/grid/grid.component";` +
-        `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "../../lib/main";\r\n` +
+        `import { IgxGridComponent } from "igniteui-angular";` +
+        `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
         `import {` +
         `    IgxCsvExporterService,` +
         `    IgxExcelExporterOptions,` +
         `    IgxExporterOptionsBase` +
-        `} from "../../lib/services/index";\r\n` +
+        `} from "igniteui-angular";\r\n` +
         `@Component({` +
         `    providers: [IgxProvided, RemoteService]` +
         `})` +
@@ -306,13 +308,13 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.ts')).toEqual(
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
-            `import { IgxGridReplace } from "../../lib/grid/grid.component";` +
-            `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST} from "../../lib/main";\r\n` +
+            `import { IgxGridReplace } from "igniteui-angular";` +
+            `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST} from "igniteui-angular";\r\n` +
             `import {` +
             `    Injected,` +
             `    IgxNewable,` +
             `    ReturnType` +
-            `} from "../../lib/services/index";\r\n` +
+            `} from "igniteui-angular";\r\n` +
             `@Component({` +
             `    providers: [IgxProvidedReplace, RemoteService]` +
             `})` +
@@ -336,6 +338,93 @@ describe('UpdateChanges', () => {
         );
 
         done();
+    });
+
+    it('should correctly ignore types not from igniteui-angular', () => {
+        const classJson: ClassChanges = {
+            changes: [
+                { name: 'Name', replaceWith: 'NameName' },
+                { name: 'Another', replaceWith: 'Other' },
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'classes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+
+        const fileContent =
+            `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
+        appTree.create('test.component.ts', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(update.getClassChanges()).toEqual(classJson);
+
+        spyOn(tsUtils, 'getRenamePositions').and.callThrough();
+
+        update.applyChanges();
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Name', jasmine.anything());
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Another', jasmine.anything());
+        expect(appTree.readContent('test.component.ts')).toEqual(fileContent);
+    });
+
+    it('should correctly rename aliased imports and handle collision from other packages', () => {
+        const classJson: ClassChanges = {
+            changes: [
+                { name: 'Type', replaceWith: 'IgxType' },
+                { name: 'Size', replaceWith: 'IgxSize' },
+                { name: 'IgxService', replaceWith: 'IgxService1' },
+                { name: 'IgxDiffService', replaceWith: 'IgxNewDiffService' },
+                { name: 'Calendar', replaceWith: 'CalendarActual'}
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'classes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+
+        const fileContent =
+`import { Size, Type as someThg } from "igniteui-angular";
+import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular';
+import { Type } from "@angular/core";
+export class Test {
+    prop: Type;
+    prop1: someThg;
+    prop2: Size = { prop: "Size" };
+    secondary: eDiffService;
+    cal: Calendar;
+
+    constructor (public router: Router, private _iconService: IgxService) {}
+}`;
+        appTree.create('test.component.ts', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getClassChanges()).toEqual(classJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.ts')).toEqual(
+`import { IgxSize, IgxType as someThg } from "igniteui-angular";
+import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular';
+import { Type } from "@angular/core";
+export class Test {
+    prop: Type;
+    prop1: someThg;
+    prop2: IgxSize = { prop: "Size" };
+    secondary: eDiffService;
+    cal: Calendar;
+
+    constructor (public router: Router, private _iconService: IgxService1) {}
+}`
+        );
     });
 
     it('should move property value between element tags', done => {
