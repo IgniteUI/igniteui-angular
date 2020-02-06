@@ -25,7 +25,7 @@ describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,

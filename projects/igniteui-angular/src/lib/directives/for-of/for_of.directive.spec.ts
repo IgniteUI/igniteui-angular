@@ -43,7 +43,7 @@ describe('IgxForOf directive -', () => {
 
     describe('empty virtual component', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -65,7 +65,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -175,7 +175,7 @@ describe('IgxForOf directive -', () => {
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -327,7 +327,7 @@ describe('IgxForOf directive -', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -904,7 +904,7 @@ describe('IgxForOf directive -', () => {
 
     describe('variable size component', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -950,7 +950,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -992,7 +992,7 @@ describe('IgxForOf directive -', () => {
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1034,7 +1034,7 @@ describe('IgxForOf directive -', () => {
 
     describe('no width and height component', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1058,7 +1058,7 @@ describe('IgxForOf directive -', () => {
 
     describe('even odd first last functions', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
