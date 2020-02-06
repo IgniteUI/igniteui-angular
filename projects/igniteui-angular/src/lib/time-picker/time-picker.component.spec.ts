@@ -198,11 +198,11 @@ describe('IgxTimePicker', () => {
         expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
     }));
 
-    it('Should not throw Validation Failed event with null value passed in', fakeAsync(() => {
+    it('Should display mask on cancel button click with bound null value', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.componentInstance.dateValue = null;
+        fixture.componentInstance.mode = 'dropdown';
         fixture.detectChanges();
-
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
@@ -218,12 +218,12 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         expect(timePicker.onValidationFailed.emit).not.toHaveBeenCalled();
+        expect(timePicker.displayValue).toEqual('--:-- --');
     }));
 
     it('TimePicker cancel button', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
-
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
         const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
@@ -1976,12 +1976,13 @@ export class IgxTimePickerWithPassedTimeComponent {
 
 @Component({
     template: `
-        <igx-time-picker [value]="dateValue" [format]="customFormat"></igx-time-picker>
+        <igx-time-picker [mode]="mode" [value]="dateValue" [format]="customFormat"></igx-time-picker>
     `
 })
 export class IgxTimePickerWithPmTimeComponent {
-    public dateValue: Date = new Date(2017, 7, 7, 12, 27);
-    public customFormat = 'h:mm tt';
+    public dateValue: Date = new Date(2017, 7, 7, 12, 27, 23);
+    public customFormat = 'h:mm:ss tt';
+    public mode = 'dialog';
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
