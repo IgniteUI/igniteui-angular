@@ -200,7 +200,6 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(GridFunctions.getValueFromCellElement(firsCell)).toEqual('0');
 
             fix.componentInstance.scrollLeft(999999);
-            // await wait(200);
             await wait();
             // This won't work always in debugging mode due to the angular native events behavior, so errors are expected
             fix.detectChanges();
@@ -257,6 +256,19 @@ describe('IgxGrid - Cell component #grid', () => {
                 expect(item.width).toEqual('500px');
             });
         });
+
+        it('Should blur selected cell when scrolling with mouse wheel', (async () => {
+            const cell = grid.getCellByColumn(3, 'value');
+            cell.nativeElement.focus();
+            cell.nativeElement.click();
+            fix.detectChanges();
+            expect(document.activeElement).toEqual(cell.nativeElement);
+            const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, 200);
+            fix.detectChanges();
+            await wait(16);
+            expect(document.activeElement).toEqual(document.body);
+        }));
     });
 
     describe('iOS tests', () => {
