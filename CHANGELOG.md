@@ -14,7 +14,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
     - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
 
-- **Breaking Changes** Due to a breaking change in Angular 9 with Ivy Hammer providers are no longer included by default. You can find more information at: https://github.com/angular/angular/blob/master/CHANGELOG.md#breaking-changes-9 . Because of this change the following components require `HammerModule` to be imported in the root module of the application in order for user interactions to work as expected:
+- **Breaking Changes** Due to a breaking change in Angular 9 with Ivy, Hammer providers are no longer included by default. You can find more information at: https://github.com/angular/angular/blob/master/CHANGELOG.md#breaking-changes-9 . Because of this change the following components require `HammerModule` to be imported in the root module of the application in order for user interactions to work as expected:
     - `IgxSlider`
 
     The following components require `HammerModule` to be imported in the root module of the application so that their **touch** interactions work as expected:
