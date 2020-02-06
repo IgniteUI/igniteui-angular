@@ -131,7 +131,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: true })
-    public excelStyleSearch: IgxExcelStyleSearchComponent;
+    protected excelStyleSearch: IgxExcelStyleSearchComponent;
 
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
@@ -171,7 +171,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.isColumnPinnable = this.column.pinnable;
@@ -608,8 +608,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     get applyButtonDisabled() {
-        return  (this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
-                (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
+        return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
     }
 
     public applyFilter() {
