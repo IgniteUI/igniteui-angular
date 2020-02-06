@@ -96,6 +96,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
@@ -107,6 +108,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
