@@ -8,7 +8,6 @@ import {
     IgxCardModule,
     IgxCardComponent,
     IgxCardType,
-    IgxCardActionsLayout,
     IgxCardThumbnailDirective,
     IgxCardHeaderTitleDirective,
     IgxCardHeaderSubtitleDirective,
