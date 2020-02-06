@@ -58,6 +58,8 @@
 /// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius fraction, between 0-1 to be used for box input .
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
 /// @prop {Number} search-border-radius [.2] - The border radius fraction, between 0-1 to be used for search input .
+/// @prop {Color} label-floated-background [igx-color: surface] - The background color of the label when floated for input of type border.
+/// @prop {Color} label-floated-disabled-background [igx-color: surface] - The background color of the label when floated for input group of type border in its disabled state.
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-input-group
@@ -144,7 +146,7 @@ $_light-input-group: extend(
 
         disabled-border-color: (
             igx-color: ('grays', 500),
-            rgba: .06
+            rgba: .12
         ),
 
         box-background: (
@@ -157,8 +159,14 @@ $_light-input-group: extend(
 
         border-background: transparent,
 
-        border-disabled-background: (
-            igx-color: ('grays', 100)
+        border-disabled-background: transparent,
+
+        label-floated-background: (
+            igx-color: surface
+        ),
+
+        label-floated-disabled-background: (
+            igx-color: surface
         ),
 
         search-background: #fff,

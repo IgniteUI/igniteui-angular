@@ -712,7 +712,7 @@ class TabsTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-        <igx-tabs tabsType="fixed">
+        <igx-tabs type="fixed">
             <igx-tabs-group label="Tab111111111111111111111111">
                 <ng-template igxTab>
                     <div>T1</div>
