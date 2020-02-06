@@ -3210,7 +3210,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
         }));
 
-        fit('Should enable/disable the apply button correctly.', fakeAsync(() => {
+        it('Should enable/disable the apply button correctly.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
             fix.detectChanges();
