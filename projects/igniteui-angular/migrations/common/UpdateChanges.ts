@@ -4,8 +4,9 @@ import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
-import { getIdentifierPositions } from './tsUtils';
+import { getLanguageService, getRenamePositions } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
+import { LanguageService } from 'typescript';
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
@@ -58,6 +59,14 @@ export class UpdateChanges {
             }, sourceDirs);
         }
         return this._sassFiles;
+    }
+
+    private _service: LanguageService;
+    public get service(): LanguageService {
+        if (!this._service) {
+            this._service = getLanguageService(this.tsFiles, this.host);
+        }
+        return this._service;
     }
 
     /**
@@ -169,20 +178,16 @@ export class UpdateChanges {
 
     protected updateClasses(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
         for (const change of this.classChanges.changes) {
             if (fileContent.indexOf(change.name) !== -1) {
-                const positions = getIdentifierPositions(fileContent, change.name);
+                const positions = getRenamePositions(entryPath, change.name, this.service);
                 // loop backwards to preserve positions
                 for (let i = positions.length; i--;) {
                     const pos = positions[i];
                     fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
                 }
-                overwrite = true;
+                this.host.overwrite(entryPath, fileContent);
             }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
         }
     }
 
