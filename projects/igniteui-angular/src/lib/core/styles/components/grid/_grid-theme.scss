@@ -526,7 +526,6 @@
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $bootstrap-header-border-bottom-width: --var($theme, 'header-border-width') * 2;
     $cbx-size: map-get((
         material: rem(20px),
         fluent: rem(20px),
@@ -691,7 +690,7 @@
         border-bottom: $grid-header-border;
 
         @if $bootstrap-theme {
-            border-bottom-width: $bootstrap-header-border-bottom-width;
+            border-bottom-width: rem(2px);
         }
 
         z-index: 2;
