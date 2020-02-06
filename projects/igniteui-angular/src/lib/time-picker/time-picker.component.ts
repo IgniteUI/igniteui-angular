@@ -1477,7 +1477,7 @@ export class IgxTimePickerComponent implements
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
 
-        if (!this.displayValue && this.displayValue === this._formatTime(this.value, this.format)) {
+        if (this.displayValue === this.parseMask(false)) {
             return;
         }
 
@@ -1795,8 +1795,8 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public cancelButtonClick(): void {
-        if (this.mode === InteractionMode.DropDown && this.value) {
-            this.displayValue = this._formatTime(this.value, this.format);
+        if (this.mode === InteractionMode.DropDown) {
+            this.displayValue = this.value ? this._formatTime(this.value, this.format) : this.parseMask(false);
         }
 
         this.close();
