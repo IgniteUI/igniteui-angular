@@ -571,6 +571,14 @@ describe('Navigation Drawer', () => {
         done();
     });
 
+    it('should retain classes added in markup, fix for #6508', () => {
+        const fix = TestBed.createComponent(TestComponent);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.navDrawer.element.classList.contains('markupClass')).toBeTruthy();
+        expect(fix.componentInstance.navDrawer.element.classList.contains('igx-nav-drawer')).toBeTruthy();
+    });
+
     function swipe(element, posX, posY, duration, deltaX, deltaY) {
         const swipeOptions = {
             deltaX,
@@ -610,7 +618,7 @@ describe('Navigation Drawer', () => {
 
 @Component({
     selector: 'igx-test-cmp',
-    template: '<igx-nav-drawer></igx-nav-drawer>'
+    template: '<igx-nav-drawer class="markupClass"></igx-nav-drawer>'
 })
 class TestComponent {
     @ViewChild(IgxNavigationDrawerComponent, { static: true }) public navDrawer: IgxNavigationDrawerComponent;
