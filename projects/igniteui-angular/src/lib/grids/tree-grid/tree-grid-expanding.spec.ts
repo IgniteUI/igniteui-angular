@@ -23,7 +23,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
@@ -572,10 +572,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
-                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).rowID);
+                const ri = treeGrid.getRowByIndex(rowToToggle).rowID;
+                treeGrid.toggleRow(ri);
                 fix.detectChanges();
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
-                    if (rowToCheck === rowToToggle) {
+                    if (rowToCheck === rowToToggle && treeGrid.gridAPI.allow_expansion_state_change(ri, false)) {
                         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
                     } else {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
@@ -1134,7 +1135,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
@@ -1380,7 +1381,7 @@ describe('Custom expand/collapse template #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridCustomExpandersTemplateComponent

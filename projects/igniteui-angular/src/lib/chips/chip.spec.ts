@@ -15,6 +15,7 @@ import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { ControlsFunction } from '../test-utils/controls-functions.spec';
 
 @Component({
     template: `
@@ -93,7 +94,7 @@ describe('IgxChip', () => {
     let chipArea;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
@@ -129,7 +130,7 @@ describe('IgxChip', () => {
 
         it('should render remove button when enabled after the content inside the chip', () => {
             const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const chipRemoveButton = HelperTestFunctions.getDeleteButton(fix);
+            const chipRemoveButton = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
 
             // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
             expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
@@ -241,10 +242,10 @@ describe('IgxChip', () => {
 
         it('should delete chip when space button is pressed on delete button', () => {
             HelperTestFunctions.verifyChipsCount(fix, 4);
-
-            const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
+            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const deleteButtonElement = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
             // Removes chip with id City, because country chip is unremovable
-            UIInteractions.triggerKeyDownEvtUponElem(' ', deleteButtonElement.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem(' ', deleteButtonElement, true);
             fix.detectChanges();
 
             HelperTestFunctions.verifyChipsCount(fix, 3);
@@ -257,9 +258,10 @@ describe('IgxChip', () => {
         it('should delete chip when enter button is pressed on delete button', () => {
             HelperTestFunctions.verifyChipsCount(fix, 4);
 
-            const deleteButtonElement = HelperTestFunctions.getDeleteButton(fix);
+            const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+            const deleteButtonElement = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
             // Removes chip with id City, because country chip is unremovable
-            UIInteractions.triggerKeyDownEvtUponElem('Enter', deleteButtonElement.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', deleteButtonElement, true);
             fix.detectChanges();
 
             HelperTestFunctions.verifyChipsCount(fix, 3);
@@ -360,7 +362,8 @@ describe('IgxChip', () => {
             spyOn(secondChipComp.onSelection, 'emit');
             spyOn(secondChipComp.onSelectionDone, 'emit');
 
-            const chipRemoveButton = HelperTestFunctions.getDeleteButton(fix).nativeElement;
+            const chipRemoveButton = ControlsFunction.getChipRemoveButton(secondChipComp.chipArea.nativeElement);
+
             const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
             const removeBtnLeft = chipRemoveButton.getBoundingClientRect().left;
 
@@ -400,12 +403,6 @@ describe('IgxChip', () => {
 });
 
 class HelperTestFunctions {
-    public static CHIP_REMOVE_BUTTON = '.igx-chip__remove';
-
-    public static getDeleteButton(fix, index = 0) {
-        return fix.debugElement.queryAll(By.css(HelperTestFunctions.CHIP_REMOVE_BUTTON))[index];
-    }
-
     public static verifyChipsCount(fix, count) {
         const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         expect(chipComponents.length).toEqual(count);

@@ -3,6 +3,22 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-$_default-shape-tabs: ();
-$_round-shape-tabs: ();
-$_square-shape-tabs: ();
+$_default-shape-tabs: (
+    border-radius: 0
+);
+
+$_round-shape-tabs: (
+    border-radius: 0
+);
+
+$_square-shape-tabs: (
+    border-radius: 0
+);
+
+$_fluent-shape-tabs: (
+    border-radius: 0
+);
+
+$_bootstrap-shape-tabs: (
+    border-radius: 4px
+);

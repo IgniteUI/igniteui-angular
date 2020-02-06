@@ -27,6 +27,7 @@ enum IgxInputGroupType {
     BOX,
     BORDER,
     FLUENT,
+    BOOTSTRAP,
     SEARCH,
     FLUENT_SEARCH,
 }
@@ -106,10 +107,10 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--search')
     public isSearch = false;
+
     /**
      * @hidden
      */
-
     @HostBinding('class.igx-input-group--fluent-search')
     public isFluentSearch = false;
 
@@ -118,6 +119,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--fluent')
     public isFluent = false;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--bootstrap')
+    public isBootstrap = false;
 
     /**
      * An @Input property that disables the `IgxInputGroupComponent`.
@@ -184,7 +191,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     set type(value: string) {
         const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
         if (type !== undefined) {
-            this.isBox = this.isFluent = this.isFluentSearch = this.isBorder = this.isSearch = false;
+            this.isBox = this.isBootstrap = this.isFluent = this.isFluentSearch = this.isBorder = this.isSearch = false;
             switch (type) {
                 case IgxInputGroupType.BOX:
                     this.isBox = true;
@@ -200,6 +207,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     break;
                 case IgxInputGroupType.SEARCH:
                     this.isSearch = true;
+                    break;
+                case IgxInputGroupType.BOOTSTRAP:
+                    this.isBootstrap = true;
                     break;
                 default: break;
             }
@@ -365,6 +375,24 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     get isTypeFluent() {
         return this._type === IgxInputGroupType.FLUENT;
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is Bootstrap.
+     * ```typescript
+     *@ViewChild("MyInputGroup1")
+     *public inputGroup: IgxInputGroupComponent;
+     *ngAfterViewInit(){
+     *    let isTypeBootstrap = this.inputGroup.isTypeBootstrap;
+     *}
+     * ```
+     */
+    get isTypeBootstrap() {
+        return this._type === IgxInputGroupType.BOOTSTRAP;
+    }
+
+    get isNotMaterial() {
+        return this._type === IgxInputGroupType.FLUENT || this._type === IgxInputGroupType.BOOTSTRAP;
     }
 
     /**

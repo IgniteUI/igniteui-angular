@@ -17,6 +17,7 @@ import {
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs } from '../core/utils';
+import { IgxDirectionality } from '../services/direction/directionality';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -704,7 +705,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     @ViewChild('circle', { static: true }) private _svgCircle: ElementRef;
 
-    constructor(private renderer: Renderer2) {
+    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
         super();
     }
 
@@ -761,8 +762,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     private getProgress(percentage: number) {
-        // Reverse the sign here: '-' should become '+' in RTL mode
-        return this._circumference - (percentage * this._circumference / 100);
+        return this._directionality.rtl ?
+            this._circumference + (percentage * this._circumference / 100) :
+            this._circumference - (percentage * this._circumference / 100);
     }
 }
 

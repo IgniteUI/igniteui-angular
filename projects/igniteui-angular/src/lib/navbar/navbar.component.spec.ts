@@ -11,7 +11,7 @@ const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 NavbarIntializeTestComponent,

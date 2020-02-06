@@ -24,7 +24,7 @@ const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
 describe('IgxSlider', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SliderInitializeTestComponent,

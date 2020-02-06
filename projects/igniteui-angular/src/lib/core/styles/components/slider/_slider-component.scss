@@ -34,6 +34,10 @@
         @extend %igx-slider__ticks--top !optional;
     }
 
+    @include e(ticks-label) {
+        @extend %igx-slider__tick-label !optional;
+    }
+
     @include e(tick-label, $m: hidden) {
         @extend %igx-slider__tick-label--hidden !optional;
     }

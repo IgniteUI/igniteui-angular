@@ -14,8 +14,8 @@
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
+/// @param {Number} $border-width [null] - The border width of the badge component.
 /// @param {Color} $background-color [null] - The background color used.
-/// @param {Bool} $disable-border [true] - Sets the badge border visibility.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
 /// @param {border-radius} $border-radius [null] - The border radius used for badge component.
 ///
@@ -47,11 +47,10 @@
 
     $border-color: null,
     $border-radius: null,
+    $border-width: null,
 
     $background-color: null,
     $shadow: null,
-
-    $disable-border: true
 ) {
     $name: 'igx-badge';
     $badge-schema: ();
@@ -63,7 +62,7 @@
     }
 
     $theme: apply-palette($badge-schema, $palette);
-    $border-width: if($disable-border == true, 0, rem(1px));
+
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($badge-schema, 'border-radius')), 0, 11px
     );

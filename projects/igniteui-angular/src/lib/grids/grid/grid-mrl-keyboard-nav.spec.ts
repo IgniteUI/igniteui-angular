@@ -19,7 +19,7 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
@@ -1637,6 +1637,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             ]
         }];
         fix.detectChanges();
+        await wait(DEBOUNCETIME * 2);
 
         let firstCell;
         let secondCell;

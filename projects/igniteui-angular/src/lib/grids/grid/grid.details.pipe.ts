@@ -26,16 +26,12 @@ export class IgxGridDetailsPipe implements PipeTransform {
         const result = [];
         collection.forEach((v) => {
             result.push(v);
-            if (!this.gridAPI.grid.isGroupByRecord(v) && this.isExpanded(expansionStates, v)) {
+            if (!this.gridAPI.grid.isGroupByRecord(v) && !this.gridAPI.grid.isSummaryRow(v) &&
+                this.gridAPI.get_row_expansion_state(v)) {
                 const detailsObj = { detailsData: v };
                 result.push(detailsObj);
             }
         });
         return result;
     }
-    protected isExpanded(states:  Map<any, boolean>, record: any): boolean {
-        const pk = this.gridAPI.grid.primaryKey;
-        const rowID = pk ? record[pk] : record;
-        return states.get(rowID);
-   }
 }

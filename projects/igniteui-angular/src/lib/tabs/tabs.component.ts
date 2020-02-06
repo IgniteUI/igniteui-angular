@@ -25,6 +25,7 @@ import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
+import { PlatformUtil } from '../core/utils';
 
 export enum IgxTabsType {
     FIXED = 'fixed',
@@ -298,7 +299,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef, private _ngZone: NgZone) {
+    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) {
     }
 
     /**
@@ -317,28 +318,29 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this._selectedIndex = 0;
         }
 
-        requestAnimationFrame(() => {
-            const newTab = this.tabs.toArray()[this._selectedIndex];
-            if (newTab) {
-                this.performSelection(newTab);
-            } else {
-                this.hideIndicator();
-            }
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                const newTab = this.tabs.toArray()[this._selectedIndex];
+                if (newTab) {
+                    this.performSelection(newTab);
+                } else {
+                    this.hideIndicator();
+                }
+            });
+            this._ngZone.runOutsideAngular(() => {
+                this._resizeObserver = new ResizeObserver(() => {
+                    if (!this.hasContentTabs && this._selectedIndex >= 0 && this._selectedIndex < this.tabs.length) {
+                        const newTab = this.tabs.toArray()[this._selectedIndex];
+                        this.transformContentAnimation(newTab, 0);
+                    }
+                });
+
+                this._resizeObserver.observe(this.tabsContainer.nativeElement);
+            });
+        }
 
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
-        });
-
-        this._ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new ResizeObserver(() => {
-                if (!this.hasContentTabs && this._selectedIndex >= 0 && this._selectedIndex < this.tabs.length) {
-                    const newTab = this.tabs.toArray()[this._selectedIndex];
-                    this.transformContentAnimation(newTab, 0);
-                }
-            });
-
-            this._resizeObserver.observe(this.tabsContainer.nativeElement);
         });
     }
 
@@ -349,10 +351,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
         }
-
-        this._ngZone.runOutsideAngular(() => {
-            this._resizeObserver.disconnect();
-        });
+        if (this._resizeObserver) {
+            this._ngZone.runOutsideAngular(() => {
+                this._resizeObserver.disconnect();
+            });
+        }
     }
 
     private resetSelectionOnCollectionChanged(): void {

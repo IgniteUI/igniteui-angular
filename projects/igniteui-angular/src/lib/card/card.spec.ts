@@ -65,7 +65,7 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCardComponent,

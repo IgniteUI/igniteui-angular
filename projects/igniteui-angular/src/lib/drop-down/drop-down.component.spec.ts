@@ -36,7 +36,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
 
 describe('IgxDropDown ', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDropDownTestComponent,
@@ -57,7 +57,8 @@ describe('IgxDropDown ', () => {
                 GroupDropDownComponent,
                 VirtualizedDropDownComponent,
                 DensityInputComponent,
-                DensityParentComponent
+                DensityParentComponent,
+                DropDownWithIdComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -71,6 +72,15 @@ describe('IgxDropDown ', () => {
     }));
 
     describe('igxDropDown integration tests', () => {
+    it('#6546 - Should render the custom id set', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithIdComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLL)).nativeElement;
+            expect(ddList.id).toEqual('test-id-list');
+        }));
+
         // configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
@@ -1062,6 +1072,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
 
             spyOn(componentInstance, 'onToggleOpening');
+            spyOn(componentInstance.dropdown, 'onToggleContentAppended');
             spyOn(componentInstance, 'onToggleOpened');
             spyOn(componentInstance, 'onToggleClosing');
             spyOn(componentInstance, 'onToggleClosed');
@@ -1073,13 +1084,14 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             expect(componentInstance.onToggleOpening).toHaveBeenCalledTimes(1);
+            expect(componentInstance.dropdown.onToggleContentAppended).toHaveBeenCalledTimes(1);
             expect(componentInstance.onToggleOpened).toHaveBeenCalledTimes(1);
             button.click({ stopPropagation: () => null });
             tick();
 
             fixture.detectChanges();
             expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
-            expect(componentInstance.onToggleClosing).toHaveBeenCalledTimes(1);
+            expect(componentInstance.onToggleClosed).toHaveBeenCalledTimes(1);
         }));
 
         it('Should retain width/height properties', fakeAsync(() => {
@@ -1514,7 +1526,7 @@ describe('IgxDropDown ', () => {
             await wait(200);
             firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
-            expect(firstItemElement.textContent.trim()).toEqual('Item 1989');
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
             expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
         });
         it('Should properly handle keyboard navigation when virtualized', async(() => {
@@ -1729,6 +1741,10 @@ class IgxDropDownTestScrollComponent {
     public selectItem5() {
         this.dropdownScroll.setSelectedItem(4);
     }
+
+    public selectItem15() {
+        this.dropdownScroll.setSelectedItem(14);
+    }
 }
 
 @Component({
@@ -1862,6 +1878,10 @@ class IgxDropDownWithScrollComponent implements OnInit {
 
     public selectItem5() {
         this.dropdownScroll.setSelectedItem(4);
+    }
+
+    public selectItem15() {
+        this.dropdownScroll.setSelectedItem(14);
     }
 
     ngOnInit() {
@@ -2114,6 +2134,16 @@ class DropDownWithValuesComponent {
 
 @Component({
     template: `
+    <igx-drop-down #dropdownElement id="test-id">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithIdComponent extends DropDownWithValuesComponent {}
+
+@Component({
+    template: `
     <igx-drop-down #dropdownElement [maxHeight]="'100px'">
         <igx-drop-down-item *ngFor="let item of items" [value]="item">
             {{ item.field }}
@@ -2185,7 +2215,7 @@ class GroupDropDownComponent {
     styles: [`
     .wrapping-div {
         overflow: hidden;
-        height: 420px;
+        height: 400px;
     }
     `]
 })
@@ -2205,8 +2235,8 @@ class VirtualizedDropDownComponent {
             id: i
         }));
     }
-    public itemsMaxHeight = 420;
-    public itemHeight = 42;
+    public itemsMaxHeight = 400;
+    public itemHeight = 40;
 }
 
 @Component({

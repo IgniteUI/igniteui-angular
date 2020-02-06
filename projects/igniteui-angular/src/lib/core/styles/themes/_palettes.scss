@@ -107,3 +107,17 @@ $fluent-word-palette: igx-palette(
     $warn: #797673,
     $error: #a80000
 ) !default;
+
+/// Bootstrap palette
+/// @type {Map}
+/// @group palettes
+$bootstrap-palette: igx-palette(
+    $primary: #007bff,
+    $secondary: #6c757d,
+    $info: #17a2b8,
+    $success: #28a745,
+    $warn: #ffc107,
+    $error: #dc3545,
+    $surface: #f8f9fa
+) !default;
+
