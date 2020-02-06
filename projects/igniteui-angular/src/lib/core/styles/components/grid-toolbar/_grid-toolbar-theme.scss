@@ -257,8 +257,14 @@
         border-color: igx-color(map-get($theme, 'palette'), 'secondary') !important;
 
         @if $bootstrap-theme {
-            border-color: igx-color(map-get($theme, 'palette'), 'primary', 800) !important;
             border-width: 2px;
+            border-color: igx-color(map-get($theme, 'palette'), 'primary', 800) !important;
+            color: igx-color(map-get($theme, 'palette'), 'primary', 800);
+
+            &:hover,
+            &:focus {
+                background: igx-color(map-get($theme, 'palette'), 'primary', 800);
+            }
         }
     }
 
