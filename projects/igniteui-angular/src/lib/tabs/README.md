@@ -25,7 +25,7 @@ There are two tabs types that specify the sizing mechanism of the items.
  - `fixed`
 
 
-You can set the tabs type using the `tabsType` input.
+You can set the tabs type using the `type` input.
 
 ### Fixed Type
 All tabs items have equal size. The width of each tab is calculated by taking the width of the view and dividing it by the number of tabs. The width is in the range of min/max widths specified in Material Design.
@@ -48,7 +48,7 @@ If the total visible items width exceeds the vew port width, scroll buttons are 
 | `icon` | string | Set the icon to the item. Currently all icons from the material icon set are supported. |
 | `label` | string | Set the tab item text. |
 | `disabled` | boolean | 	Set if the tab is enabled/disabled.	 |
-| `tabsType` | TabsType | 	Set the tab item sizing mode. By default, `contentfit` is set, the tab item width is sized to its content in the range of min/max width. When the sizing type is `fixed` - all tabs have equal size to fit the view port. |
+| `type` | IgxTabsType | 	Set the tab item sizing mode. By default, `contentfit` is set, the tab item width is sized to its content in the range of min/max width. When the sizing type is `fixed` - all tabs have equal size to fit the view port. |
 
 ## Events
 

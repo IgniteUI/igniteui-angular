@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
+import { IgxSliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
 
 class Task {
     title: string;
@@ -24,7 +24,7 @@ export class SliderSampleComponent {
     public ticksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
-    public sliderType: SliderType = SliderType.RANGE;
+    public sliderType: IgxSliderType = IgxSliderType.RANGE;
     public labelsDates = new Array<Date>();
     public task: Task = new Task('Implement new app', 30);
     public labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

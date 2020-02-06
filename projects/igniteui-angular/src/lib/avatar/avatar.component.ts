@@ -14,17 +14,17 @@ import { IgxIconModule } from '../icon/index';
 
 let NEXT_ID = 0;
 
-export enum Size {
+export enum IgxAvatarSize {
     SMALL = 'small',
     MEDIUM = 'medium',
     LARGE = 'large'
 }
 
-export enum AvatarType {
-    DEFAULT = 'default',
+export enum IgxAvatarType {
     INITIALS = 'initials',
     IMAGE = 'image',
-    ICON = 'icon'
+    ICON = 'icon',
+    CUSTOM = 'custom',
 }
 
 /**
@@ -116,19 +116,22 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /**
      * Returns the type of the avatar.
-     * The avatar can be: `"initials type avatar"`, `"icon type avatar"` or `"image type avatar"`
+     * The avatar can be:
+     * - `"initials type avatar"`
+     * - `"icon type avatar"`
+     * - `"image type avatar"`.
+     * - `"custom type avatar"`.
      *
      * @example
      * ```typescript
      * let avatarDescription = this.avatar.roleDescription;
      * ```
      */
-
     @HostBinding('attr.aria-roledescription')
     public roleDescription: string;
 
     /**
-     * Sets the `id` of the avatar. If not set, the first avatar component will have an `id` = `"igx-avatar-0"`.
+     * Sets the `id` of the avatar. If not set, the first avatar component will have `id` = `"igx-avatar-0"`.
      *
      * @example
      * ```html
@@ -213,7 +216,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @Input()
     public src: string;
 
-    private _size: string | Size = 'small';
+    /**
+     * @hidden
+     * @internal
+     */
+    private _size: IgxAvatarSize = IgxAvatarSize.SMALL;
     /**
      * Returns the size of the avatar.
      *
@@ -223,7 +230,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```
      */
     @Input()
-    public get size(): string | Size {
+    public get size(): IgxAvatarSize {
         return this._size;
     }
 
@@ -236,15 +243,15 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * <igx-avatar size="large"></igx-avatar>
      * ```
      */
-    public set size(value: string | Size) {
+    public set size(value: IgxAvatarSize) {
         switch (value) {
-            case 'small':
-            case 'medium':
-            case 'large':
+            case IgxAvatarSize.SMALL:
+            case IgxAvatarSize.MEDIUM:
+            case IgxAvatarSize.LARGE:
                 this._size = value;
                 break;
             default:
-                this._size = 'small';
+                this._size = IgxAvatarSize.SMALL;
         }
     }
 
@@ -256,20 +263,20 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * let avatarType = this.avatar.type;
      * ```
      */
-    get type(): AvatarType {
+    get type(): IgxAvatarType {
         if (this.src) {
-            return AvatarType.IMAGE;
+            return IgxAvatarType.IMAGE;
         }
 
         if (this.icon) {
-            return AvatarType.ICON;
+            return IgxAvatarType.ICON;
         }
 
         if (this.initials) {
-            return AvatarType.INITIALS;
+            return IgxAvatarType.INITIALS;
         }
 
-        return AvatarType.DEFAULT;
+        return IgxAvatarType.CUSTOM;
     }
 
     /**
@@ -280,11 +287,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     get template(): TemplateRef<any> {
         switch (this.type) {
-            case AvatarType.IMAGE:
+            case IgxAvatarType.IMAGE:
                 return this.imageTemplate;
-            case AvatarType.INITIALS:
+            case IgxAvatarType.INITIALS:
                 return this.initialsTemplate;
-            case AvatarType.ICON:
+            case IgxAvatarType.ICON:
                 return this.iconTemplate;
             default:
                 return this.defaultTemplate;
@@ -300,18 +307,21 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        this.elementRef.nativeElement.classList
-            .add(`igx-avatar--${this._size}`, `igx-avatar--${this.type}`);
+        if (this.type !== IgxAvatarType.CUSTOM) {
+            this.elementRef.nativeElement.classList.add(`igx-avatar--${this.type}`);
+        }
+
+        this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
 
     /** @hidden @internal */
     private getRole(): string {
         switch (this.type) {
-            case AvatarType.IMAGE:
+            case IgxAvatarType.IMAGE:
                 return 'image avatar';
-            case AvatarType.ICON:
+            case IgxAvatarType.ICON:
                 return 'icon avatar';
-            case AvatarType.INITIALS:
+            case IgxAvatarType.INITIALS:
                 return 'initials avatar';
             default:
                 return 'custom avatar';
