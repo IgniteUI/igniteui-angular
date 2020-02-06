@@ -36,7 +36,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
 
 describe('IgxDropDown ', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDropDownTestComponent,
@@ -1526,7 +1526,7 @@ describe('IgxDropDown ', () => {
             await wait(200);
             firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
-            expect(firstItemElement.textContent.trim()).toEqual('Item 1989');
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
             expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
         });
         it('Should properly handle keyboard navigation when virtualized', async(() => {
@@ -2215,7 +2215,7 @@ class GroupDropDownComponent {
     styles: [`
     .wrapping-div {
         overflow: hidden;
-        height: 420px;
+        height: 400px;
     }
     `]
 })
@@ -2235,8 +2235,8 @@ class VirtualizedDropDownComponent {
             id: i
         }));
     }
-    public itemsMaxHeight = 420;
-    public itemHeight = 42;
+    public itemsMaxHeight = 400;
+    public itemHeight = 40;
 }
 
 @Component({

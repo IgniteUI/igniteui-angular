@@ -20,7 +20,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
