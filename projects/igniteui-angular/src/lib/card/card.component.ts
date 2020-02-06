@@ -193,7 +193,7 @@ export class IgxCardFooterDirective {
  */
 
 export enum IgxCardType {
-    DEFAULT = 'default',
+    ELEVATED = 'elevated',
     OUTLINED = 'outlined'
 }
 
@@ -238,7 +238,7 @@ export class IgxCardComponent {
      */
     @HostBinding('class.igx-card')
     @Input()
-    public type: IgxCardType | string = IgxCardType.DEFAULT;
+    public type: IgxCardType | string = IgxCardType.ELEVATED;
 
     /**
      * A getter which will return true if the card type is `outlined`.
@@ -262,7 +262,7 @@ export class IgxCardComponent {
 }
 
 export enum IgxCardActionsLayout {
-    DEFAULT = 'default',
+    START = 'start',
     JUSTIFY = 'justify',
 }
 
@@ -292,7 +292,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      */
     @HostBinding('class.igx-card-actions')
     @Input()
-    public layout: IgxCardActionsLayout | string = 'default';
+    public layout: IgxCardActionsLayout | string = IgxCardActionsLayout.START;
 
     /**
      * An @Input property that sets the vertical attribute of the actions.

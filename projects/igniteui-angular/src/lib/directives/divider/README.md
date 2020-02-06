@@ -37,7 +37,7 @@ The **igx-divider** is a directive that groups content in lists and layout.
 |:----------|:-------------:|:------|
 | `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `role` | string | The role attribute of the divider. By default it's set to `separator`. |
-| `type` | IgxDividerType | The type of the divider. Can be `default` or `dashed`. |
+| `type` | IgxDividerType | The type of the divider. Can be `solid` or `dashed`. |
 | `inset` | string | The space between the separator and the surrounding container. Provide the value in `px`, `%`, or relative units(`em`, `rem`). |
 | `middle` | boolean | When set to `true`, the divider will be set in on both sides when an `inset` value is provided. |
 | `vertical` | boolean | Whether the divider should be vertically layed out. |
