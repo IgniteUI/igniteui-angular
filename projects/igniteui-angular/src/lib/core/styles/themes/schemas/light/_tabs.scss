@@ -124,6 +124,8 @@ $_bootstrap-tabs: extend(
     (
         variant: 'bootstrap',
 
+        item-background: inherit,
+
         border-color: (
             igx-color: ('grays', 300)
         ),
@@ -136,7 +138,7 @@ $_bootstrap-tabs: extend(
             igx-color: ('primary', 500)
         ),
 
-        item-hover-background: #fff,
+        item-hover-background: inherit,
 
         item-hover-color: (
             igx-color: ('primary', 700)
@@ -150,7 +152,7 @@ $_bootstrap-tabs: extend(
             igx-color: ('grays', 800)
         ),
 
-        item-active-background: #fff,
+        item-active-background: inherit,
 
         indicator-color: (
             igx-color: ('grays', 400)
