@@ -82,11 +82,11 @@
             }
 
             // Add native element typographic styles.
-            // @if $e != null {
-            //     #{$e} {
-            //         @extend %#{$category};
-            //     }
-            // }
+            @if $e != null {
+                #{$e} {
+                    @extend %#{$category};
+                }
+            }
 
             // Add class selector typographic styles.
             @include e(#{$category}) {
