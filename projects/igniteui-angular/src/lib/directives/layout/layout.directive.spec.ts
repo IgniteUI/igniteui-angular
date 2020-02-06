@@ -7,7 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxLayoutDirective', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [TestFlexLayoutComponent],
             imports: [IgxLayoutModule]

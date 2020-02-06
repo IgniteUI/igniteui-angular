@@ -13,7 +13,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('igxMask', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AlphanumSpaceMaskComponent,

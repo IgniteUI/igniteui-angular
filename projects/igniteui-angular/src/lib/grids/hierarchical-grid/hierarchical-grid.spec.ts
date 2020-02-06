@@ -18,7 +18,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -422,7 +422,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
@@ -680,7 +680,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSizingComponent
@@ -820,7 +820,7 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHGridRemoteOnDemandComponent
@@ -897,7 +897,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     const THEAD_CLASS = '.igx-grid__thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridColumnsUpdateComponent
@@ -1062,7 +1062,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridToggleRIComponent
@@ -1146,7 +1146,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridCustomTemplateComponent
