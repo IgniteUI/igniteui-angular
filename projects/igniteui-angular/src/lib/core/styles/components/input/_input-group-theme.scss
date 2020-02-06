@@ -12,7 +12,9 @@
 /// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
 ///
 /// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
+/// @param {Color} $input-prefix-background [null] - The background color of an input prefix in the idle state.
 /// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
+/// @param {Color} $input-suffix-background [null] - The background color of an input sufix in the idle state.
 ///
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
 /// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
@@ -49,6 +51,9 @@
 /// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
 /// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
 /// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
+///
+/// @param {Color} placeholder-color [null] - The placeholder color of an input group.
+/// @param {Color} disabled-placeholder-color [null] - The disabled placeholder color of an input group.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
