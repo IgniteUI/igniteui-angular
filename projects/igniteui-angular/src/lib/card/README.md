@@ -39,7 +39,7 @@ Supporting directives and components:
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
-| `type` | IgxCardType | The type of the card component. It can be either `default` or `outlined`. |
+| `type` | IgxCardType | The type of the card component. It can be either `elevated` or `outlined`. |
 | `role` | string | The role attribute of the card. By default it's set to `group`. |
 | `isCardOutlined` | boolean | Returns `true` if the card is outlined. |
 | `horizontal`* | boolean | Sets the card layout direction. When set to `true` the card content is horizontally layed out. |
@@ -60,7 +60,7 @@ Supporting directives and components:
 ## igx-card-actions
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `layout` | IgxCardActionsLayout | Sets the layout type of the area. Can be either `default` or `justify`. |
+| `layout` | IgxCardActionsLayout | Sets the layout type of the area. Can be either `start` or `justify`. |
 | `vertical` | boolean | Sets the layout direction. When set to `true` all buttons in the area will be aligned vertically. |
 | `reverse` | boolean | Reverses the layout of the area. When set to `true` all `igx-icons` and/or `igx-button='icon` will appear before all regular(text) buttons. |
 | `isJustifyLayout` | boolean | Returns true when the layout type is set to `justify`. |
