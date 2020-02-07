@@ -80,6 +80,11 @@
 /// @param {Color} $drop-area-background [null] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
 ///
+/// @param {Color} $filtering-background-and [null] - The background color of advanced filtering "AND" condition.
+/// @param {Color} $filtering-background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @param {Color} $filtering-background-or [null] - The background color of advanced filtering "OR" condition.
+/// @param {Color} $filtering-background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+///
 /// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
 /// @param {Color} $filtering-header-text-color [null] - The text color color of the filtered column header.
 /// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
@@ -183,6 +188,10 @@
     $filtering-header-text-color: null,
     $filtering-row-background: null,
     $filtering-row-text-color: null,
+    $filtering-background-and: null,
+    $filtering-background-or: null,
+    $filtering-background-and--focus: null,
+    $filtering-background-or--focus: null,
     $tree-filtered-text-color: null,
 
     $body-summaries-background: null,
@@ -197,7 +206,7 @@
     $row-drag-color: null,
     $drop-area-border-radius: null,
     $grid-border-color: null,
-    $sortable-header-icon-hover-color: null
+    $sortable-header-icon-hover-color: null,
 ) {
     $name: 'igx-grid';
     $grid-schema: ();
@@ -488,6 +497,10 @@
         filtering-header-text-color: $filtering-header-text-color,
         filtering-row-background: $filtering-row-background,
         filtering-row-text-color: $filtering-row-text-color,
+        filtering-background-and: $filtering-background-and,
+        filtering-background-or: $filtering-background-or,
+        filtering-background-and--focus: $filtering-background-and--focus,
+        filtering-background-or--focus: $filtering-background-or--focus,
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
@@ -525,6 +538,7 @@
 
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
+    $not-bootstrap-theme: $variant != 'bootstrap';
 
     $cbx-size: map-get((
         material: rem(20px),
