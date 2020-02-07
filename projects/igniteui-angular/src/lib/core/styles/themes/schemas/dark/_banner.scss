@@ -22,4 +22,9 @@ $_dark-fluent-banner: extend($_fluent-banner);
 /// @type {Map}
 /// @requires extend
 /// @requires $_bootstrap-banner
-$_dark-bootstrap-banner: extend($_bootstrap-banner);
+$_dark-bootstrap-banner: extend(
+    $_bootstrap-banner,
+    (
+        banner-background: #333,
+    )
+);

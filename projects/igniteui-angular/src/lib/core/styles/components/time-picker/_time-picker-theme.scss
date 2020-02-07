@@ -354,7 +354,9 @@
     }
 
     %time-picker__header-hour {
-        @include igx-type-style($type-scale, $header-hour);
+        @include igx-type-style($type-scale, $header-hour) {
+            margin-top: 0;
+        }
     }
 
     %time-picker__column {

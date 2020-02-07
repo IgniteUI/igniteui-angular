@@ -1,7 +1,7 @@
 import { Directive, HostBinding, NgModule, Input } from '@angular/core';
 
 export enum IgxDividerType {
-    DEFAULT = 'default',
+    SOLID = 'solid',
     DASHED = 'dashed'
 }
 
@@ -54,7 +54,7 @@ export class IgxDividerDirective {
      */
     @HostBinding('class.igx-divider')
     @Input()
-    public type: IgxDividerType | string = IgxDividerType.DEFAULT;
+    public type: IgxDividerType | string = IgxDividerType.SOLID;
 
     @HostBinding('class.igx-divider--dashed')
     get isDashed() {
@@ -79,8 +79,8 @@ export class IgxDividerDirective {
      * const isDefault = this.divider.isDefault;
      * ```
      */
-    get isDefault() {
-        return this.type === IgxDividerType.DEFAULT;
+    get isSolid() {
+        return this.type === IgxDividerType.SOLID;
     }
 
     /**

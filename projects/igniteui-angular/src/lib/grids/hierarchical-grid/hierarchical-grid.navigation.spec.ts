@@ -14,7 +14,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -561,6 +561,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
          // collapse
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
@@ -568,6 +569,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // expand
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         parentCell = hierarchicalGrid.getCellByColumn(38, 'ID');
@@ -793,7 +795,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxHierarchicalGridTestComplexComponent
@@ -949,7 +951,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
@@ -1110,7 +1112,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSmallerChildComponent

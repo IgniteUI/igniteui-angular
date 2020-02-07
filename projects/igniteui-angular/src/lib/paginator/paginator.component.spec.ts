@@ -8,7 +8,7 @@ import { GridFunctions } from '../test-utils/grid-functions.spec';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultPaginatorComponent
@@ -90,7 +90,7 @@ describe('IgxPaginator with default settings', () => {
 
 describe('IgxPaginator with custom settings', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomizedPaginatorComponent,

@@ -21,7 +21,7 @@ const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 describe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCircularProgressBarComponent,

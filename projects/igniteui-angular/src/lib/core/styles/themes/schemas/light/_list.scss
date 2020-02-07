@@ -158,6 +158,18 @@ $_bootstrap-list: extend(
             igx-color: ('grays', 100),
             hexrgba: (#fff)
         ),
+
+        item-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-active: (
+            igx-color: ('grays', 900)
+        ),
     )
 );
 
