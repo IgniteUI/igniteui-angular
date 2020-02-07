@@ -6,13 +6,34 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - Added support for the Ivy renderer.
-- **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+- **Breaking Changes** The following classes and enumarators have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
     - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
     - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+    - `AvatarType` -> `IgxAvatarType`
+    - `Size` -> `IgxAvatarSize`
+    - `Type` -> `IgxBadgeType`
+    - `SliderType` -> `IgxSliderType`
+    - `TabsType` -> `IgxTabsType`
+
+- **Breaking Changes** Due to a breaking change in Angular 9 with Ivy, Hammer providers are no longer included by default. You can find more information at: https://github.com/angular/angular/blob/master/CHANGELOG.md#breaking-changes-9 . Because of this change the following components require `HammerModule` to be imported in the root module of the application in order for user interactions to work as expected:
+    - `IgxSlider`
+
+    The following components require `HammerModule` to be imported in the root module of the application so that their **touch** interactions work as expected:
+    - `igxGrid`
+    - `igxHierarchicalGrid`
+    - `igxTreeGrid`
+    - `igxList`
+    - `igxNavigationDrawer`
+    - `igxTimePicker`
+    - `igxMonthPicker`
+    - `igxSlider`
+    - `igxCalendar`
+    - `igxDatePicker`
+    - `igxCarousel`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
@@ -25,6 +46,21 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
+- `IgxAvatar`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `custom` in `IgxAvatarType`;
+- `IgxBadge`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `primary` in `IgxBadgeType`;
+- `IgxCard`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `elevated` in `IgxCardType`;
+    - **Breaking Changes** - renamed the `default` enumeration member to `start` in `IgxCardActionsLayout`;
+- `IgxDivider`:
+    - **Breaking Changes** - renamed the `default` enumeration member to `solid` in `IgxDividerType`;
+    - **Breaking Changes** - renamed the `isDefault` getter to `isSolid`;
+- `IgxProgress`:
+    - **Breaking Changes** - renamed the `danger` enumeration member to `error` in `IgxProgresType`;
+    - **Breaking Changes** - renamed the `danger` getter to `error`;
+- `IgxTabs`:
+    - **Breaking Changes** - The `tabsType` input property has been renamed to `type`. It should get renamed in your components via `ng update`;
 - `igxOverlay`:
     - **Behavioural Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed `onAppended` overlay event and manage/restore the scroll position.
 

@@ -645,11 +645,12 @@
 
     %cal-value-content {
         position: relative;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
         width: $cal-value-w;
         height: $cal-value-h;
         min-width: 2ch;
-        line-height: $cal-value-h;
-        text-align: center;
         border-radius: --var($theme, 'date-border-radius');
         z-index: 0;
         // transition: background .15s ease-out;
@@ -944,7 +945,6 @@
 
     %cal-header-date {
         @include igx-type-style($type-scale, $header-date) {
-            line-height: rem(42px);
             margin: 0;
         }
     }

@@ -46,6 +46,7 @@ $_dark-bootstrap-list: extend(
     $_bootstrap-list,
     $_base-dark-list,
     (
+        background: #222,
         item-background: #222,
         header-background: #222,
     )

@@ -41,6 +41,11 @@
 
     $theme: apply-palette($grid-paginator-schema, $palette);
 
+
+    @if not($text-color) and $background-color {
+        $text-color: text-contrast($background-color);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
