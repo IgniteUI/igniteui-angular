@@ -72,14 +72,14 @@
         "resize-observer-polyfill": "^1.5.1"
     },
     "peerDependencies": {
-        "@angular/common": "^8.0.0",
-        "@angular/core": "^8.0.0",
-        "@angular/animations": "^8.0.0",
-        "@angular/forms": "^8.0.0",
+        "@angular/common": "^9.0.0",
+        "@angular/core": "^9.0.0",
+        "@angular/animations": "^9.0.0",
+        "@angular/forms": "^9.0.0",
         "web-animations-js": "^2.3.2"
     },
     "devDependencies": {
-        "@igniteui/angular-schematics": "^9.0.500-rc.1"
+        "@igniteui/angular-schematics": "^9.0.500"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
