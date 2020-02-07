@@ -53,7 +53,7 @@ export interface ISliderValueChangeEventArgs {
     value: number | IRangeSliderValue;
 }
 
-export enum SliderType {
+export enum IgxSliderType {
     /**
      * Slider with single thumb.
      */

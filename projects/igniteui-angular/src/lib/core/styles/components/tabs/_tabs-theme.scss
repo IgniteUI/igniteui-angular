@@ -379,7 +379,10 @@
             background: --var($theme, 'item-active-background');
             position: relative;
             z-index: 1;
-            border-color: --var($theme, 'border-color') --var($theme, 'border-color') --var($theme, 'item-active-background');
+            border-top-color: --var($theme, 'border-color');
+            border-left-color: --var($theme, 'border-color');
+            border-right-color: --var($theme, 'border-color');
+            border-bottom-color: transparent;
 
             &::after {
                 content: '';
@@ -393,7 +396,10 @@
 
             &:hover,
             &:focus {
-                border-color: --var($theme, 'border-color') --var($theme, 'border-color') transparent;
+                border-top-color: --var($theme, 'border-color');
+                border-left-color: --var($theme, 'border-color');
+                border-right-color: --var($theme, 'border-color');
+                border-bottom-color: transparent;
             }
         }
     }
