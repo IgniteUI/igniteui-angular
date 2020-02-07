@@ -16,7 +16,7 @@ describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,

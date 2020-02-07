@@ -24,7 +24,7 @@ describe('IgxGrid Master Detail #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,

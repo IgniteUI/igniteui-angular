@@ -22,7 +22,7 @@ import { SliderHandle,
     IgxThumbFromTemplateDirective,
     IgxThumbToTemplateDirective,
     IRangeSliderValue,
-    SliderType,
+    IgxSliderType,
     ISliderValueChangeEventArgs,
     TicksOrientation,
     TickLabelsOrientation,
@@ -87,7 +87,7 @@ export class IgxSliderComponent implements
     private _secondaryTicks = 0;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
-    private _type = SliderType.SLIDER;
+    private _type = IgxSliderType.SLIDER;
 
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
@@ -220,7 +220,8 @@ export class IgxSliderComponent implements
     public id = `igx-slider-${NEXT_ID++}`;
 
     /**
-     * An @Input property that gets the type of the `IgxSliderComponent`. The slider can be SliderType.SLIDER(default) or SliderType.RANGE.
+     * An @Input property that gets the type of the `IgxSliderComponent`.
+     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
      * @ViewChild("slider2")
      * public slider: IgxSliderComponent;
@@ -234,18 +235,19 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * An @Input property that sets the type of the `IgxSliderComponent`. The slider can be SliderType.SLIDER(default) or SliderType.RANGE.
+     * An @Input property that sets the type of the `IgxSliderComponent`.
+     * The slider can be IgxSliderType.SLIDER(default) or IgxSliderType.RANGE.
      * ```typescript
-     * sliderType: SliderType = SliderType.RANGE;
+     * sliderType: IgxSliderType = IgxSliderType.RANGE;
      * ```
      * ```html
      * <igx-slider #slider2 [type]="sliderType" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
      * ```
      */
-    public set type(type: SliderType) {
+    public set type(type: IgxSliderType) {
         this._type = type;
 
-        if (type === SliderType.SLIDER) {
+        if (type === IgxSliderType.SLIDER) {
             this.lowerValue = 0;
         }
 
@@ -572,8 +574,9 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the slider value. If the slider is of type {@link SliderType.SLIDER} the returned value is number.
-     * If the slider type is {@link SliderType.RANGE} the returned value represents an object of {@link lowerValue} and {@link upperValue}.
+     * Returns the slider value. If the slider is of type {@link IgxSliderType.SLIDER} the returned value is number.
+     * If the slider type is {@link IgxSliderType.RANGE}.
+     * The returned value represents an object of {@link lowerValue} and {@link upperValue}.
      *```typescript
      *@ViewChild("slider2")
      *public slider: IgxSliderComponent;
@@ -595,8 +598,9 @@ export class IgxSliderComponent implements
 
     /**
      * Sets the slider value.
-     * If the slider is of type {@link SliderType.SLIDER} the argument is number. By default the {@link value} gets the {@link lowerBound}.
-     * If the slider type is {@link SliderType.RANGE} the argument
+     * If the slider is of type {@link IgxSliderType.SLIDER}.
+     * The argument is number. By default the {@link value} gets the {@link lowerBound}.
+     * If the slider type is {@link IgxSliderType.RANGE} the argument
      * represents an object of {@link lowerValue} and {@link upperValue} properties.
      * By default the object is associated with the {@link lowerBound} and {@link upperBound} property values.
      * ```typescript
@@ -837,7 +841,7 @@ export class IgxSliderComponent implements
      * ```
      */
     public get isRange(): boolean {
-        return this.type === SliderType.RANGE;
+        return this.type === IgxSliderType.RANGE;
     }
 
     /**

@@ -48,7 +48,7 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeEach(async(() => {
+   beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,

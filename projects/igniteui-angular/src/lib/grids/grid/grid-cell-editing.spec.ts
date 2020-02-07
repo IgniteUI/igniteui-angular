@@ -21,7 +21,7 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CellEditingTestComponent,
