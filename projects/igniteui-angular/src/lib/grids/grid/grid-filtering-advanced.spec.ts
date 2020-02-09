@@ -1,4 +1,4 @@
-﻿import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+﻿import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -24,6 +24,8 @@ const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--a
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
+const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
+const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
 
 describe('IgxGrid - Advanced Filtering #grid', () => {
     configureTestSuite();
@@ -230,15 +232,15 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
             // Verify commit expression button is disabled.
             const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
+            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
             // Verify close expression button is enabled.
             const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
-            expect(closeButton.classList.contains('igx-button--disabled')).toBe(false);
+            expect(closeButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
 
             // Verify adding buttons are disabled.
             const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
             for (const button of buttons) {
-                expect(button.classList.contains('igx-button--disabled')).toBe(true);
+                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
             }
         }));
 
@@ -269,15 +271,15 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
             // Verify commit expression button is disabled.
             const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
+            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
             // Verify close expression button is enabled.
             const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
-            expect(closeButton.classList.contains('igx-button--disabled')).toBe(false);
+            expect(closeButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
 
             // Verify adding buttons are disabled.
             const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
             for (const button of buttons) {
-                expect(button.classList.contains('igx-button--disabled')).toBe(true);
+                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
             }
         }));
 
@@ -294,7 +296,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
             // Verify commit button is disabled.
             let commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
+            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             verifyEditModeExpressionInputStates(fix, true, false, false);
@@ -310,7 +312,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
             // Verify commit button is now enabled.
             commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains('igx-button--disabled')).toBe(false);
+            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -1421,7 +1423,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
             const buttons = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [0], 0);
             expect(buttons.length).toBe(4);
             for (const button of buttons) {
-                expect(button.classList.contains('igx-button--disabled')).toBe(false);
+                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
             }
 
             // Click the cancel button to hide the buttons.
@@ -1903,7 +1905,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
 
                 let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
 
                 let secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
@@ -1930,7 +1932,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // the new group
                 verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [0]), 'and');
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(false);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(false);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, true).length).toBe(2);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, false).length).toBe(2);
 
@@ -1970,7 +1972,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
 
                 let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
 
                 let secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
@@ -1997,7 +1999,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // the new group
                 verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [0]), 'or');
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(false);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(false);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, true).length).toBe(2);
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, false).length).toBe(2);
 
@@ -2037,7 +2039,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
 
                 let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
 
                 const secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
@@ -2068,7 +2070,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
             }));
 
-            it('Should show/hide group\'s context menu when clicking its operator line.', (async() => {
+            it('Should show/hide group\'s context menu when clicking its operator line.', fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2092,25 +2094,27 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 fix.detectChanges();
 
                 // Verify context menu is not visible.
-                verifyContextMenuVisibility(fix, false);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, false);
+                });
 
                 // Click the innner group's operator line.
                 const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 operatorLine.click();
-                await wait(400);
-                fix.detectChanges();
 
                 // Verify context menu is visible.
-                verifyContextMenuVisibility(fix, true);
-                verifyContextMenuType(fix, true);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, true);
+                    verifyContextMenuType(fix, true);
+                });
 
                 // Click the innner group's operator line again.
                 operatorLine.click();
-                await wait(400);
-                fix.detectChanges();
 
                 // Verify context menu is no longer visible.
-                verifyContextMenuVisibility(fix, false);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, false);
+                });
             }));
 
             it('Should change the group\'s operator when using its context menu buttons.', fakeAsync(() => {
@@ -2197,7 +2201,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
 
                 let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
 
                 const secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
@@ -2222,7 +2226,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 // Verify three expression in the root group are what remains.
                 for (let index = 0; index < 3; index++) {
                     firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [index]); // expression
-                    expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                    expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
                 }
             }));
 
@@ -2248,7 +2252,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 // Verify the ungroup button is disabled.
                 const ungroupButton = GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3];
-                expect(ungroupButton.classList.contains('igx-button--disabled')).toBe(true);
+                expect(ungroupButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
             }));
 
             it('Should delete the group from the tree when click \'delete\' from context menu.',
@@ -2281,7 +2285,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
 
                 let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
 
                 const secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
@@ -2305,10 +2309,10 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
-                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+                expect(firstItem.classList.contains(ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS)).toBe(true);
             }));
 
-            it('Should close the context menu when clicking its close button.' , (async() => {
+            it('Should close the context menu when clicking its close button.' , fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.Or);
                 tree.filteringOperands.push({
@@ -2329,25 +2333,25 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                await wait(200);
-                fix.detectChanges();
 
                 // Verify context menu is opened.
-                verifyContextMenuVisibility(fix, true);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, true);
+                });
 
                 // Click close button of context menu.
                 const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
                 buttons[0].click();
-                await wait(100);
-                fix.detectChanges();
 
                 // Verify context menu is closed.
-                verifyContextMenuVisibility(fix, false);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, false);
+                });
             }));
         });
 
         describe('Keyboard Navigation/Interaction', () => {
-            it('Should close the context menu when pressing \'Escape\' on it.' , (async() => {
+            it('Should close the context menu when pressing \'Escape\' on it.' , fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.Or);
                 tree.filteringOperands.push({
@@ -2368,19 +2372,19 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                await wait(200);
-                fix.detectChanges();
 
                 // Verify context menu is opened.
-                verifyContextMenuVisibility(fix, true);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, true);
+                });
 
                 // Press 'Escape' on the context menu.
                 UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringContextMenu(fix), 'Escape');
-                await wait(200);
-                fix.detectChanges();
 
                 // Verify context menu is closed.
-                verifyContextMenuVisibility(fix, false);
+                fix.whenStable().then(() => {
+                    verifyContextMenuVisibility(fix, false);
+                });
             }));
 
             it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.' , fakeAsync(() => {
@@ -3034,6 +3038,7 @@ function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
 function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
     const contextMenu: HTMLElement = GridFunctions.getAdvancedFilteringContextMenu(fix);
     const contextMenuRect = contextMenu.getBoundingClientRect();
+    console.log(contextMenu.classList);
     expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(!shouldBeVisible, 'incorrect context menu visibility');
     expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(!shouldBeVisible, 'incorrect context menu dimensions');
 }
