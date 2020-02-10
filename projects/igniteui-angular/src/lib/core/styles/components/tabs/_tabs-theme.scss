@@ -245,6 +245,7 @@
         align-items: center;
         overflow: hidden;
         background: --var($theme, 'item-background');
+
         @if $not-bootstrap-theme {
             box-shadow: --var($theme, 'tab-area-shadow');
         }
@@ -355,6 +356,9 @@
         outline: 0;
         color: --var($theme, 'item-active-color');
 
+        @if $bootstrap-theme {
+            border-color: --var($theme, 'border-color--hover') --var($theme, 'border-color--hover') transparent;
+        }
 
         &:focus {
             background: --var($theme, 'item-active-background');
@@ -380,7 +384,10 @@
             background: --var($theme, 'item-active-background');
             position: relative;
             z-index: 1;
-            border-color: --var($theme, 'border-color') --var($theme, 'border-color') --var($theme, 'item-active-background');
+            border-top-color: --var($theme, 'border-color');
+            border-left-color: --var($theme, 'border-color');
+            border-right-color: --var($theme, 'border-color');
+            border-bottom-color: transparent;
 
             &::after {
                 content: '';
@@ -394,7 +401,10 @@
 
             &:hover,
             &:focus {
-                border-color: --var($theme, 'border-color') --var($theme, 'border-color') transparent;
+                border-top-color: --var($theme, 'border-color');
+                border-left-color: --var($theme, 'border-color');
+                border-right-color: --var($theme, 'border-color');
+                border-bottom-color: transparent;
             }
         }
     }

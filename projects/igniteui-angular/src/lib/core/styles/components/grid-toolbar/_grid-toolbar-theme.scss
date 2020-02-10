@@ -105,6 +105,9 @@
 @mixin igx-grid-toolbar($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -252,6 +255,17 @@
 
     %igx-grid-toolbar__adv-filter--filtered {
         border-color: igx-color(map-get($theme, 'palette'), 'secondary') !important;
+
+        @if $bootstrap-theme {
+            border-width: 2px;
+            border-color: igx-color(map-get($theme, 'palette'), 'primary', 800) !important;
+            color: igx-color(map-get($theme, 'palette'), 'primary', 800);
+
+            &:hover,
+            &:focus {
+                background: igx-color(map-get($theme, 'palette'), 'primary', 800);
+            }
+        }
     }
 
     %igx-grid-toolbar__dropdown {

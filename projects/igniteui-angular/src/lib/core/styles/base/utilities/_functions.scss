@@ -297,10 +297,11 @@
 /// @param {Color} $success [#4eb862] - The success color used throughout the application.
 /// @param {Color} $warn [#fbb13c] - The warning color used throughout the application.
 /// @param {Color} $error [#ff134a] - The error color used throughout the application.
-/// @param {Color} $grays [#000] - The color used for generating the grayscale palette.
+/// @param {Color} $grays [$igx-foreground-color] - The color used for generating the grayscale palette.
 /// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
+/// @see $igx-foreground-color
 @function igx-palette(
     $primary,
     $secondary,
@@ -308,7 +309,7 @@
     $success: #4eb862,
     $warn: #fbb13c,
     $error: #ff134a,
-    $grays: #000,
+    $grays: if(global-variable-exists('igx-foreground-color'), $igx-foreground-color, #000),
     $surface: #fff
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');

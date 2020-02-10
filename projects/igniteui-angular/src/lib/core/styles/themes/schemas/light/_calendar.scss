@@ -58,6 +58,7 @@ $_light-calendar: extend(
     $_default-shape-calendar,
     (
         variant: 'material',
+
         content-background: (
             igx-color: 'surface'
         ),
@@ -291,8 +292,6 @@ $_bootstrap-calendar: extend(
             igx-color: ('primary', 800)
         ),
 
-        picker-text-color: #000,
-
         year-current-text-color: (
             igx-color: ('primary', 500)
         ),
@@ -326,6 +325,22 @@ $_bootstrap-calendar: extend(
         date-selected-text-color: #fff,
 
         content-background: #fff,
+
+        content-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        weekend-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        picker-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        inactive-text-color: (
+            igx-color: ('grays', 500)
+        ),
     )
 );
 

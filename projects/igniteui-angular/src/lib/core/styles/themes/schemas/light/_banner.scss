@@ -47,4 +47,17 @@ $_fluent-banner: extend($_light-banner);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-banner
-$_bootstrap-banner: extend($_light-banner);
+$_bootstrap-banner: extend(
+    $_light-banner,
+    (
+        banner-background: #fff,
+
+        banner-message-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        banner-illustration-color: (
+            igx-color: ('grays', 800)
+        )
+    )
+);
