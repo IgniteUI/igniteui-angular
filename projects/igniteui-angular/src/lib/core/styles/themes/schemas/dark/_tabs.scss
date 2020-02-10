@@ -30,13 +30,10 @@ $_dark-fluent-tabs: extend($_fluent-tabs, $_base-dark-tabs);
 
 /// Generates a dark bootstrap tabs schema based on a mix of $_bootstrap-tabs and $_base-dark-tabs.
 /// @type {Map}
+/// @prop {Map} item-background [igx-color: ('primary', 400)] - The background color used for the tabs header.
 /// @requires {function} extend
 /// @requires $_bootstrap-tabs
 $_dark-bootstrap-tabs: extend($_bootstrap-tabs, (
-    item-background: #333,
-    button-background: #333,
-    item-hover-background: #333,
-    item-active-background: #333,
     item-hover-color: (
         igx-color: ('primary', 400)
     ),
