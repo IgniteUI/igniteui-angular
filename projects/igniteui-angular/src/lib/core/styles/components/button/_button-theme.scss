@@ -785,6 +785,10 @@
         &%igx-button--fab,
         &%igx-button--icon {
             color: --var($theme, 'disabled-color');
+
+            igx-icon {
+                color: inherit;
+            }
         }
 
         &%igx-button--raised,
