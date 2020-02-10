@@ -2,24 +2,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Calendar } from './calendar';
 
 @Pipe({
-    name: 'monthViewsSlots'
+    name: 'IgxMonthViewSlots'
 })
-export class IgxMonthViewsGen implements PipeTransform {
-    public transform(monthViews) {
+export class IgxMonthViewSlotsCalendar implements PipeTransform {
+    public transform(monthViews: number) {
         return new Array(monthViews);
     }
 }
 
 @Pipe({
-    name: 'getViewDate'
+    name: 'IgxGetViewDate'
 })
-export class IgxGetViewDate implements PipeTransform {
+export class IgxGetViewDateCalendar implements PipeTransform {
     private calendar: Calendar;
     constructor() {
         this.calendar = new Calendar();
     }
-    public transform(index: number, viewDate: Date, isDate = true) {
+    public transform(index: number, viewDate: Date, wholeDate = true) {
         const date = this.calendar.timedelta(viewDate, 'month', index);
-        return isDate ? date : date.getMonth();
+        return wholeDate ? date : date.getMonth();
     }
 }
