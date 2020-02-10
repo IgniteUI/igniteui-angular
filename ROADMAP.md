@@ -13,6 +13,7 @@
 7. Row Pinning IgxGrid [#6640](https://github.com/IgniteUI/igniteui-angular/issues/6640)
 8. Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
 
+
 ## Going down the road
 
 1. Tile Manager
