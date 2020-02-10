@@ -27,6 +27,7 @@ import {
     IgxGridEmptyRowEditTemplateComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridTestComponent } from './grid.component.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -1148,10 +1149,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Change page size
             select.click();
             fix.detectChanges();
-            const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
-            selectList.children[2].nativeElement.click();
+            ControlsFunction.clickDropDownItem(fix, 2);
             tick(16);
-            fix.detectChanges();
 
             expect(cell.editMode).toEqual(false);
             expect(GridFunctions.getRowEditingOverlay(fix)).toBeFalsy();
@@ -1183,10 +1182,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 // Change page size
                 select.click();
                 fix.detectChanges();
-                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
-                selectList.children[0].nativeElement.click();
+                ControlsFunction.clickDropDownItem(fix, 0);
                 tick(16);
-                fix.detectChanges();
 
                 // Next page button click
                 GridFunctions.navigateToNextPage(grid.nativeElement);
