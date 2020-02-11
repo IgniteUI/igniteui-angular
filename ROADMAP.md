@@ -1,27 +1,38 @@
 # Roadmap - Ignite UI for Angular
 
 # Current Milestone
-## Milestone 10 (Due by December, 2019)
+
+## Milestone 11 (Due by April, 2020)
 
 1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
-2. Theming service for Ignite UI for Angular [#5999](https://github.com/IgniteUI/igniteui-angular/issues/5999)
+2. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
+3. RTL Support across Ignite UI for Angular components [#5958](https://github.com/IgniteUI/igniteui-angular/issues/5958)
+4. Column freezing/Pinning on the right (igx-grid) [#5879](https://github.com/IgniteUI/igniteui-angular/issues/5879)
+5. Column Selection for IgxGrid [#6638](https://github.com/IgniteUI/igniteui-angular/issues/6638)
+6. Splitter IgxGrid [#6639](https://github.com/IgniteUI/igniteui-angular/issues/6639)
+7. Row Pinning IgxGrid [#6640](https://github.com/IgniteUI/igniteui-angular/issues/6640)
+8. Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
+
+
+## Going down the road
+
+1. Tile Manager
+2. Visual Cell merging
+
+# Previous Milestones 
+
+## Milestone 10 (Released February 10th, 2020)
+
+1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
+2. **[DONE]** Theming service for Ignite UI for Angular [#5999](https://github.com/IgniteUI/igniteui-angular/issues/5999)
 3. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
 4. **[DONE]** igxGrid overlay components exposed for instantiation in arbitrary container [#5878](https://github.com/IgniteUI/igniteui-angular/issues/5878)
 5. RTL Support across Ignite UI for Angular components [#5958](https://github.com/IgniteUI/igniteui-angular/issues/5958)
 6. **[DONE]** Carousel slide animations/transitions [#4268](https://github.com/IgniteUI/igniteui-angular/issues/4268)
 7. **[DONE]** Access all data when calculating summary per column [#5754](https://github.com/IgniteUI/igniteui-angular/issues/5754)
-8. Angular 9 support [#5998](https://github.com/IgniteUI/igniteui-angular/issues/5998)
+8. **[DONE]** Angular 9 support [#5998](https://github.com/IgniteUI/igniteui-angular/issues/5998)
 9. **[DONE]** Allow master-detail style visualization with igxHierarchicalGrid [#5880](https://github.com/IgniteUI/igniteui-angular/issues/5880)
 10. **[DONE]** Collapsible column groups (column expansion state templates) [#3343](https://github.com/IgniteUI/igniteui-angular/issues/3343) 
-
-## Going down the road
-
-1. Row-pinning
-2. Visual Cell merging
-3. Splitter
-4. PDF Integration
-
-# Previous Milestones 
 
 ## Milestone 9 (Released September 26th, 2019) 
 

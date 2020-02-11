@@ -6,7 +6,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - Added support for the Ivy renderer.
-- **Breaking Changes** The following classes and enumarators have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+- **Breaking Changes** The following classes and enumerators have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
     - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
@@ -45,7 +45,7 @@ All notable changes for each version of this project will be documented in this 
     - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
-    - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
+    - **Behavioral change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
 - `IgxAvatar`:
     - **Breaking Changes** - renamed the `default` enumeration member to `custom` in `IgxAvatarType`;
 - `IgxBadge`:
@@ -57,12 +57,12 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Changes** - renamed the `default` enumeration member to `solid` in `IgxDividerType`;
     - **Breaking Changes** - renamed the `isDefault` getter to `isSolid`;
 - `IgxProgress`:
-    - **Breaking Changes** - renamed the `danger` enumeration member to `error` in `IgxProgresType`;
+    - **Breaking Changes** - renamed the `danger` enumeration member to `error` in `IgxProgressType`;
     - **Breaking Changes** - renamed the `danger` getter to `error`;
 - `IgxTabs`:
     - **Breaking Changes** - The `tabsType` input property has been renamed to `type`. It should get renamed in your components via `ng update`;
 - `igxOverlay`:
-    - **Behavioural Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed `onAppended` overlay event and manage/restore the scroll position.
+    - **Behavioral Change** - `igxOverlay` - no longer persists element scrolling `out of the box`. In order to persist an element scroll position after attaching the element to an overlay, handle the exposed `onAppended` overlay event and manage/restore the scroll position.
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
@@ -75,9 +75,9 @@ All notable changes for each version of this project will be documented in this 
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
     - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
     - `collapsible` and `expanded` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expanded` identifies whether the group is expanded or collapsed initially;
-    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expanded` properties are changed accordingly;
-    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
-    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emited whenever `visibleWhenCollapsed`  property is changed;
+    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emitted whenever `collapsible` and `expanded` properties are changed accordingly;
+    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parent is collapsed.
+    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emitted whenever `visibleWhenCollapsed`  property is changed;
     - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
     - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.

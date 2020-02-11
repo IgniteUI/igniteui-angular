@@ -18,6 +18,7 @@ import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -213,6 +214,18 @@ export class ScrollsComponent extends BasicGridComponent {
     public columnInit(column) {
         // column.width = '50px';
     }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [primaryKey]="'ID'"
+          [width]="'900px'"
+          [height]="'900px'"
+          [columnWidth]="'200px'"`,
+        '', ColumnDefinitions.idNameJobTitleCompany)
+})
+export class NoScrollsComponent extends BasicGridSearchComponent {
+    data = SampleTestData.personIDNameJobCompany();
 }
 
 @Component({
@@ -1534,7 +1547,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
+    public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
@@ -1556,6 +1569,57 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [columnWidth] = "'100px'"
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="enableRowEditing">
+        </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
+    `
+})
+export class IgxGridGroupByComponent extends DataParent implements OnInit {
+    public width = '600px';
+    public height = '600px';
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
+    public dropAreaTemplate: TemplateRef<any>;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = false;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+
+    public ngOnInit() {
+        this.grid.groupingExpressions = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc }
+        ];
     }
 }
 
