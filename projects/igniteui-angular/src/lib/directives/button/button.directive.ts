@@ -14,7 +14,7 @@ import {
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 
 /**
- * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button. 
+ * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button.
  *
  * @igxModule IgxButtonModule
  *
@@ -99,7 +99,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * Sets/gets the `role` attribute.
-     * 
+     *
      * @example
      * ```typescript
      * this.button.role = 'navbutton';
