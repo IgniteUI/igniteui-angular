@@ -43,12 +43,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Sets the `value` property.
+     * 
+     * @example
      * ```html
      * <input-group>
      *  <input igxInput #igxInput [value]="'IgxInput Value'">
      * </input-group>
      * ```
-     * @memberof IgxInputDirective
      */
     @Input('value')
     set value(value: any) {
@@ -57,24 +58,26 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the `value` propery.
+     * 
+     * @example
      * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
      *  public igxInput: IgxInputDirective;
      * let inputValue = this.igxInput.value;
      * ```
-     * @memberof IgxInputDirective
      */
     get value() {
         return this.nativeElement.value;
     }
     /**
      * Sets the `disabled` property.
+     * 
+     * @example
      * ```html
      * <input-group>
      *  <input igxInput #igxInput [disabled]="true">
      * </input-group>
      * ```
-     * @memberof IgxInputDirective
      */
     @Input()
     public set disabled(value: boolean) {
@@ -83,12 +86,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the `disabled` property
+     * 
+     * @example
      * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
      *  public igxInput: IgxInputDirective;
      * let isDisabled = this.igxInput.disabled;
      * ```
-     * @memberof IgxInputDirective
      */
     public get disabled() {
         return this.nativeElement.hasAttribute('disabled');
@@ -96,12 +100,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the `required` property.
+     * 
+     * @example
      * ```html
      * <input-group>
      *  <input igxInput #igxInput [required]="true">
      * </input-group>
      * ```
-     * @memberof IgxInputDirective
      */
     @Input()
     public set required(value: boolean) {
@@ -118,10 +123,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is required.
+     * 
+     * @example
      * ```typescript
      * let isRequired = this.igxInput.required;
      * ```
-     * @memberof IgxInputDirective
      */
     public get required() {
         return this.nativeElement.hasAttribute('required');
@@ -130,39 +136,49 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
+     * 
+     * @example
      * ```typescript
      * this.igxInput.isInput = true;
      * ```
+     * 
+     * @example
      * ```typescript
      * let isCLassAdded = this.igxInput.isInput;
      * ```
-     * @memberof IgxInputDirective
      */
     @HostBinding('class.igx-input-group__input')
     public isInput = false;
     /**
      * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
      * Default value is `false`.
+     * 
+     * @example
      * ```typescript
      * this.igxInput.isTextArea = true;
      * ```
+     * 
+     * @example
      * ```typescript
      * let isCLassAdded = this.igxInput.isTextArea;
      * ```
-     * @memberof IgxInputDirective
      */
     @HostBinding('class.igx-input-group__textarea')
     public isTextArea = false;
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     @HostListener('focus', ['$event'])
     public onFocus(event) {
         this.inputGroup.isFocused = true;
     }
     /**
+<<<<<<< HEAD
      * @param event The event to invoke the handler
      *
+=======
+>>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
@@ -179,16 +195,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     @HostListener('input')
     public onInput() {
         this.checkValidity();
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.inputGroup.hasPlaceholder = this.nativeElement.hasAttribute('placeholder');
         this.inputGroup.disabled = this.inputGroup.disabled || this.nativeElement.hasAttribute('disabled');
         this.inputGroup.isRequired = this.nativeElement.hasAttribute('required');
@@ -218,35 +236,39 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
     }
     /**
      * Sets a focus on the igxInput.
+     * 
+     * @example
      * ```typescript
      * this.igxInput.focus();
      * ```
-     * @memberof IgxInputDirective
      */
     public focus() {
         this.nativeElement.focus();
     }
     /**
      * Gets the `nativeElement` of the igxInput.
+     * 
+     * @example
      * ```typescript
      * let igxInputNativeElement = this.igxInput.nativeElement;
      * ```
-     * @memberof IgxInputDirective
      */
     public get nativeElement() {
         return this.element.nativeElement;
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     protected onStatusChanged() {
         if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
@@ -268,28 +290,33 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets whether the igxInput has a placeholder.
+     * 
+     * @example
      * ```typescript
      * let hasPlaceholder = this.igxInput.hasPlaceholder;
      * ```
-     * @memberof IgxInputDirective
      */
     public get hasPlaceholder() {
         return this.nativeElement.hasAttribute('placeholder');
     }
     /**
      * Gets the placeholder element of the igxInput.
+     * 
+     * @example
      * ```typescript
      * let igxInputPlaceholder = this.igxInput.placeholder;
      * ```
-     * @memberof IgxInputDirective
      */
     public get placeholder() {
         return this.nativeElement.placeholder;
     }
 
     /**
+<<<<<<< HEAD
      * @returns An indicator of whether the input has validator attributes or not
      *
+=======
+>>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
@@ -302,22 +329,25 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
     }
+
     /**
      * Gets whether the igxInput is focused.
+     * 
+     * @example
      * ```typescript
      * let isFocused = this.igxInput.focused;
      * ```
-     * @memberof IgxInputDirective
      */
     public get focused() {
         return this.inputGroup.isFocused;
     }
     /**
      * Gets the state of the igxInput.
+     * 
+     * @example
      * ```typescript
      * let igxInputState = this.igxInput.valid;
      * ```
-     * @memberof IgxInputDirective
      */
     public get valid(): IgxInputState {
         return this._valid;
@@ -325,10 +355,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is valid.
+     * 
+     * @example
      * ```typescript
      * let valid = this.igxInput.isValid;
      * ```
-     * @memberof IgxInputDirective
      */
     public get isValid(): boolean {
         return this.valid !== IgxInputState.INVALID;
@@ -336,18 +367,22 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the state of the igxInput.
+     * 
+     * @example
      * ```typescript
      * this.igxInput.valid = IgxInputState.INVALID;
      * ```
-     * @memberof IgxInputDirective
      */
     public set valid(value: IgxInputState) {
         this._valid = value;
     }
 
     /**
+<<<<<<< HEAD
      * A function to assign a validity property of an input.
      *
+=======
+>>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
