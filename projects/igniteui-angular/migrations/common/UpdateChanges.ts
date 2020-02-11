@@ -186,7 +186,9 @@ export class UpdateChanges {
                     const pos = positions[i];
                     fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
                 }
-                this.host.overwrite(entryPath, fileContent);
+                if (positions.length) {
+                    this.host.overwrite(entryPath, fileContent);
+                }
             }
         }
     }
@@ -266,7 +268,7 @@ export class UpdateChanges {
                     continue;
                 }
                 for (const match of matches) {
-                    if (match.indexOf(change.name)) {
+                    if (match.indexOf(change.name) !== -1) {
                         const name = change.name.replace('$', '\\$');
                         const reg = new RegExp(String.raw`^\s*${name}:`);
                         const opening = `${change.owner}(`;
