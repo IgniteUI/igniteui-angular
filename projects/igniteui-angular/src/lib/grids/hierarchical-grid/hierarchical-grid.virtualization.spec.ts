@@ -12,6 +12,7 @@ import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-ut
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
@@ -161,7 +162,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
-        const topOffset = fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top;
+        const topOffset =  GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top;
         const secondRow = hierarchicalGrid.dataRowList.toArray()[1];
         // expand second row
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -170,7 +171,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
 
@@ -180,7 +181,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
     });
@@ -219,7 +220,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
-        const topOffset = fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top;
+        const topOffset = GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top;
         const secondRow = hierarchicalGrid.rowList.toArray()[2];
         // expand second row
         (secondRow.nativeElement.children[0] as HTMLElement).click();
@@ -228,7 +229,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
 
@@ -238,7 +239,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
         expect(
-            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(GridFunctions.getGridDisplayContainer(fixture).nativeElement.style.top, 10) -
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
     });
