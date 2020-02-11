@@ -814,6 +814,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public type = 'box';
 
     /**
+     * An @Input property that controls whether the combo's search box
+     * should be focused after the `onOpened` event is called
+     * When `false`, the combo's list item container will be focused instead
+     */
+    @Input()
+    public autoFocusSearch = true;
+
+    /**
      * Gets if control is valid, when used in a form
      *
      * ```typescript
@@ -1480,7 +1488,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleOpened() {
         this.triggerCheck();
-        this.focusSearchInput(true);
+        if (this.autoFocusSearch) {
+            this.focusSearchInput(true);
+        } else {
+            this.dropdownContainer.nativeElement.focus();
+        }
         this.onOpened.emit();
     }
 

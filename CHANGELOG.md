@@ -142,6 +142,7 @@ All notable changes for each version of this project will be documented in this 
         ...
     }
     ```
+    - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input will be focused after the `onOpened` event is fired (current behavior). When set to `false`, the focus will go to the combo items' list container. Suppressing the input focus can be used to prevent a keyboard showing up on mobile devices when opening the combo.
 
 - `IgxDropDown`:
     - `clearSelection` method is added, which can be used to deselect the selected dropdown item
