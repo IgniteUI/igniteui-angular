@@ -13,6 +13,25 @@ import {
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 
+/**
+ * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button. 
+ *
+ * @igxModule IgxButtonModule
+ *
+ * @igxParent Data Entry & Display
+ *
+ * @igxTheme igx-button-theme
+ *
+ * @igxKeywords button, span, div, click
+ *
+ * @remarks
+ * The Ignite UI Button directive is intended to be used by any button, span or div and turn it into a fully functional button.
+ *
+ * @example
+ * ```html
+ * <button igxButton="outlined">A Button</button>
+ * ```
+ */
 @Directive({
     selector: '[igxButton]'
 })
@@ -66,14 +85,14 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-     * Returns the underlying DOM element
+     * Returns the underlying DOM element.
      */
     public get nativeElement() {
         return this.element.nativeElement;
     }
 
     /**
-     * Called when the button is clicked
+     * Called when the button is clicked.
      */
     @Output()
     public buttonClick = new EventEmitter<any>();
@@ -84,7 +103,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @example
      * ```typescript
      * this.button.role = 'navbutton';
-     * let buttonRole =  this.button.role;
+     * let buttonRole = this.button.role;
      * ```
      */
     @HostBinding('attr.role')
@@ -95,7 +114,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button  igxButton= "icon"></button>
+     * <button igxButton="icon"></button>
      * ```
      */
     @Input('igxButton')
