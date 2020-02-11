@@ -222,7 +222,11 @@ $_bootstrap-drop-down: extend(
 
         selected-focus-item-text-color: #fff,
 
-        border-width: 1px
+        border-width: 1px,
+
+        disabled-item-text-color: (
+            igx-color: ('grays', 400)
+        ),
     )
 );
 
