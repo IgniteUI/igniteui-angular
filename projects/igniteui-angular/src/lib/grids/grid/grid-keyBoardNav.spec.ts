@@ -170,7 +170,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
         it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
             grid.getColumnByName('Name').pinned = true;
-            tick();
             fix.detectChanges();
             let selectedCell;
             const firstCell = GridFunctions.getRowCells(fix, 0)[0];
@@ -180,7 +179,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 selectedCell = event.cell;
             });
             firstCell.triggerEventHandler('focus', null);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Casey Houston');
@@ -204,7 +202,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
             grid.getColumnByName('Name').pinned = true;
             grid.getColumnByName('Company').pinned = true;
-            tick();
             fix.detectChanges();
 
             let selectedCell;
@@ -217,7 +214,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 selectedCell = event.cell;
             });
             firstPinnedCell.triggerEventHandler('focus', null);
-            tick(100);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', firstPinnedCell);
@@ -780,7 +776,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         with keyboard and the grid is scrolled to the bottom`, (async () => {
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(30);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             let groupedRowsCount = grid.groupsRowList.length;
