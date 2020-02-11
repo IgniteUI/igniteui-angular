@@ -349,11 +349,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-        if (this.excelStyleSearch.column) {
-            requestAnimationFrame(() => {
-                this.excelStyleSearch.searchInput.nativeElement.focus();
-            });
-        }
+        requestAnimationFrame(() => {
+            this.excelStyleSearch.searchInput.nativeElement.focus();
+        });
 
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
