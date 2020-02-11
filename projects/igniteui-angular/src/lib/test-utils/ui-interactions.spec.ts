@@ -17,6 +17,8 @@ export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
     public static arrowDownEvent = { key: 'ArrowDown', stopPropagation: () => { }, preventDefault: () => { } };
     public static altAndArrowDownEvent = { key: 'ArrowDown', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
+    public static arrowUpEvent = { key: 'ArrowUp', stopPropagation: () => { }, preventDefault: () => { } };
+    public static altAndArrowUpEvent = { key: 'ArrowUp', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
 
     public static sendInput(element, text, fix?) {
