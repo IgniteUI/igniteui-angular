@@ -17,7 +17,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWithNoScrollsComponent,
@@ -408,7 +408,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -427,7 +427,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             cell = treeGrid.getCellByColumn(0, 'ID');
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -448,7 +448,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             // Go to the last parent row and expand collapse
             cell = treeGrid.getCellByColumn(0, 'ID');
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
-            await wait(2 * DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, 'ID');
@@ -458,7 +458,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             cell = treeGrid.getCellByColumn(8, 'ID');
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(8, 'ID');
@@ -475,7 +475,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             cell = treeGrid.getCellByColumn(8, 'ID');
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(8, 'ID');

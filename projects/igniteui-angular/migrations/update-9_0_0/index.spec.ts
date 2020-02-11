@@ -43,4 +43,32 @@ describe('Update 9.0.0', () => {
             `);
         done();
     });
+
+    it('should update Enum names.', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/enum.component.ts',
+            `import { AvatarType, Size, Type, SliderType } from 'igniteui-angular';
+            `);
+
+        const tree = schematicRunner.runSchematic('migration-13', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/enum.component.ts'))
+            .toEqual(
+            `import { IgxAvatarType, IgxAvatarSize, IgxBadgeType, IgxSliderType } from 'igniteui-angular';
+            `);
+        done();
+    });
+
+    it('should update input prop from tabsType to type', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/tabs.component.html',
+            '<igx-tabs tabsType="fixed"></igx-tabs>'
+        );
+
+        const tree = schematicRunner.runSchematic('migration-13', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/tabs.component.html'))
+            .toEqual('<igx-tabs type="fixed"></igx-tabs>');
+
+        done();
+    });
 });

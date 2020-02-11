@@ -8,7 +8,6 @@ import {
     IgxCardModule,
     IgxCardComponent,
     IgxCardType,
-    IgxCardActionsLayout,
     IgxCardThumbnailDirective,
     IgxCardHeaderTitleDirective,
     IgxCardHeaderSubtitleDirective,
@@ -66,7 +65,7 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCardComponent,
