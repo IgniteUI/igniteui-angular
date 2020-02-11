@@ -138,9 +138,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
         });
 
-        it('Should properly handle TAB / SHIFT + TAB on row selectors', fakeAsync(() => {
+        it('Should properly handle TAB / SHIFT + TAB on row selectors', () => {
             grid.rowSelection = GridSelectionMode.multiple;
-            tick(100);
             fix.detectChanges();
 
             const firstCell = GridFunctions.getRowCells(fix, 1)[0];
@@ -152,7 +151,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', firstCell, false, true);
-            tick(100);
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(0, 'Company');
@@ -160,17 +158,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridSelectionFunctions.verifyRowCheckboxIsNotFocused(secondRow.nativeElement);
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', secondCell);
-            tick(100);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(1, 'ID');
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifyRowCheckboxIsNotFocused(firstRow.nativeElement);
-        }));
+        });
 
-        it('should allow vertical keyboard navigation in pinned area.', fakeAsync(() => {
+        it('should allow vertical keyboard navigation in pinned area.', () => {
             grid.getColumnByName('Name').pinned = true;
-            tick();
             fix.detectChanges();
             let selectedCell;
             const firstCell = GridFunctions.getRowCells(fix, 0)[0];
@@ -180,31 +176,27 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 selectedCell = event.cell;
             });
             firstCell.triggerEventHandler('focus', null);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Casey Houston');
             expect(selectedCell.column.field).toMatch('Name');
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', firstCell);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Gilberto Todd');
             expect(selectedCell.column.field).toMatch('Name');
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', secondCell);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Casey Houston');
             expect(selectedCell.column.field).toMatch('Name');
-        }));
+        });
 
-        it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync(() => {
+        it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', () => {
             grid.getColumnByName('Name').pinned = true;
             grid.getColumnByName('Company').pinned = true;
-            tick();
             fix.detectChanges();
 
             let selectedCell;
@@ -212,36 +204,30 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const secondPinnedCell = GridFunctions.getRowCells(fix, 0)[1];
             const firstUnPinnedCell = GridFunctions.getRowCells(fix, 0)[2];
 
-
             grid.onSelection.subscribe((event: IGridCellEventArgs) => {
                 selectedCell = event.cell;
             });
             firstPinnedCell.triggerEventHandler('focus', null);
-            tick(100);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', firstPinnedCell);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', secondPinnedCell);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual(1);
             expect(selectedCell.column.field).toMatch('ID');
 
             UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', firstUnPinnedCell);
-            tick(100);
             fix.detectChanges();
 
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
-        }));
-
+        });
     });
 
     describe('in virtualized grid', () => {
@@ -780,7 +766,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         with keyboard and the grid is scrolled to the bottom`, (async () => {
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(30);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             let groupedRowsCount = grid.groupsRowList.length;

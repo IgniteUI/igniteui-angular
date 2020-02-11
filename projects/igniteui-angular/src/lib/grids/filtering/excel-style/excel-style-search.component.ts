@@ -60,8 +60,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public inline: boolean;
 
-    public filteredData: FilterListItem[];
-
     @Input()
     public column: IgxColumnComponent;
 
