@@ -21,6 +21,25 @@ export class UIInteractions {
     public static altAndArrowUpEvent = { key: 'ArrowUp', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
 
+    public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        elem.triggerEventHandler('keydown', event);
+    }
+
+    public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        UIInteractions.triggerEventHandlerKeyDown(keyPressed, elem, altKey, shift, ctrl);
+        elem.triggerEventHandler('blur', null);
+    }
+
+
     public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -81,7 +100,7 @@ export class UIInteractions {
         UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
         nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('click', { bubbles: true}));
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
@@ -188,8 +207,8 @@ export class UIInteractions {
 
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
-        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
-        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+        Object.defineProperty(event, 'wheelDeltaX', { value: deltaX });
+        Object.defineProperty(event, 'wheelDeltaY', { value: deltaY });
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
@@ -205,7 +224,7 @@ export class UIInteractions {
             pageY: pageY
         };
         const t = new Touch(touchInit);
-        const touchEventObject = new TouchEvent('touchstart', {touches: [t]});
+        const touchEventObject = new TouchEvent('touchstart', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
             resolve();
@@ -219,7 +238,7 @@ export class UIInteractions {
             pageY: movedY
         };
         const t = new Touch(touchInit);
-        const touchEventObject = new TouchEvent('touchmove', {touches: [t]});
+        const touchEventObject = new TouchEvent('touchmove', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
             resolve();
@@ -234,7 +253,7 @@ export class UIInteractions {
             pageY: movedY
         };
         const t = new Touch(touchInit);
-        const touchEventObject = new TouchEvent('touchend', {touches: [t]});
+        const touchEventObject = new TouchEvent('touchend', { touches: [t] });
         return new Promise((resolve, reject) => {
             element.dispatchEvent(touchEventObject);
             resolve();
@@ -251,11 +270,11 @@ export class UIInteractions {
         element: Element,
         hAlign: HorizontalAlignment = HorizontalAlignment.Center,
         vAlign: VerticalAlignment = VerticalAlignment.Middle): Point {
-            const elementRect = element.getBoundingClientRect();
-            return {
-                x: elementRect.right + hAlign * elementRect.width,
-                y: elementRect.bottom + vAlign * elementRect.height
-            };
+        const elementRect = element.getBoundingClientRect();
+        return {
+            x: elementRect.right + hAlign * elementRect.width,
+            y: elementRect.bottom + vAlign * elementRect.height
+        };
     }
 
     public static hoverElement(element: HTMLElement, bubbles: boolean = false) {
@@ -267,7 +286,7 @@ export class UIInteractions {
     }
 
     public static clickDragDirective(fix, dragDir) {
-        dragDir.onPointerDown(new PointerEvent('pointerdown', { pointerId: 1}));
+        dragDir.onPointerDown(new PointerEvent('pointerdown', { pointerId: 1 }));
         dragDir.onPointerUp(new PointerEvent('pointerup'));
         fix.detectChanges();
     }
