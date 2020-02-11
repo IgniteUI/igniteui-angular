@@ -7,7 +7,6 @@ import {
     TemplateRef,
     Directive,
     OnDestroy,
-    AfterViewInit,
     ElementRef,
     Input,
     ViewRef
@@ -97,7 +96,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
@@ -314,17 +313,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.destroy$.complete();
     }
 
-    /**
-     * @hidden @internal
-     */
-    ngAfterViewInit(): void {
-        if (this.excelStyleSearch.column) {
-            requestAnimationFrame(() => {
-                this.excelStyleSearch.searchInput.nativeElement.focus();
-            });
-        }
-    }
-
     private init() {
         this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
@@ -360,6 +348,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.overlayComponentId = overlayComponentId;
 
         this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
+
+        if (this.excelStyleSearch.column) {
+            requestAnimationFrame(() => {
+                this.excelStyleSearch.searchInput.nativeElement.focus();
+            });
+        }
 
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
