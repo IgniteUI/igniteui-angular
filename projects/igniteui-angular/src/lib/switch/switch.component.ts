@@ -29,19 +29,19 @@ export interface IChangeSwitchEventArgs extends IBaseEventArgs {
 const noop = () => { };
 let nextId = 0;
 /**
- * 
+ *
  * The Switch component is a binary choice selection component.
- * 
+ *
  * @igxModule IgxSwitchModule
- * 
+ *
  * @igxTheme igx-switch-theme, igx-tooltip-theme
- * 
+ *
  * @igxKeywords switch, states, tooltip
- * 
+ *
  * @igxGroup Data Entry & Display
- * 
+ *
  * @remarks
- * 
+ *
  * The Ignite UI Switch lets the user toggle between on/off or true/false states.
  *
  * @example
@@ -64,7 +64,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     protected _value: any;
     /**
      * Returns a reference to the native checkbox element.
-     * 
+     *
      * @example
      * ```typescript
      * let checkboxElement =  this.switch.nativeCheckbox;
@@ -73,7 +73,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
-     * 
+     *
      * @example
      * ```typescript
      * let labelElement =  this.switch.nativeLabel;
@@ -82,7 +82,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
-     * 
+     *
      * @example
      * ```typescript
      * let labelPlaceholder = this.switch.placeholderLabel;
@@ -93,7 +93,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets the `id` of the switch component.
      * If not set, the `id` of the first switch component will be `"igx-switch-0"`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch id="my-first-switch"></igx-switch>
@@ -104,7 +104,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets the id of the `label` element of the switch component.
      * If not set, the label of the first switch component will have value `"igx-switch-0-label"`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch labelId="Label1"></igx-switch>
@@ -113,7 +113,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     @Input() public labelId = `${this.id}-label`;
     /**
      * Sets/gets the `value` attribute of the switch component.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch [value]="switchValue"></igx-switch>
@@ -122,7 +122,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     @Input() public value: any;
     /**
      * Sets/gets the `name` attribute of the switch component.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch name="Switch1"></igx-switch>
@@ -131,7 +131,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     @Input() public name: string;
     /**
      * Sets/gets the value of the `tabindex` attribute.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch [tabindex]="1"></igx-switch>
@@ -141,7 +141,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets the position of the `label` in the switch component.
      * If not set, `labelPosition` will have value `"after"`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch labelPosition="before"></igx-switch>
@@ -151,7 +151,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Enables/Disables the ripple effect
      * If not set, `disableRipple` will have value `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch [disableRipple]="true"></igx-switch>
@@ -161,7 +161,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets whether switch is required.
      * If not set, `required` will have value `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch [required]="true"></igx-switch>
@@ -171,7 +171,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch aria-labelledby = "Label1"></igx-switch>
@@ -181,7 +181,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public ariaLabelledBy = this.labelId;
     /**
      * Sets/gets the value of the `aria-label` attribute.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch aria-label="Label1"></igx-switch>
@@ -207,7 +207,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     private _onChangeCallback: (_: any) => void = noop;
     /**
      * Returns the class of the switch component.
-     * 
+     *
      * @example
      * ```typescript
      * let switchClass = this.switch.cssClass;
@@ -218,7 +218,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets whether the switch is on or off.
      * Default value is 'false'.
-     * 
+     *
      * @example
      * ```html
      *  <igx-switch [checked]="true"></igx-switch>
@@ -229,7 +229,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets the `disabled` attribute.
      * Default value is `false`.
-     * 
+     *
      * @example
      * ```html
      * <igx-switch [disabled]="true"><igx-switch>
@@ -240,7 +240,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
-     * 
+     *
      * @example
      * ```typescript
      * this.switch.focused = true;
@@ -255,7 +255,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public inputId = `${this.id}-input`;
     /**
      * Toggles the checked state of the switch.
-     * 
+     *
      * @example
      * ```typescript
      * this.switch.toggle();
@@ -320,8 +320,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this._value = value;
         this.checked = !!this._value;
     }
-    /** 
-     * @hidden 
+    /**
+     * @hidden
      * @internal
      * */
     public getEditElement() {
