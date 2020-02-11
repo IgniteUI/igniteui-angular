@@ -8,11 +8,10 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  */
 export const configureTestSuite = () => {
 
-
   let originReset;
   beforeAll(() => {
     originReset = TestBed.resetTestingModule;
-    // TestBed.resetTestingModule();
+    TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
@@ -21,6 +20,8 @@ export const configureTestSuite = () => {
     const testBedApi: any = getTestBed();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
     testBedApi._instantiated = false;
+    // reset Ivy TestBed
+    testBedApi._testModuleRef = null;
   });
 
   afterAll(() => {
