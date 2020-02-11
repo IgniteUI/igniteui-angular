@@ -29,6 +29,7 @@ const BANNER_ROW_CLASS = '.igx-banner__row';
 const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
 const PAGER_BUTTONS = '.igx-paginator__pager > button';
 const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
+const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
@@ -41,8 +42,34 @@ const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
 const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
 const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
+const CELL_CSS_CLASS = '.igx-grid__td';
+const ROW_CSS_CLASS = '.igx-grid__tr';
+const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
+const GRID_BODY_CLASS = '.igx-grid__tbody';
+const DISPLAY_CONTAINER = 'igx-display-container';
 
 export class GridFunctions {
+
+    public static getRows(fix): DebugElement[] {
+        const rows: DebugElement[] = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
+        rows.shift();
+        return rows;
+    }
+
+    public static getRowCells(fix, rowIndex: number): DebugElement[] {
+       const allRows = GridFunctions.getRows(fix);
+       return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+    }
+
+    public static getGridDisplayContainer(fix): DebugElement {
+        const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
+        return gridBody.query(By.css(DISPLAY_CONTAINER));
+     }
+
+     public static getRowDisplayContainer(fix, index: number): DebugElement {
+        const row = GridFunctions.getRows(fix)[index];
+        return row.query(By.css(DISPLAY_CONTAINER));
+     }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
         const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
@@ -83,40 +110,6 @@ export class GridFunctions {
         const vScrollbar = grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
-
-    public static navigateVerticallyToIndex = (
-        grid: IgxGridComponent,
-        rowStartIndex: number,
-        rowEndIndex: number,
-        colIndex?: number,
-        shift = false) => new Promise(async (resolve, reject) => {
-            const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
-            const row = grid.getRowByIndex(rowStartIndex);
-            const cIndx = colIndex || 0;
-            const colKey = grid.columnList.toArray()[cIndx].field;
-            const nextIndex = dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
-            let elem;
-            if (row) {
-                elem = row instanceof IgxGridGroupByRowComponent ?
-                    row : grid.getCellByColumn(row.index, colKey);
-            } else {
-                const summariRow = grid.summariesRowList.find(s => s.index === rowStartIndex);
-                if (summariRow) {
-                    elem = summariRow.summaryCells.find(cell => cell.visibleColumnIndex === cIndx);
-                }
-            }
-
-            if (rowStartIndex === rowEndIndex) {
-                resolve();
-                return;
-            }
-
-            UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
-            await wait(40);
-
-            GridFunctions.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
-                .then(() => { resolve(); });
-        })
 
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
@@ -191,36 +184,14 @@ export class GridFunctions {
         resolve();
     })
 
-    public static expandCollapceGroupRow =
-        (fix, groupRow: IgxGridGroupByRowComponent,
-            cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', groupRow.nativeElement, true, true);
-                await wait(300);
-                fix.detectChanges();
+    public static getGroupedRows(fix): DebugElement[] {
+        return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
+    }
 
-                expect(groupRow.expanded).toBe(false);
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowright', groupRow.nativeElement, true, true);
-                await wait(100);
-                fix.detectChanges();
-
-                expect(groupRow.expanded).toBe(true);
-                expect(groupRow.focused).toBe(true);
-                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
-                if (cell != null) {
-                    expect(cell.selected).toBe(true);
-                }
-                resolve();
-            })
+    public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
+        expect(groupRow.focused).toBe(focused);
+        expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+    }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
@@ -624,7 +595,7 @@ export class GridFunctions {
         fix.detectChanges();
 
         // Enter key to submit
-        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+        UIInteractions.triggerEventHandlerKeyDown('Enter', input);
         fix.detectChanges();
     }
 
@@ -657,7 +628,8 @@ export class GridFunctions {
     public static submitFilterRowInput(fix) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+
+        UIInteractions.triggerEventHandlerKeyDown('Enter', input);
         fix.detectChanges();
     }
 
@@ -1792,6 +1764,20 @@ export class GridSelectionFunctions {
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
     }
 
+    // Check the grid selected cell and cell in in the onSelection function
+    public static verifyGridCellSelected(fix, cell: IgxGridCellComponent) {
+        const selectedCellFromGrid = cell.grid.selectedCells[0];
+        const selectedCell = fix.componentInstance.selectedCell;
+        expect(cell.selected).toBe(true);
+        expect(selectedCell.value).toEqual(cell.value);
+        expect(selectedCell.column.field).toMatch(cell.column.field);
+        expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
+        expect(selectedCellFromGrid.value).toEqual(cell.value);
+        expect(selectedCellFromGrid.column.field).toMatch(cell.column.field);
+        expect(selectedCellFromGrid.rowIndex).toEqual(cell.rowIndex);
+    }
+
+
     public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
         expect(row.selected).toBe(selected);
         expect(row.nativeElement.classList.contains(ROW_SELECTION_CSS_CLASS)).toBe(selected);
@@ -1846,6 +1832,11 @@ export class GridSelectionFunctions {
                 expect(rowCheckbox.style.visibility).toEqual('');
             }
         }
+    }
+
+    public static verifyRowCheckboxIsNotFocused(rowDOM: HTMLElement, focused = false) {
+        const rowCheckbox: HTMLElement = GridSelectionFunctions.getRowCheckbox(rowDOM);
+        expect(rowCheckbox.classList.contains(FOCUSED_CHECKBOX_CLASS)).toEqual(focused);
     }
 
     public static verifyHeaderRowHasCheckbox(parent, hasCheckbox = true, hasCheckboxDiv = true) {
