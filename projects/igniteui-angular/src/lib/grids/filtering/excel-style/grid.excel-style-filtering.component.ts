@@ -318,9 +318,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
      * @hidden @internal
      */
     ngAfterViewInit(): void {
-        requestAnimationFrame(() => {
-            this.excelStyleSearch.searchInput.nativeElement.focus();
-        });
+        if (this.excelStyleSearch.column) {
+            requestAnimationFrame(() => {
+                this.excelStyleSearch.searchInput.nativeElement.focus();
+            });
+        }
     }
 
     private init() {
