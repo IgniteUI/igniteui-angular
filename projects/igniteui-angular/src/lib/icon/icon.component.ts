@@ -2,14 +2,23 @@ import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChi
 import { IgxIconService } from './icon.service';
 
 /**
- * **Ignite UI for Angular Icon** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
+ * Icon provides a way to include material icons to markup
+ * 
+ * @igxModule IgxIconModule
+ *
+ * @igxTheme igx-icon-theme
+ *
+ * @igxKeywords icon, picture
+ *
+ * @igxGroup Display
+ *
+ * @remarks
  *
  * The Ignite UI Icon makes it easy for developers to include material design icons directly in their markup. The icons
  * support custom colors and can be marked as active or disabled using the `isActive` property. This will change the appearance
  * of the icon.
  *
- * Example:
+ * @example
  * ```html
  * <igx-icon color="#00ff00" isActive="true">home</igx-icon>
  * ```
@@ -33,20 +42,16 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
-     *```typescript
-     *@ViewChild("MyIcon") public icon: IgxIconComponent;
-     *constructor(private cdRef:ChangeDetectorRef) {}
-     *ngAfterViewInit() {
-     *    this.icon.cssClass = "";
-     *    this.cdRef.detectChanges();
-     *}
-     * ```
+     *
+     * @hidden
+     * @internal
      */
     @HostBinding('class.igx-icon')
     public cssClass = 'igx-icon';
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
+     * @example
      *```typescript
      *@ViewChild("MyIcon") public icon: IgxIconComponent;
      *constructor(private cdRef:ChangeDetectorRef) {}
@@ -61,8 +66,9 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *  An @Input property that sets the value of the `id` attribute.
+    * @example
     *```html
-    *<igx-icon id="igx-icon-1" fontSet="material" color="blue" [isActive]="false">settings</igx-icon>
+    *<igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
     *```
     */
     @HostBinding('attr.id')
@@ -71,8 +77,9 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *  An @Input property that sets the value of the `fontSet`. By default it's "material".
+    * @example
     *```html
-    *<igx-icon fontSet="material" color="blue" [isActive]="false">settings</igx-icon>
+    *<igx-icon fontSet="material">settings</igx-icon>
     *```
     */
     @Input('fontSet')
@@ -80,8 +87,9 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *  An @Input property that allows you to disable the `active` property. By default it's applied.
+    * @example
     *```html
-    *<igx-icon [isActive]="false" fontSet="material" color="blue">settings</igx-icon>
+    *<igx-icon [isActive]="false">settings</igx-icon>
     *```
     */
     @Input('isActive')
@@ -89,8 +97,9 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *  An @Input property that allows you to change the `iconColor` of the icon.
+    * @example
     *```html
-    *<igx-icon color="blue" [isActive]="true" fontSet="material">settings</igx-icon>
+    *<igx-icon color="blue">settings</igx-icon>
     *```
     */
     @Input('color')
@@ -98,9 +107,9 @@ export class IgxIconComponent implements OnInit {
 
     /**
     *  An @Input property that allows you to set the `iconName` of the icon.
-    *  The `iconName` can be set using the `name` property.
+    *  @example
     *```html
-    *<igx-icon color="blue" [isActive]="true" fontSet="material">question_answer</igx-icon>
+    *<igx-icon name="contains" fontSet="filter-icons"></igx-icon>
     *```
     */
     @Input('name')
@@ -119,6 +128,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      * @hidden
+     * @internal
      */
     ngOnInit() {
         this.updateIconClass();
@@ -126,6 +136,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  An accessor that returns the value of the font property.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -140,6 +151,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  An accessor that returns the value of the active property.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -154,6 +166,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  An accessor that returns inactive property.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -169,6 +182,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  An accessor that returns the opposite value of the `iconColor` property.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -184,6 +198,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *  An accessor that returns the value of the iconName property.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -199,6 +214,7 @@ export class IgxIconComponent implements OnInit {
     /**
      *  An accessor that returns the key of the SVG image.
      *  The key consists of the fontSet and the iconName separated by underscore.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -217,6 +233,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
+     * @example
      *```typescript
      *@ViewChild("MyIcon")
      *public icon: IgxIconComponent;
@@ -239,6 +256,7 @@ export class IgxIconComponent implements OnInit {
 
     /**
      * @hidden
+     * @internal
      */
     private updateIconClass() {
         const className = this.iconService.fontSetClassName(this.font);
