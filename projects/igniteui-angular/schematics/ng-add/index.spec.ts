@@ -108,7 +108,8 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
 
-    expect(pkgJsonData.devDependencies['@igniteui/angular-schematics']).toBeTruthy();
+    const version = require('../../package.json')['igxDevDependencies']['@igniteui/angular-schematics'];
+    expect(pkgJsonData.devDependencies['@igniteui/angular-schematics']).toBe(version);
     expect(pkgJsonData.dependencies['@igniteui/angular-schematics']).toBeFalsy();
   });
 
