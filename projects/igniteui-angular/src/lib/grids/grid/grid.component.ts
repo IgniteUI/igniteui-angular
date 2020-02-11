@@ -798,7 +798,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     private _setGroupColsVisibility(value) {
-        if (this.columnList && !this.hasColumnLayouts) {
+        if (this.columnList.length > 0 && !this.hasColumnLayouts) {
             this.groupingExpressions.forEach((expr) => {
                 const col = this.getColumnByName(expr.fieldName);
                 col.hidden = value;
@@ -1102,7 +1102,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public ngDoCheck(): void {
         if (this.groupingDiffer && this.columnList && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
-            if (changes && this.columnList) {
+            if (changes && this.columnList.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
                     col.hidden = true;
