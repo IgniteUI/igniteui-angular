@@ -29,12 +29,22 @@ export interface IChangeSwitchEventArgs extends IBaseEventArgs {
 const noop = () => { };
 let nextId = 0;
 /**
- * **Ignite UI for Angular Switch** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/switch.html)
- *
+ * 
+ * The Switch component is a binary choice selection component.
+ * 
+ * @igxModule IgxSwitchModule
+ * 
+ * @igxTheme igx-switch-theme, igx-tooltip-theme
+ * 
+ * @igxKeywords switch, states, tooltip
+ * 
+ * @igxGroup Data Entry & Display
+ * 
+ * @remarks
+ * 
  * The Ignite UI Switch lets the user toggle between on/off or true/false states.
  *
- * Example:
+ * @example
  * ```html
  * <igx-switch [checked]="true">
  *   Simple switch
@@ -48,228 +58,208 @@ let nextId = 0;
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     protected _value: any;
     /**
-     * Returns reference to the native checkbox element.
+     * Returns a reference to the native checkbox element.
+     * 
+     * @example
      * ```typescript
      * let checkboxElement =  this.switch.nativeCheckbox;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
+     * 
+     * @example
      * ```typescript
      * let labelElement =  this.switch.nativeLabel;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
+     * 
+     * @example
      * ```typescript
-     * let labelPlaceholder =  this.switch.placeholderLabel;
+     * let labelPlaceholder = this.switch.placeholderLabel;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
 
     /**
      * Sets/gets the `id` of the switch component.
      * If not set, the `id` of the first switch component will be `"igx-switch-0"`.
+     * 
+     * @example
      * ```html
      * <igx-switch id="my-first-switch"></igx-switch>
      * ```
-     * ```typescript
-     * let switchId =  this.switch.id;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @HostBinding('attr.id')
     @Input() public id = `igx-switch-${nextId++}`;
     /**
-     * Sets/gets the id of the `label` element in the switch component.
+     * Sets/gets the id of the `label` element of the switch component.
      * If not set, the label of the first switch component will have value `"igx-switch-0-label"`.
+     * 
+     * @example
      * ```html
      * <igx-switch labelId="Label1"></igx-switch>
      * ```
-     * ```typescript
-     * let labelId =  this.switch.labelId;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public labelId = `${this.id}-label`;
     /**
      * Sets/gets the `value` attribute of the switch component.
+     * 
+     * @example
      * ```html
-     * <igx-switch [value] = "switchValue"></igx-switch>
+     * <igx-switch [value]="switchValue"></igx-switch>
      * ```
-     * ```typescript
-     * let value =  this.switch.value;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public value: any;
     /**
      * Sets/gets the `name` attribute of the switch component.
+     * 
+     * @example
      * ```html
-     * <igx-switch name = "Switch1"></igx-switch>
+     * <igx-switch name="Switch1"></igx-switch>
      * ```
-     * ```typescript
-     * let name =  this.switch.name;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public name: string;
     /**
      * Sets/gets the value of the `tabindex` attribute.
+     * 
+     * @example
      * ```html
      * <igx-switch [tabindex]="1"></igx-switch>
      * ```
-     * ```typescript
-     * let tabIndex =  this.switch.tabindex;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public tabindex: number = null;
     /**
      * Sets/gets the position of the `label` in the switch component.
      * If not set, `labelPosition` will have value `"after"`.
+     * 
+     * @example
      * ```html
      * <igx-switch labelPosition="before"></igx-switch>
      * ```
-     * ```typescript
-     * let labelPosition =  this.switch.labelPosition;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public labelPosition: SwitchLabelPosition | string = 'after';
     /**
      * Enables/Disables the ripple effect
      * If not set, `disableRipple` will have value `false`.
+     * 
+     * @example
      * ```html
      * <igx-switch [disableRipple]="true"></igx-switch>
      * ```
-     * ```typescript
-     * let isRippleDisabled = this.switch.disableRipple;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public disableRipple = false;
     /**
      * Sets/gets whether switch is required.
      * If not set, `required` will have value `false`.
+     * 
+     * @example
      * ```html
      * <igx-switch [required]="true"></igx-switch>
      * ```
-     * ```typescript
-     * let isRequired = this.switch.required;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input() public required = false;
     /**
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
+     * 
+     * @example
      * ```html
      * <igx-switch aria-labelledby = "Label1"></igx-switch>
      * ```
-     * ```typescript
-     * let ariaLabelledBy = this.switch.ariaLabelledBy;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input('aria-labelledby')
     public ariaLabelledBy = this.labelId;
     /**
      * Sets/gets the value of the `aria-label` attribute.
+     * 
+     * @example
      * ```html
      * <igx-switch aria-label="Label1"></igx-switch>
      * ```
-     * ```typescript
-     * let ariaLabel =  this.switch.ariaLabel;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @Input('aria-label')
     public ariaLabel: string | null = null;
     /**
      * An event that is emitted after the switch state is changed.
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
-     * @memberof IgxSwitchComponent
      */
     @Output()
     readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
     /**
-     *@hidden
-     * @memberof IgxSwitchComponent
+     * @hidden
+     * @internal
      */
     private _onTouchedCallback: () => void = noop;
     /**
-     *@hidden
-     * @memberof IgxSwitchComponent
+     * @hidden
+     * @internal
      */
     private _onChangeCallback: (_: any) => void = noop;
     /**
      * Returns the class of the switch component.
+     * 
+     * @example
      * ```typescript
      * let switchClass = this.switch.cssClass;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch')
     public cssClass = 'igx-switch';
     /**
      * Sets/gets whether the switch is on or off.
      * Default value is 'false'.
+     * 
+     * @example
      * ```html
-     *  <igx-switch [checked] = "true"></igx-switch>
+     *  <igx-switch [checked]="true"></igx-switch>
      * ```
-     * ```typescript
-     * let isChecked =  this.switch.checked;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--checked')
     @Input() public checked = false;
     /**
      * Sets/gets the `disabled` attribute.
      * Default value is `false`.
+     * 
+     * @example
      * ```html
-     * <igx-switch [disabled] = "true"><igx-switch>
+     * <igx-switch [disabled]="true"><igx-switch>
      * ```
-     * ```typescript
-     * let isDisabled =  this.switch.disabled;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--disabled')
     @Input() public disabled = false;
     /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
+     * 
+     * @example
      * ```typescript
      * this.switch.focused = true;
      * ```
-     * ```typescript
-     * let isFocused =  this.switch.focused;
-     * ```
-     * @memberof IgxSwitchComponent
      */
     @HostBinding('class.igx-switch--focused')
     public focused = false;
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public inputId = `${this.id}-input`;
     /**
      * Toggles the checked state of the switch.
+     * 
+     * @example
      * ```typescript
      * this.switch.toggle();
      * ```
-     * @memberof IgxSwitchComponent
      */
     public toggle() {
         if (this.disabled) {
@@ -282,13 +272,15 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this._onChangeCallback(this.checked);
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public _onSwitchChange(event) {
         event.stopPropagation();
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public _onSwitchClick(event) {
         event.stopPropagation();
@@ -299,38 +291,46 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         }
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public _onLabelClick(event) {
         this.toggle();
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public onFocus(event) {
         this.focused = true;
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public writeValue(value) {
         this._value = value;
         this.checked = !!this._value;
     }
-    /** @hidden */
-    getEditElement() {
+    /** 
+     * @hidden 
+     * @internal
+     * */
+    public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public get labelClass(): string {
         switch (this.labelPosition) {
@@ -342,11 +342,13 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         }
     }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
@@ -368,6 +370,7 @@ export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
 
 /**
  * @hidden
+ * @internal
  */
 @NgModule({
     declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
