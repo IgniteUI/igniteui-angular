@@ -24,7 +24,8 @@ import {
     IgxGridRowEditingWithoutEditableColumnsComponent,
     IgxGridCustomOverlayComponent,
     IgxGridRowEditingWithFeaturesComponent,
-    IgxGridEmptyRowEditTemplateComponent
+    IgxGridEmptyRowEditTemplateComponent,
+    VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridTestComponent } from './grid.component.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -48,7 +49,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridTestComponent,
                 IgxGridCustomOverlayComponent,
                 IgxGridRowEditingWithFeaturesComponent,
-                IgxGridEmptyRowEditTemplateComponent
+                IgxGridEmptyRowEditTemplateComponent,
+                VirtualGridComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
@@ -282,12 +284,11 @@ describe('IgxGrid - Row Editing #grid', () => {
         it('Should properly exit pending state when committing row edit w/o changes', fakeAsync(() => {
             const initialDataLength = grid.data.length;
             const productNameCell = fix.debugElement.queryAll(By.css(CELL_CLASS))[2];
-            const enterEvent = { key: 'enter', stopPropagation: () => { }, preventDefault: () => { } };
-            productNameCell.triggerEventHandler('keydown', enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('enter', productNameCell);
             tick(16);
             fix.detectChanges();
             expect(grid.getCellByKey(1, 'ProductName').editMode).toBeTruthy();
-            productNameCell.triggerEventHandler('keydown', enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('enter', productNameCell);
             tick(16);
             fix.detectChanges();
             expect(grid.getCellByKey(1, 'ProductName').editMode).toBeFalsy();
@@ -1894,6 +1895,53 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(columns[1].editable).toBeTruthy(); // column.editable not set
             expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
         }));
+
+        it('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', async () => {
+            const fix = TestBed.createComponent(VirtualGridComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            setupGridScrollDetection(fix, grid);
+            fix.detectChanges();
+
+            fix.componentInstance.columns = fix.componentInstance.generateCols(100, 50);
+            fix.componentInstance.data = fix.componentInstance.generateData(100);
+
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            grid.primaryKey = '0';
+            grid.rowEditable = true;
+            grid.columns.every(c => c.editable = true);
+
+            grid.getColumnByName('2').pinned = true;
+            grid.getColumnByName('3').pinned = true;
+            grid.getColumnByName('3').editable = false;
+            grid.getColumnByName('0').editable = false;
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.navigateTo(0, 99);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
+            const cell = rows[0].querySelectorAll('igx-grid-cell')[0];
+            cell.dispatchEvent(new Event('focus'));
+            UIInteractions.triggerKeyDownEvtUponElem('F2', cell, true);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(grid.crudService.cell.column.header).toBe('2');
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell, true);
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(grid.crudService.cell.column.header).toBe('1');
+        });
     });
 
     describe('Custom overlay', () => {
@@ -2393,7 +2441,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it('Hide row editing dialog with group collapsing/expanding', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
             fix.detectChanges();
-            const grid = fix.componentInstance.instance;
+            const grid = fix.componentInstance.grid;
             grid.primaryKey = 'ID';
             fix.detectChanges();
 
@@ -2482,7 +2530,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
                 fix.detectChanges();
-                const grid = fix.componentInstance.instance;
+                const grid = fix.componentInstance.grid;
                 grid.primaryKey = 'ID';
                 fix.detectChanges();
                 grid.groupBy({
