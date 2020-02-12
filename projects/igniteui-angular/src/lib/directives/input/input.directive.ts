@@ -23,6 +23,27 @@ export enum IgxInputState {
     INVALID
 }
 
+/**
+ * The `igxInput` directive creates single- or multiline text elements, covering common scenarios when dealing with form inputs.
+ *
+ * @igxModule IgxInputGroupModule
+ * 
+ * @igxParent Data Entry & Display
+ *
+ * @igxTheme igx-input-group-theme
+ *
+ * @igxKeywords input, input group, form, field, validation
+ *
+ * @igxGroup presentation
+ *
+ * @example
+ * ```html
+ * <input-group>
+ *  <label for="address">Adress</label>
+ *  <input igxInput name="address" type="text" [(ngModel)]="customer.address">
+ * </input-group>
+ * ```
+ */
 @Directive({
     selector: '[igxInput]',
     exportAs: 'igxInput'
@@ -43,7 +64,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Sets the `value` property.
-     * 
+     *
      * @example
      * ```html
      * <input-group>
@@ -58,7 +79,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the `value` propery.
-     * 
+     *
      * @example
      * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
@@ -71,7 +92,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Sets the `disabled` property.
-     * 
+     *
      * @example
      * ```html
      * <input-group>
@@ -86,7 +107,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the `disabled` property
-     * 
+     *
      * @example
      * ```typescript
      * @ViewChild('igxInput', {read: IgxInputDirective})
@@ -100,7 +121,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the `required` property.
-     * 
+     *
      * @example
      * ```html
      * <input-group>
@@ -123,7 +144,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is required.
-     * 
+     *
      * @example
      * ```typescript
      * let isRequired = this.igxInput.required;
@@ -136,12 +157,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
-     * 
+     *
      * @example
      * ```typescript
      * this.igxInput.isInput = true;
      * ```
-     * 
+     *
      * @example
      * ```typescript
      * let isCLassAdded = this.igxInput.isInput;
@@ -152,12 +173,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets whether the `"class.igx-input-group__textarea"` class is added to the host element.
      * Default value is `false`.
-     * 
+     *
      * @example
      * ```typescript
      * this.igxInput.isTextArea = true;
      * ```
-     * 
+     *
      * @example
      * ```typescript
      * let isCLassAdded = this.igxInput.isTextArea;
@@ -246,7 +267,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Sets a focus on the igxInput.
-     * 
+     *
      * @example
      * ```typescript
      * this.igxInput.focus();
@@ -257,7 +278,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the `nativeElement` of the igxInput.
-     * 
+     *
      * @example
      * ```typescript
      * let igxInputNativeElement = this.igxInput.nativeElement;
@@ -290,7 +311,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets whether the igxInput has a placeholder.
-     * 
+     *
      * @example
      * ```typescript
      * let hasPlaceholder = this.igxInput.hasPlaceholder;
@@ -301,7 +322,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the placeholder element of the igxInput.
-     * 
+     *
      * @example
      * ```typescript
      * let igxInputPlaceholder = this.igxInput.placeholder;
@@ -332,7 +353,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is focused.
-     * 
+     *
      * @example
      * ```typescript
      * let isFocused = this.igxInput.focused;
@@ -343,7 +364,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * Gets the state of the igxInput.
-     * 
+     *
      * @example
      * ```typescript
      * let igxInputState = this.igxInput.valid;
@@ -355,7 +376,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Gets whether the igxInput is valid.
-     * 
+     *
      * @example
      * ```typescript
      * let valid = this.igxInput.isValid;
@@ -367,7 +388,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * Sets the state of the igxInput.
-     * 
+     *
      * @example
      * ```typescript
      * this.igxInput.valid = IgxInputState.INVALID;
