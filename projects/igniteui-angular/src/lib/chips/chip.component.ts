@@ -62,8 +62,8 @@ let CHIP_ID = 0;
  * @igxGroup display
  *
  * @remarks
- * The Ignite UI Chip can be templated, deleted, and selected. 
- * Multiple chips can be reordered and visually connected to each other. 
+ * The Ignite UI Chip can be templated, deleted, and selected.
+ * Multiple chips can be reordered and visually connected to each other.
  * Chips reside in a container called chips area which is responsible for managing the interactions between the chips.
  *
  * @example
