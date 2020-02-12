@@ -39,7 +39,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 
 /**
  * Grid provides a way to present and manipulate tabular data.
- * 
  *@igxModule IgxGridModule
  *@igxGroup Grids & Lists
  *@igxKeywords grid, table

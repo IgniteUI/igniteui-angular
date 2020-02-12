@@ -1009,7 +1009,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets a unique values strategy used by the Excel Style Filtering 
+     * Gets/Sets a unique values strategy used by the Excel Style Filtering
      * @remarks
      * Provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
@@ -1025,7 +1025,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                                         done: (values: any[]) => void) => void;
 
     /**
-     * Emitted when `IgxGridCellComponent` is clicked. 
+     * Emitted when `IgxGridCellComponent` is clicked.
      * @remarks
      * Returns the `IgxGridCellComponent`.
      * @example
@@ -1187,7 +1187,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when sorting is performed through the UI.
-     * @remarks 
+     * @remarks
      * Returns the sorting expression.
      * @example
      * ```html
@@ -1275,7 +1275,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     /**
-     * Emitted when a cell is right clicked. 
+     * Emitted when a cell is right clicked.
      * @remarks
      * Returns the `IgxGridCellComponent` object.
      * ```html
@@ -1313,7 +1313,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
     /**
-     * Emitted when column moving starts. 
+     * Emitted when column moving starts.
      * @remarks
      * Returns the moved `IgxColumnComponent` object.
      * @example
@@ -2344,7 +2344,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when making a range selection.
-     * @remarks 
+     * @remarks
      * Range selection can be made either through drag selection or through keyboard selection.
      */
     @Output()
@@ -3079,7 +3079,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Expands the row by its id. 
+     * Expands the row by its id.
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
@@ -3108,7 +3108,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-     * Toggles the row by its id. 
+     * Toggles the row by its id.
      * @remarks
      * ID is either the primaryKey value or the data record instance.
      * @example
