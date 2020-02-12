@@ -26,6 +26,8 @@ const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__li
 const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
 const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
+const CHIP_SELECT_CLASS = '.igx-chip__select';
+const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
 describe('IgxGrid - Advanced Filtering #grid', () => {
     configureTestSuite();
@@ -2094,27 +2096,29 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 fix.detectChanges();
 
                 // Verify context menu is not visible.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, false);
-                });
+                verifyContextMenuVisibility(fix, false);
 
                 // Click the innner group's operator line.
                 const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 operatorLine.click();
 
-                // Verify context menu is visible.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, true);
-                    verifyContextMenuType(fix, true);
+                // Simulate end of chip selection animation
+                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
+                const transitionEvent = new TransitionEvent('transitionend', {
+                    propertyName: 'width'
                 });
+                chipSelectHidden.dispatchEvent(transitionEvent);
+
+                // Verify context menu is visible.
+                verifyContextMenuVisibility(fix, true);
+                verifyContextMenuType(fix, true);
 
                 // Click the innner group's operator line again.
                 operatorLine.click();
+                tick();
 
                 // Verify context menu is no longer visible.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, false);
-                });
+                verifyContextMenuVisibility(fix, false);
             }));
 
             it('Should change the group\'s operator when using its context menu buttons.', fakeAsync(() => {
@@ -2334,19 +2338,23 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
 
-                // Verify context menu is opened.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, true);
+                // Simulate end of chip selection animation
+                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
+                const transitionEvent = new TransitionEvent('transitionend', {
+                    propertyName: 'width'
                 });
+                chipSelectHidden.dispatchEvent(transitionEvent);
+
+                // Verify context menu is opened.
+                verifyContextMenuVisibility(fix, true);
 
                 // Click close button of context menu.
                 const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
                 buttons[0].click();
+                tick();
 
                 // Verify context menu is closed.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, false);
-                });
+                verifyContextMenuVisibility(fix, false);
             }));
         });
 
@@ -2373,18 +2381,22 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
 
-                // Verify context menu is opened.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, true);
+                // Simulate end of chip selection animation
+                const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
+                const transitionEvent = new TransitionEvent('transitionend', {
+                    propertyName: 'width'
                 });
+                chipSelectHidden.dispatchEvent(transitionEvent);
+
+                // Verify context menu is opened.
+                verifyContextMenuVisibility(fix, true);
 
                 // Press 'Escape' on the context menu.
                 UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringContextMenu(fix), 'Escape');
+                tick();
 
                 // Verify context menu is closed.
-                fix.whenStable().then(() => {
-                    verifyContextMenuVisibility(fix, false);
-                });
+                verifyContextMenuVisibility(fix, false);
             }));
 
             it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.' , fakeAsync(() => {
@@ -2967,12 +2979,12 @@ function verifyExpressionChipSelectionByChip(chip: HTMLElement, shouldBeSelected
     const chipItem = chip.querySelector('.igx-chip__item');
     if (shouldBeSelected) {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
-        expect(chipItem.querySelector('.igx-chip__select')).not.toBeNull();
-        expect(chipItem.querySelector('.igx-chip__select--hidden')).toBeNull();
+        expect(chipItem.querySelector(CHIP_SELECT_CLASS)).not.toBeNull();
+        expect(chipItem.querySelector(CHIP_SELECT_HIDDEN_CLASS)).toBeNull();
     } else {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
-        expect(chipItem.querySelector('.igx-chip__select')).toBeNull();
-        expect(chipItem.querySelector('.igx-chip__select--hidden')).not.toBeNull();
+        expect(chipItem.querySelector(CHIP_SELECT_CLASS)).toBeNull();
+        expect(chipItem.querySelector(CHIP_SELECT_HIDDEN_CLASS)).not.toBeNull();
     }
 }
 
@@ -3038,7 +3050,6 @@ function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
 function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
     const contextMenu: HTMLElement = GridFunctions.getAdvancedFilteringContextMenu(fix);
     const contextMenuRect = contextMenu.getBoundingClientRect();
-    console.log(contextMenu.classList);
     expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(!shouldBeVisible, 'incorrect context menu visibility');
     expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(!shouldBeVisible, 'incorrect context menu dimensions');
 }
