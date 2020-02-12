@@ -67,7 +67,7 @@ export function addDependencies(options: Options): Rule {
             }
         });
 
-        addPackageToPkgJson(tree, schematicsPackage, pkgJson.devDependencies[schematicsPackage], devDependencies);
+        addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], devDependencies);
         return tree;
     };
 }
