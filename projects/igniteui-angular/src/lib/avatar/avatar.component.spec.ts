@@ -87,6 +87,11 @@ describe('Avatar', () => {
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.LARGE);
         expect(hostEl.classList).not.toContain(classes.large);
+
+        instance.size = 'nonsense' as any;
+        fixture.detectChanges();
+        expect(instance.size).toEqual(IgxAvatarSize.SMALL);
+        expect(hostEl.classList).toContain(classes.small);
     });
 
     it('Initializes default avatar', () => {

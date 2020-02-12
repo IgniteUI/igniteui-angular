@@ -212,6 +212,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```html
      * <igx-avatar src="images/picture.jpg"></igx-avatar>
      * ```
+     * @igxFriendlyName Image URL
      */
     @Input()
     public src: string;
