@@ -189,7 +189,7 @@
         height: 0;
         cursor: default;
         z-index: 1;
-        left: 0;
+        #{$left}: 0;
     }
 
     %igx-slider-track {
@@ -239,11 +239,11 @@
         position: relative;
 
         &:first-of-type {
-            margin-left: rem(-1px);
+            margin-#{$left}: rem(-1px);
         }
 
         &:last-of-type {
-            margin-left: rem(-1px);
+            margin-#{$left}: rem(-1px);
         }
     }
 
@@ -386,7 +386,7 @@
         height: $slider-thumb-height;
         outline-style: none;
         top: -#{rem($slider-thumb-radius)};
-        margin-left: -#{rem($slider-thumb-radius)};
+        margin-#{$left}: -#{rem($slider-thumb-radius)};
 
         &:focus %igx-thumb-dot::after {
             opacity: .18;
@@ -420,7 +420,7 @@
         justify-content: center;
         flex: 0 0 auto;
         top: -#{rem($slider-thumb-height - 4px)};
-        left: -50%;
+        #{$left}: -50%;
         pointer-events: none;
         min-width: rem($slider-label-width);
         height: rem($slider-label-height);
@@ -439,8 +439,8 @@
             content: '';
             position: absolute;
             top: 0;
-            left: 50%;
-            margin-left: -#{$slider-label-radius};
+            #{$left}: 50%;
+            margin-#{$left}: -#{$slider-label-radius};
             width: rem($slider-label-width);
             height: $slider-label-height;
             border-radius: 0 $slider-label-radius $slider-label-radius;
@@ -453,9 +453,9 @@
             content: '';
             position: absolute;
             top: rem(40px);
-            left: calc(50% - 1px);
-            border-left: 1px solid;
-            border-right: 1px solid;
+            #{$left}: calc(50% - 1px);
+            border-#{$left}: 1px solid;
+            border-#{$right}: 1px solid;
             border-top: rem(14px) solid;
             border-color: inherit;
         }
@@ -463,7 +463,7 @@
 
     %igx-thumb-dot {
         position: relative;
-        left: 0;
+        #{$left}: 0;
         padding: rem(20px);
         pointer-events: none;
 
@@ -478,7 +478,7 @@
             content: '';
             width: rem($dot-size);
             height: rem($dot-size);
-            left: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
+            #{$left}: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
             top: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
             background: --var($theme, 'thumb-color');
             border: rem($thumb-border-width) solid --var($theme, 'thumb-border-color');
@@ -495,7 +495,7 @@
             height: rem($slider-thumb-height);
             background: --var($theme, 'thumb-color');
             top: 0;
-            left: 0;
+            #{$left}: 0;
             opacity: 0;
             transform: scale(0);
             transform-origin: center center;

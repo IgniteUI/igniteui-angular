@@ -32,6 +32,7 @@ import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
 import { resizeObservable } from '../core/utils';
+import { IgxDirectionality } from '../services/direction/directionality';
 
 const noop = () => {
 };
@@ -773,7 +774,8 @@ export class IgxSliderComponent implements
         private renderer: Renderer2,
         private _el: ElementRef,
         private _cdr: ChangeDetectorRef,
-        private _ngZone: NgZone) { }
+        private _ngZone: NgZone,
+        private _dir: IgxDirectionality) { }
 
     /**
      * @hidden
@@ -1200,14 +1202,15 @@ export class IgxSliderComponent implements
     }
 
     private positionHandler(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
-        const positionLeft = `${this.valueToFraction(position) * 100}%`;
+        const percent = `${this.valueToFraction(position) * 100}%`;
+        const dir = this._dir.rtl ? 'right' : 'left';
 
         if (thumbHandle) {
-            thumbHandle.nativeElement.style.left = positionLeft;
+            thumbHandle.nativeElement.style[dir] = percent;
         }
 
         if (labelHandle) {
-            labelHandle.nativeElement.style.left = positionLeft;
+            labelHandle.nativeElement.style[dir] = percent;
         }
     }
 
@@ -1353,6 +1356,7 @@ export class IgxSliderComponent implements
                 trackLeftIndention = Math.round((1 / positionGap * fromPosition) * 100);
             }
 
+            trackLeftIndention = this._dir.rtl ? -trackLeftIndention : trackLeftIndention;
             this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${positionGap}) translateX(${trackLeftIndention}%)`);
         } else {
             this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${toPosition})`);

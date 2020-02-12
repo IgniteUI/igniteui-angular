@@ -22,7 +22,7 @@ const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -550,7 +550,7 @@ describe('IgxSlider', () => {
 
     });
 
-    describe('Slider - List View', () => {
+    fdescribe('Slider - List View', () => {
         let fixture: ComponentFixture<SliderWithLabelsComponent>;
         let slider: IgxSliderComponent;
 
