@@ -3,7 +3,7 @@ import { IgxIconService } from './icon.service';
 
 /**
  * Icon provides a way to include material icons to markup
- * 
+ *
  * @igxModule IgxIconModule
  *
  * @igxTheme igx-icon-theme
