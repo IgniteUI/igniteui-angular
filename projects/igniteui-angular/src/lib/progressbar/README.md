@@ -35,7 +35,7 @@ export class AppModule {}
 |:----------|:-------------:|:------|
 | `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
 | `max` |  number | Set maximum value that can be passed. By default it is set to 100. |
-| `type` |  string | Set type of the linear bar. Possible options - `default`, `success`, `info`, `warning`, and `danger`. |
+| `type` |  string | Set type of the linear bar. Possible options - `success`, `info`, `warning`, and `error`. |
 | `value` |  number | Set value that indicates the completed bar position. |
 | `striped` |  boolean | Set bar to have striped style. |
 | `animate` |  boolean | animation on progress bar. |

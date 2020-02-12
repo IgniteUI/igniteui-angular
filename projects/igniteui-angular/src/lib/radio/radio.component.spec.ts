@@ -16,7 +16,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('IgxRadio', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxRadioComponent,
