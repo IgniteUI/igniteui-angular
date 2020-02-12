@@ -27,7 +27,7 @@ export enum IgxInputState {
  * The `igxInput` directive creates single- or multiline text elements, covering common scenarios when dealing with form inputs.
  *
  * @igxModule IgxInputGroupModule
- * 
+ *
  * @igxParent Data Entry & Display
  *
  * @igxTheme igx-input-group-theme
