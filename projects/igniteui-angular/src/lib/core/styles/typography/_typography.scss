@@ -40,7 +40,6 @@
 @mixin igx-typography(
     $font-family: "'Titillium Web', sans-serif",
     $type-scale: $default-type-scale,
-    $base-color: $igx-foreground-color
 ) {
     // Maps type scale typographic categories
     // to native elements.
@@ -64,7 +63,6 @@
         font-family: unquote($font-family);
         font-size: $browser-context;
         line-height: $browser-line-height;
-        color: $base-color;
         font-size-adjust: 100%;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
