@@ -497,7 +497,6 @@
     @include igx-typography(
         $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
         $type-scale: $fluent-type-scale,
-        $base-color: #323130
     );
 
     @include igx-theme(
@@ -532,8 +531,7 @@
 
     @include igx-typography(
         $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale,
-        $base-color: #fff
+        $type-scale: $fluent-type-scale
     );
 
     @include igx-theme(
@@ -569,8 +567,7 @@
 
     @include igx-typography(
         $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        $type-scale: $bootstrap-type-scale,
-        $base-color: #212529
+        $type-scale: $bootstrap-type-scale
     );
 
     @include igx-calendar-typography($bootstrap-type-scale, $categories: (
@@ -632,8 +629,7 @@
 
     @include igx-typography(
         $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        $type-scale: $bootstrap-type-scale,
-        $base-color: #fff
+        $type-scale: $bootstrap-type-scale
     );
 
     @include igx-calendar-typography($bootstrap-type-scale, $categories: (
