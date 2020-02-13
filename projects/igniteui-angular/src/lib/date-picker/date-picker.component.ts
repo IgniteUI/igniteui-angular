@@ -16,9 +16,10 @@ import {
     HostListener,
     NgModuleRef,
     OnInit,
-    AfterViewInit
+    AfterViewInit,
+    Injector
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import {
     IgxCalendarComponent,
     IgxCalendarHeaderTemplateDirective,
@@ -28,8 +29,8 @@ import {
     isDateInRanges
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '../input-group/index';
-import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/index';
+import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
@@ -112,6 +113,8 @@ export enum PredefinedFormatOptions {
     LongDate = 'longDate',
     FullDate = 'fullDate'
 }
+
+const noop = () => { };
 
 /**
  * **Ignite UI for Angular Date Picker** -
@@ -419,8 +422,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._transformedDate = value;
     }
 
-    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService, public element: ElementRef,
-        private _cdr: ChangeDetectorRef, private _moduleRef: NgModuleRef<any>) { }
+    constructor(@Inject(
+        IgxOverlayService) private _overlayService: IgxOverlayService,
+        public element: ElementRef,
+        private _cdr: ChangeDetectorRef,
+        private _moduleRef: NgModuleRef<any>,
+        private _injector: Injector) { }
 
     /**
      * Gets the input group template.
@@ -722,10 +729,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild('readonlyInput', { read: ElementRef, static: false })
     protected readonlyInput: ElementRef;
 
-    /*
-    * @hidden
-    */
-    @ContentChild(IgxInputDirective, { static: false })
+     /* @hidden */
+    @ViewChild('editableInput', { read: IgxInputDirective })
+    protected editableInputDirective: IgxInputDirective;
+
+    /* @hidden */
+    @ViewChild('readonlyInput', { read: IgxInputDirective })
+    protected readonlyInputDirective: IgxInputDirective;
+
+    /** @hidden @internal */
+    @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
 
     /**
@@ -778,6 +791,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         year: false
     };
     private _destroy$ = new Subject<boolean>();
+    private _statusChanges$: Subscription;
     private _componentID: string;
     private _format: string;
     private _value: Date;
@@ -792,6 +806,31 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _transformedDate;
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
+    private _ngControl: NgControl = null;
+
+    //#region ControlValueAccessor
+
+    private _onChangeCallback: (_: Date) => void = noop;
+
+    private _onTouchedCallback: () => void = noop;
+
+    /** @hidden @internal */
+    public writeValue(value: Date) {
+        this._value = value;
+        // TODO: do we need next call
+        this._cdr.markForCheck();
+    }
+
+    /** @hidden @internal */
+    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /** @hidden @internal */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    //#endregion
 
     /**
     * @hidden
@@ -803,38 +842,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         event.preventDefault();
     }
 
-    /**
-     *Method that sets the selected date.
-     *```typescript
-     *public date = new Date();
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.datePicker.writeValue(this.date);
-     *}
-     *```
-     *@param value The date you want to select.
-     *@memberOf {@link IgxDatePickerComponent}
-     */
-    public writeValue(value: Date) {
-        this.value = value;
-        this._cdr.markForCheck();
-    }
-
-    /**
-     *@hidden
-     */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
-
-    /**
-     *@hidden
-     */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
-
-    /**
-     *@hidden
-     */
-    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
     /** @hidden */
     public getEditElement() {
@@ -910,6 +917,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
         }
+
+        this._ngControl = this._injector.get<NgControl>(NgControl, null);
     }
 
     ngAfterViewInit() {
@@ -918,6 +927,32 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((res) => this.onKeyDown(res));
+        }
+
+        if (this._ngControl) {
+            this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        }
+    }
+
+    protected onStatusChanged() {
+        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
+            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+            const input = this.readonlyInputDirective || this.editableInputDirective;
+            if (this.inputGroup.isFocused) {
+                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        }
+        this.manageRequiredAsterisk();
+    }
+
+    protected manageRequiredAsterisk(): void {
+        if (this._ngControl && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
+            this._cdr.markForCheck();
         }
     }
 
@@ -1031,6 +1066,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
+    public mouseDown(e) {
+        // if the click is not on the input but in input group
+        // e.g. on prefix or sufix, prevent default and this way prevent blur
+        if (e.target !== this.getEditElement()) {
+            e.preventDefault();
+        }
+    }
+
     /**
      * Close the calendar.
      *
@@ -1086,7 +1129,20 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     */
     public onBlur(event): void {
         this._isInEditMode = false;
-        this.calculateDate(event.target.value, event.type);
+        if (this.mode === InteractionMode.DropDown) {
+            this.calculateDate(event.target.value, event.type);
+        }
+
+        this._onTouchedCallback();
+        if (this.collapsed) {
+            const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
+            if (this._ngControl && !this._ngControl.valid) {
+                console.log('onBlur + collapsed + invalid');
+                input.valid = IgxInputState.INVALID;
+            } else {
+                input.valid = IgxInputState.INITIAL;
+            }
+        }
     }
 
     /**
@@ -1370,9 +1426,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
-    private _onTouchedCallback: () => void = () => { };
-
-    private _onChangeCallback: (_: Date) => void = () => { };
 }
 
 /**
