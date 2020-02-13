@@ -8,6 +8,14 @@
                 "selector": "igx-slider",
                 "type": "component"
             }
+        },
+        {
+            "name": "tabsType",
+            "replaceWith": "type",
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
         }
     ]
 }

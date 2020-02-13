@@ -51,7 +51,7 @@ const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -283,22 +283,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            prefix.triggerEventHandler('keydown', UIInteractions.spaceEvent);
+            UIInteractions.triggerEventHandlerKeyDown(' ', prefix);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
-            input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
-            prefix.triggerEventHandler('keydown', UIInteractions.tabEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', prefix);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix, false);
 
-            input.triggerEventHandler('keydown', UIInteractions.spaceEvent);
+            UIInteractions.triggerEventHandlerKeyDown(' ', input);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
@@ -980,7 +980,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
             expect(input.componentInstance.value).toEqual('a');
 
-            input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             fix.detectChanges();
 
             // Check focus is kept and chips is no longer selected.
@@ -1298,8 +1298,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
-
-            input.triggerEventHandler('keydown', UIInteractions.altAndArrowDownEvent);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', input, true);
             tick(30);
             fix.detectChanges();
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
@@ -1311,7 +1310,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const input = filterUIRow.query(By.directive(IgxInputDirective));
 
-            input.triggerEventHandler('keydown', UIInteractions.escapeEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Escape', input);
             tick(100);
             fix.detectChanges();
 
@@ -1348,7 +1347,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset, false);
 
             // submit the input with empty value
-            input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', input);
             tick(50);
             fix.detectChanges();
 
@@ -1623,7 +1622,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the commit icon.
             const inputCommitIcon = GridFunctions.getFilterRowInputCommitIcon(fix);
-            inputCommitIcon.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', inputCommitIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1645,7 +1644,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Press 'Enter' on the clear icon.
             const inputClearIcon = GridFunctions.getFilterRowInputClearIcon(fix);
-            inputClearIcon.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', inputClearIcon);
             tick(200);
             fix.detectChanges();
 
@@ -1659,7 +1658,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
             const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            filterCellChip.triggerEventHandler('keydown', UIInteractions.enterEvent);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', filterCellChip);
             tick(200);
             fix.detectChanges();
 
@@ -2430,7 +2429,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -3210,40 +3209,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
         }));
 
-        it('Should filter, clear and enable/disable the apply button correctly.', fakeAsync(() => {
+        it('Should enable/disable the apply button correctly.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
             fix.detectChanges();
 
-            // Type string in search box.
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
-            sendInputNativeElement(inputNativeElement, 'hello there', fix);
-            tick(100);
-            fix.detectChanges();
-
-            // Verify there are no filtered-in results and that apply button is disabled.
-            let listItems = searchComponent.querySelectorAll('igx-list-item');
-            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            let raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-            let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
-            expect(listItems.length).toBe(0, 'ESF search result should be empty');
-            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
-
-            // Clear filtering.
-            const icons = Array.from(searchComponent.querySelectorAll('igx-icon'));
-            const clearIcon: any = icons.find((ic: any) => ic.innerText === 'clear');
-            clearIcon.click();
-            tick(100);
-            fix.detectChanges();
-
             // Verify there are filtered-in results and that apply button is enabled.
-            listItems = searchComponent.querySelectorAll('igx-list-item');
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = searchComponent.querySelectorAll('igx-list-item');
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
+            let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
             expect(listItems.length).toBe(6, 'ESF search result should NOT be empty');
             expect(applyButton.classList.contains('igx-button--disabled')).toBe(false);
+
+            // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
+            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+            checkbox[0].click(); // Select All
+            tick();
+            fix.detectChanges();
+            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
         }));
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {

@@ -314,6 +314,7 @@
 
         @include e(label) {
             @extend %form-group-label--box !optional;
+            @extend %form-group-label--border !optional;
         }
 
         @include e(textarea) {
@@ -324,6 +325,28 @@
             @extend %form-group-helper--box !optional;
         }
     }
+
+    @include mx(border, filled) {
+        @include e(label) {
+            @extend %form-group-label-float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
+    @include mx(border, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
+    @include mx(border, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
 
     @include mx(border, cosy) {
         @extend %form-group-display--no-margin-cosy !optional;
@@ -341,6 +364,30 @@
         }
     }
 
+    @include mx(border, cosy, filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
+    @include mx(border, cosy, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
+    @include mx(border, cosy, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
     @include mx(border, compact) {
         @extend %form-group-display--no-margin-compact !optional;
 
@@ -354,6 +401,30 @@
 
         @include e(textarea) {
             @extend %form-group-textarea--box-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
         }
     }
 
@@ -378,6 +449,10 @@
     @include mx(disabled, border) {
         @include e(bundle) {
             @extend %form-group-bundle-border--disabled !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--float-border-disabled !optional;
         }
     }
 

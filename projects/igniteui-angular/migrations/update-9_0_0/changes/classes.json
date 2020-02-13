@@ -28,6 +28,26 @@
         {
             "name": "IgxBaseExporter",
             "replaceWith": "IgxBaseExporterDirective"
+        },
+        {
+            "name": "AvatarType",
+            "replaceWith": "IgxAvatarType"
+        },
+        {
+            "name": "Size",
+            "replaceWith": "IgxAvatarSize"
+        },
+        {
+            "name": "Type",
+            "replaceWith": "IgxBadgeType"
+        },
+        {
+            "name": "SliderType",
+            "replaceWith": "IgxSliderType"
+        },
+        {
+            "name": "TabsType",
+            "replaceWith": "IgxTabsType"
         }
     ]
 }

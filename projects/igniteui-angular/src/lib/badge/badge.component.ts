@@ -4,8 +4,8 @@ import { IgxIconModule } from '../icon/index';
 
 let NEXT_ID = 0;
 
-export enum Type {
-    DEFAULT = 'default',
+export enum IgxBadgeType {
+    PRIMARY = 'primary',
     INFO = 'info',
     SUCCESS = 'success',
     WARNING = 'warning',
@@ -53,14 +53,14 @@ export class IgxBadgeComponent {
 
     /**
     * An @Input property controlling the type of the badge.
-    * Allowed values are `default`, `info`, `success`, `warning`, `error`.
+    * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
     * ```html
     *<igx-badge type="success" icon="check" class="badge-style"></igx-badge>
     * ```
     */
     @Input()
-    public type: string | Type = 'default';
+    public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
 
     /**
     * An @Input property that sets the value to be displayed inside the badge.
@@ -126,7 +126,7 @@ export class IgxBadgeComponent {
      * Defines a human-readable, accessor, author-localized description for the `type` and the `icon` or `value` of the element.
      */
     get roleDescription() {
-        let message;
+        let message: string;
 
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
@@ -148,32 +148,31 @@ export class IgxBadgeComponent {
     public setClasses() {
         let classes = {};
 
-        switch (Type[this.type.toUpperCase()]) {
-            case Type.DEFAULT:
-                classes = {
-                    [`${this.cssClass}__circle--default`]: true
-                };
-                break;
-            case Type.INFO:
+        switch (IgxBadgeType[this.type.toUpperCase()]) {
+            case IgxBadgeType.INFO:
                 classes = {
                     [`${this.cssClass}__circle--info`]: true
                 };
                 break;
-            case Type.SUCCESS:
+            case IgxBadgeType.SUCCESS:
                 classes = {
                     [`${this.cssClass}__circle--success`]: true
                 };
                 break;
-            case Type.WARNING:
+            case IgxBadgeType.WARNING:
                 classes = {
                     [`${this.cssClass}__circle--warning`]: true
                 };
                 break;
-            case Type.ERROR:
+            case IgxBadgeType.ERROR:
                 classes = {
                     [`${this.cssClass}__circle--error`]: true
                 };
                 break;
+            default:
+                classes = {
+                    [`${this.cssClass}__circle--default`]: true
+                };
         }
 
         return classes;
@@ -189,5 +188,4 @@ export class IgxBadgeComponent {
     exports: [IgxBadgeComponent],
     imports: [CommonModule, IgxIconModule]
 })
-export class IgxBadgeModule {
-}
+export class IgxBadgeModule { }
