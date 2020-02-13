@@ -1260,7 +1260,7 @@ describe('IgxDatePicker', () => {
         }));
     });
 
-    fdescribe('Reactive form', () => {
+    describe('Reactive form', () => {
         let fixture: ComponentFixture<IgxDatePickerReactiveFormComponent>;
         let datePicker: IgxDatePickerComponent;
 
