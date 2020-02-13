@@ -575,7 +575,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * ```html
     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
     * ```
-     * @memberof IgxGridBaseDirective
     */
     @WatchChanges()
     @Input()
@@ -643,6 +642,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the width of the header.
+     * @example
      * ```html
      * let gridHeaderWidth = this.grid.headerWidth;
      * ```
@@ -1049,7 +1049,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
@@ -1063,7 +1062,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
@@ -1092,7 +1090,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
@@ -2955,7 +2952,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     public get expansionStates() {
@@ -2976,7 +2972,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * this.grid.expandAll();
      * ```
-	 * @memberof IgxGridBaseDirective
     */
     public expandAll() {
         this._defaultExpandState = true;
@@ -2989,7 +2984,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * this.grid.collapseAll();
      * ```
-	 * @memberof IgxGridBaseDirective
     */
     public collapseAll() {
         this._defaultExpandState = false;
@@ -3004,6 +2998,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * this.grid.expandRow(rowID);
      * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
      */
     public expandRow(rowID: any) {
         this.gridAPI.set_row_expansion_state(rowID, true);
@@ -3017,7 +3012,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * this.grid.collapseRow(rowID);
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @param rowID The row id - primaryKey value or the data record instance.
     */
     public collapseRow(rowID: any) {
         this.gridAPI.set_row_expansion_state(rowID, false);
@@ -3032,7 +3027,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * this.grid.toggleRow(rowID);
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @param rowID The row id - primaryKey value or the data record instance.
     */
     public toggleRow(rowID: any) {
         const rec = this.gridAPI.get_rec_by_id(rowID);
@@ -3040,6 +3035,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.set_row_expansion_state(rowID, !state);
     }
 
+    /**
+     * @hidden
+     * @internal
+    */
     public getDefaultExpandState(rec: any) {
         return this._defaultExpandState;
     }
@@ -3528,7 +3527,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * grid.moveColumn(compName, persDetails);
      * ```
-	  * @memberof IgxGridBaseDirective
 	  */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
@@ -4837,7 +4835,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      *      const dataView = this.grid.dataView;
      * ```
-     * @memberof IgxGridComponent
      */
     get dataView(): any[] {
         return this.verticalScrollContainer.igxForOf;
@@ -5186,7 +5183,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * ```typescript
     *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
     * ```
-    * @memberof IgxGridBaseDirective
     */
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
@@ -5220,7 +5216,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * ```typescript
     *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
     * ```
-    * @memberof IgxGridBaseDirective
     */
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
