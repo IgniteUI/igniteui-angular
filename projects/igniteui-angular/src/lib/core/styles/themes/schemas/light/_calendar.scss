@@ -37,13 +37,12 @@
 /// @prop {Map} date-current-bg-hover-color [igx-color: ('secondary', 500)] - The hover background color for the current date.
 /// @prop {Map} date-current-bg-focus-color [igx-color: ('secondary', 500)] - The focus background color for the current date.
 /// @prop {Map} date-hover-background [igx-color: ('grays', 200)] - The hover date background color.
-
+///
 /// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
 ///
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Map} date-disabled-background [igx-color: ('grays', 100)] - The background color for disabled dates.
-///
 ///
 /// @prop {Color} picker-background-color [transparent] - The igx calendar picker background color.
 /// @prop {Map} border-color [igx-color: ('grays', 300)] - The calendar border color.
@@ -192,7 +191,6 @@ $_light-calendar: extend(
 /// @prop {Number} border-radius [0%] - The border radius used for calendar.
 /// @prop {Number} date-border-radius [0%] - The border radius used for calendar dates.
 /// @prop {Number} month-border-radius [0%] - The border radius used for month picker month.
-///
 /// @requires {function} extend
 /// @requires {map} $_light-calendar
 /// @requires {map} $_fluent-shape-calendar
@@ -221,7 +219,6 @@ $_fluent-calendar: extend(
 
 /// Generates a bootstrap calendar schema.
 /// @type {Map}
-///
 /// @prop {Map} year-hover-text-color [igx-color: ('primary', 500)] - The year hover text color.
 /// @prop {Map} date-special-background [igx-color: ('warn'), rgba:.5] - The background color used for special dates.
 ///
@@ -250,7 +247,6 @@ $_fluent-calendar: extend(
 /// @prop {Number} border-radius [4px] - The border radius for calendar.
 /// @prop {Number} date-border-radius [4px] - The border radius for calendar dates.
 /// @prop {Number} month-border-radius [4px] - The border radius month picker month.
-///
 /// @requires {function} extend
 /// @requires {map} $_light-calendar
 $_bootstrap-calendar: extend(

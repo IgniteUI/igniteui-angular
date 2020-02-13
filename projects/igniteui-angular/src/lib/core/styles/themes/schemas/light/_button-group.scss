@@ -152,7 +152,6 @@ $_fluent-button-group: extend(
 /// @prop {map} disabled-background-color [igx-color: ('primary', 500), lighten: 35%] - The background color for a disabled item in the button group.
 /// @prop {map} disabled-text-color [igx-color: ('primary', 500), lighten: 20%]- The text/icon color for a disabled item in the button group.
 /// @prop {map} item-disabled-border [igx-color: ('primary', 500), lighten: 35%] - The border color for a disabled item in the button group.
-
 /// @requires {function} extend
 /// @requires {map} $_light-button-group
 /// @requires {map} $_bootstrap-elevation-button-group
