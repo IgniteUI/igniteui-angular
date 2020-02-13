@@ -254,7 +254,7 @@ $_light-button: extend(
 /// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
 /// @prop {Map} raised-focus-background [igx-color: ('primary', 600)] - The focus background color of a raised button.
 /// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
-
+///
 /// @prop {Map} fab-background [igx-color: ('primary', 500)] - The background color of a floating action button.
 /// @prop {Color} fab-text-color [#fff] - The text color of a floating action button.
 /// @prop {Map} fab-hover-background [igx-color: ('primary', 600)] - The hover background color of a floating action button.
@@ -277,7 +277,6 @@ $_light-button: extend(
 /// @prop {Number} outlined-border-radius [2px] - The border radius fraction used for outlined button.
 /// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
 /// @prop {Number} icon-border-radius [0] - The border radius fraction used for icon button.
-///
 /// @requires {function} extend
 /// @requires {map} $_light-button
 /// @requires {map} $_fluent-shape-button

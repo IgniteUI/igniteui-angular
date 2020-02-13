@@ -8,7 +8,6 @@
 
 /// Generates a light slider schema.
 /// @type {Map}
-///
 /// @property {map} track-color [igx-color: ('secondary', 500)] - The color of the track.
 /// @property {map} track-hover-color [igx-color: ('secondary', 500)] - The color of the track on hover.
 /// @property {map} thumb-color [igx-color: ('secondary', 500)] - The color of the thumb.
@@ -25,7 +24,6 @@
 /// @property {map} tick-label-color-tall [igx-color: ('grays', 900)] - The color of the tall tick label .
 /// @property {map} tick-color [igx-color: ('grays', 500)] - The background-color of the tick.
 /// @property {map} tick-color-tall [igx-color: ('grays', 500)] - The background-color of the tall tick.
-
 /// @see $default-palette
 $_light-slider: extend(
     $_default-shape-slider,
