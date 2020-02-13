@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.0.1
+- **Breaking Changes** 
+    - Remove `$base-color` from igx-typography. The igx-typography class now inherits the parent color.
+
 ## 9.0.0
 
 ### General
