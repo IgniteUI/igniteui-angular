@@ -301,7 +301,6 @@
 /// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
-/// @see $igx-foreground-color
 @function igx-palette(
     $primary,
     $secondary,
@@ -552,7 +551,6 @@
 /// @example scss Set variable values based on $direction
 ///    $left: if-ltr(left, right);
 ///    $right: if-ltr(right, left);
-/// @requires $direction
 @function if-ltr($if, $else: null) {
     $dir: if(global-variable-exists('direction'), $direction, 'ltr');
 
@@ -570,7 +568,6 @@
 /// @example scss Set variable values based on $direction
 ///    $left: if-rtl(left, right);
 ///    $right: if-rtl(right, left);
-/// @requires $direction
 @function if-rtl($if, $else: null) {
     @return if-ltr($else, $if);
 }
