@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
@@ -206,7 +206,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When a modal datepicker is closed via outside click, the focus should remain on the input',
+        it('When a modal datepicker is closed via outside click, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -230,7 +230,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+        it('When datepicker is closed upon selecting a date, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -301,97 +301,97 @@ describe('IgxDatePicker', () => {
     });
 
     it('When datepicker in "dropdown" mode is closed via outside click, the input should not receive focus',
-    fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
-        fixture.detectChanges();
+        fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
+            fixture.detectChanges();
 
-        const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
-        const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-        let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
 
-        expect(overlayToggle.length).toEqual(0);
+            expect(overlayToggle.length).toEqual(0);
 
-        UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
-        flush();
-        fixture.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            flush();
+            fixture.detectChanges();
 
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).not.toBeNull();
-        expect(overlayToggle[0]).not.toBeUndefined();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).not.toBeNull();
+            expect(overlayToggle[0]).not.toBeUndefined();
 
-        const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
-        dummyInput.focus();
-        dummyInput.click();
-        tick();
-        fixture.detectChanges();
+            const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+            dummyInput.focus();
+            dummyInput.click();
+            tick();
+            fixture.detectChanges();
 
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).toEqual(undefined);
-        expect(input).not.toEqual(document.activeElement);
-        expect(dummyInput).toEqual(document.activeElement);
-    }));
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).not.toEqual(document.activeElement);
+            expect(dummyInput).toEqual(document.activeElement);
+        }));
 
     it('When datepicker in "dropdown" mode, should focus input on user interaction with Today btn, Cancel btn, Enter Key, Escape key',
-    fakeAsync(() => {
-        const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
-        fixture.detectChanges();
-        const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
-        const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
-        let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle.length).toEqual(0);
+        fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
+            fixture.detectChanges();
+            const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle.length).toEqual(0);
 
-        UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
-        flush();
-        fixture.detectChanges();
-        const buttons = document.getElementsByClassName('igx-button--flat');
-        expect(buttons.length).toEqual(2);
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            flush();
+            fixture.detectChanges();
+            const buttons = document.getElementsByClassName('igx-button--flat');
+            expect(buttons.length).toEqual(2);
 
-        // Today btn
-        const todayBtn = buttons[1] as HTMLElement;
-        expect(todayBtn.innerText).toBe('Today');
-        todayBtn.click();
-        tick();
-        fixture.detectChanges();
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).toEqual(undefined);
-        expect(input).toEqual(document.activeElement);
+            // Today btn
+            const todayBtn = buttons[1] as HTMLElement;
+            expect(todayBtn.innerText).toBe('Today');
+            todayBtn.click();
+            tick();
+            fixture.detectChanges();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
 
-        // Cancel btn
-        UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
-        flush();
-        fixture.detectChanges();
-        const cancelBtn = buttons[0] as HTMLElement;
-        expect(cancelBtn.innerText).toBe('Cancel');
-        cancelBtn.click();
-        tick();
-        fixture.detectChanges();
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).toEqual(undefined);
-        expect(input).toEqual(document.activeElement);
+            // Cancel btn
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            flush();
+            fixture.detectChanges();
+            const cancelBtn = buttons[0] as HTMLElement;
+            expect(cancelBtn.innerText).toBe('Cancel');
+            cancelBtn.click();
+            tick();
+            fixture.detectChanges();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
 
-        // Enter key
-        UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
-        flush();
-        fixture.detectChanges();
-        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        tick();
-        fixture.detectChanges();
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).toEqual(undefined);
-        expect(input).toEqual(document.activeElement);
+            // Enter key
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            flush();
+            fixture.detectChanges();
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
 
-        // Esc key
-        UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
-        flush();
-        fixture.detectChanges();
-        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-        tick();
-        fixture.detectChanges();
+            // Esc key
+            UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+            flush();
+            fixture.detectChanges();
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
 
-        overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
-        expect(overlayToggle[0]).toEqual(undefined);
-        expect(input).toEqual(document.activeElement);
-    }));
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
+        }));
 
     it('Datepicker week start day (Monday)', () => {
         const fixture = TestBed.createComponent(IgxDatePickerWithWeekStartComponent);
@@ -1260,7 +1260,7 @@ describe('IgxDatePicker', () => {
         }));
     });
 
-    describe('Reactive form', () => {
+    fdescribe('Reactive form', () => {
         let fixture: ComponentFixture<IgxDatePickerReactiveFormComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -1269,6 +1269,15 @@ describe('IgxDatePicker', () => {
             datePicker = fixture.componentInstance.datePicker;
             fixture.detectChanges();
         });
+
+        it('Should properly initialize when used as a form control in reactive form', fakeAsync(() => {
+            expect(datePicker).toBeDefined();
+            expect(datePicker.value).toEqual(new Date(2000, 10, 15));
+
+            const datePickerFormReference = fixture.componentInstance.reactiveForm.controls.datePickerReactive;
+            expect(datePickerFormReference).toBeDefined();
+            expect(datePickerFormReference.status).toEqual('VALID');
+        }));
 
         // Bug #6025 Date picker does not disable in reactive form
         it('Should disable when form is disabled', fakeAsync(() => {
@@ -1282,6 +1291,7 @@ describe('IgxDatePicker', () => {
             expect(datePicker.collapsed).toBeFalsy();
 
             datePicker.closeCalendar();
+            tick();
             fixture.detectChanges();
 
             formGroup.disable();
@@ -1443,11 +1453,10 @@ export class IgxDatePickerOpeningComponent {
 
 @Component({
     template: `
-    <form [formGroup]="reactiveForm">
-    <p>
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
         <igx-date-picker formControlName="datePickerReactive" #datePickerReactive></igx-date-picker>
-    </p>
-</form>
+        <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+    </form>
 `
 })
 class IgxDatePickerReactiveFormComponent {
@@ -1457,7 +1466,7 @@ class IgxDatePickerReactiveFormComponent {
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            datePickerReactive: new FormControl(''),
+            datePickerReactive: [new Date(2000, 10, 15)],
         });
     }
     onSubmitReactive() { }
