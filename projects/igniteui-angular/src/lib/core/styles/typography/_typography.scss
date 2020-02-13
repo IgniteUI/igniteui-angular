@@ -36,7 +36,6 @@
 /// default-type-scale will be used.
 /// @param {String} $font-family ["'Titillium Web', sans-serif"] - The font family to be used across all typographic elements.
 /// @param {Map} $type-scale [$default-type-scale] - A type scale map as produced by igx-type-scale.
-/// @param {String} $base-color [rgba(0, 0, 0, .74)] - The default color used across all typographic elements (Components define their own text colors).
 @mixin igx-typography(
     $font-family: "'Titillium Web', sans-serif",
     $type-scale: $default-type-scale,
