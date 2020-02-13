@@ -86,7 +86,6 @@
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
-
 $light-square-schema: (
     igx-avatar: extend($_light-avatar, $_square-shape-avatar),
     igx-badge: extend($_light-badge, $_square-shape-badge),
