@@ -209,7 +209,6 @@ export class IgxBadgeComponent {
 
 /**
  * @hidden
- * @internal
  */
 @NgModule({
     declarations: [IgxBadgeComponent],
