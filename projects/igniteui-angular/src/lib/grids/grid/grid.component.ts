@@ -314,6 +314,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Gets the hierarchical representation of the group by records.
+     * @example
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
@@ -631,6 +632,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Gets/Sets the template reference of the `IgxGridComponent`'s group area.
+     * @example
      * ```typescript
      * const groupAreaTemplate = this.grid.groupAreaTemplate;
      * this.grid.groupAreaTemplate = myAreaTemplate.
@@ -647,8 +649,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Groups by a new `IgxColumnComponent` based on the provided expression, or modifies an existing one.
+     * @remarks
      * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
      * The onGroupingDone event would get raised only **once** if this method gets called multiple times with the same arguments.
+     * @example
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * this.grid.groupBy([
@@ -672,14 +676,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * Clears grouping for particular column, array of columns or all columns.
+     * @remarks
      * Clears all grouping in the grid, if no parameter is passed.
      * If a parameter is provided, clears grouping for a particular column or an array of columns.
+     * @example
      * ```typescript
      * this.grid.clearGrouping(); //clears all grouping
      * this.grid.clearGrouping("ID"); //ungroups a single column
      * this.grid.clearGrouping(["ID", "Column1", "Column2"]); //ungroups multiple columns
      * ```
-     *
+     *@param name Name of column or array of column names to be ungrouped.
      */
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(name);
@@ -688,6 +695,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Returns if a group is expanded or not.
+     * @param group The group record.
+     * @example
      * ```typescript
      * public groupRow: IGroupByRecord;
      * const expandedGroup = this.grid.isExpandedGroup(this.groupRow);
@@ -700,6 +709,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Toggles the expansion state of a group.
+     * @param groupRow The group record to toggle.
+     * @example
      * ```typescript
      * public groupRow: IGroupByRecord;
      * const toggleExpGroup = this.grid.toggleGroup(this.groupRow);
@@ -712,6 +723,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Expands the specified group and all of its parent groups.
+     * @param groupRow The group record to fully expand.
+     * @example
      * ```typescript
      * public groupRow: IGroupByRecord;
      * this.grid.fullyExpandGroup(this.groupRow);
@@ -732,6 +745,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Toggles the expansion state of all group rows recursively.
+     * @example
      * ```typescript
      * this.grid.toggleAllGroupRows;
      * ```
@@ -744,6 +758,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * Returns if the `IgxGridComponent` has groupable columns.
+     * @example
      * ```typescript
      * const groupableGrid = this.grid.hasGroupableColumns;
      * ```
@@ -762,7 +777,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns if the grid's group by drop area is visible.
+     * Gets if the grid's group by drop area is visible.
+     * @example
      * ```typescript
      * const dropVisible = this.grid.dropAreaVisible;
      * ```
