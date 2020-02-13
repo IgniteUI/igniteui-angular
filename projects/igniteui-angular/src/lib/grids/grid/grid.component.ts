@@ -122,7 +122,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -139,7 +138,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-     * @memberof IgxGridComponent
     */
     @Input()
     public get data(): any[] {
@@ -162,7 +160,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * let filteredData = this.grid.filteredData;
      * this.grid.filteredData = [...];
      * ```
-	 * @memberof IgxGridComponent
      */
     get filteredData() {
         return this._filteredData;
@@ -181,7 +178,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const itemCount = this.grid1.totalItemCount;
      * this.grid1.totalItemCount = 55;
      * ```
-	 * @memberof IgxGridComponent
      */
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
@@ -212,7 +208,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     get groupingExpressions(): IGroupingExpression[] {
@@ -283,7 +278,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     get groupingExpansionState() {
@@ -314,7 +308,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     public groupsExpanded = true;
@@ -324,7 +317,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```typescript
      * let groupRecords = this.grid.groupsRecords;
      * ```
-	 * @memberof IgxGridComponent
      */
     public groupsRecords: IGroupByRecord[] = [];
 
@@ -336,7 +328,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     public get hideGroupedColumns() {
@@ -366,7 +357,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *      <igx-column [groupable]="true" field="ID"></igx-column>
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     set dropAreaMessage(value: string) {
@@ -390,7 +380,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *      <span> Custom drop area! </span>
      * </ng-template>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     public dropAreaTemplate: TemplateRef<any>;
@@ -409,7 +398,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```html
      * <igx-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
@@ -441,7 +429,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```typescript
      * const groupList = this.grid.groupsRowList;
      * ```
-	 * @memberof IgxGridComponent
      */
     public get groupsRowList() {
         const res = new QueryList<any>();
@@ -631,7 +618,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const groupRowTemplate = this.grid.groupRowTemplate;
      * this.grid.groupRowTemplate = myRowTemplate;
      * ```
-	 * @memberof IgxGridComponent
      */
     get groupRowTemplate(): TemplateRef<any> {
         return this._groupRowTemplate;
@@ -649,7 +635,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * const groupAreaTemplate = this.grid.groupAreaTemplate;
      * this.grid.groupAreaTemplate = myAreaTemplate.
      * ```
-	 * @memberof IgxGridComponent
      */
     get groupAreaTemplate(): TemplateRef<any> {
         return this._groupAreaTemplate;
@@ -672,7 +657,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
         ]);
      * ```
-	 * @memberof IgxGridComponent
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         if (this.checkIfNoColumnField(expression)) {
@@ -708,7 +692,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * public groupRow: IGroupByRecord;
      * const expandedGroup = this.grid.isExpandedGroup(this.groupRow);
      * ```
-	 * @memberof IgxGridComponent
      */
     public isExpandedGroup(group: IGroupByRecord): boolean {
         const state: IGroupByExpandState = this._getStateForGroupRow(group);
@@ -721,7 +704,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * public groupRow: IGroupByRecord;
      * const toggleExpGroup = this.grid.toggleGroup(this.groupRow);
      * ```
-	 * @memberof IgxGridComponent
      */
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
@@ -734,7 +716,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * public groupRow: IGroupByRecord;
      * this.grid.fullyExpandGroup(this.groupRow);
      * ```
-     * @memberof IgxGridComponent
      */
     public fullyExpandGroup(groupRow: IGroupByRecord) {
         this._fullyExpandGroup(groupRow);
@@ -754,7 +735,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```typescript
      * this.grid.toggleAllGroupRows;
      * ```
-	 * @memberof IgxGridComponent
      */
     public toggleAllGroupRows() {
         this.groupingExpansionState = [];
@@ -767,7 +747,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```typescript
      * const groupableGrid = this.grid.hasGroupableColumns;
      * ```
-	 * @memberof IgxGridComponent
      */
     get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
@@ -787,7 +766,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```typescript
      * const dropVisible = this.grid.dropAreaVisible;
      * ```
-	 * @memberof IgxGridComponent
      */
     public get dropAreaVisible(): boolean {
         return (this.draggedColumn && this.draggedColumn.groupable) ||
