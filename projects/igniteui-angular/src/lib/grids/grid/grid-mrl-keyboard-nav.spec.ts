@@ -23,22 +23,22 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
     let zone: TestNgZone;
 
-    describe('Without scrolling', () => {
-        configureTestSuite();
-        beforeAll(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    ColumnLayoutTestComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
+    configureTestSuite();
+    beforeAll(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                ColumnLayoutTestComponent
+            ],
+            imports: [NoopAnimationsModule, IgxGridModule],
+            providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+        }).compileComponents();
+    }));
 
-        beforeEach(() => {
-            fix = TestBed.createComponent(ColumnLayoutTestComponent);
-        });
+    beforeEach(() => {
+        fix = TestBed.createComponent(ColumnLayoutTestComponent);
+    });
 
+    describe('Navigation without scrolling', () => {
         describe('General', () => {
             it('should navigate through a single layout with right and left arrow keys', () => {
                 fix.detectChanges();
@@ -1750,25 +1750,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         });
     });
 
-
     // Note: Some tests execute await wait() and etc two times, because the grid scrolls two times.
     // This means that we need to wait onChunkLoad event from the igxForOf two times.
     describe('Navigation with scrolling', () => {
-        configureTestSuite();
-        beforeAll(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    ColumnLayoutTestComponent
-                ],
-                imports: [NoopAnimationsModule, IgxGridModule],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
-        }));
-
-        beforeEach(() => {
-            fix = TestBed.createComponent(ColumnLayoutTestComponent);
-        });
-
         describe('General', () => {
             it('should allow navigating down with scrolling', async() => {
                 fix.componentInstance.colGroups = [{
@@ -3073,7 +3057,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     });
 });
 
-describe('Method navigateTo', () => {
+describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
     configureTestSuite();
