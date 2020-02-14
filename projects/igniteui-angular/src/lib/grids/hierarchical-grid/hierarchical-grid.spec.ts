@@ -1080,8 +1080,8 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    // Logged issue #6731
     xit('should allow changing row islands runtime in root grid.', () => {
+        pending('Related to issue #6731');
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
