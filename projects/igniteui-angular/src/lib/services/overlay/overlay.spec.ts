@@ -1678,8 +1678,8 @@ describe('igxOverlay', () => {
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1].lastElementChild; // wrapped in NG-COMPONENT
             expect(wrapperContent.children.length).toEqual(1);
-            expect(wrapperContent.lastElementChild.getAttribute('style'))
-                .toEqual('width:100px; height: 100px; background-color: red');
+            expect(wrapperContent.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+                .toEqual('width:100px; height:100px; background-color:red');
         }));
 
         it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
@@ -1702,8 +1702,9 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapped in NG-COMPONENT
-            const expectedStyle = 'width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedStyle = 'width:100px; height:100px; background-color:red';
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+            .toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth;
@@ -2131,8 +2132,8 @@ describe('igxOverlay', () => {
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1].lastElementChild; // wrapped in NG-COMPONENT
             expect(wrapperContent.children.length).toEqual(1);
-            expect(wrapperContent.lastElementChild.getAttribute('style'))
-                .toEqual('width:100px; height: 100px; background-color: red');
+            expect(wrapperContent.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+                .toEqual('width:100px; height:100px; background-color:red');
         }));
 
         it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + RIGHT.', fakeAsync(() => {
@@ -2910,8 +2911,9 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedStyle = 'width:100px; height:100px; background-color:red';
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+            .toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
@@ -2960,8 +2962,9 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedStyle = 'width:100px; height:100px; background-color:red';
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+            .toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedRight = buttonLeft; // To the left of the button
@@ -3009,8 +3012,9 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const contentElement = wrappers[wrappers.length - 1] as HTMLElement; // wrapper in NG-COMPONENT
-            const expectedStyle = 'width:100px; height: 100px; background-color: red';
-            expect(contentElement.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedStyle = 'width:100px; height:100px; background-color:red';
+            expect(contentElement.lastElementChild.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+            .toEqual(expectedStyle);
             const expectedRight = buttonElement.offsetLeft;
             const expectedTop = buttonElement.offsetTop + buttonElement.clientHeight;
             const contentElementRect = contentElement.getBoundingClientRect();
@@ -3058,8 +3062,9 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const expectedStyle = 'width:100px; height:100px; background-color:red';
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style').replace(/:\s/g, ':').replace(/red;/, 'red'))
+            .toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
