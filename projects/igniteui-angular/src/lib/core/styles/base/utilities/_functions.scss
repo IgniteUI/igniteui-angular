@@ -315,10 +315,6 @@
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
     $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);
 
-    @if global-variable-exists('igx-foreground-color') and type-of($igx-foreground-color) == 'color' {
-        $grays: $igx-foreground-color;
-    }
-
     $primary-palette: generate-palette($primary, $saturations);
     $secondary-palette: generate-palette($secondary, $saturations);
     $grayscale-palette: grayscale-palette($grays, $shades);
