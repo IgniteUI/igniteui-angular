@@ -254,7 +254,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
 /**
  * @hidden
- * @internal
  */
 @NgModule({
     declarations: [IgxButtonDirective],
