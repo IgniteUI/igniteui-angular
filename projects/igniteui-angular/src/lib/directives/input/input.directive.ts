@@ -161,7 +161,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.inputGroup.isFocused = true;
     }
     /**
-     *@hidden
+     * @param event The event to invoke the handler
+     * 
+     * @hidden
+     * @internal
      */
     @HostListener('blur', ['$event'])
     public onBlur(event) {
@@ -284,6 +287,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         return this.nativeElement.placeholder;
     }
 
+    /**
+     * @returns An indicator of whether the input has validator attributes or not
+     * 
+     * @hidden
+     * @internal
+     */
     private _hasValidators(): boolean {
         for (const nativeValidationAttribute of nativeValidationAttributes) {
             if (this.nativeElement.hasAttribute(nativeValidationAttribute)) {
@@ -336,6 +345,12 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this._valid = value;
     }
 
+    /**
+     * A function to assign a validity property of an input.
+     * 
+     * @hidden
+     * @internal
+     */
     private checkValidity() {
         if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
