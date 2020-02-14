@@ -370,7 +370,6 @@ export class IgxSwitchRequiredDirective extends CheckboxRequiredValidator { }
 
 /**
  * @hidden
- * @internal
  */
 @NgModule({
     declarations: [IgxSwitchComponent, IgxSwitchRequiredDirective],
