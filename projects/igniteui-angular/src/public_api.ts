@@ -101,7 +101,9 @@ export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
+export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export { InteractionMode } from './lib/core/enums';
 
