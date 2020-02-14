@@ -105,6 +105,22 @@ $_bootstrap-card: extend(
         outline-color: (
             igx-color: ('grays', 300)
         ),
+
+        header-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        subtitle-text-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        content-text-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        actions-text-color: (
+            igx-color: ('grays', 900)
+        ),
     )
 );
 

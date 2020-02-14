@@ -5,7 +5,7 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
-import { IgxBadgeComponent, IgxBadgeModule } from './badge.component';
+import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -74,7 +74,7 @@ describe('Badge', () => {
         const badge = fixture.componentInstance.badge;
 
         expect(badge.icon === 'person').toBeTruthy();
-        expect(badge.type === 'info').toBeTruthy();
+        expect(badge.type === IgxBadgeType.INFO).toBeTruthy();
         expect(badge.value === '').toBeTruthy();
 
         expect(fixture.debugElement.query(By.css('.igx-badge__circle'))).toBeTruthy();
