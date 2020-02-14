@@ -27,7 +27,7 @@ export enum IgxInputState {
  * The `igxInput` directive creates single- or multiline text elements, covering common scenarios when dealing with form inputs.
  *
  * @igxModule IgxInputGroupModule
- * 
+ *
  * @igxParent Data Entry & Display
  *
  * @igxTheme igx-input-group-theme
@@ -195,11 +195,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         this.inputGroup.isFocused = true;
     }
     /**
-<<<<<<< HEAD
      * @param event The event to invoke the handler
      *
-=======
->>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
@@ -333,11 +330,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-<<<<<<< HEAD
      * @returns An indicator of whether the input has validator attributes or not
      *
-=======
->>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
@@ -399,11 +393,8 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     /**
-<<<<<<< HEAD
      * A function to assign a validity property of an input.
      *
-=======
->>>>>>> c039e7bdf... docs(igxInput): adds API docs for the igxInput directive
      * @hidden
      * @internal
      */
