@@ -196,7 +196,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
     /**
      * @param event The event to invoke the handler
-     * 
+     *
      * @hidden
      * @internal
      */
@@ -331,7 +331,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * @returns An indicator of whether the input has validator attributes or not
-     * 
+     *
      * @hidden
      * @internal
      */
@@ -394,7 +394,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
     /**
      * A function to assign a validity property of an input.
-     * 
+     *
      * @hidden
      * @internal
      */
