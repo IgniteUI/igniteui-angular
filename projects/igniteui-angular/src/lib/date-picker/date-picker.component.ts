@@ -427,7 +427,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Gets/Sets the value of `id` attribute. 
+     *Gets/Sets the value of `id` attribute.
      *@remarks If not provided it will be automatically generated.
      *@example
      *```html
