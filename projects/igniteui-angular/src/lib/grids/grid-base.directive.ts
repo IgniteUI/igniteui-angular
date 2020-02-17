@@ -103,7 +103,14 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import {
+    GridKeydownTargetType,
+    GridSelectionMode,
+    GridSummaryPosition,
+    GridSummaryCalculationMode,
+    FilterMode,
+    ColumnPinningPosition
+} from './common/enums';
 import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
@@ -125,7 +132,7 @@ import {
     IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridType } from './common/grid.interface';
+import { GridType, IPinningConfig } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -899,6 +906,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public columnHidingTitle = '';
+
+    /**
+     * Returns if the built-in column pinning UI should be shown in the toolbar.
+     * ```typescript
+     *  let colPinning = this.grid.columnPinning;
+     * ```
+     */
+    @Input()
+    public pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     /**
      * Returns if the built-in column pinning UI should be shown in the toolbar.

@@ -12,6 +12,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { IGridCellEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
+import { ColumnPinningPosition } from '../common/enums';
+import { IPinningConfig } from '../common/grid.interface';
 
 describe('IgxGrid - Column Pinning #grid ', () => {
     configureTestSuite();
@@ -412,6 +414,53 @@ describe('IgxGrid - Column Pinning #grid ', () => {
     }));
 });
 
+describe('IgxGrid - Column Pinning to End', () => {
+    configureTestSuite();
+
+    const COLUMN_HEADER_CLASS = '.igx-grid__th';
+
+    beforeAll(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                GridRightPinningComponent
+            ],
+            imports: [NoopAnimationsModule, IgxGridModule]
+        }).compileComponents();
+    }));
+
+    it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridRightPinningComponent);
+
+        tick();
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        const firstPinnedIndex = grid.unpinnedColumns.length + 1;
+        const secondPinnedIndex = grid.unpinnedColumns.length + 2;
+        // verify pinned/unpinned collections
+        expect(grid.pinnedColumns.length).toEqual(2);
+        expect(grid.unpinnedColumns.length).toEqual(9);
+
+        // verify DOM
+        const firstIndexCell = grid.getCellByColumn(0, 'CompanyName');
+        expect(firstIndexCell.visibleColumnIndex).toEqual(firstPinnedIndex);
+        // expect(firstIndexCell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+
+        const lastIndexCell = grid.getCellByColumn(0, 'ContactName');
+        expect(lastIndexCell.visibleColumnIndex).toEqual(secondPinnedIndex);
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(headers[firstPinnedIndex].context.column.field).toEqual('CompanyName');
+
+        expect(headers[secondPinnedIndex].context.column.field).toEqual('ContactName');
+        // expect(headers[secondPinnedIndex].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
+
+        // verify container widths
+        expect(grid.pinnedWidth).toEqual(400);
+        expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+    }));
+});
+
 /* tslint:disable */
 const companyData = [
     { "ID": "ALFKI", "CompanyName": "Alfreds Futterkiste", "ContactName": "Maria Anders", "ContactTitle": "Sales Representative", "Address": "Obere Str. 57", "City": "Berlin", "Region": null, "PostalCode": "12209", "Country": "Germany", "Phone": "030-0074321", "Fax": "030-0076545" },
@@ -744,4 +793,37 @@ export class GridInitialPinningComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='piningConfig'
+            [width]='"800px"'
+            [height]='"300px"'
+            [data]="data"
+            (onColumnInit)="initColumns($event)"
+            (onSelection)="cellSelected($event)"
+            [autoGenerate]="true">
+        </igx-grid>
+    `
+})
+export class GridRightPinningComponent {
+    public selectedCell;
+
+    public data = companyData;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public initColumns(column: IgxColumnComponent) {
+        if (column.field === 'CompanyName' || column.field === 'ContactName') {
+            column.pinned = true;
+        }
+        column.width = '200px';
+    }
+
+    public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
 }
