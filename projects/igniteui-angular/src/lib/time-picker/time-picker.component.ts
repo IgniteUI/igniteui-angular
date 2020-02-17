@@ -803,9 +803,6 @@ export class IgxTimePickerComponent implements
         if (this.toggleRef) {
             this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
 
-                if (this._input) {
-                    this._input.nativeElement.focus();
-                }
 
                 if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
@@ -826,6 +823,15 @@ export class IgxTimePickerComponent implements
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
                 this.onClosing.emit(event);
+                // If canceled in a user onClosing handler
+                if (event.cancel) {
+                    return;
+                }
+                // Do not focus the input if clicking outside in dropdown mode
+                const input = this.getEditElement();
+                if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
+                    input.focus();
+                }
             });
         }
     }
@@ -1147,9 +1153,9 @@ export class IgxTimePickerComponent implements
             return false;
         } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     private _isEntryValid(val: string): boolean {
@@ -1288,6 +1294,10 @@ export class IgxTimePickerComponent implements
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
 
+        if (this.displayValue === this.parseMask(false)) {
+            return;
+        }
+
         if (this._isValueValid(newVal)) {
             if (!this.value || oldValue.getTime() !== newVal.getTime()) {
                 this.value = newVal;
@@ -1325,7 +1335,6 @@ export class IgxTimePickerComponent implements
         // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
         // against the real value when initializing the component and value is bound via ngModel
         this._dateFromModel = value;
-
         this.value = value;
 
         if (this.mode === InteractionMode.DropDown) {
@@ -1558,7 +1567,7 @@ export class IgxTimePickerComponent implements
      */
     public cancelButtonClick(): void {
         if (this.mode === InteractionMode.DropDown) {
-            this.displayValue = this._formatTime(this.value, this.format);
+            this.displayValue = this.value ? this._formatTime(this.value, this.format) : this.parseMask(false);
         }
 
         this.close();
@@ -1789,8 +1798,8 @@ export class IgxTimePickerComponent implements
         }
 
         // minor hack for preventing cursor jumping in IE
-        this._displayValue = this.inputFormat.transform(displayVal);
-        this.input.nativeElement.value = this._displayValue;
+        this.displayValue = this.inputFormat.transform(displayVal);
+        this.input.nativeElement.value = this.displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {

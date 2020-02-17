@@ -144,7 +144,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
@@ -170,24 +170,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     set filteredData(value) {
         this._filteredData = value;
-    }
-
-    /**
-     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
-     * ```typescript
-     * const gridVirtState = this.grid1.virtualizationState;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    get virtualizationState() {
-        return this.verticalScrollContainer.state;
-    }
-
-    /**
-     * @hidden
-     */
-    set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
     }
 
     /**
@@ -471,27 +453,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: false })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
-    /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
-
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
@@ -694,7 +655,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     private _setGroupColsVisibility(value) {
-        if (this.columnList && !this.hasColumnLayouts) {
+        if (this.columnList.length > 0 && !this.hasColumnLayouts) {
             this.groupingExpressions.forEach((expr) => {
                 const col = this.getColumnByName(expr.fieldName);
                 col.hidden = value;
@@ -955,7 +916,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public ngDoCheck(): void {
         if (this.groupingDiffer && this.columnList && !this.hasColumnLayouts) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
-            if (changes && this.columnList) {
+            if (changes && this.columnList.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.getColumnByName(rec.item.fieldName);
                     col.hidden = true;

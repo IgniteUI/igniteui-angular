@@ -32,6 +32,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
     @Output()
     public onCachedViewLoaded = new EventEmitter<ICachedViewLoadedEventArgs>();
 
+    @Output()
+    public onBeforeViewDetach = new EventEmitter<IViewChangeEventArgs>();
+
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
 
@@ -65,6 +68,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
     private _recreateView() {
         // detach old and create new
         if (this._viewRef) {
+            this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
             this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
         }
         if (this.igxTemplateOutlet) {
@@ -91,15 +95,19 @@ export class IgxTemplateOutletDirective implements OnChanges {
         if (view !== this._viewRef) {
             if (owner._viewContainerRef.indexOf(view) !== -1) {
                 // detach in case view it is attached somewhere else at the moment.
+                this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
                 owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
             }
             if (this._viewRef && this._viewContainerRef.indexOf(this._viewRef) !== -1) {
+                this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
                 this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
             }
             this._viewRef = view;
             this._viewContainerRef.insert(view, 0);
             this._updateExistingContext(this.igxTemplateOutletContext);
             this.onViewMoved.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
+        } else {
+            this._updateExistingContext(this.igxTemplateOutletContext);
         }
     }
     private _useCachedView() {
@@ -111,6 +119,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         // if view exists, but template has been changed and there is a view in the cache with the related template
         // then detach old view and insert the stored one with the matching template
         // after that update its context.
+        this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
         this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
         this._viewRef = cachedView;
         const oldContext = this._cloneContext(cachedView.context);

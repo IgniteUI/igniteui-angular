@@ -21,6 +21,8 @@ import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -76,12 +78,12 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row only should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row only should have been exported!');
 
             options.ignoreFiltering = true;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All 10 rows should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All 10 rows should have been exported!');
         });
 
         it('should honor filter criteria changes.', async () => {
@@ -92,14 +94,14 @@ describe('Excel Exporter', () => {
             options.ignoreFiltering = false;
 
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridDataRecord5, 'One row should have been exported!');
 
             grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
         });
 
         it('should honor \'ignoreColumnsVisibility\' option.', async () => {
@@ -115,12 +117,12 @@ describe('Excel Exporter', () => {
 
             expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
             options.ignoreColumnsVisibility = true;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All three columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All three columns should have been exported!');
         });
 
         it('should honor columns visibility changes.', async () => {
@@ -134,28 +136,28 @@ describe('Excel Exporter', () => {
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columns[0].hidden = true;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
             grid.columns[0].hidden = false;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columns[0].hidden = undefined;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
         });
 
         it('should honor columns declaration order.', async () => {
@@ -166,7 +168,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             const wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
+            await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitleID);
         });
 
         it('should honor \'ignorePinning\' option.', async () => {
@@ -179,13 +181,13 @@ describe('Excel Exporter', () => {
 
             let wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
-            // wrapper.verifyTemplateFilesContent();
-            wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
+            // await wrapper.verifyTemplateFilesContent();
+            await wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
             options.ignorePinning = true;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns should have been exported!');
         });
 
         it('should honor pinned state changes.', async () => {
@@ -194,12 +196,22 @@ describe('Excel Exporter', () => {
             const grid = result.grid;
 
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
             grid.columns[1].pinned = false;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
+        });
+
+        it('should honor all pinned columns.', async() => {
+            const result = await TestMethods.createGridAndPinColumn(2, 0);
+            const fix = result.fixture;
+            const grid = result.grid;
+
+            const wrapper = await getExportedData(grid, options);
+            wrapper.verifyStructure();
+            await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
         });
 
         it('should honor applied sorting.', async () => {
@@ -212,7 +224,7 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             const wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
+            await wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
 
             // XXX : ???? What's the point of this?
             // grid.clearSort();
@@ -229,20 +241,21 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             let wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
 
             grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             wrapper = await getExportedData(grid, options);
-            wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
+            await wrapper.verifyDataFilesContent(
+                actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             // wrapper = await getExportedData(grid, options);
-            // wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false), 'Unsorted data should have been exported.');
+            // await wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(false), 'Unsorted data should have been exported.');
         });
 
         it('should export all columns with the width specified in options.', async () => {
@@ -323,7 +336,7 @@ describe('Excel Exporter', () => {
             expect(cols[0].index).toBe(0);
             expect(cols[1].header).toBe('JobTitle');
             expect(cols[1].index).toBe(1);
-            wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
+            await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
         });
 
         it('should not export columns when \'onColumnExport\' is canceled.', async () => {
@@ -340,7 +353,7 @@ describe('Excel Exporter', () => {
             const wrapper = await getExportedData(grid, options);
             expect(wrapper.hasValues).toBe(false);
             wrapper.verifyStructure();
-            wrapper.verifyTemplateFilesContent();
+            await wrapper.verifyTemplateFilesContent();
         });
 
         it('should fire \'onRowExport\' for each grid row.', async () => {
@@ -378,7 +391,7 @@ describe('Excel Exporter', () => {
             const wrapper = await getExportedData(grid, options);
             expect(wrapper.hasValues).toBe(false);
             wrapper.verifyStructure();
-            wrapper.verifyTemplateFilesContent();
+            await wrapper.verifyTemplateFilesContent();
         });
 
         it('shouldn\'t affect grid sort expressions', async () => {
@@ -452,6 +465,41 @@ describe('Excel Exporter', () => {
                 }
             });
             await exportAndVerify(grid, options, actualData.simpleGridData);
+        });
+
+        it('Should honor Advanced filters when exporting', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'r',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                searchVal: 5,
+                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            });
+
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            grid.cdr.detectChanges();
+            await wait();
+            expect(grid.filteredData.length).toBe(4);
+
+            // Export and verify
+            await exportAndVerify(grid, options, actualData.gridWithAdvancedFilters);
         });
     });
 
@@ -588,6 +636,30 @@ describe('Excel Exporter', () => {
             });
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
+        });
+
+        it('Should honor Advanced filters when exporting', async () => {
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Age',
+                searchVal: 40,
+                condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+
+            treeGrid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            treeGrid.cdr.detectChanges();
+            await wait();
+            expect(treeGrid.filteredData.length).toBe(5);
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridWithAdvancedFilters);
         });
     });
 

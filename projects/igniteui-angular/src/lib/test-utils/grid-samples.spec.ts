@@ -1,3 +1,4 @@
+import { FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand } from 'igniteui-angular';
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
@@ -1177,7 +1178,7 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
-        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ID'" [header]="'HeaderID'" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
         <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
@@ -1421,6 +1422,22 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+        <ng-template igxRowEdit >
+        </ng-template>
+    </igx-grid>
+    `
+})
+export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
     [paging]="paging" [perPage]="7">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
@@ -1543,5 +1560,64 @@ export class GridWithUndefinedDataComponent implements OnInit  {
         setTimeout(() => {
            this.data = SampleTestData.foodProductDataExtended();
         }, 300);
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" [allowFiltering]='true' [(filteringExpressionsTree)]="filterTree">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
+        </igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringBindingComponent extends BasicGridComponent implements OnInit {
+    public resizable = false;
+    public filterable = true;
+    filterTree: FilteringExpressionsTree;
+
+    public data = SampleTestData.excelFilteringData();
+
+    public ngOnInit(): void {
+        this.filterTree = new FilteringExpressionsTree(FilteringLogic.And);
+        this.filterTree.filteringOperands = [
+          {
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            fieldName: 'Downloads',
+            searchVal: 200
+          }
+        ];
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true"
+        [(advancedFilteringExpressionsTree)]="filterTree" >
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
+        </igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent implements OnInit {
+    public resizable = false;
+    public filterable = true;
+    filterTree: FilteringExpressionsTree;
+
+    public data = SampleTestData.excelFilteringData();
+
+    public ngOnInit(): void {
+        this.filterTree = new FilteringExpressionsTree(FilteringLogic.And);
+        this.filterTree.filteringOperands = [
+          {
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            fieldName: 'Downloads',
+            searchVal: 200
+          }
+        ];
     }
 }

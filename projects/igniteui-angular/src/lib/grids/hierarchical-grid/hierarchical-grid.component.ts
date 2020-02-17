@@ -411,6 +411,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.rowSelectorsTemplates = this.parentIsland ?
             this.parentIsland.rowSelectorsTemplates :
             this.rowSelectorsTemplates;
+        this.dragIndicatorIconTemplate = this.parentIsland ?
+            this.parentIsland.dragIndicatorIconTemplate :
+            this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
@@ -441,13 +444,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     public get outletDirective() {
         return this.rootGrid._outletDirective;
-    }
-
-    /**
-     * @hidden
-     */
-    public get parentRowOutletDirective() {
-        return this === this.rootGrid ? null : this.rootGrid.rowEditingOutletDirective;
     }
 
     /**

@@ -18,6 +18,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
+import { DataUtil } from './../../../data-operations/data-util';
 
 /**
  *@hidden
@@ -55,6 +56,7 @@ class ExpressionOperandItem extends ExpressionItem {
     inEditMode: boolean;
     inAddMode: boolean;
     hovered: boolean;
+    columnHeader: string;
 }
 
 /**
@@ -208,12 +210,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
-        if (this.addRootAndGroupButton) {
-            this.addRootAndGroupButton.nativeElement.focus();
-        } else if (this.addConditionButton) {
-            this.addConditionButton.nativeElement.focus();
-        }
-
         this._overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
@@ -307,7 +303,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.editedExpression) {
             this.editedExpression.expression.fieldName = this.selectedColumn.field;
             this.editedExpression.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
-            this.editedExpression.expression.searchVal = this.searchValue;
+            this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedColumn.dataType, this.searchValue);
+            this.editedExpression.columnHeader = this.selectedColumn.header;
 
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
@@ -391,6 +388,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                         ignoreCase: filteringExpr.ignoreCase
                     };
                     const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
+                    const column = this.grid.getColumnByName(filteringExpr.fieldName);
+                    operandItem.columnHeader = column.header;
                     groupItem.children.push(operandItem);
                 }
             }
@@ -788,6 +787,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.grid.advancedFilteringExpressionsTree) {
             this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
             this.currentGroup = this.rootGroup;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public setAddButtonFocus() {
+        if (this.addRootAndGroupButton) {
+            this.addRootAndGroupButton.nativeElement.focus();
+        } else if (this.addConditionButton) {
+            this.addConditionButton.nativeElement.focus();
         }
     }
 

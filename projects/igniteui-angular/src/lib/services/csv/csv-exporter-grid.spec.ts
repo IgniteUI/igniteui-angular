@@ -15,9 +15,11 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('CSV Grid Exporter', () => {
     configureTestSuite();
@@ -336,6 +338,37 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
     });
 
+    it('Should honor the Advanced filters when exporting', async() => {
+        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands.push({
+            fieldName: 'Name',
+            searchVal: 'a',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            ignoreCase: true
+        });
+        tree.filteringOperands.push({
+            fieldName: 'Name',
+            searchVal: 'r',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            ignoreCase: true
+        });
+        tree.filteringOperands.push({
+            fieldName: 'ID',
+            searchVal: 5,
+            condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+        });
+
+        grid.advancedFilteringExpressionsTree = tree;
+        fix.detectChanges();
+
+        expect(grid.filteredData.length).toBe(4);
+        const wrapper = await getExportedData(grid, options);
+        wrapper.verifyData(wrapper.gridWithAdvancedFilters, 'Should export only filtered data.');
+    });
 
     describe('', () => {
         let fix;
@@ -440,6 +473,29 @@ describe('CSV Grid Exporter', () => {
             });
             wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
+        });
+
+        it('Should honor the Advanced filters when exporting', async() => {
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'r',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            treeGrid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            await wait();
+            expect(treeGrid.filteredData.length).toBe(5);
+
+            const wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridWithAdvancedFilters, 'Should export only filtered data!');
         });
     });
 
