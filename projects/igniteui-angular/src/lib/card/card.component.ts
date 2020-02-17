@@ -358,7 +358,9 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     }
 }
 
-/** @hidden @internal */
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [
         IgxCardComponent,
