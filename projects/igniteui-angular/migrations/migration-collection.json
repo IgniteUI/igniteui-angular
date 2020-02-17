@@ -65,6 +65,11 @@
             "version": "9.0.0",
             "description": "Updates Ignite UI for Angular from v8.2.x to v9.0.0",
             "factory": "./update-9_0_0"
+        },
+        "migration-14": {
+            "version": "9.0.1",
+            "description": "Updates Ignite UI for Angular from v9.0.0 to v9.0.1",
+            "factory": "./update-9_0_1"
         }
     }
 }
