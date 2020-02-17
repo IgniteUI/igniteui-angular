@@ -366,11 +366,12 @@ describe('IgxAutocomplete', () => {
             const verifyDropdownItems = function() {
                 expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
                 for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
-                    expect(dropdownListScrollElement.children[itemIndex].nativeElement.textContent.trim()).
+                    const itemElement = dropdownListScrollElement.children[itemIndex].nativeElement;
+                    expect(itemElement.textContent.trim()).
                     toEqual(filteredTowns[itemIndex]);
                     const isFocused = itemIndex === 0 ? true : false;
                     const hasFocusedClass =
-                    dropdownListScrollElement.children[itemIndex].nativeElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
+                    itemElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
                     isFocused ? expect(hasFocusedClass).toBeTruthy() :
                     expect(hasFocusedClass).toBeFalsy();
                     expect(dropDown.items[itemIndex].focused).toEqual(isFocused);
