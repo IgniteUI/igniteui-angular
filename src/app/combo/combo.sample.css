@@ -54,7 +54,7 @@
     width: 100%;
 }
 
-.state-card--simple>* {
+.state-card--simple > * {
     flex: 1 1 auto;
 }
 
@@ -81,7 +81,7 @@
     margin-bottom: 24px;
 }
 
-.input-container+.input-container {
+.input-container + .input-container {
     margin-left: 24px;
 }
 
@@ -92,7 +92,8 @@
 .custom-combo-header,
 .custom-combo-footer {
     padding: 4px 8px;
-    background: #444;
+    background: rgba(180, 180, 180, .12);
+    color: #09f;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    font-weight: 900;
 }

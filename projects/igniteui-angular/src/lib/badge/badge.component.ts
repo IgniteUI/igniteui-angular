@@ -4,36 +4,37 @@ import { IgxIconModule } from '../icon/index';
 
 let NEXT_ID = 0;
 
-export enum Type {
-    DEFAULT = 'default',
+/**
+ * Determines the igxBadge type
+ */
+export enum IgxBadgeType {
+    PRIMARY = 'primary',
     INFO = 'info',
     SUCCESS = 'success',
     WARNING = 'warning',
     ERROR = 'error'
 }
 /**
- * **Ignite UI for Angular Badge** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge.html)
+ * Badge provides visual notifications used to decorate avatars, menus, etc.
  *
+ * @igxModule IgxBadgeModule
+ *
+ * @igxTheme igx-badge-theme
+ *
+ * @igxKeywords badge, icon, notification
+ *
+ * @igxGroup Data Entry & Display
+ *
+ * @remarks
  * The Ignite UI Badge is used to decorate avatars, navigation menus, or other components in the
  * application when visual notification is needed. They are usually designed as icons with a predefined
  * style to communicate information, success, warnings, or errors.
  *
- * Example:
+ * @example
  * ```html
- * <igx-avatar icon="person" roundShape="true" size="small">
- *   <igx-badge icon="check" type="success" class="badge-style">
- *   </igx-badge>
+ * <igx-avatar>
+ *   <igx-badge icon="check" type="success"></igx-badge>
  * </igx-avatar>
- * ```
- * The `badge-style` class is used to position the badge:
- * ```css
- * .badge-style {
- *   position: absolute;
- *   bottom: -6px;
- *   right:-50px;
- * }
- * ```
  */
 @Component({
     selector: 'igx-badge',
@@ -42,9 +43,14 @@ export enum Type {
 export class IgxBadgeComponent {
 
     /**
-    * An @Input property that sets the value of the `id` attribute.
+    * Sets/gets the `id` of the badge.
+    *
+    * @remarks
+    * If not set, the `id` will have value `"igx-badge-0"`.
+    *
+    * @example
     * ```html
-    *<igx-badge id="igx-badge-2" icon="check" type="success" class="badge-style"></igx-badge>
+    * <igx-badge id="igx-badge-2"></igx-badge>
     * ```
     */
     @HostBinding('attr.id')
@@ -52,81 +58,101 @@ export class IgxBadgeComponent {
     public id = `igx-badge-${NEXT_ID++}`;
 
     /**
-    * An @Input property controlling the type of the badge.
-    * Allowed values are `default`, `info`, `success`, `warning`, `error`.
+    * Sets/gets the type of the badge.
+    *
+    * @remarks
+    * Allowed values are `primary`, `info`, `success`, `warning`, `error`.
     * Providing an invalid value won't display a badge.
+    *
+    * @example
     * ```html
-    *<igx-badge type="success" icon="check" class="badge-style"></igx-badge>
+    * <igx-badge type="success"></igx-badge>
     * ```
     */
     @Input()
-    public type: string | Type = 'default';
+    public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
 
     /**
-    * An @Input property that sets the value to be displayed inside the badge.
+    * Sets/gets the value to be displayed inside the badge.
+    *
+    * @remarks
     * If an `icon` property is already set the `icon` will be displayed.
-    * If neither a `value` nor an `icon` is set the contentent of the badge will be empty.
+    * If neither a `value` nor an `icon` is set the content of the badge will be empty.
+    *
+    * @example
     * ```html
-    *<igx-badge value="11" type="success" class="badge-style"></igx-badge>
+    * <igx-badge value="11"></igx-badge>
     * ```
     */
     @Input()
     public value = '';
 
     /**
-     * Set an icon for the badge from the material icons set.
+     * Sets/gets an icon for the badge from the material icons set.
+     *
+     * @remarks
      * Has priority over the `value` property.
      * If neither a `value` nor an `icon` is set the content of the badge will be empty.
      * Providing an invalid value won't display anything.
+     *
+     * @example
      * ```html
-     *<igx-badge icon="check" type="success" class="badge-style" value="11"></igx-badge>
+     * <igx-badge icon="check"></igx-badge>
      * ```
      */
     @Input()
     public icon: string;
 
     /**
-     * This allows you to set value to role attribute.
-     *```html
-     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *public badge: IgxBadgeComponent;
-     * //...
-     *badge.label = "badge-status";
+     * Sets/gets the role attribute value.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     * public badge: IgxBadgeComponent;
+     *
+     * badge.role = 'status';
      * ```
      */
     @HostBinding('attr.role')
     public role = 'status';
 
     /**
-     * This allows you to disable igx-badge class. The default it's applied.
-     *```html
-     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *public badge: IgxBadgeComponent;
-     * //...
-     *badge.cssClass = false;
+     * Sets/gets the the css class to use on the badge.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     * public badge: IgxBadgeComponent;
+     *
+     * badge.cssClass = 'my-badge-class';
      * ```
      */
     @HostBinding('class.igx-badge')
     public cssClass = 'igx-badge';
 
     /**
-     * This allows you to set value to aria-label attribute.
-     *```html
-     *@ViewChild("MyBadge", { read: IgxBadgeComponent })
-     *public badge: IgxBadgeComponent;
-     * //...
-     *badge.label = "icon-badge";
+     * Sets/gets the aria-label attribute value.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyBadge", { read: IgxBadgeComponent })
+     * public badge: IgxBadgeComponent;
+     *
+     * badge.label = 'badge';
      * ```
      */
     @HostBinding('attr.aria-label')
     public label = 'badge';
 
     /**
+     * Defines a human-readable, accessor, author-localized description for
+     * the `type` and the `icon` or `value` of the element.
      * @hidden
-     * Defines a human-readable, accessor, author-localized description for the `type` and the `icon` or `value` of the element.
+     * @internal
      */
     get roleDescription() {
-        let message;
+        let message: string;
 
         // tslint:disable-next-line:prefer-conditional-expression
         if (this.icon) {
@@ -141,39 +167,39 @@ export class IgxBadgeComponent {
     }
 
     /**
-     * @hidden
      * Method which makes the name of the class more descriptive.
      * This helps the styling of the badges.
+     * @hidden
+     * @internal
      */
     public setClasses() {
         let classes = {};
 
-        switch (Type[this.type.toUpperCase()]) {
-            case Type.DEFAULT:
-                classes = {
-                    [`${this.cssClass}__circle--default`]: true
-                };
-                break;
-            case Type.INFO:
+        switch (IgxBadgeType[this.type.toUpperCase()]) {
+            case IgxBadgeType.INFO:
                 classes = {
                     [`${this.cssClass}__circle--info`]: true
                 };
                 break;
-            case Type.SUCCESS:
+            case IgxBadgeType.SUCCESS:
                 classes = {
                     [`${this.cssClass}__circle--success`]: true
                 };
                 break;
-            case Type.WARNING:
+            case IgxBadgeType.WARNING:
                 classes = {
                     [`${this.cssClass}__circle--warning`]: true
                 };
                 break;
-            case Type.ERROR:
+            case IgxBadgeType.ERROR:
                 classes = {
                     [`${this.cssClass}__circle--error`]: true
                 };
                 break;
+            default:
+                classes = {
+                    [`${this.cssClass}__circle--default`]: true
+                };
         }
 
         return classes;
@@ -189,5 +215,4 @@ export class IgxBadgeComponent {
     exports: [IgxBadgeComponent],
     imports: [CommonModule, IgxIconModule]
 })
-export class IgxBadgeModule {
-}
+export class IgxBadgeModule { }

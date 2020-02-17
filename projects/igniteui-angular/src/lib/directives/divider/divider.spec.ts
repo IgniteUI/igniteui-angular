@@ -21,18 +21,20 @@ describe('Divider', () => {
 
     let fixture: ComponentFixture<TestDividerComponent>;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [TestDividerComponent],
             imports: [IgxDividerModule]
         }).compileComponents();
-
-        fixture = TestBed.createComponent(TestDividerComponent);
     }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TestDividerComponent);
+    });
 
     it('should initialize default divider', () => {
         const divider = fixture.debugElement.query(By.css('igx-divider'));
-        fixture.componentInstance.type = IgxDividerType.DEFAULT;
+        fixture.componentInstance.type = IgxDividerType.SOLID;
         fixture.detectChanges();
 
         expect(divider.nativeElement).toBeDefined();

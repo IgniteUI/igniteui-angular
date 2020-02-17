@@ -11,15 +11,15 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-import { DefaultSortingStrategy } from 'igniteui-angular';
 import { GridSelectionMode } from '../common/enums';
 
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,

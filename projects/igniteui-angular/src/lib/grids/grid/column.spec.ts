@@ -8,7 +8,8 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 describe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
@@ -16,7 +17,7 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,

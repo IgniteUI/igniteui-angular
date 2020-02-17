@@ -121,7 +121,8 @@ import {
     IGridClipboardEvent,
     IGridToolbarExportEventArgs,
     ISearchInfo,
-    ICellPosition
+    ICellPosition,
+    IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -1671,6 +1672,34 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
+
+    /**
+     * Emitted when the expanded state of a row gets changed.
+     * ```typescript
+     * rowToggle(event: IRowToggleEventArgs){
+     *  // the id of the row
+     *  const rowID = event.rowID;
+     *  // the new expansion state
+     *  const newExpandedState = event.expanded;
+     *  // the original event that triggered onRowToggle
+     *  const originalEvent = event.event;
+     *  // whether the event should be cancelled
+     *  event.cancel = true;
+     * }
+     * ```
+     * ```html
+     * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
+
+    /**
      * @hidden
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -2825,7 +2854,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
     protected _loadingId;
-
+    protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+    protected _defaultExpandState = false;
     // Caches
     private _totalWidth = NaN;
     private _pinnedVisible = [];
@@ -2834,6 +2864,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _unpinnedWidth = NaN;
     private _visibleColumns = [];
     private _columnGroups = false;
+    protected _headerFeaturesWidth = NaN;
 
     private _columnWidth: string;
 
@@ -2914,6 +2945,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     public get hasDetails() {
         return false;
+    }
+
+    /**
+     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
+     * ```typescript
+     * const gridVirtState = this.grid1.virtualizationState;
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    get virtualizationState() {
+        return this.verticalScrollContainer.state;
+    }
+
+    /**
+     * @hidden
+     */
+    set virtualizationState(state) {
+        this.verticalScrollContainer.state = state;
     }
 
     /**
@@ -3068,10 +3117,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridSizes();
+            this.calculateGridSizes(false);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
+            this._headerFeaturesWidth = NaN;
             this.summaryService.summaryHeight = 0;
             this.endEdit(true);
             this.cdr.markForCheck();
@@ -3150,7 +3200,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetCaches() {
+    public resetCaches(recalcFeatureWidth = true) {
+        if (recalcFeatureWidth) {
+            this._headerFeaturesWidth = NaN;
+        }
         this.resetForOfCache();
         this.resetColumnsCaches();
         this.resetColumnCollections();
@@ -3304,6 +3357,111 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
+     * ```typescript
+     * const expansionStates = this.grid.expansionStates;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get expansionStates() {
+        return this._expansionStates;
+    }
+
+     /**
+     * Sets a list of key-value pairs [row ID, expansion state].
+     * ```typescript
+     * const states = new Map<any, boolean>();
+     * states.set(1, true);
+     * this.grid.expansionStates = states;
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
+     * <ng-template igxGridDetail let-dataItem>
+     * <div *ngIf="dataItem.Category">
+     *  <header>{{dataItem.Category?.CategoryName}}</header>
+     * <span>{{dataItem.Category?.Description}}</span>
+     * </div>
+     * </ng-template>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    public set expansionStates(value) {
+        this._expansionStates = new Map<any, boolean>(value);
+        this.expansionStatesChange.emit(this._expansionStates);
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
+    }
+
+   /**
+     * Expands all rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public expandAll() {
+        this._defaultExpandState = true;
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+   /**
+     * Collapses all rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public collapseAll() {
+        this._defaultExpandState = false;
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+    /**
+     * Expands the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.expandRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+     */
+    public expandRow(rowID: any) {
+        this.gridAPI.set_row_expansion_state(rowID, true);
+    }
+
+    /**
+     * Collapses the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.collapseRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public collapseRow(rowID: any) {
+        this.gridAPI.set_row_expansion_state(rowID, false);
+    }
+
+
+    /**
+     * Toggles the row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.toggleRow(rowID);
+     * ```
+	 * @memberof IgxGridBaseDirective
+    */
+    public toggleRow(rowID: any) {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const state = this.gridAPI.get_row_expansion_state(rec);
+        this.gridAPI.set_row_expansion_state(rowID, !state);
+    }
+
+    public getDefaultExpandState(rec: any) {
+        return this._defaultExpandState;
+    }
+
+    /**
      * Returns the native element of the `IgxGridComponent`.
      * ```typescript
      * const nativeEl = this.grid.nativeElement.
@@ -3412,17 +3570,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public get featureColumnsWidth() {
-        return this.getFeatureColumnsWidth();
+    public featureColumnsWidth(expander?: ElementRef) {
+        if (Number.isNaN(this._headerFeaturesWidth)) {
+            const rowSelectArea = this.headerSelectorContainer ?
+                this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
+            const rowDragArea = this.rowDraggable && this.headerDragContainer ?
+                this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
+            const groupableArea = this.headerGroupContainer ?
+                this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
+            const expanderWidth = expander ? expander.nativeElement.getBoundingClientRect().width : 0;
+            this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
+        }
+        return this._headerFeaturesWidth;
     }
 
     /**
      * @hidden
      */
     get summariesMargin() {
-        return this.featureColumnsWidth;
+        return this.featureColumnsWidth();
     }
 
     /**
@@ -4603,11 +4770,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.getFeatureColumnsWidth();
-
-        if (this.showDragIcons) {
-            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
-        }
+        computedWidth -= this.featureColumnsWidth();
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4697,7 +4860,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return null;
         }
         this.cdr.detectChanges();
-        colSum += this.getFeatureColumnsWidth();
+        colSum += this.featureColumnsWidth();
         return colSum;
     }
 
@@ -4772,7 +4935,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected calculateGridSizes() {
+    protected calculateGridSizes(recalcFeatureWidth = true) {
         /*
             TODO: (R.K.) This layered lasagne should be refactored
             ASAP. The reason I have to reset the caches so many times is because
@@ -4781,11 +4944,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         this.calculateGridHeight();
 
@@ -4815,7 +4978,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         }
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
     }
 
     private _applyWidthHostBinding() {
@@ -4830,25 +4993,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._hostWidth = width;
         this.cdr.markForCheck();
-    }
-
-
-    /**
-     * @hidden
-     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * Method used to override the calculations.
-     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
-     */
-    public getFeatureColumnsWidth() {
-        let width = 0;
-
-        if (this.isRowSelectable) {
-            width += this.headerSelectorContainer ? this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        if (this.rowDraggable) {
-            width += this.headerDragContainer ? this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        return width;
     }
 
     /**
@@ -4867,7 +5011,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        sum += this.featureColumnsWidth;
+        sum += this.featureColumnsWidth();
 
         return sum;
     }
@@ -6040,18 +6184,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
-        if (args.context['templateID'] === 'dataRow' && args.context['$implicit'] === args.oldContext['$implicit']) {
-            args.view.detectChanges();
-            const row = this.getRowByIndex(args.context.index);
-            if (row && row.cells) {
-                row.cells.forEach((c) => {
-                    c.highlightText(
-                        this.lastSearchInfo.searchText,
-                        this.lastSearchInfo.caseSensitive,
-                        this.lastSearchInfo.exactMatch);
-                });
-            }
-        }
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;
             const index = args.context.index;
@@ -6103,16 +6235,4 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             advancedFilteringDialog.closeDialog();
         }
     }
-
-   protected _focusActiveCell() {
-    // persist focused cell
-    const isVirtualized = !this.verticalScrollContainer.dc.instance.notVirtual;
-    const el = this.selectionService.activeElement;
-    if (isVirtualized && el) {
-        const cell = this.gridAPI.get_cell_by_visible_index(el.row, el.column);
-        if (cell) {
-            cell.nativeElement.focus();
-        }
-    }
-}
 }

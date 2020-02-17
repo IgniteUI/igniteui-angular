@@ -149,10 +149,19 @@
 @mixin igx-time-picker($theme) {
     @include igx-root-css-vars($theme);
 
+    $variant: map-get($theme, 'variant');
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
     $vertical-header-width: rem(168px);
+
+    $picker-buttons-padding: map-get((
+        material: rem(8px),
+        fluent: rem(8px),
+        bootstrap: rem(16px)
+    ), $variant);
 
     %time-picker-display {
         display: flex;
@@ -312,8 +321,11 @@
     %time-picker__buttons {
         display: flex;
         justify-content: flex-end;
-        height: rem(52px);
-        padding: rem(8px);
+        @if $not-bootstrap-theme {
+            height: rem(52px);
+        }
+
+        padding: $picker-buttons-padding;
 
         [igxButton] + [igxButton] {
             margin-#{$left}: rem(8px);
@@ -342,7 +354,9 @@
     }
 
     %time-picker__header-hour {
-        @include igx-type-style($type-scale, $header-hour);
+        @include igx-type-style($type-scale, $header-hour) {
+            margin-top: 0;
+        }
     }
 
     %time-picker__column {

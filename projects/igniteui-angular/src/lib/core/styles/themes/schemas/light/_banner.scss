@@ -43,3 +43,22 @@ $_light-banner: extend(
 /// @requires {function} extend
 /// @requires $_light-banner
 $_fluent-banner: extend($_light-banner);
+
+/// Generates a bootstrap banner schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-banner
+$_bootstrap-banner: extend(
+    $_light-banner,
+    (
+        banner-background: #fff,
+
+        banner-message-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        banner-illustration-color: (
+            igx-color: ('grays', 800)
+        )
+    )
+);

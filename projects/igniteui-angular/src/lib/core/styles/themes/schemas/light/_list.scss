@@ -110,12 +110,66 @@ $_light-list: extend(
 
         item-thumbnail-color-hover: currentColor,
 
-        item-thumbnail-color-active: currentColor
+        item-thumbnail-color-active: currentColor,
+
+        border-color: transparent,
+
+        border-width: 0,
     )
 );
 
-/// Generates a fluent schema.
+/// Generates a fluent list schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-list
-$_fluent-list: extend($_light-list);
+$_fluent-list: extend(
+    $_light-list,
+    (
+        border-color: transparent,
+        border-width: 0,
+    )
+);
+
+/// Generates a bootstrap list schema.
+/// @type {Map}
+///
+/// @property {Number} item-thumbnail-color-hover [rem(1px)] - The list border color.
+/// @property {map} item-thumbnail-color-active [igx-color: ('grays', 300)] - The list border-width.
+///
+/// @requires {function} extend
+/// @requires $_light-list
+$_bootstrap-list: extend(
+    $_light-list,
+    $_bootstrap-shape-list,
+    (
+        variant: 'bootstrap',
+
+        border-width: rem(1px),
+
+        border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        item-background: #fff,
+
+        header-background: #fff,
+
+        item-background-hover: (
+            igx-color: ('grays', 100),
+            hexrgba: (#fff)
+        ),
+
+        item-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-active: (
+            igx-color: ('grays', 900)
+        ),
+    )
+);
+

@@ -16,7 +16,7 @@ describe('IgxToggle', () => {
     configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxToggleActionTestComponent,
@@ -76,6 +76,19 @@ describe('IgxToggle', () => {
 
         expect(toggle.onOpening.emit).toHaveBeenCalled();
         expect(toggle.onOpened.emit).toHaveBeenCalled();
+    }));
+
+    it('should emit \'onAppended\' event', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        spyOn(toggle.onAppended, 'emit');
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+
+        expect(toggle.onAppended.emit).toHaveBeenCalled();
     }));
 
     it('should emit \'onClosing\' and \'onClosed\' events', fakeAsync(() => {

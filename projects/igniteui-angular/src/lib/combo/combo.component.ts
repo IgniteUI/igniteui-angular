@@ -91,6 +91,8 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBa
     added: any[];
     /** An array containing the values that will be removed from the selection (if any) */
     removed: any[];
+    /** The text that will be displayed in the combo text box */
+    displayText: string;
     /** The user interaction that triggered the selection change */
     event?: Event;
 }
@@ -151,6 +153,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _itemsMaxHeight = null;
     private _remoteSelection = {};
     private _onChangeCallback: (_: any) => void = noop;
+    private _onTouchedCallback: () => void = noop;
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(),
@@ -1124,11 +1127,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public onBlur() {
         if (this.collapsed) {
+            this._onTouchedCallback();
             if (this.ngControl && !this.ngControl.valid) {
                 this.valid = IgxComboState.INVALID;
             } else {
                 this.valid = IgxComboState.INITIAL;
             }
+        }
+    }
+
+    /** @hidden @internal */
+    public onFocus() {
+        if (this.collapsed) {
+            this._onTouchedCallback();
         }
     }
 
@@ -1185,7 +1196,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {
+        this._onTouchedCallback = fn;
+    }
 
     /**
      * @hidden @internal
@@ -1229,6 +1242,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleClearItems(event: Event): void {
         this.deselectAllItems(true, event);
+        if (this.collapsed) {
+            this.getEditElement().focus();
+        } else {
+            this.focusSearchInput(true);
+        }
         event.stopPropagation();
     }
 
@@ -1382,37 +1400,59 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected setSelection(newSelection: Set<any>, event?: Event): void {
         const removed = diffInSets(this.selection.get(this.id), newSelection);
         const added = diffInSets(newSelection, this.selection.get(this.id));
+        const newSelectionAsArray = Array.from(newSelection);
+        const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
+        const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
         const args: IComboSelectionChangeEventArgs = {
-            newSelection: Array.from(newSelection),
-            oldSelection: Array.from(this.selection.get(this.id) || []),
+            newSelection: newSelectionAsArray,
+            oldSelection: oldSelectionAsArray,
             added,
             removed,
             event,
+            displayText,
             cancel: false
         };
         this.onSelectionChange.emit(args);
         if (!args.cancel) {
             this.selection.select_items(this.id, args.newSelection, true);
-            let value = '';
-            if (this.isRemote) {
-                if (args.newSelection.length) {
-                    const removedItems = args.oldSelection.filter(e => args.newSelection.indexOf(e) < 0);
-                    const addedItems = args.newSelection.filter(e => args.oldSelection.indexOf(e) < 0);
-                    this.registerRemoteEntries(addedItems);
-                    this.registerRemoteEntries(removedItems, false);
-                    value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
-                } else {
-                    // If new selection is empty, clear all items
-                    this.registerRemoteEntries(args.oldSelection, false);
-                }
+            if (displayText !== args.displayText) {
+                this._value = args.displayText;
             } else {
-                value = this.displayKey !== null && this.displayKey !== undefined ?
-                    this.convertKeysToItems(args.newSelection).map(entry => entry[this.displayKey]).join(', ') :
-                    args.newSelection.join(', ');
+                this._value = this.createDisplayText(args.newSelection, args.oldSelection);
             }
-            this._value = value;
             this._onChangeCallback(args.newSelection);
         }
+    }
+
+    /** Returns a string that should be populated in the combo's text box */
+    private concatDisplayText(selection: any[]): string {
+        const value = this.displayKey !== null && this.displayKey !== undefined ?
+        this.convertKeysToItems(selection).map(entry => entry[this.displayKey]).join(', ') :
+        selection.join(', ');
+        return value;
+    }
+
+    /** Constructs the combo display value
+     * If remote, caches the key displayText
+     * If not, just combine the object.displayKeys
+     */
+    private createDisplayText(newSelection: any[], oldSelection: any[]) {
+        let value = '';
+        if (this.isRemote) {
+            if (newSelection.length) {
+                const removedItems = oldSelection.filter(e => newSelection.indexOf(e) < 0);
+                const addedItems = newSelection.filter(e => oldSelection.indexOf(e) < 0);
+                this.registerRemoteEntries(addedItems);
+                this.registerRemoteEntries(removedItems, false);
+                value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+            } else {
+                // If new selection is empty, clear all items
+                this.registerRemoteEntries(oldSelection, false);
+            }
+        } else {
+            value = this.concatDisplayText(newSelection);
+        }
+        return value;
     }
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */

@@ -25,7 +25,7 @@ describe('IgxTabs', () => {
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
 
         const testRoutes = [
             { path: 'view1', component: TabsRoutingView1Component },
@@ -712,7 +712,7 @@ class TabsTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-        <igx-tabs tabsType="fixed">
+        <igx-tabs type="fixed">
             <igx-tabs-group label="Tab111111111111111111111111">
                 <ng-template igxTab>
                     <div>T1</div>

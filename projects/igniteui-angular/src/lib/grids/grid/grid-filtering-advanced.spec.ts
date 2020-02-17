@@ -18,6 +18,7 @@ import {
     IgxGridExternalAdvancedFilteringComponent,
     IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -26,7 +27,7 @@ const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__
 
 describe('IgxGrid - Advanced Filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -380,6 +381,52 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(false, 'Button indicates there is active filtering.');
+        }));
+
+        it('Should correctly display header name in select dropdown and in chip expression.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Open column dropdown and verify header name is displayed for first item
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+            expect(dropdownItems[0].innerText).toBe('HeaderID');
+
+            selectColumnInEditModeExpression(fix, 0); // Select 'HeaderID' column
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'a'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Verify header name in chip text
+            verifyExpressionChipContent(fix, [0], 'HeaderID', 'Contains', 'a');
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Close Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog again.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify header name in chip text
+            verifyExpressionChipContent(fix, [0], 'HeaderID', 'Contains', 'a');
         }));
 
         it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
@@ -896,7 +943,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
             fix.detectChanges();
             const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
             expect(dropdownItems.length).toBe(3);
-            expect(dropdownItems[0].innerText).toBe('ID');
+            expect(dropdownItems[0].innerText).toBe('HeaderID');
             expect(dropdownItems[1].innerText).toBe('ProductName');
             expect(dropdownItems[2].innerText).toBe('Another Field');
         }));
@@ -2395,7 +2442,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 // Press 'Enter' on the remove icon of the second chip.
                 const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]);
-                const removeIcon = chip.querySelector('.igx-chip__remove');
+                const removeIcon = ControlsFunction.getChipRemoveButton(chip);
                 UIInteractions.simulateKeyDownEvent(removeIcon, 'Enter');
                 tick(200);
                 fix.detectChanges();

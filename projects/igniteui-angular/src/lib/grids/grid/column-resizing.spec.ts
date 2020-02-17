@@ -13,6 +13,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
@@ -22,7 +23,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const COLUMN_FILTER_CELL_SELECTOR = 'igx-grid-filtering-cell';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,
@@ -511,7 +512,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
-        const displayContainer: HTMLElement = fixture.componentInstance.grid.tbody.nativeElement.querySelector('igx-display-container');
+        const displayContainer: HTMLElement = GridFunctions.getGridDisplayContainer(fixture).nativeElement;
         let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
         let colsRendered = rowsRendered[0].children;
 

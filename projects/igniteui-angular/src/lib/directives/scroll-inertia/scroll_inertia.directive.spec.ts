@@ -6,259 +6,36 @@ import {
     ViewChild,
     ElementRef
 } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('Scroll Inertia Directive ', () => {
-    configureTestSuite();
+describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(async(() => {
+    configureTestSuite();
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ],
             imports: [IgxScrollInertiaModule]
-        }).compileComponents();
+        }).compileComponents().then(() => {
+            fix = TestBed.createComponent(ScrollInertiaComponent);
+            fix.detectChanges();
+        });
     }));
-
-    beforeEach(() => {
-        fix = TestBed.createComponent(ScrollInertiaComponent);
-        fix.detectChanges();
-    });
 
     it('should initialize directive on non-scrollable container.', () => {
         expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
     });
 
-    // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
-    it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
-        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        const evt = {wheelDeltaY: -240, preventDefault: () => {}};
-        scrInertiaDir.onWheel(evt);
-
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollTop).toEqual(2 * scrInertiaDir.wheelStep);
-    });
-
-    it('should change scroll left for related scrollbar if onWheel is executed with wheelDeltaX.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt = {wheelDeltaX: -240, preventDefault: () => {}};
-        scrInertiaDir.onWheel(evt);
-
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollLeft).toEqual(2 * scrInertiaDir.wheelStep);
-    });
-
-    // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
-    it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        const evt = {deltaY: 1, preventDefault: () => {}};
-        scrInertiaDir.onWheel(evt);
-
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollTop).toEqual(scrInertiaDir.wheelStep);
-    });
-
-    it('should change scroll left for related scrollbar if onWheel is executed with deltaX.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'horizontal';
-        const evt = {deltaX: 1, preventDefault: () => {}};
-        scrInertiaDir.onWheel(evt);
-
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollLeft).toEqual(scrInertiaDir.wheelStep);
-    });
-
-    it('should not throw error if there is no associated scrollbar and wheel event is called.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        scrInertiaDir.IgxScrollInertiaScrollContainer = null;
-        const evt = {preventDefault: () => {}};
-        expect (() => scrInertiaDir.onWheel(evt)).not.toThrow();
-    });
-
-    // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
-    it('should change scroll top for related scrollbar on touch start/move/end', async() => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        scrInertiaDir.onTouchStart(evt);
-
-        evt = {
-            touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
-            preventDefault: () => {}
-        };
-        await wait(10);
-        scrInertiaDir.onTouchMove(evt);
-
-        scrInertiaDir.onTouchEnd(evt);
-        // wait for inertia to complete
-        await wait(1500);
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollTop).toBeGreaterThan(3000);
-
-    });
-
-    it('should stop inertia if another touch event is initiated while inertia is executing.', async() => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        scrInertiaDir.onTouchStart(evt);
-
-        evt = {
-            touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
-            preventDefault: () => {}
-        };
-        await wait(10);
-        scrInertiaDir.onTouchMove(evt);
-
-        scrInertiaDir.onTouchEnd(evt);
-        await wait(10);
-
-        // don't wait for inertia to end. Instead start another touch interaction.
-        evt = {
-            touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        scrInertiaDir.onTouchStart(evt);
-
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollTop).toBeLessThan(1000);
-    });
-
-    it('should honor the defined swipeToleranceX.', async() => {
-        // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        scrInertiaDir.onTouchStart(evt);
-        evt = {
-            touches: [{
-                pageX: -10,
-                pageY: -50
-            }],
-            preventDefault: () => {}
-        };
-        await wait(10);
-        scrInertiaDir.onTouchMove(evt);
-
-        scrInertiaDir.onTouchEnd(evt);
-
-        await wait(1500);
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollLeft).toEqual(0);
-        expect(scrContainer.nativeElement.scrollTop).toBeGreaterThan(100);
-    });
-
-    it('should change scroll left for related scrollbar on touch start/move/end', async() => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        scrInertiaDir.onTouchStart(evt);
-
-        evt = {
-            touches: [{
-                pageX: -100,
-                pageY: 0
-            }],
-            preventDefault: () => {}
-        };
-        await wait(10);
-        scrInertiaDir.onTouchMove(evt);
-
-        scrInertiaDir.onTouchEnd(evt);
-        // wait for inertia to complete
-        await wait(1500);
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollLeft).toBeGreaterThan(3000);
-
-    });
-    it('should not throw errors on touch start/move/end if no scrollbar is associated.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        scrInertiaDir.IgxScrollInertiaScrollContainer = null;
-        const evt = {preventDefault: () => {}};
-        expect (() => scrInertiaDir.onTouchStart(evt)).not.toThrow();
-        expect (() => scrInertiaDir.onTouchMove(evt)).not.toThrow();
-        expect (() => scrInertiaDir.onTouchEnd(evt)).not.toThrow();
-    });
-
-    // Unit tests for touch events on IE/Edge
-    it('should change scroll top related scrollbar via gesture events. ', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            screenX: 0,
-            screenY: 0
-        };
-        scrInertiaDir.onMSGestureStart(evt);
-
-
-        evt = {
-            screenX: 0,
-            screenY: -100
-        };
-
-        scrInertiaDir.onMSGestureChange(evt);
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollTop).toEqual(100);
-    });
-
-    it('should change scroll left related scrollbar via gesture events. ', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        let evt = {
-            screenX: 0,
-            screenY: 0
-        };
-        scrInertiaDir.onMSGestureStart(evt);
-
-
-        evt = {
-            screenX: -100,
-            screenY: 0
-        };
-
-        scrInertiaDir.onMSGestureChange(evt);
-        const scrContainer = fix.componentInstance.scrollContainer;
-        expect(scrContainer.nativeElement.scrollLeft).toEqual(80);
-    });
-
     // Unit tests for inertia function.
     it('inertia should accelerate and then deccelerate vertically.', async() => {
+        pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // vertical inertia
@@ -277,6 +54,7 @@ describe('Scroll Inertia Directive ', () => {
     });
 
     it('inertia should accelerate and then deccelerate horizontally.', async() => {
+        pending('This should be tested in the e2e test');
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
 
         // horizontal inertia
@@ -293,10 +71,225 @@ describe('Scroll Inertia Directive ', () => {
         expect(first).toBeLessThan(mid);
         expect(end).toBeLessThan(mid);
     });
+});
 
-     // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
+describe('Scroll Inertia Directive - Scrolling', () => {
+    let scrollInertiaDir: IgxTestScrollInertiaDirective;
+    let scrollContainerMock;
+
+    beforeEach(() => {
+        const mockZone = jasmine.createSpyObj('NgZone', ['runOutsideAngular']);
+        scrollContainerMock = {
+            scrollLeft: 0,
+            scrollTop: 0,
+            offsetHeight: 500,
+            children: [{ style: { width: '50px', height: '500px', scrollHeight: 100 } }]
+        };
+        scrollInertiaDir = new IgxTestScrollInertiaDirective(null, mockZone);
+        scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
+    });
+
+    // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
+    it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
+        const evt = {wheelDeltaY: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(2 * scrollInertiaDir.wheelStep);
+    });
+
+    it('should change scroll left for related scrollbar if onWheel is executed with wheelDeltaX.', () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt = {wheelDeltaX: -240, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollLeft).toEqual(2 * scrollInertiaDir.wheelStep);
+    });
+
+    // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
+    it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
+        const evt = {deltaY: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollTop).toEqual(scrollInertiaDir.wheelStep);
+    });
+
+    it('should change scroll left for related scrollbar if onWheel is executed with deltaX.', () => {
+        scrollInertiaDir.IgxScrollInertiaDirection = 'horizontal';
+        const evt = {deltaX: 1, preventDefault: () => {}};
+        scrollInertiaDir.onWheel(evt);
+
+        expect(scrollContainerMock.scrollLeft).toEqual(scrollInertiaDir.wheelStep);
+    });
+
+    it('should not throw error if there is no associated scrollbar and wheel event is called.', () => {
+        scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
+        const evt = {preventDefault: () => {}};
+        expect (() => scrollInertiaDir.onWheel(evt)).not.toThrow();
+    });
+
+    // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
+    it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrollInertiaDir.onTouchStart(evt);
+
+        evt = {
+            touches: [{
+                pageX: 0,
+                pageY: -100
+            }],
+            preventDefault: () => {}
+        };
+        tick(10);
+        scrollInertiaDir.onTouchMove(evt);
+
+        scrollInertiaDir.onTouchEnd(evt);
+        // wait for inertia to complete
+        tick(300);
+        expect(scrollContainerMock.scrollTop).toBeGreaterThan(3000);
+    }));
+
+    it('should stop inertia if another touch event is initiated while inertia is executing.', fakeAsync(() => {
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrollInertiaDir.onTouchStart(evt);
+
+        evt = {
+            touches: [{
+                pageX: 0,
+                pageY: -100
+            }],
+            preventDefault: () => {}
+        };
+        tick(10);
+        scrollInertiaDir.onTouchMove(evt);
+
+        scrollInertiaDir.onTouchEnd(evt);
+        tick(10);
+
+        // don't wait for inertia to end. Instead start another touch interaction.
+        evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrollInertiaDir.onTouchStart(evt);
+
+        expect(scrollContainerMock.scrollTop).toBeLessThan(1000);
+    }));
+
+    it('should honor the defined swipeToleranceX.', fakeAsync(() => {
+        // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrollInertiaDir.onTouchStart(evt);
+        evt = {
+            touches: [{
+                pageX: -10,
+                pageY: -50
+            }],
+            preventDefault: () => {}
+        };
+        tick(10);
+        scrollInertiaDir.onTouchMove(evt);
+
+        scrollInertiaDir.onTouchEnd(evt);
+
+        tick(300);
+        expect(scrollContainerMock.scrollLeft).toEqual(0);
+        expect(scrollContainerMock.scrollTop).toBeGreaterThan(100);
+    }));
+
+    it('should change scroll left for related scrollbar on touch start/move/end', fakeAsync(() => {
+        let evt = {
+            touches: [{
+                pageX: 0,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        scrollInertiaDir.onTouchStart(evt);
+
+        evt = {
+            touches: [{
+                pageX: -100,
+                pageY: 0
+            }],
+            preventDefault: () => {}
+        };
+        tick(10);
+        scrollInertiaDir.onTouchMove(evt);
+
+        scrollInertiaDir.onTouchEnd(evt);
+        // wait for inertia to complete
+        tick(300);
+        expect(scrollContainerMock.scrollLeft).toBeGreaterThan(3000);
+
+    }));
+    it('should not throw errors on touch start/move/end if no scrollbar is associated.', () => {
+        scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
+        const evt = {preventDefault: () => {}};
+        expect (() => scrollInertiaDir.onTouchStart(evt)).not.toThrow();
+        expect (() => scrollInertiaDir.onTouchMove(evt)).not.toThrow();
+        expect (() => scrollInertiaDir.onTouchEnd(evt)).not.toThrow();
+    });
+
+    // Unit tests for touch events on IE/Edge
+    it('should change scroll top related scrollbar via gesture events. ', () => {
+        let evt = {
+            screenX: 0,
+            screenY: 0
+        };
+        scrollInertiaDir.onMSGestureStart(evt);
+
+
+        evt = {
+            screenX: 0,
+            screenY: -100
+        };
+
+        scrollInertiaDir.onMSGestureChange(evt);
+        expect(scrollContainerMock.scrollTop).toEqual(100);
+    });
+
+    it('should change scroll left related scrollbar via gesture events. ', () => {
+        let evt = {
+            screenX: 0,
+            screenY: 0
+        };
+        scrollInertiaDir.onMSGestureStart(evt);
+
+
+        evt = {
+            screenX: -100,
+            screenY: 0
+        };
+
+        scrollInertiaDir.onMSGestureChange(evt);
+        expect(scrollContainerMock.scrollLeft).toEqual(80);
+    });
+
+    // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
     it('should prepare MSGesture on PointerDown to handle touch interactions on IE/Edge and should release them on PointerUp.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
         const targetElem = {
             setPointerCapture: (arg) => {},
             releasePointerCapture: (arg) => {}
@@ -320,11 +313,11 @@ describe('Scroll Inertia Directive ', () => {
             target: targetElem,
             pointerId: pointerId
         };
-        scrInertiaDir.onPointerDown(evt);
+        scrollInertiaDir.onPointerDown(evt);
 
         expect(targetElem.setPointerCapture).toHaveBeenCalledWith(pointerId);
 
-        scrInertiaDir.onPointerUp(evt);
+        scrollInertiaDir.onPointerUp(evt);
         expect(targetElem.releasePointerCapture).toHaveBeenCalledWith(pointerId);
 
         // restore original MSGesture state
@@ -332,15 +325,14 @@ describe('Scroll Inertia Directive ', () => {
     });
 
     it('should not throw error when calling pointerDown/pointerUp if there is no associated scrollbar.', () => {
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
-        scrInertiaDir.IgxScrollInertiaScrollContainer = null;
+        scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
         const evt = {
             pointerType: 2,
             target: {},
             pointerId: 0
         };
-        expect (() => scrInertiaDir.onPointerDown(evt)).not.toThrow();
-        expect (() => scrInertiaDir.onPointerUp(evt)).not.toThrow();
+        expect (() => scrollInertiaDir.onPointerDown(evt)).not.toThrow();
+        expect (() => scrollInertiaDir.onPointerUp(evt)).not.toThrow();
     });
 });
 

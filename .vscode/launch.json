@@ -13,7 +13,10 @@
                 "ts-node/register",
                 "./node_modules/jasmine/bin/jasmine.js",
                 "./projects/igniteui-angular/migrations/common/UpdateChanges.spec.ts"
-            ]
+            ],
+            "env": {
+                "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
+            }
         }
     ]
 }

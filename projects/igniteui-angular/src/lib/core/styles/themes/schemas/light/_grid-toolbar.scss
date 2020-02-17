@@ -22,6 +22,8 @@
 /// @see $default-palette
 
 $_light-grid-toolbar: (
+    variant: 'material',
+
     background-color: (
         igx-color: ('grays', 50)
     ),
@@ -63,8 +65,22 @@ $_light-grid-toolbar: (
 $_fluent-grid-toolbar: extend(
     $_light-grid-toolbar,
     (
+        variant: 'fluent',
+
         background-color: (
             igx-color: 'surface'
         ),
     )
 );
+
+/// Generates a bootstrap grid-toolbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-toolbar
+$_bootstrap-grid-toolbar: extend(
+    $_light-grid-toolbar,
+    (
+        variant: 'bootstrap'
+    )
+);
+

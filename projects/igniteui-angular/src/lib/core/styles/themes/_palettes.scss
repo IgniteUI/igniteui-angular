@@ -47,6 +47,17 @@
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
+
+/// Default dark palette
+/// @type {Map}
+/// @group palettes
+$default-dark-palette: extend(
+    $default-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
 /// Global Overlay Color
 /// @group palettes
 /// @type Color
@@ -77,7 +88,17 @@ $green-palette: igx-palette(
     $secondary: #72da67
 ) !default;
 
-/// Red palette
+/// Dark green palette,
+/// @type {Map}
+/// @group palettes
+$green-dark-palette: extend(
+    $green-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
+/// Purple palette
 /// @type {Map}
 /// @group palettes
 $purple-palette: igx-palette(
@@ -85,6 +106,15 @@ $purple-palette: igx-palette(
     $secondary: #514590
 ) !default;
 
+/// Dark purple palette
+/// @type {Map}
+/// @group palettes
+$purple-dark-palette: extend(
+    $purple-palette,
+    (
+        surface: (500: #333)
+    )
+) !default;
 
 /// Fluent Excel palette
 /// @type {Map}
@@ -97,6 +127,16 @@ $fluent-excel-palette: igx-palette(
     $error: #a80000
 ) !default;
 
+/// Fluent Excel dark palette
+/// @type {Map}
+/// @group palettes
+$fluent-excel-dark-palette: extend(
+    $fluent-excel-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
 /// Fluent Word palette
 /// @type {Map}
 /// @group palettes
@@ -105,5 +145,39 @@ $fluent-word-palette: igx-palette(
     $secondary: #2b579a,
     $success: #107c10,
     $warn: #797673,
-    $error: #a80000
+    $error: #a80000,
 ) !default;
+
+/// Fluent Word dark palette
+/// @type {Map}
+/// @group palettes
+$fluent-word-dark-palette: extend(
+    $fluent-word-palette,
+    (
+        surface: (500: #222)
+    )
+) !default;
+
+/// Bootstrap palette
+/// @type {Map}
+/// @group palettes
+$bootstrap-palette: igx-palette(
+    $primary: #007bff,
+    $secondary: #6c757d,
+    $info: #17a2b8,
+    $success: #28a745,
+    $warn: #ffc107,
+    $error: #dc3545,
+    $surface: #f8f9fa
+) !default;
+
+/// Bootstrap dark palette
+/// @type {Map}
+/// @group palettes
+$bootstrap-dark-palette: extend(
+    $bootstrap-palette,
+    (
+        surface: (500: #333)
+    )
+) !default;
+

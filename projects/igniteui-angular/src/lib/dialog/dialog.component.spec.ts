@@ -2,11 +2,12 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { PositionSettings, slideInTop, slideOutBottom, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
 import { useAnimation } from '@angular/animations';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
+import { slideOutBottom, slideInTop } from '../animations/main';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
@@ -15,7 +16,7 @@ const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AlertComponent,

@@ -10,7 +10,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxHighlight', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTextHighlightDirective,

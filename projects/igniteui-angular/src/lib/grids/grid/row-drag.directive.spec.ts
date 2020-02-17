@@ -40,7 +40,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowDraggableComponent,
@@ -218,9 +218,12 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
             grid.width = '400px';
+            tick(30);
+            fixture.detectChanges();
             grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = false;
-            tick();
+            fixture.detectChanges();
+            tick(30);
             fixture.detectChanges();
             let rowSelectElement: DebugElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
             let dragIndicatorElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
@@ -231,7 +234,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             // has draggable rows and has no selectable rows
             grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = true;
-            tick();
+            fixture.detectChanges();
+            tick(30);
             fixture.detectChanges();
             rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
             dragIndicatorElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
@@ -818,8 +822,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
 
         it('should be able to drag row on every hierarchical level', (async () => {
             // first level row
-            let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
+            let dragIndicatorElement: Element = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
             let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
             let startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -837,10 +841,10 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
 
             // second level row
-            dragIndicatorElement = dragIndicatorElements[8].nativeElement;
             const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
             rowToDrag = childGrid.getRowByIndex(0);
-            rowDragDirective = dragRows[4].injector.get(IgxRowDragDirective);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
 
             spyOn(childGrid.onRowDragStart, 'emit').and.callThrough();
@@ -854,10 +858,10 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, false, 1);
 
             // third level row
-            dragIndicatorElement = dragIndicatorElements[10].nativeElement;
             const nestedChildGrid = childGrid.hgridAPI.getChildGrids(false)[0];
             rowToDrag = nestedChildGrid.getRowByIndex(0);
-            rowDragDirective = dragRows[5].injector.get(IgxRowDragDirective);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
 
             spyOn(nestedChildGrid.onRowDragStart, 'emit').and.callThrough();
@@ -879,8 +883,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
             // first level row
-            let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
+            let dragIndicatorElement: Element = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
             let rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective) as any;
 
             let startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -896,10 +900,10 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(rowDragDirective.ghostContext.grid).toEqual(dragGrid);
 
             // second level row
-            dragIndicatorElement = dragIndicatorElements[8].nativeElement;
             const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
             rowToDrag = childGrid.getRowByIndex(0);
-            rowDragDirective = dragRows[4].injector.get(IgxRowDragDirective);
+            dragIndicatorElement = rowToDrag.nativeElement.querySelector('.' + CSS_CLASS_DRAG_INDICATOR);
+            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
 
             await pointerDown(dragIndicatorElement, startPoint, fixture);

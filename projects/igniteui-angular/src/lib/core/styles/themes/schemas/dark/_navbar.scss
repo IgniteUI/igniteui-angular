@@ -19,3 +19,9 @@ $_dark-navbar: extend($_light-navbar);
 /// @requires $_fluent-navbar
 $_dark-fluent-navbar: extend($_fluent-navbar);
 
+/// Generates a dark bootstrap navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-navbar
+$_dark-bootstrap-navbar: extend($_bootstrap-navbar);
+

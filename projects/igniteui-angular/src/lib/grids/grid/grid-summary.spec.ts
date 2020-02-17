@@ -23,11 +23,13 @@ import {
     SummariesGroupByWithScrollsComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection, IgxChipComponent } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxChipComponent } from '../../chips/chip.component';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
@@ -37,7 +39,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const SUMMARY_CELL = 'igx-grid-summary-cell';
     const DEBOUNCETIME = 30;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
@@ -2362,8 +2364,8 @@ describe('IgxGrid - Summaries #grid', () => {
     function verifySummaryRowIndentationByDataRowIndex(fixture, visibleIndex) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         const summaryRowIndentation = summaryRow.query(By.css('.igx-grid__summaries-patch'));
-        const expander = fixture.componentInstance.grid.headerGroupContainer;
-        expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
+        const grid = fixture.componentInstance.grid;
+        expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
     }
 
     function verifyBaseSummaries(fixture) {

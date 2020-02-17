@@ -37,3 +37,11 @@ $_dark-fluent-navdrawer: extend(
         ),
     )
 );
+
+/// Generates a dark bootstrap navdrawer schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-navdrawer
+$_dark-bootstrap-navdrawer: extend(
+    $_bootstrap-navdrawer,
+);

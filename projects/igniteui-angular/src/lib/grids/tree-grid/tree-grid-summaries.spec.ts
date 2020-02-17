@@ -12,15 +12,15 @@ import {
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSummariesComponent,

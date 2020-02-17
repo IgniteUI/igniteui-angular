@@ -3,18 +3,17 @@ import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from './index';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxCalendarComponent, IgxCalendarModule } from './index';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { DateRangeType } from '../core/dates';
-import { By } from '@angular/platform-browser';
-
+import { HelperTestFunctions } from './calendar-helper-utils';
 
 describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
@@ -92,15 +91,15 @@ describe('Multi-View Calendar - ', () => {
 
             expect(calendar.monthsViewNumber).toBe(2);
             expect(HelperTestFunctions.getInactiveDays(fixture, 0).length).toBeGreaterThan(1);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(0);
             expect(HelperTestFunctions.getInactiveDays(fixture, 1).length).toBeGreaterThan(1);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(0);
 
             calendar.hideOutsideDays = true;
             fixture.detectChanges();
 
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 0).length);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 1).length);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 0).length);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 1).length);
         });
 
         it('weekStart should be properly set to all month views', () => {
@@ -125,7 +124,7 @@ describe('Multi-View Calendar - ', () => {
             calendar.vertical = true;
             fixture.detectChanges();
 
-            const verticalCalendar = fixture.nativeElement.querySelector(HelperTestFunctions.VERICAL_CALENDAR_CSSCLASS);
+            const verticalCalendar = fixture.nativeElement.querySelector(HelperTestFunctions.VERTICAL_CALENDAR_CSSCLASS);
             expect(verticalCalendar).not.toBeNull();
             const today = new Date(Date.now());
 
@@ -763,9 +762,9 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(monthDates[10]);
         }));
 
-        it('Verify that months increment/decrement continuously on enter keydown', (async () => {
+        it('Verify that months increment/decrement continuously on enter keydown', (fakeAsync(() => {
             calendar.monthsViewNumber = 2;
-            await wait();
+            tick(100);
             fixture.detectChanges();
             const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
             new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
@@ -775,7 +774,7 @@ describe('Multi-View Calendar - ', () => {
             for (let i = 1; i < dates.length - 1; i++) {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
                 UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
-                await wait(300);
+                tick(100);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
@@ -783,16 +782,16 @@ describe('Multi-View Calendar - ', () => {
             for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.simulateKeyDownEvent(arrowLeft, 'Enter');
-                await wait(300);
+                tick(100);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
             }
-        }));
+        })));
 
-        it('Verify that months increment/decrement continiously on mouse down', (async () => {
+        it('Verify that months increment/decrement continuously on mouse down', (fakeAsync(() => {
             calendar.monthsViewNumber = 2;
-            await wait();
+            tick(100);
             fixture.detectChanges();
             const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
             new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
@@ -802,7 +801,7 @@ describe('Multi-View Calendar - ', () => {
             for (let i = 1; i < dates.length - 1; i++) {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
                 UIInteractions.simulateMouseEvent('mousedown', arrowRight, 0, 0);
-                await wait(300);
+                tick(100);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
@@ -810,16 +809,16 @@ describe('Multi-View Calendar - ', () => {
             for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
                 UIInteractions.simulateMouseEvent('mousedown', arrowLeft, 0, 0);
-                await wait(300);
+                tick(100);
                 fixture.detectChanges();
 
                 HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
             }
-        }));
+        })));
 
-        it('When navigating to a new month the selected date should not steal the focus', (async () => {
+        it('When navigating to a new month the selected date should not steal the focus', (fakeAsync (() => {
             calendar.monthsViewNumber = 2;
-            await wait();
+            tick(100);
             fixture.detectChanges();
             const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15')];
 
@@ -834,15 +833,16 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
-            await wait(600);
+            tick(100);
             fixture.detectChanges();
 
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[1], dates[2]]);
             expect(document.activeElement).toEqual(arrowRight);
-        }));
+        })));
 
         it('When select a new month - should come at correct position', fakeAsync(() => {
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('.igx-calendar-picker__date')[2];
+            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+                .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[2];
             UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
             fixture.detectChanges();
             tick(100);
@@ -887,7 +887,8 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
 
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('.igx-calendar-picker__date')[3];
+            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+                .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[3];
             UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
             fixture.detectChanges();
             tick(150);
@@ -1011,7 +1012,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
         });
 
-        it('Multi/Single Selecion - select multiple dates should not create range', () => {
+        it('Multi/Single Selection - select multiple dates should not create range', () => {
             expect(calendar.hideOutsideDays).toBe(false);
             calendar.selection = 'multi';
             fixture.detectChanges();
@@ -1042,26 +1043,26 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(calendar.hideOutsideDays).toBe(false);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(0);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(0);
 
             calendar.hideOutsideDays = true;
             fixture.detectChanges();
 
             const firstMonthInactiveDays = HelperTestFunctions.getInactiveDays(fixture, 0).length;
             const secondMonthInactiveDays = HelperTestFunctions.getInactiveDays(fixture, 1).length;
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
 
             calendar.selection = 'multi';
             fixture.detectChanges();
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
 
             calendar.selection = 'range';
             fixture.detectChanges();
-            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
-            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiddenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
         });
 
         it('should change days view when selecting an outside day', () => {
@@ -1154,7 +1155,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0); // november
         });
 
-        it('ouside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () => {
+        it('outside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () => {
             spyOn(calendar.onSelection, 'emit');
             calendar.selection = 'range';
             fixture.detectChanges();
@@ -1232,17 +1233,17 @@ describe('Multi-View Calendar - ', () => {
         });
 
         it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
-            let target = fixture.nativeElement.querySelector('.igx-icon');
+            let target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.clickElement(target);
             tick(400);
             fixture.detectChanges();
 
-            let overlay = document.querySelector('.igx-overlay');
+            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 3);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
             UIInteractions.clickElement(overlayDiv);
             tick(400);
             fixture.detectChanges();
@@ -1252,30 +1253,30 @@ describe('Multi-View Calendar - ', () => {
             tick();
             fixture.detectChanges();
 
-            target = fixture.nativeElement.querySelector('.igx-icon');
+            target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.clickElement(target);
             tick(400);
             fixture.detectChanges();
 
-            overlay = document.querySelector('.igx-overlay');
+            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
             HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
         }));
 
         it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
-            const target = fixture.nativeElement.querySelector('.igx-icon');
+            const target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
             UIInteractions.clickElement(target);
             tick(400);
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(true);
-            let overlay = document.querySelector('.igx-overlay');
-            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
-            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
-            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
+            let overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
             UIInteractions.clickElement(overlayDiv);
             tick(400);
             fixture.detectChanges();
@@ -1289,143 +1290,14 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             expect(datePicker.hideOutsideDays).toBe(false);
-            overlay = document.querySelector('.igx-overlay');
-            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(0);
-            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(0);
-            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(0);
+            overlay = document.querySelector(HelperTestFunctions.OVERLAY_CSSCLASS);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 1).length).toBe(0);
+            expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(0);
         }));
 
     });
 });
-
-class HelperTestFunctions {
-    public static CURRENT_DATE_CSSCLASS = '.igx-calendar__date--current';
-    public static DAYS_VIEW = 'igx-days-view';
-    public static CALENDAR = 'igx-calendar';
-    public static CALENDAR_HEADER_CSSCLASS = '.igx-calendar__header';
-    public static CALENDAR_HEADER_YEAR_CSSCLASS = '.igx-calendar__header-year';
-    public static CALENDAR_HEADER_DATE_CSSCLASS = '.igx-calendar__header-date';
-    public static INACTIVE_DAYS_CSSCLASS = '.igx-calendar__date--inactive';
-    public static HIDDEN_DAYS_CSSCLASS = '.igx-calendar__date--hidden';
-    public static WEEKSTART_LABEL_CSSCLASS = '.igx-calendar__label';
-    public static VERICAL_CALENDAR_CSSCLASS = '.igx-calendar--vertical';
-    public static DAY_CSSCLASS = '.igx-calendar__date';
-    public static SELECTED_DATE = '.igx-calendar__date--selected';
-    public static RANGE_CSSCLASS = 'igx-calendar__date--range';
-    public static CALENDAR_PREV_BUTTON_CSSCLASS = '.igx-calendar-picker__prev';
-    public static CALENDAR_NEXT_BUTTON_CSSCLASS = '.igx-calendar-picker__next';
-    public static CALENDAR_SUBHEADERS_SELECTOR =
-        'div:not(' + HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS + '):not(' + HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS + ')';
-
-    public static verifyMonthsViewNumber(fixture, monthsView: number, checkCurrentDate = false) {
-        const el = fixture.nativeElement ? fixture.nativeElement : fixture;
-        const daysView = el.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
-        expect(daysView).toBeDefined();
-        expect(daysView.length).toBe(monthsView);
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(el).querySelectorAll('div');
-        expect(monthPickers.length).toBe(monthsView + 2); // plus the navigation arrows
-        if (checkCurrentDate) {
-            const currentDate = el.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
-            expect(currentDate).not.toBeNull();
-        }
-    }
-
-    public static verifyCalendarHeader(fixture, selectedDate: Date) {
-        const daysView = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_CSSCLASS);
-        expect(daysView).not.toBeNull();
-        const year = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_YEAR_CSSCLASS);
-        expect(year).not.toBeNull();
-        expect(Number(year.innerText)).toEqual(selectedDate.getFullYear());
-        const date = fixture.nativeElement.querySelector(HelperTestFunctions.CALENDAR_HEADER_DATE_CSSCLASS);
-        expect(date).not.toBeNull();
-        const dateParts = selectedDate.toUTCString().split(' '); // (weekday, date month year)
-        expect(date.children[0].innerText.trim()).toEqual(dateParts[0]);
-        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + Number(dateParts[1]));
-    }
-
-    public static verifyNoRangeSelectionCreated(fixture, monthNumber: number) {
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--range')).toBeNull();
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--first')).toBeNull();
-        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--last')).toBeNull();
-    }
-
-    public static verifyCalendarSubHeader(fixture, monthNumber: number, viewDate: Date) {
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('div');
-        const dateParts = viewDate.toString().split(' '); // weekday month day year
-        expect(monthPickers[monthNumber].children[0].innerHTML.trim()).toEqual(dateParts[1]);
-        expect(monthPickers[monthNumber].children[1].innerHTML.trim()).toEqual(dateParts[3]);
-    }
-
-    public static verifyCalendarSubHeaders(fixture, viewDates: Date[]) {
-        const dom = fixture.nativeElement ? fixture.nativeElement : fixture;
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(dom).querySelectorAll(this.CALENDAR_SUBHEADERS_SELECTOR);
-        expect(monthPickers.length).toEqual(viewDates.length);
-        for (let index = 0; index < viewDates.length; index++) {
-            const dateParts = viewDates[index].toString().split(' '); // weekday month day year
-            expect(monthPickers[index].children[0].innerHTML.trim()).toEqual(dateParts[1]);
-            expect(monthPickers[index].children[1].innerHTML.trim()).toEqual(dateParts[3]);
-        }
-    }
-
-    public static getHiidenDays(fixture, monthNumber: number) {
-        const monthView = HelperTestFunctions.getMonthView(fixture, monthNumber);
-        return monthView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
-    }
-
-    public static getInactiveDays(fixture, monthNumber: number) {
-        const monthView = HelperTestFunctions.getMonthView(fixture, monthNumber);
-        return monthView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-    }
-
-    public static getCalendarSubHeader(fixture): HTMLElement {
-        const element = fixture.nativeElement ? fixture.nativeElement : fixture;
-        return element.querySelector('div.igx-calendar-picker');
-    }
-
-    public static getMonthView(fixture, monthsViewNumber: number) {
-        const domEL = fixture.nativeElement ? fixture.nativeElement : fixture;
-        return domEL.querySelectorAll('igx-days-view')[monthsViewNumber];
-    }
-
-    public static getMonthViewDates(fixture, monthsViewNumber: number) {
-        const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
-    }
-
-    public static getMonthViewInactiveDates(fixture, monthsViewNumber: number) {
-        const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-    }
-
-    public static getMonthViewSelectedDates(fixture, monthsViewNumber: number) {
-        const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.SELECTED_DATE +
-            `:not(${HelperTestFunctions.HIDDEN_DAYS_CSSCLASS})`);
-    }
-
-    public static getMonthsFromMonthView(fixture) {
-        return fixture.nativeElement.querySelector('igx-months-view')
-            .querySelectorAll('.igx-calendar__month, .igx-calendar__month--current');
-    }
-
-    public static getYearsFromYearView(fixture) {
-        return fixture.nativeElement.querySelector('igx-years-view')
-            .querySelectorAll('.igx-calendar__year, .igx-calendar__year--current');
-    }
-
-    public static getCurrentYearsFromYearView(fixture) {
-        return fixture.nativeElement.querySelector('igx-years-view')
-            .querySelector('.igx-calendar__year--current');
-    }
-
-    public static getNexArrowElement(fixture) {
-        return fixture.debugElement.query(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS)).nativeElement;
-    }
-
-    public static getPreviousArrowElement(fixture) {
-        return fixture.debugElement.query(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS)).nativeElement;
-    }
-}
 
 @Component({
     template: `

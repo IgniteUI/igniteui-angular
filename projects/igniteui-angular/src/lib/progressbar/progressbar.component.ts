@@ -17,6 +17,7 @@ import {
     IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs } from '../core/utils';
+import { IgxDirectionality } from '../services/direction/directionality';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -28,7 +29,7 @@ export enum IgxTextAlign {
 }
 
 export enum IgxProgressType {
-    DANGER = 'danger',
+    ERROR = 'error',
     INFO = 'info',
     WARNING = 'warning',
     SUCCESS = 'success'
@@ -354,7 +355,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     /**
      *Set the position that defines if the text should be aligned above the progress line. By default is set to false.
      *```html
-     *<igx-linear-bar type="danger" [textTop]="true"></igx-linear-bar>
+     *<igx-linear-bar type="error" [textTop]="true"></igx-linear-bar>
      *```
      */
     @Input()
@@ -370,9 +371,9 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     public text: string;
 
     /**
-     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `danger`.
+     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
      *```html
-     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
+     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="error"></igx-linear-bar>
      *```
      */
 
@@ -445,8 +446,8 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      * @hidden
      */
     @HostBinding('class.igx-linear-bar--danger')
-    public get danger() {
-        return this.type === IgxProgressType.DANGER;
+    public get error() {
+        return this.type === IgxProgressType.ERROR;
     }
 
     /**
@@ -704,7 +705,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     @ViewChild('circle', { static: true }) private _svgCircle: ElementRef;
 
-    constructor(private renderer: Renderer2) {
+    constructor(private renderer: Renderer2, private _directionality: IgxDirectionality) {
         super();
     }
 
@@ -761,8 +762,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     private getProgress(percentage: number) {
-        // Reverse the sign here: '-' should become '+' in RTL mode
-        return this._circumference - (percentage * this._circumference / 100);
+        return this._directionality.rtl ?
+            this._circumference + (percentage * this._circumference / 100) :
+            this._circumference - (percentage * this._circumference / 100);
     }
 }
 

@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
+<igx-grid-toolbar role="rowgroup" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
     [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
@@ -11,11 +11,11 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-                <div #headerHierarchyExpander (click)="toggleAll()" [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
-                    'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
-                    'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
-                    'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
-                }">
+            <div #headerHierarchyExpander (click)="toggleAll()" [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
+                'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
+                'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
+            }">
                 <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
             </div>
             <ng-container *ngIf="rowDraggable">
@@ -86,7 +86,7 @@
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
+        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -178,7 +178,7 @@
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
-    <igx-icon role="button" [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' [isActive]='true' fontSet="material">unfold_less</igx-icon>
+    <igx-icon role="button" [isActive]='hasExpandedRecords() && hasExpandableChildren' fontSet="material">unfold_less</igx-icon>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>

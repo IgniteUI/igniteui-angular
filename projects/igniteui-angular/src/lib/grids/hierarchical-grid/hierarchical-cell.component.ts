@@ -93,35 +93,15 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (event.altKey && !this.row.added) {
-            const grid = this.gridAPI.grid;
-            const state = this.gridAPI.grid.hierarchicalState;
             const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
             const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
             if (collapse) {
-                grid.hierarchicalState = state.filter(v => {
-                    return v.rowID !== this.row.rowID;
-                });
+                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
             } else if (expand) {
-                state.push({ rowID: this.row.rowID });
-                grid.hierarchicalState = [...state];
-            }
-            if (expand || collapse) {
-                const rowID = this.cellID.rowID;
-                grid.cdr.detectChanges();
-                this.persistFocusedCell(rowID);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
             }
             return;
         }
         super.dispatchEvent(event);
-    }
-
-    protected persistFocusedCell(rowID) {
-        requestAnimationFrame(() => {
-            // TODO: Test it out
-            const cell = this.gridAPI.get_cell_by_key(rowID, this.column.field);
-            if (cell) {
-                cell.nativeElement.focus();
-            }
-        });
     }
 }

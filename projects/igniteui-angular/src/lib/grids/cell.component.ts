@@ -28,7 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { IgxGridComponent } from './grid';
+import { IgxGridComponent, ISearchInfo } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -51,6 +51,7 @@ import { IgxGridComponent } from './grid';
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
+    protected _lastSearchInfo: ISearchInfo;
 
     /**
      * Gets the column of the cell.
@@ -300,6 +301,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     get cellSelectionMode() {
         return this._cellSelection;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    set lastSearchInfo(value: ISearchInfo) {
+        this._lastSearchInfo = value;
+        this.highlightText(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
     }
 
     set cellSelectionMode(value) {
@@ -620,6 +631,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
+                /* This check is related with the following issue #6517:
+                 * when edit cell that belongs to a column which is sorted and press tab,
+                 * the next cell in edit mode is with wrong value /its context is not updated/;
+                 * So we reapply sorting before the next cell enters edit mode.
+                 * Also we need to keep the notifyChanges below, because of the current
+                 * change detection cycle when we have editing with enabled transactions
+                 */
+                if (this.grid.sortingExpressions.length && this.grid.sortingExpressions.indexOf(editableCell.column.field)) {
+                    this.grid.cdr.detectChanges();
+                }
             }
             crud.end();
             this.grid.notifyChanges();
@@ -835,24 +856,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleAlt(key: string, event: KeyboardEvent) {
-        if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+        if (this.isToggleKey(key)) {
             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
             const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            if (collapse) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            } else if (expand) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            }
-        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            const expandedStates = this.grid.expansionStates;
             if (expand) {
-                expandedStates.set(this.row.rowID, true);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
             } else if (collapse) {
-                expandedStates.set(this.row.rowID, false);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
             }
-            this.grid.expansionStates = expandedStates;
             this.grid.notifyChanges();
         }
     }
@@ -900,6 +911,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         event.stopPropagation();
 
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+
+        // This fixes IME editing issue(#6335) that happens only on IE
+        if (isIE() && keydownArgs.event.keyCode === 229 && event.key === 'Tab') {
+            return;
+        }
+
         this.grid.onGridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel) {
             this.selectionService.clear();

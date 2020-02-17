@@ -48,8 +48,6 @@
 @mixin igx-ripple($theme, $palette: $default-palette) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
-
     %igx-ripple-display {
         display: block;
         position: absolute;

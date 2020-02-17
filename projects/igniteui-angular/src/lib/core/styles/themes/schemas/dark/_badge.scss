@@ -18,3 +18,9 @@ $_dark-badge: extend($_light-badge);
 /// @requires extend
 /// @requires $_fluent-badge
 $_dark-fluent-badge: extend($_fluent-badge);
+
+/// Generates a dark bootstrap badge schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_bootstrap-badge
+$_dark-bootstrap-badge: extend($_bootstrap-badge);
