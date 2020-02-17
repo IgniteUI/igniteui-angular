@@ -474,7 +474,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * Gets the list `items` excluding the header ones.
-     * 
+     *
      * @example
      * ```typescript
      * let listItems: IgxListItemComponent[] = this.list.items;
@@ -494,7 +494,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * Gets the header list `items`.
-     * 
+     *
      * @example
      * ```typescript
      * let listHeaders: IgxListItemComponent[] =  this.list.headers;
@@ -518,7 +518,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @remark
      * Gets the `context` object which represents the `template context` binding into the `list container`
      * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
-     * 
+     *
      * @example
      * ```typescript
      * let listComponent =  this.list.context;
@@ -532,7 +532,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * Gets a `TemplateRef` to the currently used template.
-     * 
+     *
      * @example
      * ```typescript
      * let listTemplate = this.list.template;
