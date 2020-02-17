@@ -79,7 +79,6 @@
 @mixin igx-core(
     $print-layout: true,
     $direction: ltr,
-    $foreground-color: rgba(0, 0, 0, .87)
 ) {
     @if $direction != ltr and $direction != rtl {
         $direction: ltr !global;
@@ -87,9 +86,7 @@
         $direction: $direction !global;
     }
 
-    $igx-foreground-color: $foreground-color !global;
-
-    @include igx-typography($base-color: $foreground-color);
+    @include igx-typography();
     @include igx-vhelper();
 
     @if $print-layout == true {
