@@ -24,15 +24,15 @@ let NEXT_ID = 0;
     selector: 'igx-card-media'
 })
 export class IgxCardMediaDirective {
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('class.igx-card__media')
     public cssClass = 'igx-card__media';
 
     /**
      * An @Input property that sets the `width` and `min-width` style property
      * of the media container. If not provided it will be set to `auto`.
+     *
+     * @example
      * ```html
      * <igx-card-media width="300px"></igx-card-media>
      * ```
@@ -45,6 +45,8 @@ export class IgxCardMediaDirective {
     /**
      * An @Input property that sets the `height` style property of the media container.
      * If not provided it will be set to `auto`.
+     *
+     * @example
      * ```html
      * <igx-card-media height="50%"></igx-card-media>
      * ```
@@ -69,15 +71,15 @@ export class IgxCardMediaDirective {
     templateUrl: 'card-header.component.html'
 })
 export class IgxCardHeaderComponent {
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('class.igx-card-header')
     public cssClass = 'igx-card-header';
 
     /**
      * An @Input property that sets the layout style of the header.
      * By default the header elements(thumbnail and title/subtitle) are aligned horizontally.
+     *
+     * @example
      * ```html
      * <igx-card-header [vertical]="true"></igx-card-header>
      * ```
@@ -89,6 +91,8 @@ export class IgxCardHeaderComponent {
     /**
      * An @Input property that sets the value of the `role` attribute of the card header.
      * By default the value is set to `header`.
+     *
+     * @example
      * ```html
      * <igx-card-header role="header"></igx-card-header>
      * ```
@@ -114,9 +118,7 @@ export class IgxCardThumbnailDirective { }
     selector: '[igxCardHeaderTitle]'
 })
 export class IgxCardHeaderTitleDirective {
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('class.igx-card-header__title')
     public cssClass = 'igx-card__header__title';
 }
@@ -129,9 +131,7 @@ export class IgxCardHeaderTitleDirective {
     selector: '[igxCardHeaderSubtitle]'
 })
 export class IgxCardHeaderSubtitleDirective {
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('class.igx-card-header__subtitle')
     public cssClass = 'igx-card-header__subtitle';
 }
@@ -143,9 +143,7 @@ export class IgxCardHeaderSubtitleDirective {
     selector: 'igx-card-content'
 })
 export class IgxCardContentDirective {
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     @HostBinding('class.igx-card-content')
     public cssClass = 'igx-card-content';
 }
@@ -161,6 +159,8 @@ export class IgxCardFooterDirective {
     /**
      * An @Input property that sets the value of the `role` attribute of the card footer.
      * By default the value is set to `footer`.
+     *
+     * @example
      * ```html
      * <igx-card-footer role="footer"></igx-card-footer>
      * ```
@@ -171,13 +171,21 @@ export class IgxCardFooterDirective {
 }
 
 /**
- * **Ignite UI for Angular Card** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/card.html)
+ * Card provides a way to display organized content in appealing way.
  *
+ * @igxModule IgxCardModule
+ *
+ * @igxTheme igx-card-theme, igx-icon-theme, igx-button-theme
+ *
+ * @igxKeywords card, button, avatar, icon
+ *
+ * @igxGroup Layouts
+ *
+ * @remarks
  * The Ignite UI Card serves as a container that allows custom content to be organized in an appealing way. There are
  * five sections in a card that you can use to organize your content. These are header, media, content, actions, and footer.
  *
- * Example:
+ * @example
  * ```html
  * <igx-card>
  *   <igx-card-header>
@@ -205,13 +213,14 @@ export class IgxCardComponent {
     /**
      * Sets/gets the `id` of the card.
      * If not set, `id` will have value `"igx-card-0"`;
+     *
+     * @example
      * ```html
      * <igx-card id = "my-first-card"></igx-card>
      * ```
      * ```typescript
      * let cardId =  this.card.id;
      * ```
-     * @memberof IgxCardComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -220,6 +229,8 @@ export class IgxCardComponent {
     /**
      * An @Input property that sets the value of the `role` attribute of the card.
      * By default the value is set to `group`.
+     *
+     * @example
      * ```html
      * <igx-card role="group"></igx-card>
      * ```
@@ -232,6 +243,8 @@ export class IgxCardComponent {
      * An @Input property that sets the value of the `type` attribute of the card.
      * By default the value is set to `default`. You can make the card use the
      * outlined style by setting the value to `outlined`.
+     *
+     * @example
      * ```html
      * <igx-card type="outlined"></igx-card>
      * ```
@@ -252,6 +265,8 @@ export class IgxCardComponent {
      * An @Input property that sets the value of the `horizontal` attribute of the card.
      * Setting this to `true` will make the different card sections align horizontally,
      * essentially flipping the card to the side.
+     *
+     * @example
      * ```html
      * <igx-card [horizontal]="true"></igx-card>
      * ```
@@ -286,6 +301,8 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * of the card-actions area.
      * You can justify the elements in those groups so they are positioned equally
      * from one another taking up all the space available along the card actions axis.
+     *
+     * @example
      * ```html
      * <igx-card-actions layout="justify"></igx-card-actions>
      * ```
@@ -318,6 +335,8 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * placed in the actions area.
      * If you want to reverse their positions so that icons appear first, use the `reverse`
      * attribute.
+     *
+     * @example
      * ```html
      * <igx-card-actions [reverse]="true"></igx-card-actions>
      * ```
