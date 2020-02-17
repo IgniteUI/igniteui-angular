@@ -932,6 +932,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
+
+        this.manageRequiredAsterisk();
     }
 
     protected onStatusChanged() {
@@ -1137,7 +1139,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this.collapsed) {
             const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
             if (this._ngControl && !this._ngControl.valid) {
-                console.log('onBlur + collapsed + invalid');
                 input.valid = IgxInputState.INVALID;
             } else {
                 input.valid = IgxInputState.INITIAL;
@@ -1315,7 +1316,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _onOpened(): void {
-        this._onTouchedCallback();
         this.onOpened.emit(this);
 
         // TODO: remove this line after deprecating 'onOpen'
