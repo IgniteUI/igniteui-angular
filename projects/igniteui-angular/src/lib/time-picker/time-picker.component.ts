@@ -16,13 +16,14 @@ import {
     ViewChild,
     ContentChild,
     Injectable,
-    AfterViewInit
+    AfterViewInit,
+    Injector
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
@@ -32,7 +33,7 @@ import {
     IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
-import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
+import { Subject, fromEvent, interval, animationFrameScheduler, Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
@@ -69,6 +70,8 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     currentValue: Date;
     setThroughUI: boolean;
 }
+
+const noop = () => { };
 
 @Component({
     providers: [
@@ -548,6 +551,9 @@ export class IgxTimePickerComponent implements
     @ViewChild('input', { read: ElementRef })
     private input: ElementRef;
 
+    @ViewChild(IgxInputDirective, { read: IgxInputDirective})
+    private _inputDirective: IgxInputDirective;
+
     /**
      * @hidden
      */
@@ -643,6 +649,7 @@ export class IgxTimePickerComponent implements
 
     private _dateFromModel: Date;
     private _destroy$ = new Subject<boolean>();
+    private _statusChanges$: Subscription;
     private _dropDownOverlaySettings: OverlaySettings;
     private _dialogOverlaySettings: OverlaySettings;
 
@@ -658,9 +665,38 @@ export class IgxTimePickerComponent implements
     private _minutesPos = new Set();
     private _secondsPos = new Set();
     private _amPmPos = new Set();
+    private _ngControl: NgControl = null;
 
-    private _onTouchedCallback: () => void = () => { };
-    private _onChangeCallback: (_: Date) => void = () => { };
+    //#region ControlValueAccessor
+
+    private _onChangeCallback: (_: Date) => void = noop;
+    private _onTouchedCallback: () => void = noop;
+
+    /** @hidden @internal */
+    public writeValue(value: Date) {
+        // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
+        // against the real value when initializing the component and value is bound via ngModel
+        this._dateFromModel = value;
+
+        this._value = value;
+
+        if (this.mode === InteractionMode.DropDown) {
+            this.displayValue = this._formatTime(this.value, this.format);
+        }
+    }
+
+    /** @hidden @internal */
+    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /** @hidden @internal */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    //#endregion
+
+
 
     private trimMask(): void {
         this.mask = this.mask.slice(this.mask.indexOf(':') + 1, this.mask.length);
@@ -851,6 +887,7 @@ export class IgxTimePickerComponent implements
             positionStrategy: new AutoPositionStrategy()
         };
         this._dialogOverlaySettings = {};
+        this._ngControl = this._injector.get<NgControl>(NgControl, null);
     }
 
     /**
@@ -908,6 +945,12 @@ export class IgxTimePickerComponent implements
             });
 
             this.determineCursorPos();
+
+            if (this._ngControl) {
+                this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            }
+
+            this.manageRequiredAsterisk();
         }
     }
 
@@ -936,6 +979,8 @@ export class IgxTimePickerComponent implements
     public onAltArrowDown() {
         this.openDialog(this.getInputGroupElement());
     }
+
+    constructor(private _injector: Injector) { }
 
     private determineCursorPos(): void {
         this.clearCursorPos();
@@ -1497,6 +1542,25 @@ export class IgxTimePickerComponent implements
         }
     }
 
+    protected onStatusChanged() {
+        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
+            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+            if (this.group.isFocused) {
+                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        }
+        this.manageRequiredAsterisk();
+    }
+
+    protected manageRequiredAsterisk(): void {
+        if (this._ngControl && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            this.group.isRequired = error && error.required;
+        }
+    }
     /**
      * @hidden
      */
@@ -1511,34 +1575,6 @@ export class IgxTimePickerComponent implements
         return this.group ? this.group.element.nativeElement : null;
     }
 
-    /**
-     * @hidden
-     */
-    public writeValue(value: Date) {
-        // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
-        // against the real value when initializing the component and value is bound via ngModel
-        this._dateFromModel = value;
-        this.value = value;
-
-        if (this.mode === InteractionMode.DropDown) {
-            this.displayValue = this._formatTime(this.value, this.format);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
-
-    /**
-     *@hidden
-     */
-    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
-
-    /**
-     * @hidden
-     */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
     /**
      * opens the dialog.
@@ -1984,6 +2020,23 @@ export class IgxTimePickerComponent implements
                 };
                 this.onValidationFailed.emit(args);
             }
+        }
+
+        this._onTouchedCallback();
+        if (this.toggleRef.collapsed) {
+            if (this._ngControl && !this._ngControl.valid) {
+                this._inputDirective.valid = IgxInputState.INVALID;
+            } else {
+                this._inputDirective.valid = IgxInputState.INITIAL;
+            }
+        }
+    }
+
+    public mouseDown(event: MouseEvent): void {
+        // if the click is not on the input but in input group
+        // e.g. on prefix or suffix, prevent default and this way prevent blur
+        if (event.target !== this.getEditElement()) {
+            event.preventDefault();
         }
     }
 
