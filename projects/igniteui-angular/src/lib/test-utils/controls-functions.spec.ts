@@ -9,6 +9,8 @@ const DROP_DOWN_SCROLL_CLASS = '.igx-drop-down__list-scroll';
 const DROP_DOWN__ITEM_CLASS = '.igx-drop-down__item';
 const BUTTON_SELECTED_CLASS = 'igx-button-group__item--selected';
 const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
+const CHECKBOX_CHECKED_CLASS = 'igx-checkbox--checked';
+const CHECKBOX_IND_CLASS = 'igx-checkbox--indeterminate';
 export class ControlsFunction {
 
     public static getChipRemoveButton(chip: HTMLElement): HTMLElement {
@@ -38,5 +40,10 @@ export class ControlsFunction {
 
    public static verifyButtonIsDisabled(element: HTMLElement, disabled: boolean = true) {
       expect(element.classList.contains(BUTTON_DISABLED_CLASS)).toEqual(disabled);
+   }
+
+   public static verifyCheckboxState(element: HTMLElement, checked: boolean = true, indeterminate = false) {
+      expect(element.classList.contains(CHECKBOX_CHECKED_CLASS)).toEqual(checked);
+      expect(element.classList.contains(CHECKBOX_IND_CLASS)).toEqual(indeterminate);
    }
 }
