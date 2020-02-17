@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, NgZone } from '@angular/core';
+import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
@@ -10,12 +10,15 @@ import { PlatformUtil } from '../../core/utils';
 import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
+import { IgxGridCellComponent } from '../tree-grid';
 
 describe('IgxGrid - Cell component #grid', () => {
 
     describe('Test events', () => {
         let fix;
         let grid: IgxGridComponent;
+        let cellElem: DebugElement;
+        let firstCell: IgxGridCellComponent;
 
         configureTestSuite();
         beforeAll(async(() => {
@@ -31,61 +34,55 @@ describe('IgxGrid - Cell component #grid', () => {
             fix = TestBed.createComponent(NoScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            cellElem = GridFunctions.getRowCells(fix, 0)[0];
+            firstCell = grid.getCellByColumn(0, 'ID');
         }));
 
         it('@Input properties and getters', () => {
-            const firstIndexCell = grid.getCellByColumn(0, 'ID');
-
-            expect(firstIndexCell.columnIndex).toEqual(grid.columnList.first.index);
-            expect(firstIndexCell.rowIndex).toEqual(grid.rowList.first.index);
-            expect(firstIndexCell.grid).toBe(grid);
-            expect(firstIndexCell.nativeElement).toBeDefined();
-            expect(firstIndexCell.nativeElement.textContent).toMatch('1');
-            expect(firstIndexCell.readonly).toBe(true);
-            expect(firstIndexCell.describedby).toMatch(`${grid.id}_${firstIndexCell.column.field}`);
+            expect(firstCell.columnIndex).toEqual(grid.columnList.first.index);
+            expect(firstCell.rowIndex).toEqual(grid.rowList.first.index);
+            expect(firstCell.grid).toBe(grid);
+            expect(firstCell.nativeElement).toBeDefined();
+            expect(firstCell.nativeElement.textContent).toMatch('1');
+            expect(firstCell.readonly).toBe(true);
+            expect(firstCell.describedby).toMatch(`${grid.id}_${firstCell.column.field}`);
         });
 
         it('selection and selection events', () => {
-            const rv = GridFunctions.getRowCells(fix, 0)[0];
-            const cell = grid.getCellByColumn(0, 'ID');
-
-            expect(rv.nativeElement.getAttribute('aria-selected')).toMatch('false');
+            expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
             const event = new Event('focus');
-            rv.nativeElement.dispatchEvent(event);
+            cellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
-                cell,
+                cell: firstCell,
                 event
             };
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
-            expect(cell.focused).toBe(true);
-            expect(cell.selected).toBe(true);
-            expect(rv.nativeElement.getAttribute('aria-selected')).toMatch('true');
+            expect(firstCell.focused).toBe(true);
+            expect(firstCell.selected).toBe(true);
+            expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('true');
         });
 
         it('Should not emit selection event for already selected cell', () => {
-            const cell = GridFunctions.getRowCells(fix, 0)[0];
             spyOn(grid.onSelection, 'emit').and.callThrough();
 
-            cell.triggerEventHandler('focus', null);
+            cellElem.triggerEventHandler('focus', null);
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDown('Enter', cell);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', cellElem);
             fix.detectChanges();
-            UIInteractions.triggerEventHandlerKeyDown('Escape', cell);
+            UIInteractions.triggerEventHandlerKeyDown('Escape', cellElem);
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
         });
 
         it('Should trigger onCellClick event when click into cell', () => {
-            const firstCell = grid.getCellByColumn(0, 'ID');
-
             spyOn(grid.onCellClick, 'emit').and.callThrough();
             const event = new Event('click');
             firstCell.nativeElement.dispatchEvent(event);
@@ -103,7 +100,6 @@ describe('IgxGrid - Cell component #grid', () => {
             grid.columns[0].editable = true;
             fix.detectChanges();
             spyOn(grid.onDoubleClick, 'emit').and.callThrough();
-            const cellElem = GridFunctions.getRowCells(fix, 0)[0];
 
             cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fix.detectChanges();
@@ -115,9 +111,6 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should trigger onContextMenu event when right click into cell', () => {
-            const cellElem = GridFunctions.getRowCells(fix, 0)[0];
-            const firstCell = grid.getCellByColumn(0, 'ID');
-
             spyOn(grid.onContextMenu, 'emit').and.callThrough();
             const event = new Event('contextmenu');
             cellElem.nativeElement.dispatchEvent(event);
@@ -132,9 +125,6 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should trigger onDoubleClick event when double click into cell', () => {
-            const cellElem = GridFunctions.getRowCells(fix, 0)[0];
-            const firstCell = grid.getCellByColumn(0, 'ID');
-
             spyOn(grid.onDoubleClick, 'emit').and.callThrough();
             const event = new Event('dblclick');
             spyOn(event, 'preventDefault');
@@ -180,15 +170,14 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         });
 
-        it('should use default column width for cells with width in %.', fakeAsync(() => {
+        it('should use default column width for cells with width in %.', () => {
             fix.componentInstance.defaultWidth = '25%';
-            tick();
             fix.detectChanges();
             const rows = grid.rowList;
             rows.forEach((item) => {
                 expect(item.cells.last.width).toEqual('25%');
             });
-        }));
+        });
 
         it('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
@@ -213,11 +202,10 @@ describe('IgxGrid - Cell component #grid', () => {
                 grid.scrollWidth).toEqual(parseInt(grid.width, 10));
         }));
 
-        it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {
+        it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
             const columns = grid.columnList;
             const lastCol: IgxColumnComponent = columns.last;
             lastCol.pinned = true;
-            tick();
             fix.detectChanges();
             lastCol.cells.forEach((cell) => {
                 expect(cell.width).toEqual('200px');
@@ -226,10 +214,9 @@ describe('IgxGrid - Cell component #grid', () => {
             rows.forEach((item) => {
                 expect(item.cells.last.width).toEqual('200px');
             });
-        }));
+        });
 
-        it('should not make last column smaller when vertical scrollbar is on the right of last cell',
-            fakeAsync(/** height/width setter rAF */() => {
+        it('should not make last column smaller when vertical scrollbar is on the right of last cell', () => {
                 fix.componentInstance.columns = fix.componentInstance.generateCols(4, '30px');
                 fix.componentInstance.data = fix.componentInstance.generateData(10);
                 fix.detectChanges();
@@ -238,7 +225,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 lastColumnCells.forEach(function (item) {
                     expect(item.width).toEqual('30px');
                 });
-            }));
+            });
 
         it('should not make last column smaller when vertical scrollbar is on the left of last cell', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(4, '500px');
@@ -248,7 +235,6 @@ describe('IgxGrid - Cell component #grid', () => {
             const scrollbar = grid.headerContainer.getScroll();
             scrollbar.scrollLeft = 10000;
             fix.detectChanges();
-            // await wait(100);
             await wait();
             const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
             fix.detectChanges();
