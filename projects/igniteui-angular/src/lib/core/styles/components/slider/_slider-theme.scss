@@ -255,6 +255,10 @@
         line-height: .7;
         opacity: 1;
         transition: opacity .2s $ease-in-out-quad;
+
+        @include if-rtl() {
+            left: 100%;
+        }
     }
 
     %igx-slider__ticks-tick {
