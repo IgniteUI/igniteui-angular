@@ -13,43 +13,69 @@ import {
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 
+/**
+ * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button.
+ *
+ * @igxModule IgxButtonModule
+ *
+ * @igxParent Data Entry & Display
+ *
+ * @igxTheme igx-button-theme
+ *
+ * @igxKeywords button, span, div, click
+ *
+ * @remarks
+ * The Ignite UI Button directive is intended to be used by any button, span or div and turn it into a fully functional button.
+ *
+ * @example
+ * ```html
+ * <button igxButton="outlined">A Button</button>
+ * ```
+ */
 @Directive({
     selector: '[igxButton]'
 })
 export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _type: string;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _defaultType = 'flat';
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _cssClassPrefix = 'igx-button';
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _color: string;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _label: string;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _backgroundColor: string;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     private _disabled: boolean;
 
@@ -59,37 +85,37 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
-     * Returns the underlying DOM element
+     * Returns the underlying DOM element.
      */
     public get nativeElement() {
         return this.element.nativeElement;
     }
 
     /**
-     * Called when the button is clicked
+     * Called when the button is clicked.
      */
     @Output()
     public buttonClick = new EventEmitter<any>();
 
     /**
      * Sets/gets the `role` attribute.
+     *
+     * @example
      * ```typescript
      * this.button.role = 'navbutton';
+     * let buttonRole = this.button.role;
      * ```
-     * ```typescript
-     * let buttonRole =  this.button.role;
-     * ```
-     * @memberof IgxButtonDirective
      */
     @HostBinding('attr.role')
     public role = 'button';
 
     /**
      * Sets the type of the button.
+     *
+     * @example
      * ```html
-     * <button  igxButton= "icon"></button>
+     * <button igxButton="icon"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input('igxButton')
     set type(value: string) {
@@ -103,10 +129,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * Sets the button text color.
+     *
+     * @example
      * ```html
      * <button igxButton="gradient" igxButtonColor="blue"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input('igxButtonColor') set color(value: string) {
         this._color = value || this.nativeElement.style.color;
@@ -115,10 +142,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * Sets the background color of the button.
-     * ```html
+     *
+     * @example
+     *  ```html
      * <button igxButton="raised" igxButtonBackground="red"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input('igxButtonBackground') set background(value: string) {
         this._backgroundColor = value || this._backgroundColor;
@@ -127,10 +155,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * Sets the `aria-label` attribute.
-     * ```html
+     *
+     * @example
+     *  ```html
      * <button igxButton= "flat" igxLabel="Label"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input('igxLabel') set label(value: string) {
         this._label = value || this._label;
@@ -139,10 +168,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * Enables/disables the button.
-     *  ```html
+     *
+     * @example
+     * ```html
      * <button igxButton= "fab" [disabled]="true"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input() set disabled(val) {
         val = !!val;
@@ -156,6 +186,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-button--cosy')
     public get cssClassCosy(): boolean {
@@ -165,6 +196,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-button--compact')
     public get cssClassCompact(): boolean {
@@ -174,6 +206,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-button--fab-cosy')
     public get cssClassCosyFab(): boolean {
@@ -182,6 +215,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-button--fab-compact')
     public get cssClassCompactFab(): boolean {
@@ -190,6 +224,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('attr.disabled')
     public get disabledAttribute() {
@@ -199,15 +234,17 @@ export class IgxButtonDirective extends DisplayDensityBase {
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
+     *
+     * @example
      * ```html
      * <button igxButton="flat" [selected]="button.selected"></button>
      * ```
-     * @memberof IgxButtonDirective
      */
     @Input() public selected = false;
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     @HostListener('click', ['$event'])
     public onClick(ev) {
