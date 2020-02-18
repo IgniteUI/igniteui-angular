@@ -216,6 +216,10 @@
         compact: 0 rem(8px)
     );
 
+    %igx-drop-down {
+        position: absolute;
+    }
+
     %igx-drop-down__list {
         overflow: hidden;
         border-radius: --var($theme, 'border-radius');
@@ -227,6 +231,7 @@
 
     %igx-drop-down__list-scroll {
         overflow-y: auto;
+        overflow-x: hidden;
         position: relative;
 
         &:empty {
