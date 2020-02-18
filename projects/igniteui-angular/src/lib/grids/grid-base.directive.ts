@@ -802,6 +802,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @Input()
     public columnHidingTitle = '';
 
+    /**
+     * Gets/Sets the initial pinning configuration.
+     * @remarks
+     * Allows to apply pinning the columns to the start or the end.
+     * Note that pinning to both sides at a time is not allowed.
+     * @example
+     * ```html
+     * <igx-grid [pinning]="pinningConfig"></igx-grid>
+     * ```
+     */
     @Input()
     public pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 

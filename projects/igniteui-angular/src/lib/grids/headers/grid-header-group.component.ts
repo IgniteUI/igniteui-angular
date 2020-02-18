@@ -172,7 +172,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * Gets whether the header group is stored in the first column of the right pinned area.
-     * @memberof IgxGridHeaderGroupComponent
      */
     get isFirstPinned(): boolean {
         return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
