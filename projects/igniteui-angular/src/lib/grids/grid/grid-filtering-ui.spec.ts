@@ -2691,16 +2691,18 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
 
             expect(grid.filteredData.length).toEqual(2);
 
             GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
             fix.detectChanges();
 
             GridFunctions.clickOperatorFromCascadeMenu(fix, 10);
+            tick(100);
 
-            const andButton = GridFunctions.getAdvancedFilteringExpressionAndButton(fix);
+            const andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             andButton.click();
             fix.detectChanges();
 
@@ -2720,7 +2722,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.filteringExpressionsTree = gridFilteringExpressionsTree;
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
 
             expect(grid.filteredData.length).toEqual(2);
 
@@ -3270,7 +3272,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 tick(200);
 
                 // Click the left input to open the operators dropdown and verify its display density.
-                let conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0);
+                let conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0, true);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
@@ -3295,7 +3297,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 tick(200);
 
                 // Click the left input to open the operators dropdown and verify its display density.
-                conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0);
+                conditionsInput = GridFunctions.getExcelFilteringDDInput(fix, 0, true);
                 conditionsInput.click();
                 tick(100);
                 fix.detectChanges();
@@ -3455,6 +3457,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickAddFilterExcelStyleCustomFiltering(fix);
             tick(200);
             fix.detectChanges();
+            tick(200);
+            fix.detectChanges();
 
             // Verify last expression is currently in view inside the expressions container.
             const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
@@ -3475,9 +3479,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 'addFilterButton overlaps lastExpression');
             expect(addFilterButtonRect.bottom <= expressionsContainerRect.bottom).toBe(true,
                 'addFilterButton ends below expressionsContainer');
-
-            // Close excel style custom filtering dialog.
-            GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
         }));
 
         it('Should generate "equals" conditions when selecting two values.', fakeAsync(() => {
@@ -3594,7 +3595,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar is visible for 'comfortable'.
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            await wait(30);
+            fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(true, 'excel search scrollbar should be visible');
             GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -3605,7 +3608,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar is NOT visible for 'cosy'.
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            await wait(30);
+            fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
             GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -3616,7 +3621,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar is NOT visible for 'compact'.
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            await wait(30);
+            fix.detectChanges();
 
             expect(isExcelSearchScrollBarVisible(fix)).toBe(false, 'excel search scrollbar should NOT be visible');
         }));
@@ -3783,7 +3790,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             // Verify 'And' button is selected on first expression.
-            let andButton = GridFunctions.getAdvancedFilteringExpressionAndButton(fix);
+            let andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             ControlsFunction.verifyButtonIsSelected(andButton);
 
             // Click the 'And' button.
@@ -3792,10 +3799,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify that selected button remains the same.
-            andButton =  GridFunctions.getAdvancedFilteringExpressionAndButton(fix);
+            andButton =  GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
             ControlsFunction.verifyButtonIsSelected(andButton);
 
-            const orButton = GridFunctions.getAdvancedFilteringExpressionOrButton(fix);
+            const orButton = GridFunctions.getExcelCustomFilteringExpressionOrButton(fix);
             ControlsFunction.verifyButtonIsSelected(orButton, false);
         }));
 
@@ -3808,8 +3815,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
             tick(200);
 
-            const andButton = GridFunctions.getAdvancedFilteringExpressionAndButton(fix);
-            const orButton = GridFunctions.getAdvancedFilteringExpressionOrButton(fix);
+            const andButton = GridFunctions.getExcelCustomFilteringExpressionAndButton(fix);
+            const orButton = GridFunctions.getExcelCustomFilteringExpressionOrButton(fix);
 
             // Verify 'and' is selected.
             ControlsFunction.verifyButtonIsSelected(andButton);
@@ -4025,21 +4032,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.width = '700px';
             fix.detectChanges();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
 
-            const excelMenuParent =  GridFunctions.getExcelStyleFilteringComponent(fix);
-            const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix, excelMenuParent);
+            const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix);
 
             // Verify that custom filter dropdown (the submenu) is not visible.
-            let subMenu = excelMenuParent.querySelector('.igx-drop-down__list.igx-toggle--hidden');
+            let subMenu = fix.nativeElement.querySelector('.igx-drop-down__list.igx-toggle--hidden');
             expect(subMenu).not.toBeNull();
 
             cascadeButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-            tick(30);
+            tick(100);
             fix.detectChanges();
 
+
             // Verify that custom filter dropdown (the submenu) is visible.
-            subMenu = excelMenuParent.querySelector('.igx-drop-down__list.igx-toggle--hidden');
+            subMenu = fix.nativeElement.querySelector('.igx-drop-down__list.igx-toggle--hidden');
             expect(subMenu).toBeNull();
         }));
 
