@@ -547,7 +547,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(cell.visibleColumnIndex).toBe(0);
             });
 
-            it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left key
+            it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left and Right key
                 and then Arrow Up + Down to same cell`, () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -609,6 +609,70 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+            });
+
+            it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Right and Left key
+                and then Arrow Up + Down to same cell`, () => {
+                fix.componentInstance.colGroups = [{
+                    group: 'group1',
+                    hidden: true,
+                    columns: [
+                        { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 3 }
+                    ]
+                }, {
+                    group: 'group2',
+                    columns: [
+                        { field: 'Country', rowStart: 1, colStart: 1 },
+                        { field: 'Phone', rowStart: 1, colStart: 2 },
+                        { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+                    ]
+                }, {
+                    group: 'group3',
+                    columns: [
+                        { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3 },
+                        { field: 'Region', rowStart: 3, colStart: 1 },
+                        { field: 'PostalCode', rowStart: 3, colStart: 2 }
+                    ]
+                }, {
+                    group: 'group4',
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 },
+                        { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
+                    ]
+                }];
+                fix.detectChanges();
+                const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
+                const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
+                const firstCell = firstRowCell[2];
+
+                firstCell.triggerEventHandler('focus', null);
+                fix.detectChanges();
+
+                GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+
+                GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowLeft');
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+                GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowUp');
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+                GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowDown');
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
             });
 
             it('should navigate using Arrow Left through bigger cell with same rowStart but bigger row span', () => {
