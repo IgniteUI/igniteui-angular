@@ -1943,6 +1943,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get isPinningToStart() {
+        return this.pinning.columns !== ColumnPinningPosition.End;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
             return this.rowSelectorsTemplates.first.templateRef;

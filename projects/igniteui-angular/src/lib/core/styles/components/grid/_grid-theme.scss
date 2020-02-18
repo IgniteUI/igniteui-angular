@@ -1296,6 +1296,15 @@
         }
     }
 
+    %grid-cell--pinned-first {
+        border-#{$left}: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+
+        &%grid-cell--editing {
+            border-#{$left}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
+        }
+    }
+
+
     %grid-cell-header {
         flex-flow: row nowrap;
         justify-content: space-between;
