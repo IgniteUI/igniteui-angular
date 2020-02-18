@@ -418,6 +418,7 @@ describe('IgxGrid - Column Pinning to End', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const FIRST_PINNED_CELL_CSS = '.igx-grid__td--pinned-first';
 
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -434,8 +435,8 @@ describe('IgxGrid - Column Pinning to End', () => {
         tick();
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        const firstPinnedIndex = grid.unpinnedColumns.length + 1;
-        const secondPinnedIndex = grid.unpinnedColumns.length + 2;
+        const firstPinnedIndex = grid.unpinnedColumns.length;
+        const secondPinnedIndex = grid.unpinnedColumns.length + 1;
         // verify pinned/unpinned collections
         expect(grid.pinnedColumns.length).toEqual(2);
         expect(grid.unpinnedColumns.length).toEqual(9);
@@ -443,16 +444,16 @@ describe('IgxGrid - Column Pinning to End', () => {
         // verify DOM
         const firstIndexCell = grid.getCellByColumn(0, 'CompanyName');
         expect(firstIndexCell.visibleColumnIndex).toEqual(firstPinnedIndex);
-        // expect(firstIndexCell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+        expect(firstIndexCell.nativeElement.classList.contains(FIRST_PINNED_CELL_CSS)).toBe(true);
 
         const lastIndexCell = grid.getCellByColumn(0, 'ContactName');
         expect(lastIndexCell.visibleColumnIndex).toEqual(secondPinnedIndex);
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
-        expect(headers[firstPinnedIndex].context.column.field).toEqual('CompanyName');
+        expect(headers[headers.length - 2].context.column.field).toEqual('CompanyName');
 
-        expect(headers[secondPinnedIndex].context.column.field).toEqual('ContactName');
+        expect(headers[headers.length - 1].context.column.field).toEqual('ContactName');
         // expect(headers[secondPinnedIndex].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
 
         // verify container widths
@@ -798,7 +799,7 @@ export class GridInitialPinningComponent {
 @Component({
     template: `
         <igx-grid
-            [pinning]='piningConfig'
+            [pinning]='pinningConfig'
             [width]='"800px"'
             [height]='"300px"'
             [data]="data"
@@ -812,6 +813,7 @@ export class GridRightPinningComponent {
     public selectedCell;
 
     public data = companyData;
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
