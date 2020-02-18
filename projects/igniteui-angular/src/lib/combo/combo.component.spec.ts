@@ -58,7 +58,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     let fixture;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -1452,7 +1452,8 @@ fdescribe('igxCombo', () => {
                         IgxToggleModule,
                         ReactiveFormsModule,
                         FormsModule
-                    ]
+                    ],
+                    providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1480,6 +1481,7 @@ fdescribe('igxCombo', () => {
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
                 await wait();
+                zone.simulateOnStable();
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                 firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
