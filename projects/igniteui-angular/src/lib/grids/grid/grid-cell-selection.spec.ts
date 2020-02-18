@@ -1206,7 +1206,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 3, 3);
         }));
 
-        fit('Should handle Shift + Ctrl + Arrow Down keys combination', (async () => {
+        it('Should handle Shift + Ctrl + Arrow Down keys combination', (async () => {
             const firstCell = grid.getCellByColumn(2, 'Name');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
