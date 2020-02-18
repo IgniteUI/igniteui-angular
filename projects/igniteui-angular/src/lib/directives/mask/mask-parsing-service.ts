@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 /**
  * @hidden
  */
@@ -19,7 +21,10 @@ export const KEYS = {
 /**
  * @hidden
  */
-export class MaskHelper {
+@Injectable({
+    providedIn: 'root'
+})
+export class MaskParsingService {
     private _cursor;
     public get cursor() {
         return this._cursor;

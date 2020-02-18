@@ -207,13 +207,10 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             [height]="'600px'"
             [autoGenerate]="true"
             rowSelection = "multiple"`,
-            EventSubscriptions.onColumnInit, '')
+            '', '')
 })
 export class ScrollsComponent extends BasicGridComponent {
     data = SampleTestData.generateBigDataRowsAndCols(16, 16);
-    public columnInit(column) {
-        // column.width = '50px';
-    }
 }
 
 @Component({
@@ -224,7 +221,7 @@ export class ScrollsComponent extends BasicGridComponent {
           [columnWidth]="'200px'"`,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
-export class NoScrollsComponent extends BasicGridSearchComponent {
+export class NoScrollsComponent extends GridWithSizeComponent {
     data = SampleTestData.personIDNameJobCompany();
 }
 
@@ -861,12 +858,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth: number = null) {
+     public generateCols(numCols: number, defaultColWidth = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || (j % 8 < 2 ? 100 : (j % 6) * 125)
             });
         }
         return cols;
@@ -1879,4 +1876,34 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
           }
         ];
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column field="firstName"></igx-column>
+            <igx-column field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
+            <igx-column field="fullName" [editable]="false"></igx-column>
+        </igx-grid>
+        <button class="btnTest">Test</button>
+    `
+})
+export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
+    public data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data" [autoGenerate]="true"></igx-grid>
+    `
+})
+export class NoColumnWidthGridComponent extends BasicGridComponent {
+    data = SampleTestData.generateNumberData(1000);
 }

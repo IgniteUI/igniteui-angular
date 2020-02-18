@@ -1903,7 +1903,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
 
-            fix.componentInstance.columns = fix.componentInstance.generateCols(100, 50);
+            fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(100);
 
             fix.detectChanges();
