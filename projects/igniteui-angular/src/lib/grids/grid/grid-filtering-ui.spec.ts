@@ -1372,14 +1372,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const calendar = outlet.getElementsByClassName('igx-calendar')[0];
             const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
             (<HTMLElement>todayDayItem).click();
-            tick(100);
+            tick(200);
             fix.detectChanges();
 
             // Verify the chip and input are committed.
             const filterChip = filteringRow.query(By.directive(IgxChipComponent));
             expect(filterChip).toBeTruthy();
             expect(filterChip.componentInstance.selected).toBeFalsy();
-            expect(input.componentInstance.value).toBeNull('input value is present and not committed');
+            expect(input.nativeElement.value).toEqual('');
         }));
 
         it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
