@@ -414,7 +414,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
 
 /**
  * @hidden
- * @internal
  */
 @NgModule({
     declarations: [IgxRadioGroupDirective, IgxRadioComponent],
