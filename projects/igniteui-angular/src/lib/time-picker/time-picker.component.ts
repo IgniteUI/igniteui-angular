@@ -873,6 +873,8 @@ export class IgxTimePickerComponent implements
                 const input = this.getEditElement();
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
+                } else {
+                    this.updateValidity();
                 }
             });
 
@@ -1824,13 +1826,8 @@ export class IgxTimePickerComponent implements
             }
         }
 
-        this._onTouchedCallback();
         if (this.toggleRef.collapsed) {
-            if (this._ngControl && !this._ngControl.valid) {
-                this._inputDirective.valid = IgxInputState.INVALID;
-            } else {
-                this._inputDirective.valid = IgxInputState.INITIAL;
-            }
+            this.updateValidity();
         }
     }
 
@@ -1904,6 +1901,40 @@ export class IgxTimePickerComponent implements
         requestAnimationFrame(() => {
             this._setCursorPosition(cursor);
         });
+    }
+
+    private cursorOnHours(cursor: number, showHours: boolean): boolean {
+        return showHours && this._hoursPos.has(cursor);
+    }
+
+    private cursorOnMinutes(cursor: number, showHours: boolean, showMinutes: boolean): boolean {
+        return showMinutes &&
+            (showHours && this._minutesPos.has(cursor)) ||
+            (!showHours && this._minutesPos.has(cursor));
+    }
+
+    private cursorOnSeconds(cursor: number, showHours: boolean, showMinutes: boolean, showSeconds: boolean): boolean {
+        return showSeconds &&
+            (showHours && showMinutes && this._secondsPos.has(cursor)) ||
+            ((!showHours || !showMinutes) && this._secondsPos.has(cursor)) ||
+            (!showHours && !showMinutes && this._secondsPos.has(cursor));
+    }
+
+    private cursorOnAmPm(cursor: number, showHours: boolean, showMinutes: boolean,
+        showSeconds: boolean, showAmPm: boolean): boolean {
+        return showAmPm &&
+            (showHours && showMinutes && showSeconds && this._amPmPos.has(cursor)) ||
+            ((!showHours || !showMinutes || !showSeconds) && this._amPmPos.has(cursor)) ||
+            (!showHours && (!showMinutes || !showSeconds) && this._amPmPos.has(cursor));
+    }
+
+    private updateValidity() {
+        this._onTouchedCallback();
+        if (this._ngControl && !this._ngControl.valid) {
+            this._inputDirective.valid = IgxInputState.INVALID;
+        } else {
+            this._inputDirective.valid = IgxInputState.INITIAL;
+        }
     }
 }
 

@@ -907,6 +907,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 const input = this.getEditElement();
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
+                } else {
+                    this._updateValidity();
                 }
             });
 
@@ -1135,14 +1137,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.calculateDate(event.target.value, event.type);
         }
 
-        this._onTouchedCallback();
         if (this.collapsed) {
-            const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
-            if (this._ngControl && !this._ngControl.valid) {
-                input.valid = IgxInputState.INVALID;
-            } else {
-                input.valid = IgxInputState.INITIAL;
-            }
+            this._updateValidity();
         }
     }
 
@@ -1426,6 +1422,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
+    private _updateValidity() {
+        this._onTouchedCallback();
+        const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
+        if (this._ngControl && !this._ngControl.valid) {
+            input.valid = IgxInputState.INVALID;
+        } else {
+            input.valid = IgxInputState.INITIAL;
+        }
+    }
 }
 
 /**
