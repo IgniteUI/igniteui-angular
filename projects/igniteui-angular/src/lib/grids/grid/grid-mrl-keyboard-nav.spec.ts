@@ -1988,11 +1988,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Address');
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'ArrowRight', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2000,11 +2000,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'ArrowLeft', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2051,11 +2051,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'end', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2064,11 +2064,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2114,11 +2114,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
