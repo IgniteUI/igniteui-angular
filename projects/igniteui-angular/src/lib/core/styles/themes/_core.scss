@@ -61,7 +61,6 @@
 @import '../print/index';
 
 /// Includes the base for each theme.
-
 [class^='igx-'] {
     &,
     *,
@@ -71,7 +70,17 @@
     }
 }
 
-@mixin igx-core($print-layout: true, $direction: ltr) {
+/// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
+/// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
+/// @param {color} $foreground-color [0, 0, 0, .87] - Sets the value of the global $igx-foreground-color used in all typography styles.
+/// @see $igx-foreground-color
+/// @requires {mixin} igx-typography
+/// @requires {mixin} igx-vhelper
+/// @requires {mixin} igx-print-layout
+@mixin igx-core(
+    $print-layout: true,
+    $direction: ltr,
+) {
     @if $direction != ltr and $direction != rtl {
         $direction: ltr !global;
     } @else {

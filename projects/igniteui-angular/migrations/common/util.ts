@@ -42,7 +42,7 @@ export function getProjects(config: WorkspaceSchema): WorkspaceProject<ProjectTy
     for (const projName of Object.keys(config.projects)) {
         const proj = config.projects[projName];
         if ((proj.projectType && proj.projectType !== ProjectType.Application) ||
-            (proj.architect && proj.architect.e2e)) {
+            (proj.architect && proj.architect.e2e && !proj.architect.build)) {
             continue;
         }
         projects.push(proj as WorkspaceProject<ProjectType.Application>);

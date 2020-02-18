@@ -61,8 +61,12 @@ export class IgxNavigationDrawerComponent implements
     AfterContentInit,
     OnDestroy,
     OnChanges {
+
     private _isOpen = false;
-    @HostBinding('class') public cssClass = 'igx-nav-drawer';
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-nav-drawer')
+    public cssClass = true;
 
     /**
      * ID of the component

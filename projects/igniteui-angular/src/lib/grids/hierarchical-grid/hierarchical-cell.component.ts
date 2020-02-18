@@ -93,7 +93,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (event.altKey && !this.row.added) {
-            const grid = this.gridAPI.grid;
             const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
             const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
             if (collapse) {
@@ -101,23 +100,8 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             } else if (expand) {
                 this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
             }
-            if (expand || collapse) {
-                const rowID = this.cellID.rowID;
-                grid.cdr.detectChanges();
-                this.persistFocusedCell(rowID);
-            }
             return;
         }
         super.dispatchEvent(event);
-    }
-
-    protected persistFocusedCell(rowID) {
-        requestAnimationFrame(() => {
-            // TODO: Test it out
-            const cell = this.gridAPI.get_cell_by_key(rowID, this.column.field);
-            if (cell) {
-                cell.nativeElement.focus();
-            }
-        });
     }
 }
