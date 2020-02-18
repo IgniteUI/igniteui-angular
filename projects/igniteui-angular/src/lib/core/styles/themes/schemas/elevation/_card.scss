@@ -3,11 +3,14 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-card: (
     resting-elevation: 2,
     hover-elevation: 8
 );
 
+/// @type Map
 $_fluent-elevation-card: (
     resting-elevation: 0,
     hover-elevation: 0
