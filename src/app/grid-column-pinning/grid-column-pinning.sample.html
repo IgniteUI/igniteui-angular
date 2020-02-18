@@ -23,6 +23,7 @@
         <div class="sample-switches">
             <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
             <igx-switch [(ngModel)]="grid1.columnPinning" style="padding-left: 10px">Column Pinning</igx-switch>
+            <igx-switch *ngIf="grid1.columnPinning" [(ngModel)]="rightPinning" style="padding-left: 10px">Right Pinning</igx-switch>
         </div>
         </div>
     </div>

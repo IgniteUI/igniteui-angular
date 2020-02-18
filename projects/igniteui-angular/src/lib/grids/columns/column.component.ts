@@ -1003,9 +1003,9 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get rightPinnedOffset(): string {
-        return this.pinned ?
+        return (this.pinned && !this.grid.isPinningToStart) ?
             - this.grid.pinnedWidth + 'px' :
-            null;
+            this.grid.isPinningToStart ? 0 + 'px' : null;
     }
 
     get gridRowSpan(): number {
