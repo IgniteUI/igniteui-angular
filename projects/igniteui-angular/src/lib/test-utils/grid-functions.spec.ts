@@ -589,8 +589,11 @@ export class GridFunctions {
         tick();
         fix.detectChanges();
 
-        ControlsFunction.clickDropDownItem(fix, index);
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
+        const ddItems = ddList.nativeElement.children;
+        ddItems[index].click();
         tick(100);
+        fix.detectChanges();
     }
 
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
