@@ -21,6 +21,10 @@ export class UIInteractions {
     public static altAndArrowUpEvent = { key: 'ArrowUp', altKey: true, stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
 
+    public static getKeyboardEvent(eventType: string, keyboardEvent: KeyboardEventInit) {
+        return new KeyboardEvent(eventType, keyboardEvent);
+    }
+
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
             key: keyPressed,
@@ -32,6 +36,19 @@ export class UIInteractions {
             preventDefault: () => { }
         };
         elem.triggerEventHandler('keydown', event);
+    }
+
+    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        elem.triggerEventHandler('keyup', event);
     }
 
     public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
