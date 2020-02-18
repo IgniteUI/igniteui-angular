@@ -3,11 +3,14 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-grid: (
     grid-elevation: 2,
     drag-elevation: 5,
 );
 
+/// @type Map
 $_fluent-elevation-grid: (
     grid-elevation: 0,
     drag-elevation: 1,
