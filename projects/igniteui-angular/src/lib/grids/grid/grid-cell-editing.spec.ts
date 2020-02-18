@@ -6,11 +6,11 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { ColumnEditablePropertyTestComponent } from './cell.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
-    SelectionWithTransactionsComponent
+    SelectionWithTransactionsComponent,
+    ColumnEditablePropertyTestComponent
 } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCETIME = 30;
