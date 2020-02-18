@@ -16,6 +16,7 @@ import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent }
 import { ControlsFunction } from './controls-functions.spec';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
+const SUMMARY_ROW = 'igx-grid-summary-row';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -1620,6 +1621,16 @@ export class GridFunctions {
             (<HTMLElement>a).getBoundingClientRect().left - (<HTMLElement>b).getBoundingClientRect().left);
     }
 
+    public static sortDebugElementsVertically(arr) {
+        return arr.sort((a, b) =>
+            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+    }
+
+    public static sortDebugElementsHorizontally(arr) {
+        return arr.sort((a, b) =>
+            (<HTMLElement>a.nativeElement).getBoundingClientRect().left - (<HTMLElement>b.nativeElement).getBoundingClientRect().left);
+    }
+
     public static getRowEditingBannerRow(fix): HTMLElement {
         return fix.nativeElement.querySelector(BANNER_ROW_CLASS);
     }
@@ -1747,13 +1758,19 @@ export class GridSummaryFunctions {
         const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
         const rowIndexes = [];
         summaries.forEach(summary => {
-            rowIndexes.push(Number(summary.attributes['data-rowIndex']));
+            rowIndexes.push(Number(summary.nativeElement.attributes['data-rowindex'].value));
         });
         return rowIndexes.sort((a: number, b: number) => a - b);
     }
 
     public static getAllVisibleSummaries(fix) {
-        return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
+        return fix.debugElement.queryAll(By.css(SUMMARY_ROW));
+    }
+
+    public static getAllVisibleSummariesSorted(fix: ComponentFixture<any>) {
+        const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+        return summaries.sort((a, b) =>
+            (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
     }
 
     public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
