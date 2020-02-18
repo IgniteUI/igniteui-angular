@@ -16,7 +16,7 @@ import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
 import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs } from '../services';
 
-fdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
