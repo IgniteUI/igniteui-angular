@@ -1654,7 +1654,7 @@ export class GridSummaryFunctions {
         const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
         const rowIndexes = [];
         summaries.forEach(summary => {
-            rowIndexes.push(Number(summary.attributes['data-rowindex']));
+            rowIndexes.push(Number(summary.nativeElement.attributes['data-rowindex'].value));
         });
         return rowIndexes.sort((a: number, b: number) => a - b);
     }
