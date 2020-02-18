@@ -8,7 +8,10 @@
 
 /// Generates the base dark button-group schema.
 /// @type {Map}
-/// @prop {Color} item-background [#222] - The background color for button group items .
+/// @prop {Color} item-background [#222] - The background color for button group items.
+/// @prop {map} item-border-color [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group items.
+/// @prop {map} item-selected-border-color [igx-color: ('grays', 500), hexrgba: #222] - The border color for button group selected items.
+/// @prop {map} item-disabled-border: [igx-color: ('grays', 400), hexrgba: #222] - The border color for button group disabled items.
 $_base-dark-button-group: (
     item-background: #222,
 
@@ -47,8 +50,8 @@ $_dark-button-group: extend($_light-button-group, $_base-dark-button-group);
 /// @prop {Color} item-hover-background [#222] - The background color for button group items on hover.
 /// @prop {map} item-selected-background [igx-color: ('grays', 100)] - The background color for button group selected items.
 /// @prop {map} item-selected-hover-background [igx-color: ('grays', 100)] - The background color for button group selected items on hover.
-/// @prop {map} item-selected-hover-background [igx-color: ('primary', 200)] - The text color for button group selected items.
-/// @prop {Color} item-hover-background [#222] - The background color for button group disabled items.
+/// @prop {map} item-selected-text-color [igx-color: ('primary', 200)] - The text color for button group selected items.
+/// @prop {Color} disabled-background-color [#222] - The background color for button group disabled items.
 ///
 /// @requires {function} extend
 /// @requires $_fluent-button-group
