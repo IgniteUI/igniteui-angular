@@ -2524,6 +2524,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @hidden
     * @internal
     */
+    public get headerFeaturesWidth() {
+        return this._headerFeaturesWidth;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
     public isDetailRecord(rec) {
         return false;
     }
