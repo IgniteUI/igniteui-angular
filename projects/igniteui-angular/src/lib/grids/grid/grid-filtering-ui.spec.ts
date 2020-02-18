@@ -2736,6 +2736,28 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(5);
         }));
 
+        it('Should not be able to exit custom dialog when press tab on apply button', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick();
+
+            const applyButton = GridFunctions.getApplyExcelStyleCustomFiltering(fix);
+            applyButton.focus();
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', applyButton, true);
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(applyButton);
+        }));
+
         it('Should populate custom filter dialog.', fakeAsync(() => {
             const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
             const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.Or, 'Downloads');
