@@ -10,7 +10,7 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableIvy": true
+    "enableIvy": false
   },
   "files": [
     "src/test.ts"
