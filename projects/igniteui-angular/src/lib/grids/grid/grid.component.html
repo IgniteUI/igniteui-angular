@@ -139,9 +139,10 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail='true' style="overflow:auto;width: 100%;" (focusin)='detailsViewFocused(detailsContainer, rowIndex)' tabindex="0" #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
+            <div detail='true' style="overflow:auto;width: 100%;" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
-                'igx-grid__tr-container': true
+                'igx-grid__tr-container': true,
+                'igx-grid__tr-container--active': isDetailActive(rowIndex)
             }">
                 <div class="igx-grid__hierarchical-indent" style='display:flex;'>
                         <ng-container *ngIf="this.groupingExpressions.length > 0">
@@ -174,7 +175,7 @@
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
-        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0"
+        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="-1"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
     <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight'

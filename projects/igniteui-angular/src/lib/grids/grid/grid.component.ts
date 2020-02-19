@@ -508,13 +508,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     (activeElem as any).focus({ preventScroll: true });
                     return;
                 }
-                const nextCellTarget = this.navigation.getCellElementByVisibleIndex(active.row, active.column);
+/*                 const nextCellTarget = this.navigation.getCellElementByVisibleIndex(active.row, active.column);
                 const nextRowTarget = (this.navigation as any).getRowByIndex(active.row + 1, '');
                 if (nextCellTarget) {
                     nextCellTarget.focus({ preventScroll: true });
                 } else if (nextRowTarget) {
                     nextRowTarget.focus({ preventScroll: true });
-                }
+                } */
             });
         }
     }
@@ -533,17 +533,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     *@hidden @internal
     */
     public detailsViewFocused(container, rowIndex) {
-        this.selectionService.activeElement = {
-            row: rowIndex,
-            column: this.selectionService.activeElement ? this.selectionService.activeElement.column : 0
-        };
+        this.navigation.activeNode ? this.navigation.activeNode.row = rowIndex :
+            this.navigation.activeNode = {row: rowIndex};
     }
 
     /**
     *@hidden @internal
     */
     public detailsKeyboardHandler(event, rowIndex, container) {
-        const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
+/*         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
         const key = event.key.toLowerCase();
@@ -573,7 +571,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.navigation.navigateDown(container, {row: rowIndex, column: colIndex});
         } else if (key === 'arrowdown' && ctrl && target === container) {
             this.navigation.navigateBottom(colIndex);
-        }
+        } */
     }
 
 
@@ -604,6 +602,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     */
    public isDetailRecord(record) {
     return record.detailsData !== undefined;
+   }
+   /**
+    * @hidden @internal
+    */
+   public isDetailActive(rowIndex) {
+       return this.navigation.activeNode ? this.navigation.activeNode.row === rowIndex : false;
    }
     /**
      * @hidden @internal

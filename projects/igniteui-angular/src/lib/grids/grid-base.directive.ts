@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -1806,17 +1806,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get firstEditableColumnIndex(): number {
-        const index = this.navigation.gridOrderedColumns.findIndex(e => e.editable);
-        return index !== -1 ? index : null;
+        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort();
+        return index.length ? index[0] : null;
     }
 
     /**
      * @hidden @internal
      */
     public get lastEditableColumnIndex(): number {
-        const orderedColumns = this.navigation.gridOrderedColumns;
-        const index = orderedColumns.reverse().findIndex(e => e.editable);
-        return index !== -1 ? orderedColumns.length - 1 - index : null;
+        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort().reverse();
+        return index.length ? index[0] : null;
     }
 
     /**
@@ -1850,6 +1849,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
+
+    @HostBinding('attr.aria-activedescendant')
+    get activeDescendant() {
+        const activeElem = this.navigation.activeNode;
+        if (activeElem) {
+            return this.gridAPI.grid.id + '_' + activeElem.row + '_' + activeElem.column;
+        }
+        return null;
+    }
 
     /**
      * @hidden @internal
@@ -2553,8 +2561,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
-        if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
-            event.preventDefault();
+        if ((SUPPORTED_KEYS.has(key) && event.keyCode !== 32) || key === 'pagedown' || key === 'pageup' ||
+            (key === 'tab' && this.navigation.isRowInEditMode(this.navigation.activeNode.row))) {
+            console.log('GRIDKeyDown', event);
+            this.navigation.dispatchEvent(event);
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
                 this.nativeElement.focus();
@@ -3254,6 +3264,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.columnList.find((col) => col.field === name);
     }
 
+    public getColumnByVisibleIndex(index: number): IgxColumnComponent {
+        return this.visibleColumns.find((col) => col.visibleIndex === index);
+    }
+
     /**
      * Returns the `IgxRowDirective` by index.
      * @example
@@ -3309,6 +3323,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (columnId !== -1) {
             return this.gridAPI.get_cell_by_index(rowIndex, columnId);
         }
+    }
+
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_visible_index(rowIndex, index);
+
     }
 
     /**
@@ -5160,11 +5179,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex);
         const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performVerticalScrollToCell(rowIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
                      () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
@@ -5848,9 +5866,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             // hence we need to trigger it manually when cell is detached.
             const row = this.getRowByIndex(context.index);
             const focusedCell = row && row.cells ? row.cells.find(x => x.focused) : false;
-            if (focusedCell) {
-                focusedCell.onBlur();
-            }
         }
     }
 
