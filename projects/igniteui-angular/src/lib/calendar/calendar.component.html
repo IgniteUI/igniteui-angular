@@ -4,11 +4,11 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB(getViewDate(obj.index), $event)" (click)="activeViewYear(getViewDate(obj.index), $event)"
+    <span tabindex="0" #monthsBtn (keydown)="onActiveViewYearKB(getViewDate(obj.index), $event, obj.index)" (click)="onActiveViewYear(getViewDate(obj.index), obj.index, $event)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index))"
+    <span tabindex="0" #yearsBtn (keydown)="onActiveViewDecadeKB($event, getViewDate(obj.index), obj.index)" (click)="onActiveViewDecade(getViewDate(obj.index), obj.index)"
         class="igx-calendar-picker__date">
         {{ formattedYear(getViewDate(obj.index)) }}
     </span>
@@ -31,7 +31,7 @@
                 }">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div class="igx-calendar-picker__dates" *ngFor="let view of dayViews; index as i;" [style.width.%]="100/monthsViewNumber" [attr.data-month]="getMonth(i)">
+        <div class="igx-calendar-picker__dates" *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [style.width.%]="100/monthsViewNumber" [attr.data-month]="i | IgxGetViewDate:viewDate:false">
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)">
             </ng-container>
         </div>
@@ -46,14 +46,14 @@
     <div style="display: flex"
         [@animateChange]="animationAction"
         (@animateChange.done)="animationDone($event)">
-        <igx-days-view *ngFor="let view of dayViews; index as i;" [changeDaysView]="true" #days
+        <igx-days-view *ngFor="let view of monthsViewNumber | IgxMonthViewSlots; index as i;" [changeDaysView]="true" #days
+                [selection]="selection"
                 [locale]="locale"
                 [value]="value"
-                [viewDate]="getViewDate(i)"
+                [viewDate]="i | IgxGetViewDate:viewDate"
                 [weekStart]="weekStart"
                 [formatOptions]="formatOptions"
                 [formatViews]="formatViews"
-                [selection]="selection"
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
                 [hideOutsideDays]="hideOutsideDays"
