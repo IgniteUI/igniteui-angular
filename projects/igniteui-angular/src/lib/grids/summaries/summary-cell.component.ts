@@ -40,25 +40,26 @@ export class IgxSummaryCellComponent {
         return this.column.visibleIndex;
     }
 
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('attr.aria-describedby')
     public get describeby() {
         return `Summary_${this.column.field}`;
     }
 
-    @HostBinding('class.igx-grid-summary--active')
-    public focused: boolean;
-
-    @HostListener('focus')
-    public onFocus() {
-        this.focused = true;
+    @HostBinding('attr.id')
+    public get attrCellID() {
+        return `${this.grid.id}_${this.rowIndex}_${ this.visibleColumnIndex}`;
     }
 
-    @HostListener('blur')
-    public onBlur() {
-        this.focused = false;
+    @HostBinding('class.igx-grid-summary--active')
+    public get focused() {
+        const node = this.grid.navigation.activeNode;
+        return  node ? node.row === this.rowIndex && node.column === this.visibleColumnIndex : false;
+
+    }
+
+    @HostListener('click')
+    public activate() {
+        this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex};
     }
 
     protected get selectionNode(): ISelectionNode {
@@ -67,65 +68,6 @@ export class IgxSummaryCellComponent {
             column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex,
             isSummaryRow: true
         };
-    }
-
-    @HostListener('keydown', ['$event'])
-    dispatchEvent(event: KeyboardEvent) {
-        // TODO: Refactor
-        const key = event.key.toLowerCase();
-        const ctrl = event.ctrlKey;
-        const shift = event.shiftKey;
-
-        if (!SUPPORTED_KEYS.has(key)) {
-            return;
-        }
-        event.stopPropagation();
-        const args = { targetType: 'summaryCell', target: this, event: event, cancel: false };
-        this.grid.onGridKeydown.emit(args);
-        if (args.cancel) {
-            return;
-        }
-        event.preventDefault();
-
-        if (!this.isKeySupportedInCell(key, ctrl)) { return; }
-
-        this.grid.selectionService.keyboardState.shift = shift && !(key === 'tab');
-        const row = this.getRowElementByIndex(this.rowIndex);
-        switch (key) {
-            case 'tab':
-                if (shift) {
-                    this.grid.navigation.performShiftTabKey(row, this.selectionNode);
-                    break;
-                }
-                this.grid.navigation.performTab(row, this.selectionNode);
-                break;
-            case 'arrowleft':
-            case 'home':
-            case 'left':
-                if (ctrl || key === 'home') {
-                    this.grid.navigation.onKeydownHome(this.rowIndex, true);
-                    break;
-                }
-                this.grid.navigation.onKeydownArrowLeft(this.nativeElement, this.selectionNode);
-                break;
-            case 'end':
-            case 'arrowright':
-            case 'right':
-                if (ctrl || key === 'end') {
-                    this.grid.navigation.onKeydownEnd(this.rowIndex, true);
-                    break;
-                }
-                this.grid.navigation.onKeydownArrowRight(this.nativeElement, this.selectionNode);
-                break;
-            case 'arrowup':
-            case 'up':
-                    this.grid.navigation.navigateUp(row, this.selectionNode);
-                break;
-            case 'arrowdown':
-            case 'down':
-                    this.grid.navigation.navigateDown(row, this.selectionNode);
-                break;
-        }
     }
 
     get width() {
@@ -149,18 +91,6 @@ export class IgxSummaryCellComponent {
     */
     public get grid() {
         return (this.column.grid as any);
-    }
-
-    private getRowElementByIndex(rowIndex) {
-        const summaryRows = this.grid.summariesRowList.toArray();
-        return summaryRows.find((sr) => sr.dataRowIndex === rowIndex).nativeElement;
-    }
-
-    private isKeySupportedInCell(key, ctrl) {
-        if (ctrl) {
-           return ['arrowup', 'arrowdown', 'up', 'down', 'end', 'home'].indexOf(key) === -1;
-        }
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end', 'tab'].indexOf(key) !== -1;
     }
 
     public translateSummary(summary: IgxSummaryResult): string {

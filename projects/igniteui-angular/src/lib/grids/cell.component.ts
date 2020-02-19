@@ -265,7 +265,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.id')
     public get attrCellID() {
-        return `${this.row.gridID}_${this.rowIndex}_${ this.columnIndex}`;
+        return `${this.row.gridID}_${this.rowIndex}_${ this.visibleColumnIndex}`;
     }
 
     /**
@@ -788,6 +788,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
+        this.grid.navigation.activeNode = this.selectionNode;
         this.grid.onCellClick.emit({
             cell: this,
             event
@@ -810,7 +811,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @hidden
      * @internal
      */
-    public activateCell(event: FocusEvent) {
+    public activate(event: FocusEvent) {
         const node = this.selectionNode;
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 

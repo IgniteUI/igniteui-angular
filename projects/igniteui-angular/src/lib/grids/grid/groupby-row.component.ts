@@ -14,7 +14,6 @@ import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
-import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
 
 @Component({
@@ -65,7 +64,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     get focused(): boolean {
-        return this.isFocused;
+        return this.isActive();
     }
 
     /**
@@ -118,12 +117,6 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
-     * @hidden
-     */
     @HostBinding('attr.aria-describedby')
     get describedBy(): string {
         const grRowExpr = this.groupRow.expression !== undefined ? this.groupRow.expression.fieldName : '';
@@ -145,6 +138,11 @@ export class IgxGridGroupByRowComponent {
         return this.element.nativeElement;
     }
 
+    @HostBinding('attr.id')
+    public get attrCellID() {
+        return `${this.gridID}_${this.index}`;
+    }
+
     /**
      * Returns the style classes applied to the group rows.
      * ```typescript
@@ -154,23 +152,18 @@ export class IgxGridGroupByRowComponent {
     @HostBinding('class')
     get styleClasses(): string {
         return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
-            (this.focused ? ` ${this.defaultCssClass}--active` : '');
+            (this.isActive() ? ` ${this.defaultCssClass}--active` : '');
     }
 
-    /**
-     *@hidden
-     */
-    @HostListener('focus')
-    public onFocus() {
-        this.isFocused = true;
+    public isActive() {
+        return this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row === this.index : false;
     }
 
-    /**
-     *@hidden
-     */
-    @HostListener('blur')
-    public onBlur() {
-        this.isFocused = false;
+
+    @HostListener('click')
+    public activate() {
+        this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row = this.index :
+            this.grid.navigation.activeNode = {row: this.index};
     }
 
     /**
@@ -207,53 +200,6 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
-     * @hidden
-     */
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event) {
-        // TODO: Refactor
-        const key = event.key.toLowerCase();
-        if (!SUPPORTED_KEYS.has(key)) {
-            return;
-        }
-        event.stopPropagation();
-        const keydownArgs = { targetType: 'groupRow', target: this, event: event, cancel: false };
-        this.grid.onGridKeydown.emit(keydownArgs);
-        if (keydownArgs.cancel) {
-            return;
-        }
-        event.preventDefault();
-
-        if (!this.isKeySupportedInGroupRow(key, event.shiftKey, event.altKey) || event.ctrlKey) { return; }
-
-        if (this.isToggleKey(key, event.altKey)) {
-            if ((this.expanded && ROW_COLLAPSE_KEYS.has(key)) || (!this.expanded && ROW_EXPAND_KEYS.has(key))) {
-                this.toggle();
-            }
-            return;
-        }
-
-        const selection = this.gridSelection;
-        selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
-
-        const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
-        activeNode.row = this.index;
-        switch (key) {
-            case 'arrowdown':
-            case 'down':
-                this.grid.navigation.navigateDown(this.nativeElement, activeNode);
-                break;
-            case 'arrowup':
-            case 'up':
-                this.grid.navigation.navigateUp(this.nativeElement, activeNode);
-                break;
-            case 'tab':
-                this.handleTabKey(event.shiftKey, activeNode);
-                break;
-        }
-    }
-
-    /**
      * Returns a reference to the `IgxGridComponent` the `IgxGridGroupByRowComponent` belongs to.
      * ```typescript
      * this.grid1.rowList.first.grid;
@@ -270,31 +216,4 @@ export class IgxGridGroupByRowComponent {
         const column = this.grid.getColumnByName(this.groupRow.expression.fieldName);
         return (column && column.dataType) || DataType.String;
     }
-
-    private handleTabKey(shift: boolean, activeNode: ISelectionNode) {
-        if (shift) {
-            this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
-        } else {
-            if (this.index === this.grid.dataView.length - 1 && this.grid.rootSummariesEnabled) {
-                this.grid.navigation.onKeydownHome(0, true);
-            } else {
-                const orderedColumns = this.grid.navigation.gridOrderedColumns;
-                const lastCol = orderedColumns[orderedColumns.length - 1];
-                activeNode.column = lastCol.columnLayoutChild ? lastCol.parent.visibleIndex : lastCol.visibleIndex;
-                this.grid.navigation.performTab(this.nativeElement, activeNode);
-            }
-        }
-    }
-
-    private isKeySupportedInGroupRow(key, shift = false, alt = false) {
-        if (shift) {
-            return ['down', 'up', 'arrowdown', 'arrowup', 'tab'].indexOf(key) !== -1;
-        }
-        return this.isToggleKey(key, alt) ? true : ['down', 'up', 'arrowdown', 'arrowup', 'tab'].indexOf(key) !== -1;
-    }
-
-    private isToggleKey(key, altKey) {
-        return altKey && ['left', 'right', 'up', 'down', 'arrowleft', 'arrowright', 'arrowup', 'arrowdown'].indexOf(key) !== -1;
-    }
-
 }
