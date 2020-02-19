@@ -288,10 +288,10 @@ export class IgxSliderComponent implements
         this._pMax = this.valueToFraction(this.upperBound, 0, 1);
         this._pMin = this.valueToFraction(this.lowerBound, 0, 1);
 
-        this.stepDistance = this.calculateStepDistance();
         this.positionHandlersAndUpdateTrack();
 
         if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
             this.setTickInterval();
         }
     }
@@ -325,8 +325,8 @@ export class IgxSliderComponent implements
     public set step(step: number) {
         this._step = step;
 
-        this.stepDistance = this.calculateStepDistance();
         if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
             this.normalizeByStep(this.value);
             this.setTickInterval();
         }
@@ -446,9 +446,9 @@ export class IgxSliderComponent implements
         // Refresh min travel zone limit.
         this._pMin = 0;
         // Recalculate step distance.
-        this.stepDistance = this.calculateStepDistance();
         this.positionHandlersAndUpdateTrack();
         if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
             this.setTickInterval();
         }
     }
@@ -492,9 +492,9 @@ export class IgxSliderComponent implements
         // refresh max travel zone limits.
         this._pMax = 1;
         // recalculate step distance.
-        this.stepDistance = this.calculateStepDistance();
         this.positionHandlersAndUpdateTrack();
         if (this._hasViewInit) {
+            this.stepDistance = this.calculateStepDistance();
             this.setTickInterval();
         }
     }
@@ -973,14 +973,6 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public ngOnInit() {
-        this.sliderSetup();
-
-        // Set track travel zone
-        this._pMin = this.valueToFraction(this.lowerBound) || 0;
-        this._pMax = this.valueToFraction(this.upperBound) || 1;
-    }
-
     public ngOnChanges(changes) {
         if (changes.minValue && changes.maxValue &&
                 changes.minValue.currentValue < changes.maxValue.currentValue) {
@@ -992,8 +984,20 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
+    public ngOnInit() {
+        this.sliderSetup();
+
+        // Set track travel zone
+        this._pMin = this.valueToFraction(this.lowerBound) || 0;
+        this._pMax = this.valueToFraction(this.upperBound) || 1;
+    }
+
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
         this._hasViewInit = true;
+        this.stepDistance = this.calculateStepDistance();
         this.positionHandlersAndUpdateTrack();
         this.setTickInterval();
         this.changeThumbFocusableState(this.disabled);
