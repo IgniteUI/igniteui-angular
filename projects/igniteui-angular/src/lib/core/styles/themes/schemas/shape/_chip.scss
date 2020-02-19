@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-chip: (
     border-radius: 1,
 );
@@ -15,10 +17,12 @@ $_square-shape-chip: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_fluent-shape-chip: (
     border-radius: 1,
 );
 
+/// @type Map
 $_bootstrap-shape-chip: (
     border-radius: .25
 );

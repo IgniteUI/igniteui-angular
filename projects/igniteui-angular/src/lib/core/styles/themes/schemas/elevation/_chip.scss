@@ -3,14 +3,18 @@
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @type Map
 $_default-elevation-chip: (
     ghost-elevation: 8
 );
 
+/// @type Map
 $_fluent-elevation-chip: (
     ghost-elevation: 2
 );
 
+/// @type Map
 $_bootstrap-elevation-chip: (
     ghost-elevation: 0
 );
