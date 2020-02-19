@@ -1830,7 +1830,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 verifyContextMenuVisibility(fix, false);
             }));
 
-            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu.', (async() => {
+            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu.', fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -1858,11 +1858,15 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 // Select two chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                await wait(400);
-                fix.detectChanges();
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
-                await wait(400);
-                fix.detectChanges();
+                tick(200);
+
+                 // Simulate end of chip selection animation
+                 const chipSelectHidden = fix.nativeElement.querySelector(CHIP_SELECT_HIDDEN_CLASS);
+                 const transitionEvent = new TransitionEvent('transitionend', {
+                     propertyName: 'width'
+                 });
+                 chipSelectHidden.dispatchEvent(transitionEvent);
 
                 // Verify context menu is visible.
                 verifyContextMenuVisibility(fix, true);
@@ -1870,8 +1874,11 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
 
                 // Unselect one of the two selected chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                await wait(400);
-                fix.detectChanges();
+                tick(200);
+
+                // Simulate end of chip selection animation
+                const chipSelect = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
+                chipSelect.dispatchEvent(transitionEvent);
 
                 // Verify context menu is no longer visible.
                 verifyContextMenuVisibility(fix, false);
@@ -2470,7 +2477,7 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
             }));
 
             it('Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.',
-            (async() => {
+            fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2494,26 +2501,28 @@ describe('IgxGrid - Advanced Filtering #grid', () => {
                 fix.detectChanges();
 
                 // Press 'Enter' on the root group's operator line
-                // and verify that the root group and all of its children become selected.
                 let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
-                UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
-                fix.detectChanges();
-                await wait(200);
-                fix.detectChanges();
-                await wait(200);
-                fix.detectChanges();
+                const keyboardEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+                rootOperatorLine.dispatchEvent(keyboardEvent);
+                tick();
+
+                // Simulate end of chip selection animation
+                const chipSelect = fix.nativeElement.querySelector(CHIP_SELECT_CLASS);
+                const transitionEvent = new TransitionEvent('transitionend', {
+                    propertyName: 'width'
+                });
+                chipSelect.dispatchEvent(transitionEvent);
+
+                // Verify items are selected and context menu is opened
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
                 verifyContextMenuVisibility(fix, true);
 
                 // Press 'Enter' on the root group's operator line again
-                // and verify that the root group and all of its children become unselected.
                 rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
-                UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
-                fix.detectChanges();
-                await wait(200);
-                fix.detectChanges();
-                await wait(200);
-                fix.detectChanges();
+                rootOperatorLine.dispatchEvent(keyboardEvent);
+                tick();
+
+                // Verify items are not selected and context menu is closed
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
                 verifyContextMenuVisibility(fix, false);
             }));
@@ -3071,9 +3080,9 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
     } else {
         expect(contextMenuButtons.length).toBe(4, 'incorrect buttons count in context menu');
         expect(contextMenuButtons[0].innerText.toLowerCase()).toBe('close');
-        expect(contextMenuButtons[1].innerText.toLowerCase()).toBe('create "and" group');
-        expect(contextMenuButtons[2].innerText.toLowerCase()).toBe('create "or" group');
-        expect(contextMenuButtons[3].innerText.toLowerCase()).toBe('delete filters');
+        expect(contextMenuButtons[1].innerText.toLowerCase().trim()).toBe('create "and" group');
+        expect(contextMenuButtons[2].innerText.toLowerCase().trim()).toBe('create "or" group');
+        expect(contextMenuButtons[3].innerText.toLowerCase().trim()).toBe('delete filters');
     }
 }
 
