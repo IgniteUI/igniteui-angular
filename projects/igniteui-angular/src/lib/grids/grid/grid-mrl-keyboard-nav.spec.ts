@@ -49,7 +49,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let fourthCell;
                 [firstCell, secondCell, thirdCell, fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
@@ -107,7 +107,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                secondCell .triggerEventHandler('focus', null);
+                secondCell .componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -140,7 +140,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                thirdCell .triggerEventHandler('focus', null);
+                thirdCell .componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -168,7 +168,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowDown');
@@ -200,7 +200,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                secondCell .triggerEventHandler('focus', null);
+                secondCell .componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowDown');
@@ -232,7 +232,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowDown');
@@ -263,7 +263,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                thirdCell.triggerEventHandler('focus', null);
+                thirdCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowDown');
@@ -294,7 +294,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                thirdCell.triggerEventHandler('focus', null);
+                thirdCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowDown');
@@ -320,7 +320,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowUp');
@@ -346,7 +346,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                thirdCell.triggerEventHandler('focus', null);
+                thirdCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowUp');
@@ -377,7 +377,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowRight');
@@ -583,7 +583,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const lastCell = firstRowCell[firstRowCell.length - 1];
 
-                lastCell.triggerEventHandler('focus', null);
+                lastCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'ArrowLeft', false, false, true);
@@ -647,7 +647,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = firstRowCell[2];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
@@ -695,7 +695,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [thirdCell, secondCell, firstCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
@@ -735,7 +735,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell,              firstCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -771,7 +771,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
@@ -811,7 +811,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell,              dummyCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -853,7 +853,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, thirdCell, dummyCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -905,7 +905,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell, thirdCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -956,7 +956,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell,  firstCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
@@ -1001,7 +1001,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     thirdCell,
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                thirdCell.triggerEventHandler('focus', null);
+                thirdCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -1214,7 +1214,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell  , dummyCell  ,
                     dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 // arrow down
@@ -1298,7 +1298,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell               ] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
                 [   secondCell  ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 // Tab
@@ -1468,7 +1468,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell  , dummyCell  ,
                     dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowLeft');
@@ -1520,7 +1520,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 [   secondCell               ,
                     dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowDown');
@@ -1574,7 +1574,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell  , dummyCell  ,
                     dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowDown');
@@ -1626,7 +1626,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 [   firstCell               ,
                     dummyCell  , dummyCell ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowUp');
@@ -1680,7 +1680,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell  , dummyCell  ,
                     dummyCell               ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowUp');
@@ -1737,7 +1737,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     secondCell,
                     dummyCell   ] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
@@ -1833,7 +1833,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const secondCell = penultRowCells[1];
                 const rowIndex = parseInt(secondCell.nativeElement.getAttribute('data-rowindex'), 10);
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowDown');
@@ -1883,7 +1883,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'end');
@@ -1968,7 +1968,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'end', false, false, true);
@@ -2032,7 +2032,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // last cell from first layout
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
-                lastCell.triggerEventHandler('focus', null);
+                lastCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'end');
@@ -2111,7 +2111,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // last cell from first layout
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
-                lastCell.triggerEventHandler('focus', null);
+                lastCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'end', false, false, true);
@@ -2174,7 +2174,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
@@ -2241,7 +2241,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
@@ -2473,7 +2473,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstRowCells = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const secondRowCells = rows[2].queryAll(By.css(CELL_CSS_CLASS));
 
-                secondRowCells[0].triggerEventHandler('focus', null);
+                secondRowCells[0].componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondRowCells[0].componentInstance, 'Tab', false, true);
@@ -2743,7 +2743,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
@@ -2874,7 +2874,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
@@ -2915,7 +2915,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'End');
@@ -2954,7 +2954,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                secondCell.triggerEventHandler('focus', null);
+                secondCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowRight', false, false, true);
@@ -3021,7 +3021,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                firstCell.triggerEventHandler('focus', null);
+                firstCell.componentInstance.onFocus(null);
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight');
