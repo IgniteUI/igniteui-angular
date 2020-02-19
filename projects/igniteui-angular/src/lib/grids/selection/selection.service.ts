@@ -193,6 +193,7 @@ export class IgxGridCRUDService {
 
     end(): void {
         this.cell = null;
+        this.grid.nativeElement.focus();
     }
     public enterEditMode(cell) {
         if (this.isInCompositionMode) {

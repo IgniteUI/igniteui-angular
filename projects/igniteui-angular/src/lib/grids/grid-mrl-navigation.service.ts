@@ -30,7 +30,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
      * @hidden
      * @internal
      */
-    public setStartNavigationCell(colStart: number, rowStart: number, dir: NavigationDirection) {
+/*     public setStartNavigationCell(colStart: number, rowStart: number, dir: NavigationDirection) {
         this.startNavigationCell = {
             colStart: colStart,
             rowStart: rowStart,
@@ -573,5 +573,5 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public goToLastCell() {
         this.startNavigationCell = null;
         super.goToLastCell();
-    }
+    } */
 }

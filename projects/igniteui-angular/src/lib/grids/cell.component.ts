@@ -500,7 +500,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostBinding('class.igx-grid__td--active')
-    public get focused() {
+    public get active() {
         const node = this.grid.navigation.activeNode;
         return node ? node.row === this.rowIndex && node.column === this.visibleColumnIndex : false;
     }
@@ -541,11 +541,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             };
     }
 
+    public focused = this.active;
     protected compositionStartHandler;
     protected compositionEndHandler;
     private _highlight: IgxTextHighlightDirective;
     private _cellSelection = GridSelectionMode.multiple;
-
 
     constructor(
         protected selectionService: IgxGridSelectionService,

@@ -2561,9 +2561,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
-        if ((SUPPORTED_KEYS.has(key) && event.keyCode !== 32) || key === 'pagedown' || key === 'pageup' ||
-            (key === 'tab' && this.navigation.isRowInEditMode(this.navigation.activeNode.row))) {
-            console.log('GRIDKeyDown', event);
+        if (SUPPORTED_KEYS.has(key) || key === 'pagedown' || key === 'pageup' ||
+            (key === 'tab' && this.crudService.cell)) {
+           // console.log('GRIDKeyDown', event);
             this.navigation.dispatchEvent(event);
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
@@ -2579,7 +2579,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        protected gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -5184,8 +5184,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (shouldScrollVertically) {
             this.navigation.performVerticalScrollToCell(rowIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                     () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex,
+                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }
@@ -5865,7 +5865,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
             // hence we need to trigger it manually when cell is detached.
             const row = this.getRowByIndex(context.index);
-            const focusedCell = row && row.cells ? row.cells.find(x => x.focused) : false;
+            const focusedCell = row.cells.find(x => x.focused);
+            if (focusedCell) {
+                focusedCell.focused = false;
+            }
         }
     }
 

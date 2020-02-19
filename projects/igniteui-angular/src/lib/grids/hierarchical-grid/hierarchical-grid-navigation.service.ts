@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
-    protected getCellSelector(visibleIndex?: number, isSummary = false) {
+ /*    protected getCellSelector(visibleIndex?: number, isSummary = false) {
         return isSummary ? 'igx-grid-summary-cell' : 'igx-hierarchical-grid-cell';
     }
 
@@ -801,5 +801,5 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     protected getNextRowByIndex(nextIndex) {
         return this.grid.dataRowList.find(element => element.index === nextIndex).element.nativeElement;
-   }
+   } */
 }

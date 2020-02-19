@@ -26,7 +26,6 @@ export class IgxGridNavigationService {
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
         event.stopPropagation();
-
 /*      // This fixes IME editing issue(#6335) that happens only on IE
         if (isIE() && keydownArgs.event.keyCode === 229 && event.key === 'Tab') {
             return;
@@ -109,10 +108,12 @@ export class IgxGridNavigationService {
             case ' ':
             case 'spacebar':
             case 'space':
-                /* if (this.grid.isRowSelectable) {
-                    this.row.selected ? this.selectionService.deselectRow(this.row.rowID, event) :
-                    this.selectionService.selectRowById(this.row.rowID, false, event);
-                } */
+                debugger;
+                if (this.grid.isRowSelectable) {
+                    const row = this.grid.getRowByIndex(this.activeNode.row);
+                    row.selected ? this.grid.selectionService.deselectRow(row.rowID, event) :
+                    this.grid.selectionService.selectRowById(row.rowID, false, event);
+                }
                 break;
             default:
                 return;
@@ -123,38 +124,6 @@ export class IgxGridNavigationService {
         this.grid.cdr.detectChanges();
     }
 
-    protected handleAlt(key: string, event: KeyboardEvent) {
-        if (this.isToggleKey(key)) {
-/*             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            if (expand) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
-            } else if (collapse) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
-            } */
-            this.grid.notifyChanges();
-        }
-    }
-
-    protected handleRowEditing(shift) {
-        const cellI = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, (col) => col.editable) :
-        this.grid.getNextCell(this.activeNode.row, this.activeNode.column, (col) => col.editable);
-        if (this.activeNode.row !== cellI.rowIndex) {
-            if (this.grid.rowEditTabs.length) {
-                //  TODO: make gridAPI visible for internal use and remove cast to any
-                (this.grid as any).gridAPI.submit_value();
-                shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
-                this.grid.rowEditTabs.first.element.nativeElement.focus();
-                return;
-            }
-        }
-        this.activeNode.row = cellI.rowIndex;
-        this.activeNode.column = cellI.visibleColumnIndex;
-        this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
-            obj.target.setEditMode(true);
-            this.grid.cdr.detectChanges();
-        });
-    }
     get displayContainerWidth() {
         return Math.round(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth);
     }
@@ -228,36 +197,39 @@ export class IgxGridNavigationService {
         }
     }
 
-    public goToLastBodyElement() {
-        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
-        if (verticalScroll.scrollHeight === 0 ||
-            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            const rowIndex = this.grid.dataView.length - 1;
-            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
-            const isRowTarget = row.tagName.toLowerCase() === 'igx-grid-groupby-row' ||
-            this.grid.isDetailRecord(this.grid.dataView[rowIndex]);
-            if (row && isRowTarget) {
-                row.focus();
+    protected handleAlt(key: string, event: KeyboardEvent) {
+        if (this.isToggleKey(key)) {
+            const row = this.grid.getRowByIndex(this.activeNode.row);
+            if (!(row as any).expanded && ROW_EXPAND_KEYS.has(key)) {
+                this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
+            } else if ((row as any).expanded && ROW_COLLAPSE_KEYS.has(key)) {
+                this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
+            }
+            this.grid.notifyChanges();
+        }
+    }
+
+    protected handleRowEditing(shift) {
+        const cellI = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, (col) => col.editable) :
+        this.grid.getNextCell(this.activeNode.row, this.activeNode.column, (col) => col.editable);
+        if (this.activeNode.row !== cellI.rowIndex) {
+            if (this.grid.rowEditTabs.length) {
+                //  TODO: make gridAPI visible for internal use and remove cast to any
+                (this.grid as any).gridAPI.submit_value();
+                shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
+                this.grid.rowEditTabs.first.element.nativeElement.focus();
                 return;
             }
-            const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
-           // this.onKeydownEnd(rowIndex, isSummary);
-        } else {
-            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
-            this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
-                    const rowIndex = this.grid.dataView.length - 1;
-                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
-                    const isRowTarget = row.tagName.toLowerCase() === 'igx-grid-groupby-row' ||
-                    this.grid.isDetailRecord(this.grid.dataView[rowIndex]);
-                    if (row && isRowTarget) {
-                        row.focus();
-                        return;
-                    }
-                    const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
-                   //  this.onKeydownEnd(rowIndex, isSummary);
-                });
         }
+        this.activeNode.row = cellI.rowIndex;
+        this.activeNode.column = cellI.visibleColumnIndex;
+        this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
+            obj.target.setEditMode(true);
+            this.grid.cdr.detectChanges();
+        });
+    }
+
+    public goToLastBodyElement() {
     }
 
     public moveFocusToFilterCell(toStart?: boolean) {
@@ -300,9 +272,7 @@ export class IgxGridNavigationService {
 
     public navigateFirstCellIfPossible(eventArgs) {
         if (this.grid.rowList.length > 0) {
-            this.activeNode.row = 0;
-            this.activeNode.column = 0;
-            this.grid.navigateTo(this.activeNode.row, this.activeNode.column);
+            this.grid.navigateTo(this.activeNode.row = 0, this.activeNode.column = 0);
             eventArgs.preventDefault();
         } else if (this.grid.rootSummariesEnabled) {
             this.grid.navigateTo(this.activeNode.row, this.activeNode.column);
@@ -411,8 +381,7 @@ export class IgxGridNavigationService {
             });
     }
 
-    public performHorizontalScrollToCell(
-        rowIndex: number, visibleColumnIndex: number, isSummary: boolean = false, cb?: () => void) {
+    public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?: () => void) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
        this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
