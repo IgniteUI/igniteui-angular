@@ -854,7 +854,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e:any) => {})});
+            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
