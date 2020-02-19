@@ -56,6 +56,7 @@
 /// @param {Color} $drop-indicator-color [null] - The color applied to the line between the columns when dragging a column.
 ///
 /// @param {Color} $grouparea-background [null] - The grid group area background color.
+/// @param {Color} $grouparea-color [null] - The grid group area color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
 /// @param {Color} $group-row-selected-background [null] - The drop area background on drop color.
@@ -101,6 +102,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
@@ -112,6 +114,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -160,6 +163,7 @@
     $drop-indicator-color: null,
 
     $grouparea-background: null,
+    $grouparea-color: null,
 
     $group-row-background: null,
     $group-row-selected-background: null,
@@ -364,9 +368,19 @@
         $grouparea-background: $header-background
     }
 
+    @if not($grouparea-color) and $grouparea-background {
+        $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+    }
+
+    @if not($grouparea-color) and $header-background {
+        $grouparea-color: rgba(text-contrast($header-background), .8)
+    }
+
     @if not($drop-area-background) and $grouparea-background {
         $drop-area-background: text-contrast($grouparea-background);
     }
+
+
 
     @if not($drop-area-on-drop-background) and $drop-area-background {
         $drop-area-on-drop-background: $drop-area-background;
@@ -470,6 +484,8 @@
         drop-indicator-color: $drop-indicator-color,
 
         grouparea-background: $grouparea-background,
+        grouparea-color: $grouparea-color,
+
         group-label-column-name-text: $group-label-column-name-text,
         group-label-icon: $group-label-icon,
         group-label-text: $group-label-text,
@@ -1296,6 +1312,15 @@
         }
     }
 
+    %grid-cell--pinned-first {
+        border-#{$left}: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+
+        &%grid-cell--editing {
+            border-#{$left}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
+        }
+    }
+
+
     %grid-cell-header {
         flex-flow: row nowrap;
         justify-content: space-between;
@@ -1875,6 +1900,7 @@
         flex-wrap: wrap;
         border-bottom: $grid-header-border;
         background: --var($theme, 'grouparea-background');
+        color: --var($theme, 'grouparea-color');
         min-height: map-get($grouparea-min-height, 'comfortable');
         padding: map-get($grouparea-padding, 'comfortable');
         z-index: 2;

@@ -122,6 +122,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         const classList = {
             'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__th--pinned-first': this.isFirstPinned,
             'igx-grid__drag-col-header': this.isHeaderDragged,
             'igx-grid__th--filtering': this.isFiltered
         };
@@ -167,6 +168,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get isLastPinned(): boolean {
         return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
+    }
+
+    /**
+     * Gets whether the header group is stored in the first column of the right pinned area.
+     */
+    get isFirstPinned(): boolean {
+        return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
     }
 
     @HostBinding('style.display')
