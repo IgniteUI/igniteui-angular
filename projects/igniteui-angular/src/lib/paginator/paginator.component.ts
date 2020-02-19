@@ -112,7 +112,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     public set selectOptions(value: Array<number>) {
         this._selectOptions = this.sortUniqueOptions(value, this._perPage);
-        this.defaultSelectValues = [...this._selectOptions];
+        this.defaultSelectValues = [...value];
     }
     /**
     * An @Input property that sets if the pager in the paginator should be enabled.
