@@ -103,7 +103,14 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import {
+    GridKeydownTargetType,
+    GridSelectionMode,
+    GridSummaryPosition,
+    GridSummaryCalculationMode,
+    FilterMode,
+    ColumnPinningPosition
+} from './common/enums';
 import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
@@ -125,7 +132,7 @@ import {
     IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridType } from './common/grid.interface';
+import { GridType, IPinningConfig } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -173,6 +180,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
+    private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -794,6 +802,28 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public columnHidingTitle = '';
+
+    /**
+     * Gets/Sets the initial pinning configuration.
+     * @remarks
+     * Allows to apply pinning the columns to the start or the end.
+     * Note that pinning to both sides at a time is not allowed.
+     * @example
+     * ```html
+     * <igx-grid [pinning]="pinningConfig"></igx-grid>
+     * ```
+     */
+    @Input()
+    get pinning() {
+        return this._pinning;
+    }
+    set pinning(value) {
+        if (value !== this._pinning) {
+            this.resetCaches();
+        }
+        this._pinning = value;
+    }
+
 
     /**
      * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
@@ -1574,6 +1604,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
     public headSelectorsTemplates: QueryList<IgxHeadSelectorDirective>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    get isPinningToStart() {
+        return this.pinning.columns !== ColumnPinningPosition.End;
+    }
 
     /**
      * @hidden
@@ -2490,6 +2528,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get headerFeaturesWidth() {
+        return this._headerFeaturesWidth;
     }
 
     /**
@@ -4623,7 +4669,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        sum += this.featureColumnsWidth();
+        if (this.pinning.columns === ColumnPinningPosition.Start) {
+            sum += this.featureColumnsWidth();
+        }
 
         return sum;
     }
@@ -4640,6 +4688,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
+        if (this.pinning.columns === ColumnPinningPosition.End) {
+            width -= this.featureColumnsWidth();
+        }
+
         return width - this.getPinnedWidth(takeHidden);
     }
 
