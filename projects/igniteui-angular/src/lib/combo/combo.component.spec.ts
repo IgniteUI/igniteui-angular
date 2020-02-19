@@ -1505,6 +1505,7 @@ describe('igxCombo', () => {
         });
     });
     describe('Virtualization tests: ', () => {
+        let zone: TestNgZone;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -1517,7 +1518,8 @@ describe('igxCombo', () => {
                     IgxToggleModule,
                     ReactiveFormsModule,
                     FormsModule
-                ]
+                ],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
             }).compileComponents();
         }));
         beforeEach(fakeAsync(() => {
@@ -1563,7 +1565,8 @@ describe('igxCombo', () => {
             expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
             combo.toggle();
-            await wait(10);
+            zone.simulateOnStable();
+            await wait(20);
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
