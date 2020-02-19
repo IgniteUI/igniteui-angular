@@ -4,7 +4,7 @@
     </app-page-header>
     <div class="sample-content">
         <div class="sample-column">
-        <igx-grid [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'800px'" [rowSelectable]="true">
+        <igx-grid [pinning]="pinningConfig" #grid1 [data]="data" [width]="'800px'" [height]="'800px'" [rowSelectable]="false">
             <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
                 [hidden]='c.hidden'>
             </igx-column>
@@ -23,7 +23,8 @@
         <div class="sample-switches">
             <igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
             <igx-switch [(ngModel)]="grid1.columnPinning" style="padding-left: 10px">Column Pinning</igx-switch>
-            <igx-switch *ngIf="grid1.columnPinning" [(ngModel)]="rightPinning" style="padding-left: 10px">Right Pinning</igx-switch>
+            <igx-switch [(ngModel)]="grid1.rowSelectable" style="padding-left: 10px">Row Selectors</igx-switch>
+            <igx-switch (change)='onChange()' style="padding-left: 10px">Left Pinning toggle</igx-switch>
         </div>
         </div>
     </div>
