@@ -181,6 +181,13 @@ export class UIInteractions {
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
     }
 
+    public static simulateDropEvent(nativeElement: HTMLElement, data: any, format: string) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.setData(format, data);
+
+        nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer: dataTransfer }));
+    }
+
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
