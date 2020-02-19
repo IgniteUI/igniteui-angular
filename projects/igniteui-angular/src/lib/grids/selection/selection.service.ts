@@ -98,6 +98,7 @@ export class IgxGridCRUDService {
     grid;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
+    public isInCompositionMode = false;
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
@@ -193,7 +194,34 @@ export class IgxGridCRUDService {
     end(): void {
         this.cell = null;
     }
+    public enterEditMode(cell) {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (cell && cell.column.editable && !cell.row.deleted) {
+            if (this.inEditMode) {
+                this.grid.endEdit(true);
+                this.grid.nativeElement.focus();
+            } else {
+                this.begin(cell);
+            }
+        }
+    }
 
+    public exitEditMode() {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (this.inEditMode) {
+            const args = this.cell.createEditEventArgs();
+            this.grid.onCellEditCancel.emit(args);
+            if (args.cancel) {
+                return;
+            }
+            this.grid.endEdit(false);
+            this.grid.nativeElement.focus();
+        }
+    }
 
     isInEditMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {

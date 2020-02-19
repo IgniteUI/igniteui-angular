@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { first} from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
-import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
-import { ISelectionNode } from './selection/selection.service';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
 import { FilterMode } from './common/enums';
 import { SUPPORTED_KEYS, isIE, NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
+import { IMultiRowLayoutNode, ISelectionNode } from './selection/selection.service';
 
-enum MoveDirection {
-    LEFT = 'left',
-    RIGHT = 'right'
+export interface IActiveNode {
+    row: number;
+    column?: number;
+    layout?: IMultiRowLayoutNode;
+    isSummaryRow?: boolean;
 }
 
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
     public grid: IgxGridBaseDirective & GridType;
-    public activeNode: ISelectionNode;
+    public activeNode: IActiveNode;
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
