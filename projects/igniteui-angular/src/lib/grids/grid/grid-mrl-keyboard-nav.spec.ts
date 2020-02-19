@@ -548,7 +548,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
 
             it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Left and Right key
-                and then Arrow Up + Down to same cell`, () => {
+                and then Arrow Up + Down to same cell`, async() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     hidden: true,
@@ -587,6 +587,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(lastCell.componentInstance, 'ArrowLeft', false, false, true);
+                await wait();
+                fix.detectChanges();
+
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
@@ -612,7 +616,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             });
 
             it(`should navigate to the first cell from the layout by pressing Ctrl + Arrow Right and Left key
-                and then Arrow Up + Down to same cell`, () => {
+                and then Arrow Up + Down to same cell`, async() => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
                     hidden: true,
@@ -651,6 +655,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
+                await wait();
+                fix.detectChanges();
+
+                await wait();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
