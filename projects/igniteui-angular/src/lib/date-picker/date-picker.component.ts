@@ -1338,7 +1338,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _updateValidity() {
         this._onTouchedCallback();
         const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
-        if (this._ngControl && !this._ngControl.valid) {
+        if (input && this._ngControl && !this._ngControl.valid) {
             input.valid = IgxInputState.INVALID;
         } else {
             input.valid = IgxInputState.INITIAL;
