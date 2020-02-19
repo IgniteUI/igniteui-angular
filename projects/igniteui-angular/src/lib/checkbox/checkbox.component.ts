@@ -29,13 +29,21 @@ export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
 const noop = () => { };
 let nextId = 0;
 /**
- * **Ignite UI for Angular Checkbox** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/checkbox.html)
+ * Allows users to make a binary choice for a certain condition.
  *
- * The Ignite UI Checkbox is a selection control that allows users to make a binary choice. It behaves similarly
+ * @igxModule IgxCheckboxModule
+ *
+ * @igxTheme igx-checkbox-theme
+ *
+ * @igxKeywords checkbox, label
+ *
+ * @igxGroup Data entry and display
+ *
+ * @remarks
+ * The Ignite UI Checkbox is a selection control that allows users to make a binary choice for a certain condition.It behaves similarly
  * to the native browser checkbox.
  *
- * Example:
+ * @example
  * ```html
  * <igx-checkbox checked="true">
  *   simple checkbox
@@ -55,243 +63,260 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     protected _value: any;
     /**
      * Returns reference to the native checkbox element.
+     *
+     * @example
      * ```typescript
      * let checkboxElement =  this.checkbox.checkboxElement;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
+     *
+     * @example
      * let labelElement =  this.checkbox.nativeLabel;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
+     *
+     * @example
      * let labelPlaceholder =  this.checkbox.placeholderLabel;
      * ```
-     * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
     /**
      * Sets/gets the `id` of the checkbox component.
      * If not set, the `id` of the first checkbox component will be `"igx-checkbox-0"`.
+     *
+     * @example
      * ```html
      * <igx-checkbox id="my-first-checkbox"></igx-checkbox>
      * ```
      * ```typescript
      * let checkboxId =  this.checkbox.id;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('attr.id')
     @Input() public id = `igx-checkbox-${nextId++}`;
     /**
      * Sets/gets the id of the `label` element.
      * If not set, the id of the `label` in the first checkbox component will be `"igx-checkbox-0-label"`.
+     *
+     * @example
      * ```html
      * <igx-checkbox labelId = "Label1"></igx-checkbox>
      * ```
      * ```typescript
      * let labelId =  this.checkbox.labelId;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public labelId = `${this.id}-label`;
     /**
      * Sets/gets the `value` attribute.
+     *
+     * @example
      * ```html
      * <igx-checkbox [value] = "'CheckboxValue'"></igx-checkbox>
      * ```
      * ```typescript
      * let value =  this.checkbox.value;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public value: any;
     /**
      * Sets/gets the `name` attribute.
+     *
+     * @example
      * ```html
      * <igx-checkbox name = "Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
      * let name =  this.checkbox.name;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public name: string;
     /**
      * Sets/gets the value of the `tabindex` attribute.
+     *
+     * @example
      * ```html
      * <igx-checkbox [tabindex] = "1"></igx-checkbox>
      * ```
      * ```typescript
      * let tabIndex =  this.checkbox.tabindex;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public tabindex: number = null;
     /**
      *  Sets/gets the position of the `label`.
      *  If not set, the `labelPosition` will have value `"after"`.
+     *
+     * @example
      * ```html
      * <igx-checkbox labelPosition = "before"></igx-checkbox>
      * ```
      * ```typescript
      * let labelPosition =  this.checkbox.labelPosition;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public labelPosition: LabelPosition | string = LabelPosition.AFTER;
     /**
      * Enables/Disables the ripple effect.
      * If not set, `disableRipple` will have value `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [disableRipple] = "true"></igx-checkbox>
      * ```
      * ```typescript
      * let isRippleDisabled = this.checkbox.desableRipple;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public disableRipple = false;
     /**
      * Sets/gets whether the checkbox is required.
      * If not set, `required` will have value `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [required] = "true"></igx-checkbox>
      * ```
      * ```typescript
      * let isRequired =  this.checkbox.required;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public required = false;
     /**
      * Sets/gets the `aria-labelledby` attribute.
      * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
+     *
+     * @example
      * ```html
      * <igx-checkbox aria-labelledby = "Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
      * let ariaLabelledBy =  this.checkbox.ariaLabelledBy;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input('aria-labelledby')
     public ariaLabelledBy = this.labelId;
     /**
      * Sets/gets the value of the `aria-label` attribute.
+     *
+     * @example
      * ```html
      * <igx-checkbox aria-label = "Checkbox1"></igx-checkbox>
      * ```
      * ```typescript
-     * let ariaLabel = this.checkbox.aruaLabel;
+     * let ariaLabel = this.checkbox.ariaLabel;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input('aria-label')
     public ariaLabel: string | null = null;
     /**
      * An event that is emitted after the checkbox state is changed.
      * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
-     * @memberof IgxCheckboxComponent
      */
     @Output()
     readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
     /**
      * Returns the class of the checkbox component.
+     *
+     * @example
      * ```typescript
      * let class =  this.checkbox.cssClass;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox')
     public cssClass = 'igx-checkbox';
     /**
      * Sets/gets whether the checkbox component is on focus.
      * Default value is `false`.
+     *
+     * @example
      * ```typescript
      * this.checkbox.focused =  true;
      * ```
      * ```typescript
      * let isFocused =  this.checkbox.focused;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--focused')
     public focused = false;
     /**
      * Sets/gets the checkbox indeterminate visual state.
      * Default value is `false`;
+     *
+     * @example
      * ```html
      * <igx-checkbox [indeterminate] = "true"></igx-checkbox>
      * ```
      * ```typescript
      * let isIndeterminate = this.checkbox.indeterminate;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--indeterminate')
     @Input() public indeterminate = false;
     /**
      * Sets/gets whether the checkbox is checked.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [checked] = "true"></igx-checkbox>
      * ```
      * ```typescript
      * let isChecked =  this.checkbox.checked;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--checked')
     @Input() public checked = false;
     /**
      * Sets/gets whether the checkbox is disabled.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [disabled] = "true"></igx-checkbox>
      * ```
      * ```typescript
      * let isDisabled = this.checkbox.disabled;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--disabled')
     @Input() public disabled = false;
     /**
      * Sets/gets whether the checkbox is readonly.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [readonly]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let readonly = this.checkbox.readonly;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @Input() public readonly = false;
     /**
      * Sets/gets whether the checkbox should disable all css transitions.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      * <igx-checkbox [disableTransitions]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let disableTransitions = this.checkbox.disableTransitions;
      * ```
-     * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--plain')
     @Input() public disableTransitions = false;
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public inputId = `${this.id}-input`;
     /**
      *@hidden
@@ -303,10 +328,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     private _onChangeCallback: (_: any) => void = noop;
     /**
      * If `disabled` is `false`, switches the `checked` state.
+     *
+     * @example
      * ```typescript
      * this.checkbox.toggle();
      * ```
-     * @memberof IgxCheckboxComponent
      */
     public toggle() {
         if (this.disabled || this.readonly) {
@@ -320,17 +346,13 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         this.change.emit({ checked: this.checked, checkbox: this });
         this._onChangeCallback(this.checked);
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public _onCheckboxChange(event) {
         // We have to stop the original checkbox change event
         // from bubbling up since we emit our own change event
         event.stopPropagation();
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public _onCheckboxClick(event) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
@@ -351,9 +373,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
         this.toggle();
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public _onLabelClick(event) {
         // We use a span element as a placeholder label
         // in place of the native label, we need to emit
@@ -361,29 +381,21 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // the click event emitted on click
         this.toggle();
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public onFocus(event) {
         this.focused = true;
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public onBlur(event) {
         this.focused = false;
         this._onTouchedCallback();
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public writeValue(value) {
         this._value = value;
         this.checked = !!this._value;
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public get labelClass(): string {
         switch (this.labelPosition) {
             case LabelPosition.BEFORE:
@@ -393,17 +405,13 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
                 return `${this.cssClass}__label`;
         }
     }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
-    /**
-     *@hidden
-     */
+    /** @hidden @internal */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
-    /** @hidden */
-    getEditElement() {
+    /** @hidden @internal */
+    public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }
 }

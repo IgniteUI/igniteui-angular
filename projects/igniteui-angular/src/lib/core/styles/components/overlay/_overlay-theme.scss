@@ -13,6 +13,7 @@
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
+/// @requires extend
 ///
 /// @example scss Change the background color
 ///   $my-overlay-theme: igx-overlay-theme($background-color: rgba(yellow, .74));
