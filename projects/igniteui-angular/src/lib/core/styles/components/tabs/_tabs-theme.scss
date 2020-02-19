@@ -25,6 +25,10 @@
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius for the tabs.
+/// @param {Color} $border-color [null] - The border color of the tabs.
+/// @param {Color} $border-color--hover [null] - The border color of the tabs on hover.
+///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
 /// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
@@ -35,6 +39,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires text-contrast
+/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: igx-tabs-theme(

@@ -336,6 +336,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     lastPinned = false;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    @HostBinding('class.igx-grid__td--pinned-first')
+    firstPinned = false;
+
+    /**
      * Returns whether the cell is in edit mode.
      */
     @Input()

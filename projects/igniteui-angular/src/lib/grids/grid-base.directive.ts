@@ -103,7 +103,14 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import {
+    GridKeydownTargetType,
+    GridSelectionMode,
+    GridSummaryPosition,
+    GridSummaryCalculationMode,
+    FilterMode,
+    ColumnPinningPosition
+} from './common/enums';
 import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
@@ -125,7 +132,7 @@ import {
     IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridType } from './common/grid.interface';
+import { GridType, IPinningConfig } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -794,6 +801,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public columnHidingTitle = '';
+
+    /**
+     * Gets/Sets the initial pinning configuration.
+     * @remarks
+     * Allows to apply pinning the columns to the start or the end.
+     * Note that pinning to both sides at a time is not allowed.
+     * @example
+     * ```html
+     * <igx-grid [pinning]="pinningConfig"></igx-grid>
+     * ```
+     */
+    @Input()
+    public pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     /**
      * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
@@ -1574,6 +1594,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
     public headSelectorsTemplates: QueryList<IgxHeadSelectorDirective>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    get isPinningToStart() {
+        return this.pinning.columns !== ColumnPinningPosition.End;
+    }
 
     /**
      * @hidden
