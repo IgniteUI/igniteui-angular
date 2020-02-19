@@ -103,7 +103,14 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import {
+    GridKeydownTargetType,
+    GridSelectionMode,
+    GridSummaryPosition,
+    GridSummaryCalculationMode,
+    FilterMode,
+    ColumnPinningPosition
+} from './common/enums';
 import {
     IGridCellEventArgs,
     IRowSelectionEventArgs,
@@ -125,7 +132,7 @@ import {
     IRowToggleEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridType } from './common/grid.interface';
+import { GridType, IPinningConfig } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -191,20 +198,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-    * @hidden
+    * @hidden @internal
     */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultExpandedTemplate: TemplateRef<any>;
 
     /**
-    * @hidden
+    * @hidden @internal
     */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
 
     /**
-     * An accessor that sets the resource strings.
+     * Gets/Sets the resource strings.
+     * @remarks
      * By default it uses EN resources.
     */
     @Input()
@@ -212,70 +220,75 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
-    /**
-     * An accessor that returns the resource strings.
-    */
     get resourceStrings(): IGridResourceStrings {
         return this._resourceStrings;
     }
 
     /**
-     * An @Input property that autogenerates the `IgxGridComponent` columns.
+     * Gets/Sets whether to autogenerate the columns.
+     *@remarks
      * The default value is false.
+     * @example
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public autoGenerate = false;
 
+    /**
+    * @hidden @internal
+    */
     public id: string;
 
     /**
-     * An @Input property that sets a custom template when the `IgxGridComponent` is empty.
+     * Gets/Sets a custom template when empty.
+     * @example
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
 
     /**
-     * An @Input property that sets a custom template when the `IgxGridComponent` is loading.
+     * Gets/Sets a custom template when loading.
+     * @example
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public loadingGridTemplate: TemplateRef<any>;
 
+
+    /**
+     * Gets/Sets the filtering logic of the `IgxGridComponent`.
+     * @remarks
+     * The default is AND.
+     * @example
+     * ```html
+     * <igx-grid [data]="Data" [autoGenerate]="true" [filteringLogic]="filtering"></igx-grid>
+     * ```
+     */
     @WatchChanges()
     @Input()
     public get filteringLogic() {
         return this._filteringExpressionsTree.operator;
     }
 
-    /**
-     * Sets the filtering logic of the `IgxGridComponent`.
-     * The default is AND.
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true" [filteringLogic]="filtering"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set filteringLogic(value: FilteringLogic) {
         this._filteringExpressionsTree.operator = value;
     }
 
     /**
-     * Returns the filtering state of `IgxGridComponent`.
-     * ```typescript
-     * let filteringExpressionsTree = this.grid.filteringExpressionsTree;
+     * Gets/Sets the filtering state.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @remarks
+     * Supports two-way binding.
      */
     @WatchChanges()
     @Input()
@@ -283,25 +296,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filteringExpressionsTree;
     }
 
-    /**
-     * Sets the filtering state of the `IgxGridComponent`.
-     * ```typescript
-     * const logic = new FilteringExpressionsTree(FilteringLogic.And, "ID");
-     * logic.filteringOperands = [
-     *     {
-     *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-     *          fieldName: 'ID',
-     *          searchVal: 1
-     *     }
-     * ];
-     * this.grid.filteringExpressionsTree = (logic);
-     * ```
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set filteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
             const val = (value as FilteringExpressionsTree);
@@ -332,44 +326,37 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after filtering is performed.
+     * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
-     * ```typescript
-     * filteringExprTreeChange(event: IFilteringExpressionsTree){
-     *     const filteringTree = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
      *              (filteringExpressionsTreeChange)="filteringExprTreeChange($event)"></igx-grid>
      * ```
-     * @memberof IgxGridBaseDirective
-     */
+    */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Emitted after advanced filtering is performed.
+     * @remarks
      * Returns the advanced filtering expressions tree.
-     * ```typescript
-     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
-     *     const filteringTree = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
      *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
      * ```
-     * @memberof IgxGridBaseDirective
-     */
+    */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Returns the advanced filtering state of `IgxGridComponent`.
+     * Gets/Sets the advanced filtering state.
+     * @example
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+     * this.grid.advancedFilteringExpressionsTree = logic;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -377,26 +364,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._advancedFilteringExpressionsTree;
     }
 
-    /**
-     * Sets the advanced filtering state of the `IgxGridComponent`.
-     * ```typescript
-     * const logic = new FilteringExpressionsTree(FilteringLogic.And);
-     * logic.filteringOperands = [
-     *     {
-     *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-     *          fieldName: 'ID',
-     *          searchVal: 1
-     *     },
-     *     {
-     *          condition: IgxStringFilteringOperand.instance().condition('contains'),
-     *          fieldName: 'CompanyName',
-     *          searchVal: 'a'
-     *     }
-     * ];
-     * this.grid.advancedFilteringExpressionsTree = logic;
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set advancedFilteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
             value.type = FilteringExpressionsTreeType.Advanced;
@@ -421,7 +388,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the locale of the grid.
+     * Gets/Sets the locale.
+     * @remarks
      * If not set, returns browser's language.
      */
     @Input()
@@ -433,33 +401,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * Sets the locale of the grid.
-     */
     set locale(value) {
         this._locale = value;
     }
 
     /**
-     * Returns whether the paging feature is enabled/disabled.
+     * Gets/Sets whether the paging feature is enabled.
+     * @remarks
      * The default state is disabled (false).
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
      * ```
-     * const paging = this.grid.paging;
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     get paging(): boolean {
         return this._paging;
     }
 
-    /**
-     * Enables/Disables the paging feature.
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set paging(value: boolean) {
         this._paging = value;
         this._pipeTrigger++;
@@ -467,28 +426,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the current page index.
-     * ```html
-     * let gridPage = this.grid.page;
+     * Gets/Sets the current page index.
+    *@example
+    * ```html
+     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @remarks
+     * Supports two-way binding.
      */
     @Input()
     get page(): number {
         return this._page;
     }
 
-    /**
-     * Sets the current page index.
-     * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
-     *```
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set page(val: number) {
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
             return;
@@ -502,36 +452,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @Output()
     public pageChange = new EventEmitter<number>();
 
     /**
-     * Returns the number of visible items per page of the `IgxGridComponent`.
+     * Gets/Sets the number of visible items per page.
+     * @remarks
      * The default is 15.
+     * @example
      * ```html
-     * let itemsPerPage = this.grid.perPage;
+     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     get perPage(): number {
         return this._perPage;
     }
 
-    /**
-     * Sets the number of visible items per page of the `IgxGridComponent`.
-     * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [perPage]="5" [autoGenerate]="true"></igx-grid>
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set perPage(val: number) {
         if (val < 0) {
             return;
@@ -545,42 +484,35 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
     /**
-     * You can provide a custom `ng-template` for the pagination UI of the grid.
+     * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
+     * @example
      * ```html
      * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public paginationTemplate: TemplateRef<any>;
 
     /**
-     * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
-     * By default it is disabled (false).
-     * ```typescript
-     * let gridColHiding = this.grid.columnHiding;
+     * Gets/Sets whether the column hiding UI is enabled.
+     * @remarks
+     * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
+     * @example
+     * ```html
+     * <igx-grid [data]="Data" [autoGenerate]="true" [showToolbar]="true" [columnHiding]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     get columnHiding() {
         return this._columnHiding;
     }
 
-    /**
-     * Sets whether the column hiding UI for the `IgxGridComponent` is enabled.
-     * In order for the UI to work, you need to enable the toolbar as shown in the example below.
-     * ```html
-     * <igx-grid [data]="Data" [autoGenerate]="true" [showToolbar]="true" [columnHiding]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set columnHiding(value) {
         if (this._columnHiding !== value) {
             this._columnHiding = value;
@@ -602,37 +534,34 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns if the row selectors are hidden
-     * @memberof IgxGridBaseDirective
-     */
+     * Gets/Sets if the row selectors are hidden.
+     * @remarks
+     *  By default row selectors are shown
+    */
     @WatchChanges()
     @Input()
     get hideRowSelectors() {
         return this._hideRowSelectors;
     }
 
-    /**
-     * Allows you to change the visibility of the row selectors
-     * By default row selectors are shown
-     * @memberof IgxGridBaseDirective
-     */
     set hideRowSelectors(value: boolean) {
         this._hideRowSelectors = value;
         this.notifyChanges(true);
     }
 
+    /**
+     * Gets/Sets whether rows can be moved.
+     * @example
+     * ```html
+     * <igx-grid #grid [rowDraggable]="true"></igx-grid>
+     * ```
+     */
     @Input()
     get rowDraggable(): boolean {
         return this._rowDrag && this.hasVisibleColumns;
     }
 
-    /**
-     * Sets whether rows can be moved.
-     * ```html
-     * <igx-grid #grid [rowDraggable]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
+
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
         this.notifyChanges(true);
@@ -646,25 +575,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
- * Sets whether the `IgxGridRowComponent` is editable.
- * By default it is set to false.
- * ```typescript
- * let rowEditable = this.grid.rowEditable;
- * ```
- * @memberof IgxGridBaseDirective
- */
+    * Gets/Sets whether the rows are editable.
+    * @remarks
+    * By default it is set to false.
+    * @example
+    * ```html
+    * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
+    * ```
+    */
     @WatchChanges()
     @Input()
     get rowEditable(): boolean {
         return this._rowEditable;
     }
-    /**
-    * Sets whether rows can be edited.
-    * ```html
-    * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [primaryKey]="'ProductID'" [columnHiding]="true"></igx-grid>
-    * ```
-    * @memberof IgxGridBaseDirective
-    */
+
     set rowEditable(val: boolean) {
         if (!this._init) {
             this.refreshGridState();
@@ -674,11 +598,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the height of the `IgxGridComponent`.
-     * ```typescript
-     * let gridHeight = this.grid.height;
+     * Gets/Sets the height.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @HostBinding('style.height')
@@ -687,13 +611,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._height;
     }
 
-    /**
-     * Sets the height of the `IgxGridComponent`.
-     * ```html
-     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
@@ -703,24 +620,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
     */
     @HostBinding('style.width')
     get hostWidth() {
         return this._width || this._hostWidth;
     }
     /**
-     * Returns the width of the `IgxGridComponent`.
+     * Gets/Sets the width of the grid.
+     * @example
      * ```typescript
      * let gridWidth = this.grid.width;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     get width() {
         return this._width;
     }
+
     set width(value) {
         if (this._width !== value) {
             this._width = value;
@@ -730,42 +648,42 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the width of the header of the `IgxGridComponent`.
+     * Gets the width of the header.
+     * @example
      * ```html
      * let gridHeaderWidth = this.grid.headerWidth;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get headerWidth() {
         return parseInt(this.width, 10) - 17;
     }
 
     /**
-     * An @Input property that adds styling classes applied to all even `IgxGridRowComponent`s in the grid.
+     * Gets/Sets the styling classes applied to all even `IgxGridRowComponent`s in the grid.
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-even-class'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public evenRowCSS = 'igx-grid__tr--even';
 
     /**
-     * An @Input property that adds styling classes applied to all odd `IgxGridRowComponent`s in the grid.
+     * Gets/Sets the styling classes applied to all odd `IgxGridRowComponent`s in the grid.
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-odd-class'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public oddRowCSS = 'igx-grid__tr--odd';
 
     /**
-     * Returns the row height.
-     * ```typescript
-     * const rowHeight = this.grid.rowHeight;
+     * Gets/Sets the row height.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -773,23 +691,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
-    /**
-     * Sets the row height.
-     * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set rowHeight(value) {
         this._rowHeight = parseInt(value, 10);
     }
 
     /**
-     * An @Input property that sets the default width of the `IgxGridComponent`'s columns.
+     * Gets/Sets the default width of the columns.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -803,41 +714,37 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * An @Input property that sets the primary key of the `IgxGridComponent`.
+     * Gets/Sets the primary key.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     public primaryKey;
 
     /**
-     * An @Input property that sets the message displayed when there are no records.
+     * Get/Sets the message displayed when there are no records.
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     set emptyGridMessage(value: string) {
         this._emptyGridMessage = value;
     }
-
-    /**
-     * An accessor that returns the message displayed when there are no records.
-    */
     get emptyGridMessage(): string {
         return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
     }
 
     /**
-     * An @Input property that sets whether the grid is going to show loading indicator.
+     * Gets/Sets whether the grid is going to show a loading indicator.
+     *@example
      * ```html
      * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -852,75 +759,74 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
-    /**
-     * An accessor that returns whether the grid is showing loading indicator.
-     */
     get isLoading(): boolean {
         return this._isLoading;
     }
 
     /**
-     * A property that allows the columns to be auto-generated once again after the initialization of the grid.
+     * Gets/Sets whether the columns should be auto-generated once again after the initialization of the grid
+     * @remarks
      * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
      * Note that after generating the columns, this property would be disabled to avoid re-creating
      * columns each time a new data is assigned.
+     * @example
      * ```typescript
      *  this.grid.shouldGenerate = true;
-     *  this.remoteData = this.remoteService.remoteData;
      * ```
      */
     public shouldGenerate: boolean;
 
     /**
-     * An @Input property that sets the message displayed when there are no records and the grid is filtered.
+     * Gets/Sets the message displayed when there are no records and the grid is filtered.
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     set emptyFilteredGridMessage(value: string) {
         this._emptyFilteredGridMessage = value;
     }
 
-    /**
-     * An accessor that returns the message displayed when there are no records and the grid is filtered.
-    */
     get emptyFilteredGridMessage(): string {
         return this._emptyFilteredGridMessage || this.resourceStrings.igx_grid_emptyFilteredGrid_message;
     }
 
     /**
-     * An @Input property that sets the title to be displayed in the built-in column hiding UI.
+     * Gets/Sets the title to be displayed in the built-in column hiding UI.
+     * @example
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public columnHidingTitle = '';
 
     /**
-     * Returns if the built-in column pinning UI should be shown in the toolbar.
-     * ```typescript
-     *  let colPinning = this.grid.columnPinning;
+     * Gets/Sets the initial pinning configuration.
+     * @remarks
+     * Allows to apply pinning the columns to the start or the end.
+     * Note that pinning to both sides at a time is not allowed.
+     * @example
+     * ```html
+     * <igx-grid [pinning]="pinningConfig"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     */
+    @Input()
+    public pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+
+    /**
+     * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
+     * @example
+    * ```html
+     * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
      */
     @WatchChanges()
     @Input()
     get columnPinning() {
         return this._columnPinning;
     }
-
-    /**
-     * Sets if the built-in column pinning UI should be shown in the toolbar.
-     * By default it's disabled.
-     * ```html
-     * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set columnPinning(value) {
         if (this._columnPinning !== value) {
             this._columnPinning = value;
@@ -931,35 +837,27 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * An @Input property that sets the title to be displayed in the UI of the column pinning.
+     * Gets/Sets the title to be displayed in the UI of the column pinning.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [columnPinningTitle]="'Column Hiding'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public columnPinningTitle = '';
 
     /**
-     * Returns if the filtering is enabled.
-     * ```typescript
-     *  let filtering = this.grid.allowFiltering;
+     * Gets/Sets if the filtering is enabled.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     get allowFiltering() {
         return this._allowFiltering;
     }
 
-    /**
-     * Sets if the filtering is enabled.
-     * By default it's disabled.
-     * ```html
-     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
@@ -977,25 +875,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns a value indicating whether the advanced filtering is enabled.
-     * ```typescript
-     *  let filtering = this.grid.allowAdvancedFiltering;
+     * Gets/Sets a value indicating whether the advanced filtering is enabled.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     get allowAdvancedFiltering() {
         return this._allowAdvancedFiltering;
     }
 
-    /**
-     * Sets a value indicating whether the advanced filtering is enabled.
-     * By default it's disabled.
-     * ```html
-     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set allowAdvancedFiltering(value) {
         if (this._allowAdvancedFiltering !== value) {
             this._allowAdvancedFiltering = value;
@@ -1008,25 +898,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the filter mode.
-     * ```typescript
-     *  let filtering = this.grid.filterMode;
+     * Gets/Sets the filter mode.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @remarks
+     * By default it's set to FilterMode.quickFilter.
      */
     @Input()
     get filterMode() {
         return this._filterMode;
     }
 
-    /**
-     * Sets filter mode.
-     * By default it's set to FilterMode.quickFilter.
-     * ```html
-     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set filterMode(value) {
         this._filterMode = value;
 
@@ -1037,50 +921,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the summary position.
-     * ```typescript
-     *  let summaryPosition = this.grid.summaryPosition;
+     * Gets/Sets the summary position.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @remarks
+     * By default it is bottom.
      */
     @Input()
     get summaryPosition() {
         return this._summaryPosition;
     }
 
-    /**
-     * Sets summary position.
-     * By default it is bottom.
-     * ```html
-     * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set summaryPosition(value) {
         this._summaryPosition = value;
         this.notifyChanges();
     }
 
     /**
-     * Returns the summary calculation mode.
-     * ```typescript
-     *  let summaryCalculationMode = this.grid.summaryCalculationMode;
+     * Gets/Sets the summary calculation mode.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="localData" summaryCalculationMode="rootLevelOnly" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @remarks
+     * By default it is rootAndChildLevels which means the summaries are calculated for the root level and each child level.
      */
     @Input()
     get summaryCalculationMode() {
         return this._summaryCalculationMode;
     }
 
-    /**
-     * Sets summary calculation mode.
-     * By default it is rootAndChildLevels which means the summaries are calculated for the root level and each child level.
-     * ```html
-     * <igx-grid #grid [data]="localData" summaryCalculationMode="rootLevelOnly" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
         if (!this._init) {
@@ -1091,9 +963,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets the filtering strategy of the grid.
-     * ```typescript
-     *  let filterStrategy = this.grid.filterStrategy
+     * Gets/Sets the filtering strategy of the grid.
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
      * ```
      */
     @Input()
@@ -1101,20 +974,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._filteringStrategy;
     }
 
-    /**
-     * Sets the filtering strategy of the grid.
-     * ```html
-     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
-     * ```
-     */
     set filterStrategy(classRef: IFilteringStrategy) {
         this._filteringStrategy = classRef;
     }
 
     /**
-     * Gets the sorting strategy of the grid.
-     * ```typescript
-     *  let sortStrategy = this.grid.sortStrategy
+     * Gets/Sets the sorting strategy of the grid.
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
      * ```
      */
     @Input()
@@ -1122,31 +990,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._sortingStrategy;
     }
 
-    /**
-     * Sets the sorting strategy of the grid.
-     * ```html
-     *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
-     * ```
-     */
     set sortStrategy(value: IGridSortingStrategy) {
         this._sortingStrategy = value;
     }
 
     /**
-     * An @Input property that provides a callback for loading unique column values on demand.
+     * Gets/Sets a unique values strategy used by the Excel Style Filtering
+     * @remarks
+     * Provides a callback for loading unique column values on demand.
      * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
+     * @example
      * ```html
      * <igx-grid [data]="localData" [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy"></igx-grid>
      * ```
-     *
-     * ```typescript
-     * public columnValuesStrategy = (column: IgxColumnComponent,
-     *                               filteringExpressionsTree: IFilteringExpressionsTree,
-     *                               done: (uniqueValues: any[]) => void) => {
-     *     this.dataService.getColumnData(column, filteringExpressionsTree, uniqueValues => done(uniqueValues));
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Input()
     public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
@@ -1154,53 +1010,44 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                                         done: (values: any[]) => void) => void;
 
     /**
-     * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
+     * Emitted when `IgxGridCellComponent` is clicked.
+     * @remarks
+     * Returns the `IgxGridCellComponent`.
+     * @example
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-     * ```typescript
-     * public onCellClick(e){
-     *     alert("The cell has been clicked!");
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when `IgxGridCellComponent` is selected. Returns the `IgxGridCellComponent`.
+     * Emitted when `IgxGridCellComponent` is selected.
+     * @remarks
+     *  Returns the `IgxGridCellComponent`.
+     * @example
      * ```html
      * <igx-grid #grid (onSelection)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-     * ```typescript
-     * public onCellSelect(e){
-     *     alert("The cell has been selected!");
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
 
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
+     * @example
      * ```html
      * <igx-grid #grid (onRowSelectionChange)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
-     * ```typescript
-     * public onCellClickChange(e){
-     *     alert("The selected row has been changed!");
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
 
     /**
      * Emitted when `IgxColumnComponent` is pinned.
+     * @remarks
      * The index that the column is inserted at may be changed through the `insertAtIndex` property.
+     * @example
      * ```typescript
      * public columnPinning(event) {
      *     if (event.column.field === "Name") {
@@ -1208,441 +1055,269 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *     }
      * }
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
-     * An @Output property emitting an event when `IgxGridCellComponent`
-     * editing has been performed in the grid and the values have **not** been submitted (e.g. `Esc` key was pressed).
+     * Emitted when editing and **not** submitting the value.
+     * @remarks
+     * (e.g. `Esc` key was pressed)
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      cellID: {
-     *          columnID: int,
-     *          rowID: int,
-     *          rowIndex: int
-     *      }
-     *      newValue: object,
-     *      oldValue: object,
-     *      rowID: int
-     *  }
-     *
-     * ```typescript
-     * editCancel(event: IGridEditEventArgs){
-     *    const rowID: IgxColumnComponent = event.rowID;
-     * }
-     * ```
+     *@example
      * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" [primaryKey]="'ProductID'">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when `IgxGridCellComponent` enters edit mode.
+     * Emitted when cell enters edit mode.
+     * @remarks
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      cellID: {
-     *          columnID: int,
-     *          rowID: int,
-     *          rowIndex: int
-     *      }
-     *      oldValue: object,
-     *      rowID: int
-     *  }
-     *
-     * ```typescript
-     * editStart(event: IGridEditEventArgs){
-     *    const value: IgxColumnComponent = event.newValue;
-     * }
-     * ```
+     *@example
      * ```html
-     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when `IgxGridCellComponent` editing has been performed in the grid.
+     * Emitted when cell has been edited.
+     * @remarks
      * Event is fired after editing is completed, when the cell is exiting edit mode.
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      cellID: {
-     *          columnID: int,
-     *          rowID: int,
-     *          rowIndex: int
-     *      }
-     *      newValue: object,
-     *      oldValue: object,
-     *      rowID: int
-     *  }
-     *
-     * ```typescript
-     * editDone(event: IGridEditEventArgs){
-     *    const value: IgxColumnComponent = event.newValue;
-     * }
-     * ```
+     * @example
      * ```html
-     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onCellEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when [rowEditable]="true" a row enters edit mode.
+     * Emitted when a row enters edit mode.
+     * @remarks
+     * Emitted when [rowEditable]="true".
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      oldValue: <rowObj>,
-     *      rowID: int
-     *  }
-     *
-     * Bind to the event in markup as follows:
+     *@example
      * ```html
-     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowEditable]="true">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
-     * ```typescript
-     *      editStart(event: IGridEditEventArgs) {
-     *          const editedRowObj = event.oldValue;
-     *          const cancelValue = event.cancel;
-     *          const rowID = event.rowID;
-     *      }
-     * ```
-	 * @memberof IgxGridComponent
      */
     @Output()
     public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when [rowEditable]="true" & `endEdit(true)` is called.
+     * Emitted when exiting edit mode for a row.
+     * @remarks
+     * Emitted when [rowEditable]="true" & `endEdit(true)` is called.
      * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
      * performing paging operation, column resizing, pinning, moving or hitting  `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      newValue: <rowObj>,
-     *      oldValue: <rowObj>,
-     *      rowID: int
-     *  }
-     *
-     * Bind to the event in markup as follows:
+     *@example
      * ```html
-     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowEditable]="true">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
-     *
-     * ```typescript
-     *      editDone(event: IGridEditEventArgs) {
-     *          const originalRowObj = event.oldValue;
-     *          const updatedRowObj = event.newValue;
-     *          const cancelValue = event.cancel;
-     *          const rowID = event.rowID;
-     *      }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when [rowEditable]="true" & `endEdit(false)` is called.
+     * Emitted when row editing is canceled.
+     * @remarks
+     * Emits when [rowEditable]="true" & `endEdit(false)` is called.
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      * This event is cancelable.
-     *
-     * args: IGridEditEventArgs = {
-     *      cancel: bool,
-     *      newValue: <rowObj>,
-     *      oldValue: <rowObj>,
-     *      rowID: int
-     *  }
-     *
-     * Bind to the event in markup as follows:
+     *@example
      * ```html
-     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowEditable]="true">
-     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
-     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
-     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
      * ```
-     * ```typescript
-     *      editCancel(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
-     *          const originalRowObj = event.oldValue;
-     *          const updatedRowObj = event.newValue;
-     *          const cancelValue = event.cancel;
-     *          const rowID = event.rowID;
-     *      }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowEditCancel = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * Emitted when a grid column is initialized. Returns the column object.
+     * Emitted when a column is initialized.
+     * @remarks
+     * Returns the column object.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"></igx-grid>
      * ```
-     * ```typescript
-     * initColumns(event: IgxColumnComponent) {
-     * const column: IgxColumnComponent = event;
-     *       column.filterable = true;
-     *       column.sortable = true;
-     *       column.editable = true;
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnInit = new EventEmitter<IgxColumnComponent>();
 
     /**
-     * Emitted when sorting is performed through the UI. Returns the sorting expression.
+     * Emitted when sorting is performed through the UI.
+     * @remarks
+     * Returns the sorting expression.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (onSortingDone)="sortingDone($event)"></igx-grid>
      * ```
-     * ```typescript
-     * sortingDone(event: SortingDirection){
-     *     const sortingDirection = event;
-     * }
-     * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onSortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
 
     /**
      * Emitted when filtering is performed through the UI.
+     * @remarks
      * Returns the filtering expressions tree of the column for which filtering was performed.
-     * ```typescript
-     * filteringDone(event: IFilteringExpressionsTree){
-     *     const filteringTree = event;
-     *}
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onFilteringDone)="filteringDone($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Emitted when paging is performed. Returns an object consisting of the previous and next pages.
-     * ```typescript
-     * pagingDone(event: IPageEventArgs){
-     *     const paging = event;
-     * }
-     * ```
+     * Emitted when paging is performed.
+     * @remarks
+     * Returns an object consisting of the previous and next pages.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
-     * Emitted when a `IgxGridRowComponent` is being added to the `IgxGridComponent` through the API.
+     * Emitted when a row added through the API.
+     * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
-     * ```typescript
-     * rowAdded(event: IRowDataEventArgs){
-     *    const rowInfo = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" (onRowAdded)="rowAdded($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowAdded = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when a `IgxGridRowComponent` is deleted through the `IgxGridComponent` API.
+     * Emitted when a row is deleted through API.
+     * @remarks
      * Returns an `IRowDataEventArgs` object.
-     * ```typescript
-     * rowDeleted(event: IRowDataEventArgs){
-     *    const rowInfo = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" (onRowDeleted)="rowDeleted($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
+     * @example
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
-     * Emitted when `IgxColumnComponent` is resized.
+     * Emitted when column is resized.
+     * @remarks
      * Returns the `IgxColumnComponent` object's old and new width.
-     * ```typescript
-     * resizing(event: IColumnResizeEventArgs){
-     *     const grouping = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" (onColumnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     /**
-     * Emitted when a `IgxGridCellComponent` is right clicked. Returns the `IgxGridCellComponent` object.
-     * ```typescript
-     * contextMenu(event: IGridCellEventArgs){
-     *     const resizing = event;
-     *     console.log(resizing);
-     * }
-     * ```
+     * Emitted when a cell is right clicked.
+     * @remarks
+     * Returns the `IgxGridCellComponent` object.
      * ```html
      * <igx-grid #grid [data]="localData" (onContextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when a `IgxGridCellComponent` is double clicked. Returns the `IgxGridCellComponent` object.
-     * ```typescript
-     * dblClick(event: IGridCellEventArgs){
-     *     const dblClick = event;
-     *     console.log(dblClick);
-     * }
-     * ```
+     * Emitted when a cell is double clicked.
+     * @remarks
+     * Returns the `IgxGridCellComponent` object.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" (onDoubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean }
-     * ```typescript
-     * visibilityChanged(event: IColumnVisibilityChangedEventArgs){
-     *    const visiblity = event;
-     * }
-     * ```
+     * Emitted when column visibility is changed.
+     * @remarks
+     * Args: { column: any, newValue: boolean }
+     * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
     /**
-     * Emitted when `IgxColumnComponent` moving starts. Returns the moved `IgxColumnComponent` object.
-     * ```typescript
-     * movingStart(event: IColumnMovingStartEventArgs){
-     *     const movingStarts = event;
-     * }
-     * ```
+     * Emitted when column moving starts.
+     * @remarks
+     * Returns the moved `IgxColumnComponent` object.
+     * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingStart)="movingStart($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
 
     /**
-     * Emitted throughout the `IgxColumnComponent` moving operation.
+     * Emitted during the column moving operation.
+     * @remarks
      * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
-     * ```typescript
-     * moving(event: IColumnMovingEventArgs){
-     *     const moving = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMoving)="moving($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
 
     /**
-     * Emitted when `IgxColumnComponent` moving ends.
+     * Emitted when column moving ends.
+     * @remarks
      * Returns the source and target `IgxColumnComponent` objects.
-     * ```typescript
-     * movingEnds(event: IColumnMovingEndEventArgs){
-     *     const movingEnds = event;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingEnd)="movingEnds($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
+     * @remarks
      * This event is fired only if the key combination is supported in the grid.
      * Return the target type, target object and the original event. This event is cancelable.
-     * ```typescript
-     * customKeydown(args: IGridKeydownEventArgs) {
-     *  const keydownEvent = args.event;
-     * }
-     * ```
+     * @example
      * ```html
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
@@ -1652,6 +1327,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when start dragging a row.
+     * @remarks
      * Return the dragged row.
      */
     @Output()
@@ -1659,6 +1335,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when dropping a row.
+     * @remarks
      * Return the dropped row.
      */
     @Output()
@@ -1666,105 +1343,94 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when a copy operation is executed.
+     * @remarks
      * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
     @Output()
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /**
      * Emitted when the expanded state of a row gets changed.
-     * ```typescript
-     * rowToggle(event: IRowToggleEventArgs){
-     *  // the id of the row
-     *  const rowID = event.rowID;
-     *  // the new expansion state
-     *  const newExpandedState = event.expanded;
-     *  // the original event that triggered onRowToggle
-     *  const originalEvent = event.event;
-     *  // whether the event should be cancelled
-     *  event.cancel = true;
-     * }
-     * ```
+     * @example
      * ```html
      * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild(IgxGridColumnResizerComponent)
     public resizeLine: IgxGridColumnResizerComponent;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('loadingOverlay', { static: true })
     public loadingOverlay: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public loadingOutlet: IgxOverlayOutletDirective;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChildren(IgxGridHeaderGroupComponent, { read: IgxGridHeaderGroupComponent })
     public headerGroups: QueryList<IgxGridHeaderGroupComponent>;
 
     /**
      * A list of all `IgxGridHeaderGroupComponent`.
+     * @example
      * ```typescript
      * const headerGroupsList = this.grid.headerGroupsList;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get headerGroupsList(): IgxGridHeaderGroupComponent[] {
         return this.headerGroups ? flatten(this.headerGroups.toArray()) : [];
@@ -1772,10 +1438,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of all `IgxGridHeaderComponent`.
+     * @example
      * ```typescript
      * const headers = this.grid.headerCellList;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get headerCellList(): IgxGridHeaderComponent[] {
         return this.headerGroupsList.map((headerGroup) => headerGroup.headerCell).filter((headerCell) => headerCell);
@@ -1783,10 +1449,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of all `IgxGridFilteringCellComponent`.
+     * @example
      * ```typescript
      * const filterCells = this.grid.filterCellList;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get filterCellList(): IgxGridFilteringCellComponent[] {
         return this.headerGroupsList.map((headerGroup) => headerGroup.filterCell).filter((filterCell) => filterCell);
@@ -1798,6 +1464,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
+    /**
+     * @hidden @internal
+    */
     public get summariesRowList() {
         const res = new QueryList<any>();
         if (!this._summaryRowList) {
@@ -1812,10 +1481,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A list of `IgxGridRowComponent`.
+     * @example
      * ```typescript
      * const rowList = this.grid.rowList;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public get rowList() {
         const res = new QueryList<any>();
@@ -1837,11 +1506,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _dataRowList: QueryList<IgxRowDirective<IgxGridBaseDirective>>;
 
     /**
-     * A list of `IgxGridRowComponent`, currently rendered.
+     * A list of currently rendered `IgxGridRowComponent`'s.
+     * @example
      * ```typescript
      * const dataList = this.grid.dataRowList;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public get dataRowList(): QueryList<IgxRowDirective<IgxGridBaseDirective>> {
         const res = new QueryList<IgxRowDirective<IgxGridBaseDirective>>();
@@ -1858,41 +1527,44 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * A template reference for the template when the filtered `IgxGridComponent` is empty.
+     * A template reference for the template when the filtered grid is empty.
+     * @example
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @ViewChild('emptyFilteredGrid', { read: TemplateRef, static: true })
     public emptyFilteredGridTemplate: TemplateRef<any>;
 
     /**
-     * A template reference for the template when the `IgxGridComponent` is empty.
+     * A template reference for the template when the grid is empty.
+     * @example
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef, static: true })
     public emptyGridDefaultTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+    */
     @ViewChild('defaultLoadingGrid', { read: TemplateRef, static: true })
     public loadingGridDefaultTemplate: TemplateRef<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective, static: true })
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
      * Returns the template which will be used by the toolbar to show custom content.
+     * @example
      * ```typescript
      * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
      * ```
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
         return this.toolbarCustomContentTemplates.first;
     }
@@ -1927,6 +1599,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get isPinningToStart() {
+        return this.pinning.columns !== ColumnPinningPosition.End;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
             return this.rowSelectorsTemplates.first.templateRef;
@@ -1950,114 +1630,114 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective, static: true })
     public verticalScroll: IgxGridForOfDirective<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('scr', { read: ElementRef, static: true })
     public scr: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('footer', { read: ElementRef })
     public footer: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('headerSelectorContainer')
     public headerSelectorContainer: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('headerDragContainer')
     public headerDragContainer: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('headerGroupContainer')
     public headerGroupContainer: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
     public filteringRow: IgxGridFilteringRowComponent;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('theadRow', { static: true })
     public theadRow: ElementRef;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('tbody', { static: true })
     public tbody: ElementRef;
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     protected _outletDirective: IgxOverlayOutletDirective;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get outletDirective() {
         return this._outletDirective;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
-     * @hidden
+     * @hidden @internal
     */
     @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
     public tmpOutlets: QueryList<any> = new QueryList<any>();
 
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get rowOutletDirective() {
         return this.rowEditingOutletDirective;
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get parentRowOutletDirective() {
         return this.outletDirective;
     }
@@ -2070,26 +1750,32 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public dragIndicatorIconBase: TemplateRef<any>;
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
     private defaultRowEditTemplate: TemplateRef<any>;
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     public get rowEditContainer(): TemplateRef<any> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
     public rowEditText: TemplateRef<any>;
 
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
     public rowEditActions: TemplateRef<any>;
 
@@ -2137,15 +1823,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
         const editRowState = this.crudService.row;
         return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get firstEditableColumnIndex(): number {
         const index = this.navigation.gridOrderedColumns.findIndex(e => e.editable);
@@ -2153,7 +1839,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get lastEditableColumnIndex(): number {
         const orderedColumns = this.navigation.gridOrderedColumns;
@@ -2162,19 +1848,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChildren(IgxRowEditTabStopDirective)
     public rowEditTabsDEFAULT: QueryList<IgxRowEditTabStopDirective>;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ContentChildren(IgxRowEditTabStopDirective)
     public rowEditTabsCUSTOM: QueryList<IgxRowEditTabStopDirective>;
 
     /**
-     * @hidden
+     * @hidden @internal
      * TODO: Nav service logic doesn't handle 0 results from this querylist
      */
     public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
@@ -2182,19 +1868,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.class')
     get hostClass(): string {
@@ -2207,38 +1893,40 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     @HostBinding('attr.role')
     public hostRole = 'grid';
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get pipeTrigger(): number {
         return this._pipeTrigger;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get filteringPipeTrigger(): number {
         return this._filteringPipeTrigger;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get summaryPipeTrigger(): number {
         return this._summaryPipeTrigger;
     }
 
     /**
-     * Returns the sorting state of the `IgxGridComponent`.
-     * ```typescript
-     * const sortingState = this.grid.sortingExpressions;
+     * Gets/Sets the sorting state.
+     * @remarks
+     * Supports two-way data binding.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(sortingExpressions)]="model.sortingExpressions"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -2246,22 +1934,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._sortingExpressions;
     }
 
-    /**
-     * Sets the sorting state of the `IgxGridComponent`.
-     * ```typescript
-     * this.grid.sortingExpressions = [{
-     *     fieldName: "ID",
-     *     dir: SortingDirection.Desc,
-     *     ignoreCase: true
-     * }];
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(sortingExpressions)]="model.sortingExpressions"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = cloneArray(value);
         this.sortingExpressionsChange.emit(this._sortingExpressions);
@@ -2269,22 +1941,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before sorting is performed. Returns the sorting expressions.
+     * Emitted before sorting is performed.
+     * @remarks
+     * Returns the sorting expressions.
+     * @example
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
      * ```
-     * ```typescript
-     * sortingExprChange(event: ISortingExpression[]){
-     *     const sortingExpressions = event;
-     * }
-     * ```
-     * @memberof IgxGridBaseDirective
-     */
+    */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
@@ -2296,7 +1965,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the number of hidden `IgxColumnComponent`.
+     * Gets the number of hidden columns.
+     * @example
      * ```typescript
      * const hiddenCol = this.grid.hiddenColumnsCount;
      * ``
@@ -2306,12 +1976,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the text to be displayed inside the toggle button
-     * for the built-in column hiding UI of the`IgxColumnComponent`.
-     * ```typescript
-     * const hiddenColText = this.grid.hiddenColumnsText;
+     * Gets/Sets the text to be displayed inside the toggle button.
+     * @remarks
+     * Used for the built-in column hiding UI of the`IgxColumnComponent`.
+     * @example
+     * ```html
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -2319,41 +1990,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._hiddenColumnsText;
     }
 
-    /**
-     * Sets the text to be displayed inside the toggle button
-     * for the built-in column hiding UI of the`IgxColumnComponent`.
-     * ```typescript
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set hiddenColumnsText(value) {
         this._hiddenColumnsText = value;
 
     }
 
     /**
-     * Returns the text to be displayed inside the toggle button
-     * for the built-in column pinning UI of the`IgxColumnComponent`.
-     * ```typescript
-     * const pinnedText = this.grid.pinnedColumnsText;
+     * Gets/Sets the text to be displayed inside the toggle button.
+     * @remarks
+     * Used for the built-in column pinning UI of the`IgxColumnComponent`.
+     * @example
+     * ```html
+     * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     get pinnedColumnsText() {
         return this._pinnedColumnsText;
     }
-
-    /**
-     * Sets the text to be displayed inside the toggle button
-     * for the built-in column pinning UI of the`IgxColumnComponent`.
-     * ```html
-     * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     set pinnedColumnsText(value) {
         this._pinnedColumnsText = value;
     }
@@ -2366,7 +2021,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
     */
     public columnsWithNoSetWidths = null;
 
@@ -2382,7 +2037,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _currentRowState: any;
     private _filteredSortedData = null;
     /**
-     * @hidden
+     * @hidden @internal
     */
     public get currentRowState(): any {
         return this._currentRowState;
@@ -2390,10 +2045,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Provides access to the `IgxToolbarComponent`.
+     * @example
      * ```typescript
      * const gridToolbar = this.grid.toolbar;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
@@ -2402,25 +2057,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private toolbarHtml: ElementRef = null;
 
     /**
-     * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
-     * ```typescript
-     * const toolbarGrid = this.grid.showToolbar;
+     * Gets/Sets whether the toolbar is shown.
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
     }
-
-    /**
-     * Shows or hides the `IgxGridComponent`'s toolbar.
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set showToolbar(newValue: boolean) {
         if (this._showToolbar !== newValue) {
             this._showToolbar = newValue;
@@ -2431,11 +2078,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the toolbar's title.
-     * ```typescript
-     * const toolbarTitle  = this.grid.toolbarTitle;
+     * Gets/Sets the toolbar's title.
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -2443,13 +2090,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._toolbarTitle;
     }
 
-    /**
-     * Sets the toolbar's title.
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set toolbarTitle(newValue: string) {
         if (this._toolbarTitle !== newValue) {
             this._toolbarTitle = newValue;
@@ -2460,11 +2100,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns whether the option for exporting to MS Excel is enabled or disabled.
-     * ```typescript
-     * cosnt excelExporter = this.grid.exportExcel;
+     * Gets/Sets whether exporting to MS Excel is enabled or disabled.
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -2472,13 +2112,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.getExportExcel();
     }
 
-    /**
-     * Enable or disable the option for exporting to MS Excel.
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set exportExcel(newValue: boolean) {
         if (this._exportExcel !== newValue) {
             this._exportExcel = newValue;
@@ -2489,25 +2122,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns whether the option for exporting to CSV is enabled or disabled.
-     * ```typescript
-     * const exportCsv = this.grid.exportCsv;
+     * Gets/Sets whether the option for exporting to CSV is enabled or disabled.
+     * ```html
+     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     public get exportCsv(): boolean {
         return this.getExportCsv();
     }
-
-    /**
-     * Enable or disable the option for exporting to CSV.
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportCsv]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set exportCsv(newValue: boolean) {
         if (this._exportCsv !== newValue) {
             this._exportCsv = newValue;
@@ -2518,11 +2142,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the textual content for the main export button.
-     * ```typescript
-     * const exportText = this.grid.exportText;
+     * Gets/Sets the textual content for the main export button.
+     * @example
+     * ```html
+     * <igx-grid [data]="localData" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
@@ -2530,13 +2154,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._exportText;
     }
 
-    /**
-     * Sets the textual content for the main export button.
-     * ```html
-     * <igx-grid [data]="localData" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set exportText(newValue: string) {
         if (this._exportText !== newValue) {
             this._exportText = newValue;
@@ -2547,25 +2164,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the textual content for the MS Excel export button.
-     * ```typescript
-     * const excelText = this.grid.exportExcelText;
+     * Gets/Sets the textual content for the MS Excel export button.
+     * ```html
+     * <igx-grid [exportExcelText]="'My Excel Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     public get exportExcelText(): string {
         return this._exportExcelText;
     }
-
-    /**
-     * Sets the textual content for the MS Excel export button.
-     * ```html
-     * <igx-grid [exportExcelText]="'My Excel Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set exportExcelText(newValue: string) {
         if (this._exportExcelText !== newValue) {
             this._exportExcelText = newValue;
@@ -2576,25 +2184,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the textual content for the CSV export button.
-     * ```typescript
-     * const csvText = this.grid.exportCsvText;
+     * Gets/Sets the textual content for the CSV export button.
+     * @example
+     * ```html
+     * <igx-grid [exportCsvText]="'My Csv Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportExcel]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @WatchChanges()
     @Input()
     public get exportCsvText(): string {
         return this._exportCsvText;
     }
-
-    /**
-     * Sets the textual content for the CSV export button.
-     * ```html
-     * <igx-grid [exportCsvText]="'My Csv Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportExcel]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set exportCsvText(newValue: string) {
         if (this._exportCsvText !== newValue) {
             this._exportCsvText = newValue;
@@ -2628,21 +2228,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     /**
-     * Returns the current cell selection state, which can be none, single or multiple
-     * @memberof IgxGridBaseDirective
-     */
+     * Gets/Sets cell selection mode.
+     * @remarks
+     * By default the cell selection mode is multiple
+     * @param selectionMode: GridSelectionMode
+    */
     @WatchChanges()
     @Input()
     get cellSelection() {
         return this._cellSelectionMode;
     }
 
-    /**
-     * Allows you to set cell selection mode
-     * By default the cell selection mode is multiple
-     * @param selectionMode: GridSelectionMode
-     * @memberof IgxGridBaseDirective
-     */
     set cellSelection(selectionMode:  GridSelectionMode) {
         this._cellSelectionMode = selectionMode;
         if (this.gridAPI.grid) {
@@ -2652,21 +2248,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the current row selection state, which can be none, single or multiple
-     * @memberof IgxGridBaseDirective
-     */
+     * Gets/Sets row selection mode
+     * @remarks
+     * By default the row selection mode is none
+     * @param selectionMode: GridSelectionMode
+    */
     @WatchChanges()
     @Input()
     get rowSelection() {
         return this._rowSelectionMode;
     }
 
-    /**
-     * Allows you to set row selection mode
-     * By default the row selection mode is none
-     * @param selectionMode: GridSelectionMode
-     * @memberof IgxGridBaseDirective
-     */
+
     set rowSelection(selectionMode:  GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
@@ -2676,18 +2269,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public rowEditMessage;
 
     /**
      * Emitted when an export process is initiated by the user.
+     * @example
      * ```typescript
      * toolbarExporting(event: IGridToolbarExportEventArgs){
      *     const toolbarExporting = event;
      * }
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     @Output()
     public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
@@ -2695,50 +2288,51 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /* End of toolbar related definitions */
 
     /**
-     * Emitted when making a range selection either through
-     * drag selection or through keyboard selection.
+     * Emitted when making a range selection.
+     * @remarks
+     * Range selection can be made either through drag selection or through keyboard selection.
      */
     @Output()
     onRangeSelection = new EventEmitter<GridSelectionRange>();
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public pagingState;
     /**
-     * @hidden
+     * @hidden @internal
      */
     public calcWidth: number;
     /**
-     * @hidden
+     * @hidden @internal
      */
     public calcHeight = 0;
     /**
-     * @hidden
+     * @hidden @internal
      */
     public tfootHeight: number;
     /**
-     * @hidden
+     * @hidden @internal
      */
     public chipsGoupingExpressions = [];
     /**
-     * @hidden
+     * @hidden @internal
      */
     public summariesHeight: number;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public draggedColumn: IgxColumnComponent;
 
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public disableTransitions = false;
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
@@ -2749,7 +2343,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public columnWidthSetByUser = false;
 
@@ -2948,11 +2542,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
+     * Returns the state of the grid virtualization.
+     * @remarks
+     * Includes the start index and how many records are rendered.
+     * @example
      * ```typescript
      * const gridVirtState = this.grid1.virtualizationState;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get virtualizationState() {
         return this.verticalScrollContainer.state;
@@ -3219,6 +2815,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.setupColumns();
     }
 
+    /**
+     * @hidden @internal
+     */
     public _setupRowObservers() {
         const elementFilter = (item: IgxRowDirective<any> | IgxSummaryRowComponent) => this.isDefined(item.nativeElement.parentElement);
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
@@ -3234,6 +2833,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         ];
     }
 
+    /**
+     * @hidden @internal
+    */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('keydown', this.keydownHandler);
@@ -3260,6 +2862,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
     }
 
+    /**
+     * @hidden @internal
+    */
     public notifyChanges(repaint = false) {
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
@@ -3271,6 +2876,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._cdrRequests = false;
     }
 
+    /**
+     * @hidden @internal
+    */
     public ngDoCheck() {
         super.ngDoCheck();
         if (this._init) {
@@ -3303,7 +2911,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public ngOnDestroy() {
         this.tmpOutlets.forEach((tmplOutlet) => {
@@ -3329,21 +2937,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
     }
 
     /**
      * Toggles the specified column's visibility.
+     * @example
      * ```typescript
      * this.grid1.toggleColumnVisibility({
      *       column: this.grid1.columns[0],
      *       newValue: true
      * });
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
         const col = args.column ? this.columnList.find((c) => c === args.column) : undefined;
@@ -3357,38 +2965,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
-     * ```typescript
-     * const expansionStates = this.grid.expansionStates;
+     * Gets/Sets a list of key-value pairs [row ID, expansion state].
+     * @remarks
+     * Includes only states that differ from the default one.
+     * Supports two-way binding.
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
+     * </igx-grid>
      * ```
-	 * @memberof IgxGridComponent
      */
     @Input()
     public get expansionStates() {
         return this._expansionStates;
     }
 
-     /**
-     * Sets a list of key-value pairs [row ID, expansion state].
-     * ```typescript
-     * const states = new Map<any, boolean>();
-     * states.set(1, true);
-     * this.grid.expansionStates = states;
-     * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
-     * <ng-template igxGridDetail let-dataItem>
-     * <div *ngIf="dataItem.Category">
-     *  <header>{{dataItem.Category?.CategoryName}}</header>
-     * <span>{{dataItem.Category?.Description}}</span>
-     * </div>
-     * </ng-template>
-     * </igx-grid>
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
@@ -3399,10 +2990,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
    /**
      * Expands all rows.
+     * @example
      * ```typescript
      * this.grid.expandAll();
      * ```
-	 * @memberof IgxGridBaseDirective
     */
     public expandAll() {
         this._defaultExpandState = true;
@@ -3411,10 +3002,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
    /**
      * Collapses all rows.
+     * @example
      * ```typescript
      * this.grid.collapseAll();
      * ```
-	 * @memberof IgxGridBaseDirective
     */
     public collapseAll() {
         this._defaultExpandState = false;
@@ -3422,22 +3013,28 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Expands the row by its id. ID is either the primaryKey value or the data record instance.
+     * Expands the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
      * ```typescript
      * this.grid.expandRow(rowID);
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @param rowID The row id - primaryKey value or the data record instance.
      */
     public expandRow(rowID: any) {
         this.gridAPI.set_row_expansion_state(rowID, true);
     }
 
     /**
-     * Collapses the row by its id. ID is either the primaryKey value or the data record instance.
+     * Collapses the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
      * ```typescript
      * this.grid.collapseRow(rowID);
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @param rowID The row id - primaryKey value or the data record instance.
     */
     public collapseRow(rowID: any) {
         this.gridAPI.set_row_expansion_state(rowID, false);
@@ -3445,11 +3042,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-     * Toggles the row by its id. ID is either the primaryKey value or the data record instance.
+     * Toggles the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
      * ```typescript
      * this.grid.toggleRow(rowID);
      * ```
-	 * @memberof IgxGridBaseDirective
+     * @param rowID The row id - primaryKey value or the data record instance.
     */
     public toggleRow(rowID: any) {
         const rec = this.gridAPI.get_rec_by_id(rowID);
@@ -3457,34 +3057,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.set_row_expansion_state(rowID, !state);
     }
 
+    /**
+     * @hidden
+     * @internal
+    */
     public getDefaultExpandState(rec: any) {
         return this._defaultExpandState;
     }
 
     /**
-     * Returns the native element of the `IgxGridComponent`.
+     * Gets the native element.
+     * @example
      * ```typescript
      * const nativeEl = this.grid.nativeElement.
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get nativeElement() {
         return this.elementRef.nativeElement;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     protected get outlet() {
         return this.outletDirective;
     }
 
     /**
-     * Returns the `IgxGridComponent`'s rows height.
+     * Gets the default row height.
+     * @example
      * ```typescript
      * const rowHeigh = this.grid.defaultRowHeight;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get defaultRowHeight(): number {
         switch (this.displayDensity) {
@@ -3497,6 +3101,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get defaultSummaryHeight(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
@@ -3510,9 +3117,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     * @remarks
      * Used internally for restricting header group component width.
      * The values below depend on the header cell default right/left padding values.
-	 * @memberof IgxGridBaseDirective
      */
     get defaultHeaderGroupMinWidth(): number {
         switch (this.displayDensity) {
@@ -3525,6 +3132,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public paginatorClassName(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
@@ -3537,11 +3147,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the current width of the container for the pinned `IgxColumnComponent`s.
+     * Gets the current width of the container for the pinned `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get pinnedWidth() {
         if (!isNaN(this._pinnedWidth)) { return this._pinnedWidth; }
@@ -3550,11 +3160,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the current width of the container for the unpinned `IgxColumnComponent`s.
+     * Gets the current width of the container for the unpinned `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const unpinnedWidth = this.grid.getUnpinnedWidth;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get unpinnedWidth() {
         if (!isNaN(this._unpinnedWidth)) { return this._unpinnedWidth; }
@@ -3562,13 +3172,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._unpinnedWidth;
     }
 
+    /**
+     * @hidden @internal
+    */
     get isHorizontalScrollHidden() {
         const diff = this.unpinnedWidth - this.totalWidth;
         return this.width === null || diff >= 0;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
      */
     public featureColumnsWidth(expander?: ElementRef) {
@@ -3586,29 +3199,29 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     get summariesMargin() {
         return this.featureColumnsWidth();
     }
 
     /**
-     * Returns an array of `IgxColumnComponent`s.
+     * Gets an array of `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const colums = this.grid.columns.
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get columns(): IgxColumnComponent[] {
         return this._columns;
     }
 
     /**
-     * Returns an array of the pinned `IgxColumnComponent`s.
+     * Gets an array of the pinned `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const pinnedColumns = this.grid.pinnedColumns.
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get pinnedColumns(): IgxColumnComponent[] {
         if (this._pinnedVisible.length) {
@@ -3619,11 +3232,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns an array of unpinned `IgxColumnComponent`s.
+     * Gets an array of unpinned `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const unpinnedColumns = this.grid.unpinnedColumns.
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         if (this._unpinnedVisible.length) {
@@ -3634,8 +3247,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
-	 * @memberof IgxGridBaseDirective
+     * Gets the `width` to be set on `IgxGridHeaderGroupComponent`.
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
         if (this.hasColumnLayouts) {
@@ -3654,47 +3266,48 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxColumnComponent` by field name.
+     * @example
      * ```typescript
      * const myCol = this.grid1.getColumnByName("ID");
      * ```
      * @param name
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
     }
 
     /**
      * Returns the `IgxRowDirective` by index.
+     * @example
      * ```typescript
      * const myRow = this.grid1.getRowByIndex(1);
      * ```
      * @param index
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getRowByIndex(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.gridAPI.get_row_by_index(index);
     }
 
     /**
      * Returns `IgxGridRowComponent` object by the specified primary key .
+     * @remarks
      * Requires that the `primaryKey` property is set.
+     * @example
      * ```typescript
      * const myRow = this.grid1.getRowByKey("cell5");
      * ```
      * @param keyValue
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getRowByKey(keyValue: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.gridAPI.get_row_by_key(keyValue);
     }
 
     /**
      * Returns an array of visible `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * const visibleColumns = this.grid.visibleColumns.
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get visibleColumns(): IgxColumnComponent[] {
         if (this._visibleColumns.length) {
@@ -3706,13 +3319,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the `IgxGridCellComponent` that matches the conditions.
+     * @example
      * ```typescript
      * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
      * ```
      * @param rowIndex
      * @param columnField
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
         const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
         if (columnId !== -1) {
@@ -3722,24 +3335,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an `IgxGridCellComponent` object by the specified primary key and column field.
+     * @remarks
      * Requires that the primaryKey property is set.
+     * @example
      * ```typescript
      * grid.getCellByKey(1, 'index');
      * ```
      * @param rowSelector match any rowID
      * @param columnField
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
         return this.gridAPI.get_cell_by_key(rowSelector, columnField);
     }
 
     /**
-     * Returns the total number of pages.
+     * Gets the total number of pages.
+     * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get totalPages(): number {
         if (this.pagingState) {
@@ -3749,22 +3363,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns if the current page is the first page.
+     * Gets if the current page is the first page.
+     * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get isFirstPage(): boolean {
         return this.page === 0;
     }
 
     /**
-     * Goes to the next page of the `IgxGridComponent`, if the grid is not already at the last page.
+     * Goes to the next page, if the grid is not already at the last page.
+     * @example
      * ```typescript
      * this.grid1.nextPage();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public nextPage(): void {
         if (!this.isLastPage) {
@@ -3773,11 +3387,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Goes to the previous page of the `IgxGridComponent`, if the grid is not already at the first page.
+     * Goes to the previous page, if the grid is not already at the first page.
+     * @example
      * ```typescript
      * this.grid1.previousPage();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public previousPage(): void {
         if (!this.isFirstPage) {
@@ -3787,11 +3401,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the total number of records.
+     * @remarks
      * Only functions when paging is enabled.
+     * @example
      * ```typescript
      * const totalRecords = this.grid.totalRecords;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get totalRecords(): number {
         if (this.pagingState) {
@@ -3801,10 +3416,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the current page is the last page.
+     * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
@@ -3812,10 +3427,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the total width of the `IgxGridComponent`.
+     * @example
      * ```typescript
      * const gridWidth = this.grid.totalWidth;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get totalWidth(): number {
         if (!isNaN(this._totalWidth)) { return this._totalWidth; }
@@ -3930,10 +3545,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     /**
      * Moves a column to the specified drop target.
+     * @example
      * ```typescript
      * grid.moveColumn(compName, persDetails);
      * ```
-	  * @memberof IgxGridBaseDirective
 	  */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
@@ -4012,12 +3627,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the desired page index.
+     * @example
      * ```typescript
      * this.grid1.paginate(1);
      * ```
      * @param val
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {
             return;
@@ -4028,10 +3643,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Manually marks the `IgxGridComponent` for change detection.
+     * @example
      * ```typescript
      * this.grid1.markForCheck();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public markForCheck() {
         this.cdr.detectChanges();
@@ -4039,16 +3654,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Creates a new `IgxGridRowComponent` and adds the data record to the end of the data source.
+     * @example
      * ```typescript
-     * const record = {
-     *     ID: this.grid1.data[this.grid1.data.length - 1].ID + 1,
-     *     Name: this.newRecord
-     * };
      * this.grid1.addRow(record);
      * ```
      * @param data
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public addRow(data: any): void {
         // commit pending states prior to adding a row
         this.endEdit(true);
@@ -4061,14 +3672,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
+     * @remarks
      * Requires that the `primaryKey` property is set.
      * The method accept rowSelector as a parameter, which is the rowID.
+     * @example
      * ```typescript
      * this.grid1.deleteRow(0);
      * ```
      * @param rowSelector
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             this.deleteRowById(rowSelector);
@@ -4101,15 +3713,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Updates the `IgxGridRowComponent` and the corresponding data record by primary key.
+     * @remarks
      * Requires that the `primaryKey` property is set.
+     * @example
      * ```typescript
      * this.gridWithPK.updateCell('Updated', 1, 'ProductName');
      * ```
      * @param value the new value which is to be set.
      * @param rowSelector corresponds to rowID.
      * @param column corresponds to column field.
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public updateCell(value: any, rowSelector: any, column: string): void {
         if (this.isDefined(this.primaryKey)) {
             const col = this.columnList.toArray().find(c => c.field === column);
@@ -4142,9 +3755,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Updates the `IgxGridRowComponent`, which is specified by
+     * Updates the `IgxGridRowComponent`
+     * @remarks
+     * The row is specified by
      * rowSelector parameter and the data source record with the passed value.
      * This method will apply requested update only if primary key is specified in the grid.
+     * @example
      * ```typescript
      * grid.updateRow({
      *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
@@ -4152,8 +3768,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param value
      * @param rowSelector correspond to rowID
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
@@ -4174,11 +3789,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Sort a single `IgxColumnComponent`.
+     * @remarks
      * Sort the `IgxGridComponent`'s `IgxColumnComponent` based on the provided array of sorting expressions.
+     * @example
      * ```typescript
      * this.grid.sort({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
@@ -4192,6 +3808,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Filters a single `IgxColumnComponent`.
+     * @example
      * ```typescript
      * public filter(term) {
      *      this.grid.filter("ProductName", term, IgxStringFilteringOperand.instance().condition("contains"));
@@ -4201,8 +3818,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param value
      * @param conditionOrExpressionTree
      * @param ignoreCase
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
         this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
@@ -4210,31 +3826,33 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
+     * @example
      * ```typescript
      * grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
      * ```
      * @param value
      * @param condition
      * @param ignoreCase
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
 
     /**
      * Enables summaries for the specified column and applies your customSummary.
+     * @remarks
      * If you do not provide the customSummary, then the default summary for the column data type will be applied.
+     * @example
      * ```typescript
      * grid.enableSummaries([{ fieldName: 'ProductName' }, { fieldName: 'ID' }]);
      * ```
      * Enable summaries for the listed columns.
+     * @example
      * ```typescript
      * grid.enableSummaries('ProductName');
      * ```
      * @param rest
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public enableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
             this._multipleSummaries(rest[0], true);
@@ -4245,15 +3863,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Disable summaries for the specified column.
+     * @example
      * ```typescript
      * grid.disableSummaries('ProductName');
      * ```
-     *
+     *@remarks
      * Disable summaries for the listed columns.
+     *@example
      * ```typescript
      * grid.disableSummaries([{ fieldName: 'ProductName' }]);
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
@@ -4264,27 +3883,29 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * If name is provided, clears the filtering state of the corresponding `IgxColumnComponent`,
-     * otherwise clears the filtering state of all `IgxColumnComponent`s.
+     * If name is provided, clears the filtering state of the corresponding `IgxColumnComponent`.
+     *@remarks
+     Otherwise clears the filtering state of all `IgxColumnComponent`s.
+     *@example
      * ```typescript
      * this.grid.clearFilter();
      * ```
      * @param name
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public clearFilter(name?: string) {
         this.filteringService.clearFilter(name);
     }
 
     /**
-     * If name is provided, clears the sorting state of the corresponding `IgxColumnComponent`,
+     * If name is provided, clears the sorting state of the corresponding `IgxColumnComponent`.
+     * @remarks
      * otherwise clears the sorting state of all `IgxColumnComponent`.
+     * @example
      * ```typescript
      * this.grid.clearSort();
      * ```
      * @param name
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public clearSort(name?: string) {
         if (!name) {
             this.sortingExpressions = [];
@@ -4297,7 +3918,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public refreshGridState(args?) {
         this.endEdit(true);
@@ -4308,14 +3929,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     // TODO: We have return values here. Move them to event args ??
 
     /**
-     * Pins a column by field name. Returns whether the operation is successful.
+     * Pins a column by field name.
+     * @remarks
+     * Returns whether the operation is successful.
+     * @example
      * ```typescript
      * this.grid.pinColumn("ID");
      * ```
      * @param columnName
      * @param index
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.pin(index);
@@ -4323,13 +3946,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Unpins a column by field name. Returns whether the operation is successful.
+     * @example
      * ```typescript
      * this.grid.pinColumn("ID");
      * ```
      * @param columnName
      * @param index
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.unpin(index);
@@ -4337,11 +3960,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-     * Recalculates grid width/height dimensions. Should be run when changing DOM elements dimentions manually that affect the grid's size.
+     * Recalculates grid width/height dimensions.
+     * @remarks
+     * Should be run when changing DOM elements dimentions manually that affect the grid's size.
+     * @example
      * ```typescript
      * this.grid.reflow();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public reflow() {
         this.calculateGridSizes();
@@ -4349,43 +3974,46 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Finds the next occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
+     * @remarks
      * Returns how many times the grid contains the string.
+     * @example
      * ```typescript
      * this.grid.findNext("financial");
      * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value  (defaults to false).
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, 1, caseSensitive, exactMatch);
     }
 
     /**
      * Finds the previous occurrence of a given string in the grid and scrolls to the cell if it isn't visible.
+     * @remarks
      * Returns how many times the grid contains the string.
+     * @example
      * ```typescript
      * this.grid.findPrev("financial");
      * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, -1, caseSensitive, exactMatch);
     }
 
     /**
      * Reapplies the existing search.
+     * @remarks
      * Returns how many times the grid contains the last search.
+     * @example
      * ```typescript
      * this.grid.refreshSearch();
      * ```
      * @param updateActiveInfo
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
@@ -4409,10 +4037,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Removes all the highlights in the cell.
+     * @example
      * ```typescript
      * this.grid.clearSearch();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public clearSearch() {
         this.lastSearchInfo = {
@@ -4434,10 +4062,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has sortable columns.
+     * @example
      * ```typescript
      * const sortableGrid = this.grid.hasSortableColumns;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
@@ -4445,10 +4073,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has editable columns.
+     * @example
      * ```typescript
      * const editableGrid = this.grid.hasEditableColumns;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasEditableColumns(): boolean {
         return this.columnList.some((col) => col.editable);
@@ -4456,10 +4084,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has fiterable columns.
+     * @example
      * ```typescript
      * const filterableGrid = this.grid.hasFilterableColumns;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasFilterableColumns(): boolean {
         return this.columnList.some((col) => col.filterable);
@@ -4467,24 +4095,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has summarized columns.
+     * @example
      * ```typescript
      * const summarizedGrid = this.grid.hasSummarizedColumns;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasSummarizedColumns(): boolean {
         return this.summaryService.hasSummarizedColumns;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get hasVisibleColumns(): boolean {
         if (this._hasVisibleColumns === undefined) {
@@ -4498,10 +4126,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
+     * @example
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasMovableColumns(): boolean {
         return this.columnList && this.columnList.some((col) => col.movable);
@@ -4509,20 +4137,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the `IgxGridComponent` has column groups.
+     * @example
      * ```typescript
      * const groupGrid = this.grid.hasColumnGroups;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get hasColumnGroups(): boolean {
         return this._columnGroups;
     }
     /**
      * Returns if the `IgxGridComponent` has column layouts for multi-row layout definition.
+     * @example
      * ```typescript
      * const layoutGrid = this.grid.hasColumnLayouts;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public get hasColumnLayouts() {
         return !!this.columnList.some(col => col.columnLayout);
@@ -4530,10 +4158,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an array of the selected `IgxGridCellComponent`s.
+     * @example
      * ```typescript
      * const selectedCells = this.grid.selectedCells;
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.dataRowList) {
@@ -4544,7 +4172,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get multiRowLayoutRowSize() {
         return this._multiRowLayoutRowSize;
@@ -4742,12 +4370,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return res;
     }
 
+    /**
+     * @hidden @internal
+     */
     public get outerWidth() {
         return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      * Gets the visible content height that includes header + tbody + footer.
      */
     public getVisibleContentHeight() {
@@ -4759,7 +4390,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public getPossibleColumnWidth(baseWidth: number = null) {
         let computedWidth;
@@ -4864,6 +4495,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return colSum;
     }
 
+    /**
+     * @hidden @internal
+     */
     public hasVerticalSroll() {
         if (this._init) { return false; }
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
@@ -4997,12 +4631,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets calculated width of the pinned area.
+     * @example
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
@@ -5020,8 +4654,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridBaseDirective
-     */
+    */
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
@@ -5180,15 +4813,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public isColumnGrouped(fieldName: string): boolean {
         return false;
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public onHeaderSelectorClick(event) {
         if (!this.isMultiRowSelectionEnabled) { return; }
         this.selectionService.areAllRowSelected() ?
@@ -5196,7 +4829,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get headSelectorBaseAriaLabel() {
         if (this._filteringExpressionsTree.filteringOperands.length > 0) {
@@ -5220,10 +4853,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid.
+     * @example
      * ```typescript
      *      const dataView = this.grid.dataView;
      * ```
-     * @memberof IgxGridComponent
      */
     get dataView(): any[] {
         return this.verticalScrollContainer.igxForOf;
@@ -5231,11 +4864,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Get current selection state.
+     * @example
      * Returns an array with selected rows' IDs (primaryKey or rowData)
      * ```typescript
      * const selectedRows = this.grid.selectedRows();
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public selectedRows(): any[] {
         return this.selectionService.getSelectedRows();
@@ -5243,13 +4876,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Select specified rows by ID.
+     * @example
      * ```typescript
      * this.grid.selectRows([1,2,5], true);
      * ```
      * @param rowIDs
      * @param clearCurrentSelection if true clears the current selection
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
         this.notifyChanges();
@@ -5257,12 +4890,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselect specified rows by ID.
+     * @example
      * ```typescript
      * this.grid.deselectRows([1,2,5]);
      * ```
      * @param rowIDs
-     * @memberof IgxGridBaseDirective
-     */
+    */
     public deselectRows(rowIDs: any[]) {
         this.selectionService.deselectRowsWithNoEvent(rowIDs);
         this.notifyChanges();
@@ -5270,14 +4903,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Selects all rows
-     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * @remarks
+     * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
+     * @example
      * ```typescript
      * this.grid.selectAllRows();
      * this.grid.selectAllRows(false);
      * ```
      * @param onlyFilterData
-	 * @memberof IgxGridBaseDirective
      */
     public selectAllRows(onlyFilterData = true) {
         const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data(true);
@@ -5287,13 +4921,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Deselects all rows
-     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * @remarks
+     * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
+     * @example
      * ```typescript
      * this.grid.deselectAllRows();
      * ```
      * @param onlyFilterData
-	 * @memberof IgxGridBaseDirective
      */
     public deselectAllRows(onlyFilterData = true) {
         if (onlyFilterData && this.filteredData && this.filteredData.length > 0) {
@@ -5304,12 +4939,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    clearCellSelection(): void {
+    /**
+     * @hidden @internal
+     */
+    public clearCellSelection(): void {
         this.selectionService.clear(true);
         this.notifyChanges();
     }
 
-    dragScroll(dir: DragScrollDirection): void {
+    /**
+     * @hidden @internal
+    */
+    public dragScroll(dir: DragScrollDirection): void {
         const scrollDelta = 48;
         const horizontal = this.headerContainer.getScroll();
         const vertical = this.verticalScrollContainer.getScroll();
@@ -5347,11 +4988,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    isDefined(arg: any): boolean {
+    /**
+     * @hidden @internal
+    */
+    public isDefined(arg: any): boolean {
         return arg !== undefined && arg !== null;
     }
 
-    selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined): void {
+    /**
+     * @hidden @internal
+     */
+    public selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined): void {
         if (!this.isDefined(arg)) {
             this.clearCellSelection();
             return;
@@ -5364,7 +5011,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
-    columnToVisibleIndex(field: string | number): number {
+    /**
+     * @hidden @internal
+    */
+    public columnToVisibleIndex(field: string | number): number {
         const visibleColumns = this.visibleColumns;
         if (typeof field === 'number') {
             return field;
@@ -5372,8 +5022,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return visibleColumns.find(column => column.field === field).visibleIndex;
     }
 
-
-    setSelection(range: GridSelectionRange): void {
+    /**
+     * @hidden @internal
+    */
+    public setSelection(range: GridSelectionRange): void {
         const startNode = { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
         const endNode = { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
 
@@ -5383,6 +5035,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.selectionService.initPointerState();
     }
 
+    /**
+     * @hidden @internal
+     */
     getSelectedRanges(): GridSelectionRange[] {
         return this.selectionService.ranges;
     }
@@ -5442,17 +5097,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      *
      * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     * @remarks
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    getSelectedData(formatters = false, headers = false) {
+    public getSelectedData(formatters = false, headers = false) {
         const source = this.dataView;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public scrollHandler = (event) => {
         this.headerContainer.scrollPosition += event.target.scrollLeft;
         this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
@@ -5460,6 +5116,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         event.target.scrollTop = 0;
     }
 
+    /**
+     * @hidden @internal
+     */
     copyHandlerIE() {
         if (isIE()) {
             this.copyHandler(null, true);
@@ -5504,15 +5163,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         event.clipboardData.setData('text/plain', result);
     }
 
-    /**
-     * This method allows you to navigate to a position
-     * in the grid based on provided `rowindex` and `visibleColumnIndex`,
-     * also to execute a custom logic over the target element,
+    /**Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
+     * @remarks
+     * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
+     * @example
      * ```typescript
      *  this.grid.navigateTo(10, 3, (args) => { args.target.nativeElement.focus(); });
      * ```
-	 * @memberof IgxGridBaseDirective
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
         if (rowIndex < 0 || rowIndex > this.dataView.length - 1
@@ -5538,12 +5196,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
     * Returns `ICellPosition` which defines the next cell,
     * according to the current position, that match specific criteria.
+    * @remarks
     * You can pass callback function as a third parameter of `getPreviousCell` method.
     * The callback function accepts IgxColumnComponent as a param
+    * @example
     * ```typescript
     *  const nextEditableCellPosition = this.grid.getNextCell(0, 3, (column) => column.editable);
     * ```
-    * @memberof IgxGridBaseDirective
     */
     public getNextCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
@@ -5570,12 +5229,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
     * Returns `ICellPosition` which defines the previous cell,
     * according to the current position, that match specific criteria.
+    * @remarks
     * You can pass callback function as a third parameter of `getPreviousCell` method.
     * The callback function accepts IgxColumnComponent as a param
+    * @example
     * ```typescript
     *  const previousEditableCellPosition = this.grid.getPreviousCell(0, 3, (column) => column.editable);
     * ```
-    * @memberof IgxGridBaseDirective
     */
     public getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (IgxColumnComponent) => boolean = null): ICellPosition {
@@ -5656,7 +5316,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public trackColumnChanges(index, col) {
         return col.field + col._calcWidth;
@@ -5735,11 +5395,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns an array containing the filtered sorted data.
+     * @example
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
-     * @memberof IgxGridBaseDirective
-     */
+    */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
     }
@@ -5941,6 +5601,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * @hidden @internal
+    */
     openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
@@ -5950,7 +5613,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public closeRowEditingOverlay() {
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
@@ -5960,8 +5623,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public toggleRowEditingOverlay(show) {
         const rowStyle = this.rowEditingOverlay.element.style;
         if (show) {
@@ -5972,7 +5635,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public repositionRowEditingOverlay(row: IgxRowDirective<IgxGridBaseDirective & GridType>) {
         if (row && !this.rowEditingOverlay.collapsed) {
@@ -5999,8 +5662,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public get rowChangesCount() {
         if (!this.crudService.row) {
             return 0;
@@ -6013,6 +5676,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
     }
 
+    /**
+     * @hidden @internal
+     */
     endRowTransaction(commit: boolean, row: IgxRow) {
         row.newData = this.transactions.getAggregatedValue(row.id, true);
 
@@ -6033,7 +5699,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-    * @hidden
+     * @hidden @internal
     */
     public gridOutletKeyboardHandler(event) {
         // TODO: This should be removed after grid keyboard refactoring
@@ -6044,9 +5710,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     // TODO: Refactor
     /**
      * Finishes the row transactions on the current row.
+     * @remarks
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
-     *
-     * Binding to the event
+     * @example
      * ```html
      * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
@@ -6090,7 +5756,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.gridAPI.get_all_data());
@@ -6103,10 +5769,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return result;
     }
 
+    /**
+     * @hidden @internal
+    */
     public get dataLength() {
         return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data().length;
     }
 
+    /**
+     * @hidden @internal
+     */
     public hasHorizontalScroll() {
         return this.totalWidth - this.unpinnedWidth > 0;
     }
@@ -6139,34 +5811,43 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     get shouldOverlayLoading(): boolean {
         return this.isLoading && this.data && this.data.length > 0;
     }
 
     /**
-    * @hidden
+     * @hidden @internal
     */
     public isSummaryRow(rowData): boolean {
         return rowData.summaries && (rowData.summaries instanceof Map);
     }
 
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     public get isMultiRowSelectionEnabled(): boolean {
         return this.rowSelection === GridSelectionMode.multiple;
     }
 
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     public get isRowSelectable(): boolean {
         return this.rowSelection !== GridSelectionMode.none;
     }
 
-    /** @hidden */
+    /**
+     * @hidden @internal
+     */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
     }
 
+    /**
+     * @hidden @internal
+    */
     public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
         const context = args.view.context;
         if (context['templateID'] === 'dataRow') {
@@ -6181,8 +5862,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     */
+     * @hidden @internal
+    */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;

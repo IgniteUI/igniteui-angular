@@ -24,12 +24,12 @@ $_dark-bottom-nav: extend($_light-bottom-nav, $_base-dark-bottom-nav);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-bottom-nav
-/// @requires $_base-dark-bottom-na
+/// @requires $_base-dark-bottom-nav
 $_dark-fluent-bottom-nav: extend($_fluent-bottom-nav, $_base-dark-bottom-nav);
 
 /// Generates a dark bootstrap bottom-nav schema based on a mix of $_bootstrap-bottom-nav and $_base-dark-bottom-nav
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-bottom-nav
-/// @requires $_base-dark-bottom-na
+/// @requires $_base-dark-bottom-nav
 $_dark-bootstrap-bottom-nav: extend($_bootstrap-bottom-nav, $_base-dark-bottom-nav);
