@@ -824,7 +824,7 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.getColumnByName('ID').hasSummary = true;
             fixture.detectChanges();
 
-            let summaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[0];
+            let summaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fixture)[0];
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '12', '101', '113', '56.5']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
@@ -833,13 +833,13 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.updateCell(19, 101, 'ParentID');
             fixture.detectChanges();
 
-            summaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[1];
+            summaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fixture)[0];
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '12', '12', '12', '12']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
 
-            const secondSummaryRow = fixture.debugElement.queryAll(By.css(SUMMARY_ROW))[0];
+            const secondSummaryRow = GridSummaryFunctions.getAllVisibleSummariesSorted(fixture)[1];
             GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 0,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '15', '101', '116', '58']);
             GridSummaryFunctions.verifyColumnSummaries(secondSummaryRow, 1,

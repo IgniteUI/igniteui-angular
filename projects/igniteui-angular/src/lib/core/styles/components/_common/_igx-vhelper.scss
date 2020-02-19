@@ -1,3 +1,5 @@
+/// @group themes
+/// @access private
 @mixin igx-vhelper {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);

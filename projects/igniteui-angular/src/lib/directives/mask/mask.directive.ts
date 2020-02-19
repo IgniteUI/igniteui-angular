@@ -11,7 +11,7 @@ import {
     PipeTransform
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KEYS, MaskHelper } from './mask-helper';
+import { KEYS, MaskParsingService } from './mask-parsing.service';
 import { isIE, IBaseEventArgs } from '../../core/utils';
 
 const noop = () => { };
@@ -188,11 +188,6 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    private maskHelper: MaskHelper;
-
-    /**
-     *@hidden
-     */
     private _onTouchedCallback: () => void = noop;
 
     /**
@@ -200,9 +195,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     private _onChangeCallback: (_: any) => void = noop;
 
-    constructor(private elementRef: ElementRef) {
-        this.maskHelper = new MaskHelper();
-    }
+    constructor(private elementRef: ElementRef, private maskParser: MaskParsingService) { }
 
     /**
      *@hidden
@@ -277,23 +270,23 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._paste = false;
 
             const clipboardData = this.value.substring(this._cursorOnPaste, this.getCursorPosition());
-            this.value = this.maskHelper.parseValueByMaskUponCopyPaste(
+            this.value = this.maskParser.parseValueByMaskUponCopyPaste(
                 this._valOnPaste, this._maskOptions, this._cursorOnPaste, clipboardData, this._selection);
 
-            this.setCursorPosition(this.maskHelper.cursor);
+            this.setCursorPosition(this.maskParser.cursor);
         } else {
             const currentCursorPos = this.getCursorPosition();
 
-            this.maskHelper.data = (this._key === KEYS.BACKSPACE) || (this._key === KEYS.DELETE);
+            this.maskParser.data = (this._key === KEYS.BACKSPACE) || (this._key === KEYS.DELETE);
 
             this.value = this._selection && this._selection !== 0 ?
-                this.maskHelper.parseValueByMaskUponSelection(this.value, this._maskOptions, currentCursorPos - 1, this._selection) :
-                this.maskHelper.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1);
+                this.maskParser.parseValueByMaskUponSelection(this.value, this._maskOptions, currentCursorPos - 1, this._selection) :
+                this.maskParser.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1);
 
-            this.setCursorPosition(this.maskHelper.cursor);
+            this.setCursorPosition(this.maskParser.cursor);
         }
 
-        const rawVal = this.maskHelper.restoreValueFromMask(this.value, this._maskOptions);
+        const rawVal = this.maskParser.restoreValueFromMask(this.value, this._maskOptions);
 
         this.dataValue = this.includeLiterals ? this.value : rawVal;
         this._onChangeCallback(this.dataValue);
@@ -312,7 +305,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             }
             this.value = this.focusedValuePipe.transform(value);
         } else {
-            this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
+            this.value = this.maskParser.parseValueByMaskOnInit(this.value, this._maskOptions);
         }
     }
 
@@ -323,7 +316,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public onBlur(value) {
         if (this.displayValuePipe) {
             this.value = this.displayValuePipe.transform(value);
-        } else if (value === this.maskHelper.parseMask(this._maskOptions)) {
+        } else if (value === this.maskParser.parseMask(this._maskOptions)) {
             this.value = '';
         }
     }
@@ -350,7 +343,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
 
-        this.value = value ? this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions) : '';
+        this.value = value ? this.maskParser.parseValueByMaskOnInit(value, this._maskOptions) : '';
         if (this.displayValuePipe) {
             this.value = this.displayValuePipe.transform(this.value);
         }

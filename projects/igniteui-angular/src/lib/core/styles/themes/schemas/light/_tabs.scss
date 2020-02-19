@@ -116,7 +116,7 @@ $_fluent-tabs: extend($_light-tabs, $_fluent-shape-tabs);
 /// @property {map} button-background [igx-color: ('surface')] - The color used for the button background.
 /// @property {map} item-hover-background [igx-color: ('surface')] - The background used for the tabs on hover.
 /// @property {map} item-active-background [igx-color: ('surface')] - The color used for the active/focused tab background.
-
+///
 /// @property {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for list component.
 /// @requires {function} extend
 /// @requires $_light-tabs

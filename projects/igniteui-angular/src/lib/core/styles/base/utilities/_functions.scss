@@ -115,7 +115,7 @@
 /// @access public
 /// @requires {function} to-string
 /// @param {Color} $rgba - The rgba color to convert.
-/// @param {Color} $background - The background color to convert against.
+/// @param {Color} $background [#fff] - The background color to convert against.
 /// @return {Color} - The hexidecimal representation of the rgba value.
 @function hexrgba($rgba, $background: #fff) {
     @if type-of($rgba) == color {
@@ -155,7 +155,7 @@
 /// @group Palettes
 /// @param {Map} $palette - The source palette map.
 /// @param {string} $color - The target color from the color palette.
-/// @param {number|variant} $variant - The target color shade from the color palette.
+/// @param {number|variant} $variant [500] - The target color shade from the color palette.
 /// @requires igx-color
 /// @requires text-contrast
 /// @requires hexrgba
@@ -181,7 +181,7 @@
 /// Test if a component, or list of components
 /// is in the list of known components.
 /// @access private
-/// @param {String|List} $excludes - The components list to check in.
+/// @param {String|List} $items - The components list to check in.
 /// @return {List} - The list of passed items.
 @function is-component($items) {
     $register: map-keys($components);
@@ -196,7 +196,7 @@
 /// Converts numbers to HEX value strings.
 /// @access private
 /// @param {number} $num - The number to convert.
-/// @param {radix} $radix - The base radix to use for the conversion.
+/// @param {radix} $radix [16] - The base radix to use for the conversion.
 /// @return {String} - The resulting string.
 @function to-string($num, $radix: 16) {
     $chars: '0123456789abcdef';
@@ -301,7 +301,6 @@
 /// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
-/// @see $igx-foreground-color
 @function igx-palette(
     $primary,
     $secondary,
@@ -314,10 +313,6 @@
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
     $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);
-
-    @if global-variable-exists('igx-foreground-color') and type-of($igx-foreground-color) == 'color' {
-        $grays: $igx-foreground-color;
-    }
 
     $primary-palette: generate-palette($primary, $saturations);
     $secondary-palette: generate-palette($secondary, $saturations);
@@ -552,7 +547,6 @@
 /// @example scss Set variable values based on $direction
 ///    $left: if-ltr(left, right);
 ///    $right: if-ltr(right, left);
-/// @requires $direction
 @function if-ltr($if, $else: null) {
     $dir: if(global-variable-exists('direction'), $direction, 'ltr');
 
@@ -570,7 +564,6 @@
 /// @example scss Set variable values based on $direction
 ///    $left: if-rtl(left, right);
 ///    $right: if-rtl(right, left);
-/// @requires $direction
 @function if-rtl($if, $else: null) {
     @return if-ltr($else, $if);
 }
