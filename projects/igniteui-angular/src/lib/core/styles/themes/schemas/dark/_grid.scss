@@ -12,6 +12,7 @@
 /// @prop {Color} row-odd-background [#222] - The background color of odd rows.
 /// @prop {Color} row-even-background [#222] - The background color of even rows.
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
+/// @prop {Color} row-hover-text-color [#fff] - The hover row text color.
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222] - The selected row background color.
 /// @prop {Map} row-selected-hover-background [igx-color: ('secondary', 'A700'), rgba: .24, hexrgba: #222] - The selected row background color on hover.
 /// @prop {Color} row-selected-text-color [#fff] - The selected row text color.
@@ -25,9 +26,11 @@
 /// @prop {Color} filtering-header-background [#222] - The background color of the filtered column header.
 /// @prop {Color} filtering-row-background [#222] - The background color of the filtering row.
 /// @prop {Map} body-summaries-background [igx-color: ('grays', 300), hexrgba: #222] - The background color of the summary groups located the body.
-/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the body.
-/// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of the summary groups located the footer.
-/// @prop {Map} root-summaries-text-color [igx-color: ('grays', 100), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
+/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 100), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 300), hexrgba: #222] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
+/// @prop {Map} row-highlight [igx-color: ('secondary', 500)] - The highlight color of a row.
+/// @prop {Map} row-ghost-background [igx-color: ('primary', 900)] - The dragged row background color.
 $_base-dark-grid: (
     header-background: (
         igx-color: ('grays', 100),
@@ -132,12 +135,9 @@ $_dark-grid: extend($_light-grid, $_base-dark-grid);
 
 
 /// Generates a dark fluent grid schema based on a mix of $_fluent-grid and $_base-dark-grid.
-/// @type {Map}
-///
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
 /// @prop {Map} row-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The selected row background color.
-/// @prop {Map} row-selected-hover-background [igx-color: ('grays', 300), hexrgba: #222] - The selected row background color on hover.
-///
+/// @prop {Map} row-selected-hover-background [igx-color: ('grays', '300'), hexrgba: #222] - The selected row background color on hover.
 /// @requires extend
 /// @requires $_fluent-grid
 /// @requires $_base-dark-grid
