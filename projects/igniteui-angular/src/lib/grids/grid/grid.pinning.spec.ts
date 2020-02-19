@@ -460,6 +460,35 @@ describe('IgxGrid - Column Pinning to End', () => {
         expect(grid.pinnedWidth).toEqual(400);
         expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
     }));
+
+    it('should correctly pin column to right when row selectors are enabled.', fakeAsync(() => {
+        const fix = TestBed.createComponent(GridRightPinningComponent);
+
+        tick();
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+        grid.rowSelectable = true;
+        tick();
+        fix.detectChanges();
+
+        // check row DOM
+        const row = grid.getRowByIndex(0).nativeElement;
+        expect(row.children[0].className).toBe('igx-grid__cbx-selection');
+        expect(row.children[1].className).toBe('igx-display-container');
+        expect(row.children[2].getAttribute('aria-describedby')).toBe(grid.id + '_CompanyName');
+        expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
+
+        // check scrollbar DOM
+        const scrBarStartSection = fix.debugElement.query(By.css('.igx-grid__scroll-start'));
+        const scrBarMainSection = fix.debugElement.query(By.css('.igx-grid__scroll-main'));
+        const scrBarEndSection = fix.debugElement.query(By.css('.igx-grid__scroll-end'));
+
+        expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
+        const pinnedColSum = grid.pinnedColumns.map(x => parseInt(x.calcWidth, 10)).reduce((x, y) => x + y);
+        expect(scrBarEndSection.nativeElement.offsetWidth).toEqual(pinnedColSum);
+        const expectedUnpinAreWidth = parseInt(grid.width, 10) - grid.featureColumnsWidth() - pinnedColSum - grid.scrollWidth;
+        expect(scrBarMainSection.nativeElement.offsetWidth).toEqual(expectedUnpinAreWidth);
+    }));
 });
 
 /* tslint:disable */
