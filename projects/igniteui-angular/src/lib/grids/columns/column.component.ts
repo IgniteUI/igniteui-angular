@@ -44,6 +44,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
+import { ColumnPinningPosition } from '../common/enums';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -916,9 +917,16 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (!this.pinned) {
             const indexInCollection = unpinnedColumns.indexOf(col);
-            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
+            vIndex = indexInCollection === -1 ?
+                -1 :
+                (this.grid.isPinningToStart ?
+                    pinnedColumns.length + indexInCollection :
+                    indexInCollection);
         } else {
-            vIndex = pinnedColumns.indexOf(col);
+            const indexInCollection = pinnedColumns.indexOf(col);
+            vIndex = this.grid.isPinningToStart ?
+                indexInCollection :
+                unpinnedColumns.length + indexInCollection;
         }
         this._vIndex = vIndex;
         return vIndex;
@@ -986,8 +994,20 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get isLastPinned(): boolean {
-        return this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
+        return this.grid.isPinningToStart &&
+            this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
+
+    get isFirstPinned(): boolean {
+        return !this.grid.isPinningToStart && this.grid.pinnedColumns[0] === this;
+    }
+
+    get rightPinnedOffset(): string {
+        return this.pinned && !this.grid.isPinningToStart ?
+            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
+            null;
+    }
+
     get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
