@@ -730,4 +730,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get getScrollbarSize() {
+        return this.isPinningToStart ?
+            this.pinnedWidth :
+            this.featureColumnsWidth();
+    }
+
 }

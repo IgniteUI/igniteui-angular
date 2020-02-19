@@ -33,7 +33,7 @@
     </div>
 </ng-container>
 
-<ng-container *ngIf="pinnedColumns.length > 0">
+<ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
     <igx-hierarchical-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
         [class.igx-grid__td--number]="col.dataType === 'number'"
@@ -81,6 +81,32 @@
         [cellSelectionMode]="grid.cellSelection">
     </igx-hierarchical-grid-cell>
 </ng-template>
+
+<ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+    <igx-hierarchical-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
+        class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
+        [class.igx-grid__td--number]="col.dataType === 'number'"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [column]="col"
+        [formatter]="col.formatter"
+        [row]="this"
+        [firstPinned]="col.isFirstPinned"
+        [style.min-height.px]="grid.rowHeight || 32"
+        [rowData]="rowData"
+        [style.min-width]="col.width"
+        [style.max-width]="col.width"
+        [style.flex-basis]="col.width"
+        [style.left]="col.rightPinnedOffset"
+        [width]="col.getCellWidth()"
+        [visibleColumnIndex]="col.visibleIndex"
+        [value]="rowData[col.field]"
+        [cellTemplate]="col.bodyTemplate"
+        [lastSearchInfo]="grid.lastSearchInfo"
+        [cellSelectionMode]="grid.cellSelection">
+    </igx-hierarchical-grid-cell>
+</ng-container>
 
 <ng-template #rowSelectorBaseTemplate>
     <div class="igx-grid__cbx-padding">
