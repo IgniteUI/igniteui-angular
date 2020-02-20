@@ -1417,7 +1417,7 @@ describe('igxCombo', () => {
 
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                await wait();
+                await wait(20);
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                 firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -1480,7 +1480,7 @@ describe('igxCombo', () => {
 
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                await wait();
+                await wait(20);
                 zone.simulateOnStable();
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
