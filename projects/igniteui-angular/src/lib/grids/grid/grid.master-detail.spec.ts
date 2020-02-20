@@ -807,8 +807,9 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 const row = grid.getRowByKey('ALFKI');
                 expect(row).toBeUndefined();
-                detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
-                expect(detailViews[0].context.index).toBe(3);
+                detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]')).sort((a, b) => a.context.index - b.context.index);
+                expect(detailViews[0].context.index).toBe(1);
+                expect(detailViews[0].context.templateID).toBe('detailRow-ANATR');
             });
 
             it('Should be able to expand detail view of newly added row.', async() => {
