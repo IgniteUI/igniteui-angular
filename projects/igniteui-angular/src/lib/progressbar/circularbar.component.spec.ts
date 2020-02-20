@@ -146,6 +146,7 @@ describe('IgCircularBar', () => {
     }));
 
     it('Should update value when we try to decrease it (without animation)', () => {
+        pending('Related to the bug #6740');
         const fixture = TestBed.createComponent(CircularBarComponent);
         fixture.detectChanges();
 
@@ -221,6 +222,7 @@ describe('IgCircularBar', () => {
     }));
 
     it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
+        pending('Related to the bug #6740');
         const fix = TestBed.createComponent(CircularBarComponent);
         const compInstance = fix.componentInstance;
         let value = 2.67;
@@ -305,6 +307,7 @@ describe('IgCircularBar', () => {
     }));
 
     it('should apply its template correctly', () => {
+        pending('Related to the bug #6740');
         const fixture = TestBed.createComponent(CircularBarTemplateComponent);
         fixture.detectChanges();
 
