@@ -14,6 +14,7 @@ import { IGridCellEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Column Pinning #grid ', () => {
     configureTestSuite();
@@ -423,7 +424,8 @@ describe('IgxGrid - Column Pinning to End', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridRightPinningComponent
+                GridRightPinningComponent,
+                PinnedGroupsGridComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -489,6 +491,34 @@ describe('IgxGrid - Column Pinning to End', () => {
         const expectedUnpinAreWidth = parseInt(grid.width, 10) - grid.featureColumnsWidth() - pinnedColSum - grid.scrollWidth;
         expect(scrBarMainSection.nativeElement.offsetWidth).toEqual(expectedUnpinAreWidth);
     }));
+
+    it('should correctly pin column groups to end.', async() => {
+        const fix = TestBed.createComponent(PinnedGroupsGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.pinning = { columns: ColumnPinningPosition.End };
+        fix.detectChanges();
+        await wait();
+        fix.detectChanges();
+        const pinnedCols = grid.pinnedColumns.filter(x => !x.columnGroup);
+        expect(pinnedCols.length).toBe(3);
+
+        expect(grid.getColumnByName('CompanyName').isFirstPinned).toBeTruthy();
+        const row = grid.getRowByIndex(0).nativeElement;
+        // check cells are rendered after main display container and have left offset
+        for (let i = 0; i <= pinnedCols.length - 1; i++) {
+            const elem = row.children[i + 1];
+            expect(parseInt((elem as any).style.left, 10)).toBe(-450);
+            expect(elem.getAttribute('aria-describedby')).toBe(grid.id + '_' + pinnedCols[i].field);
+        }
+
+        // check correct headers have left border
+        const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
+        .queryAll((By.css('.igx-grid__th--pinned-first')));
+        expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
+        expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
+    });
 });
 
 /* tslint:disable */
@@ -719,7 +749,7 @@ export class OverPinnedGridComponent {
 @Component({
     template: `
         <igx-grid [width]='"800px"' [height]='"500px"' [data]="data">
-            <igx-column field="ID" header="ID" width="150px" [pinned]='true' [hidden]='false'></igx-column>
+            <igx-column field="ID" header="ID" width="150px" [hidden]='false'></igx-column>
             <igx-column-group header="General Information" [pinned]='true'>
                 <igx-column field="CompanyName" header="CompanyName" width="150px" [pinned]='false' [hidden]='false'></igx-column>
                 <igx-column-group header="Person Details">
@@ -727,7 +757,7 @@ export class OverPinnedGridComponent {
                     <igx-column field="ContactTitle" header="ContactTitle" width="150px" [pinned]='false' [hidden]='false'></igx-column>
                 </igx-column-group>
             </igx-column-group>
-            <igx-column-group header="Address Information" [pinned]='true'>
+            <igx-column-group header="Address Information">
                 <igx-column-group header="Location" [pinned]="false">
                     <igx-column field="Country" header="Country" width="150px" [pinned]='false' [hidden]='false'></igx-column>
                     <igx-column field="Region" header="Region" width="150px" [pinned]='false' [hidden]='false'></igx-column>
