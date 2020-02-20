@@ -529,8 +529,8 @@ describe('IgxGrid - Column Pinning to End', () => {
         // check row DOM
         const row = grid.getRowByIndex(0).nativeElement;
         expect(row.children[0].classList.contains('igx-display-container')).toBeTruthy();
-        expect(row.children[1].classList.contains("igx-grid__td--pinned-first")).toBeTruthy();
-        expect(row.children[1].classList.contains("igx-grid__mrl-block")).toBeTruthy();
+        expect(row.children[1].classList.contains('igx-grid__td--pinned-first')).toBeTruthy();
+        expect(row.children[1].classList.contains('igx-grid__mrl-block')).toBeTruthy();
         expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
         // check correct headers have left border
