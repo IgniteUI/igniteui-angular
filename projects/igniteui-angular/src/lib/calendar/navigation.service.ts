@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IgxDayItemComponent } from './day-item.component';
-import { IgxDaysViewComponent } from './days-view.component';
-import { ScrollMonth } from '../calendar-base';
+import { IgxDayItemComponent } from './days-view/day-item.component';
+import { IgxDaysViewComponent } from './days-view/days-view.component';
+import { ScrollMonth } from './calendar-base';
+import { Calendar } from '../calendar';
 
 enum Direction {
     Up = 'ArrowUp',
@@ -12,7 +13,10 @@ enum Direction {
 
 const ARROW = 'Arrow';
 
-/** @hidden */
+/**
+ * @hidden
+ * This service should be decoupled from the days View Component and it should become global for the whole calendar navigation.
+ * */
 @Injectable()
 export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;
