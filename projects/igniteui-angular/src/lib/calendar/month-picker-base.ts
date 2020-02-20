@@ -1,5 +1,5 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { ViewChild, ElementRef, HostBinding, Directive } from '@angular/core';
+import { HostBinding, Directive, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -10,16 +10,16 @@ export enum CalendarView {
     YEAR,
     DECADE
 }
+
 @Directive({
     selector: '[igxMonthPickerBase]'
 })
 export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
-     * @hidden
+     * Holds month view index we are operating on.
      */
-    @ViewChild('yearsBtn')
-    public yearsBtn: ElementRef;
+    protected activeViewIdx = 0;
 
     /**
      * The default `tabindex` attribute for the component.
@@ -28,6 +28,13 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren('yearsBtn')
+    public yearsBtns: QueryList<ElementRef>;
+
 
     /**
      * Gets the current active view.
@@ -66,28 +73,31 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
      * @hidden
      */
     public changeYear(event: Date) {
-        this.viewDate = new Date(event.getFullYear(), this.viewDate.getMonth());
-        this._activeView = CalendarView.DEFAULT;
+        this.viewDate = this.calendarModel.getFirstViewDate(event, 'month', this.activeViewIdx);
+        this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
+            if (this.yearsBtns && this.yearsBtns.length) {
+                this.yearsBtns.find((e: ElementRef, idx: number) => idx === this.activeViewIdx).nativeElement.focus();
+            }
         });
     }
 
     /**
      * @hidden
      */
-    public activeViewDecade(args?: Date): void {
+    public activeViewDecade(activeViewIdx = 0): void {
         this._activeView = CalendarView.DECADE;
+        this.activeViewIdx = activeViewIdx;
     }
 
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, args?: Date) {
+    public activeViewDecadeKB(event, activeViewIdx = 0) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.activeViewDecade(args);
+            this.activeViewDecade(activeViewIdx);
         }
     }
 
