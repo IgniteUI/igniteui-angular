@@ -11,7 +11,7 @@ import {
     PipeTransform
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KEYS, MaskParsingService } from './mask-parsing-service';
+import { KEYS, MaskParsingService } from './mask-parsing.service';
 import { isIE, IBaseEventArgs } from '../../core/utils';
 
 const noop = () => { };

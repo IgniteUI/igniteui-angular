@@ -1284,8 +1284,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
             ]
         }];
+        fix.detectChanges();
+
         const grid = fix.componentInstance.grid;
-        grid.height = '400px';
         setupGridScrollDetection(fix, grid);
         fix.detectChanges();
 
@@ -3119,7 +3120,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" (onSelection)="cellSelected($event)">
+    <igx-grid #grid [data]="data" [height]="'500px'" (onSelection)="cellSelected($event)">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
