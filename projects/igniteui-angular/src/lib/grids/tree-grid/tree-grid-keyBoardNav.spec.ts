@@ -497,10 +497,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 5; i < 9; i++) {
                 let cell = treeGrid.getCellByColumn(i, 'ID');
                 GridFunctions.simulateCellKeydown(cell, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -511,10 +511,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 9; i > 0; i--) {
                 let cell = treeGrid.getCellByColumn(i, 'ID');
                 GridFunctions.simulateCellKeydown(cell, 'ArrowUp');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
