@@ -5232,7 +5232,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             visibleColIndex = -1;
         }
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex);
-        const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        const isDetailsRow = this.navigation.getRowByIndex(rowIndex)?.classList.contains('igx-grid__tr-container');
+        const shouldScrollHorizontally = !isDetailsRow && visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
         if (shouldScrollVertically) {
             this.navigation.performVerticalScrollToCell(rowIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
