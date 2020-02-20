@@ -16,7 +16,7 @@
 </ng-container>
 
 <ng-container *ngIf="!grid.hasColumnLayouts">
-    <ng-container *ngIf="pinnedColumns.length > 0">
+    <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
         <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
                 <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
@@ -24,6 +24,11 @@
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
     </ng-template>
+    <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+        <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+        </ng-template>
+    </ng-container>
 </ng-container>
 
 <ng-container *ngIf="grid.hasColumnLayouts">
@@ -81,11 +86,13 @@
         [formatter]="col.formatter"
         [row]="this"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
         [style.min-width]="col.width"
         [style.max-width]="col.width"
         [style.flex-basis]="col.width"
+        [style.left]="col.rightPinnedOffset"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"

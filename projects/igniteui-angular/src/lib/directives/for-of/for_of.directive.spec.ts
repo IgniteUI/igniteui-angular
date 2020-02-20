@@ -914,37 +914,37 @@ describe('IgxForOf directive -', () => {
             }).compileComponents();
         }));
 
-        it('should update display container classes when content state changes from virtualized to non-virtualzied.', () => {
+        it('should update display container classes when content state changes from virtualized to non-virtualized.', () => {
             const fix = TestBed.createComponent(VirtualVariableSizeComponent);
             fix.detectChanges();
 
-            let displayContainerDebugEl: DebugElement[] = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
+            let displayContainerDebugEl: DebugElement = fix.debugElement.query(By.css(DISPLAY_CONTAINER));
             // No size and no data - display container should be inactive
-            expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+            expect(displayContainerDebugEl.classes[INACTIVE_VIRT_CONTAINER]).toBeTruthy();
 
             // set size
             fix.componentInstance.height = '500px';
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
+            displayContainerDebugEl = fix.debugElement.query(By.css(DISPLAY_CONTAINER));
             // Has size but no data - display container should be inactive
-            expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+            expect(displayContainerDebugEl.classes[INACTIVE_VIRT_CONTAINER]).toBeTruthy();
 
             // set data with 1 rec.
             fix.componentInstance.data = fix.componentInstance.generateData(1);
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
+            displayContainerDebugEl = fix.debugElement.query(By.css(DISPLAY_CONTAINER));
             // Has size but not enough data to be virtualized - display container should be inactive
-            expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(true);
+            expect(displayContainerDebugEl.classes[INACTIVE_VIRT_CONTAINER]).toBeTruthy();
 
             // set data with 1000 recs.
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
-            displayContainerDebugEl = fix.debugElement.queryAll(By.css(DISPLAY_CONTAINER));
+            displayContainerDebugEl = fix.debugElement.query(By.css(DISPLAY_CONTAINER));
             // Has size and enough data to be virtualized - display container should be active.
-            expect(displayContainerDebugEl[0].classes[INACTIVE_VIRT_CONTAINER]).toBe(false);
+            expect(displayContainerDebugEl.classes[INACTIVE_VIRT_CONTAINER]).toBeFalsy();
         });
     });
 
