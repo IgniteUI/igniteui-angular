@@ -58,19 +58,19 @@ export class GridFunctions {
     }
 
     public static getRowCells(fix, rowIndex: number): DebugElement[] {
-       const allRows = GridFunctions.getRows(fix);
-       return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+        const allRows = GridFunctions.getRows(fix);
+        return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
         const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
         return gridBody.query(By.css(DISPLAY_CONTAINER));
-     }
+    }
 
-     public static getRowDisplayContainer(fix, index: number): DebugElement {
+    public static getRowDisplayContainer(fix, index: number): DebugElement {
         const row = GridFunctions.getRows(fix)[index];
         return row.query(By.css(DISPLAY_CONTAINER));
-     }
+    }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
         const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
@@ -901,7 +901,7 @@ export class GridFunctions {
 
         const filterCell = GridFunctions.getFilterCell(fix, columnField);
         const moreIcon = Array.from(filterCell.queryAll(By.css('igx-icon')))
-                .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
+            .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
         return moreIcon;
     }
 
@@ -1605,6 +1605,36 @@ export class GridFunctions {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
         const expandInd = GridFunctions.getColGroupExpandIndicator(groupHeader);
         expandInd.dispatchEvent(new Event('click', {}));
+    }
+
+    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        cellComp.dispatchEvent(keyboardEvent);
+        cellComp.onBlur();
+    }
+
+    public static simulateCellKeydownWithBlur(cellComp: IgxGridCellComponent, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        GridFunctions.simulateCellKeydown(cellComp, keyName, altKey, shiftKey, ctrlKey );
+        cellComp.onBlur();
+    }
+
+    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        rowComp.onKeydown(keyboardEvent);
+        rowComp.onBlur();
     }
 }
 export class GridSummaryFunctions {
