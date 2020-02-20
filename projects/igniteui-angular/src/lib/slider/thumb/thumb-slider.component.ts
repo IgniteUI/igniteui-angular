@@ -13,6 +13,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
+import { IgxDirectionality } from '../../services/direction/directionality';
 
 /**
  * @hidden
@@ -116,7 +117,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this._destroy$;
     }
 
-    constructor(private _elementRef: ElementRef) { }
+    constructor(private _elementRef: ElementRef, private _dir: IgxDirectionality) { }
 
     /**
      * @hidden
@@ -200,7 +201,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     }
 
     private calculateTrackUpdate(mouseX: number): number {
-        const scaleX = mouseX - this.thumbPositionX;
+        const scaleX = this._dir.rtl ? this.thumbPositionX - mouseX : mouseX - this.thumbPositionX;
         const stepDistanceCenter = this.stepDistance / 2;
 
         // If the thumb scale range (slider update) is less thàn a half step,

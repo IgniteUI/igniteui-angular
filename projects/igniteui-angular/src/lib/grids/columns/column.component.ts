@@ -999,12 +999,13 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     get isFirstPinned(): boolean {
-        return !this.grid.isPinningToStart && this.grid.pinnedColumns[0] === this;
+        const pinnedCols = this.grid.pinnedColumns.filter(x => !x.columnGroup);
+        return !this.grid.isPinningToStart && pinnedCols[0] === this;
     }
 
     get rightPinnedOffset(): string {
-        return this.pinned ?
-            - this.grid.pinnedWidth + 'px' :
+        return this.pinned && !this.grid.isPinningToStart ?
+            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
             null;
     }
 
