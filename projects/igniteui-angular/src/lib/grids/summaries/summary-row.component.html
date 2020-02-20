@@ -6,7 +6,7 @@
         [style.flex-basis.px]="grid.summariesMargin"
         ></div>
     </ng-container>
-    <ng-container *ngIf="pinnedColumns.length > 0">
+    <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
         <igx-grid-summary-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
             class="igx-grid-summary igx-grid-summary--fw igx-grid-summary--pinned"
             [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
@@ -45,4 +45,25 @@
             [style.flex-basis]="col.getCellWidth()">
         </igx-grid-summary-cell>
     </ng-template>
+    <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+        <igx-grid-summary-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
+            class="igx-grid-summary igx-grid-summary--fw igx-grid-summary--pinned"
+            [class.igx-grid-summary--cosy]="grid.displayDensity === 'cosy'"
+            [class.igx-grid-summary--compact]="grid.displayDensity === 'compact'"
+            [class.igx-grid-summary--empty]="!col.hasSummary"
+            [class.igx-grid-summary--pinned-first]="col.isFirstPinned"
+            [column]="col"
+            [firstCellIndentation]="firstCellIndentation"
+            [rowIndex]="index"
+            [summaryResults]="getColumnSummaries(col.field)"
+            [hasSummary]="col.hasSummary"
+            [density]="grid.displayDensity"
+            [style.max-height.px]="minHeight"
+            [style.min-height.px]="minHeight"
+            [style.min-width]="col.getCellWidth()"
+            [style.max-width]="col.getCellWidth()"
+            [style.flex-basis]="col.getCellWidth()"
+            [style.left]="col.rightPinnedOffset">
+        </igx-grid-summary-cell>
+    </ng-container>
 </ng-container>
