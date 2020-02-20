@@ -15,7 +15,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 
-describe('IgxGrid - Column Pinning', () => {
+describe('IgxGrid - Column Pinning #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
