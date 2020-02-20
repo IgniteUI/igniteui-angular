@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-card: (
     border-radius: .17,
 );
@@ -15,6 +17,7 @@ $_square-shape-card: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_fluent-shape-card: (
     border-radius: 2px,
 );

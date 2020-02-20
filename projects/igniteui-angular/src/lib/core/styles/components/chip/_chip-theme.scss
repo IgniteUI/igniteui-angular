@@ -6,15 +6,22 @@
 
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {String} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
 /// @param {Color} $background [null] - The chip background color.
 /// @param {Color} $border-color [null] - The chip border color.
+/// @param {Color} $ghost-background [null] - The chip ghost background color.
+/// @param {box-shadow} $ghost-shadow [null] - The chip ghost shadow.
 ///
 /// @param {Color} $hover-text-color [null] - The chip text hover color.
 /// @param {Color} $hover-background [null] - The chip hover background color.
 /// @param {Color} $hover-border-color [null] - The chip hover border color.
+///
+/// @param {Color} $focus-text-color [null] - The chip text focus color.
+/// @param {Color} $focus-background [null] - The chip focus background color.
 /// @param {color} $focus-border-color [null] - The chip focus border color.
 ///
 /// @param {color} $selected-text-color [null] - The selected chip text color.

@@ -216,6 +216,10 @@
         compact: 0 rem(8px)
     );
 
+    %igx-drop-down {
+        position: absolute;
+    }
+
     %igx-drop-down__list {
         overflow: hidden;
         border-radius: --var($theme, 'border-radius');
@@ -227,6 +231,7 @@
 
     %igx-drop-down__list-scroll {
         overflow-y: auto;
+        overflow-x: hidden;
         position: relative;
 
         &:empty {
@@ -346,7 +351,7 @@
 /// categories from the typographic scale.
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
-/// @param {Map} $categories [(header: 'overline', item: 'body-2')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(header: 'overline', item: 'body-2', select-item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-drop-down-typography(
     $type-scale,

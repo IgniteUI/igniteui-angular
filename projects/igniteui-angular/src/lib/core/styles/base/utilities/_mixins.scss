@@ -215,8 +215,8 @@
 /// optional prefix and suffix attached to the class name.
 /// @access private
 /// @param {string} $prop - The CSS property to assign the palette color to.
-/// @param {string} $prefix [null] - A prefix to be attached to the class name.
-/// @param {string} $suffix [igx] - A suffix to be attached to the class name.
+/// @param {string} $prefix [igx] - A prefix to be attached to the class name.
+/// @param {string} $suffix [null] - A suffix to be attached to the class name.
 /// @example scss Generate background classes with colors from the palette.
 ///   // Will generate class names like
 ///   // .igx-primary-500-bg { ... };
@@ -265,7 +265,7 @@
 
 /// Add theme colors to a scope.
 /// @access public
-/// @param {map} $theme - The component theme to get the
+/// @param {map} $theme - The component theme to be used
 /// @requires {mixin} css-vars-from-theme
 @mixin igx-css-vars($theme) {
     $scope: if(is-root(), ':root', '&');
