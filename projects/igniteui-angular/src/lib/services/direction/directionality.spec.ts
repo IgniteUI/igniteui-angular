@@ -9,11 +9,8 @@ interface FakeDoc {
 }
 
 describe('IgxDirectionality DI', () => {
-    let fakeDoc: FakeDoc;
     beforeEach(async(() => {
-        fakeDoc = {body: {}, documentElement: {}};
-
-        TestBed.configureTestingModule({
+        return TestBed.configureTestingModule({
             declarations: [
                 InjectsIgxDirectionalityComponent
             ],
