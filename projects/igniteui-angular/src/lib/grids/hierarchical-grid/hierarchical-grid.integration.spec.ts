@@ -970,7 +970,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(cell.nativeElement.classList.contains('igx-grid__td--pinned')).toBe(false);
         }));
 
-        fit('should be applied correctly even on the right side', (() => {
+        it('should be applied correctly even on the right side', (() => {
             hierarchicalGrid = fixture.componentInstance.hgrid;
             hierarchicalGrid.columnList.find(x => x.field === 'ID').pinned = true;
             hierarchicalGrid.pinning.columns = 1;
