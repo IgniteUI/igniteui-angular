@@ -5961,4 +5961,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             advancedFilteringDialog.closeDialog();
         }
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get getScrollbarSize() {
+        return this.isPinningToStart ?
+            this.pinnedWidth :
+            this.featureColumnsWidth();
+    }
 }
