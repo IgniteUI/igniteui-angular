@@ -32,42 +32,33 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../
 import { IBaseEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
+
+/**
+ * Interface for the panStateChange igxList event arguments
+ */
 export interface IPanStateChangeEventArgs extends IBaseEventArgs {
     oldState: IgxListPanState;
     newState: IgxListPanState;
     item: IgxListItemComponent;
 }
 
+/**
+ * Interface for the listItemClick igxList event arguments
+ */
 export interface IListItemClickEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     event: Event;
     direction: IgxListPanState;
 }
 
+/**
+ * Interface for the listItemPanning igxList event arguments
+ */
 export interface IListItemPanningEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     direction: IgxListPanState;
     keepItem: boolean;
 }
-
-/**
- * **Ignite UI for Angular List** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
- *
- * The Ignite UI List displays rows of items and supports one or more header items as well as search and filtering
- * of list items. Each list item is completely templateable and will support any valid HTML or Angular component.
- *
- * Example:
- * ```html
- * <igx-list>
- *   <igx-list-item isHeader="true">Contacts</igx-list-item>
- *   <igx-list-item *ngFor="let contact of contacts">
- *     <span class="name">{{ contact.name }}</span>
- *     <span class="phone">{{ contact.phone }}</span>
- *   </igx-list-item>
- * </igx-list>
- * ```
- */
 
 /**
  * igxListThumbnail is container for the List media
@@ -77,7 +68,6 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
     // tslint:disable-next-line:directive-selector
     selector: '[igxListThumbnail]'
 })
-
 export class IgxListThumbnailDirective {}
 
 /**
@@ -88,7 +78,6 @@ export class IgxListThumbnailDirective {}
     // tslint:disable-next-line:directive-selector
     selector: '[igxListAction]'
 })
-
 export class IgxListActionDirective {}
 
 /**
@@ -99,7 +88,6 @@ export class IgxListActionDirective {}
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLine]'
 })
-
 export class IgxListLineDirective {}
 
 /**
@@ -110,7 +98,6 @@ export class IgxListLineDirective {}
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLineTitle]'
 })
-
 export class IgxListLineTitleDirective {
     @HostBinding('class.igx-list__item-line-title')
     public cssClass = 'igx-list__item-line-title';
@@ -124,12 +111,37 @@ export class IgxListLineTitleDirective {
     // tslint:disable-next-line:directive-selector
     selector: '[igxListLineSubTitle]'
 })
-
 export class IgxListLineSubTitleDirective {
     @HostBinding('class.igx-list__item-line-subtitle')
     public cssClass = 'igx-list__item-line-subtitle';
 }
 
+/**
+ * Displays a collection of data items in a templatable list format
+ *
+ * @igxModule IgxListModule
+ *
+ * @igxTheme igx-list-theme
+ *
+ * @igxKeywords list, data
+ *
+ * @igxGroup Grids & Lists
+ *
+ * @remarks
+ * The Ignite UI List displays rows of items and supports one or more header items as well as search and filtering
+ * of list items. Each list item is completely templatable and will support any valid HTML or Angular component.
+ *
+ * @example
+ * ```html
+ * <igx-list>
+ *   <igx-list-item isHeader="true">Contacts</igx-list-item>
+ *   <igx-list-item *ngFor="let contact of contacts">
+ *     <span class="name">{{ contact.name }}</span>
+ *     <span class="phone">{{ contact.phone }}</span>
+ *   </igx-list-item>
+ * </igx-list>
+ * ```
+ */
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
@@ -144,10 +156,11 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * Returns a collection of all items and headers in the list.
+     *
+     * @example
      * ```typescript
      * let listChildren: QueryList = this.list.children;
      * ```
-     * @memberof IgxListComponent
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
     public children: QueryList<IgxListItemComponent>;
@@ -167,81 +180,131 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `false`.
+     * Sets/gets the empty list template.
+     *
+     * @remarks
+     * This template is used by IgxList in case there are no list items
+     * defined and `isLoading` is set to `false`.
+     *
+     * @example
+     * ```html
+     * <igx-list>
+     *   <ng-template igxEmptyList>
+     *     <p class="empty">No contacts! :(</p>
+     *   </ng-template>
+     * </igx-list>
+     * ```
      * ```typescript
      * let emptyTemplate = this.list.emptyListTemplate;
      * ```
-     * @memberof IgxListComponent
      */
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
 
     /**
-     * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `true`.
+     * Sets/gets the list loading template.
+     *
+     * @remarks
+     * This template is used by IgxList in case there are no list items defined and `isLoading` is set to `true`.
+     *
+     * @example
+     * ```html
+     * <igx-list>
+     *   <ng-template igxDataLoading>
+     *     <p>Patience, we are currently loading your data...</p>
+     *   </ng-template>
+     * </igx-list>
+     * ```
      * ```typescript
      * let loadingTemplate = this.list.dataLoadingTemplate;
      * ```
-     * @memberof IgxListComponent
      */
     @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     /**
-     * Sets/gets the template shown when left panning a list item.
+     * Sets/gets the template for left panning a list item.
+     *
+     * @remarks
      * Default value is `null`.
+     *
+     * @example
      * ```html
-     *  <igx-list [allowLeftPanning] = "true"></igx-list>
+     * <igx-list [allowLeftPanning]="true">
+     *   <ng-template igxListItemLeftPanning>
+     *     <igx-icon>delete</igx-icon>Delete
+     *   </ng-template>
+     * </igx-list>
      * ```
      * ```typescript
      * let itemLeftPanTmpl = this.list.listItemLeftPanningTemplate;
      * ```
-     * @memberof IgxListComponent
      */
     @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
-     * Sets/gets the template shown when right panning a list item.
+     * Sets/gets the template for right panning a list item.
+     *
+     * @remarks
      * Default value is `null`.
+     *
+     * @example
      * ```html
-     *  <igx-list [allowLeftPanning] = "true"></igx-list>
+     * <igx-list [allowRightPanning] = "true">
+     *   <ng-template igxListItemRightPanning>
+     *     <igx-icon>call</igx-icon>Dial
+     *   </ng-template>
+     * </igx-list>
      * ```
      * ```typescript
      * let itemRightPanTmpl = this.list.listItemRightPanningTemplate;
      * ```
-     * @memberof IgxListComponent
      */
     @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
      * Provides a threshold after which the item's panning will be completed automatically.
+     *
+     * @remarks
      * By default this property is set to 0.5 which is 50% of the list item's width.
-     * ```typescript
-     * this.list.panEndTriggeringThreshold = 0.8;
+     *
+     * @example
+     * ```html
+     * <igx-list [panEndTriggeringThreshold]="0.8"></igx-list>
      * ```
      */
     @Input()
     public panEndTriggeringThreshold = 0.5;
 
-    /**@hidden*/
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
-    /**@hidden*/
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     /**
      * Sets/gets the `id` of the list.
+     *
+     * @remarks
      * If not set, the `id` of the first list component will be `"igx-list-0"`.
+     *
+     * @example
      * ```html
-     * <igx-list id = "my-first-list"></igx-list>
+     * <igx-list id="my-first-list"></igx-list>
      * ```
      * ```typescript
-     * let listId =  this.list.id;
+     * let listId = this.list.id;
      * ```
-     * @memberof IgxListComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -249,97 +312,120 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * Sets/gets whether the left panning of an item is allowed.
+     *
+     * @remarks
      * Default value is `false`.
+     *
+     * @example
      * ```html
-     *  <igx-list [allowLeftPanning] = "true"></igx-list>
+     * <igx-list [allowLeftPanning]="true"></igx-list>
      * ```
      * ```typescript
      * let isLeftPanningAllowed = this.list.allowLeftPanning;
      * ```
-     * @memberof IgxListComponent
      */
     @Input()
     public allowLeftPanning = false;
 
     /**
      * Sets/gets whether the right panning of an item is allowed.
+     *
+     * @remarks
      * Default value is `false`.
+     *
+     * @example
      * ```html
-     *  <igx-list [allowRightPanning] = "true"></igx-list>
+     * <igx-list [allowRightPanning]="true"></igx-list>
      * ```
      * ```typescript
      * let isRightPanningAllowed = this.list.allowRightPanning;
      * ```
-     * @memberof IgxListComponent
      */
     @Input()
     public allowRightPanning = false;
 
     /**
      * Sets/gets whether the list is currently loading data.
+     *
+     * @remarks
      * Set it to display the dataLoadingTemplate while data is being retrieved.
      * Default value is `false`.
+     *
+     * @example
      * ```html
      *  <igx-list [isLoading]="true"></igx-list>
      * ```
      * ```typescript
      * let isLoading = this.list.isLoading;
      * ```
-     * @memberof IgxListComponent
      */
     @Input()
     public isLoading = false;
 
     /**
-     * Emits an event within the current list when left pan gesture is executed on a list item.
+     * Event emitted when a left pan gesture is executed on a list item.
+     *
+     * @remarks
      * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
+     *
+     * @example
      * ```html
      * <igx-list [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)"></igx-list>
      * ```
-     * @memberof IgxListComponent
      */
     @Output()
     public onLeftPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
-     * Emits an event within the current list when right pan gesture is executed on a list item.
+     * Event emitted when a right pan gesture is executed on a list item.
+     *
+     * @remarks
      * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
+     *
+     * @example
      * ```html
      * <igx-list [allowRightPanning]="true" (onRightPan)="onRightPan($event)"></igx-list>
      * ```
-     * @memberof IgxListComponent
      */
     @Output()
     public onRightPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
-    * Emits an event within the current list when pan gesture is executed on list item.
-    * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
-    * ```html
-    * <igx-list (onPanStateChange) = "onPanStateChange($event)"></igx-list>
-    * ```
-    * @memberof IgxListComponent
+     *
+     * Event emitted when a pan gesture is executed on a list item.
+     *
+     * @remarks
+     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
+     *
+     * @example
+     * ```html
+     * <igx-list (onPanStateChange)="onPanStateChange($event)"></igx-list>
+     * ```
     */
     @Output()
     public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
 
     /**
-     * Emits an event within the current list when a list item has been clicked.
+     * Event emitted when a list item is clicked.
+     *
+     * @remarks
      * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
-     *  ```html
-     * <igx-list (onItemClicked) = "onItemClicked($event)"></igx-list>
+     *
+     * @example
+     * ```html
+     * <igx-list (onItemClicked)="onItemClicked($event)"></igx-list>
      * ```
-     * @memberof IgxListComponent
      */
     @Output()
     public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
 
     /**
-     * Gets the `role` attribute.
+     * Gets the `role` attribute value.
+     *
+     * @example
      * ```typescript
      * let listRole =  this.list.role;
      * ```
-     * @memberof IgxListComponent
      */
     @HostBinding('attr.role')
     public get role() {
@@ -347,11 +433,12 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns boolean indicating if the list is empty.
+     * Gets a boolean indicating if the list is empty.
+     *
+     * @example
      * ```typescript
      * let isEmpty =  this.list.isListEmpty;
      * ```
-     * @memberof IgxListComponent
      */
     @HostBinding('class.igx-list-empty')
     public get isListEmpty(): boolean {
@@ -360,6 +447,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
@@ -368,6 +456,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-list--compact')
     public get cssClassCompact(): boolean {
@@ -376,6 +465,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('class.igx-list--cosy')
     public get cssClassCosy(): boolean {
@@ -383,11 +473,12 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns the `items` in the list excluding the headers.
+     * Gets the list `items` excluding the header ones.
+     *
+     * @example
      * ```typescript
      * let listItems: IgxListItemComponent[] = this.list.items;
      * ```
-     * @memberof IgxListComponent
      */
     public get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
@@ -402,11 +493,12 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns the headers in the list.
+     * Gets the header list `items`.
+     *
+     * @example
      * ```typescript
      * let listHeaders: IgxListItemComponent[] =  this.list.headers;
      * ```
-     * @memberof IgxListComponent
      */
     public get headers(): IgxListItemComponent[] {
         const headers: IgxListItemComponent[] = [];
@@ -421,8 +513,13 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns the `context` object which represents the `template context` binding into the `list container`
+     * Gets the `context` object of the template binding.
+     *
+     * @remark
+     * Gets the `context` object which represents the `template context` binding into the `list container`
      * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
+     *
+     * @example
      * ```typescript
      * let listComponent =  this.list.context;
      * ```
@@ -434,11 +531,12 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Returns the `template` of an empty list.
+     * Gets a `TemplateRef` to the currently used template.
+     *
+     * @example
      * ```typescript
      * let listTemplate = this.list.template;
      * ```
-     * @memberof IgxListComponent
      */
     public get template(): TemplateRef<any> {
         if (this.isLoading) {
