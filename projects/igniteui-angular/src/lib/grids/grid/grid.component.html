@@ -127,8 +127,7 @@
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
                 (onCachedViewLoaded)='cachedViewLoaded($event)'
                 (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)'
-                (onBeforeViewDetach)='viewDetachHandler($event)'>
+                (onViewMoved)='viewMovedHandler($event)'>
             </ng-template>
         </ng-template>
         <ng-template #record_template let-rowIndex="index" let-rowData>

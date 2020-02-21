@@ -2510,11 +2510,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                if (this.rowEditable) {
+                    this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+                }
             });
-
-            if (this.rowEditable) {
-                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
-            }
         });
         this.disableTransitions = false;
 
@@ -5358,7 +5357,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return false;
     }
 
-
     /**
      * @hidden @internal
      */
@@ -5887,22 +5885,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
-    }
-
-    /**
-     * @hidden @internal
-    */
-    public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
-        const context = args.view.context;
-        if (context['templateID'] === 'dataRow') {
-            // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
-            // hence we need to trigger it manually when cell is detached.
-            const row = this.getRowByIndex(context.index);
-            const focusedCell = row.cells.find(x => x.focused);
-            if (focusedCell) {
-                focusedCell.focused = false;
-            }
-        }
     }
 
     /**
