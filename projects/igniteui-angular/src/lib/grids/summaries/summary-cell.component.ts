@@ -3,7 +3,6 @@ import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
-import { SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,13 +47,6 @@ export class IgxSummaryCellComponent {
     @HostBinding('attr.id')
     public get attrCellID() {
         return `${this.grid.id}_${this.rowIndex}_${ this.visibleColumnIndex}`;
-    }
-
-    @HostBinding('class.igx-grid-summary--active')
-    public get focused() {
-        const node = this.grid.navigation.activeNode;
-        return  node ? node.row === this.rowIndex && node.column === this.visibleColumnIndex : false;
-
     }
 
     @HostListener('click')

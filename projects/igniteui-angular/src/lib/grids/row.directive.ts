@@ -339,6 +339,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         this.grid.deleteRowById(this.rowID);
     }
 
+    public isCellActive(visibleColumnIndex) {
+        const node = this.grid.navigation.activeNode;
+        return node ? node.row === this.index && node.column === visibleColumnIndex : false;
+    }
+
     /**
      * @hidden
      */

@@ -424,6 +424,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     width = '';
 
+     /**
+     * @hidden
+     */
+    @Input()
+    @HostBinding('class.igx-grid__td--active')
+    public active: boolean;
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -501,16 +507,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     get editable(): boolean {
         return this.column.editable;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-grid__td--active')
-    public get active() {
-        const node = this.grid.navigation.activeNode;
-        return node ? node.row === this.rowIndex && node.column === this.visibleColumnIndex : false;
     }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })

@@ -85,6 +85,15 @@ export class IgxSummaryRowComponent implements DoCheck  {
 
     /**
      * @hidden
+     * @internal
+     */
+    public isCellActive(visibleColumnIndex) {
+        const node = this.grid.navigation.activeNode;
+        return node ? node.row === this.index && node.column === visibleColumnIndex : false;
+    }
+
+    /**
+     * @hidden
      */
     public get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
