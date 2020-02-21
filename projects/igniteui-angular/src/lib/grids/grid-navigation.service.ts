@@ -73,7 +73,7 @@ export class IgxGridNavigationService {
                 this.activeNode.column = lastColumnIndex;
                 break;
             case 'home':
-                this.activeNode.row = ctrl ? 0 : this.activeNode.row;
+                this.activeNode.row = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row;
                 this.activeNode.column = 0;
                 break;
             case 'arrowleft':
@@ -159,13 +159,8 @@ export class IgxGridNavigationService {
     }
 
     private forOfDir(): IgxForOfDirective<any> {
-        let forOfDir: IgxForOfDirective<any>;
-        if (this.grid.dataRowList.length > 0) {
-            forOfDir = this.grid.dataRowList.first.virtDirRow;
-        } else {
-            forOfDir = this.grid.headerContainer;
-        }
-        return forOfDir;
+        const  forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
+        return forOfDir as  IgxForOfDirective<any>;
     }
 
     private isColumnPinned(columnIndex: number, forOfDir: IgxForOfDirective<any>): boolean {
@@ -189,7 +184,7 @@ export class IgxGridNavigationService {
         let i = this.grid.dataView.length;
         while (i--) {
             const rec = this.grid.dataView[i];
-            if (!this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec)) {
+            if (!this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec) && !rec.summaries) {
                  return i;
             }
         }
@@ -329,7 +324,7 @@ export class IgxGridNavigationService {
 
     public performHorizontalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?: () => void) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
-       this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
+       this.grid.nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -338,10 +333,6 @@ export class IgxGridNavigationService {
                 }
             });
         this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
-    }
-
-    protected getFocusableGrid() {
-        return this.grid;
     }
 
     public getRowByIndex(index) {
