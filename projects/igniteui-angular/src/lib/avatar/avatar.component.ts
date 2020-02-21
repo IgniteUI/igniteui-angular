@@ -221,7 +221,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * @hidden
      * @internal
      */
-    private _size: IgxAvatarSize = IgxAvatarSize.SMALL;
+    private _size: string | IgxAvatarSize = IgxAvatarSize.SMALL;
     /**
      * Returns the size of the avatar.
      *
@@ -231,7 +231,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * ```
      */
     @Input()
-    public get size(): IgxAvatarSize {
+    public get size(): string | IgxAvatarSize {
         return this._size;
     }
 
@@ -244,15 +244,15 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * <igx-avatar size="large"></igx-avatar>
      * ```
      */
-    public set size(value: IgxAvatarSize) {
+    public set size(value: string | IgxAvatarSize) {
         switch (value) {
-            case IgxAvatarSize.SMALL:
-            case IgxAvatarSize.MEDIUM:
-            case IgxAvatarSize.LARGE:
+            case 'small':
+            case 'medium':
+            case 'large':
                 this._size = value;
                 break;
             default:
-                this._size = IgxAvatarSize.SMALL;
+                this._size = 'small';
         }
     }
 
