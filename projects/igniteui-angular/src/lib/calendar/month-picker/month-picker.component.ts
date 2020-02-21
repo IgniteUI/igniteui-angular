@@ -3,7 +3,8 @@ import {
     HostListener,
     ViewChild,
     HostBinding,
-    Input
+    Input,
+    ElementRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
@@ -69,20 +70,26 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    @ViewChild('months', { read: IgxMonthsViewComponent, static: false })
+    @ViewChild('months', { read: IgxMonthsViewComponent, static: false  })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('decade', { read: IgxYearsViewComponent, static: false })
+    @ViewChild('decade', { read: IgxYearsViewComponent, static: false  })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', { read: IgxDaysViewComponent, static: false })
+    @ViewChild('days', { read: IgxDaysViewComponent, static: false  })
     public daysView: IgxDaysViewComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('yearsBtn', { static: false })
+    public yearsBtn: ElementRef;
 
     /**
      * @hidden
@@ -133,7 +140,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
      */
     public nextYear() {
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -156,7 +163,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
      */
     public previousYear() {
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -231,7 +238,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
     }
 
     /**
@@ -241,7 +248,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
     }
 
     /**

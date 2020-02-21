@@ -1274,9 +1274,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.collapsed = true;
         this._componentID = null;
         this.onClosed.emit(this);
-
-        // TODO: remove this line after deprecating 'onClose'
-        this.onClose.emit(this);
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
