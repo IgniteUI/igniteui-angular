@@ -530,7 +530,6 @@ describe('igxCombo', () => {
         });
     });
     describe('Initialization and rendering tests: ', () => {
-        let zone: TestNgZone;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -543,8 +542,7 @@ describe('igxCombo', () => {
                     IgxToggleModule,
                     ReactiveFormsModule,
                     FormsModule
-                ],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                ]
             }).compileComponents();
         }));
         beforeEach(() => {
@@ -1417,7 +1415,7 @@ describe('igxCombo', () => {
 
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                await wait(20);
+                await wait(30);
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                 firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -1480,7 +1478,7 @@ describe('igxCombo', () => {
 
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
-                await wait(20);
+                await wait(30);
                 zone.simulateOnStable();
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
