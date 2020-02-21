@@ -180,6 +180,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
     private _sortingStrategy: IGridSortingStrategy;
+    private _pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -813,7 +814,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public pinning: IPinningConfig = { columns: ColumnPinningPosition.Start };
+    get pinning() {
+        return this._pinning;
+    }
+    set pinning(value) {
+        if (value !== this._pinning) {
+            this.resetCaches();
+        }
+        this._pinning = value;
+    }
+
 
     /**
      * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
@@ -2515,6 +2525,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.hideOverlays();
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get headerFeaturesWidth() {
+        return this._headerFeaturesWidth;
     }
 
     /**
@@ -4645,7 +4663,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        sum += this.featureColumnsWidth();
+        if (this.pinning.columns === ColumnPinningPosition.Start) {
+            sum += this.featureColumnsWidth();
+        }
 
         return sum;
     }
@@ -4662,6 +4682,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
+        if (this.pinning.columns === ColumnPinningPosition.End) {
+            width -= this.featureColumnsWidth();
+        }
+
         return width - this.getPinnedWidth(takeHidden);
     }
 
