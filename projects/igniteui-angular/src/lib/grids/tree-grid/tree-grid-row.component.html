@@ -12,61 +12,7 @@
     </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
-    <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
-        <ng-template #cellTemplate>
-            <igx-grid-cell
-                class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
-                [class.igx-grid__td--number]="col.dataType === 'number'"
-                [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
-                [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
-                [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
-                [column]="col"
-                [formatter]="col.formatter"
-                [row]="this"
-                [lastPinned]="col.isLastPinned"
-                [style.min-height.px]="grid.rowHeight || 32"
-                [rowData]="rowData"
-                [style.min-width]="col.width"
-                [style.max-width]="col.width"
-                [style.flex-basis]="col.width"
-                [width]="col.getCellWidth()"
-                [visibleColumnIndex]="col.visibleIndex"
-                [value]="rowData[col.field]"
-                [cellTemplate]="col.bodyTemplate"
-                [lastSearchInfo]="grid.lastSearchInfo"
-                [cellSelectionMode]="grid.cellSelection" #treeCell>
-            </igx-grid-cell>
-            </ng-template>
-        <ng-template #treeCellTemplate>
-            <igx-tree-grid-cell
-                class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell igx-grid__td--pinned"
-                [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
-                [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
-                [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
-                [level]="treeRow.level"
-                [expanded]="treeRow.expanded"
-                [showIndicator]="showIndicator"
-                [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
-                [column]="col"
-                [formatter]="col.formatter"
-                [row]="this"
-                [lastPinned]="col.isLastPinned"
-                [style.min-height.px]="grid.rowHeight || 32"
-                [rowData]="rowData"
-                [style.min-width]="col.width"
-                [style.max-width]="col.width"
-                [style.flex-basis]="col.width"
-                [width]="col.getCellWidth()"
-                [visibleColumnIndex]="col.visibleIndex"
-                [value]="rowData[col.field]"
-                [isLoading]="isLoading"
-                [cellTemplate]="col.bodyTemplate"
-                [lastSearchInfo]="grid.lastSearchInfo"
-                [cellSelectionMode]="grid.cellSelection"  #treeCell>
-            </igx-tree-grid-cell>
-        </ng-template>
-        <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
-    </ng-template>
+    <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
 </ng-container>
 <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]="'calcPixelWidth'" [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
     <ng-template #cellTemplate>
@@ -122,6 +68,22 @@
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
 </ng-template>
 <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+    <ng-container *ngTemplateOutlet="pinnedCellsTemplate; context: this"></ng-container>
+</ng-container>
+<ng-template #rowSelectorBaseTemplate>
+    <div class="igx-grid__cbx-padding">
+        <igx-checkbox
+            [readonly]="true"
+            [checked]="selected"
+            [disabled]="deleted"
+            disableRipple="true"
+            [disableTransitions]="grid.disableTransitions"
+            [aria-label]="rowCheckboxAriaLabel">
+        </igx-checkbox>
+    </div>
+</ng-template>
+
+<ng-template #pinnedCellsTemplate let-col>
     <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
         <ng-template #cellTemplate>
             <igx-grid-cell
@@ -134,6 +96,7 @@
                 [formatter]="col.formatter"
                 [row]="this"
                 [firstPinned]="col.isFirstPinned"
+                [lastPinned]="col.isLastPinned"
                 [style.min-height.px]="grid.rowHeight || 32"
                 [rowData]="rowData"
                 [style.min-width]="col.width"
@@ -167,6 +130,7 @@
                 [style.min-width]="col.width"
                 [style.max-width]="col.width"
                 [style.flex-basis]="col.width"
+                [style.left]="col.rightPinnedOffset"
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
@@ -178,16 +142,4 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
     </ng-template>
-</ng-container>
-<ng-template #rowSelectorBaseTemplate>
-    <div class="igx-grid__cbx-padding">
-        <igx-checkbox
-            [readonly]="true"
-            [checked]="selected"
-            [disabled]="deleted"
-            disableRipple="true"
-            [disableTransitions]="grid.disableTransitions"
-            [aria-label]="rowCheckboxAriaLabel">
-        </igx-checkbox>
-    </div>
 </ng-template>
