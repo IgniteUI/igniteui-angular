@@ -4,7 +4,7 @@
             <ng-template igxCollapsibleIndicator let-column="column" #ind >
                 <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
             </ng-template>
-        <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [showToolbar]="true" [allowAdvancedFiltering]="true" [columnHiding]="true">
+        <igx-grid [allowFiltering]="true" [pinning]="{columns: 1}" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [showToolbar]="true" [allowAdvancedFiltering]="true" [columnHiding]="true" [columnPinning]='true'>
             <igx-column [movable]="true"  [resizable]="true" [pinned]="true" field="Missing"></igx-column>
             <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expanded]="true" [hidden]="true">
                 <igx-column [movable]="true" [filterable]="false" [hidden]="true" sortable="true" resizable="true" field="CompanyName" width="200px" [visibleWhenCollapsed]="false"></igx-column>
