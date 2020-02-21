@@ -1619,12 +1619,6 @@ export class GridFunctions {
         cellComp.onBlur();
     }
 
-    public static simulateCellKeydownWithBlur(cellComp: IgxGridCellComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        GridFunctions.simulateCellKeydown(cellComp, keyName, altKey, shiftKey, ctrlKey );
-        cellComp.onBlur();
-    }
-
     public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
         altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
