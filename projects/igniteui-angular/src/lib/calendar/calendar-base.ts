@@ -313,7 +313,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
     /**
      *@hidden
      */
-    public calendarModel: Calendar;
+    protected calendarModel: Calendar;
 
     /**
      * @hidden
