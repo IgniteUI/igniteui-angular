@@ -539,10 +539,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 0; i < treeColumns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(3, treeColumns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'ArrowRight');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -562,10 +562,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = treeColumns.length - 1; i > 0; i--) {
                 let cell = treeGrid.getCellByColumn(3, treeColumns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'ArrowLeft');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -640,7 +640,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             GridFunctions.simulateCellKeydown(cell, 'ArrowLeft', false, false, true);
-            await wait();
+            await wait(DEBOUNCETIME);
             zone.simulateOnStable();
             fix.detectChanges();
 
@@ -650,7 +650,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
             GridFunctions.simulateCellKeydown(cell, 'ArrowRight', false, false, true);
-            await wait();
+            await wait(DEBOUNCETIME);
             zone.simulateOnStable();
             fix.detectChanges();
 
@@ -706,10 +706,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 2; i < treeColumns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(5, treeColumns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'Tab');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -732,10 +732,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 0; i < treeColumns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(6, treeColumns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'Tab');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -785,10 +785,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 4; i > 0; i--) {
                 cell = treeGrid.getCellByColumn(3, treeColumns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'Tab', false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
                 cell = treeGrid.getCellByColumn(3, treeColumns[i - 1]);
