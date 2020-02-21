@@ -573,7 +573,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
             expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
         });
-        
 
         it('should correctly pin columns with their summaries to end.', async() => {
             const fix = TestBed.createComponent(GridRightPinningComponent);
