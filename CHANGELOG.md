@@ -4,6 +4,17 @@ All notable changes for each version of this project will be documented in this 
 
 ## 9.1.0
 
+### New Features
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added support for pinning columns on the right. Change the position of pinning using the new `pinning` input.
+    ```html
+    <igx-grid [data]="data" [pinning]="pinningConfiguration"></igx-grid>
+    ```
+    ```typescript
+    public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
+    ```
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 
