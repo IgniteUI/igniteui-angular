@@ -96,4 +96,11 @@ export class IgxSummaryRowComponent implements DoCheck  {
     public get unpinnedColumns(): IgxColumnComponent[] {
         return this.grid.unpinnedColumns;
     }
+
+    getContext(col, row) {
+        return {
+            $implicit: col,
+            row: row
+        };
+    }
 }
