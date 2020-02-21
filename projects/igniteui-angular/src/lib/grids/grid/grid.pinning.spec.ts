@@ -524,7 +524,6 @@ describe('IgxGrid - Column Pinning to End', () => {
     it('should correctly pin multi-row-layouts to end.', () => {
         const fix = TestBed.createComponent(GridRightPinningMRLComponent);
         fix.detectChanges();
-        debugger;
         const grid = fix.componentInstance.instance;
         // check row DOM
         const row = grid.getRowByIndex(0).nativeElement;
