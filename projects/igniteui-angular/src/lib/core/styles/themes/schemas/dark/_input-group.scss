@@ -23,8 +23,8 @@ $_dark-input-group: extend($_light-input-group, $_base-dark-input-group);
 
 /// Generates a dark fluent input-group schema based on a mix of $_fluent-input-group and $_base-dark-input-group.
 /// @type {Map}
-/// @prop {Color} input-prefix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input prefix of type line, box, border and fluent.
-/// @prop {Color} input-suffix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input suffix of type line, box, border and fluent.
+/// @prop {Map} input-prefix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input prefix of type line, box and border.
+/// @prop {Map} input-suffix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input sufix of type line, box and border.
 /// @requires {function} extend
 /// @requires $_fluent-input-group
 /// @requires $_base-dark-input-group
