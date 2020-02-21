@@ -86,9 +86,6 @@
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
-
-
-/// The default light schema for all components.
 $light-schema: (
     igx-avatar: $_light-avatar,
     igx-badge: $_light-badge,
@@ -131,7 +128,6 @@ $light-schema: (
     igx-toast: $_light-toast,
     igx-tooltip: $_light-tooltip
 );
-
 
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,

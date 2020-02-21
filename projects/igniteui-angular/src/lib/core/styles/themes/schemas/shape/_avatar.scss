@@ -8,16 +8,19 @@ $_default-shape-avatar: (
     border-radius-square: 0
 );
 
+/// @type Map
 $_round-shape-avatar: (
     border-radius-round: 1,
     border-radius-square: .25
 );
 
+/// @type Map
 $_square-shape-avatar: (
     border-radius-round: .75,
     border-radius-square: 0
 );
 
+/// @type Map
 $_bootstrap-shape-avatar: (
     border-radius-round: 1,
     border-radius-square: .25
