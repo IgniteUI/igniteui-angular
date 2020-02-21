@@ -5967,8 +5967,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get getScrollbarSize() {
-        return this.isPinningToStart ?
-            this.pinnedWidth :
-            this.featureColumnsWidth();
+        if (this.isPinningToStart) {
+            return this.pinnedWidth;
+        }
+        if (this.featureColumnsWidth()) {
+            return this.featureColumnsWidth();
+        }
+        return 0;
     }
 }

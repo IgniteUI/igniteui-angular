@@ -148,12 +148,14 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
-    <div class="igx-grid__scroll-start" [style.width.px]='getScrollbarSize' [hidden]="pinnedWidth === 0"></div>
-    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
+    <div class="igx-grid__scroll-start" 
+        [style.width.px]='pinnedWidth ? getScrollbarSize : (featureColumnsWidth() ? featureColumnsWidth() : 0)'
+        [hidden]="!pinnedWidth ? (!featureColumnsWidth() ? true : false) : false"></div>
+    <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth - featureColumnsWidth()'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
         </ng-template>
     </div>
-    <div *ngIf="!isPinningToStart" class="igx-grid__scroll-end" [style.width.px]='pinnedWidth - featureColumnsWidth()' [hidden]="pinnedWidth === 0"></div>
+    <div class="igx-grid__scroll-end" [style.width.px]='pinnedWidth - featureColumnsWidth()' *ngIf="!isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
