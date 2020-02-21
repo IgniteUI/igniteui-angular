@@ -297,7 +297,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * An @Input property that autogenerates the `IgxGridComponent` columns.
      * The default value is false.
      * @remarks
-     * When is set to true, it will override all columns declared through code or in markup.
+     * When set to true, it will override all columns declared through code or in markup.
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
