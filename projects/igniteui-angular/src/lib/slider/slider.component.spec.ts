@@ -1644,7 +1644,7 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-rtl',
     template: `
-        <igx-slider [value]="value" [type]="type"></igx-slider>
+        <igx-slider [type]="type" [value]="value"></igx-slider>
     `
 })
 export class SliderRtlComponent {
