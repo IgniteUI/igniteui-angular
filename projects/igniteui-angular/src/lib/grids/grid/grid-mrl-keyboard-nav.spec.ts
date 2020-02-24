@@ -989,46 +989,6 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
             });
 
-            it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', () => {
-                fix.componentInstance.colGroups = [{
-                    group: 'group1',
-                    pinned: true,
-                    columns: [
-                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
-                        { field: 'ContactName', rowStart: 2, colStart: 1 },
-                        { field: 'ContactTitle', rowStart: 2, colStart: 2 }
-                    ]
-                }];
-                fix.detectChanges();
-
-                let firstCell;
-                let secondCell;
-                let thirdCell;
-                [
-                    firstCell, secondCell,
-                    thirdCell,
-                ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-
-                thirdCell.componentInstance.onFocus(null);
-                fix.detectChanges();
-
-                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-
-                GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowDown', false, false, true);
-                fix.detectChanges();
-
-                expect(fix.componentInstance.selectedCell.value)
-                    .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].ContactTitle);
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-
-                GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowUp', false, false, true);
-                fix.detectChanges();
-
-                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
-                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
-            });
-
             it('should navigate correctly with column group is hidden.', () => {
                 fix.componentInstance.colGroups = [{
                     group: 'group1',
@@ -1856,6 +1816,56 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[rowIndex + 1].City);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('City');
+            });
+
+            it('should navigate correctly by pressing Ctrl + ArrowUp/ArrowDown key', async() => {
+                fix.componentInstance.colGroups = [{
+                    group: 'group1',
+                    pinned: true,
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3 },
+                        { field: 'ContactName', rowStart: 2, colStart: 1 },
+                        { field: 'ContactTitle', rowStart: 2, colStart: 2 }
+                    ]
+                }];
+                fix.detectChanges();
+
+                let firstCell;
+                let secondCell;
+                let thirdCell;
+                [
+                    firstCell, secondCell,
+                    thirdCell,
+                ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+
+                thirdCell.componentInstance.onFocus(null);
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+
+                GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowDown', false, false, true);
+                await wait();
+                zone.simulateOnStable();
+                fix.detectChanges();
+                await wait();
+                zone.simulateOnStable();
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value)
+                    .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].ContactTitle);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
+
+                GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowUp', false, false, true);
+                await wait();
+                zone.simulateOnStable();
+                fix.detectChanges();
+                await wait();
+                zone.simulateOnStable();
+                fix.detectChanges();
+
+                expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
+                expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
             });
 
             it('should navigate to the last cell from the layout by pressing Home/End or Ctrl + ArrowLeft/ArrowRight key', async() => {

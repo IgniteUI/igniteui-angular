@@ -56,9 +56,8 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.rowList.length).toEqual(expandIcons.length);
         });
 
-        it('Should correctly expand a basic detail view, update expansionStates and the context provided should be correct', async() => {
+        it('Should correctly expand a basic detail view, update expansionStates and the context provided should be correct', () => {
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             const firstRowIconName = GridFunctions.getRowExpandIconName(grid.rowList.first);
@@ -70,9 +69,8 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(firstRowDetail)).toEqual('Obere Str. 57');
         });
 
-        it('Should render a detail view with dynamic elements and they should be clickable/focusable.', async() => {
+        it('Should render a detail view with dynamic elements and they should be clickable/focusable.', () => {
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             const firstDetail = GridFunctions.getMasterRowDetailDebug(fix, grid.rowList.first);
@@ -102,7 +100,6 @@ describe('IgxGrid Master Detail #grid', () => {
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
             checkbox state, etc. after scrolling them in and out of view.`, (async() => {
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             let firstDetail = GridFunctions.getMasterRowDetailDebug(fix, grid.rowList.first);
@@ -144,9 +141,8 @@ describe('IgxGrid Master Detail #grid', () => {
         }));
 
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
-            checkbox state, etc. after scrolling them in and out of view.`, async() => {
+            checkbox state, etc. after scrolling them in and out of view.`, () => {
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             let firstRowDetail = GridFunctions.getMasterRowDetailDebug(fix, grid.rowList.first);
@@ -163,11 +159,9 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-            await wait();
             fix.detectChanges();
 
             firstRowDetail = GridFunctions.getMasterRowDetailDebug(fix, grid.rowList.first);
@@ -397,6 +391,9 @@ describe('IgxGrid Master Detail #grid', () => {
             const row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
 
+            targetCellElement.onFocus(null);
+            fix.detectChanges();
+
             GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
             await wait();
             fix.detectChanges();
@@ -536,6 +533,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(row.expanded).toBeFalsy();
             targetCellElement = grid.getCellByColumn(52, 'ContactName');
@@ -546,6 +544,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(row.expanded).toBeTruthy();
             targetCellElement = grid.getCellByColumn(52, 'ContactName');
@@ -987,7 +986,6 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
 
                 GridFunctions.toggleMasterRow(fix, grid.rowList.first);
-                await wait();
                 fix.detectChanges();
             });
 
@@ -1012,7 +1010,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it(`Should navigate down through a detail view by focusing the whole row and continuing
-            onto the next with arrow down in multi-row layout grid.`, () => {
+            onto the next with arrow down in multi-row layout grid.`, async() => {
                 let targetCellElement = grid.getCellByColumn(0, 'ContactName');
                 GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
                 fix.detectChanges();
@@ -1027,6 +1025,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(document.activeElement).toBe(firstRowDetail);
 
                 GridFunctions.simulateDetailKeydown(grid, grid.rowList.first, 'ArrowDown');
+                await wait();
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(2, 'CompanyName');
@@ -1034,9 +1033,10 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it(`Should navigate up through a detail view by
-            focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, () => {
+            focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async() => {
                 let targetCellElement = grid.getCellByColumn(2, 'ContactName');
                 GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
+                await wait();
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(2, 'CompanyName');
