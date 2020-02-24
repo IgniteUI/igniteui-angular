@@ -532,11 +532,15 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('input', { read: ElementRef, static: false })
-    private input: ElementRef;
+    @ViewChild('input', { read: ElementRef })
+    private inputElementRef: ElementRef;
 
     @ViewChild(IgxInputDirective, { read: IgxInputDirective})
     private _inputDirective: IgxInputDirective;
+
+    /** @hidden @internal */
+    @ContentChild(IgxInputDirective)
+    protected input: IgxInputDirective;
 
     /**
      * @hidden
@@ -826,8 +830,8 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown && this.input) {
-            fromEvent(this.input.nativeElement, 'keydown').pipe(
+        if (this.mode === InteractionMode.DropDown && this.inputElementRef) {
+            fromEvent(this.inputElementRef.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((event: KeyboardEvent) => {
@@ -1271,11 +1275,11 @@ export class IgxTimePickerComponent implements
     }
 
     private _getCursorPosition(): number {
-        return this.input.nativeElement.selectionStart;
+        return this.inputElementRef.nativeElement.selectionStart;
     }
 
     private _setCursorPosition(start: number, end: number = start): void {
-        this.input.nativeElement.setSelectionRange(start, end);
+        this.inputElementRef.nativeElement.setSelectionRange(start, end);
     }
 
     private _updateEditableInput(): void {
@@ -1894,8 +1898,8 @@ export class IgxTimePickerComponent implements
         }
 
         // minor hack for preventing cursor jumping in IE
-        this.displayValue = this.inputFormat.transform(displayVal);
-        this.input.nativeElement.value = this.displayValue;
+        this._displayValue = this.inputFormat.transform(displayVal);
+        this.inputElementRef.nativeElement.value = this._displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
@@ -1930,10 +1934,11 @@ export class IgxTimePickerComponent implements
 
     private updateValidity() {
         this._onTouchedCallback();
+        const inputDirective = this._inputDirective || this.input;
         if (this._ngControl && !this._ngControl.valid) {
-            this._inputDirective.valid = IgxInputState.INVALID;
+            inputDirective.valid = IgxInputState.INVALID;
         } else {
-            this._inputDirective.valid = IgxInputState.INITIAL;
+            inputDirective.valid = IgxInputState.INITIAL;
         }
     }
 }
