@@ -317,7 +317,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      *@hidden
      */
-    public calendarModel: Calendar;
+    protected calendarModel: Calendar;
 
     /**
      * @hidden
