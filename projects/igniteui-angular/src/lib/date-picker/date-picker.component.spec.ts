@@ -16,7 +16,7 @@ import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
 import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs, HorizontalAlignment, VerticalAlignment } from '../services';
 
-fdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -1316,7 +1316,6 @@ fdescribe('IgxDatePicker', () => {
             UIInteractions.clickElement(datePickerOnBlurComponent.getEditElement(), HorizontalAlignment.Center, VerticalAlignment.Middle);
             fixture.detectChanges();
 
-            console.log(document.activeElement);
             expect(formGroup.controls.datePickerOnBlur.status).toEqual('VALID');
             expect(inputGroup.isRequired).toBeTruthy();
             expect(inputGroup.validClass).toBeFalsy();
@@ -1336,7 +1335,6 @@ fdescribe('IgxDatePicker', () => {
             datePickerOnBlurComponent.mode = InteractionMode.DropDown;
             fixture.detectChanges();
 
-            console.log(document.activeElement);
             expect(inputGroup.isRequired).toBeTruthy();
             expect(inputGroup.validClass).toBeFalsy();
             expect(inputGroup.invalidClass).toBeTruthy();
@@ -1344,32 +1342,16 @@ fdescribe('IgxDatePicker', () => {
         }));
 
         // Bug #6025 Date picker does not disable in reactive form
-        it('Should disable when form is disabled', fakeAsync(() => {
-            fixture.detectChanges();
+        it('Should disable when form is disabled', () => {
             const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
             const inputGroup = (datePickerOnChangeComponent as any).inputGroup as IgxInputGroupComponent;
 
-            inputGroup.element.nativeElement.click();
-            fixture.detectChanges();
-            tick();
-            expect(datePickerOnChangeComponent.collapsed).toBeFalsy();
-
-            // inputGroup.element.nativeElement.click();
-            datePickerOnChangeComponent.closeCalendar();
-            fixture.detectChanges();
-            tick();
-            expect(datePickerOnChangeComponent.collapsed).toBeTruthy();
+            expect(inputGroup.disabled).toBeFalsy();
 
             formGroup.disable();
             fixture.detectChanges();
-            tick();
-
-            inputGroup.element.nativeElement.parentElement.click();
-            fixture.detectChanges();
-            tick();
-            const dateDropDown = document.getElementsByClassName('igx-date-picker--dropdown');
-            expect(dateDropDown.length).toEqual(0);
-        }));
+            expect(inputGroup.disabled).toBeTruthy();
+        });
     });
 
     describe('Control value accessor unit tests', () => {
@@ -1582,7 +1564,6 @@ export class IgxDatePickerOpeningComponent {
         <igx-date-picker formControlName="datePickerOnChange" #datePickerOnChangeComponent></igx-date-picker>
         <igx-date-picker formControlName="datePickerOnBlur" #datePickerOnBlurComponent></igx-date-picker>
     </form>
-    <input #input />
 `
 })
 class IgxDatePickerReactiveFormComponent {
@@ -1591,9 +1572,6 @@ class IgxDatePickerReactiveFormComponent {
 
     @ViewChild('datePickerOnBlurComponent', { read: IgxDatePickerComponent, static: true })
     public datePickerOnBlurComponent: IgxDatePickerComponent;
-
-    @ViewChild('input', { static: true })
-    public input: ElementRef;
 
     reactiveForm: FormGroup;
 
