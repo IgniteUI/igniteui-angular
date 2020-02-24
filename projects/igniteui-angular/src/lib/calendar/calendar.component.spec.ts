@@ -424,7 +424,8 @@ describe('IgxCalendar - ', () => {
                 const parent = dom.query(
                     By.css(`${HelperTestFunctions.CALENDAR_ROW_CSSCLASS}:last-child`)
                 );
-                const target = parent.childNodes.pop();
+                const parentDates = parent.queryAll(By.css(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS));
+                const target = parentDates[parentDates.length - 1];
 
                 target.nativeElement.click();
                 fixture.detectChanges();

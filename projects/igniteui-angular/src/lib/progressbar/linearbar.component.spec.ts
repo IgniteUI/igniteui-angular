@@ -172,6 +172,7 @@ describe('IgLinearBar', () => {
     }));
 
     it('Should update value when we try to decrease it (without animation)', () => {
+        pending('Related to the bug #6740');
         const fixture = TestBed.createComponent(LinearBarComponent);
         const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
@@ -246,6 +247,7 @@ describe('IgLinearBar', () => {
     }));
 
     it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
+        pending('Related to the bug #6740');
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
         let value = 2.67;
