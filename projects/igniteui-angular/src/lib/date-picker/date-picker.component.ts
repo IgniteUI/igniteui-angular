@@ -336,6 +336,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return this._dropDownOverlaySettings || this._defaultDropDownOverlaySettings;
     }
 
+    public get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            // this.inputGroup.isRequired = error && error.required;
+            return error && error.required;
+        }
+    }
+
     public set dropDownOverlaySettings(value: OverlaySettings) {
         this._dropDownOverlaySettings = value;
     }
@@ -884,8 +893,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
-
-        this.manageRequiredAsterisk();
     }
 
     protected onStatusChanged() {
@@ -897,16 +904,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             } else {
                 input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
-        }
-        this.manageRequiredAsterisk();
-    }
-
-    protected manageRequiredAsterisk(): void {
-        if (this._ngControl && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            this.inputGroup.isRequired = error && error.required;
-            this._cdr.markForCheck();
         }
     }
 
@@ -1335,7 +1332,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
-    private _updateValidity() {
+    public _updateValidity() {
         this._onTouchedCallback();
         const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
         if (input && this._ngControl && !this._ngControl.valid) {
