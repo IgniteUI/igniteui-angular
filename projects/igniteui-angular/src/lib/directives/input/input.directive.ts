@@ -134,17 +134,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         if (typeof value === 'boolean') {
             this.nativeElement.required = this.inputGroup.isRequired = value;
 
-            if (value && !this.nativeElement.checkValidity() && this.shouldCheckValidity) {
+            if (value && !this.nativeElement.checkValidity()) {
                 this.valid = IgxInputState.INVALID;
             } else {
                 this.valid = IgxInputState.INITIAL;
             }
         }
     }
-
-    /** @hidden @internal */
-    @Input()
-    public shouldCheckValidity = true;
 
     /**
      * Gets whether the igxInput is required.
@@ -212,7 +208,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             if (!this.ngControl.valid) {
                 this.valid = IgxInputState.INVALID;
             }
-        } else if (this._hasValidators() && !this.nativeElement.checkValidity() && this.shouldCheckValidity) {
+        } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
             this.valid = IgxInputState.INVALID;
         }
     }
@@ -403,7 +399,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     private checkValidity() {
-        if (!this.ngControl && this._hasValidators() && this.shouldCheckValidity) {
+        if (!this.ngControl && this._hasValidators()) {
             this.valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
