@@ -1535,14 +1535,14 @@ describe('igxCombo', () => {
             expect(combo.dropdown.element).toBeDefined();
             expect(mockFunc).toBeDefined();
         });
-        it('should restore position of dropdown scroll after opening', (async () => {
+        fit('should restore position of dropdown scroll after opening', (async () => {
             const virtDir = combo.virtualScrollContainer;
             spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
             spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
             combo.toggle();
-            await wait(10);
+            await wait(30);
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
@@ -1551,7 +1551,7 @@ describe('igxCombo', () => {
             expect(virtDir.getScroll().scrollTop).toEqual(0);
             expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
             virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
-            await wait(10);
+            await wait(30);
             fixture.detectChanges();
             expect(virtDir.getScroll().scrollTop).toBeGreaterThan(0);
             UIInteractions.simulateClickEvent(document.documentElement);
@@ -1561,7 +1561,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
             combo.toggle();
-            await wait(10);
+            await wait(30);
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
