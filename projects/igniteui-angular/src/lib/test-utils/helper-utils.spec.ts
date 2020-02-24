@@ -1,4 +1,4 @@
-import { DebugElement, NgZone, Injectable, EventEmitter } from '@angular/core';
+import { DebugElement, EventEmitter, NgZone, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { ComponentFixture } from '@angular/core/testing';
