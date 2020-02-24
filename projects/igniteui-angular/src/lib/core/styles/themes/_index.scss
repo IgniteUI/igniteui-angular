@@ -51,7 +51,7 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @requires {variable} $components
@@ -91,7 +91,7 @@
     $palette,
     $schema: $light-schema,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -412,11 +412,11 @@
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -447,11 +447,11 @@
 /// Creates a global theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -482,11 +482,11 @@
 /// Creates a global fluent theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-fluent-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -518,11 +518,11 @@
 /// Creates a global fluent theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-fluent-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -555,11 +555,11 @@
 /// Creates a global bootstrap-like theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-bootstrap-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -618,11 +618,11 @@
 /// Creates a global bootstrap-like theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
 @mixin igx-bootstrap-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {

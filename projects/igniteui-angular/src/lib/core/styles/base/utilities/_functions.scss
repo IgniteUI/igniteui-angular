@@ -351,7 +351,7 @@
 ///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme';
 /// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
 @function --var($map, $key, $fallback: null) {
-    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
+    $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
