@@ -1218,7 +1218,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true, false, true, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1227,7 +1227,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const lastCell = grid.getCellByColumn(7, 'Name');
             UIInteractions.triggerKeyDownWithBlur('arrowdown', lastCell.nativeElement, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
         }));
@@ -1244,7 +1244,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1283,7 +1283,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, true, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1303,7 +1303,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownWithBlur('home', firstCell.nativeElement, true, false, true, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1312,7 +1312,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const lastCell = grid.getCellByColumn(0, 'ID');
             UIInteractions.triggerKeyDownWithBlur('arrowup', lastCell.nativeElement, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
         }));
@@ -1329,7 +1329,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
 
             UIInteractions.triggerKeyDownWithBlur('end', firstCell.nativeElement, true, false, true, true);
-            await wait(50);
+            await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);

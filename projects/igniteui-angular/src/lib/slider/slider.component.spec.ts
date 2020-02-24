@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
 import { FormsModule } from '@angular/forms';
+import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
@@ -22,10 +23,18 @@ const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
+interface FakeDoc {
+    body: { dir?: string };
+    documentElement: { dir?: string };
+}
+
 describe('IgxSlider', () => {
+    let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(async(() => {
-        TestBed.configureTestingModule({
+        fakeDoc = { body: {}, documentElement: {} };
+
+        return TestBed.configureTestingModule({
             declarations: [
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
@@ -33,10 +42,14 @@ describe('IgxSlider', () => {
                 SliderWithLabelsComponent,
                 RangeSliderWithLabelsComponent,
                 RangeSliderWithCustomTemplateComponent,
-                SliderTicksComponent
+                SliderTicksComponent,
+                SliderRtlComponent
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
+            ],
+            providers: [
+                { provide: DIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
     }));
@@ -45,7 +58,7 @@ describe('IgxSlider', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
-        beforeEach(() => {
+        beforeEach(()  => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -562,15 +575,15 @@ describe('IgxSlider', () => {
 
         it('labels should show/hide on pointer up/down', async() => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
+            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -581,24 +594,24 @@ describe('IgxSlider', () => {
         it('should be able to change thumbLabelVisibilityDuration', async() => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
+            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
+            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
+            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).toBeNull();
         });
 
@@ -832,8 +845,8 @@ describe('IgxSlider', () => {
         });
 
         it('labels should show/hide on pointer up/down', async() => {
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(100);
             fixture.detectChanges();
 
@@ -841,7 +854,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
+            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -1334,16 +1347,17 @@ describe('IgxSlider', () => {
             const instance = fix.componentInstance;
             const spyOnValueChanged = spyOn<any>(instance.slider.onValueChanged, 'emit').and.callThrough();
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.triggerEventHandler('focus', null);
+            const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
+            thumbTo.triggerEventHandler('focus', null);
             fix.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 200, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             let currentValue = instance.slider.value;
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 300, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
@@ -1568,6 +1582,29 @@ describe('IgxSlider', () => {
         });
     });
 
+    describe('Slider RTL', () => {
+        beforeEach(() => {
+            fakeDoc.documentElement.dir = 'rtl';
+        });
+
+        it('should reflect on the right instead of the left css property of the slider handlers', () => {
+            const fix = TestBed.createComponent(SliderRtlComponent);
+            fix.detectChanges();
+
+            const inst = fix.componentInstance;
+            const thumbs = fix.debugElement.queryAll(By.css('igx-thumb'));
+            const labels = fix.debugElement.queryAll(By.css('igx-thumb-label'));
+
+            expect(inst.dir.rtl).toEqual(true);
+
+            expect(thumbs[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
+            expect(thumbs[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
+
+            expect(labels[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
+            expect(labels[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
+        });
+    });
+
     function panRight(element, elementHeight, elementWidth, duration) {
         const panOptions = {
             deltaX: elementWidth * 0.6,
@@ -1603,6 +1640,26 @@ describe('IgxSlider', () => {
         });
     }
 });
+
+@Component({
+    selector: 'igx-slider-rtl',
+    template: `
+        <igx-slider [type]="type" [value]="value"></igx-slider>
+    `
+})
+export class SliderRtlComponent {
+    public value = {
+        lower: 20,
+        upper: 80
+    };
+
+    @ViewChild(IgxSliderComponent)
+    public slider: IgxSliderComponent;
+
+    public type: IgxSliderType = IgxSliderType.RANGE;
+
+    public constructor(public dir: IgxDirectionality) { }
+}
 
 @Component({
     selector: 'igx-slider-ticks',

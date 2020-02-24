@@ -22,7 +22,7 @@ export enum ScrollMonth {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxCalendarBase]'
+    selector: '[igxCalendarBase]',
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
@@ -317,7 +317,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      *@hidden
      */
-    public calendarModel: Calendar;
+    protected calendarModel: Calendar;
 
     /**
      * @hidden
