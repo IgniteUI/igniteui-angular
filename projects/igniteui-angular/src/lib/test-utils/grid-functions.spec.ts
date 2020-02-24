@@ -1668,6 +1668,30 @@ export class GridFunctions {
         const expandInd = GridFunctions.getColGroupExpandIndicator(groupHeader);
         expandInd.dispatchEvent(new Event('click', {}));
     }
+
+    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+            altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        cellComp.dispatchEvent(keyboardEvent);
+        cellComp.onBlur();
+    }
+
+    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
+                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        rowComp.onKeydown(keyboardEvent);
+        rowComp.onBlur();
+    }
 }
 export class GridSummaryFunctions {
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
