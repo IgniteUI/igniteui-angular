@@ -1,4 +1,4 @@
-﻿import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+﻿import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -78,7 +78,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify AF dialog is opened.
@@ -120,8 +120,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -184,8 +183,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -197,8 +195,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
 
             // Click the initial 'Add Or Group' button.
-            const addOrGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1];
-            addOrGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 1);
             tick(100);
             fix.detectChanges();
 
@@ -208,12 +205,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should correctly initialize a newly added \'And\' group.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -247,12 +243,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should correctly initialize a newly added \'Or\' group.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add Or Group' button.
-            const addOrGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1];
-            addOrGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 1);
             tick(100);
             fix.detectChanges();
 
@@ -286,12 +281,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should add a new group through initial adding button and filter by it.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -341,12 +335,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBe(false, 'Button indicates there is active filtering.');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -369,7 +362,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBe(true, 'Button indicates there is no active filtering.');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Clear the filters.
@@ -388,12 +381,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should correctly display header name in select dropdown and in chip expression.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -425,7 +417,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog again.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify header name in chip text
@@ -449,8 +441,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -491,8 +482,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -533,8 +523,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -574,8 +563,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -615,8 +603,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -661,8 +648,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -698,12 +684,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             spyOn(grid.onFilteringDone, 'emit');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -762,7 +747,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verfiy there is a root group with 'And' operator line and 2 children.
@@ -792,7 +777,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify there are not filters present and that the default text is shown.
@@ -815,12 +800,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Add a root 'and' group.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -876,7 +860,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             tick(100);
             fix.detectChanges();
 
@@ -895,12 +879,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should discard the newly added group when clicking the \'close\' button of its initial condition.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -925,7 +908,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Make the 'Downloads', 'Released' and 'ReleaseDate' columns non-filterable.
@@ -936,8 +919,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
 
             // Click the initial 'Add and Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -953,12 +935,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\').', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Add a new group.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -990,12 +971,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'date\' or \'boolean\').', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Add a new group.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1035,7 +1015,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
@@ -1179,7 +1159,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Scroll to the top.
@@ -1227,7 +1207,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify there are filters in the dialog.
@@ -1271,7 +1251,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify the content of the first expression in the inner 'or' group.
@@ -1300,7 +1280,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify the content of the first expression in the inner 'or' group.
@@ -1334,7 +1314,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify the content of the first expression in the inner 'or' group.
@@ -1363,7 +1343,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify the content of the first expression in the inner 'or' group.
@@ -1372,7 +1352,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should not close the AF dialog when clicking outside of it.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify that the Advanced Filtering dialog is opened.
@@ -1404,7 +1384,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Select a chip from the child group.
@@ -1451,7 +1431,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify group's children count before adding a new child.
@@ -1503,7 +1483,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify group's children count before adding a new child.
@@ -1581,7 +1561,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify tree layout before deleting chips.
@@ -1601,6 +1581,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Delete a chip and verify layout.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix, [0, 1]);
             tick(100);
+            flush();
             fix.detectChanges();
             rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
             expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
@@ -1625,7 +1606,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify first chip is not selected.
@@ -1659,7 +1640,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Verify actions container is not visible. (This container contains the 'edit' and the 'add' buttons.)
@@ -1711,7 +1692,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Click root group's operator line and verify that the root group and all of its children become selected.
@@ -1743,12 +1724,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should open the operator dropdown below its respective input-group.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             // Add root group.
-            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            initialAddAndGroupBtn.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -1804,12 +1784,11 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         describe('Context Menu - ', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Add initial 'and' group.
-                const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-                initialAddAndGroupBtn.click();
+                GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
                 tick(100);
                 fix.detectChanges();
 
@@ -1844,7 +1823,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify context menu is not visible.
@@ -1899,7 +1878,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify tree layout before the creation of a new group with context menu.
@@ -1963,7 +1942,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify tree layout before the creation of a new group with context menu.
@@ -2027,7 +2006,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify tree layout before the creation of a new group with context menu.
@@ -2084,7 +2063,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify context menu is not visible.
@@ -2133,7 +2112,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify current operator of inner group.
@@ -2188,7 +2167,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify tree layout before the the ungrouping with context menu.
@@ -2237,7 +2216,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Click root group's operator line.
@@ -2272,7 +2251,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify tree layout before deleting a group through context menu.
@@ -2323,7 +2302,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Click root operator line to open the context menu.
@@ -2366,7 +2345,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Click root operator line to open the context menu.
@@ -2406,7 +2385,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify first chip is not selected.
@@ -2440,7 +2419,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Verify the there are two chip expressions.
@@ -2482,7 +2461,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 fix.detectChanges();
 
                 // Open Advanced Filtering dialog.
-                GridFunctions.clickAdvancedFilteringButton(fix);
+                grid.openAdvancedFilteringDialog();
                 fix.detectChanges();
 
                 // Press 'Enter' on the root group's operator line
@@ -2540,7 +2519,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            grid.openAdvancedFilteringDialog();
             fix.detectChanges();
 
             expect(GridFunctions.getAdvancedFilteringHeaderText(fix)).toBe('My advanced filter');
@@ -2552,8 +2531,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBe('My or group');
             expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix).innerText).toBe('My initial text');
 
-            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            initialAddAndGroupBtn.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -2653,8 +2631,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
 
             // Click the initial 'Add And Group' button.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
@@ -2677,8 +2654,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
         it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
             // Add a root 'and' group.
-            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            addAndGroupButton.click();
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
             tick(100);
             fix.detectChanges();
 
