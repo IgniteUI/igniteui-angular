@@ -17,7 +17,7 @@ import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { IgxDaysViewNavigationService } from './daysview-navigation.service';
+import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -98,7 +98,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    constructor(public navService: IgxDaysViewNavigationService) {
+    constructor(public daysNavService: IgxDaysViewNavigationService) {
         super();
     }
 
@@ -113,7 +113,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
      * @hidden
      */
     public ngOnInit() {
-        this.navService.monthView = this;
+        this.daysNavService.monthView = this;
     }
 
     /**
@@ -341,7 +341,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.navService.focusNextDate(event.target as HTMLElement, event.key);
+        this.daysNavService.focusNextDate(event.target as HTMLElement, event.key);
     }
 
     /**
@@ -351,7 +351,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.getFirstMonthView().navService.focusHomeDate();
+        this.getFirstMonthView().daysNavService.focusHomeDate();
     }
 
     /**
@@ -361,6 +361,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.getLastMonthView().navService.focusEndDate();
+        this.getLastMonthView().daysNavService.focusEndDate();
     }
 }

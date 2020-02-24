@@ -245,6 +245,10 @@
         @extend %grid-cell--pinned-last !optional;
     }
 
+    @include e(th, $m: pinned-first) {
+        @extend %grid-cell--pinned-first !optional;
+    }
+
     @include e(th, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
     }
@@ -325,6 +329,11 @@
     @include e(td, $m: pinned-last) {
         @extend %grid-cell--pinned !optional;
         @extend %grid-cell--pinned-last !optional;
+    }
+
+    @include e(td, $m: pinned-first) {
+        @extend %grid-cell--pinned !optional;
+        @extend %grid-cell--pinned-first !optional;
     }
 
     @include e(td, $m: pinned-end) {

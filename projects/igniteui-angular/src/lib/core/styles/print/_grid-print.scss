@@ -3,6 +3,8 @@ $border-pin-color: #999;
 $print-background: #f9f9f9;
 $print-background: #eee;
 
+/// Defines printing styles for the igx-grid component.
+/// @group print
 @mixin igx-grid-print {
     %grid-display {
         %form-group-display,
