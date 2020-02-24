@@ -195,32 +195,6 @@ export class GridFunctions {
         resolve();
     })
 
-    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
-            altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        cellComp.dispatchEvent(keyboardEvent);
-        if (!altKey) {
-            cellComp.onBlur();
-        }
-    }
-
-    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        rowComp.onKeydown(keyboardEvent);
-        rowComp.onBlur();
-    }
-
     public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
                                         altKey = false, shiftKey = false, ctrlKey = false) {
         const detailRow = GridFunctions.getMasterRowDetail(masterRow);
@@ -1782,7 +1756,9 @@ export class GridFunctions {
             altKey: altKey
         });
         cellComp.dispatchEvent(keyboardEvent);
-        cellComp.onBlur();
+        if (!altKey) {
+            cellComp.onBlur();
+        }
     }
 
     public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
@@ -1794,7 +1770,9 @@ export class GridFunctions {
             altKey: altKey
         });
         rowComp.onKeydown(keyboardEvent);
-        rowComp.onBlur();
+        if (!altKey) {
+            rowComp.onBlur();
+        }
     }
 }
 export class GridSummaryFunctions {
