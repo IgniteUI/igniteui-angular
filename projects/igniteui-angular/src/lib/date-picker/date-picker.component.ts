@@ -386,7 +386,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.
             const error = this._ngControl.control.validator({} as AbstractControl);
-            // this.inputGroup.isRequired = error && error.required;
             return error && error.required;
         }
     }
@@ -970,7 +969,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
         }
 
-        this.inputGroup.isRequired = this.required;
+        if (this.inputGroup && this.inputGroup.isRequired !== this.required) {
+            this.inputGroup.isRequired = this.required;
+        }
     }
 
     /**
