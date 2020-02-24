@@ -17,7 +17,8 @@ import {
     NgModuleRef,
     OnInit,
     AfterViewInit,
-    Injector
+    Injector,
+    AfterViewChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import {
@@ -143,7 +144,8 @@ const noop = () => { };
         }
     `]
 })
-export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
+          EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
      * The default label is 'Date'.
@@ -945,6 +947,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
+    public ngAfterViewChecked() {
+        // if one sets mode at run time this forces initialization of new igxInputGroup
+        // As a result a new igxInputDirective is initialized too. In ngAfterViewInit of
+        // the new directive isRequired of the igxInputGroup is set again. However
+        // ngAfterViewInit of date picker is not called again and we may finish with wrong
+        // isRequired in igxInputGroup. This is why we should set it her, only when needed
+        if (this.inputGroup && this.inputGroup.isRequired !== this.required) {
+            this.inputGroup.isRequired = this.required;
+            this._cdr.detectChanges();
+        }
+    }
+
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
@@ -955,6 +969,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         }
+
+        this.inputGroup.isRequired = this.required;
     }
 
     /**
