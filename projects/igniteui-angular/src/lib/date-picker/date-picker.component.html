@@ -11,8 +11,6 @@
             [disabled]="disabled"
             (blur)="onBlur($event)"
             readonly
-            required="required"
-            [shouldCheckValidity]="false"
         />
     </igx-input-group>
 </ng-template>
@@ -38,8 +36,6 @@
             (wheel)="onWheel($event)"
             (input)="onInput($event)"
             (focus)="onFocus()"
-            required="required"
-            [shouldCheckValidity]="false"
         />
         <igx-suffix *ngIf="!isEmpty" (click)="clear()">
             <igx-icon>clear</igx-icon>

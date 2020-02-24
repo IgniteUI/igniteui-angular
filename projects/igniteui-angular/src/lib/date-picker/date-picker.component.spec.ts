@@ -1376,7 +1376,12 @@ describe('IgxDatePicker', () => {
                 onClosing: new EventEmitter<OverlayClosingEventArgs>()
             };
             element = {};
-            cdr = { markForCheck: () => {}, detach: () => {}, reattach: () => {}};
+            cdr = {
+                markForCheck: () => {},
+                detectChanges: () => {},
+                detach: () => {},
+                reattach: () => {}
+            };
             moduleRef = {};
             injector = { get: () => ngModel };
             inputGroup = new IgxInputGroupComponent(null, null);
