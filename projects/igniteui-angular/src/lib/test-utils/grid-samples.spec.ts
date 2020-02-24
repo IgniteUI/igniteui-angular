@@ -18,6 +18,7 @@ import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -206,13 +207,22 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             [height]="'600px'"
             [autoGenerate]="true"
             rowSelection = "multiple"`,
-            EventSubscriptions.onColumnInit, '')
+            '', '')
 })
 export class ScrollsComponent extends BasicGridComponent {
     data = SampleTestData.generateBigDataRowsAndCols(16, 16);
-    public columnInit(column) {
-        // column.width = '50px';
-    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [primaryKey]="'ID'"
+          [width]="'900px'"
+          [height]="'900px'"
+          [columnWidth]="'200px'"`,
+        '', ColumnDefinitions.idNameJobTitleCompany)
+})
+export class NoScrollsComponent extends GridWithSizeComponent {
+    data = SampleTestData.personIDNameJobCompany();
 }
 
 @Component({
@@ -848,12 +858,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth: number = null) {
+     public generateCols(numCols: number, defaultColWidth = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || (j % 8 < 2 ? 100 : (j % 6) * 125)
             });
         }
         return cols;
@@ -1534,7 +1544,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public instance: IgxGridComponent;
+    public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
@@ -1556,6 +1566,57 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [columnWidth] = "'100px'"
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="enableRowEditing">
+        </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
+    `
+})
+export class IgxGridGroupByComponent extends DataParent implements OnInit {
+    public width = '600px';
+    public height = '600px';
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
+    public dropAreaTemplate: TemplateRef<any>;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = false;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+
+    public ngOnInit() {
+        this.grid.groupingExpressions = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc }
+        ];
     }
 }
 
@@ -1815,4 +1876,34 @@ export class IgxGridAdvancedFilteringBindingComponent extends BasicGridComponent
           }
         ];
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column field="firstName"></igx-column>
+            <igx-column field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
+            <igx-column field="fullName" [editable]="false"></igx-column>
+        </igx-grid>
+        <button class="btnTest">Test</button>
+    `
+})
+export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
+    public data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-grid [height]="'300px'" [width]="'800px'" [data]="data" [autoGenerate]="true"></igx-grid>
+    `
+})
+export class NoColumnWidthGridComponent extends BasicGridComponent {
+    data = SampleTestData.generateNumberData(1000);
 }
