@@ -585,7 +585,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             fix.detectChanges();
 
             // move 'ID' column to the pinned area
-            grid.moveColumn(grid.getColumnByName('ID'),grid.getColumnByName('ContactName'));
+            grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'));
             fix.detectChanges();
 
             // verify column is pinned at the correct place
