@@ -946,7 +946,20 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
 
-            for (let i = 2; i < columns.length - 1; i++) {
+            const firstCell = treeGrid.getCellByColumn(5, 'HireDate');
+            GridFunctions.simulateCellKeydown(firstCell, 'End');
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+
+            const lastCell = treeGrid.getCellByColumn(5, columns[4]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, lastCell);
+            expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
+
+            for (let i = 0; i < columns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(5, columns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'Tab');
                 await wait(DEBOUNCETIME);
@@ -1004,13 +1017,63 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toEqual(0);
         });
 
-        it('should navigate with arrow Left and Right keys when there is pinned column', async () => {
+        it('should navigate with arrow Left key when there is a pinned column', async () => {
             treeGrid.getColumnByName('HireDate').pinned = true;
             fix.detectChanges();
 
             const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
 
-            for (let i = 2; i < columns.length - 1; i++) {
+            const firstCell = treeGrid.getCellByColumn(3, 'HireDate');
+            GridFunctions.simulateCellKeydown(firstCell, 'End');
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+
+            const lastCell = treeGrid.getCellByColumn(3, columns[4]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, lastCell);
+            expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
+
+            for (let i = 4; i > 0 ; i--) {
+                let cell = treeGrid.getCellByColumn(3, columns[i]);
+                GridFunctions.simulateCellKeydown(cell, 'ArrowLeft');
+                await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
+                fix.detectChanges();
+                await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
+                fix.detectChanges();
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                cell = treeGrid.getCellByColumn(3, columns[i - 1]);
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            }
+
+            expect(treeGrid.headerContainer.getScroll().scrollLeft).toEqual(0);
+        });
+
+        it('should navigate with arrow Right key when there is a pinned column', async () => {
+            treeGrid.getColumnByName('HireDate').pinned = true;
+            fix.detectChanges();
+
+            const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
+
+            const firstCell = treeGrid.getCellByColumn(0, 'HireDate');
+            GridFunctions.simulateCellKeydown(firstCell, 'End');
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            zone.simulateOnStable();
+            fix.detectChanges();
+
+            let newCell = treeGrid.getCellByColumn(0, columns[4]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+            const scrollLeft = treeGrid.headerContainer.getScroll().scrollLeft;
+            expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
+
+            for (let i = 0; i < columns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(0, columns[i]);
                 GridFunctions.simulateCellKeydown(cell, 'ArrowRight');
                 await wait(DEBOUNCETIME);
@@ -1024,7 +1087,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             }
 
-            let newCell = treeGrid.getCellByColumn(0, columns[4]);
+            newCell = treeGrid.getCellByColumn(0, columns[4]);
             GridFunctions.simulateCellKeydown(newCell, 'Home');
             await wait(DEBOUNCETIME);
             zone.simulateOnStable();
@@ -1035,37 +1098,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             newCell = treeGrid.getCellByColumn(0, columns[0]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
-            const scrollLeft = treeGrid.headerContainer.getScroll().scrollLeft;
-            expect(scrollLeft).toBeGreaterThan(0);
-
-            // Test Arrow left
-            GridFunctions.simulateCellKeydown(newCell, 'End');
-            await wait(DEBOUNCETIME);
-            zone.simulateOnStable();
-            fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            zone.simulateOnStable();
-            fix.detectChanges();
-
-            newCell = treeGrid.getCellByColumn(0, columns[4]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toEqual(scrollLeft);
-
-            for (let i = 4; i > 0 ; i--) {
-                let cell = treeGrid.getCellByColumn(0, columns[i]);
-                GridFunctions.simulateCellKeydown(cell, 'ArrowLeft');
-                await wait(DEBOUNCETIME);
-                zone.simulateOnStable();
-                fix.detectChanges();
-                await wait(DEBOUNCETIME);
-                zone.simulateOnStable();
-                fix.detectChanges();
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
-                cell = treeGrid.getCellByColumn(0, columns[i - 1]);
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            }
-
-            expect(treeGrid.headerContainer.getScroll().scrollLeft).toEqual(0);
         });
 
         it('should select correct cells after expand/collapse row', async () => {
