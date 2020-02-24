@@ -1535,7 +1535,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.element).toBeDefined();
             expect(mockFunc).toBeDefined();
         });
-        fit('should restore position of dropdown scroll after opening', (async () => {
+        it('should restore position of dropdown scroll after opening', (async () => {
             const virtDir = combo.virtualScrollContainer;
             spyOn(combo.dropdown, 'onToggleOpening').and.callThrough();
             spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
