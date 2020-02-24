@@ -58,13 +58,46 @@ export class UIInteractions {
      * Clicks an element - native or debug, by dispatching pointerdown, focus, pointerup and click events.
      * @param element - Native or debug element.
      */
-    public static clickElement(element) {
+    public static clickElement(
+        element,
+        horizontal: HorizontalAlignment = HorizontalAlignment.Left,
+        vertical: VerticalAlignment = VerticalAlignment.Top) {
         const nativeElement = element.nativeElement ? element.nativeElement : element;
-        const elementRect = nativeElement.getBoundingClientRect();
-        UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
+        const point: Point = this.elementPointFromDirection(nativeElement, horizontal, vertical);
+        UIInteractions.simulatePointerEvent('pointerdown', nativeElement, point.x, point.y);
         nativeElement.dispatchEvent(new Event('focus'));
-        UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('click', { bubbles: true}));
+        UIInteractions.simulatePointerEvent('pointerup', nativeElement, point.x, point.y);
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+    }
+
+    public static elementPointFromDirection (element: Element, horizontal: HorizontalAlignment, vertical: VerticalAlignment): Point {
+        const elementRect = element.getBoundingClientRect();
+        const point: Point = { x: 0, y: 0};
+        switch (horizontal) {
+            case HorizontalAlignment.Left:
+                point.x = elementRect.left;
+                break;
+            case HorizontalAlignment.Center:
+                point.x = elementRect.left + elementRect.width / 2;
+                break;
+            case HorizontalAlignment.Right:
+                point.x = elementRect.right;
+                break;
+        }
+
+        switch (vertical) {
+            case VerticalAlignment.Top:
+                point.y = elementRect.top;
+                break;
+            case VerticalAlignment.Middle:
+                point.y = elementRect.top + elementRect.height / 2;
+                break;
+            case VerticalAlignment.Bottom:
+                point.y = elementRect.bottom;
+                break;
+        }
+
+        return point;
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
