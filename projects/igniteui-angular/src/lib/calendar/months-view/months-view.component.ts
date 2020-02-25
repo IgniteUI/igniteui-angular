@@ -131,7 +131,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * @hidden
      */
     @ViewChildren(IgxCalendarMonthDirective, { read: IgxCalendarMonthDirective })
-    public dates: QueryList<IgxCalendarMonthDirective>;
+    public monthsRef: QueryList<IgxCalendarMonthDirective>;
 
 
     /**
@@ -263,12 +263,12 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
         if (!node) {
             return;
         }
 
-        const months = this.dates.toArray();
+        const months = this.monthsRef.toArray();
         const nodeRect = node.nativeElement.getBoundingClientRect();
 
         for (let index = months.indexOf(node) - 1; index >= 0; index--) {
@@ -289,12 +289,12 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
         if (!node) {
             return;
         }
 
-        const months = this.dates.toArray();
+        const months = this.monthsRef.toArray();
         const nodeRect = node.nativeElement.getBoundingClientRect();
 
         for (let index = months.indexOf(node) + 1; index < months.length; index++) {
@@ -315,10 +315,10 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
         if (!node) { return; }
 
-        const months = this.dates.toArray();
+        const months = this.monthsRef.toArray();
         if (months.indexOf(node) + 1 < months.length) {
             const month = months[months.indexOf(node) + 1];
 
@@ -334,10 +334,10 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const node = this.dates.find((date) => date.nativeElement === event.target);
+        const node = this.monthsRef.find((date) => date.nativeElement === event.target);
         if (!node) { return; }
 
-        const months = this.dates.toArray();
+        const months = this.monthsRef.toArray();
         if (months.indexOf(node) - 1 >= 0) {
             const month = months[months.indexOf(node) - 1];
 
@@ -353,7 +353,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const month = this.dates.toArray()[0];
+        const month = this.monthsRef.toArray()[0];
 
         month.nativeElement.focus();
     }
@@ -366,7 +366,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
         event.preventDefault();
         event.stopPropagation();
 
-        const months = this.dates.toArray();
+        const months = this.monthsRef.toArray();
         const month = months[months.length - 1];
 
         month.nativeElement.focus();
@@ -377,7 +377,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      */
     @HostListener('keydown.enter', ['$event'])
     public onKeydownEnter(event) {
-        const value = this.dates.find((date) => date.nativeElement === event.target).value;
+        const value = this.monthsRef.find((date) => date.nativeElement === event.target).value;
         this.date = new Date(value.getFullYear(), value.getMonth(), this.date.getDate());
 
         this.onSelection.emit(this.date);
