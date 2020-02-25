@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, NgZone } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
@@ -52,6 +52,7 @@ export class IgxSummaryCellComponent {
     @HostListener('click')
     public activate() {
         this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex};
+        this.grid.cdr.detectChanges();
     }
 
     protected get selectionNode(): ISelectionNode {

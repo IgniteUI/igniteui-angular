@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -2606,7 +2606,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const key = event.key.toLowerCase();
         if (SUPPORTED_KEYS.has(key) || key === 'pagedown' || key === 'pageup' ||
             (key === 'tab' && this.crudService.cell)) {
-           // console.log('GRIDKeyDown', event);
             this.navigation.dispatchEvent(event);
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
@@ -2622,6 +2621,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
+        /** @hidden @internal */
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
@@ -2869,7 +2869,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.nativeElement.addEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
@@ -5224,13 +5223,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             visibleColIndex = -1;
         }
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex);
-        const isDetailsRow = this.navigation.getRowByIndex(rowIndex)?.classList.contains('igx-grid__tr-container');
-        const shouldScrollHorizontally = !isDetailsRow && visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
             this.navigation.performVerticalScrollToCell(rowIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }

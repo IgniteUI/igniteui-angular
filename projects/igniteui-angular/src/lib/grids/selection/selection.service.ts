@@ -410,9 +410,9 @@ export class IgxGridSelectionService {
 
         // Focus triggered by keyboard navigation
         if (kbState.active) {
-            if (isChromium()) {
+/*             if (isChromium()) {
                 this._moveSelectionChrome(dom);
-            }
+            } */
             // Start generating a range if shift is hold
             if (kbState.shift) {
                 this.dragSelect(node, kbState);

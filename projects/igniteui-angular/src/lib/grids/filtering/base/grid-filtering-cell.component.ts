@@ -82,7 +82,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     public onTabKeyDown(eventArgs) {
 
         if (this.isLastElementFocused()) {
-            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs);
+            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs, false);
         }
         eventArgs.stopPropagation();
     }
@@ -90,7 +90,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
-            this.filteringService.grid.navigation.navigatePrevFilterCell(this.column, eventArgs);
+            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs, true);
         }
         eventArgs.stopPropagation();
     }

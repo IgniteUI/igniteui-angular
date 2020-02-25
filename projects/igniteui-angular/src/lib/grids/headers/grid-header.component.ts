@@ -114,9 +114,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('attr.id')
     get headerID() {
         return `${this.gridID}_${this.column.field}`;

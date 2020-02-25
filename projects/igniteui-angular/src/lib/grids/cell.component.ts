@@ -729,7 +729,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerdown = (event: PointerEvent) => {
-        this.grid.navigation.activeNode = this.selectionNode;
         if (!isLeftClick(event)) {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
@@ -737,6 +736,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
+        this.grid.navigation.activeNode = this.selectionNode;
+        this.activate(event);
     }
 
     /**
@@ -792,7 +793,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        this.grid.navigation.activeNode = this.selectionNode;
+        if (this.cellSelectionMode !== GridSelectionMode.multiple) {
+            this.grid.navigation.activeNode = this.selectionNode;
+            this.activate(event);
+        }
         this.grid.onCellClick.emit({
             cell: this,
             event
@@ -836,7 +840,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.grid.isCellSelectable && shouldEmitSelection) {
             this.grid.onSelection.emit({ cell: this, event });
         }
-        this.cdr.detectChanges();
+        this.grid.cdr.detectChanges();
     }
 
     /**
