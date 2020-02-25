@@ -3,7 +3,8 @@ import {
     HostListener,
     ViewChild,
     HostBinding,
-    Input
+    Input,
+    ElementRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
@@ -87,6 +88,12 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
+    @ViewChild('yearsBtn')
+    public yearsBtn: ElementRef;
+
+    /**
+     * @hidden
+     */
     public yearAction = '';
 
     /**
@@ -133,7 +140,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public nextYear() {
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -156,7 +163,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
      */
     public previousYear() {
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
 
         this.selectDate(this.viewDate);
         this.onSelection.emit(this.selectedDates);
@@ -231,7 +238,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'prev';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', -1);
+        this.viewDate = this.calendarModel.getPrevYear(this.viewDate);
     }
 
     /**
@@ -241,7 +248,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     public onKeydownPageDown(event: KeyboardEvent) {
         event.preventDefault();
         this.yearAction = 'next';
-        this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', 1);
+        this.viewDate = this.calendarModel.getNextYear(this.viewDate);
     }
 
     /**

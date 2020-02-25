@@ -219,8 +219,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether to autogenerate the columns.
-     *@remarks
-     * The default value is false.
+     * @remarks
+     * The default value is false. When set to true, it will override all columns declared through code or in markup.
      * @example
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
