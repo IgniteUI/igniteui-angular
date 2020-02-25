@@ -841,9 +841,9 @@ describe('Multi-View Calendar - ', () => {
         })));
 
         it('When select a new month - should come at correct position', fakeAsync(() => {
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+            const secondMonthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[2];
-            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            UIInteractions.simulateKeyDownEvent(secondMonthPicker, 'Enter');
             fixture.detectChanges();
             tick(100);
             const months = HelperTestFunctions.getMonthsFromMonthView(fixture);
@@ -878,7 +878,7 @@ describe('Multi-View Calendar - ', () => {
             UIInteractions.simulateKeyDownEvent(months[11], 'Enter');
             fixture.detectChanges();
             tick(100);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-11-12'), new Date('2019-12-1'), new Date('2020-1-2')]);
         }));
 
         it('When select a new year - should come at correct position', fakeAsync(() => {
@@ -887,9 +887,9 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
 
-            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
+            const secondYearPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[3];
-            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            UIInteractions.simulateKeyDownEvent(secondYearPicker, 'Enter');
             fixture.detectChanges();
             tick(150);
             fixture.detectChanges();
@@ -920,7 +920,7 @@ describe('Multi-View Calendar - ', () => {
             tick(100);
             fixture.detectChanges();
 
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2021-12-12'), new Date('2022-1-1'), new Date('2022-2-2')]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2020-12-12'), new Date('2021-1-1'), new Date('2021-2-2')]);
         }));
 
     });
