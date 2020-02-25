@@ -566,6 +566,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
          // collapse
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+        await wait(100);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
@@ -574,6 +575,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // expand
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+        await wait(100);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
