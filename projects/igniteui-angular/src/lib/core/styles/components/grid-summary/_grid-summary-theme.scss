@@ -159,6 +159,13 @@
         }
     }
 
+    %igx-grid-summary--pinned-first {
+        border-#{$left}: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        @media print {
+            border-left: map-get($cell-pin, 'style') #999;
+        }
+    }
+
     %igx-grid-summary__item {
         display: flex;
         align-items: center;
