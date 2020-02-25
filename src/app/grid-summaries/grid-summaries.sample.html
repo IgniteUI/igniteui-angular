@@ -1,4 +1,4 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
+<igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
     [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
     <igx-column field="Index" header="Index" [width]="cw">
     </igx-column>
@@ -48,6 +48,7 @@
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
 <igx-switch [(ngModel)]="grid1.columnHiding">columnHiding</igx-switch>
 <igx-switch [(ngModel)]="grid1.columnPinning">columnPinning</igx-switch>
+<igx-switch (change)='onChange()'>Left Pinning toggle</igx-switch>
 <igx-switch [(ngModel)]="grid1.showToolbar">showToolbar</igx-switch>
 <igx-switch [(ngModel)]="groupable">ReorderLevel groupable</igx-switch>
 <igx-switch [(ngModel)]="filterable">ReorderLevel filterable</igx-switch>

@@ -969,6 +969,23 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(cell.visibleColumnIndex).toEqual(2);
             expect(cell.nativeElement.classList.contains('igx-grid__td--pinned')).toBe(false);
         }));
+
+        it('should be applied correctly even on the right side', (() => {
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            hierarchicalGrid.columnList.find(x => x.field === 'ID').pinned = true;
+            hierarchicalGrid.pinning.columns = 1;
+            hierarchicalGrid.cdr.detectChanges();
+            const rightMostGridPart = hierarchicalGrid.nativeElement.getBoundingClientRect().right;
+            const leftMostGridPart = hierarchicalGrid.nativeElement.getBoundingClientRect().left;
+            const leftMostRightPinnedCellsPart = hierarchicalGrid.getCellByColumn(0, 'ID').nativeElement.getBoundingClientRect().left;
+            const pinnedCellWidth = hierarchicalGrid.getCellByColumn(0, 'ID').width;
+            // Expects that right pinning has been in action
+            expect(leftMostGridPart !== leftMostRightPinnedCellsPart).toBeTruthy();
+            // Expects that pinned column is in the visible grid's area
+            expect(leftMostRightPinnedCellsPart < rightMostGridPart).toBeTruthy();
+            // Expects that the whole pinned column is visible
+            expect(leftMostRightPinnedCellsPart + Number.parseInt(pinnedCellWidth, 10) < rightMostGridPart).toBeTruthy();
+        }));
     });
 });
 
