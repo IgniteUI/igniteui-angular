@@ -184,7 +184,7 @@ function typedocBuildExportFn(cb) {
 }
 
 function typedocImportJsonFn(cb) {
-    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-from-json", TYPEDOC.EXPORT_JSON_PATH],
+    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-from-json", TYPEDOC.EXPORT_JSON_PATH, "--warns"],
         { stdio: 'inherit', shell: true});
     cb();
 }
@@ -206,6 +206,7 @@ function typedocBuildDocsJA (cb) {
             slash(path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')),
             '--templateStrings',
             TYPEDOC.TEMPLATE_STRINGS_PATH,
+            '--warns',
             '--localize',
             'jp'], { stdio: 'inherit', shell: true });
 
