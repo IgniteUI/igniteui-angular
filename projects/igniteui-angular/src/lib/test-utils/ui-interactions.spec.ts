@@ -65,6 +65,16 @@ export class UIInteractions {
         }
     }
 
+    public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
+        element.value = text;
+        element.dispatchEvent(new Event('keydown'));
+        element.dispatchEvent(new Event('input'));
+        element.dispatchEvent(new Event('keyup'));
+        if (fix) {
+            fix.detectChanges();
+        }
+    }
+
     public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
         inputElement.nativeElement.value = inputValue;
         inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
