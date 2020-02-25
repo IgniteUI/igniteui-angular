@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, NgZone, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy, DebugElement } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,7 +14,6 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { TestNgZone } from '../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
@@ -915,7 +914,6 @@ describe('igxCombo', () => {
         }));
     });
     describe('Binding tests: ', () => {
-        let zone: TestNgZone;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -931,8 +929,7 @@ describe('igxCombo', () => {
                     IgxToggleModule,
                     ReactiveFormsModule,
                     FormsModule
-                ],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                ]
             }).compileComponents();
         }));
         it('should bind combo data to array of primitive data', () => {
@@ -978,7 +975,6 @@ describe('igxCombo', () => {
             productIndex = 42;
             combo.virtualScrollContainer.scrollTo(productIndex);
             await wait();
-            zone.simulateOnStable();
             fixture.detectChanges();
             verifyComboData();
             // index is at bottom
@@ -988,7 +984,6 @@ describe('igxCombo', () => {
             productIndex = 485;
             combo.virtualScrollContainer.scrollTo(productIndex);
             await wait();
-            zone.simulateOnStable();
             fixture.detectChanges();
             verifyComboData();
             expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
@@ -997,14 +992,12 @@ describe('igxCombo', () => {
             productIndex = 873;
             combo.virtualScrollContainer.scrollTo(productIndex);
             await wait();
-            zone.simulateOnStable();
             fixture.detectChanges();
             verifyComboData();
 
             productIndex = 649;
             combo.virtualScrollContainer.scrollTo(productIndex);
             await wait();
-            zone.simulateOnStable();
             fixture.detectChanges();
             verifyComboData();
         }));
@@ -1029,7 +1022,6 @@ describe('igxCombo', () => {
             // Scroll selected items out of view
             combo.virtualScrollContainer.scrollTo(40);
             await wait();
-            zone.simulateOnStable();
             fixture.detectChanges();
             combo.handleClearItems(spyObj);
             expect(combo.selectedItems()).toEqual([]);
@@ -1114,7 +1106,6 @@ describe('igxCombo', () => {
         }));
     });
     describe('Dropdown tests: ', () => {
-        let zone: TestNgZone;
         describe('complex data dropdown: ', () => {
             let dropdown: IgxComboDropDownComponent;
             configureTestSuite();
@@ -1129,8 +1120,7 @@ describe('igxCombo', () => {
                         IgxToggleModule,
                         ReactiveFormsModule,
                         FormsModule
-                    ],
-                    providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                    ]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1192,7 +1182,6 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toBeFalsy();
                 combo.virtualScrollContainer.scrollTo(51);
                 await wait(30);
-                zone.simulateOnStable();
                 fixture.detectChanges();
                 let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                 let lastItem = items[items.length - 1].componentInstance;
@@ -1231,7 +1220,6 @@ describe('igxCombo', () => {
                 // TEST move from first item
                 combo.virtualScrollContainer.scrollTo(0);
                 await wait();
-                zone.simulateOnStable();
                 fixture.detectChanges();
                 const firstItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[0].componentInstance;
                 firstItem.clicked(mockClick);
@@ -1408,7 +1396,7 @@ describe('igxCombo', () => {
                 expect(scrollbar.scrollTop).toEqual(0);
                 // Scroll to bottom;
                 UIInteractions.triggerEventHandlerKeyDown('End', dropdownContent);
-                await wait();
+                await wait(30);
                 fixture.detectChanges();
                 // Content was scrolled to bottom
                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
@@ -1450,8 +1438,7 @@ describe('igxCombo', () => {
                         IgxToggleModule,
                         ReactiveFormsModule,
                         FormsModule
-                    ],
-                    providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                    ]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -1479,7 +1466,6 @@ describe('igxCombo', () => {
                 // Scroll to top
                 UIInteractions.triggerEventHandlerKeyDown('Home', dropdownContent);
                 await wait(30);
-                zone.simulateOnStable();
                 fixture.detectChanges();
                 dropdownContainer = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
                 firstVisibleItem = dropdownContainer.querySelector(`.${CSS_CLASS_DROPDOWNLISTITEM}` + ':first-child');
@@ -1503,7 +1489,6 @@ describe('igxCombo', () => {
         });
     });
     describe('Virtualization tests: ', () => {
-        let zone: TestNgZone;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -1516,8 +1501,7 @@ describe('igxCombo', () => {
                     IgxToggleModule,
                     ReactiveFormsModule,
                     FormsModule
-                ],
-                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+                ]
             }).compileComponents();
         }));
         beforeEach(fakeAsync(() => {
@@ -1563,7 +1547,6 @@ describe('igxCombo', () => {
             expect(combo.dropdown.onToggleClosing).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleClosed).toHaveBeenCalledTimes(1);
             combo.toggle();
-            zone.simulateOnStable();
             await wait(30);
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
