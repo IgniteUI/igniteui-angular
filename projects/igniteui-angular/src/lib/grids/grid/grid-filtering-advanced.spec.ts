@@ -24,7 +24,6 @@ const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-item';
-const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
@@ -222,22 +221,15 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix), 'and');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            verifyEditModeExpressionInputStates(fix, true, false, false);
+            verifyEditModeExpressionInputStates(fix, true, false, false, false);
 
             // Verify the edit inputs are empty.
             verifyEditModeExpressionInputValues(fix, '', '', '');
 
-            // Verify commit expression button is disabled.
-            const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
-            // Verify close expression button is enabled.
-            const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
-            expect(closeButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
-
             // Verify adding buttons are disabled.
             const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
             for (const button of buttons) {
-                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
+                expect(ControlsFunction.isButtonEnabled(button)).toBe(false);
             }
         }));
 
@@ -260,22 +252,15 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix), 'or');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            verifyEditModeExpressionInputStates(fix, true, false, false);
+            verifyEditModeExpressionInputStates(fix, true, false, false, false);
 
             // Verify the edit inputs are empty.
             verifyEditModeExpressionInputValues(fix, '', '', '');
 
-            // Verify commit expression button is disabled.
-            const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
-            // Verify close expression button is enabled.
-            const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
-            expect(closeButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
-
             // Verify adding buttons are disabled.
             const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
             for (const button of buttons) {
-                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
+                expect(ControlsFunction.isButtonEnabled(button)).toBe(false);
             }
         }));
 
@@ -289,25 +274,18 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            // Verify commit button is disabled.
-            let commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
-
             // Verify the enabled/disabled state of each input of the expression in edit mode.
-            verifyEditModeExpressionInputStates(fix, true, false, false);
+            verifyEditModeExpressionInputStates(fix, true, false, false, false);
 
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-            verifyEditModeExpressionInputStates(fix, true, true, false);
+            verifyEditModeExpressionInputStates(fix, true, true, false, false);
 
             selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
-            verifyEditModeExpressionInputStates(fix, true, true, true);
+            verifyEditModeExpressionInputStates(fix, true, true, true, false);
 
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             sendInputNativeElement(fix, input, 'ign'); // Type filter value.
-
-            // Verify commit button is now enabled.
-            commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
-            expect(commitButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
+            verifyEditModeExpressionInputStates(fix, true, true, true, true);
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -569,7 +547,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
             selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
-            verifyEditModeExpressionInputStates(fix, true, true, false); // Third input should be disabled for unary operators.
+            verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -609,7 +587,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column.
             selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
-            verifyEditModeExpressionInputStates(fix, true, true, false); // Third input should be disabled for unary operators.
+            verifyEditModeExpressionInputStates(fix, true, true, false, true); // Third input should be disabled for unary operators.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix, true);
             input.click();
             fix.detectChanges();
@@ -654,7 +632,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
-            verifyEditModeExpressionInputStates(fix, true, true, true);
+            verifyEditModeExpressionInputStates(fix, true, true, true, false);
             const input = GridFunctions.getAdvancedFilteringValueInput(fix, true);
             input.click();
             fix.detectChanges();
@@ -665,6 +643,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             todayItem.click();
             tick(100);
             fix.detectChanges();
+
+            verifyEditModeExpressionInputStates(fix, true, true, true, true);
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -951,7 +931,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             let dropdownValues: string[] = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             let expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
                                   'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];
-            verifyEqualArrays(dropdownValues, expectedValues);
+            expect(dropdownValues).toEqual(expectedValues);
 
             // Close current dropdown by a random select.
             GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, 0);
@@ -966,7 +946,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             expectedValues = ['Equals', 'Does Not Equal', 'Greater Than', 'Less Than', 'Greater Than Or Equal To',
                               'Less Than Or Equal To', 'Empty', 'Not Empty', 'Null', 'Not Null'];
-            verifyEqualArrays(dropdownValues, expectedValues);
+            expect(dropdownValues).toEqual(expectedValues);
         }));
 
         it('Operator dropdown should contain operators based on the column\'s datatype (\'date\' or \'boolean\').', fakeAsync(() => {
@@ -988,7 +968,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             let expectedValues = ['Equals', 'Does Not Equal', 'Before', 'After', 'Today', 'Yesterday',
                                   'This Month', 'Last Month', 'Next Month', 'This Year', 'Last Year',
                                   'Next Year', 'Empty', 'Not Empty', 'Null', 'Not Null'];
-            verifyEqualArrays(dropdownValues, expectedValues);
+            expect(dropdownValues).toEqual(expectedValues);
 
             // Close current dropdown by a random select.
             GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, 0);
@@ -1002,7 +982,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             expectedValues = ['All', 'True', 'False', 'Empty', 'Not Empty', 'Null', 'Not Null'];
-            verifyEqualArrays(dropdownValues, expectedValues);
+            expect(dropdownValues).toEqual(expectedValues);
         }));
 
         it('Should not commit and close currently edited condition when the \'close\' button is clicked.', fakeAsync(() => {
@@ -1399,7 +1379,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const buttons = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [0], 0);
             expect(buttons.length).toBe(4);
             for (const button of buttons) {
-                expect(button.classList.contains(BUTTON_DISABLED_CLASS)).toBe(false);
+                expect(ControlsFunction.isButtonEnabled(button)).toBe(true);
             }
 
             // Click the cancel button to hide the buttons.
@@ -1648,14 +1628,14 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 .toBeNull('actions container is visible');
 
             // Hover the first chip and verify actions container is visible.
-            hoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
+            UIInteractions.hoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
             tick(50);
             fix.detectChanges();
             expect(GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, [0]))
                 .not.toBeNull('actions container is not visible');
 
             // Unhover the first chip and verify actions container is not visible.
-            unhoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
+            UIInteractions.unhoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
             tick(50);
             fix.detectChanges();
             expect(GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, [0]))
@@ -2227,7 +2207,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
                 // Verify the ungroup button is disabled.
                 const ungroupButton = GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3];
-                expect(ungroupButton.classList.contains(BUTTON_DISABLED_CLASS)).toBe(true);
+                expect(ControlsFunction.isButtonEnabled(ungroupButton)).toBe(false);
             }));
 
             it('Should delete the group from the tree when click \'delete\' from context menu.',
@@ -2749,14 +2729,6 @@ function sendInputNativeElement(fix, nativeElement, text) {
     fix.detectChanges();
 }
 
-function hoverElement(element: HTMLElement, bubbles: boolean = false) {
-    element.dispatchEvent(new MouseEvent('mouseenter', { bubbles: bubbles }));
-}
-
-function unhoverElement(element: HTMLElement, bubbles: boolean = false) {
-    element.dispatchEvent(new MouseEvent('mouseleave', { bubbles: bubbles }));
-}
-
 /**
 * Verifies the type of the operator line ('and' or 'or').
 * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -2824,7 +2796,8 @@ function verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean)
 function verifyEditModeExpressionInputStates(fix,
                                              columnSelectEnabled: boolean,
                                              operatorSelectEnabled: boolean,
-                                             valueInputEnabled: boolean) {
+                                             valueInputEnabled: boolean,
+                                             commitButtonEnabled: boolean) {
     // Verify the column select state.
     const columnInputGroup = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('igx-input-group');
     expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
@@ -2841,6 +2814,14 @@ function verifyEditModeExpressionInputStates(fix,
         Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
     expect(!valueInputGroup.classList.contains('igx-input-group--disabled')).toBe(valueInputEnabled,
         'incorrect value input state');
+
+    // Verify commit expression button state
+    const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+    expect(ControlsFunction.isButtonEnabled(commitButton)).toBe(commitButtonEnabled, 'incorrect commit button state');
+
+    // Verify close expression button is enabled.
+    const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
+    expect(ControlsFunction.isButtonEnabled(closeButton)).toBe(true);
 }
 
 function verifyEditModeExpressionInputValues(fix,
@@ -2893,14 +2874,5 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
         expect(contextMenuButtons[1].innerText.toLowerCase().trim()).toBe('create "and" group');
         expect(contextMenuButtons[2].innerText.toLowerCase().trim()).toBe('create "or" group');
         expect(contextMenuButtons[3].innerText.toLowerCase().trim()).toBe('delete filters');
-    }
-}
-
-function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
-    expect(firstArr.length).toEqual(secondArr.length, 'Array lengths mismatch.');
-    // Verify sorted arrays have equal respective elements.
-    const len = firstArr.length;
-    for (let index = 0; index < len; index++) {
-        expect(firstArr[index]).toBe(secondArr[index], 'Array element mismatch.');
     }
 }
