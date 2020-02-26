@@ -9,9 +9,6 @@
       "hammerjs"
     ]
   },
-  "angularCompilerOptions": {
-    "enableIvy": false
-  },
   "files": [
     "src/test.ts"
   ],
