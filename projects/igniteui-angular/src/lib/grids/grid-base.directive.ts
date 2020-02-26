@@ -4553,7 +4553,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (diff) {
             let added = false;
             let removed = false;
-            
+
             this.initColumns(this.columnList);
 
 
