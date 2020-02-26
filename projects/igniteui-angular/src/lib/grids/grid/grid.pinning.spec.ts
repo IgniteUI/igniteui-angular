@@ -422,19 +422,19 @@ describe('IgxGrid - Column Pinning #grid', () => {
     describe('To End', () => {
         configureTestSuite();
 
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const FIRST_PINNED_CELL_CSS = 'igx-grid__td--pinned-first';
+        const COLUMN_HEADER_CLASS = '.igx-grid__th';
+        const FIRST_PINNED_CELL_CSS = 'igx-grid__td--pinned-first';
 
-    beforeAll(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                GridRightPinningComponent,
-                PinnedGroupsGridComponent,
-                GridRightPinningMRLComponent
-            ],
-            imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    GridRightPinningComponent,
+                    PinnedGroupsGridComponent,
+                    GridRightPinningMRLComponent
+                ],
+                imports: [NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
 
         it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
             const fix = TestBed.createComponent(GridRightPinningComponent);
@@ -603,31 +603,24 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(pinnedSummaryCells[1].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
                 .toBe(-1);
         });
-    });
-});
-        // check correct headers have left border
-        const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
-        .queryAll((By.css('.igx-grid__th--pinned-first')));
-        expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
-        expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
-    });
 
-    it('should correctly pin multi-row-layouts to end.', () => {
-        const fix = TestBed.createComponent(GridRightPinningMRLComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-        // check row DOM
-        const row = grid.getRowByIndex(0).nativeElement;
-        expect(row.children[0].classList.contains('igx-display-container')).toBeTruthy();
-        expect(row.children[1].classList.contains('igx-grid__td--pinned-first')).toBeTruthy();
-        expect(row.children[1].classList.contains('igx-grid__mrl-block')).toBeTruthy();
-        expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
+        it('should correctly pin multi-row-layouts to end.', () => {
+            const fix = TestBed.createComponent(GridRightPinningMRLComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            // check row DOM
+            const row = grid.getRowByIndex(0).nativeElement;
+            expect(row.children[0].classList.contains('igx-display-container')).toBeTruthy();
+            expect(row.children[1].classList.contains('igx-grid__td--pinned-first')).toBeTruthy();
+            expect(row.children[1].classList.contains('igx-grid__mrl-block')).toBeTruthy();
+            expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
-        // check correct headers have left border
-        const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
-            .query((By.css('.igx-grid__th--pinned-first')));
-        expect(fistPinnedHeaders.classes['igx-grid__mrl-block']).toBeTruthy();
-        expect(fistPinnedHeaders.classes['igx-grid__th--pinned-first']).toBeTruthy();
+            // check correct headers have left border
+            const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
+                .query((By.css('.igx-grid__th--pinned-first')));
+            expect(fistPinnedHeaders.classes['igx-grid__mrl-block']).toBeTruthy();
+            expect(fistPinnedHeaders.classes['igx-grid__th--pinned-first']).toBeTruthy();
+        });
     });
 });
 
