@@ -1313,6 +1313,7 @@
         // this is causing an issue https://github.com/IgniteUI/igniteui-angular/issues/4981
         // border-bottom: 0;
     }
+
     %grid-cell--pinned--column-selected {
         color: --var($theme, 'row-selected-text-color');
         background: --var($theme, 'row-selected-background');
@@ -1455,17 +1456,17 @@
             background: --var($theme, 'row-selected-hover-background');
             color: --var($theme, 'row-selected-text-color');
         }
-
     }
-    %igx-grid__th--sortable {
-            .sort-icon {
-                cursor: pointer;
-                opacity: .7;
 
-                &:hover {
-                    opacity: 1;
-                }
+    %igx-grid__th--sortable {
+        .sort-icon {
+            cursor: pointer;
+            opacity: .7;
+
+            &:hover {
+                opacity: 1;
             }
+        }
     }
 
     %igx-grid__th--sorted {

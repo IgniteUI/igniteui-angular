@@ -168,7 +168,6 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[1].field).toEqual('ID');
             expect(columnsList[2].field).toEqual('LastName');
 
-
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
             UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
@@ -183,10 +182,9 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             expect(grid.columns[0].width).toEqual('250px');
 
-
             // step 3 - verify sorting is not broken
-            headers[0].triggerEventHandler('click', new Event('click'));
-            headers[0].triggerEventHandler('click', new Event('click'));
+            headers[0].query(By.css('.sort-icon')).triggerEventHandler('click', new Event('click'));
+            headers[0].query(By.css('.sort-icon')).triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(6);
