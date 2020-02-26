@@ -421,10 +421,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     describe('To End', () => {
         configureTestSuite();
-
-        const COLUMN_HEADER_CLASS = '.igx-grid__th';
-        const FIRST_PINNED_CELL_CSS = 'igx-grid__td--pinned-first';
-
         beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
