@@ -44,6 +44,15 @@
     </div>
 </ng-template>
 
+<ng-template #defaultExcelStyleSelectingTemplate>
+    <div class="igx-excel-filter__actions-select"
+    tabindex="0"
+    (click)="onSelect()">
+        <span>{{grid.resourceStrings.igx_grid_excel_select }}</span>
+        <igx-checkbox  [checked]="column.selected" [disableRipple]="true" [readonly]="true"></igx-checkbox>
+    </div>
+</ng-template>
+
 <article #dropdown
     *ngIf="column"
     class="igx-excel-filter__menu"
@@ -57,6 +66,9 @@
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>
         <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
+            <igx-checkbox *ngIf="column.selectable"
+                [(ngModel)]="column.selected" [disableRipple]="true">
+            </igx-checkbox>
             <button *ngIf="!column.disablePinning && !column.pinned"
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
@@ -100,6 +112,10 @@
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
         </div>
 
+        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
+            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
+        </div>
+
         <div
             tabindex="0"
             [ngClass]="clearFilterClass()"
@@ -117,7 +133,7 @@
             [igxDropDownItemNavigation]="subMenu" >
             <span>{{ subMenuText }}</span>
             <igx-icon>keyboard_arrow_right</igx-icon>
-        </div>
+    </div>
     </section>
 
     <igx-excel-style-search
@@ -136,7 +152,7 @@
     </footer>
 </article>
 
-<igx-drop-down 
+<igx-drop-down
     *ngIf="column"
     #subMenu
     [maxHeight]="'397px'"
@@ -145,8 +161,8 @@
     (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
-            *ngFor="let condition of conditions"
-            [value]="condition">
+        *ngFor="let condition of conditions"
+        [value]="condition">
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
@@ -158,11 +174,11 @@
 </igx-drop-down>
 
 <igx-excel-style-custom-dialog
-    *ngIf="column"
-    #customDialog
-    [column]="column"
-    [filteringService]="filteringService"
-    [overlayComponentId]="overlayComponentId"
-    [overlayService]="overlayService"
-    [displayDensity]="grid.displayDensity">
+*ngIf="column"
+#customDialog
+[column]="column"
+[filteringService]="filteringService"
+[overlayComponentId]="overlayComponentId"
+[overlayService]="overlayService"
+[displayDensity]="grid.displayDensity">
 </igx-excel-style-custom-dialog>

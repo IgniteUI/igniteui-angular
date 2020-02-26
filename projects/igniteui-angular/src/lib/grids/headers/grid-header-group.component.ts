@@ -195,7 +195,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isHeaderDragged(): boolean {
-        return this.grid.draggedColumn ===  this.column;
+        return this.grid.draggedColumn === this.column;
     }
 
     /**
@@ -222,6 +222,33 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
+    public groupClicked(event): void {
+        if (this.column.selectable) {
+            const columnsToSelect = [];
+            this.column.allChildren.forEach(child => {
+                if (!child.columnGroup && !child.hidden && child.selectable) {
+                    columnsToSelect.push(child.field);
+                }
+            });
+            if (this.column.selected) {
+                this.grid.selectionService.deselectColumns(columnsToSelect, event);
+            } else {
+                this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+            }
+        }
+    }
+
+    /**
+    * @hidden
+    */
+    public toggleExpandState(event): void {
+        event.stopPropagation();
+        this.column.expanded = !this.column.expanded;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
@@ -233,8 +260,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     constructor(private cdr: ChangeDetectorRef,
-                public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                public element: ElementRef,
-                public colResizingService: IgxColumnResizingService,
-                public filteringService: IgxFilteringService) { }
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public element: ElementRef,
+        public colResizingService: IgxColumnResizingService,
+        public filteringService: IgxFilteringService) { }
 }

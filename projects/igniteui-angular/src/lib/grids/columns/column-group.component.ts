@@ -127,6 +127,28 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public set filters(classRef: any) { }
 
     /**
+     * Gets the column group is selectable
+     * ```typescript
+     * let columnGroupSelectable = this.columnGroup.selectable;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    public get selectable(): boolean {
+        return this._selectable && this.checkSelectableState();
+    }
+    /**
+     *  Sets  whether the column group is selectable.
+     * ```typescript
+     * this.columnGroup.selectable = false;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    public set selectable(value: boolean) {
+        this._selectable = value;
+    }
+
+    /**
      * Returns a reference to the body template.
      * ```typescript
      * let bodyTemplate = this.columnGroup.bodyTemplate;
@@ -206,11 +228,40 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this._hidden || !this.collapsible) {
             this.children.forEach(child => child.hidden = this._hidden);
         } else {
-            this.children.forEach(c =>  {
-                if (c.visibleWhenCollapsed === undefined) {c.hidden = false; return; }
+            this.children.forEach(c => {
+                if (c.visibleWhenCollapsed === undefined) { c.hidden = false; return; }
                 c.hidden = this.expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
             });
         }
+    }
+
+    /**
+     * Gets whether the column group is selected.
+     * ```typescript
+     * let isSelected = this.columnGroup.selected;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    get selected(): boolean {
+        return this.selectable && this.children.toArray().every(c => c.hidden || !c.selectable || (c.selectable && c.selected));
+    }
+    /**
+     * Sets the column group selected property.
+     * ```html
+     * <igx-column [selected] = "true"></igx-column>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    set selected(value: boolean) {
+        this.children.forEach(c => {
+            if (!c.columnGroup) {
+                value ? this.selectionService.selectColumnsWithNoEvent([c.field]) :
+                    this.selectionService.deselectColumnsWithNoEvent([c.field]);
+            } else {
+                c.selected = value;
+            }
+        });
     }
 
     /**

@@ -36,17 +36,22 @@
         role="columnheader"
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expanded"
+        [attr.aria-selected]="column.selected"
         tabindex="0"
         [ngClass]="{
             'igx-grid__th--pinned-last': hasLastPinnedChildColumn,
             'igx-grid__th--pinned-first': hasFirstPinnedChildColumn,
-            'igx-grid__th--collapsible': column.collapsible}"
+            'igx-grid__th--collapsible': column.collapsible,
+            'igx-grid__th--selectable': column.selectable,
+            'igx-grid__th--selected': column.selected}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
-        [igxColumnMovingDrop]="column">
+        [igxColumnMovingDrop]="column"
+        (click)="groupClicked($event)"
+        >
         <ng-container *ngIf="column.collapsible">
-            <div class="igx-grid__th-expander" (click)="column.expanded = !column.expanded">
+            <div class="igx-grid__th-expander" (click)="toggleExpandState($event)">
                 <ng-container
                     *ngTemplateOutlet="column.collapsibleIndicatorTemplate ? column.collapsibleIndicatorTemplate : defaultCollapseIndicator; context: {$implicit: column, column: column}">
                 </ng-container>

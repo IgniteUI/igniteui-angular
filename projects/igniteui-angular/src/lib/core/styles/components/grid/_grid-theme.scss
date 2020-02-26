@@ -1259,6 +1259,16 @@
         }
     }
 
+    %grid-cell--column-selected {
+        color: --var($theme, 'row-selected-text-color');
+        background: --var($theme, 'row-selected-background');
+
+        &:hover {
+            background: --var($theme, 'row-selected-hover-background');
+            color: --var($theme, 'row-selected-text-color');
+        }
+    }
+
     %igx-grid__td--edited {
         %grid-cell-text {
             font-style: italic;
@@ -1302,6 +1312,15 @@
         background: --var($theme, 'cell-selected-background');
         // this is causing an issue https://github.com/IgniteUI/igniteui-angular/issues/4981
         // border-bottom: 0;
+    }
+    %grid-cell--pinned--column-selected {
+        color: --var($theme, 'row-selected-text-color');
+        background: --var($theme, 'row-selected-background');
+
+        &:hover {
+            background: --var($theme, 'row-selected-hover-background');
+            color: --var($theme, 'row-selected-text-color');
+        }
     }
 
     %grid-cell--pinned-last {
@@ -1420,36 +1439,36 @@
         justify-content: normal;
     }
 
-    %igx-grid__th--sortable {
+    %igx-grid__th--selectable {
+          &:hover {
+            color: --var($theme, 'row-selected-text-color');
+            background: --var($theme, 'row-selected-background');
+            opacity: .7;
+        }
+    }
+
+    %igx-grid__th--selected {
+        color: --var($theme, 'row-selected-text-color');
+        background: --var($theme, 'row-selected-background');
+
         &:hover {
-            cursor: pointer;
+            background: --var($theme, 'row-selected-hover-background');
+            color: --var($theme, 'row-selected-text-color');
+        }
 
-            %grid-cell-header-title {
-                cursor: pointer;
-                opacity: 1;
-            }
-
+    }
+    %igx-grid__th--sortable {
             .sort-icon {
+                cursor: pointer;
                 opacity: .7;
 
                 &:hover {
                     opacity: 1;
                 }
             }
-        }
     }
 
     %igx-grid__th--sorted {
-        %grid-cell-header-title {
-            opacity: 1;
-        }
-
-        &:hover{
-            .sort-icon {
-                opacity: 1;
-            }
-        }
-
         .sort-icon {
             opacity: 1;
             color: --var($theme, 'sorted-header-icon-color');

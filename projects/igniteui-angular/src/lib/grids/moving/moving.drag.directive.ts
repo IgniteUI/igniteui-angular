@@ -130,6 +130,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.ghostElement.style.minWidth = null;
         this.ghostElement.style.flexBasis = null;
         this.ghostElement.style.position = null;
+        // Remove column selection classes
+        this.ghostElement.classList.remove('igx-grid__th--selected');
+        this.ghostElement.classList.remove('igx-grid__th--selectable');
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');

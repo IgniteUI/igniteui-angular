@@ -73,6 +73,13 @@ export class IgxExcelStyleHidingTemplateDirective {
 }
 
 @Directive({
+    selector: '[igxExcelStyleSelecting]'
+})
+export class IgxExcelStyleSelectingTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
     selector: '[igxExcelStylePinning]'
 })
 export class IgxExcelStylePinningTemplateDirective {
@@ -259,6 +266,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    @ViewChild('defaultExcelStyleSelectingTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleSelectingTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
 
@@ -340,6 +353,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    public selectClass() {
+        return this.column.searchable ? 'igx-excel-filter__actions-select' : 'igx-excel-filter__actions-select--disabled';
+    }
+
+    /**
+     * @hidden @internal
+     */
     public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = false;
@@ -378,6 +398,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     public onPin() {
         this.column.pinned = !this.column.pinned;
         this.closeDropdown();
+    }
+
+     /**
+     * @hidden @internal
+     */
+    public onSelect() {
+        this.column.selected = !this.column.selected;
     }
 
     /**
@@ -771,6 +798,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             return this.grid.excelStyleHidingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleHidingTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get selectingTemplate() {
+        if (this.grid.excelStyleSelectingTemplateDirective) {
+            return this.grid.excelStyleSelectingTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleSelectingTemplate;
         }
     }
 

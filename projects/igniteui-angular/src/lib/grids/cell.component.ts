@@ -458,6 +458,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.grid.notifyChanges();
     }
 
+    /**
+     * Gets whether the cell column is selected.
+     * ```typescript
+     * let isCellColumnSelected = this.cell.columnSelected;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @HostBinding('class.igx-grid__td--column-selected')
+    get columnSelected() {
+        return this.selectionService.isColumnSelected(this.column.field);
+    }
+
     @HostBinding('class.igx-grid__td--edited')
     get dirty() {
         if (this.grid.rowEditable) {

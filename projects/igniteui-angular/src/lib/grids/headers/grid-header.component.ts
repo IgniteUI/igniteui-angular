@@ -53,6 +53,14 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @Input()
     public gridID: string;
 
+    /**
+     * Returns the `aria-selected` of the header.
+     */
+    @HostBinding('attr.aria-selected')
+    public get ariaSelected(): boolean {
+        return this.column.selected;
+    }
+
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = [
@@ -66,8 +74,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
+            'igx-grid__th--selectable': this.column.selectable,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
-            'igx-grid__th--sorted': this.sorted
+            'igx-grid__th--sorted': this.sorted,
+            'igx-grid__th--selected': this.column.selected
         };
 
         for (const klass of Object.keys(classList)) {
@@ -162,8 +172,16 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
-            } else if (this.column.sortable) {
-                this.triggerSort();
+            } else if (this.column.selectable) {
+                if (event.shiftKey) {
+                    this.grid.selectionService.selectMultipleColumns(this.column.field, event);
+                    return;
+                }
+                if (this.column.selected) {
+                    this.grid.selectionService.deselectColumn(this.column.field, event);
+                } else {
+                    this.grid.selectionService.selectColumn(this.column.field, !event.ctrlKey, event);
+                }
             }
         }
     }
@@ -184,10 +202,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     public onSortingIconClick(event) {
-        if (this.grid.filteringService.isFilterRowVisible) {
-            event.stopPropagation();
-            this.triggerSort();
-        }
+        event.stopPropagation();
+        this.triggerSort();
     }
 
     private triggerSort() {
@@ -197,8 +213,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
             : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
         this.sortDirection = sortDir;
-        this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
-            strategy: this.column.sortStrategy });
+        this.grid.sort({
+            fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
+            strategy: this.column.sortStrategy
+        });
     }
 
     private toggleFilterDropdown() {

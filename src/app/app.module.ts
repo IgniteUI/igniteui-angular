@@ -115,6 +115,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } from './grid-column-selection/grid-column-selection.sample';
 
 const components = [
     AppComponent,
@@ -175,6 +176,8 @@ const components = [
     GridCellEditingComponent,
     GridSampleComponent,
     GridColumnMovingSampleComponent,
+    GridColumnSelectionSampleComponent,
+    GridColumnSelectionFilterPipe,
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,

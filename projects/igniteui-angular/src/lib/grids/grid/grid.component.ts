@@ -1119,6 +1119,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
+    /**
+     * @inheritdoc
+     */
+    getSelectedColumnsData(formatters = false, headers = false): any[] {
+        if (this.groupingExpressions.length) {
+            const source = [];
+
+            const process = (record) => {
+                if (record.expression || record.summaries) {
+                    source.push(null);
+                    return;
+                }
+                source.push(record);
+            };
+
+            this.dataView.forEach(process);
+            return this.extractDataFromColumnsSelection(source, formatters, headers);
+        } else {
+            return super.getSelectedColumnsData(formatters, headers);
+        }
+    }
+
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService();

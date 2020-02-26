@@ -212,12 +212,12 @@ export class IgxGridSelectionService {
     keyboardState = {} as ISelectionKeyboardState;
     pointerState = {} as ISelectionPointerState;
 
-
     selection = new Map<number, Set<number>>();
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
+    columnSelection: Set<string> = new Set<string>();
     private allRowsSelected: boolean;
 
     /**
@@ -698,6 +698,100 @@ export class IgxGridSelectionService {
 
     private isRowDeleted(rowID): boolean {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
+    }
+
+     /** Returns array of the selected columns fields. */
+     getSelectedColumns(): Array<any> {
+        return this.columnSelection.size ? Array.from(this.columnSelection.keys()) : [];
+    }
+
+    isColumnSelected(field: string): boolean {
+        return this.columnSelection.size > 0 && this.columnSelection.has(field);
+    }
+
+    /** Clears columns selection */
+    clearColumnSelection(event?): void {
+        const removedRec = this.getSelectedColumns();
+        this.emitColumnSelectionEvent([], [], removedRec, event);
+    }
+
+     /** Select the specified column and emit event. */
+     selectColumn(field: string, clearPrevSelection?, event?): void {
+       const newSelection = clearPrevSelection ? [field] : this.getSelectedColumns().indexOf(field) !== -1 ?
+            this.getSelectedColumns() : [...this.getSelectedColumns(), field];
+        const removed = clearPrevSelection ? this.getSelectedColumns() : [];
+        this.emitColumnSelectionEvent(newSelection, [field], removed, event);
+    }
+
+     /** Deselect the specified column and emit event. */
+     deselectColumn(field: string, event?): void {
+        if (!this.isColumnSelected(field)) { return; }
+        const newSelection = this.getSelectedColumns().filter(c => c !== field);
+        this.emitColumnSelectionEvent(newSelection, [], [field], event);
+    }
+
+    /** Select specified columns. No event is emitted. */
+    selectColumnsWithNoEvent(fields: string[], clearPrevSelection?): void {
+        if (clearPrevSelection) { this.columnSelection.clear(); }
+        fields.forEach(field => { this.columnSelection.add(field); });
+    }
+
+     /** Select specified columns. And emit event. */
+     selectColumns(fields: string[], clearPrevSelection?, event?): void {
+        const added = fields.filter(colField => !this.isColumnSelected(colField));
+        const removed = clearPrevSelection ? this.getSelectedColumns().filter(colField =>  fields.indexOf(colField) === -1) : [];
+        const newSelection =  clearPrevSelection ? fields : this.getSelectedColumns().concat(added);
+
+        this.emitColumnSelectionEvent(newSelection, added, removed, event);
+    }
+
+     /** Deselect specified columns. No event is emitted. */
+     deselectColumnsWithNoEvent(fields: string[]): void  {
+        fields.forEach(field => this.columnSelection.delete(field));
+    }
+
+     /** Deselect specified columns. And emit event. */
+     deselectColumns(fields: string[], event?): void {
+        const removed = this.getSelectedColumns().filter(colField =>  fields.indexOf(colField) > -1);
+        const newSelection =  this.getSelectedColumns().filter(colField =>  fields.indexOf(colField) === -1);
+
+        this.emitColumnSelectionEvent(newSelection, [], removed, event);
+    }
+
+    /** Select range from last selected column to the current specified column.*/
+    selectMultipleColumns(field: string, event?): void  {
+        if (!this.columnSelection.size) {
+            this.selectColumn(field);
+            return;
+        }
+        const lastColumnField = this.getSelectedColumns()[this.columnSelection.size - 1];
+        const currIndex = this.grid.columnToVisibleIndex(lastColumnField);
+        const newIndex = this.grid.columnToVisibleIndex(field);
+        const columns = this.grid.visibleColumns.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
+        const columnsFields = columns.filter(col => col.selectable).map(col => col.field);
+
+        const added = columnsFields.filter(colField => !this.isColumnSelected(colField));
+        const newSelection = this.getSelectedColumns().concat(added);
+
+        this.emitColumnSelectionEvent(newSelection, added, [], event);
+    }
+
+    public emitColumnSelectionEvent(newSelection, added, removed, event?): boolean {
+        const currSelection = this.getSelectedColumns();
+        if (this.areEqualCollections(currSelection, newSelection)) { return; }
+
+        const args = {
+            oldSelection: currSelection, newSelection: newSelection,
+            added: added, removed: removed, event: event, cancel: false
+        };
+        this.grid.onColumnSelectionChange.emit(args);
+        if (args.cancel) { return; }
+        this.selectColumnsWithNoEvent(args.newSelection, true);
+    }
+
+     /**Clear columnSelection*/
+     public clearAllSelectedColumns(): void {
+        this.columnSelection.clear();
     }
 }
 

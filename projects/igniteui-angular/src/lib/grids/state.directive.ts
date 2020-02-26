@@ -22,6 +22,7 @@ export interface IGridState {
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
     rowSelection?: any[];
+    columnSelection?: string[];
 }
 
 export interface IGridStateOptions {
@@ -33,6 +34,7 @@ export interface IGridStateOptions {
     paging?: boolean;
     cellSelection?: boolean;
     rowSelection?: boolean;
+    columnSelection?: boolean;
 }
 
 export interface IColumnState {
@@ -65,6 +67,7 @@ const GROUPBY = 'groupBy';
 const PAGING = 'paging';
 const ROW_SELECTION = 'rowSelection';
 const CELL_SELECTION = 'cellSelection';
+const COLUMN_SELECTION = 'columnSelection';
 
 @Directive({
     selector: '[igxGridState]'
@@ -79,7 +82,8 @@ export class IgxGridStateDirective {
         groupBy: true,
         paging: true,
         cellSelection: true,
-        rowSelection: true
+        rowSelection: true,
+        columnSelection: true
     };
 
     private state: IGridState;
@@ -216,6 +220,10 @@ export class IgxGridStateDirective {
                 this.restoreCellSelection(state as GridSelectionRange[]);
                 break;
               }
+              case COLUMN_SELECTION: {
+                this.restoreColumnSelection(state as string[]);
+                break;
+              }
          }
     }
 
@@ -273,6 +281,10 @@ export class IgxGridStateDirective {
               }
               case CELL_SELECTION: {
                 Object.assign(state, this.getCellSelection());
+                break;
+              }
+              case COLUMN_SELECTION: {
+                Object.assign(state, this.getColumnSelection());
                 break;
               }
          }
@@ -346,6 +358,11 @@ export class IgxGridStateDirective {
     private getRowSelection(): IGridState {
         const selection = this.grid.selectedRows();
         return { rowSelection: selection };
+    }
+
+    private getColumnSelection(): IGridState {
+        const selection = this.grid.getSelectedColumns();
+        return { columnSelection: selection };
     }
 
     private getCellSelection(): IGridState {
@@ -425,6 +442,10 @@ export class IgxGridStateDirective {
 
     private restoreRowSelection(state: any[]) {
         this.grid.selectRows(state);
+    }
+
+    private restoreColumnSelection(state: string[]) {
+        this.grid.selectColumns(state);
     }
 
     private restoreCellSelection(state: GridSelectionRange[]) {

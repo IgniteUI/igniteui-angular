@@ -623,6 +623,24 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @inheritdoc
+     */
+    getSelectedColumnsData(formatters = false, headers = false): string[] {
+        const source = [];
+
+        const process = (record) => {
+            if (record.summaries) {
+                source.push(null);
+                return;
+            }
+            source.push(record.data);
+        };
+
+        this.dataView.forEach(process);
+        return this.extractDataFromColumnsSelection(source, formatters, headers);
+    }
+
+    /**
     * @hidden
     */
     public get template(): TemplateRef<any> {

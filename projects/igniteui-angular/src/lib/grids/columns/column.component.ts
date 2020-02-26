@@ -44,7 +44,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
-import { ColumnPinningPosition } from '../common/enums';
+import { IgxGridSelectionService } from '../selection/selection.service';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -102,6 +102,32 @@ export class IgxColumnComponent implements AfterContentInit {
     @WatchColumnChanges()
     @Input()
     public sortable = false;
+      /**
+     * Gets whether the column is selectable.
+     * ```typescript
+     * let columnSelectable = this.column.selectable;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges(true)
+    @WatchColumnChanges()
+    @Input()
+    get selectable(): boolean  {
+        return this._selectable;
+    }
+
+     /**
+     * Sets  whether the column is selectable.
+     * Default value is `true`.
+     * ```html
+     * <igx-column [selectable] = "false"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set selectable(value: boolean) {
+        this._selectable = value;
+    }
+
     /**
      * Sets/gets whether the column is groupable.
      * Default value is `false`.
@@ -254,6 +280,37 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.notifyChanges();
             }
         }
+    }
+
+    /**
+     * Gets whether the column is selected.
+     * ```typescript
+     * let isSelected = this.column.selected;
+     * ```
+     *@memberof IgxColumnComponent
+     */
+    @notifyChanges(true)
+    @WatchColumnChanges()
+    @Input()
+    get selected(): boolean {
+        return this.selectionService.isColumnSelected(this.field);
+    }
+    /**
+     * Sets the column selected property.
+     * Default value is `false`.
+     * ```html
+     * <igx-column [selected] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(selected)] = "model.isSelected"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set selected(value: boolean) {
+        value ? this.selectionService.selectColumnsWithNoEvent([this.field]) :
+        this.selectionService.deselectColumnsWithNoEvent([this.field]);
     }
 
     /**
@@ -1224,6 +1281,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _expanded = true;
+       /**
+     * @hidden
+     */
+    protected _selectable = true;
     /**
      * @hidden
      */
@@ -1259,7 +1320,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService) { }
+        public rowIslandAPI: IgxRowIslandAPIService, public selectionService: IgxGridSelectionService) { }
 
     /**
      * @hidden
@@ -1827,6 +1888,15 @@ export class IgxColumnComponent implements AfterContentInit {
         if (!this.children) { return false; }
         const cols = this.children.map(child => child.visibleWhenCollapsed);
         return (cols.some(c => c === true) && cols.some(c => c === false));
+    }
+
+     /**
+     * @hidden
+     * @internal
+     */
+    protected checkSelectableState() {
+        if (!this.children) { return true; }
+        return this.children.some(child => child.selectable);
     }
 
     /**
