@@ -11,6 +11,16 @@ import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/g
 
 export class GridColumnPinningSampleComponent implements OnInit {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
+    public get rightPinning() {
+        return (this.pinningConfig.columns === ColumnPinningPosition.End);
+    }
+    public set rightPinning(rightPinning) {
+        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
+            this.pinningConfig.columns = ColumnPinningPosition.Start;
+        } else {
+            this.pinningConfig.columns = ColumnPinningPosition.End;
+        }
+    }
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;

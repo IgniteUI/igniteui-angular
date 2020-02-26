@@ -44,7 +44,7 @@
                     </ng-template>
                 </div>
             </ng-container>
-            <ng-container *ngIf="pinnedColumns.length > 0">
+            <ng-container *ngIf="pinnedColumns.length > 0 && isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
                     <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
                         [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
@@ -57,6 +57,17 @@
                 <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
                     [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
+            <ng-container *ngIf="pinnedColumns.length > 0 && !isPinningToStart">
+                <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
+                    <igx-grid-header-group 
+                        [column]="col" 
+                        [gridID]="id" 
+                        [style.min-width]="getHeaderGroupWidth(col)"
+                        [style.flex-basis]="getHeaderGroupWidth(col)"
+                        [style.left]="col.rightPinnedOffset">
+                    </igx-grid-header-group>
+                </ng-template>
+            </ng-container>
         </div>
         <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible"
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
@@ -137,11 +148,12 @@
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
-    <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
+    <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
         </ng-template>
     </div>
+    <div class="igx-grid__scroll-end" [style.float]='"right"' [style.width.px]='pinnedWidth' [style.min-width.px]='pinnedWidth' [hidden]="pinnedWidth === 0 || isPinningToStart"></div>
 </div>
 
 <div class="igx-grid__footer" #footer>
