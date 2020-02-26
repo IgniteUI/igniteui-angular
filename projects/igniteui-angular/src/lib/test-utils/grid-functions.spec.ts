@@ -24,6 +24,15 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 const FILTER_CHIP_CLASS = '.igx-filtering-chips';
+const ESF_MENU_CLASS = '.igx-excel-filter__menu';
+const ESF_SORT_CLASS = '.igx-excel-filter__sort';
+const ESF_MOVE_CLASS = '.igx-excel-filter__move';
+const ESF_CUSTOM_FILTER_DIALOG_CLASS = '.igx-excel-filter__secondary';
+const ESF_FILTER_ICON = '.igx-excel-filter__icon';
+const ESF_FILTER_ICON_FILTERED = '.igx-excel-filter__icon--filtered';
+const ESF_ADD_FILTER_CLASS = '.igx-excel-filter__add-filter';
+const ESF_DEFAULT_EXPR = 'igx-excel-style-default-expression';
+const ESF_DATE_EXPR = 'igx-excel-style-date-expression';
 const BANNER_CLASS = '.igx-banner';
 const BANNER_TEXT_CLASS = '.igx-banner__text';
 const BANNER_ROW_CLASS = '.igx-banner__row';
@@ -58,19 +67,19 @@ export class GridFunctions {
     }
 
     public static getRowCells(fix, rowIndex: number): DebugElement[] {
-       const allRows = GridFunctions.getRows(fix);
-       return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+        const allRows = GridFunctions.getRows(fix);
+        return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
         const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
         return gridBody.query(By.css(DISPLAY_CONTAINER));
-     }
+    }
 
-     public static getRowDisplayContainer(fix, index: number): DebugElement {
+    public static getRowDisplayContainer(fix, index: number): DebugElement {
         const row = GridFunctions.getRows(fix)[index];
         return row.query(By.css(DISPLAY_CONTAINER));
-     }
+    }
 
     public static getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
         const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
@@ -297,7 +306,9 @@ export class GridFunctions {
         // day + 15
         if (!dateItem0.isThisYear) {
             thisYearCountItems--;
-        } else if (dateItem0.isNextYear) {
+        }
+
+        if (dateItem0.isNextYear) {
             nextYearCountItems++;
         }
 
@@ -589,11 +600,7 @@ export class GridFunctions {
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        input.nativeElement.value = value;
-        input.nativeElement.dispatchEvent(new Event('keydown'));
-        input.nativeElement.dispatchEvent(new Event('input'));
-        input.nativeElement.dispatchEvent(new Event('keyup'));
-        fix.detectChanges();
+        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
 
         // Enter key to submit
         UIInteractions.triggerEventHandlerKeyDown('Enter', input);
@@ -618,12 +625,7 @@ export class GridFunctions {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             input = filterUIRow.query(By.directive(IgxInputDirective));
         }
-
-        input.nativeElement.value = value;
-        input.nativeElement.dispatchEvent(new Event('keydown'));
-        input.nativeElement.dispatchEvent(new Event('input'));
-        input.nativeElement.dispatchEvent(new Event('keyup'));
-        fix.detectChanges();
+        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
     }
 
     public static submitFilterRowInput(fix) {
@@ -651,62 +653,118 @@ export class GridFunctions {
         filterIcon.nativeElement.click();
     }
 
+    /**
+     * Gets the ESF icon when no filter is applied
+    */
+    public static getExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
+        const columnHeader = GridFunctions.getColumnHeader(columnField, fix).nativeElement;
+        return columnHeader.querySelector(ESF_FILTER_ICON);
+    }
+
+    /**
+     * Gets the ESF icon when filter is applied
+    */
+    public static getExcelFilterIconFiltered(fix: ComponentFixture<any>, columnField: string) {
+        const columnHeader = GridFunctions.getColumnHeader(columnField, fix).nativeElement;
+        return columnHeader.querySelector(ESF_FILTER_ICON_FILTERED);
+    }
+
     public static clickExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
-        const columnHeader = GridFunctions.getColumnHeader(columnField, fix);
-        const filterIcon = columnHeader.query(By.css('.igx-excel-filter__icon'));
-        const filterIconFiltered = columnHeader.query(By.css('.igx-excel-filter__icon--filtered'));
+        const filterIcon = GridFunctions.getExcelFilterIcon(fix, columnField);
+        const filterIconFiltered = GridFunctions.getExcelFilterIconFiltered(fix, columnField);
         const icon = (filterIcon) ? filterIcon : filterIconFiltered;
         UIInteractions.clickElement(icon);
     }
 
-    public static clickApplyExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridComponent, columnField: string) {
+        const event = { stopPropagation: () => { }, preventDefault: () => { } };
+        const header = grid.getColumnByName(columnField).headerCell;
+        header.onFilteringIconClick(event);
+        tick(50);
+        fix.detectChanges();
+    }
+
+    public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
         const applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        return applyButton;
+    }
+
+    public static clickApplyExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
+        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix, menu);
         applyButton.click();
     }
 
-    public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static clickCancelExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const flatButtons = Array.from(excelMenu.querySelectorAll('.igx-button--flat'));
         const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
         cancelButton.click();
     }
 
-    public static clickExcelFilterCascadeButton(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-        const cascadeButton = excelMenu.querySelector('.igx-excel-filter__actions-filter');
+    public static getExcelFilterCascadeButton(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('.igx-excel-filter__actions-filter');
+    }
+
+    public static clickExcelFilterCascadeButton(fix: ComponentFixture<any>, menu = null) {
+        const cascadeButton = GridFunctions.getExcelFilterCascadeButton(fix, menu);
         cascadeButton.click();
     }
 
     public static clickOperatorFromCascadeMenu(fix: ComponentFixture<any>, operatorIndex: number) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const subMenu = gridNativeElement.querySelector('.igx-drop-down__list-scroll');
-        const dropdownItems = subMenu.querySelectorAll('igx-drop-down-item');
-        const dropdownItem = dropdownItems[operatorIndex];
-        dropdownItem.click();
+        ControlsFunction.clickDropDownItem(fix, operatorIndex);
+    }
+
+    public static getApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--raised'));
+        const applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        return applyButton as HTMLElement;
     }
 
     public static clickApplyExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
-        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--raised'));
-        const applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+        const applyButton = GridFunctions.getApplyExcelStyleCustomFiltering(fix);
         applyButton.click();
+        fix.detectChanges();
+    }
+
+    public static clickClearFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+        const raisedButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
+        const button: any = raisedButtons.find((rb: any) => rb.innerText === 'Clear filter');
+        button.click();
+        fix.detectChanges();
+    }
+
+    public static getExcelCustomFilteringExpressionAndButton(fix: ComponentFixture<any>, expressionIndex = 0): HTMLElement {
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
+        const andButton = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('.igx-button-group__item')))[0];
+        return andButton;
+    }
+
+    public static getExcelCustomFilteringExpressionOrButton(fix: ComponentFixture<any>, expressionIndex = 0): HTMLElement {
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
+        const orButton = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('.igx-button-group__item')))[1];
+        return orButton;
     }
 
     public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
         const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
         cancelButton.click();
     }
 
+    public static getAddFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>): HTMLElement {
+        const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
+        const addFilterButton: HTMLElement = customFilterMenu.querySelector(ESF_ADD_FILTER_CLASS);
+        return addFilterButton;
+    }
+
     public static clickAddFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
-        const addFilterButton = customFilterMenu.querySelector('.igx-excel-filter__add-filter');
+        const addFilterButton = GridFunctions.getAddFilterExcelStyleCustomFiltering(fix);
         addFilterButton.click();
     }
 
@@ -781,14 +839,40 @@ export class GridFunctions {
         moveRightIcon.click();
     }
 
+
+    public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex: number = 0): HTMLInputElement {
+        const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
+        return expr.querySelectorAll('.igx-input-group__input').item(1) as HTMLInputElement;
+    }
+
+    public static getExcelFilteringDDInput(fix: ComponentFixture<any>,
+        expressionIndex: number = 0, isDate: boolean = false): HTMLInputElement {
+        const allExpressions = isDate ? GridFunctions.getExcelCustomFilteringDateExpressions(fix) :
+            GridFunctions.getExcelCustomFilteringDefaultExpressions(fix);
+        return allExpressions[expressionIndex].querySelectorAll('.igx-input-group__input').item(0) as HTMLInputElement;
+    }
+
+    public static setInputValueESF(fix: ComponentFixture<any>, expressionIndex: number, value: any) {
+        const input = GridFunctions.getExcelFilteringInput(fix, expressionIndex);
+        UIInteractions.sendInputElementValue(input, value, fix);
+    }
+
     /**
-     * Click the clear filter button in the ESF.
-    */
-    public static clickClearFilterInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+        * Gets the clear filter button in the ESF.
+       */
+    public static getClearFilterInExcelStyleFiltering(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const clearFilterContainer = excelMenu.querySelector('.igx-excel-filter__actions-clear');
         const clearFilterDisabledContainer = excelMenu.querySelector('.igx-excel-filter__actions-clear--disabled');
         const clearIcon = clearFilterContainer ? clearFilterContainer : clearFilterDisabledContainer;
+        return clearIcon;
+    }
+
+    /**
+     * Click the clear filter button in the ESF.
+    */
+    public static clickClearFilterInExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
+        const clearIcon = GridFunctions.getClearFilterInExcelStyleFiltering(fix, menu);
         clearIcon.click();
     }
 
@@ -849,23 +933,57 @@ export class GridFunctions {
 
     public static getExcelStyleFilteringComponent(fix) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        let excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        let excelMenu = gridNativeElement.querySelector(ESF_MENU_CLASS);
         if (!excelMenu) {
-            excelMenu = fix.nativeElement.querySelector('.igx-excel-filter__menu');
+            excelMenu = fix.nativeElement.querySelector(ESF_MENU_CLASS);
         }
         return excelMenu;
     }
+    public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return GridFunctions.sortNativeElementsVertically(Array.from(excelMenu.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
+    }
 
-    public static getExcelStyleSearchComponent(fix) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelStyleFilteringSortContainer(fix, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector(ESF_SORT_CLASS);
+    }
+
+    public static getExcelStyleFilteringSortButtons(fix, menu = null): HTMLElement[] {
+        const sortContainer = GridFunctions.getExcelStyleFilteringSortContainer(fix, menu);
+        return sortContainer.querySelectorAll('.igx-button--flat');
+    }
+
+    public static getExcelStyleFilteringMoveContainer(fix, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector(ESF_MOVE_CLASS);
+    }
+
+    public static getExcelStyleFilteringMoveButtons(fix, menu = null): HTMLElement[] {
+        const moveContainer = GridFunctions.getExcelStyleFilteringMoveContainer(fix, menu);
+        return moveContainer.querySelectorAll('.igx-button--flat');
+    }
+
+    public static getExcelStyleSearchComponent(fix, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const searchComponent = excelMenu.querySelector('.igx-excel-filter__menu-main');
         return searchComponent;
     }
 
-    public static getExcelStyleSearchComponentScrollbar(fix) {
-        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+    public static getExcelStyleSearchComponentScrollbar(fix, menu = null) {
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, menu);
         const scrollbar = searchComponent.querySelector('igx-virtual-helper');
         return scrollbar;
+    }
+
+    public static getExcelStyleSearchComponentInput(fix, comp = null): HTMLInputElement {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix);
+        return searchComponent.querySelector('.igx-input-group__input');
+    }
+
+    public static getExcelStyleSearchComponentListItems(fix, comp = null): HTMLElement[] {
+        const searchComponent = comp ? comp : GridFunctions.getExcelStyleSearchComponent(fix);
+        return GridFunctions.sortNativeElementsVertically(Array.from(searchComponent.querySelectorAll('igx-list-item')));
     }
 
     public static getColumnHeader(columnField: string, fix: ComponentFixture<any>): DebugElement {
@@ -897,44 +1015,42 @@ export class GridFunctions {
     }
 
     public static getFilterCellMoreIcon(columnField: string, fix: ComponentFixture<any>) {
-        const columnHeader = this.getColumnHeader(columnField, fix);
-
         const filterCell = GridFunctions.getFilterCell(fix, columnField);
         const moreIcon = Array.from(filterCell.queryAll(By.css('igx-icon')))
-                .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
+            .find((ic: any) => ic.nativeElement.innerText === 'filter_list');
         return moreIcon;
     }
 
-    public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringHeaderIcons(fix: ComponentFixture<any>, menu = null) {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const headerArea = excelMenu.querySelector('.igx-excel-filter__menu-header');
         return Array.from(headerArea.querySelectorAll('.igx-button--icon'));
     }
 
-    public static getExcelFilteringPinContainer(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringPinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const pinContainer = excelMenu.querySelector('.igx-excel-filter__actions-pin');
         const pinContainerDisabled = excelMenu.querySelector('.igx-excel-filter__actions-pin--disabled');
         return pinContainer ? pinContainer : pinContainerDisabled;
     }
 
-    public static getExcelFilteringUnpinContainer(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringUnpinContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-unpin');
     }
 
-    public static getExcelFilteringHideContainer(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringHideContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('.igx-excel-filter__actions-hide');
     }
 
-    public static getExcelFilteringSortComponent(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringSortComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('igx-excel-style-sorting');
     }
 
-    public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>) {
-        const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('igx-excel-style-column-moving');
     }
 
@@ -1005,21 +1121,20 @@ export class GridFunctions {
             Array.from(gridBody.queryAll(By.css('igx-grid-row'))).map((r: any) => r.nativeElement));
     }
 
-    public static getExcelStyleCustomFilteringDialog(fix: ComponentFixture<any>) {
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        return gridNativeElement.querySelector('.igx-excel-filter__secondary');
+    public static getExcelStyleCustomFilteringDialog(fix: ComponentFixture<any>): HTMLElement {
+        return fix.nativeElement.querySelector(ESF_CUSTOM_FILTER_DIALOG_CLASS);
     }
 
-    public static getExcelCustomFilteringDefaultExpressions(fix: ComponentFixture<any>) {
+    public static getExcelCustomFilteringDefaultExpressions(fix: ComponentFixture<any>): HTMLElement[] {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
-        return GridFunctions.sortNativeElementsVertically(
-            Array.from(customFilterMenu.querySelectorAll('igx-excel-style-default-expression')));
+        const expressions = customFilterMenu.querySelectorAll(ESF_DEFAULT_EXPR);
+        return GridFunctions.sortNativeElementsVertically(Array.from(expressions));
     }
 
     public static getExcelCustomFilteringDateExpressions(fix: ComponentFixture<any>) {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         return GridFunctions.sortNativeElementsVertically(
-            Array.from(customFilterMenu.querySelectorAll('igx-excel-style-date-expression')));
+            Array.from(customFilterMenu.querySelectorAll(ESF_DATE_EXPR)));
     }
 
     public static clickAdvancedFilteringButton(fix: ComponentFixture<any>) {
@@ -1488,25 +1603,14 @@ export class GridFunctions {
         return calendar;
     }
 
-    public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
-        const input =
-            customMenu.children[1].children[expressionIndex].children[2].querySelector('.igx-input-group__bundle-main').children[0];
-        input.value = value;
-        input.dispatchEvent(new Event('keydown'));
-        input.dispatchEvent(new Event('input'));
-        input.dispatchEvent(new Event('keyup'));
-        fix.detectChanges();
-    }
 
-    public static setOperatorESF(customMenu, grid, expressionIndex: number, itemIndex: number, fix: ComponentFixture<any>) {
-        const input =
-            customMenu.children[1].children[expressionIndex].children[1].querySelector('.igx-input-group__bundle-main').children[0];
+    public static setOperatorESF(fix: ComponentFixture<any>, expressionIndex: number, itemIndex: number) {
+        const input: HTMLInputElement = GridFunctions.getExcelFilteringDDInput(fix, expressionIndex);
         input.click();
         fix.detectChanges();
 
-        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
+        const operators = fix.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
         const operator = operators.children[itemIndex].children[0];
-
         operator.click();
         tick();
         fix.detectChanges();
