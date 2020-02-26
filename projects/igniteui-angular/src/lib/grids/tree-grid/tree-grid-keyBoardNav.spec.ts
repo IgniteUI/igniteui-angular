@@ -572,7 +572,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.simulateCellKeydown(cell, 'ArrowDown', false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, 'Name');
@@ -580,7 +580,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             GridFunctions.simulateCellKeydown(cell, 'ArrowUp', false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'Name');
@@ -637,7 +637,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.simulateCellKeydown(cell, 'End', false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, treeColumns[treeColumns.length - 1]);
@@ -646,7 +646,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             GridFunctions.simulateCellKeydown(cell, 'Home', false, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, treeColumns[0]);
@@ -673,7 +673,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             let newCell = treeGrid.getCellByColumn(5, treeColumns[treeColumns.length - 1]);
             GridFunctions.simulateCellKeydown(newCell, 'Tab');
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             newCell = treeGrid.getCellByColumn(6, treeColumns[0]);
@@ -691,7 +691,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             newCell = treeGrid.getCellByColumn(6, treeColumns[treeColumns.length - 1]);
             GridFunctions.simulateCellKeydown(newCell, 'Tab');
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             newCell = treeGrid.getCellByColumn(7, treeColumns[0]);
