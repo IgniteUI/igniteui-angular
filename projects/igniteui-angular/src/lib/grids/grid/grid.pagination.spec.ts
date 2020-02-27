@@ -15,6 +15,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
@@ -158,11 +159,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
         const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
         select.click();
         fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
-        selectList.children[2].nativeElement.click();
-
+        ControlsFunction.clickDropDownItem(fix, 2);
         tick();
-        fix.detectChanges();
 
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(10, 'Invalid page size');
