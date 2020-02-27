@@ -117,6 +117,19 @@ export class UIInteractions {
         });
     }
 
+    public static createPointerEvent(eventName: string, point: Point) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1
+        };
+        const pointerEvent = new PointerEvent(eventName, options);
+        Object.defineProperty(pointerEvent, 'pageX', { value: point.x, enumerable: true });
+        Object.defineProperty(pointerEvent, 'pageY', { value: point.y, enumerable: true });
+        return pointerEvent;
+    }
+
     public static simulatePointerEvent(eventName: string, element, x, y) {
         const options: PointerEventInit = {
             view: window,
