@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorModule } from './paginator.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../test-utils/controls-functions.spec';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
@@ -112,10 +113,9 @@ describe('IgxPaginator with custom settings', () => {
         const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
         select.click();
         fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
-        selectList.children[3].nativeElement.click();
 
-        fix.detectChanges();
+        ControlsFunction.clickDropDownItem(fix, 3);
+
         totalPages = paginator.totalPages;
         expect(totalPages).toBe(1);
     });
