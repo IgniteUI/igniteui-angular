@@ -57,7 +57,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     let fixture;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -1139,7 +1139,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
                 expect(combo.collapsed).toBeFalsy();
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.arrowDownEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 fixture.detectChanges();
                 expect(dropdown.focusedItem).toBeTruthy();
                 expect(dropdown.focusedItem.itemIndex).toEqual(0);
@@ -1148,7 +1148,7 @@ describe('igxCombo', () => {
                 tick();
                 fixture.detectChanges();
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.arrowDownEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 fixture.detectChanges();
                 expect(dropdown.focusedItem).toBeTruthy();
                 expect(dropdown.focusedItem.itemIndex).toEqual(0);
@@ -1286,19 +1286,19 @@ describe('igxCombo', () => {
                 spyOn(combo, 'selectAllItems');
                 spyOn(combo, 'toggle');
                 spyOn(combo.dropdown, 'onFocus').and.callThrough();
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', { key: 'A' }));
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', {}));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'A'));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', null));
                 expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
                 expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.enterEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Enter'));
                 expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
                 spyOnProperty(combo, 'filteredData', 'get').and.returnValue([1]);
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.enterEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Enter'));
                 expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.arrowDownEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
                 // expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
-                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.escapeEvent));
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'Escape'));
                 expect(combo.toggle).toHaveBeenCalledTimes(1);
             }));
             it('should toggle combo dropdown on toggle button click', fakeAsync(() => {
@@ -1320,23 +1320,23 @@ describe('igxCombo', () => {
                 spyOn(combo, 'open').and.callThrough();
                 spyOn(combo, 'close').and.callThrough();
 
-                combo.onArrowDown(UIInteractions.getKeyboardEvent('keydown', UIInteractions.arrowDownEvent));
+                combo.onArrowDown(UIInteractions.getKeyboardEvent('keydown', 'ArrowDown'));
                 tick();
                 fixture.detectChanges();
                 expect(combo.open).toHaveBeenCalledTimes(1);
 
-                combo.onArrowDown(UIInteractions.getKeyboardEvent('keydown', UIInteractions.altAndArrowDownEvent));
+                combo.onArrowDown(UIInteractions.getKeyboardEvent('keydown', 'ArrowDown', true));
                 tick();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.open).toHaveBeenCalledTimes(2);
 
-                combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', UIInteractions.arrowUpEvent));
+                combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', 'ArrowUp'));
                 tick();
                 fixture.detectChanges();
                 expect(combo.close).toHaveBeenCalledTimes(1);
 
-                combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', UIInteractions.altAndArrowUpEvent));
+                combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', 'ArrowUp', true));
                 fixture.detectChanges();
                 tick();
                 expect(combo.close).toHaveBeenCalledTimes(2);
@@ -2231,7 +2231,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('');
             expect(combo.isAddButtonVisible()).toBeTruthy();
 
-            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.arrowDownEvent));
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
             fixture.detectChanges();
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
@@ -2257,7 +2257,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('');
             expect(combo.isAddButtonVisible()).toBeTruthy();
 
-            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', UIInteractions.arrowDownEvent));
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
             fixture.detectChanges();
             const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
             UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
