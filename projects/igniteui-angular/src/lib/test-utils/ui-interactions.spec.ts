@@ -9,14 +9,21 @@ declare var Touch: {
     new(prop): Touch;
 };
 export class UIInteractions {
-    public static enterEvent = { key: 'Enter', stopPropagation: () => { }, preventDefault: () => { } };
-    public static endEvent = { key: 'End', stopPropagation: () => { }, preventDefault: () => { } };
-    public static homeEvent = { key: 'Home', stopPropagation: () => { }, preventDefault: () => { } };
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
-    public static spaceEvent = { key: 'Space', stopPropagation: () => { }, preventDefault: () => { }, stopImmediatePropagation: () => { } };
-    public static arrowDownEvent = { key: 'ArrowDown', stopPropagation: () => { }, preventDefault: () => { } };
-    public static arrowUpEvent = { key: 'ArrowUp', stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
+
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
+        const keyboardEvent = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new KeyboardEvent(eventType, keyboardEvent); return new KeyboardEvent(eventType, keyboardEvent);
+    }
 
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
