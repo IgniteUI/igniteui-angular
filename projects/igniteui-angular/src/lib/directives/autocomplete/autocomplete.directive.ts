@@ -277,6 +277,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (this.disabled || !this.collapsed) {
             return;
         }
+        // If no drop-down width is set, the drop-down will be as wide as the autocomplete input;
         this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
         this.target.open(this.settings);
         this.target.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
