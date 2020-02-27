@@ -57,7 +57,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     let fixture;
     let combo: IgxComboComponent;
     let input: DebugElement;
