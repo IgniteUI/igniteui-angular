@@ -1805,12 +1805,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(secondCell.componentInstance, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1845,10 +1845,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateCellKeydown(thirdCell.componentInstance, 'ArrowDown', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1857,10 +1857,10 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowUp', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1905,11 +1905,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'end');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1917,11 +1917,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'home');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1929,11 +1929,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
                 GridFunctions.simulateCellKeydown(firstCell.componentInstance, 'ArrowRight', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1941,11 +1941,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateCellKeydown(fix.componentInstance.selectedCell, 'ArrowLeft', false, false, true);
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
