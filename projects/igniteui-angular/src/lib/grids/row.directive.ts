@@ -340,6 +340,32 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     /**
+     * Pins the specified row.
+     * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // pin the selected row from the grid
+     * this.grid.selectedRows[0].pin();
+     * ```
+     */
+    public pin() {
+        this.grid.pinRow(this.rowID);
+    }
+
+    /**
+     * Unpins the specified row.
+     * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // unpin the selected row from the grid
+     * this.grid.selectedRows[0].unpin();
+     * ```
+     */
+    public unpin() {
+        this.grid.unpinRow(this.rowID);
+    }
+
+    /**
      * @hidden
      */
     get rowCheckboxAriaLabel() {

@@ -2,7 +2,7 @@ import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IGridDataBindable } from './grid.interface';
+import { IGridDataBindable, GridType } from './grid.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -117,4 +117,11 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
     expanded: boolean;
     event?: Event;
     cancel: boolean;
+}
+
+export interface IPinRowEventArgs extends IBaseEventArgs {
+    row: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    rowID: any;
+    insertAtIndex?: number;
+    isPinned: boolean;
 }

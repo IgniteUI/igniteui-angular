@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -27,9 +27,17 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig = { columns: ColumnPinningPosition.Start };
+            this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
         } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End };
+            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
+        }
+    }
+
+    onRowChange() {
+        if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
+            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Top };
+        } else {
+            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Bottom };
         }
     }
 
@@ -91,6 +99,13 @@ export class GridColumnPinningSampleComponent implements OnInit {
     toggleVisibility(name: string) {
         const col = this.grid1.getColumnByName(name);
         col.hidden = !col.hidden;
+    }
+
+    togglePinRow(index) {
+        const rec = this.data[index];
+        this.grid1.pinnedRecords.indexOf(rec) === -1 ?
+         this.grid1.pinRow(this.data[index]) :
+         this.grid1.unpinRow(this.data[index])
     }
 
 }

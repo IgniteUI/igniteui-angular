@@ -942,6 +942,18 @@
         position: relative;
     }
 
+    %grid-tbody-scrollbar-start {
+        background: --var($theme, 'header-background');
+    }
+
+    %grid-tbody-scrollbar-main {
+        position: relative;
+    }
+
+    %grid-tbody-scrollbar-end {
+        background: --var($theme, 'header-background');
+    }
+
     %grid-scroll-start {
         background: --var($theme, 'header-background');
     }
@@ -1059,6 +1071,20 @@
 
     %igx-grid__tr--expanded {
         border-bottom: none;
+    }
+
+    %igx-grid__tr--pinned {       
+        position: relative;
+        background: inherit;
+        z-index: 10000;
+    }
+
+    %igx-grid__tr--pinned-top {
+        border-bottom: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+    }
+
+    %igx-grid__tr--pinned-bottom {
+        border-top: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
     }
 
     %igx-grid__tr--edit {

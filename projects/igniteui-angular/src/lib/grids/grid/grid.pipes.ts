@@ -152,3 +152,22 @@ export class IgxGridFilteringPipe implements PipeTransform {
         return result;
     }
 }
+
+
+@Pipe({
+    name: "rowPinning",
+    pure: true
+})
+export class IgxGridRowPinningPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
+
+    public transform(collection: any[], type: string, id: string, pipeTrigger: number) {
+        const grid = this.gridAPI.grid;
+        const pinnedRows = grid.pinnedRecords;
+
+        return collection.filter((value, index) => {
+            return pinnedRows.indexOf(value) === -1;
+        });
+    }
+}

@@ -109,7 +109,8 @@ import {
     GridSummaryPosition,
     GridSummaryCalculationMode,
     FilterMode,
-    ColumnPinningPosition
+    ColumnPinningPosition,
+    RowPinningPosition
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -129,7 +130,8 @@ import {
     IGridToolbarExportEventArgs,
     ISearchInfo,
     ICellPosition,
-    IRowToggleEventArgs
+    IRowToggleEventArgs,
+    IPinRowEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType, IPinningConfig } from './common/grid.interface';
@@ -1376,6 +1378,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
+     * Emitted when the pinned state of a row is changed.
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (onRowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onRowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
      * @hidden @internal
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -1611,6 +1623,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     get isPinningToStart() {
         return this.pinning.columns !== ColumnPinningPosition.End;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    get isRowPinningToTop() {
+        return this.pinning.rows !== RowPinningPosition.Bottom;
     }
 
     /**
@@ -2433,6 +2453,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _columnPinning = false;
+
+
+    /**
+     * @hidden
+    */
+    public pinnedRecords = [];
 
 
     /**
@@ -3982,6 +4008,70 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.unpin(index);
     }
 
+    /**
+     * Pin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.pinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+     * @param index The index at which to insert the row in the pinned collection.
+     */
+    public pinRow(rowID, index?) {
+        const row = this.gridAPI.get_rec_by_id(rowID);
+
+        const eventArgs: IPinRowEventArgs = {
+            insertAtIndex: index,
+            isPinned: true,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+
+        this.pinnedRecords.splice(eventArgs.insertAtIndex, 0, rowID);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Unpin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.unpinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+    */
+    public unpinRow(rowID) {
+        const row = this.gridAPI.get_rec_by_id(rowID);
+        const eventArgs: IPinRowEventArgs = {
+            isPinned: true,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+        const index =  this.pinnedRecords.indexOf(rowID);
+        this.pinnedRecords.splice(index, 1);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.notifyChanges(true);
+        }
+    }
+
+    get pinnedRowHeight() {
+        // TODO - take into consideration variable row height.
+        return this.pinnedRecords.length > 0 ? this.pinnedRecords.length * this.renderedRowHeight : 0;
+    }
+
+    get pinnedBottom() {
+        return this.isHorizontalScrollHidden ? this.pinnedRowHeight : this.pinnedRowHeight - this.scrollWidth + 1;
+    }
+
 
     /**
      * Recalculates grid width/height dimensions.
@@ -4287,6 +4377,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.calcHeight = this._calculateGridBodyHeight();
+        if (this.pinnedRowHeight) {
+            this.calcHeight -= this.pinnedRowHeight;
+        }
     }
 
     /**
