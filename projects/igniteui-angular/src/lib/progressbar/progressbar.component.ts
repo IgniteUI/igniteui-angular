@@ -14,7 +14,8 @@ import {
     OnInit,
     SimpleChanges,
     SimpleChange,
-    OnChanges
+    OnChanges,
+    AfterContentInit
 } from '@angular/core';
 import {
     IgxProcessBarTextTemplateDirective,
@@ -49,7 +50,9 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
  */
 export abstract class BaseProgress {
     private requestAnimationId: number = undefined;
-    protected _hasOnInitPassed = false;
+
+    protected _initValue = 0;
+    protected _contentInit = false;
     protected _valueInPercent = MIN_VALUE;
     protected _max = 100;
     protected _value = MIN_VALUE;
@@ -189,21 +192,20 @@ export abstract class BaseProgress {
     }
 
     protected triggerProgressTransition(oldVal, newVal) {
-        const valueInRange = getValueInProperRange(newVal, this.max);
-        if (isNaN(valueInRange)) {
+        if (oldVal === newVal) {
             return;
         }
 
         const changedValues = {
-            currentValue: valueInRange,
+            currentValue: newVal,
             previousValue: oldVal
         };
 
-        const stepDirection = this.directionFlow(oldVal, valueInRange);
-        if (this._animate) {
-            this.runAnimation(valueInRange, stepDirection);
+        const stepDirection = this.directionFlow(oldVal, newVal);
+        if (this._animate && newVal >= this.step) {
+            this.runAnimation(newVal, stepDirection);
         } else {
-            this.updateProgressDirectly(valueInRange);
+            this.updateProgressDirectly(newVal);
         }
 
         this.onProgressChanged.emit(changedValues);
@@ -222,8 +224,8 @@ export abstract class BaseProgress {
      */
     protected updateProgressSmoothly(val: number, step: number) {
         this._value += step;
-        const passedValue = convertInPercentage(val, this._max);
-        const progressValue = convertInPercentage(this._value, this._max);
+        const passedValue = toPercent(val, this._max);
+        const progressValue = toPercent(this._value, this._max);
         if (this.valueInPercent === passedValue) {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
@@ -241,7 +243,7 @@ export abstract class BaseProgress {
      */
     protected updateProgressDirectly(val: number) {
         this._value = val;
-        this.valueInPercent = convertInPercentage(this._value, this._max);
+        this.valueInPercent = toPercent(this._value, this._max);
     }
 
     /**
@@ -287,7 +289,7 @@ export abstract class BaseProgress {
      */
     private updateProgress(val: number) {
         this._value = val;
-        this.valueInPercent = convertInPercentage(this._value, this._max);
+        this.valueInPercent = toPercent(this._value, this._max);
     }
 }
 let NEXT_LINEAR_ID = 0;
@@ -297,7 +299,7 @@ let NEXT_GRADIENT_ID = 0;
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html'
 })
-export class IgxLinearProgressBarComponent extends BaseProgress implements OnChanges {
+export class IgxLinearProgressBarComponent extends BaseProgress implements AfterContentInit {
 
     constructor() {
         super();
@@ -425,11 +427,17 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements OnCha
      *```
      */
     set value(val) {
-        val = Number(val);
-        if (this._value === val || this.indeterminate) {
+        const valInRange = valueInRange(val, this.max);
+        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
         }
-        this._value = val;
+
+        if (this._contentInit) {
+            this.triggerProgressTransition(this._value, valInRange);
+        } else {
+            this._initValue = valInRange;
+        }
+
     }
 
     /**
@@ -464,15 +472,9 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements OnCha
         return this.type === IgxProgressType.SUCCESS;
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
-        const valchange: SimpleChange = changes['value'];
-        if (valchange) {
-            if (valchange.firstChange) {
-                this.triggerProgressTransition(MIN_VALUE, valchange.currentValue);
-            } else {
-                this.triggerProgressTransition(valchange.previousValue, valchange.currentValue);
-            }
-        }
+    public ngAfterContentInit() {
+        this.triggerProgressTransition(MIN_VALUE, this._initValue);
+        this._contentInit = true;
     }
 }
 
@@ -480,7 +482,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements OnCha
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html'
 })
-export class IgxCircularProgressBarComponent extends BaseProgress implements OnChanges, AfterViewInit {
+export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit, AfterContentInit {
 
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
@@ -576,12 +578,17 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements OnC
      *```
      */
     set value(val: number) {
-        val = Number(val);
-        if (this._value === val || this.indeterminate) {
+        const valInRange = valueInRange(val, this.max);
+        if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
         }
 
-        this._value = val;
+        if (this._contentInit) {
+            this.triggerProgressTransition(this._value, valInRange);
+        } else {
+            this._initValue = valInRange;
+        }
+
     }
 
     private _circleRadius = 46;
@@ -594,15 +601,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements OnC
         super();
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
-        const valChange: SimpleChange = changes['value'];
-        if (valChange) {
-            if (valChange.firstChange) {
-                this.triggerProgressTransition(MIN_VALUE, valChange.currentValue);
-            } else {
-                this.triggerProgressTransition(valChange.previousValue, valChange.currentValue);
-            }
-        }
+    public ngAfterContentInit() {
+        this.triggerProgressTransition(MIN_VALUE, this._initValue);
+        this._contentInit = true;
     }
 
     public ngAfterViewInit() {
@@ -664,11 +665,11 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements OnC
     }
 }
 
-export function getValueInProperRange(value: number, max: number, min = 0): number {
+export function valueInRange(value: number, max: number, min = 0): number {
     return Math.max(Math.min(value, max), min);
 }
 
-export function convertInPercentage(value: number, max: number) {
+export function toPercent(value: number, max: number) {
     return Math.floor(100 * value / max);
 }
 

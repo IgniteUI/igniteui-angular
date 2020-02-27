@@ -17,7 +17,7 @@ const STRIPED_CLASS = 'igx-linear-bar--striped';
 const LINEAR_BAR_TAG = 'igx-linear-bar';
 const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
 
-fdescribe('IgLinearBar', () => {
+describe('IgLinearBar', () => {
     configureTestSuite();
     const tickTime = 2000;
     beforeAll(async(() => {
@@ -416,7 +416,7 @@ fdescribe('IgLinearBar', () => {
             expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
         });
 
-        fit('Manipulate progressbar with floating point numbers', fakeAsync(() => {
+        it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
             const fix = TestBed.createComponent(InitLinearProgressBarComponent);
             fix.detectChanges();
 
