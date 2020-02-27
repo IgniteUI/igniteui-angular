@@ -56,6 +56,10 @@ $_bootstrap-toast: extend(
     (
         variant: 'bootstrap',
         background: #fff,
+
+        text-color: (
+            igx-color: ('grays', 600)
+        )
     )
 );
 
