@@ -3605,8 +3605,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin();
+            if (!this.isPinningToStart) {
+                if (pos === DropPosition.AfterDropTarget) {
+                    position = DropPosition.AfterDropTarget;
+                } else {
+                    position = DropPosition.None;
+                }
+            }
             this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
-
         }
 
         if (!dropTarget.pinned && column.pinned) {
