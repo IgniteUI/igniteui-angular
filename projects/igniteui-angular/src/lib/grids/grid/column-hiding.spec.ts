@@ -756,7 +756,7 @@ describe('Column Hiding UI #grid', () => {
             columnChooser.columnsAreaMaxHeight = '150px';
             fix.detectChanges();
             const columnsAreaDiv = columnChooserElement.query(By.css('div.igx-column-hiding__columns'));
-            expect(JSON.stringify(columnsAreaDiv.styles)).toBe('{"max-height":"150px"}');
+            expect(getComputedStyle(columnsAreaDiv.nativeElement).maxHeight).toBe('150px');
             expect(columnChooserElement.nativeElement.offsetHeight <= 255).toBe(true);
         });
 
@@ -800,23 +800,21 @@ describe('Column Hiding UI #grid', () => {
 
         it('indents columns according to their level.', () => {
             const items = columnChooser.columnItems;
-
             expect(items.filter((col) => col.calcIndent === 0).length).toBe(3);
             expect(items.filter((col) => col.calcIndent === 30).length).toBe(2);
             expect(items.filter((col) => col.calcIndent === 60).length).toBe(2);
 
             const columnItems = getColumnHidingItems();
-
-            const margin0 = '{"margin-left":"0px"}';
-            const margin1 = '{"margin-left":"30px"}';
-            const margin2 = '{"margin-left":"60px"}';
-            expect(JSON.stringify(columnItems[0].styles)).toBe(margin0);
-            expect(JSON.stringify(columnItems[1].styles)).toBe(margin0);
-            expect(JSON.stringify(columnItems[2].styles)).toBe(margin1);
-            expect(JSON.stringify(columnItems[3].styles)).toBe(margin1);
-            expect(JSON.stringify(columnItems[4].styles)).toBe(margin2);
-            expect(JSON.stringify(columnItems[5].styles)).toBe(margin2);
-            expect(JSON.stringify(columnItems[6].styles)).toBe(margin0);
+            const margin0 = '0px';
+            const margin30 = '30px';
+            const margin60 = '60px';
+            expect(getComputedStyle(columnItems[0].nativeElement).marginLeft).toBe(margin0);
+            expect(getComputedStyle(columnItems[1].nativeElement).marginLeft).toBe(margin0);
+            expect(getComputedStyle(columnItems[2].nativeElement).marginLeft).toBe(margin30);
+            expect(getComputedStyle(columnItems[3].nativeElement).marginLeft).toBe(margin30);
+            expect(getComputedStyle(columnItems[4].nativeElement).marginLeft).toBe(margin60);
+            expect(getComputedStyle(columnItems[5].nativeElement).marginLeft).toBe(margin60);
+            expect(getComputedStyle(columnItems[6].nativeElement).marginLeft).toBe(margin0);
         });
 
         it('checks & hides all children when hiding their parent.', fakeAsync(() => {

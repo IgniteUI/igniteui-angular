@@ -1419,8 +1419,10 @@ describe('IgxTimePicker', () => {
             UIInteractions.simulateWheelEvent(AMPMColumn.nativeElement, 0, -10);
             fixture.detectChanges();
 
-            expect(AMPMColumn.children[0].nativeElement.innerText).toBe('AM');
-            expect(AMPMColumn.children[1].nativeElement.innerText).toBe('PM');
+            const AMIndicator = AMPMColumn.children.find(item => item.nativeElement.innerText === 'AM');
+            const PMIndicator = AMPMColumn.children.find(item => item.nativeElement.innerText === 'PM');
+            expect(AMIndicator).not.toBeUndefined();
+            expect(PMIndicator).not.toBeUndefined();
 
             // expect input value to be changed
             expect(input.nativeElement.value).toBe('04:50 AM');
@@ -1999,26 +2001,28 @@ describe('IgxTimePicker', () => {
         // Bug #6025 Date picker does not disable in reactive form
         it('Should disable when form is disabled', fakeAsync(() => {
             fixture.detectChanges();
+            const mockClickEvent = new Event('click');
             const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
-            const timeIcon = fixture.debugElement.query(By.css('.igx-icon'));
+            let timeIcon = fixture.debugElement.query(By.css('.igx-icon'));
 
-            timeIcon.nativeElement.click();
-            tick();
+            timeIcon.triggerEventHandler('click', mockClickEvent);
             fixture.detectChanges();
-            const timeDropDown = fixture.debugElement.query(By.css('.igx-time-picker--dropdown'));
+            let timeDropDown = fixture.debugElement.query(By.css('.igx-time-picker--dropdown'));
             expect(timeDropDown.properties.hidden).toBeFalsy();
 
             timePicker.close();
+            tick();
             fixture.detectChanges();
 
             formGroup.disable();
             tick();
             fixture.detectChanges();
+            timeIcon = fixture.debugElement.query(By.css('.igx-icon'));
 
-            timeIcon.nativeElement.click();
-            tick();
+            timeIcon.triggerEventHandler('click', mockClickEvent);
             fixture.detectChanges();
-            expect(timeDropDown.properties).toEqual({});
+            timeDropDown = fixture.debugElement.query(By.css('.igx-time-picker--dropdown'));
+            expect(timeDropDown.classes['igx-toggle--hidden']).toEqual(true);
         }));
     });
 });
