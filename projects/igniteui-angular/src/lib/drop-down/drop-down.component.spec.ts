@@ -349,7 +349,7 @@ describe('IgxDropDown ', () => {
                 tick();
                 fixture.detectChanges();
                 const dropdownElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROP_DOWN_BASE}`));
-                dropdownElement.triggerEventHandler('keydown', UIInteractions.arrowDownEvent);
+                dropdownElement.triggerEventHandler('keydown', UIInteractions.getKeyboardEvent('keydown', 'ArrowDown'));
                 tick();
                 fixture.detectChanges();
                 let focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
@@ -791,11 +791,11 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
 
                 const dropdownItem = dropdown.items[0];
-                input.triggerEventHandler('keydown', UIInteractions.enterEvent);
+                input.triggerEventHandler('keydown', UIInteractions.getKeyboardEvent('keydown', 'Enter'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
-                expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, UIInteractions.enterEvent);
+                expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, UIInteractions.getKeyboardEvent('keydown', 'Enter'));
                 expect(dropdown.selectedItem).toEqual(dropdownItem);
                 expect(dropdown.collapsed).toEqual(true);
             }));
@@ -1215,9 +1215,7 @@ describe('IgxDropDown ', () => {
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down id="test-id" igxDropDownItemNavigation [maxHeight]="maxHeight"
-    [displayDensity]="density" (onSelection)="onSelection($event)" [allowItemsFocus]="true"
-    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()" >
+    [displayDensity]="density" [allowItemsFocus]="true">
         <igx-drop-down-item *ngFor="let item of items"
         [disabled]="item.disabled" [isHeader]="item.header" [selected]="item.selected">
             {{item.field}}
@@ -1252,15 +1250,6 @@ class IgxDropDownTestComponent {
     public toggleDropDown() {
         this.dropdown.toggle();
     }
-    public onSelection(ev) {
-    }
-    public onToggleOpening() { }
-
-    public onToggleOpened() { }
-
-    public onToggleClosing() { }
-
-    public onToggleClosed() { }
 }
 @Component({
     template: `
