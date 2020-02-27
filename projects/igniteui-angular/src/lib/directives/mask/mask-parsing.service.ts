@@ -95,17 +95,20 @@ export class MaskParsingService {
         for (let i = start; i < end || (chars.length && i < maskedValue.length); i++) {
             if (literalsPositions.indexOf(i) !== -1) {
                 if (chars[0] === maskedValue[i]) {
+                    cursor = i + 1;
                     chars.shift();
                 }
-                cursor++;
                 continue;
             }
             if (chars[0] && !this.validateCharOnPosition(chars[0], i, maskOptions.format)) {
                 break;
             }
-            cursor++;
 
-            const char = chars.length ? chars.shift() : maskOptions.promptChar;
+            let char = maskOptions.promptChar;
+            if (chars.length) {
+                cursor = i + 1;
+                char = chars.shift();
+            }
             maskedValue = this.replaceCharAt(maskedValue, i, char);
         }
 
