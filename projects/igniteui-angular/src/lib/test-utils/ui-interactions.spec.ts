@@ -38,6 +38,16 @@ export class UIInteractions {
         }
     }
 
+    public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
+        element.value = text;
+        element.dispatchEvent(new Event('keydown'));
+        element.dispatchEvent(new Event('input'));
+        element.dispatchEvent(new Event('keyup'));
+        if (fix) {
+            fix.detectChanges();
+        }
+    }
+
     public static triggerKeyEvtUponElem(evtName, elem) {
         const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true };
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
