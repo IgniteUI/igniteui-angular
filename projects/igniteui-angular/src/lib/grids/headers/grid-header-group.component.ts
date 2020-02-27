@@ -207,6 +207,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
+    */
+    get hasFirstPinnedChildColumn(): boolean {
+        return this.column.allChildren.some(child => child.isFirstPinned);
+    }
+
+    /**
+     * @hidden
      */
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;
