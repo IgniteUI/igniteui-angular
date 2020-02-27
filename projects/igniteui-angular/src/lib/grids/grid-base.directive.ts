@@ -5542,7 +5542,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
-        if (this.pinnedColumns.length) {
+        if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
                 columnIndex -= this.pinnedColumns.length;
                 this.scrollDirective(virtDir, columnIndex);

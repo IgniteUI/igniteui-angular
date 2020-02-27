@@ -15,6 +15,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column Pinning #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -594,8 +595,33 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.pinnedColumns[2].field).toEqual('ContactName');
             expect(grid.getColumnByName('ID').pinned).toBeTruthy();
         }));
-    });
 
+        it('should correctly pin columns with their summaries to end.', async() => {
+            const fix = TestBed.createComponent(GridRightPinningComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.instance;
+            grid.pinning = { columns: ColumnPinningPosition.End };
+            grid.columns.forEach(col => {
+                if (col.field === 'CompanyName' || col.field === 'ContactName') {
+                    col.hasSummary = true;
+                }
+            });
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+            const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 9,
+                ['Count'], ['27']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 10,
+                ['Count'], ['27']);
+            const pinnedSummaryCells = summaryRow.queryAll(By.css('igx-grid-summary-cell.igx-grid-summary--pinned'));
+            expect(pinnedSummaryCells[0].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
+                .not.toBe(-1);
+            expect(pinnedSummaryCells[1].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
+                .toBe(-1);
+        });
+    });
 });
 
 /* tslint:disable */
