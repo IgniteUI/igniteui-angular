@@ -11,10 +11,6 @@ import {
     ViewChild,
     ContentChild,
     AfterViewInit,
-    OnInit,
-    SimpleChanges,
-    SimpleChange,
-    OnChanges,
     AfterContentInit
 } from '@angular/core';
 import {
