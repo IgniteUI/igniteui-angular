@@ -10,6 +10,20 @@ declare var Touch: {
 };
 export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
+    public static clickEvent = new MouseEvent('click');
+
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
+        const keyboardEvent = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new KeyboardEvent(eventType, keyboardEvent);
+    }
 
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
@@ -22,6 +36,19 @@ export class UIInteractions {
             preventDefault: () => { }
         };
         elem.triggerEventHandler('keydown', event);
+    }
+
+    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        elem.triggerEventHandler('keyup', event);
     }
 
     public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
@@ -46,6 +73,11 @@ export class UIInteractions {
         if (fix) {
             fix.detectChanges();
         }
+    }
+
+    public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
+        inputElement.nativeElement.value = inputValue;
+        inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
     }
 
     public static triggerKeyEvtUponElem(evtName, elem) {
