@@ -155,7 +155,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
 
 @Pipe({
-    name: "rowPinning",
+    name: 'rowPinning',
     pure: true
 })
 export class IgxGridRowPinningPipe implements PipeTransform {

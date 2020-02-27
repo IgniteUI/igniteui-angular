@@ -829,7 +829,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getContext(rowData, rowIndex, pinned?): any {
         if (pinned && !this.isRowPinningToTop) {
             rowIndex = rowIndex + this.dataView.length;
-            console.log(rowIndex)
         }
         rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this.pinnedRecords.length : rowIndex;
         if (this.isDetailRecord(rowData)) {
