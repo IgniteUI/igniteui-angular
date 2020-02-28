@@ -3625,8 +3625,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin();
+            if (!this.isPinningToStart) {
+                if (pos === DropPosition.AfterDropTarget) {
+                    position = DropPosition.AfterDropTarget;
+                } else {
+                    position = DropPosition.None;
+                }
+            }
             this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
-
         }
 
         if (!dropTarget.pinned && column.pinned) {
@@ -5651,7 +5657,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
         const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
-        if (this.pinnedColumns.length) {
+        if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
                 columnIndex -= this.pinnedColumns.length;
                 this.scrollDirective(virtDir, columnIndex);
