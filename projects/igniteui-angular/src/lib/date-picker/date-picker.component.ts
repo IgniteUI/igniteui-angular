@@ -865,6 +865,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
                 } else {
+                    // outside click
                     this._updateValidity();
                 }
             });
