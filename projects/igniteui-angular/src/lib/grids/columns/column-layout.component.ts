@@ -131,6 +131,17 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         return this.children.some(child => child.isLastPinned);
     }
 
+    /*
+     * Gets whether the group contains the first pinned child column of the column layout.
+     * ```typescript
+     * let hasFirstPinnedChildColumn = this.columnLayout.hasFirstPinnedChildColumn;
+     * ```
+     * @memberof IgxColumnLayoutComponent
+     */
+    get hasFirstPinnedChildColumn() {
+        return this.children.some(child => child.isFirstPinned);
+    }
+
     /**
      *@hidden
     */
