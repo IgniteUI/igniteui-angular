@@ -916,7 +916,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
                 } else {
-                    this._updateValidity();
+                    // outside click
+                    this._updateValidityOnBlur();
                 }
             });
 
@@ -1149,7 +1150,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
 
         if (this.collapsed) {
-            this._updateValidity();
+            this._updateValidityOnBlur();
         }
     }
 
