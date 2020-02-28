@@ -230,10 +230,16 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                     columnsToSelect.push(child.field);
                 }
             });
-            if (this.column.selected) {
-                this.grid.selectionService.deselectColumns(columnsToSelect, event);
-            } else {
+            if (!this.column.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+            } else {
+                const selectedFields = this.grid.selectionService.getSelectedColumns();
+                if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
+                    || event.ctrlKey) {
+                    this.grid.selectionService.deselectColumns(columnsToSelect, event);
+                } else {
+                    this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                }
             }
         }
     }

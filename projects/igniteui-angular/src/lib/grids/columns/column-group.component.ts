@@ -244,7 +244,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     @Input()
     get selected(): boolean {
-        return this.selectable && this.children.toArray().every(c => c.hidden || !c.selectable || (c.selectable && c.selected));
+        return this.selectable && this.children.toArray().every(c => c.hidden || !c.selectable || c.selected);
     }
     /**
      * Sets the column group selected property.
@@ -254,14 +254,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     set selected(value: boolean) {
-        this.children.forEach(c => {
-            if (!c.columnGroup) {
-                value ? this.selectionService.selectColumnsWithNoEvent([c.field]) :
-                    this.selectionService.deselectColumnsWithNoEvent([c.field]);
-            } else {
+        if (this.selectable) {
+            this.children.forEach(c => {
                 c.selected = value;
-            }
-        });
+            });
+        }
     }
 
     /**

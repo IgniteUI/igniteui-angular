@@ -48,7 +48,13 @@
                 </ng-template>
             </igx-grid>
             <div class="sample-buttons">
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
+            </div>
+            <div class="sample-buttons">
+
                 <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
+                <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
+                <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>
                 <button igxButton="raised" (click)="deselectCol()">Deselect ID</button>
                 <button igxButton="raised" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
             </div>

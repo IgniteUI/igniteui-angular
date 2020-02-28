@@ -4370,10 +4370,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
             const autoSize = this._shouldAutoSize(renderedHeight);
             if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
@@ -4493,10 +4493,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected calculateGridWidth() {
         let width;
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
 
         if (this.isPercentWidth) {
             /* width in %*/
+            const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width');
             width = computed.indexOf('%') === -1 ? parseInt(computed, 10) : null;
         } else {
             width = parseInt(this.width, 10);
@@ -5165,8 +5165,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * const selectedColumns = this.grid.selectedColumns();
     * ```
     */
-    public getSelectedColumns(): string[] {
-        return this.selectionService.getSelectedColumns();
+    public getSelectedColumns(): IgxColumnComponent[] {
+        const fields = this.selectionService.getSelectedColumns();
+        return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
 
     /**
@@ -5178,8 +5179,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param fields
      * @param clearCurrentSelection if true clears the current selection
     */
-    public selectColumns(fields: string[], clearCurrentSelection?: boolean) {
-        this.selectionService.selectColumnsWithNoEvent(fields, clearCurrentSelection);
+    public selectColumns(fields: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
+        const fieldToSelect = fields.length === 0 || typeof fields[0] === 'string' ? fields as string[]
+            : (fields as IgxColumnComponent[]).map(c => c.field);
+        this.selectionService.selectColumnsWithNoEvent(fieldToSelect, clearCurrentSelection);
         this.notifyChanges();
     }
 
@@ -5191,8 +5194,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         * ```
         * @param fields
        */
-    public deselectColumns(fields: string[]) {
-        this.selectionService.deselectColumnsWithNoEvent(fields);
+    public deselectColumns(fields: string[] | IgxColumnComponent[]) {
+        const fieldToDeselect = fields.length === 0 || typeof fields[0] === 'string' ? fields as string[]
+            : (fields as IgxColumnComponent[]).map(c => c.field);
+        this.selectionService.deselectColumnsWithNoEvent(fieldToDeselect);
         this.notifyChanges();
     }
 

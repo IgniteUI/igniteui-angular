@@ -74,10 +74,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
-            'igx-grid__th--selectable': this.column.selectable,
+            'igx-grid__th--selectable': this.column.selectable && !this.column.selected && !this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--sorted': this.sorted,
-            'igx-grid__th--selected': this.column.selected
+            'igx-grid__th--selected': this.column.selected && (!this.grid.filteringService.isFilterRowVisible
+                || this.grid.filteringService.filteredColumn !== this.column)
         };
 
         for (const klass of Object.keys(classList)) {
@@ -140,7 +141,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,
-        private _filteringService: IgxFilteringService,
         private _moduleRef: NgModuleRef<any>,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService
     ) { }
@@ -173,14 +173,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
             } else if (this.column.selectable) {
-                if (event.shiftKey) {
-                    this.grid.selectionService.selectMultipleColumns(this.column.field, event);
-                    return;
-                }
-                if (this.column.selected) {
-                    this.grid.selectionService.deselectColumn(this.column.field, event);
-                } else {
+                if (!this.column.selected || ( this.grid.selectionService.getSelectedColumns().length > 1 && !event.ctrlKey)) {
                     this.grid.selectionService.selectColumn(this.column.field, !event.ctrlKey, event);
+                } else {
+                    this.grid.selectionService.deselectColumn(this.column.field, event);
                 }
             }
         }

@@ -9,7 +9,8 @@ import {
     VerticalAlignment,
     IgxDropDownComponent,
     IgxButtonDirective,
-    IgxColumnComponent
+    IgxColumnComponent,
+    FilterMode
 } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -24,6 +25,19 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
     public columns: Array<any>;
+    public filterModes = [
+        {
+            label: 'Filter Row',
+            value: FilterMode.quickFilter,
+            selected: false,
+            togglable: true },
+        {
+            label: 'Excel Style',
+            value: FilterMode.excelStyleFilter,
+            selected: true,
+            togglable: true
+        }
+    ];
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -99,6 +113,21 @@ export class GridColumnSelectionSampleComponent implements OnInit {
 
     onColumnSelection(event) {
         console.log(event);
+    }
+
+    getGridSelectedColumns() {
+        console.log(this.grid1.getSelectedColumns());
+    }
+
+    selectedColumns() {
+        this.grid1.selectColumns(['ID', 'Name', 'aaaa']);
+    }
+
+    public selectFilterMode(event) {
+        const filterMode = this.filterModes[event.index].value as FilterMode;
+        if (filterMode !== this.grid1.filterMode) {
+            this.grid1.filterMode = filterMode;
+        }
     }
 }
 

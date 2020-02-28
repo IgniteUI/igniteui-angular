@@ -309,8 +309,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     set selected(value: boolean) {
-        value ? this.selectionService.selectColumnsWithNoEvent([this.field]) :
-        this.selectionService.deselectColumnsWithNoEvent([this.field]);
+        if (this.selectable) {
+            value ? this.selectionService.selectColumnsWithNoEvent([this.field]) :
+            this.selectionService.deselectColumnsWithNoEvent([this.field]);
+        }
     }
 
     /**
