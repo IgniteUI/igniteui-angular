@@ -863,6 +863,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
                 } else {
+                    // outside click
                     this._updateValidity();
                 }
             });
@@ -1346,7 +1347,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
-    public _updateValidity() {
+    public _updateValidityOnBlur() {
         this._onTouchedCallback();
         const input = this.inputDirective || this.input;
         if (input && this._ngControl && !this._ngControl.valid) {
