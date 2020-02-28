@@ -59,6 +59,30 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public index: number;
 
     /**
+     * Gets whether the row is pinned.
+     * ```typescript
+     * let isPinned = row.pinned;
+     * ```
+     */
+    public get pinned(): boolean {
+        return this.grid.pinnedRecords.indexOf(this.rowID) !== -1;
+    }
+    /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    public set pinned(value: boolean) {
+        if (value) {
+            this.grid.pinRow(this.rowID);
+        } else {
+            this.grid.unpinRow(this.rowID);
+        }
+    }
+
+    /**
      * @hidden
      */
     @Input()
@@ -349,7 +373,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public pin() {
-        this.grid.pinRow(this.rowID);
+        return this.grid.pinRow(this.rowID);
     }
 
     /**
@@ -362,7 +386,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public unpin() {
-        this.grid.unpinRow(this.rowID);
+        return this.grid.unpinRow(this.rowID);
     }
 
     /**
