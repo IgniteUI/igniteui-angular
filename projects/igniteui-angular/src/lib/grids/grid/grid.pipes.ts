@@ -162,7 +162,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
 
-    public transform(collection: any[], type: string, id: string, pipeTrigger: number) {
+    public transform(collection: any[] , id: string, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
         const pinnedRows = grid.pinnedRecords;
 
