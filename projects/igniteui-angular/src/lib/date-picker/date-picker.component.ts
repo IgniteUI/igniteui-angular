@@ -338,14 +338,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return this._dropDownOverlaySettings || this._defaultDropDownOverlaySettings;
     }
 
-    public get required(): boolean {
-        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
-        }
-    }
-
     public set dropDownOverlaySettings(value: OverlaySettings) {
         this._dropDownOverlaySettings = value;
     }
@@ -425,6 +417,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             openDialog: (target?: HTMLElement) => this.openDialog(target)
         };
     }
+
+    /** @hidden @internal */
+    get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+    }
+
 
     /**
      *Gets/Sets the selected date.
@@ -674,13 +676,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild('readonlyInput', { read: ElementRef })
     protected readonlyInput: ElementRef;
 
-     /* @hidden */
-    @ViewChild('editableInput', { read: IgxInputDirective })
-    protected editableInputDirective: IgxInputDirective;
-
-    /* @hidden */
-    @ViewChild('readonlyInput', { read: IgxInputDirective })
-    protected readonlyInputDirective: IgxInputDirective;
+    /** @hidden */
+    @ViewChild(IgxInputDirective)
+    protected inputDirective: IgxInputDirective;
 
     /** @hidden @internal */
     @ContentChild(IgxInputDirective)
@@ -911,11 +909,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            const input = this.readonlyInputDirective || this.editableInputDirective;
             if (this.inputGroup.isFocused) {
-                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         }
 
@@ -1348,7 +1345,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     public _updateValidity() {
         this._onTouchedCallback();
-        const input = this.readonlyInputDirective || this.editableInputDirective || this.input;
+        const input = this.inputDirective || this.input;
         if (input && this._ngControl && !this._ngControl.valid) {
             input.valid = IgxInputState.INVALID;
         } else {
