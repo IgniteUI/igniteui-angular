@@ -38,6 +38,27 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     newSelection: IgxChipComponent[];
 }
 
+/**
+ * The chip area allows you to perform more complex scenarios with chips that require interaction,
+ * like dragging, selection, navigation, etc.
+ *
+ * @igxModule IgxChipsModule
+ *
+ * @igxTheme igx-chip-theme
+ *
+ * @igxKeywords chip area, chip
+ *
+ * @igxGroup display
+ *
+ * @example
+ * ```html
+ * <igx-chips-area>
+ *    <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
+ *        <span>{{chip.text}}</span>
+ *    </igx-chip>
+ * </igx-chips-area>
+ * ```
+ */
 @Component({
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
@@ -46,12 +67,14 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     @Input()
     public class = '';
 
     /**
      * @hidden
+     * @internal
      */
     @HostBinding('attr.class')
     get hostClass() {
@@ -63,6 +86,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
      * ```
@@ -73,6 +97,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * An @Input property that sets the height of the `IgxChipsAreaComponent`.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="chipsOrderChanged($event)"></igx-chips-area>
      * ```
@@ -84,13 +109,9 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     /**
      * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
      * Returns an array of `IgxChipComponent`s.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
-     * ```
-     * ```typescript
-     * public changedOrder(event: IChipsAreaReorderEventArgs){
-     *      let chips: IgxChipComponent[] = event.chipsArray;
-     * }
      * ```
      */
     @Output()
@@ -100,26 +121,19 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected/deselected.
      * Fired after the chips area is initialized if there are initially selected chips as well.
      * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection($event)"></igx-chips-area>
      * ```
-     * ```typescript
-     * public selection(event: IChipsAreaSelectEventArgs){
-     *      let selectedChips: IgxChipComponent[] = event.newSelection;
-     * }
      */
     @Output()
     public onSelection = new EventEmitter<IChipsAreaSelectEventArgs>();
 
     /**
      * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveStart)="moveStart($event)"></igx-chips-area>
-     * ```
-     * ```typescript
-     * moveStart(event: IBaseChipsAreaEventArgs){
-     *      let chipArea = event.owner;
-     * }
      * ```
      */
     @Output()
@@ -127,13 +141,9 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Emits an event after an `IgxChipComponent` in the `IgxChipsAreaComponent` is moved.
+     * @example
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onMoveEnd)="moveEnd($event)"></igx-chips-area>
-     * ```
-     * ```typescript
-     * moveEnd(event: IBaseChipsAreaEventArgs){
-     *      let chipArea = event.owner;
-     * }
      * ```
      */
     @Output()
@@ -141,6 +151,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * Holds the `IgxChipComponent` in the `IgxChipsAreaComponent`.
+     * @example
      * ```typescript
      * ngAfterViewInit(){
      *    let chips = this.chipsArea.chipsList;
@@ -161,6 +172,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     public ngAfterViewInit() {
         // If we have initially selected chips through their inputs, we need to get them, because we cannot listen to their events yet.
@@ -178,6 +190,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     public ngDoCheck(): void {
         if (this.chipsList) {
@@ -208,7 +221,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     }
 
     /**
-     *@hidden
+     * @hidden
+     * @internal
      */
     public ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -217,6 +231,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected onChipKeyDown(event: IChipKeyDownEventArgs) {
         let orderChanged = false;
@@ -245,6 +260,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected onChipMoveStart(event: IBaseChipEventArgs) {
         this.onMoveStart.emit({
@@ -255,6 +271,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected onChipMoveEnd(event: IBaseChipEventArgs) {
         this.onMoveEnd.emit({
@@ -265,6 +282,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected onChipDragEnter(event: IChipEnterDragAreaEventArgs) {
         const dropChipIndex = this.chipsList.toArray().findIndex((el) => el === event.owner);
@@ -280,6 +298,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected positionChipAtIndex(chipIndex, targetIndex, shiftRestLeft, originalEvent) {
         if (chipIndex < 0 || this.chipsList.length <= chipIndex ||
@@ -321,6 +340,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     /**
      * @hidden
+     * @internal
      */
     protected onChipSelectionChange(event: IChipSelectEventArgs) {
         let selectedChips = this.chipsList.filter((chip) => chip.selected);

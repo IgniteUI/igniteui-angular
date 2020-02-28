@@ -7,8 +7,9 @@
 
 /// Column Hiding Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $title-color [primary 500]- The text color used for the title of the list.
-/// @param {Color} $background-color [transparent] - The background color of the panel.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $title-color [null]- The text color used for the title of the list.
+/// @param {Color} $background-color [null] - The background color of the panel.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
