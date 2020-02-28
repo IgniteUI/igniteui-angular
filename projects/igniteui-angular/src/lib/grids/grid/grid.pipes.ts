@@ -165,9 +165,13 @@ export class IgxGridRowPinningPipe implements PipeTransform {
     public transform(collection: any[] , id: string, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
         const pinnedRows = grid.pinnedRecords;
+        if (pinnedRows.length === 0) {
+            return collection;
+        }
 
-        return collection.filter((value, index) => {
+        const result = collection.filter((value, index) => {
             return pinnedRows.indexOf(value) === -1;
         });
+        return result;
     }
 }
