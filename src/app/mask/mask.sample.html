@@ -18,7 +18,7 @@
         </igx-input-group>
         <igx-input-group>
           <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'" [igxTextSelection]="true"
-            [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)" />
+            [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)" required/>
           <label igxLabel for="socialSecurityNumber">Social Security Number</label>
         </igx-input-group>
         <igx-input-group>

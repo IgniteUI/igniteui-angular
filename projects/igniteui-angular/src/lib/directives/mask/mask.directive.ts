@@ -305,7 +305,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
 
         this._dataValue = this.includeLiterals ? this.inputValue : value;
-        this._onChangeCallback(this._dataValue);
 
         this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
     }
