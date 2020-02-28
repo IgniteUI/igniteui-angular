@@ -38,6 +38,19 @@ export class UIInteractions {
         elem.triggerEventHandler('keydown', event);
     }
 
+    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        elem.triggerEventHandler('keyup', event);
+    }
+
     public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         UIInteractions.triggerEventHandlerKeyDown(keyPressed, elem, altKey, shift, ctrl);
         elem.triggerEventHandler('blur', null);
@@ -50,6 +63,11 @@ export class UIInteractions {
         if (fix) {
             return fix.whenStable();
         }
+    }
+
+    public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
+        inputElement.nativeElement.value = inputValue;
+        inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
     }
 
     public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
