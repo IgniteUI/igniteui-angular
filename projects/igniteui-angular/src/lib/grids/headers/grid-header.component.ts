@@ -17,7 +17,6 @@ import { DataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxOverlayService } from '../../services/overlay/overlay';
@@ -74,7 +73,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
-            'igx-grid__th--selectable': this.column.selectable && !this.column.selected && !this.grid.filteringService.isFilterRowVisible,
+            'igx-grid__th--selectable': this.column.selectable && this.column.hovered && !this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--sorted': this.sorted,
             'igx-grid__th--selected': this.column.selected && (!this.grid.filteringService.isFilterRowVisible
@@ -273,5 +272,21 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
     private onOverlayClosed() {
         this._componentOverlayId = null;
+    }
+
+    /**
+    * @hidden
+    */
+    @HostListener('pointerenter')
+    public onPinterEnter() {
+        this.column.hovered = true;
+    }
+
+    /**
+    * @hidden
+    */
+    @HostListener('pointerleave')
+    public onPointerLeave() {
+        this.column.hovered = false;
     }
 }

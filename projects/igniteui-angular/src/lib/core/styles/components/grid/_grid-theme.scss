@@ -1442,11 +1442,9 @@
     }
 
     %igx-grid__th--selectable {
-        &:hover {
-            color: --var($theme, 'row-selected-text-color');
-            background: --var($theme, 'row-selected-background');
-            opacity: .7;
-        }
+        color: --var($theme, 'row-selected-text-color');
+        background: --var($theme, 'row-selected-background');
+        opacity: .7;
     }
 
     %igx-grid__th--selected {

@@ -425,6 +425,10 @@ export class IgxColumnComponent implements AfterContentInit {
 
     private _calcWidth = null;
     public calcPixelWidth: number;
+    /**
+     * @hidden
+    */
+    public hovered = false;
 
     /**
      * Sets/gets the maximum `width` of the column.

@@ -264,6 +264,29 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public ngDoCheck() {
         this.cdr.markForCheck();
     }
+    /**
+     * @hidden
+     */
+    public onPinterEnter() {
+        if (this.column.selectable) {
+            this.column.hovered = true;
+            this.column.allChildren.forEach(child => {
+                child.hovered = true;
+            });
+        }
+    }
+
+    /**
+     * @hidden
+    */
+    public onPointerLeave() {
+        if (this.column.selectable) {
+            this.column.hovered = false;
+            this.column.allChildren.forEach(child => {
+                child.hovered = false;
+            });
+        }
+    }
 
     constructor(private cdr: ChangeDetectorRef,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
