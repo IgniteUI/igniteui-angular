@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
@@ -1273,60 +1273,39 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
         });
 
-        it('Should properly initialize when used as a form control in reactive form', () => {
-            expect(datePickerOnChangeComponent).toBeDefined();
-            expect(datePickerOnChangeComponent.value).toEqual(new Date(2000, 10, 15));
-
-            const datePickerFormReference = fixture.componentInstance.reactiveForm.controls.datePickerOnChange;
-            expect(datePickerFormReference).toBeDefined();
-            expect(datePickerFormReference.status).toEqual('VALID');
-        });
-
         it('Should set date picker status to invalid when it is required and has no value', fakeAsync(() => {
-            const inputGroup = (datePickerOnChangeComponent as any).inputGroup as IgxInputGroupComponent;
-            const datePickerFormReference = fixture.componentInstance.reactiveForm.controls.datePickerOnChange;
-            expect(datePickerFormReference.status).toEqual('VALID');
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeFalsy();
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnChangeComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
             datePickerOnChangeComponent.value = null;
             fixture.detectChanges();
 
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeTruthy();
-            expect(datePickerFormReference.status).toEqual('INVALID');
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
         }));
 
         it('Should set date picker status to invalid when it is required and has no value onBlur', fakeAsync(() => {
-            const formGroup = fixture.componentInstance.reactiveForm;
             datePickerOnBlurComponent.mode = InteractionMode.DropDown;
             datePickerOnBlurComponent.mask = 'dd/mm/yyyy';
             datePickerOnBlurComponent.inputMask = 'dd/mm/yyyy';
             fixture.detectChanges();
 
-            const inputGroup = (datePickerOnBlurComponent as any).inputGroup as IgxInputGroupComponent;
-            const datePickerFormReference = fixture.componentInstance.reactiveForm.controls.datePickerOnBlur;
-            expect(datePickerFormReference.status).toEqual('VALID');
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeFalsy();
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnBlurComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
 
-            UIInteractions.clickElement(datePickerOnBlurComponent.getEditElement(), HorizontalAlignment.Center, VerticalAlignment.Middle);
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            UIInteractions.clickElement(datePickerOnBlurComponent.getEditElement());
             fixture.detectChanges();
 
-            expect(formGroup.controls.datePickerOnBlur.status).toEqual('VALID');
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeFalsy();
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
             datePickerOnBlurComponent.value = null;
             fixture.detectChanges();
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeFalsy();
-            expect(formGroup.controls.datePickerOnBlur.status).toEqual('VALID');
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
             // force blur on the date picker
             // we are changing mode to dialog to suppress date calculating of the component
@@ -1335,22 +1314,20 @@ describe('IgxDatePicker', () => {
             datePickerOnBlurComponent.mode = InteractionMode.DropDown;
             fixture.detectChanges();
 
-            expect(inputGroup.isRequired).toBeTruthy();
-            expect(inputGroup.validClass).toBeFalsy();
-            expect(inputGroup.invalidClass).toBeTruthy();
-            expect(formGroup.controls.datePickerOnBlur.status).toEqual('INVALID');
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
         }));
 
         // Bug #6025 Date picker does not disable in reactive form
         it('Should disable when form is disabled', () => {
             const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
-            const inputGroup = (datePickerOnChangeComponent as any).inputGroup as IgxInputGroupComponent;
-
-            expect(inputGroup.disabled).toBeFalsy();
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnBlurComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+            expect(inputDirective.disabled).toBeFalsy();
 
             formGroup.disable();
             fixture.detectChanges();
-            expect(inputGroup.disabled).toBeTruthy();
+            expect(inputDirective.disabled).toBeTruthy();
         });
     });
 
