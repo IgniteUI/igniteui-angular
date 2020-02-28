@@ -4039,7 +4039,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
-        this.pinnedRecords.splice(eventArgs.insertAtIndex, 0, rowID);
+        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
@@ -4086,7 +4086,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedBottom() {
-        return this.isHorizontalScrollHidden ? this.pinnedRowHeight : this.pinnedRowHeight - this.scrollWidth + 1;
+        // TODO - take into consideration variable row height.
+        return this.renderedRowHeight * this.verticalScrollContainer.state.chunkSize - this.calcHeight;
     }
 
 
