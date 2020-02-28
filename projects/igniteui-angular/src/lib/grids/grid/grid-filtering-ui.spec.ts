@@ -2848,8 +2848,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should update filter icon when dialog is closed and the filter has been changed.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__composite');
+            const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
 
             checkbox[0].click();
             tick();

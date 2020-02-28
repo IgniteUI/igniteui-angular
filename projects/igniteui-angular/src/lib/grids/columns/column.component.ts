@@ -1890,14 +1890,6 @@ export class IgxColumnComponent implements AfterContentInit {
         return (cols.some(c => c === true) && cols.some(c => c === false));
     }
 
-     /**
-     * @hidden
-     * @internal
-     */
-    protected checkSelectableState() {
-        if (!this.children) { return true; }
-        return this.children.some(child => child.selectable);
-    }
 
     /**
      *@hidden

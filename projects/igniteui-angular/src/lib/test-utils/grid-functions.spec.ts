@@ -57,6 +57,7 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const DISPLAY_CONTAINER = 'igx-display-container';
+const SORT_ICON_CLASS = '.sort-icon';
 
 export class GridFunctions {
 
@@ -940,8 +941,8 @@ export class GridFunctions {
         return excelMenu;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
-        return GridFunctions.sortNativeElementsVertically(Array.from(excelMenu.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
+        const searchComp =  GridFunctions.getExcelStyleSearchComponent(fix, menu);
+        return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
     public static getExcelStyleFilteringSortContainer(fix, menu = null) {
@@ -1733,6 +1734,15 @@ export class GridFunctions {
         });
         rowComp.onKeydown(keyboardEvent);
         rowComp.onBlur();
+    }
+
+    public static getHeaderSortIcon(header: DebugElement): DebugElement {
+        return  header.query(By.css(SORT_ICON_CLASS));
+    }
+
+    public static clickHeaderSortIcon(header: DebugElement) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        sortIcon.triggerEventHandler('click', new Event('click'));
     }
 }
 export class GridSummaryFunctions {

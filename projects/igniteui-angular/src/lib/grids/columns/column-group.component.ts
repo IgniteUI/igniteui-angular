@@ -135,7 +135,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     @Input()
     public get selectable(): boolean {
-        return this._selectable && this.checkSelectableState();
+        return this._selectable && this.children && this.children.some(child => child.selectable);
     }
     /**
      *  Sets  whether the column group is selectable.
