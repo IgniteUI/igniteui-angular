@@ -54,6 +54,19 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
         };
     }
 
+    get mrlRightPinnedOffset(): string {
+        return !this.grid.isPinningToStart ?
+            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
+            null;
+    }
+
+    getContextMRL(pinnedCols, row) {
+        return {
+            $implicit: pinnedCols,
+            row: row
+        };
+    }
+
     get expanded() {
         return this.gridAPI.get_row_expansion_state(this.rowData);
     }
