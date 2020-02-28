@@ -125,6 +125,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _key: number;
     private _oldText = '';
     private _dataValue = '';
+    private _focused = false;
     private _droppedData: string;
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
@@ -222,12 +223,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('focus')
     public onFocus(): void {
+        this._focused = true;
         this.showMask(this._dataValue);
     }
 
     /** @hidden */
     @HostListener('blur', ['$event.target.value'])
     public onBlur(value: string): void {
+        this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
     }
@@ -235,13 +238,17 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('dragenter')
     public onDragEnter(): void {
-        this.showMask(this._dataValue);
+        if (!this._focused) {
+            this.showMask(this._dataValue);
+        }
     }
 
     /** @hidden */
     @HostListener('dragleave')
     public onDragLeave(): void {
-        this.showDisplayValue(this.inputValue);
+        if (!this._focused) {
+            this.showDisplayValue(this.inputValue);
+        }
     }
 
     /** @hidden */
@@ -257,6 +264,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             if (isIE()) {
                 this._stopPropagation = true;
             }
+            // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format
             this.inputValue = this.focusedValuePipe.transform(value);
         } else {
             this.inputValue = this.maskParser.applyMask(this.inputValue, this.maskOptions);

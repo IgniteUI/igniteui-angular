@@ -12,17 +12,17 @@
           <label igxLabel for="name">Name</label>
         </igx-input-group>
         <igx-input-group>
-          <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [(ngModel)]="person.birthday"
+          <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [igxTextSelection]="true" [(ngModel)]="person.birthday"
             (blur)="validateDate(dateInput, snackbar)" />
           <label igxLabel for="email">Birthday</label>
         </igx-input-group>
         <igx-input-group>
-          <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'"
+          <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'" [igxTextSelection]="true"
             [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)" />
           <label igxLabel for="socialSecurityNumber">Social Security Number</label>
         </igx-input-group>
         <igx-input-group>
-          <input igxInput #phone name="phone" type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'"
+          <input igxInput #phone name="phone" type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" [igxTextSelection]="true"
             [(ngModel)]="person.phone" />
           <label igxLabel for="phone">Phone</label>
         </igx-input-group>
