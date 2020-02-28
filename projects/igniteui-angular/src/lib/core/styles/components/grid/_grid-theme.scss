@@ -852,6 +852,7 @@
     %grid-mrl-block {
         display: grid;
         background: inherit;
+        position: relative;
 
         %grid-thead-item {
             display: flex;
