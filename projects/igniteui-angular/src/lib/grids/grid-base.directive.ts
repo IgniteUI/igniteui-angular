@@ -4068,6 +4068,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.pinnedRecords.length > 0 ? this.pinnedRecords.length * this.renderedRowHeight : 0;
     }
 
+    get totalHeight() {
+        return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+    }
+
     get pinnedBottom() {
         return this.isHorizontalScrollHidden ? this.pinnedRowHeight : this.pinnedRowHeight - this.scrollWidth + 1;
     }
