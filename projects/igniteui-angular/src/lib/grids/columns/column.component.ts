@@ -109,7 +109,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
     get selectable(): boolean  {
@@ -289,7 +288,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      *@memberof IgxColumnComponent
      */
-    @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
     get selected(): boolean {
