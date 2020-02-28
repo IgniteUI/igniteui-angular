@@ -121,7 +121,7 @@ export class TimeInputFormatPipe implements PipeTransform {
         }
 
         // TODO: Pending refactoring.
-        value = value ? value : (this.timePicker as any).displayValue;
+        value = (this.timePicker as any).displayValue;
         if (!value || value === mask) {
             return mask;
         }
