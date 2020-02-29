@@ -172,7 +172,6 @@ describe('IgLinearBar', () => {
     }));
 
     it('Should update value when we try to decrease it (without animation)', () => {
-        pending('Related to the bug #6740');
         const fixture = TestBed.createComponent(LinearBarComponent);
         const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
@@ -227,19 +226,25 @@ describe('IgLinearBar', () => {
     it('Value should not exceed the lower limit (0) when operating with floating numbers', fakeAsync(() => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
+        fix.detectChanges();
+        tick(tickTime);
+
         compInstance.max = 2.5;
-        compInstance.value = -0.3;
         fix.detectChanges();
 
+        compInstance.value = -0.3;
+        fix.detectChanges();
         tick(tickTime);
+
         const bar = compInstance.progressbar;
         const expectedRes = 0;
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
 
         compInstance.animate = false;
-        compInstance.value = -2;
+        fix.detectChanges();
 
+        compInstance.value = -2;
         fix.detectChanges();
 
         expect(bar.value).toBe(expectedRes);
@@ -247,12 +252,14 @@ describe('IgLinearBar', () => {
     }));
 
     it('Value should not exceed the max limit when operating with floating numbers', fakeAsync(() => {
-        pending('Related to the bug #6740');
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
         let value = 2.67;
         const max = 2.5;
+
         compInstance.max = max;
+        fix.detectChanges();
+
         compInstance.value = value;
         fix.detectChanges();
 
@@ -263,9 +270,11 @@ describe('IgLinearBar', () => {
 
         value = 3.01;
         compInstance.animate = false;
-        compInstance.value = value;
-
         fix.detectChanges();
+
+        compInstance.value = value;
+        fix.detectChanges();
+
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
     }));
