@@ -17,7 +17,9 @@ import {
     ContentChild,
     Injectable,
     AfterViewInit,
-    Injector
+    Injector,
+    ChangeDetectorRef,
+    AfterViewChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -103,7 +105,8 @@ export class IgxTimePickerComponent implements
     EditorProvider,
     OnInit,
     OnDestroy,
-    AfterViewInit {
+    AfterViewInit,
+    AfterViewChecked {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -521,6 +524,9 @@ export class IgxTimePickerComponent implements
     @ViewChild('defaultTimePickerTemplate', { read: TemplateRef, static: true })
     protected defaultTimePickerTemplate: TemplateRef<any>;
 
+    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
+    private dropdownInputTemplate: TemplateRef<any>;
+
     /**
      *@hidden
      */
@@ -536,39 +542,20 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild(IgxInputDirective, { read: ElementRef })
-    private _input: ElementRef;
-
-    /**
-     * @hidden
-     */
     @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('input', { read: ElementRef })
-    private inputElementRef: ElementRef;
+    @ViewChild(IgxInputDirective, { read: ElementRef })
+    private _inputElementRef: ElementRef;
 
     @ViewChild(IgxInputDirective, { read: IgxInputDirective})
     private _inputDirective: IgxInputDirective;
 
-    /** @hidden @internal */
-    @ContentChild(IgxInputDirective)
-    protected input: IgxInputDirective;
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective})
+    private _inputDirectiveUserTemplate: IgxInputDirective;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('group', { read: IgxInputGroupComponent })
-    private group: IgxInputGroupComponent;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
-    private dropdownInputTemplate: TemplateRef<any>;
+    @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent })
+    private _inputGroup: IgxInputGroupComponent;
 
     private _overlaySettings: OverlaySettings;
 
@@ -699,8 +686,6 @@ export class IgxTimePickerComponent implements
     public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
     //#endregion
-
-
 
     private trimMask(): void {
         this.mask = this.mask.slice(this.mask.indexOf(':') + 1, this.mask.length);
@@ -873,6 +858,16 @@ export class IgxTimePickerComponent implements
         };
     }
 
+    private get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
+    }
+
     /**
      * @hidden
      */
@@ -898,8 +893,8 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown && this.inputElementRef) {
-            fromEvent(this.inputElementRef.nativeElement, 'keydown').pipe(
+        if (this.mode === InteractionMode.DropDown && this._inputElementRef) {
+            fromEvent(this._inputElementRef.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((event: KeyboardEvent) => {
@@ -910,14 +905,12 @@ export class IgxTimePickerComponent implements
             });
         }
 
-        if (this.toggleRef && this.group) {
-            this.toggleRef.element.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
+        if (this.toggleRef && this._inputGroup) {
+            this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
         }
 
         if (this.toggleRef) {
             this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
-
-
                 if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
                 }
@@ -946,7 +939,7 @@ export class IgxTimePickerComponent implements
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
                 } else {
-                    this.updateValidity();
+                    this._updateValidityOnBlur();
                 }
             });
 
@@ -955,8 +948,18 @@ export class IgxTimePickerComponent implements
             if (this._ngControl) {
                 this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
             }
+        }
+    }
 
-            this.manageRequiredAsterisk();
+    public ngAfterViewChecked() {
+        // if one sets mode at run time this forces initialization of new igxInputGroup
+        // As a result a new igxInputDirective is initialized too. In ngAfterViewInit of
+        // the new directive isRequired of the igxInputGroup is set again. However
+        // ngAfterViewInit of the time picker is not called again and we may finish with wrong
+        // isRequired in igxInputGroup. This is why we should set it her, only when needed
+        if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
+            this._inputGroup.isRequired = this.required;
+            this._cdr.detectChanges();
         }
     }
 
@@ -986,7 +989,9 @@ export class IgxTimePickerComponent implements
         this.openDialog(this.getInputGroupElement());
     }
 
-    constructor(private _injector: Injector) { }
+    constructor(
+        private _injector: Injector,
+        private _cdr: ChangeDetectorRef) { }
 
     private determineCursorPos(): void {
         this.clearCursorPos();
@@ -1387,11 +1392,11 @@ export class IgxTimePickerComponent implements
     }
 
     private _getCursorPosition(): number {
-        return this.inputElementRef.nativeElement.selectionStart;
+        return this._inputElementRef.nativeElement.selectionStart;
     }
 
     private _setCursorPosition(start: number, end: number = start): void {
-        this.inputElementRef.nativeElement.setSelectionRange(start, end);
+        this._inputElementRef.nativeElement.setSelectionRange(start, end);
     }
 
     private _updateEditableInput(): void {
@@ -1551,34 +1556,31 @@ export class IgxTimePickerComponent implements
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            if (this.group.isFocused) {
-                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            const input = this._inputDirective || this._inputDirectiveUserTemplate;
+            if (this._inputGroup.isFocused) {
+                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
         }
-        this.manageRequiredAsterisk();
-    }
 
-    protected manageRequiredAsterisk(): void {
-        if (this._ngControl && this._ngControl.control.validator) {
-            // Run the validation with empty object to check if required is enabled.
-            const error = this._ngControl.control.validator({} as AbstractControl);
-            this.group.isRequired = error && error.required;
+        if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
+            this._inputGroup.isRequired = this.required;
         }
     }
+
     /**
      * @hidden
      */
     getEditElement() {
-        return this._input ? this._input.nativeElement : null;
+        return this._inputElementRef ? this._inputElementRef.nativeElement : null;
     }
 
     /**
      * @hidden
      */
     public getInputGroupElement() {
-        return this.group ? this.group.element.nativeElement : null;
+        return this._inputGroup ? this._inputGroup.element.nativeElement : null;
     }
 
 
@@ -2007,29 +2009,31 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public onBlur(event): void {
-        const value = event.target.value;
+        if (this.mode === InteractionMode.DropDown) {
+            const value = event.target.value;
 
-        this.isNotEmpty = value !== '';
-        this.displayValue = value;
+            this.isNotEmpty = value !== '';
+            this.displayValue = value;
 
-        if (value && value !== this.parseMask()) {
-            if (this._isEntryValid(value)) {
-                const newVal = this._convertMinMaxValue(value);
-                if (!this.value || this.value.getTime() !== newVal.getTime()) {
-                    this.value = newVal;
+            if (value && value !== this.parseMask()) {
+                if (this._isEntryValid(value)) {
+                    const newVal = this._convertMinMaxValue(value);
+                    if (!this.value || this.value.getTime() !== newVal.getTime()) {
+                        this.value = newVal;
+                    }
+                } else {
+                    const args: IgxTimePickerValidationFailedEventArgs = {
+                        timePicker: this,
+                        currentValue: value,
+                        setThroughUI: false
+                    };
+                    this.onValidationFailed.emit(args);
                 }
-            } else {
-                const args: IgxTimePickerValidationFailedEventArgs = {
-                    timePicker: this,
-                    currentValue: value,
-                    setThroughUI: false
-                };
-                this.onValidationFailed.emit(args);
             }
         }
 
         if (this.toggleRef.collapsed) {
-            this.updateValidity();
+            this._updateValidityOnBlur();
         }
     }
 
@@ -2094,7 +2098,7 @@ export class IgxTimePickerComponent implements
 
         // minor hack for preventing cursor jumping in IE
         this._displayValue = this.inputFormat.transform(displayVal);
-        this.inputElementRef.nativeElement.value = this._displayValue;
+        this._inputElementRef.nativeElement.value = this._displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
@@ -2127,13 +2131,13 @@ export class IgxTimePickerComponent implements
             (!showHours && (!showMinutes || !showSeconds) && this._amPmPos.has(cursor));
     }
 
-    private updateValidity() {
+    private _updateValidityOnBlur() {
         this._onTouchedCallback();
-        const inputDirective = this._inputDirective || this.input;
+        const input = this._inputDirective || this._inputDirectiveUserTemplate;
         if (this._ngControl && !this._ngControl.valid) {
-            inputDirective.valid = IgxInputState.INVALID;
+            input.valid = IgxInputState.INVALID;
         } else {
-            inputDirective.valid = IgxInputState.INITIAL;
+            input.valid = IgxInputState.INITIAL;
         }
     }
 }

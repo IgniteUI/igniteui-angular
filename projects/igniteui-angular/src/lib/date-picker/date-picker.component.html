@@ -4,7 +4,7 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #readonlyInput
+        <input
             class="igx-date-picker__input-date"
             igxInput
             [value]="displayData || ''"
@@ -21,7 +21,7 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #editableInput
+        <input
             class="igx-date-picker__input-date"
             igxInput
             [igxTextSelection]="true"
