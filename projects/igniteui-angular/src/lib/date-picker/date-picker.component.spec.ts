@@ -1298,7 +1298,7 @@ describe('IgxDatePicker', () => {
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            UIInteractions.clickElement(datePickerOnBlurComponent.getEditElement());
+            datePickerOnBlurComponent.onFocus();
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
