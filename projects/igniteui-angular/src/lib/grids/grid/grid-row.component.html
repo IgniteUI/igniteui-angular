@@ -32,20 +32,8 @@
 </ng-container>
 
 <ng-container *ngIf="grid.hasColumnLayouts">
-    <ng-container *ngIf="pinnedColumns.length > 0">
-        <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
-        [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
-        [ngStyle]="{
-            'grid-template-rows':col.getGridTemplate(true, false),
-            'grid-template-columns':col.getGridTemplate(false, false),
-            'z-index': col.pinned ? 1 : null,
-            '-ms-grid-rows':col.getGridTemplate(true, true),
-            '-ms-grid-columns':col.getGridTemplate(false, true)
-        }">
-            <ng-template ngFor let-col [ngForOf]="col.children">
-                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
-            </ng-template>
-        </div>
+    <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">
+        <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
         <div class="igx-grid__mrl-block" [ngStyle]="{
@@ -59,7 +47,29 @@
             </ng-template>
         </div>
     </ng-template>
+
+    <ng-container *ngIf="pinnedColumns.length > 0 && !grid.isPinningToStart">
+        <ng-container *ngTemplateOutlet="mrlPinnedTemplate; context: getContextMRL(pinnedColumns, this)"></ng-container>
+    </ng-container>
 </ng-container>
+
+<ng-template #mrlPinnedTemplate let-pinnedColumns>
+    <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
+    [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
+    [class.igx-grid__td--pinned-first]="col.hasFirstPinnedChildColumn"
+    [style.left]="mrlRightPinnedOffset"
+    [ngStyle]="{
+        'grid-template-rows':col.getGridTemplate(true, false),
+        'grid-template-columns':col.getGridTemplate(false, false),
+        'z-index': col.pinned ? 1 : null,
+        '-ms-grid-rows':col.getGridTemplate(true, true),
+        '-ms-grid-columns':col.getGridTemplate(false, true)
+    }">
+        <ng-template ngFor let-col [ngForOf]="col.children">
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
+        </ng-template>
+    </div>
+</ng-template>
 
 <ng-template #rowSelectorBaseTemplate>
     <div class="igx-grid__cbx-padding">
@@ -149,6 +159,7 @@
         [style.-ms-grid-column]="col.colStart"
         [style.grid-column-start]="col.colStart"
         [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [firstPinned]="col.columnLayoutChild ? null : col.isFirstPinned"
         [formatter]="col.formatter"
         [row]="this"
         [style.min-height.px]="grid.rowHeight || 32"
