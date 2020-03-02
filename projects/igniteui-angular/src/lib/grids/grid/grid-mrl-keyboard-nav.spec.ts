@@ -2549,7 +2549,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow down
                 GridFunctions.simulateCellKeydown(cell, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2567,7 +2567,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow up
                 GridFunctions.simulateCellKeydown(cell, 'ArrowUp');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2585,7 +2585,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow right
                 GridFunctions.simulateCellKeydown(cell, 'ArrowRight');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -2603,7 +2603,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // arrow left
                 GridFunctions.simulateCellKeydown(cell, 'ArrowLeft');
-                await wait();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
