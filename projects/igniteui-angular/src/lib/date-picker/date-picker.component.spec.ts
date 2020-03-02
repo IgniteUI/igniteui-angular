@@ -1292,13 +1292,14 @@ describe('IgxDatePicker', () => {
             datePickerOnBlurComponent.inputMask = 'dd/mm/yyyy';
             fixture.detectChanges();
 
-            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
-            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnBlurComponent);
-            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+            const inputDirectiveElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputDirectiveElement = inputDirectiveElements.find(d => d.componentInstance === datePickerOnBlurComponent);
+            const inputDirective = inputDirectiveElement.injector.get(IgxInputDirective) as IgxInputDirective;
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            datePickerOnBlurComponent.onFocus();
+
+            inputDirectiveElement.triggerEventHandler('focus', {});
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
@@ -1307,11 +1308,7 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            // force blur on the date picker
-            // we are changing mode to dialog to suppress date calculating of the component
-            datePickerOnBlurComponent.mode = InteractionMode.Dialog;
-            datePickerOnBlurComponent.onBlur(null);
-            datePickerOnBlurComponent.mode = InteractionMode.DropDown;
+            inputDirectiveElement.triggerEventHandler('blur', { target: { value: ''}});
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
@@ -1370,9 +1367,10 @@ describe('IgxDatePicker', () => {
             ngModel.control.validator = () => ({ required: true});
             datePicker.ngOnInit();
             datePicker.ngAfterViewInit();
+            datePicker.ngAfterViewChecked();
 
             expect(datePicker).toBeDefined();
-            expect((datePicker as any).required).toBeTruthy();
+            expect(inputGroup.isRequired).toBeTruthy();
         });
 
         it('should update inputGroup isRequired correctly', () => {
@@ -1380,9 +1378,9 @@ describe('IgxDatePicker', () => {
             datePicker['inputGroup'] = inputGroup;
             datePicker.ngOnInit();
             datePicker.ngAfterViewInit();
-            expect(datePicker).toBeDefined();
+            datePicker.ngAfterViewChecked();
 
-            ngModel.statusChanges.emit();
+            expect(datePicker).toBeDefined();
             expect(inputGroup.isRequired).toBeFalsy();
 
             ngModel.control.validator = () => ({ required: true});
