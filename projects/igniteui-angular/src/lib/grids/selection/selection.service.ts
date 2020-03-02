@@ -401,7 +401,7 @@ export class IgxGridSelectionService {
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
             this.clear();
-            this.keyboardState.node = node;
+            this.keyboardState.node = Object.assign({}, node);
         }
     }
 
@@ -410,9 +410,9 @@ export class IgxGridSelectionService {
 
         // Focus triggered by keyboard navigation
         if (kbState.active) {
-/*             if (isChromium()) {
+            if (isChromium()) {
                 this._moveSelectionChrome(dom);
-            } */
+            }
             // Start generating a range if shift is hold
             if (kbState.shift) {
                 this.dragSelect(node, kbState);

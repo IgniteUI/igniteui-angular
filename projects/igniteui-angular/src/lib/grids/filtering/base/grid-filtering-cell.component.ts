@@ -16,7 +16,6 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
-import { KEYS } from '../../../core/utils';
 
 /**
  * @hidden
@@ -78,21 +77,20 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.updateFilterCellArea();
     }
 
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
-
-        if (this.isLastElementFocused()) {
-            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs, false);
+        const filterableCols = this.filteringService.grid.visibleColumns
+            .filter(c => !c.columnGroup && c.filterable).map(col => col.visibleIndex);
+        if (this.column.visibleIndex === Math.max(...filterableCols) ||
+            (eventArgs.shiftKey && this.column.visibleIndex === Math.min(...filterableCols)) ) {
+            return;
         }
         eventArgs.stopPropagation();
-    }
-
-    @HostListener('keydown.shift.tab', ['$event'])
-    public onShiftTabKeyDown(eventArgs) {
-        if (this.isFirstElementFocused()) {
-            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs, true);
+        if (eventArgs.shiftKey ? this.isFirstElementFocused() : this.isLastElementFocused()) {
+            eventArgs.preventDefault();
+            this.filteringService.grid.navigation.handleFilterNavigation(this.column, eventArgs.shiftKey);
         }
-        eventArgs.stopPropagation();
     }
 
     /**
@@ -195,10 +193,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
      * Chip keydown event handler.
      */
     public onChipKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
-        if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
             this.onChipClicked(expression);
-        }
     }
 
     /**

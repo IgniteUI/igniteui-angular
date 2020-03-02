@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef, NgZone } from '@angular/core';
+import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
@@ -29,6 +29,11 @@ export class IgxSummaryCellComponent {
 
     constructor(private element: ElementRef) {
     }
+
+    /** @hidden */
+    @Input()
+    @HostBinding('class.igx-grid-summary--active')
+    public active: boolean;
 
     @Input()
     @HostBinding('attr.data-rowIndex')

@@ -51,7 +51,18 @@ export class IgxSummaryRowComponent implements DoCheck  {
     }
 
     @ViewChildren(IgxSummaryCellComponent, { read: IgxSummaryCellComponent })
-    public summaryCells: QueryList<IgxSummaryCellComponent>;
+    public _summaryCells: QueryList<IgxSummaryCellComponent>;
+
+    public get summaryCells(): QueryList<IgxSummaryCellComponent> {
+        const res = new QueryList<IgxSummaryCellComponent>();
+        if (!this._summaryCells) { return res; }
+        const cList = this._summaryCells.filter(c => c.nativeElement.isConnected);
+        res.reset(cList);
+        return res;
+    }
+    public set summaryCells(cells) {
+
+    }
 
     /**
      * @hidden
