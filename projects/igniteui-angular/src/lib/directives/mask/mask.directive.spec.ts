@@ -129,20 +129,17 @@ describe('igxMask', () => {
     it('Enter value with a preset mask and value', fakeAsync(() => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
+        tick(); // NgModel updateValue Promise
 
         const comp = fixture.componentInstance;
         const input = comp.input;
 
-        input.nativeElement.dispatchEvent(new Event('input'));
-        tick();
 
         expect(input.nativeElement.value).toEqual('(123) 4567-890');
         expect(comp.value).toEqual('1234567890');
 
         comp.value = '7777';
         fixture.detectChanges();
-
-        input.nativeElement.dispatchEvent(new Event('input'));
         tick();
 
         expect(input.nativeElement.value).toEqual('(777) 7___-___');
