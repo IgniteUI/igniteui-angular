@@ -1,46 +1,46 @@
 <div class="sample-wrapper">
-    <app-page-header title="Mask">
-      Provide means for controlling user input and formatting the visible value based on a configurable mask rules.
-    </app-page-header>
-    <section class="sample-content">
-        <article class="sample-column">
-          <form class="input-sample" action="/" method="POST">
-            <h4>Personal Data</h4>
-            <br />
-            <igx-input-group>
-              <input igxInput name="name" type="text" [(ngModel)]="person.name" required  />
-              <label igxLabel for="name">Name</label>
-            </igx-input-group>
-            <igx-input-group>
-                <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [(ngModel)]="person.birthday" (blur)="validateDate(dateInput, snackbar)"/>
-                <label igxLabel for="email">Birthday</label>
-            </igx-input-group>
-            <igx-input-group>
-              <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'" [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)"/>
-              <label igxLabel for="socialSecurityNumber">Social Security Number</label>
-            </igx-input-group>
-            <igx-input-group>
-                <input igxInput #phone name="phone" type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" [(ngModel)]="person.phone" />
-                <label igxLabel for="phone">Phone</label>
-            </igx-input-group>
-            <igx-snackbar #snackbar [displayTime]="1000" (onAction)="snackbar.hide()"></igx-snackbar>
-          </form>
-        </article>
-        <article class="sample-column">
-            <form class="input-sample" action="/" method="POST">
-              <h4>Mask Using Pipes</h4>
-              <br/>
-              <igx-input-group>
-                  <label igxLabel for="email">Increase</label>
-                  <input igxInput name="increase" type="text" [(ngModel)]="value"
-                                                              [igxMask]="mask"
-                                                              [placeholder]="placeholder"
-                                                              [focusedValuePipe]="inputFormat"
-                                                              [displayValuePipe]="displayFormat"/>
-                  <igx-hint position="start">model value: {{value}}</igx-hint>
-              </igx-input-group>
-              <div style="height: 130px"></div>
-            </form>
-        </article>
-      </section>
-  </div>
+  <app-page-header title="Mask">
+    Provide means for controlling user input and formatting the visible value based on a configurable mask rules.
+  </app-page-header>
+  <section class="sample-content">
+    <article class="sample-column">
+      <form class="input-sample" action="/" method="POST">
+        <h4>Personal Data</h4>
+        <br />
+        <igx-input-group>
+          <input igxInput name="name" type="text" [(ngModel)]="person.name" required />
+          <label igxLabel for="name">Name</label>
+        </igx-input-group>
+        <igx-input-group>
+          <input igxInput #dateInput name="birthday" type="text" [igxMask]="'00/00/0000'" [igxTextSelection]="true" [(ngModel)]="person.birthday"
+            (blur)="validateDate(dateInput, snackbar)" />
+          <label igxLabel for="email">Birthday</label>
+        </igx-input-group>
+        <igx-input-group>
+          <input igxInput #ssn name="socialSecurityNumber" type="text" [igxMask]="'###-##-####'" [igxTextSelection]="true"
+            [(ngModel)]="person.socialSecurityNumber" (blur)="validateSSN(ssn, snackbar)" required/>
+          <label igxLabel for="socialSecurityNumber">Social Security Number</label>
+        </igx-input-group>
+        <igx-input-group>
+          <input igxInput #phone name="phone" type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" [igxTextSelection]="true"
+            [(ngModel)]="person.phone" />
+          <label igxLabel for="phone">Phone</label>
+        </igx-input-group>
+        <igx-snackbar #snackbar [displayTime]="1000" (onAction)="snackbar.hide()"></igx-snackbar>
+      </form>
+    </article>
+    <article class="sample-column">
+      <form class="input-sample" action="/" method="POST">
+        <h4>Mask Using Pipes</h4>
+        <br />
+        <igx-input-group>
+          <label igxLabel for="email">Increase</label>
+          <input igxInput name="increase" type="text" [(ngModel)]="value" [igxMask]="mask" [placeholder]="placeholder"
+            [focusedValuePipe]="inputFormat" [displayValuePipe]="displayFormat" />
+          <igx-hint position="start">model value: {{value}}</igx-hint>
+        </igx-input-group>
+        <div style="height: 130px"></div>
+      </form>
+    </article>
+  </section>
+</div>
