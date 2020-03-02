@@ -473,6 +473,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             const error = this._ngControl.control.validator({} as AbstractControl);
             return error && error.required;
         }
+
+        return false;
     }
 
 
