@@ -2580,7 +2580,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
-        fit('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
+        it('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
             grid.pinning.columns = 1;
 
             const columnToPin = grid.columns[grid.columns.length - 2];
