@@ -135,9 +135,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
             this.nativeElement.required = this.inputGroup.isRequired = value;
 
             if (value && !this.nativeElement.checkValidity()) {
-                this.valid = IgxInputState.INVALID;
+                this._valid = IgxInputState.INVALID;
             } else {
-                this.valid = IgxInputState.INITIAL;
+                this._valid = IgxInputState.INITIAL;
             }
         }
     }
@@ -203,13 +203,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostListener('blur', ['$event'])
     public onBlur(event) {
         this.inputGroup.isFocused = false;
-        this.valid = IgxInputState.INITIAL;
+        this._valid = IgxInputState.INITIAL;
         if (this.ngControl) {
             if (!this.ngControl.valid) {
-                this.valid = IgxInputState.INVALID;
+                this._valid = IgxInputState.INVALID;
             }
         } else if (this._hasValidators() && !this.nativeElement.checkValidity()) {
-            this.valid = IgxInputState.INVALID;
+            this._valid = IgxInputState.INVALID;
         }
     }
     /**
@@ -231,7 +231,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
 
         // Make sure we do not invalidate the input on init
         if (!this.ngControl) {
-            this.valid = IgxInputState.INITIAL;
+            this._valid = IgxInputState.INITIAL;
         }
         // Also check the control's validators for required
         if (!this.inputGroup.isRequired && this.ngControl && this.ngControl.control.validator) {
@@ -294,15 +294,15 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
                 //  TODO: check the logic when control is touched or dirty
                 if (this.inputGroup.isFocused) {
                     // the user is still typing in the control
-                    this.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                    this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
                 } else {
                     // the user had touched the control previously but now the value is changing due to changes in the form
-                    this.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                    this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
                 }
             } else {
                 //  if control is untouched and pristine its state is initial. This is when user did not interact
                 //  with the input or when form/control is reset
-                this.valid = IgxInputState.INITIAL;
+                this._valid = IgxInputState.INITIAL;
             }
         }
     }
