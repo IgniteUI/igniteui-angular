@@ -2580,6 +2580,47 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
+        fit('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
+            grid.pinning.columns = 1;
+
+            const columnToPin = grid.columns[grid.columns.length - 2];
+            columnToPin.pinned = true;
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+
+            const columnToMove = grid.unpinnedColumns[grid.unpinnedColumns.length - 1];
+            columnToMove.movable = true;
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
+
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(2);
+            
+            expect(grid.pinnedColumns[0].field).toBe(columnToMove.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToPin.field);
+            
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToMove.field);
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+        }));
+
         it('Should pin column when clicking buttons.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
