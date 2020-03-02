@@ -31,13 +31,18 @@ export class DatePickerDisplayValuePipe implements PipeTransform {
 export class DatePickerInputValuePipe implements PipeTransform {
     constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IDatePicker) { }
     transform(value: any, args?: any): any {
+        /**
+         * TODO(D.P.): This plugs into the mask, but constantly received display strings it can't handle at all
+         * Those are almost immediately overridden by the pickers onFocus handling anyway; Refactor ASAP
+         */
         if (this._datePicker.invalidDate !== '') {
             return this._datePicker.invalidDate;
         } else {
             if (this._datePicker.value === null || this._datePicker.value === undefined) {
                 return DatePickerUtil.maskToPromptChars(this._datePicker.inputMask);
             } else {
-                return DatePickerUtil.addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
+                return (this._datePicker as any)._getEditorDate(this._datePicker.value);
+                // return DatePickerUtil.addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
             }
         }
     }
