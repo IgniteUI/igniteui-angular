@@ -2601,10 +2601,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toBe(2);
-            
+
             expect(grid.pinnedColumns[0].field).toBe(columnToMove.field);
             expect(grid.pinnedColumns[1].field).toBe(columnToPin.field);
-            
+
             moveRight.click();
             fix.detectChanges();
 
