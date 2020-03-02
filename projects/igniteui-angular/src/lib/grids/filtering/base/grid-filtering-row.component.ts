@@ -164,7 +164,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
+          //  this.filteringService.grid.navigateTo(0, 0, (obj) => { obj.target.activate(); });
         }
     }
 
