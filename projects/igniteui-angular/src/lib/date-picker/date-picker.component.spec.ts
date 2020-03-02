@@ -1372,7 +1372,7 @@ describe('IgxDatePicker', () => {
             datePicker.ngAfterViewInit();
 
             expect(datePicker).toBeDefined();
-            expect(datePicker.required).toBeTruthy();
+            expect((datePicker as any).required).toBeTruthy();
         });
 
         it('should update inputGroup isRequired correctly', () => {
@@ -1383,15 +1383,15 @@ describe('IgxDatePicker', () => {
             expect(datePicker).toBeDefined();
 
             ngModel.statusChanges.emit();
-            expect(datePicker.required).toBeFalsy();
+            expect(inputGroup.isRequired).toBeFalsy();
 
             ngModel.control.validator = () => ({ required: true});
             ngModel.statusChanges.emit();
-            expect(datePicker.required).toBeTruthy();
+            expect(inputGroup.isRequired).toBeTruthy();
 
             ngModel.control.validator = () => ({ required: false});
             ngModel.statusChanges.emit();
-            expect(datePicker.required).toBeFalsy();
+            expect(inputGroup.isRequired).toBeFalsy();
         });
     });
 });
