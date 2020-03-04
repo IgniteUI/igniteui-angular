@@ -66,15 +66,39 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(3).rowID).toBe(fix.componentInstance.data[3]);
         });
 
-        fit('should pin rows to bottom.', fakeAsync(() => {
+        fit('should pin rows to bottom.', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             fix.detectChanges();
-            tick();
 
+            // pin 2nd
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
-            tick();
-        }));
+            
+            expect(grid.pinnedRecords.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[0].context.index).toBe(fix.componentInstance.data.length - 1);
+            expect(pinRowContainer[0].children[0].nativeElement).toBe(grid.getRowByIndex(fix.componentInstance.data.length - 1).nativeElement);
+
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[2]);
+
+            // pin 1st
+            grid.pinRow(fix.componentInstance.data[0]);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[1].context.rowID).toBe(fix.componentInstance.data[0]);
+
+            // check last pinned is fully in view
+            const last = pinRowContainer[0].children[1].context.nativeElement;
+            expect(last.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);
+
+        });
 
         it('should emit onRowPinning on pin/unpin.', () => {
 
