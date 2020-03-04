@@ -3,6 +3,7 @@ import { IgxCarouselComponent, CarouselIndicatorsOrientation } from 'igniteui-an
 
 @Component({
     selector: 'app-carousel-sample',
+    styleUrls: ['carousel.sample.scss'],
     templateUrl: 'carousel.sample.html'
 })
 export class CarouselSampleComponent {
