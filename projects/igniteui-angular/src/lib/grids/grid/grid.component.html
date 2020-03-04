@@ -108,7 +108,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-        <div *ngIf='pinnedRecords.length > 0 && isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-top'>
+        <div #pinContainer *ngIf='pinnedRecords.length > 0 && isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-top'>
             <ng-container *ngFor="let rowData of pinnedRecords
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
@@ -143,7 +143,7 @@
                 (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
-        <div *ngIf='pinnedRecords.length > 0 && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
+        <div #pinContainer *ngIf='pinnedRecords.length > 0 && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
             <ng-container *ngFor="let rowData of pinnedRecords
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns

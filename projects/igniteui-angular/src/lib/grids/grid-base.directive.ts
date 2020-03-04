@@ -1727,6 +1727,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
+     */
+    @ViewChild('pinContainer', { static: false })
+    public pinContainer: ElementRef;
+
+    /**
+     * @hidden @internal
     */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
@@ -4077,8 +4083,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        // TODO - take into consideration variable row height.
-        return this.pinnedRecords.length > 0 ? this.pinnedRecords.length * this.renderedRowHeight : 0;
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.clientHeight : 0;
+        return this.pinnedRecords.length > 0 ? containerHeight : 0;
     }
 
     get totalHeight() {
@@ -4086,8 +4092,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedBottom() {
-        // TODO - take into consideration variable row height.
-        return this.renderedRowHeight * this.verticalScrollContainer.state.chunkSize - this.calcHeight;
+        const start = this.verticalScrollContainer.state.startIndex;
+        const end = this.verticalScrollContainer.state.startIndex + this.verticalScrollContainer.state.chunkSize - 1;
+        const bottom = this.verticalScrollContainer.getScrollForIndex(end, true) - this.verticalScrollContainer.getScrollForIndex(start);
+        return bottom;
     }
 
 
