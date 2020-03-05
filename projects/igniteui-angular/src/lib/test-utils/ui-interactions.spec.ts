@@ -64,7 +64,7 @@ export class UIInteractions {
         UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
         nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true}));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
