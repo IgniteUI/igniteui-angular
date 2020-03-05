@@ -536,10 +536,10 @@ export class IgxTimePickerComponent implements
     @ViewChild(IgxInputDirective, { read: IgxInputDirective, static: false })
     private _inputDirective: IgxInputDirective;
 
-    @ContentChild(IgxInputDirective, { read: IgxInputDirective})
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: false })
     private _inputDirectiveUserTemplate: IgxInputDirective;
 
-    @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent })
+    @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent, static: false })
     private _inputGroup: IgxInputGroupComponent;
 
     private _overlaySettings: OverlaySettings;
