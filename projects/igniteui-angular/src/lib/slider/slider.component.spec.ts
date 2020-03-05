@@ -21,13 +21,8 @@ const SLIDER_TICK_LABELS_CLASS = '.igx-slider__ticks-label';
 const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
-interface FakeDoc {
-    body: { dir?: string };
-    documentElement: { dir?: string };
-}
 
 describe('IgxSlider', () => {
-    let fakeDoc: FakeDoc;
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
