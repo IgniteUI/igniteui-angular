@@ -15,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
 - `IgxCombo`:
-    - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input will be focused after the `onOpened` event is fired (current behavior). When set to `false`, the focus will go to the combo items' list container. Suppressing the input focus can be used to prevent a keyboard showing up on mobile devices when opening the combo.
+    - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
@@ -2489,4 +2489,3 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
     - `IgxDraggableDirective` moved inside `../directives/dragdrop/` folder
     - `IgxRippleDirective` moved inside `../directives/ripple/` folder
     - Folder `"./navigation/nav-service"` renamed to `"./navigation/nav.service"`
-
