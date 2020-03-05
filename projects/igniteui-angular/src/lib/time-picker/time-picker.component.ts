@@ -503,7 +503,7 @@ export class IgxTimePickerComponent implements
     @ViewChild('ampmList', { static: false })
     public ampmList: ElementRef;
 
-    /*
+    /**
      * @hidden
      */
     @ViewChild('defaultTimePickerTemplate', { read: TemplateRef, static: true })
@@ -513,7 +513,7 @@ export class IgxTimePickerComponent implements
     private dropdownInputTemplate: TemplateRef<any>;
 
     /**
-     *@hidden
+     * @hidden
      */
     @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective, static: false })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
@@ -1428,6 +1428,10 @@ export class IgxTimePickerComponent implements
             } else {
                 input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
+        }
+
+        if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
+            this._inputGroup.isRequired = this.required;
         }
     }
 
