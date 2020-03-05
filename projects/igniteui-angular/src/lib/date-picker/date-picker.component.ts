@@ -1337,7 +1337,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
-    public _updateValidity() {
+    public _updateValidityOnBlur() {
         this._onTouchedCallback();
         const input = this._inputDirective || this._inputDirectiveUserTemplate;
         if (input && this._ngControl && !this._ngControl.valid) {
