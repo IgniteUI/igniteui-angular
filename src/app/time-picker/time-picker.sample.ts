@@ -17,8 +17,8 @@ export class TimePickerSampleComponent implements AfterViewInit {
     mode = InteractionMode.DropDown;
 
     date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
-    date = new Date(2018, 10, 27, 17, 45, 0, 0);
-    val = new Date(0, 0, 0, 19, 35, 0, 0);
+    date = new Date(2018, 10, 27, 21, 55, 0, 0);
+    val = new Date(0, 0, 0, 19, 35, 30, 0);
     today = new Date(Date.now());
 
     isRequired = true;
