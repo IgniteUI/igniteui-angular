@@ -77,14 +77,15 @@ describe('Row Pinning #grid', () => {
             // pin 2nd
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
-            
+
             expect(grid.pinnedRecords.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
             expect(pinRowContainer[0].children[0].context.index).toBe(fix.componentInstance.data.length - 1);
-            expect(pinRowContainer[0].children[0].nativeElement).toBe(grid.getRowByIndex(fix.componentInstance.data.length - 1).nativeElement);
+            expect(pinRowContainer[0].children[0].nativeElement)
+                .toBe(grid.getRowByIndex(fix.componentInstance.data.length - 1).nativeElement);
 
             expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[2]);
@@ -136,7 +137,7 @@ describe('Row Pinning #grid', () => {
             // pin 2nd row
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
-            
+
             expect(grid.pinnedRecords.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
@@ -154,7 +155,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.pinnedRecords.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(0);         
+            expect(pinRowContainer.length).toBe(0);
 
             expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
@@ -182,7 +183,7 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.pinnedRecords.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(0);         
+            expect(pinRowContainer.length).toBe(0);
 
             expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
@@ -193,25 +194,25 @@ describe('Row Pinning #grid', () => {
               let row = grid.getRowByIndex(1);
               row.pinned = true;
               fix.detectChanges();
-  
+
               expect(grid.pinnedRecords.length).toBe(1);
               let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
               expect(pinRowContainer.length).toBe(1);
               expect(pinRowContainer[0].children.length).toBe(1);
               expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
-  
+
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[0]);
-  
+
               // unpin
               row = grid.getRowByIndex(0);
               row.pinned = false;
               fix.detectChanges();
-  
+
               expect(grid.pinnedRecords.length).toBe(0);
               pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-              expect(pinRowContainer.length).toBe(0);         
-  
+              expect(pinRowContainer.length).toBe(0);
+
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
