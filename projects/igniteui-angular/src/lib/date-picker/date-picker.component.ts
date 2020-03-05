@@ -18,7 +18,8 @@ import {
     OnInit,
     AfterViewInit,
     Injector,
-    AfterViewChecked
+    AfterViewChecked,
+    Type
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import {
@@ -922,7 +923,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
         }
 
-        this._ngControl = this._injector.get<NgControl>(NgControl, null);
+        this._ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
     }
 
     /**

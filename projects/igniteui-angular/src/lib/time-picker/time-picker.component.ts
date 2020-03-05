@@ -17,7 +17,8 @@ import {
     ContentChild,
     Injectable,
     AfterViewInit,
-    Injector
+    Injector,
+    Type
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -819,7 +820,7 @@ export class IgxTimePickerComponent implements
             positionStrategy: new AutoPositionStrategy()
         };
         this._dialogOverlaySettings = {};
-        this._ngControl = this._injector.get<NgControl>(NgControl, null);
+        this._ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
     }
 
     /**
