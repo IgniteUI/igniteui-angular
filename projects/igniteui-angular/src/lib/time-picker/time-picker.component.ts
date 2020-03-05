@@ -535,7 +535,7 @@ export class IgxTimePickerComponent implements
     @ViewChild('input', { read: ElementRef, static: false })
     private input: ElementRef;
 
-    @ViewChild(IgxInputDirective, { read: IgxInputDirective})
+    @ViewChild(IgxInputDirective, { read: IgxInputDirective, static: false })
     private _inputDirective: IgxInputDirective;
 
     /**

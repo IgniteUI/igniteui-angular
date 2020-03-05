@@ -730,16 +730,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild(IgxInputGroupComponent, { static: false })
     protected inputGroup: IgxInputGroupComponent;
 
-    @ViewChild(IgxInputDirective, { read: ElementRef })
+    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
     private _inputElementRef: ElementRef;
 
-    @ContentChild(IgxInputDirective, { read: ElementRef })
+    @ContentChild(IgxInputDirective, { read: ElementRef, static: false })
     protected _inputUserTemplateElementRef: ElementRef;
 
-    @ViewChild(IgxInputDirective)
+    @ViewChild(IgxInputDirective, { static: false })
     private _inputDirective: IgxInputDirective;
 
-    @ContentChild(IgxInputDirective)
+    @ContentChild(IgxInputDirective, { static: false })
     private _inputDirectiveUserTemplate: IgxInputDirective;
 
     /**
