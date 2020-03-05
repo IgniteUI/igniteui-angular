@@ -1472,6 +1472,11 @@ export class GridFunctions {
         return initialButtons;
     }
 
+    public static clickAdvancedFilteringInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number) {
+        const addAndGroupButton = this.getAdvancedFilteringInitialAddGroupButtons(fix)[buttonIndex];
+        addAndGroupButton.click();
+    }
+
     public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');
