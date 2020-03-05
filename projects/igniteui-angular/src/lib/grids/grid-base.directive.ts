@@ -4036,7 +4036,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pinnedRecords.indexOf(rowID) !== -1) {
             return false;
         }
-        const row = this.gridAPI.get_rec_by_id(rowID);
+        const row = this.gridAPI.get_row_by_key(rowID);
 
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
@@ -4067,9 +4067,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pinnedRecords.indexOf(rowID) === -1) {
             return false;
         }
-        const row = this.gridAPI.get_rec_by_id(rowID);
+        const row = this.gridAPI.get_row_by_key(rowID);
         const eventArgs: IPinRowEventArgs = {
-            isPinned: true,
+            isPinned: false,
             rowID: rowID,
             row: row
         };
