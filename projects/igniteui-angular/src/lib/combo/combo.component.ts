@@ -1102,7 +1102,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public focusSearchInput(opening?: boolean): void {
-        if (this.displaySearchInput && this.searchInput) {
+        if (this.displaySearchInput && this.searchInput && this.autoFocusSearch) {
             this.searchInput.nativeElement.focus();
         } else {
             if (opening) {
@@ -1488,11 +1488,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleOpened() {
         this.triggerCheck();
-        if (this.autoFocusSearch) {
-            this.focusSearchInput(true);
-        } else {
-            this.dropdownContainer.nativeElement.focus();
-        }
+        this.focusSearchInput(true);
         this.onOpened.emit();
     }
 
