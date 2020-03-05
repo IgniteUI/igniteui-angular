@@ -421,12 +421,12 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
     describe('To End', () => {
         configureTestSuite();
-
         beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     GridRightPinningComponent,
-                    PinnedGroupsGridComponent
+                    PinnedGroupsGridComponent,
+                    GridRightPinningMRLComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule]
             }).compileComponents();
@@ -620,6 +620,24 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 .not.toBe(-1);
             expect(pinnedSummaryCells[1].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
                 .toBe(-1);
+        });
+
+        it('should correctly pin multi-row-layouts to end.', () => {
+            const fix = TestBed.createComponent(GridRightPinningMRLComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            // check row DOM
+            const row = grid.getRowByIndex(0).nativeElement;
+            expect(row.children[0].classList.contains('igx-display-container')).toBeTruthy();
+            expect(row.children[1].classList.contains('igx-grid__td--pinned-first')).toBeTruthy();
+            expect(row.children[1].classList.contains('igx-grid__mrl-block')).toBeTruthy();
+            expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
+
+            // check correct headers have left border
+            const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
+                .query((By.css('.igx-grid__th--pinned-first')));
+            expect(fistPinnedHeaders.classes['igx-grid__mrl-block']).toBeTruthy();
+            expect(fistPinnedHeaders.classes['igx-grid__th--pinned-first']).toBeTruthy();
         });
     });
 });
@@ -990,4 +1008,44 @@ export class GridRightPinningComponent {
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='pinningConfig'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="false">
+            <igx-column-layout *ngFor='let group of colGroups' [pinned]='group.pinned'>
+                <igx-column *ngFor='let col of group.columns'
+                [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+            </igx-column-layout>
+        </igx-grid>
+    `
+})
+export class GridRightPinningMRLComponent extends GridRightPinningComponent {
+    colGroups = [
+        {
+            group: 'group1',
+            pinned: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1 },
+                { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 1, colStart: 3 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+            ]
+        },
+        {
+            group: 'group2',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
+                { field: 'Region', rowStart: 3, colStart: 1 },
+                { field: 'PostalCode', rowStart: 3, colStart: 2 },
+                { field: 'Fax', rowStart: 3, colStart: 3 }
+            ]
+        }
+    ];
 }
