@@ -788,6 +788,19 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.searchInput).toBeFalsy();
         });
+        it('should focus search input', fakeAsync(() => {
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
+        }));
+        it('should not focus search input, when autoFocusSearch=false', fakeAsync(() => {
+            combo.autoFocusSearch = false;
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(document.activeElement).not.toEqual(combo.searchInput.nativeElement);
+        }));
         it('should properly initialize templates', () => {
             expect(combo).toBeDefined();
             expect(combo.footerTemplate).toBeDefined();
