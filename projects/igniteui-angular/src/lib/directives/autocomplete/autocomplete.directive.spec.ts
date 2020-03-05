@@ -674,6 +674,13 @@ describe('IgxAutocomplete', () => {
             expect(dropDownAny.scrollContainer.getBoundingClientRect().width)
                 .toEqual(group.element.nativeElement.getBoundingClientRect().width);
         });
+        it('Should apply width to dropdown list if set', () => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.componentInstance.ddWidth = '600px';
+            fixture.detectChanges();
+            const dropDownAny = dropDown as any;
+            expect(dropDownAny.scrollContainer.getBoundingClientRect().width).toEqual(600);
+        });
         it('Should render aria attributes properly', fakeAsync(() => {
             expect(input.nativeElement.attributes['autocomplete'].value).toEqual('off');
             expect(input.nativeElement.attributes['role'].value).toEqual('combobox');
@@ -845,7 +852,7 @@ describe('IgxAutocomplete', () => {
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
     </igx-input-group>
-    <igx-drop-down #townsPanel>
+    <igx-drop-down #townsPanel [width]="ddWidth">
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
             {{town}}
         </igx-drop-down-item>
@@ -858,6 +865,7 @@ class AutocompleteComponent {
     @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
     townSelected;
     public towns;
+    public ddWidth = null;
     settings: AutocompleteOverlaySettings = null;
     onItemSelected(args) { }
 
