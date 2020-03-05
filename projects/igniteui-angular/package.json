@@ -78,8 +78,8 @@
         "@angular/forms": "^9.0.0",
         "web-animations-js": "^2.3.2"
     },
-    "devDependencies": {
-        "@igniteui/angular-schematics": "~9.0.500-rc.3"
+    "igxDevDependencies": {
+        "@igniteui/angular-schematics": "~9.0.500"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"

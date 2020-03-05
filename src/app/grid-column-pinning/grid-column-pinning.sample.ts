@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition } from 'igniteui-angular';
+import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
     providers: [],
@@ -9,25 +10,44 @@ import { IgxGridComponent } from 'igniteui-angular';
 })
 
 export class GridColumnPinningSampleComponent implements OnInit {
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
+    public get rightPinning() {
+        return (this.pinningConfig.columns === ColumnPinningPosition.End);
+    }
+    public set rightPinning(rightPinning) {
+        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
+            this.pinningConfig.columns = ColumnPinningPosition.Start;
+        } else {
+            this.pinningConfig.columns = ColumnPinningPosition.End;
+        }
+    }
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    onChange() {
+        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
+            this.pinningConfig = { columns: ColumnPinningPosition.Start };
+        } else {
+            this.pinningConfig = { columns: ColumnPinningPosition.End };
+        }
+    }
 
     data: any[];
     columns: any[];
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '5%', hidden: false },
-            { field: 'CompanyName', width: '5%' },
-            { field: 'ContactName', width: '5%', pinned: false },
-            { field: 'ContactTitle', width: '25%', pinned: false },
-            { field: 'Address', width: '10%' },
-            { field: 'City', width: '10%' },
-            { field: 'Region', width: '10%' },
-            { field: 'PostalCode', width: '10%' },
-            { field: 'Phone', width: '10%' },
-            { field: 'Fax', width: '10%' }
+            { field: 'ID', width: '200px', hidden: false },
+            { field: 'CompanyName', width: '200px' },
+            { field: 'ContactName', width: '200px', pinned: false },
+            { field: 'ContactTitle', width: '300px', pinned: false },
+            { field: 'Address', width: '250px' },
+            { field: 'City', width: '200px' },
+            { field: 'Region', width: '300px' },
+            { field: 'PostalCode', width: '150px' },
+            { field: 'Phone', width: '200px' },
+            { field: 'Fax', width: '200px' }
         ];
 
         this.data = [

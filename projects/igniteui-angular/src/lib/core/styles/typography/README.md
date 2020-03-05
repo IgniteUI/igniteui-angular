@@ -84,15 +84,13 @@ The typography mixin defines the global typography styles for an application, in
 It currently accepts 3 arguments:
 - `$font-family` - The global font family to be used by the application.
 - `$type-scale` - The default type scale to be used by the application.
-- `$base-color` - The base text color to be used by the application.
 
 To overwrite the default typography, include the `igx-typography` mixin anywhere after the `igx-core` mixin. Let's take advantage of the type scale `$my-type-scale` we defined above and make it the default type scale.
 
 ```scss
 @include igx-typography(
     $font-family: "'Roboto', sans-serif",
-    $type-scale: $my-type-scale,
-    $base-color: #484848
+    $type-scale: $my-type-scale
 );
 ```
 

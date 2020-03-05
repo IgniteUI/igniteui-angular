@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-input-group: (
     box-border-radius: .2 .2 0 0,
     border-border-radius: .2,
@@ -21,6 +23,7 @@ $_square-shape-input-group: (
     search-border-radius: 0%,
 );
 
+/// @type Map
 $_fluent-shape-input-group: (
     box-border-radius: 2px,
     border-border-radius: 2px,
