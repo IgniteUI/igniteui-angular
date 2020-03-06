@@ -36,10 +36,10 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '200px', hidden: false },
-            { field: 'CompanyName', width: '200px' },
-            { field: 'ContactName', width: '200px', pinned: false },
-            { field: 'ContactTitle', width: '300px', pinned: false },
+            { field: 'ID', width: '200px', hidden: true },
+            { field: 'CompanyName', width: '200px', groupable: true },
+            { field: 'ContactName', width: '200px', pinned: false, groupable: true  },
+            { field: 'ContactTitle', width: '300px', pinned: false, groupable: true },
             { field: 'Address', width: '250px' },
             { field: 'City', width: '200px' },
             { field: 'Region', width: '300px' },

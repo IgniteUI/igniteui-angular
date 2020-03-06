@@ -8,15 +8,15 @@
                 <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
                 <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
             </div>
-        <igx-grid [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
-            <igx-column width='50px'>
+        <igx-grid [allowFiltering]='true' [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
+            <igx-column width='70px' [filterable]='false'>
                 <ng-template igxCell let-cell="cell" let-val>
                     <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
                         {{isRowPinned(cell.row) ? 'lock' : 'lock_open'}}
                     </igx-icon>
                 </ng-template>
             </igx-column>
-            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'
                 [hidden]='c.hidden'>
             </igx-column>
         </igx-grid>
