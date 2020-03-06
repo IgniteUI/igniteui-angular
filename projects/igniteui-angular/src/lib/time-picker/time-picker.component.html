@@ -1,25 +1,41 @@
 <ng-template #dropdownInputTemplate>
-    <igx-input-group #group>
+    <igx-input-group #group (mousedown)="mouseDown($event)">
         <label igxLabel>Time</label>
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <input #input type="text" [igxMask]="mask" igxInput [includeLiterals]="false" [placeholder]="format"
-            [displayValuePipe]="displayFormat" [focusedValuePipe]="inputFormat" [promptChar]="promptChar"
-            [value]="displayValue" (input)="onInput($event)" (blur)="onBlur($event)" (focus)="onFocus($event)"
-            (wheel)="spinOnEdit($event)" [disabled]="disabled" />
+        <input 
+            type="text"
+            [igxMask]="mask"
+            igxInput
+            [includeLiterals]="false"
+            [placeholder]="format"
+            [displayValuePipe]="displayFormat"
+            [focusedValuePipe]="inputFormat"
+            [promptChar]="promptChar"
+            [value]="displayValue"
+            (input)="onInput($event)"
+            (blur)="onBlur($event)"
+            (focus)="onFocus($event)"
+            (wheel)="spinOnEdit($event)"
+            [disabled]="disabled" />
         <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
     </igx-input-group>
 </ng-template>
 <ng-template #defaultTimePickerTemplate>
-    <igx-input-group (click)="openDialog()">
+    <igx-input-group (click)="openDialog()" (mousedown)="mouseDown($event)">
         <igx-prefix>
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
         <label igxLabel>Time</label>
-        <input igxInput [value]="displayTime || ''" [disabled]="disabled" tabindex="0" readonly />
+        <input
+            igxInput
+            [value]="displayTime || ''"
+            [disabled]="disabled"
+            tabindex="0" readonly
+            (blur)="onBlur($event)" />
     </igx-input-group>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
