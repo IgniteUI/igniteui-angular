@@ -90,15 +90,11 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     togglePining(row: IgxGridRowComponent, event) {
         event.preventDefault();
-        if(this.isRowPinned(row)) {
+        if(row.pinned) {
             row.unpin();
         } else {
             row.pin();
         }
-    }
-
-    isRowPinned(row) {
-        return this.grid1.pinnedRecords.indexOf(row.rowID) !== -1;
     }
 
 }

@@ -4033,7 +4033,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID, index?): boolean {
-        if (this.pinnedRecords.indexOf(rowID) !== -1) {
+        const rec = this.primaryKey ? this.gridAPI.get_rec_by_id(rowID) : rowID;
+        if (this.pinnedRecords.indexOf(rec) !== -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4046,7 +4047,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
-        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, rowID);
+        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, rec);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
@@ -4064,7 +4065,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
     */
     public unpinRow(rowID) {
-        if (this.pinnedRecords.indexOf(rowID) === -1) {
+        const rec = this.primaryKey ? this.gridAPI.get_rec_by_id(rowID) : rowID;
+        const index =  this.pinnedRecords.indexOf(rec);
+        if (index === -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4074,7 +4077,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             row: row
         };
         this.onRowPinning.emit(eventArgs);
-        const index =  this.pinnedRecords.indexOf(rowID);
         this.pinnedRecords.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
