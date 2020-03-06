@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
@@ -206,7 +206,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When a modal datepicker is closed via outside click, the focus should remain on the input',
+        it('When a modal datepicker is closed via outside click, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -230,7 +230,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+        it('When datepicker is closed upon selecting a date, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -939,7 +939,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // press arrow up
@@ -984,7 +983,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // press arrow down
@@ -1036,7 +1034,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // up
@@ -1149,7 +1146,8 @@ describe('IgxDatePicker', () => {
             expect(input).toBeDefined();
             datePicker.isSpinLoop = false;
 
-            input.nativeElement.focus();
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges(); // bound transformedDate assign
             UIInteractions.sendInput(input, '31-03-19');
             expect(input.nativeElement.value).toBe('31-03-19');
 
