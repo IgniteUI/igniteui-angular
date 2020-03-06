@@ -1488,6 +1488,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public handleOpened() {
         this.triggerCheck();
+
+        // Disabling focus of the search input should happen only when drop down opens.
+        // During keyboard navigation input should receive focus, even the autoFocusSearch is disabled.
+        // That is why in such cases focusing of the dropdownContainer happens outside focusSearchInput method.
         if (this.autoFocusSearch) {
             this.focusSearchInput(true);
         } else {
