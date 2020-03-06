@@ -149,6 +149,24 @@ describe('igxCombo', () => {
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBe(false);
         });
+        it(`should not focus search input when property autoFocusSearch=false`, () => {
+            combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
+            const dropdownContainer = { nativeElement: { focus: () => {}}};
+            combo['dropdownContainer'] = dropdownContainer;
+            spyOn(combo, 'focusSearchInput');
+
+            combo.autoFocusSearch = false;
+            combo.handleOpened();
+            expect(combo.focusSearchInput).toHaveBeenCalledTimes(0);
+
+            combo.autoFocusSearch = true;
+            combo.handleOpened();
+            expect(combo.focusSearchInput).toHaveBeenCalledTimes(1);
+
+            combo.autoFocusSearch = false;
+            combo.handleOpened();
+            expect(combo.focusSearchInput).toHaveBeenCalledTimes(1);
+        });
         it('should call dropdown toggle with correct overlaySettings', () => {
             combo = new IgxComboComponent({ nativeElement: null }, mockCdr, mockSelection as any, mockComboService, null, mockInjector);
             const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['toggle']);
