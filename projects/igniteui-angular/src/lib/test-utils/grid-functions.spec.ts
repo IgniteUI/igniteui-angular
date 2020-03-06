@@ -1717,7 +1717,7 @@ export class GridFunctions {
     }
 
     public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
-            altKey = false, shiftKey = false, ctrlKey = false) {
+        altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyName,
             shiftKey: shiftKey,
@@ -1729,7 +1729,7 @@ export class GridFunctions {
     }
 
     public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyName,
             shiftKey: shiftKey,
