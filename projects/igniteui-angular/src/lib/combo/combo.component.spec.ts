@@ -1014,7 +1014,7 @@ describe('igxCombo', () => {
 
             productIndex = 485;
             combo.virtualScrollContainer.scrollTo(productIndex);
-            await wait();
+            await wait(30);
             fixture.detectChanges();
             verifyComboData();
             expect(combo.virtualizationState.startIndex + combo.virtualizationState.chunkSize - 1)
