@@ -187,7 +187,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.last);
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -587,6 +587,8 @@ describe('IgxGrid Master Detail #grid', () => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
 
             GridFunctions.simulateCellKeydown(targetCellElement, 'End', false, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
