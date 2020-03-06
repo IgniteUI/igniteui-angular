@@ -193,7 +193,8 @@ export class IgxGridCRUDService {
 
     end(): void {
         this.cell = null;
-        this.grid.nativeElement.focus();
+       // this.grid.nativeElement.focus();
+       this.grid.tbody.nativeElement.focus();
     }
     public enterEditMode(cell) {
         if (this.isInCompositionMode) {
@@ -202,7 +203,7 @@ export class IgxGridCRUDService {
         if (cell && cell.column.editable && !cell.row.deleted) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
-                this.grid.nativeElement.focus();
+                this.grid.tbody.nativeElement.focus();
             } else {
                 this.begin(cell);
             }
@@ -220,7 +221,7 @@ export class IgxGridCRUDService {
                 return;
             }
             this.grid.endEdit(false);
-            this.grid.nativeElement.focus();
+            this.grid.tbody.nativeElement.focus();
         }
     }
 

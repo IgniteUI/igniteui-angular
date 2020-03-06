@@ -3,7 +3,7 @@ import { first} from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
-import { isIE, NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS } from '../core/utils';
+import { isIE, NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 
@@ -20,8 +20,9 @@ export class IgxGridNavigationService {
     public activeNode: IActiveNode;
 
     dispatchEvent(event: KeyboardEvent) {
-        if (!this.activeNode) { return; }
         const key = event.key.toLowerCase();
+        if (!(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
+        if (!this.activeNode) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
 /*      This fixes IME editing issue(#6335) that happens only on IE
@@ -112,6 +113,52 @@ export class IgxGridNavigationService {
         this.grid.cdr.detectChanges();
     }
 
+    summaryNav(event) {
+        const key = event.key.toLowerCase();
+        const shift = event.shiftKey;
+        if (key === 'tab' && shift) {
+            this.activeNode.row = this.grid.dataView.length - 1;
+            event.preventDefault();
+            this.grid.tbody.nativeElement.focus();
+            return; }
+        const ctrl =  event.ctrlKey;
+        const lastColumnIndex = Math.max(...this.grid.visibleColumns.map(col => col.visibleIndex));
+        let colIndex = this.activeNode.column - 1;
+        if (['arrowleft', 'left', 'arrowright', 'right'].indexOf(key) < 0) { return; }
+        if (key === 'arrowleft' || key === 'left') {
+            this.activeNode.row = this.grid.dataView.length;
+            colIndex  = ctrl ? 0 : this.activeNode.column - 1;
+        }
+        if (key === 'arrowright' || key === 'right') {
+            this.activeNode.row = this.grid.dataView.length;
+            colIndex = ctrl ? lastColumnIndex : this.activeNode.column + 1;
+        }
+        if (colIndex > -1 && colIndex <= lastColumnIndex) {
+            event.preventDefault();
+            this.shouldPerformHorizontalScroll(colIndex) ? this.performHorizontalScrollToCell(this.activeNode.column = colIndex) :
+                this.activeNode.column = colIndex;
+        }
+    }
+
+    headerNavigation(event) {
+        const key = event.key.toLowerCase();
+        const ctrl =  event.ctrlKey;
+        if (key === 'esc') {
+            this.grid.filteringRow.close();
+            return;
+        }
+        const previous = event.key.toLowerCase() === 'arrowleft';
+        const filterableCols = this.grid.visibleColumns
+            .filter(c => !c.columnGroup && c.filterable).map(col => col.visibleIndex);
+        if ((!previous && Math.max(...filterableCols) === this.grid.filteringService.activeFilterCell) ||
+            (previous && this.grid.filteringService.activeFilterCell === Math.min(...filterableCols)) ) {
+            return;
+        }
+        if (!this.grid.filteringService.isFilterRowVisible && ['arrowleft', 'left', 'arrowright', 'right'].indexOf(key) > -1) {
+            this.handleFilterNavigation(this.grid.filteringService.activeFilterCell, previous);
+        }
+    }
+
     get displayContainerWidth() {
         return Math.round(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth);
     }
@@ -200,30 +247,14 @@ export class IgxGridNavigationService {
         return this.grid.rowEditable && (this.grid.rowInEditMode && this.grid.rowInEditMode.index === rowIndex);
     }
 
-    public moveFocusToFilterCell(toStart?: boolean) {
-        if (this.grid.filteringService.isFilterRowVisible) {
-            this.grid.filteringService.focusFilterRowCloseButton();
-            return;
-        }
-
-        const columns = this.grid.filteringService.unpinnedFilterableColumns;
-        const targetIndex = toStart ? 0 : columns.length - 1;
-        const visibleIndex = columns[targetIndex].visibleIndex;
-        const isVisible = this.isColumnFullyVisible(visibleIndex);
-        if (isVisible) {
-            this.grid.filteringService.focusFilterCellChip(columns[targetIndex], false);
-        } else {
-            this.grid.filteringService.scrollToFilterCell(columns[targetIndex], false);
-        }
-    }
-
-    public handleFilterNavigation(column: IgxColumnComponent, shift) {
-        const nextFilterableCell = shift ?
-        this.grid.getPreviousCell(this.findFirstDataRowIndex(), column.visibleIndex, (col) => col.filterable)
-        : this.grid.getNextCell(this.findFirstDataRowIndex(), column.visibleIndex, (col) => col.filterable);
+    public handleFilterNavigation(visibleIndex: number, previous) {
+        const nextFilterableCell = previous ?
+        this.grid.getPreviousCell(this.findFirstDataRowIndex(), visibleIndex, (col) => col.filterable)
+        : this.grid.getNextCell(this.findFirstDataRowIndex(), visibleIndex, (col) => col.filterable);
         const filterCol = this.grid.visibleColumns.filter(c => !c.columnGroup && c.filterable)
             .find(c => c.visibleIndex === nextFilterableCell.visibleColumnIndex);
-        this.grid.navigateTo(nextFilterableCell.rowIndex, nextFilterableCell.visibleColumnIndex, () => {
+        this.grid.navigateTo(nextFilterableCell.rowIndex,
+            this.grid.filteringService.activeFilterCell = nextFilterableCell.visibleColumnIndex, () => {
             this.grid.filteringService.focusFilterCellChip(filterCol, false);
         });
     }
@@ -265,7 +296,6 @@ export class IgxGridNavigationService {
 
     public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
-       this.grid.nativeElement.focus({ preventScroll: true });
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -282,7 +312,7 @@ export class IgxGridNavigationService {
         return [...this.grid.rowList, ...this.grid.summariesRowList].find(r => r.index === index)?.nativeElement;
     }
 
-    private isDataRow(rowIndex) {
+    protected isDataRow(rowIndex) {
         const curRow = this.grid.dataView[rowIndex];
          return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow) && !curRow.summaries;
     }

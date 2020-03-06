@@ -2605,16 +2605,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
-        if (SUPPORTED_KEYS.has(key) || key === 'pagedown' || key === 'pageup' ||
-            (key === 'tab' && this.crudService.cell)) {
-            this.navigation.dispatchEvent(event);
-            if (key === 'pagedown') {
-                this.verticalScrollContainer.scrollNextPage();
-                this.nativeElement.focus();
-            } else if (key === 'pageup') {
-                this.verticalScrollContainer.scrollPrevPage();
-                this.nativeElement.focus();
-            }
+        if (key === 'pagedown') {
+            this.verticalScrollContainer.scrollNextPage();
+            this.nativeElement.focus();
+        } else if (key === 'pageup') {
+            this.verticalScrollContainer.scrollPrevPage();
+            this.nativeElement.focus();
         }
     }
 
@@ -5362,7 +5358,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
-            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+            colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex))) {
             return true;
         }
         return false;

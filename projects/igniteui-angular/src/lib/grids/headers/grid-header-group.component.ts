@@ -225,7 +225,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
-        event.preventDefault();
+       // event.preventDefault();
     }
 
     public ngDoCheck() {
