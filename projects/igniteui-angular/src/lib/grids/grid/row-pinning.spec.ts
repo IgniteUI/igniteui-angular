@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -216,12 +217,32 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
+
+        it('should apply filtering to both pinned and unpinned rows.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[1].context.rowID).toBe(fix.componentInstance.data[5]);
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[5]);
+        });
     });
 });
 
 @Component({
     template: `
         <igx-grid
+            [allowFiltering]='true'
             [pinning]='pinningConfig'
             [width]='"800px"'
             [height]='"500px"'
