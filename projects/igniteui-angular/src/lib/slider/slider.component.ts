@@ -11,7 +11,8 @@ import {
     QueryList,
     ChangeDetectorRef,
     OnChanges,
-    NgZone
+    NgZone,
+    AfterContentInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -64,6 +65,7 @@ export class IgxSliderComponent implements
     EditorProvider,
     OnInit,
     AfterViewInit,
+    AfterContentInit,
     OnChanges,
     OnDestroy {
 
@@ -82,6 +84,7 @@ export class IgxSliderComponent implements
     private _continuous = false;
     private _disabled = false;
     private _step = 1;
+    private _value: number | IRangeSliderValue = 0;
 
     // ticks
     private _primaryTicks = 0;
@@ -616,18 +619,11 @@ export class IgxSliderComponent implements
      */
     @Input()
     public set value(value: number | IRangeSliderValue) {
-        if (!this.isRange) {
-            this.upperValue = value as number - (value as number % this.step);
-        } else {
-            value = this.validateInitialValue(value as IRangeSliderValue);
-            this.upperValue = (value as IRangeSliderValue).upper;
-            this.lowerValue = (value as IRangeSliderValue).lower;
-        }
-
-        this._onChangeCallback(this.value);
-
         if (this._hasViewInit) {
+            this.setValue(value);
             this.positionHandlersAndUpdateTrack();
+        } else {
+            this._value = value;
         }
     }
 
@@ -990,6 +986,10 @@ export class IgxSliderComponent implements
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
+    }
+
+    public ngAfterContentInit() {
+        this.setValue(this._value);
     }
 
     /**
@@ -1411,6 +1411,18 @@ export class IgxSliderComponent implements
                 (oldValue as IRangeSliderValue).upper !== (this.value as IRangeSliderValue).upper);
 
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
+    }
+
+    public setValue(value: number | IRangeSliderValue) {
+        if (!this.isRange) {
+            this.upperValue = value as number - (value as number % this.step);
+        } else {
+            value = this.validateInitialValue(value as IRangeSliderValue);
+            this.upperValue = (value as IRangeSliderValue).upper;
+            this.lowerValue = (value as IRangeSliderValue).lower;
+        }
+
+        this._onChangeCallback(this.value);
     }
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {
