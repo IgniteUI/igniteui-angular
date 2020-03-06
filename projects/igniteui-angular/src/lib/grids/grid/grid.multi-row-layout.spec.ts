@@ -11,7 +11,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
-import { ICellPosition } from '../common/events';
+import { ICellPosition } from '../grid-base.component';
 
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
