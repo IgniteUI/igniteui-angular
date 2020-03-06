@@ -28,14 +28,14 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData([], options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyTemplateFilesContent();
     });
 
     it('should export empty objects successfully.', async () => {
         const wrapper = await getExportedData(SampleTestData.emptyObjectData(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyTemplateFilesContent();
     });
 
     it('should export string data without headers successfully.', async () => {
@@ -43,8 +43,8 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.stringArray(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
     });
 
     it('should export date time data without headers successfully.', async () => {
@@ -52,8 +52,8 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.dateArray(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
     });
 
     it('should export number data without headers successfully.', async () => {
@@ -61,16 +61,16 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.numbersArray(), options);
 
         wrapper.verifyStructure();
-        // wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
+        // await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
     });
 
     it('should export object data without headers successfully.', async () => {
         const wrapper = await getExportedData(SampleTestData.noHeadersObjectArray(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
     });
 
     it('should export regular data successfully.', async () => {
@@ -78,8 +78,8 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.contactsData(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsDataContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.contactsDataContent);
     });
 
     it('should export data with missing values successfully.', async () => {
@@ -87,8 +87,8 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.contactsDataPartial(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
     });
 
     it('should export data with special characters successully.', async () => {
@@ -96,8 +96,8 @@ describe('Excel Exporter', () => {
         const wrapper = await getExportedData(SampleTestData.contactsFunkyData(), options);
 
         wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
+        await wrapper.verifyTemplateFilesContent();
+        await wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
     });
 
     it('should throw an exception when setting negative width and height.', () => {

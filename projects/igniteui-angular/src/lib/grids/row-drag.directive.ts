@@ -1,9 +1,10 @@
-import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
+import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
+import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -99,7 +100,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
+        this.ghostContext = {
+            $implicit: this.row.rowData,
+            data: this.row.rowData,
+            grid: this.row.grid
+        };
         super.createGhost(pageX, pageY, this.row.nativeElement);
+
+        // check if there is an expander icon and create the ghost at the corresponding position
+        if (this.isHierarchicalGrid) {
+            const row = this.row as IgxHierarchicalRowComponent;
+            if (row.expander) {
+                const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
+                this._ghostHostX += expanderWidth;
+            }
+        }
 
         const ghost = this.ghostElement;
 
@@ -139,6 +154,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
         this.endDragging();
     }
+
+    private get isHierarchicalGrid() {
+        return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+    }
 }
 
 /**
@@ -151,10 +170,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 export class IgxDragIndicatorIconDirective {
 }
 
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxRowDragGhost]'
+})
+
+export class IgxRowDragGhostDirective  {
+    constructor(public templateRef: TemplateRef<any>) { }
+}
+
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     imports: []
 })
 

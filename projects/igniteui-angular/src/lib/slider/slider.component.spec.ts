@@ -638,6 +638,7 @@ describe('IgxSlider', () => {
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
+            fixture.detectChanges();
 
             expect(slider.type).toBe(SliderType.SLIDER);
             expect(ticks).toBeDefined();
@@ -922,6 +923,7 @@ describe('IgxSlider', () => {
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
+            fixture.detectChanges();
 
             expect(slider.type).toBe(SliderType.RANGE);
             expect(ticks).not.toBeNull();

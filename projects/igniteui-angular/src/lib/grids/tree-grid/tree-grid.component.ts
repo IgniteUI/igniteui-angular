@@ -32,6 +32,7 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 
 let NEXT_ID = 0;
 
@@ -65,7 +66,8 @@ let NEXT_ID = 0;
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
+        IgxRowIslandAPIService
     ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
@@ -108,7 +110,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
@@ -310,27 +312,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: false })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
-
-    /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.

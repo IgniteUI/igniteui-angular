@@ -32,7 +32,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime } from 'rxjs/operators';
+import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
@@ -180,6 +180,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     @Output()
     public onChunkLoad = new EventEmitter<IForOfState>();
+
+    /**
+     * @hidden @internal
+     * An event that is emitted when scrollbar visibility has changed.
+     */
+    @Output()
+    public onScrollbarVisibilityChanged = new EventEmitter<any>();
 
     /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
@@ -397,7 +404,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             });
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(destructor,
-            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), throttleTime(40))
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
+             throttleTime(40, undefined, {leading: true, trailing: true}))
             .subscribe(() => {
                 this._zone.runTask(() => {
                     this.updateSizes();
@@ -746,8 +754,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
-        this._embeddedViews.filter(view => !view.destroyed).forEach(view => view.detectChanges());
-        const rNodes = this._embeddedViews.map(view => view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE));
+        const rNodes = this._embeddedViews.map(view =>
+            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling);
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
@@ -1155,10 +1163,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        const scrollable = this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
-            this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+            this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
             }
@@ -1168,7 +1177,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
+                // Need to reset the scrollAmount value here, because
+                // Firefox will not fire the scrollComponent scroll event handler
+                this.scrollComponent.scrollAmount = 0;
             }
+        }
+        if (scrollable !== this.isScrollable()) {
+            // scrollbar visibility has changed
+            this.onScrollbarVisibilityChanged.emit();
         }
     }
 
@@ -1558,7 +1574,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        this.recalcUpdateSizes();
+
+        this._zone.onStable.pipe(first()).subscribe( () => {
+            this.recalcUpdateSizes();
+        });
+        this.cdr.markForCheck();
     }
 
     onHScroll(scrollAmount) {

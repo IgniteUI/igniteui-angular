@@ -505,8 +505,7 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    public isFilteringExpressionsTreeEmpty(): boolean {
-        const expressionTree = this.grid.filteringExpressionsTree;
+    public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
         if (FilteringExpressionsTree.empty(expressionTree)) {
             return true;
         }

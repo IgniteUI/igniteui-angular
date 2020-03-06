@@ -1,20 +1,19 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent} from './select.component';
+import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
-import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 import { IgxSelectModule } from './select.module';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -604,6 +603,50 @@ describe('igxSelect', () => {
             inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
             expect(inputGroupWithRequiredAsterisk).toBeDefined();
         }));
+
+        it('Should have correctly bound focus and blur handlers', () => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            select = fix.componentInstance.select;
+            const input = fix.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+
+            spyOn(select, 'onFocus');
+            spyOn(select, 'onBlur');
+
+            input.triggerEventHandler('focus', {});
+            expect(select.onFocus).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+
+            input.triggerEventHandler('blur', {});
+            expect(select.onBlur).toHaveBeenCalled();
+            expect(select.onFocus).toHaveBeenCalledWith();
+        });
+
+        // Bug #6025 Select does not disable in reactive form
+        it('Should disable when form is disabled', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            const selectComp = fix.componentInstance.select;
+            const inputGroup = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
+
+            inputGroup.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toBeFalsy();
+
+            selectComp.close();
+            fix.detectChanges();
+
+            formGroup.disable();
+            tick();
+            fix.detectChanges();
+
+            inputGroup.nativeElement.click();
+            tick();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toBeTruthy();
+        }));
     });
     describe('Selection tests: ', () => {
         describe('Using simple select component', () => {
@@ -1181,70 +1224,70 @@ describe('igxSelect', () => {
             }));
 
             it('should populate the input with the specified selected item text @input, instead of the selected item element innerText',
-            fakeAsync(() => {
-                let selectedItemIndex = 1;
-                const groupIndex = 0;
-                const groupElement = selectList.children[groupIndex];
-                const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
+                fakeAsync(() => {
+                    let selectedItemIndex = 1;
+                    const groupIndex = 0;
+                    const groupElement = selectList.children[groupIndex];
+                    const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
 
-                const checkInputValue = function () {
-                    expect(select.selectedItem.text).toEqual(select.input.value);
-                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
-                };
+                    const checkInputValue = function () {
+                        expect(select.selectedItem.text).toEqual(select.input.value);
+                        expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
+                    };
 
-                // There is not a selected item initially
-                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
-                expect(selectedItems.length).toEqual(0);
-                expect(select.value).toBeUndefined();
-                expect(select.input.value).toEqual('');
-                expect(inputElement.nativeElement.value).toEqual('');
+                    // There is not a selected item initially
+                    const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                    expect(selectedItems.length).toEqual(0);
+                    expect(select.value).toBeUndefined();
+                    expect(select.input.value).toEqual('');
+                    expect(inputElement.nativeElement.value).toEqual('');
 
-                // Select item - mouse click
-                select.toggle();
-                tick();
-                fixture.detectChanges();
-                itemElementToSelect.click();
-                fixture.detectChanges();
-                checkInputValue();
+                    // Select item - mouse click
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    itemElementToSelect.click();
+                    fixture.detectChanges();
+                    checkInputValue();
 
-                // Select item - selectItem method
-                selectedItemIndex = 2;
-                select.selectItem(select.items[selectedItemIndex]);
-                tick();
-                fixture.detectChanges();
-                select.toggle();
-                tick();
-                fixture.detectChanges();
-                checkInputValue();
+                    // Select item - selectItem method
+                    selectedItemIndex = 2;
+                    select.selectItem(select.items[selectedItemIndex]);
+                    tick();
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    checkInputValue();
 
-                // Select item - item selected property
-                selectedItemIndex = 3;
-                select.items[selectedItemIndex].selected = true;
-                fixture.detectChanges();
-                checkInputValue();
-            }));
+                    // Select item - item selected property
+                    selectedItemIndex = 3;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    checkInputValue();
+                }));
 
             it('Should populate the input with the selected item element innerText, when text @Input is undefined(not set)',
-            fakeAsync(() => {
-                const selectedItemIndex = 2;
-                // const groupIndex = 0;
-                // const groupElement = selectList.children[groupIndex];
-                // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
-                const expectedInputText = 'Paris star';
+                fakeAsync(() => {
+                    const selectedItemIndex = 2;
+                    // const groupIndex = 0;
+                    // const groupElement = selectList.children[groupIndex];
+                    // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
+                    const expectedInputText = 'Paris star';
 
-                const checkInputValue = function () {
-                    expect(select.selectedItem.itemText).toEqual(expectedInputText);
-                    expect(select.selectedItem.itemText).toEqual(select.input.value);
-                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
-                };
+                    const checkInputValue = function () {
+                        expect(select.selectedItem.itemText).toEqual(expectedInputText);
+                        expect(select.selectedItem.itemText).toEqual(select.input.value);
+                        expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
+                    };
 
-                // Select item - no select-item text. Should set item;s element innerText as input value.
-                (select.items[selectedItemIndex] as IgxSelectItemComponent).text = undefined;
-                select.items[selectedItemIndex].selected = true;
-                fixture.detectChanges();
-                tick();
-                checkInputValue();
-            }));
+                    // Select item - no select-item text. Should set item;s element innerText as input value.
+                    (select.items[selectedItemIndex] as IgxSelectItemComponent).text = undefined;
+                    select.items[selectedItemIndex].selected = true;
+                    fixture.detectChanges();
+                    tick();
+                    checkInputValue();
+                }));
         });
     });
     describe('Grouped items tests: ', () => {
@@ -2366,6 +2409,57 @@ describe('igxSelect', () => {
             const selectInstance = fixture.componentInstance.select;
             expect(selectInstance.getEditElement()).toEqual(inputElement);
         });
+    });
+});
+
+describe('igxSelect ControlValueAccessor Unit', () => {
+    let select: IgxSelectComponent;
+    it('Should correctly implement interface methods', () => {
+        const mockSelection = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'clear', 'first_item']);
+        const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
+        const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
+
+        // init
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, mockInjector);
+        select.ngOnInit();
+        select.registerOnChange(mockNgControl.registerOnChangeCb);
+        select.registerOnTouched(mockNgControl.registerOnTouchedCb);
+        expect(mockInjector.get).toHaveBeenCalledWith(NgControl, null);
+
+        // writeValue
+        expect(select.value).toBeUndefined();
+        select.writeValue('test');
+        expect(mockSelection.clear).toHaveBeenCalled();
+        expect(select.value).toBe('test');
+
+        // setDisabledState
+        select.setDisabledState(true);
+        expect(select.disabled).toBe(true);
+        select.setDisabledState(false);
+        expect(select.disabled).toBe(false);
+
+        // OnChange callback
+        const item = new IgxDropDownItemComponent(select, null, null, mockSelection);
+        item.value = 'itemValue';
+        select.selectItem(item);
+        expect(mockSelection.set).toHaveBeenCalledWith(select.id, new Set([item]));
+        expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith('itemValue');
+
+        // OnTouched callback
+        select.onFocus();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+        select.input = {} as any;
+        spyOnProperty(select, 'collapsed').and.returnValue(true);
+        select.onBlur();
+        expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(2);
+    });
+
+    it('Should correctly handle ngControl validity', () => {
+        pending('Convert existing form test here');
     });
 });
 

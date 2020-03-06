@@ -151,6 +151,8 @@ export class IgxDragLocation {
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
+    protected ghostContext: any = null;
+
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
      * ```html
@@ -545,11 +547,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get baseLeft(): number {
-        return this.element.nativeElement.getBoundingClientRect().left -  this.getWindowScrollLeft();
+        return this.element.nativeElement.getBoundingClientRect().left;
     }
 
     protected get baseTop(): number {
-        return this.element.nativeElement.getBoundingClientRect().top - this.getWindowScrollTop();
+        return this.element.nativeElement.getBoundingClientRect().top;
     }
 
     protected get baseOriginLeft(): number {
@@ -742,8 +744,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement) {
             const offsetHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
             const offsetHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
-            this.ghostLeft = newLocation.pageX - offsetHostX;
-            this.ghostTop = newLocation.pageY - offsetHostY;
+            this.ghostLeft = newLocation.pageX - offsetHostX + this.getWindowScrollLeft();
+            this.ghostTop = newLocation.pageY - offsetHostY + this.getWindowScrollTop();
         } else if (!this.ghost) {
             const deltaX = newLocation.pageX - this.pageX;
             const deltaY = newLocation.pageY - this.pageY;
@@ -818,16 +820,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (!!startLocation && this.ghost && !this.ghostElement) {
             this._startX = startLocation.pageX;
             this._startY = startLocation.pageY;
+            this._ghostStartX = this._startX;
+            this._ghostStartY = this._startY;
         } else if (!!startLocation && (!this.ghost || this.ghostElement)) {
             this.setLocation(startLocation);
         } else if (this.ghost && !this.ghostElement) {
             this._startX = this.baseLeft;
             this._startY = this.baseTop;
+            this._ghostStartX = this._startX + this.getWindowScrollLeft();
+            this._ghostStartY = this._startY + this.getWindowScrollTop();
         }
 
         if (this.ghost && !this.ghostElement) {
-            this._ghostStartX = this._startX;
-            this._ghostStartY = this._startY;
             this.createGhost(this._startX, this._startY);
         }
 
@@ -887,8 +891,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this._startY = event.touches[0].pageY;
         }
 
-        this._defaultOffsetX = this.baseLeft + this.getWindowScrollLeft() - this._startX;
-        this._defaultOffsetY = this.baseTop + this.getWindowScrollTop()  - this._startY;
+        this._defaultOffsetX = this.baseLeft - this._startX + this.getWindowScrollLeft();
+        this._defaultOffsetY = this.baseTop - this._startY + this.getWindowScrollTop();
         this._ghostStartX = this._startX + this.ghostOffsetX;
         this._ghostStartY = this._startY + this.ghostOffsetY;
         this._lastX = this._startX;
@@ -1099,7 +1103,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         let dynamicGhostRef;
         if (this.ghostTemplate) {
-            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate);
+            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
             this.ghostElement = dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
@@ -1296,8 +1300,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghost && this.ghostElement) {
-            this._ghostStartX = this.baseLeft;
-            this._ghostStartY = this.baseTop;
+            this._ghostStartX = this.baseLeft + this.getWindowScrollLeft();
+            this._ghostStartY = this.baseTop + this.getWindowScrollTop();
 
             const ghostDestroyArgs: IDragGhostBaseEventArgs = {
                 owner: this,

@@ -16,13 +16,17 @@ import {
     ViewChild,
     ContentChild,
     Injectable,
-    AfterViewInit
+    AfterViewInit,
+    Injector,
+    ChangeDetectorRef,
+    AfterViewChecked,
+    Type
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import {
     IgxAmPmItemDirective,
     IgxHourItemDirective,
@@ -31,7 +35,7 @@ import {
     IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
-import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
+import { Subject, fromEvent, interval, animationFrameScheduler, Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
@@ -74,6 +78,8 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     setThroughUI: boolean;
 }
 
+const noop = () => { };
+
 @Component({
     providers: [
         {
@@ -104,7 +110,8 @@ export class IgxTimePickerComponent implements
     EditorProvider,
     OnInit,
     OnDestroy,
-    AfterViewInit {
+    AfterViewInit,
+    AfterViewChecked {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -496,14 +503,17 @@ export class IgxTimePickerComponent implements
     @ViewChild('ampmList', { static: false })
     public ampmList: ElementRef;
 
-    /*
+    /**
      * @hidden
      */
     @ViewChild('defaultTimePickerTemplate', { read: TemplateRef, static: true })
     protected defaultTimePickerTemplate: TemplateRef<any>;
 
+    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
+    private dropdownInputTemplate: TemplateRef<any>;
+
     /**
-     *@hidden
+     * @hidden
      */
     @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective, static: false })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
@@ -517,32 +527,20 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
-    private _input: ElementRef;
-
-    /**
-     * @hidden
-     */
     @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('input', { read: ElementRef, static: false })
-    private input: ElementRef;
+    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
+    private _inputElementRef: ElementRef;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('group', { read: IgxInputGroupComponent, static: false })
-    private group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { read: IgxInputDirective, static: false })
+    private _inputDirective: IgxInputDirective;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('dropdownInputTemplate', { read: TemplateRef, static: true })
-    private dropdownInputTemplate: TemplateRef<any>;
+    @ContentChild(IgxInputDirective, { read: IgxInputDirective, static: false })
+    private _inputDirectiveUserTemplate: IgxInputDirective;
+
+    @ViewChild(IgxInputGroupComponent, { read: IgxInputGroupComponent, static: false })
+    private _inputGroup: IgxInputGroupComponent;
 
     private _overlaySettings: OverlaySettings;
 
@@ -606,6 +604,7 @@ export class IgxTimePickerComponent implements
 
     private _dateFromModel: Date;
     private _destroy$ = new Subject<boolean>();
+    private _statusChanges$: Subscription;
     private _dropDownOverlaySettings: OverlaySettings;
     private _dialogOverlaySettings: OverlaySettings;
 
@@ -616,8 +615,42 @@ export class IgxTimePickerComponent implements
     private _onOpen = new EventEmitter<IgxTimePickerComponent>();
     private _onClose = new EventEmitter<IgxTimePickerComponent>();
 
-    private _onTouchedCallback: () => void = () => { };
-    private _onChangeCallback: (_: Date) => void = () => { };
+    private _hoursPos = new Set();
+    private _minutesPos = new Set();
+    private _secondsPos = new Set();
+    private _amPmPos = new Set();
+    private _ngControl: NgControl = null;
+
+    //#region ControlValueAccessor
+
+    private _onChangeCallback: (_: Date) => void = noop;
+    private _onTouchedCallback: () => void = noop;
+
+    /** @hidden @internal */
+    public writeValue(value: Date) {
+        // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
+        // against the real value when initializing the component and value is bound via ngModel
+        this._dateFromModel = value;
+
+        this._value = value;
+
+        if (this.mode === InteractionMode.DropDown) {
+            this.displayValue = this._formatTime(this.value, this.format);
+        }
+    }
+
+    /** @hidden @internal */
+    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /** @hidden @internal */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    //#endregion
+
+
 
     /**
      * @hidden
@@ -761,6 +794,16 @@ export class IgxTimePickerComponent implements
         };
     }
 
+    private get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
+    }
+
     /**
      * @hidden
      */
@@ -778,14 +821,15 @@ export class IgxTimePickerComponent implements
             positionStrategy: new AutoPositionStrategy()
         };
         this._dialogOverlaySettings = {};
+        this._ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
     }
 
     /**
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown && this.input) {
-            fromEvent(this.input.nativeElement, 'keydown').pipe(
+        if (this.mode === InteractionMode.DropDown && this._inputElementRef) {
+            fromEvent(this._inputElementRef.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((event: KeyboardEvent) => {
@@ -796,17 +840,12 @@ export class IgxTimePickerComponent implements
             });
         }
 
-        if (this.toggleRef && this.group) {
-            this.toggleRef.element.style.width = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
+        if (this.toggleRef && this._inputGroup) {
+            this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
         }
 
         if (this.toggleRef) {
             this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
-
-                if (this._input) {
-                    this._input.nativeElement.focus();
-                }
-
                 if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
                 }
@@ -826,11 +865,40 @@ export class IgxTimePickerComponent implements
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
                 this.onClosing.emit(event);
+                // If canceled in a user onClosing handler
+                if (event.cancel) {
+                    return;
+                }
+                // Do not focus the input if clicking outside in dropdown mode
+                const input = this.getEditElement();
+                if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
+                    input.focus();
+                } else {
+                    this._updateValidityOnBlur();
+                }
             });
+
+            this.determineCursorPos();
+
+            if (this._ngControl) {
+                this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            }
         }
     }
 
-    /**
+    public ngAfterViewChecked() {
+        // if one sets mode at run time this forces initialization of new igxInputGroup
+        // As a result a new igxInputDirective is initialized too. In ngAfterViewInit of
+        // the new directive isRequired of the igxInputGroup is set again. However
+        // ngAfterViewInit of the time picker is not called again and we may finish with wrong
+        // isRequired in igxInputGroup. This is why we should set it her, only when needed
+        if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
+            this._inputGroup.isRequired = this.required;
+            this._cdr.detectChanges();
+        }
+    }
+
+        /**
      * @hidden
      */
     public ngOnDestroy(): void {
@@ -854,6 +922,49 @@ export class IgxTimePickerComponent implements
     @HostListener('keydown.Alt.ArrowDown')
     public onAltArrowDown() {
         this.openDialog(this.getInputGroupElement());
+    }
+
+    constructor(
+        private _injector: Injector,
+        private _cdr: ChangeDetectorRef) { }
+
+    private determineCursorPos(): void {
+        this.clearCursorPos();
+        for (const char of this.format) {
+            switch (char) {
+                case 'H':
+                case 'h':
+                    this._hoursPos.size === 0 ? this._hoursPos.add(this.format.indexOf(char)) :
+                        this._hoursPos.add(this.format.lastIndexOf(char));
+                    this._hoursPos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'M':
+                case 'm':
+                    this._minutesPos.size === 0 ? this._minutesPos.add(this.format.indexOf(char)) :
+                        this._minutesPos.add(this.format.lastIndexOf(char));
+                    this._minutesPos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'S':
+                case 's':
+                    this._secondsPos.size === 0 ? this._secondsPos.add(this.format.indexOf(char)) :
+                        this._secondsPos.add(this.format.lastIndexOf(char));
+                    this._secondsPos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'T':
+                case 't':
+                    this._amPmPos.size === 0 ? this._amPmPos.add(this.format.indexOf(char)) :
+                        this._amPmPos.add(this.format.lastIndexOf(char));
+                    this._amPmPos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+            }
+        }
+    }
+
+    private clearCursorPos() {
+        this._hoursPos.forEach(v => this._hoursPos.delete(v));
+        this._minutesPos.forEach(v => this._minutesPos.delete(v));
+        this._secondsPos.forEach(v => this._secondsPos.delete(v));
+        this._amPmPos.forEach(v => this._amPmPos.delete(v));
     }
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
@@ -1147,9 +1258,9 @@ export class IgxTimePickerComponent implements
             return false;
         } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     private _isEntryValid(val: string): boolean {
@@ -1172,11 +1283,11 @@ export class IgxTimePickerComponent implements
     }
 
     private _getCursorPosition(): number {
-        return this.input.nativeElement.selectionStart;
+        return this._inputElementRef.nativeElement.selectionStart;
     }
 
     private _setCursorPosition(start: number, end: number = start): void {
-        this.input.nativeElement.setSelectionRange(start, end);
+        this._inputElementRef.nativeElement.setSelectionRange(start, end);
     }
 
     private _updateEditableInput(): void {
@@ -1288,6 +1399,10 @@ export class IgxTimePickerComponent implements
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
 
+        if (this.displayValue === this.parseMask(false)) {
+            return;
+        }
+
         if (this._isValueValid(newVal)) {
             if (!this.value || oldValue.getTime() !== newVal.getTime()) {
                 this.value = newVal;
@@ -1304,44 +1419,35 @@ export class IgxTimePickerComponent implements
         }
     }
 
-    /**
-     * @hidden
-     */
-    getEditElement() {
-        return this._input ? this._input.nativeElement : null;
-    }
+    protected onStatusChanged() {
+        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
+            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+            const input = this._inputDirective || this._inputDirectiveUserTemplate;
+            if (this._inputGroup.isFocused) {
+                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        }
 
-    /**
-     * @hidden
-     */
-    public getInputGroupElement() {
-        return this.group ? this.group.element.nativeElement : null;
-    }
-
-    /**
-     * @hidden
-     */
-    public writeValue(value: Date) {
-        // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
-        // against the real value when initializing the component and value is bound via ngModel
-        this._dateFromModel = value;
-
-        this.value = value;
-
-        if (this.mode === InteractionMode.DropDown) {
-            this.displayValue = this._formatTime(this.value, this.format);
+        if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
+            this._inputGroup.isRequired = this.required;
         }
     }
 
     /**
      * @hidden
      */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+    getEditElement() {
+        return this._inputElementRef ? this._inputElementRef.nativeElement : null;
+    }
 
     /**
      * @hidden
      */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public getInputGroupElement() {
+        return this._inputGroup  ? this._inputGroup .element.nativeElement : null;
+    }
 
     /**
      * opens the dialog.
@@ -1553,7 +1659,7 @@ export class IgxTimePickerComponent implements
      */
     public cancelButtonClick(): void {
         if (this.mode === InteractionMode.DropDown) {
-            this.displayValue = this._formatTime(this.value, this.format);
+            this.displayValue = this.value ? this._formatTime(this.value, this.format) : this.parseMask(false);
         }
 
         this.close();
@@ -1707,25 +1813,37 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public onBlur(event): void {
-        const value = event.target.value;
-
-        this.isNotEmpty = value !== '';
-        this.displayValue = value;
-
-        if (value && value !== this.parseMask()) {
-            if (this._isEntryValid(value)) {
-                const newVal = this._convertMinMaxValue(value);
-                if (!this.value || this.value.getTime() !== newVal.getTime()) {
-                    this.value = newVal;
+        if (this.mode === InteractionMode.DropDown) {
+            const value = event.target.value;
+            this.isNotEmpty = value !== '';
+            this.displayValue = value;
+            if (value && value !== this.parseMask()) {
+                if (this._isEntryValid(value)) {
+                    const newVal = this._convertMinMaxValue(value);
+                    if (!this.value || this.value.getTime() !== newVal.getTime()) {
+                        this.value = newVal;
+                    }
+                } else {
+                    const args: IgxTimePickerValidationFailedEventArgs = {
+                        timePicker: this,
+                        currentValue: value,
+                        setThroughUI: false
+                    };
+                    this.onValidationFailed.emit(args);
                 }
-            } else {
-                const args: IgxTimePickerValidationFailedEventArgs = {
-                    timePicker: this,
-                    currentValue: value,
-                    setThroughUI: false
-                };
-                this.onValidationFailed.emit(args);
             }
+        }
+
+        if (this.toggleRef.collapsed) {
+            this._updateValidityOnBlur();
+        }
+    }
+
+    public mouseDown(event: MouseEvent): void {
+        // if the click is not on the input but in input group
+        // e.g. on prefix or suffix, prevent default and this way prevent blur
+        if (event.target !== this.getEditElement()) {
+            event.preventDefault();
         }
     }
 
@@ -1784,13 +1902,23 @@ export class IgxTimePickerComponent implements
         }
 
         // minor hack for preventing cursor jumping in IE
-        this._displayValue = this.inputFormat.transform(displayVal);
-        this.input.nativeElement.value = this._displayValue;
+        this.displayValue = this.inputFormat.transform(displayVal);
+        this._inputElementRef.nativeElement.value = this.displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
             this._setCursorPosition(cursor);
         });
+    }
+
+    private _updateValidityOnBlur() {
+        this._onTouchedCallback();
+        const input = this._inputDirective || this._inputDirectiveUserTemplate;
+        if (this._ngControl && !this._ngControl.valid) {
+            input.valid = IgxInputState.INVALID;
+        } else {
+            input.valid = IgxInputState.INITIAL;
+        }
     }
 }
 

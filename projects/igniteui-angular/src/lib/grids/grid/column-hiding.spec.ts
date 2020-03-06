@@ -620,6 +620,9 @@ describe('Column Hiding UI #grid', () => {
             grid.columnList.forEach((col) => col.hidden = true);
             tick(30);
             fix.detectChanges();
+            grid.columnList.forEach((col) => {
+                expect(col.width).toBe('0px');
+            });
             fixEl = fix.nativeElement, gridEl = grid.nativeElement;
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');

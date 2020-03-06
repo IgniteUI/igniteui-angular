@@ -33,4 +33,5 @@ export interface GridType {
     lastEditableColumnIndex: number;
 
     endEdit(commit: boolean, event?: Event): void;
+    isGroupByRecord(rec: any): boolean;
 }
