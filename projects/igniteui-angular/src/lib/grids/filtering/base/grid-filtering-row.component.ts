@@ -159,20 +159,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeydown(event) {
-        event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-          //  this.filteringService.grid.navigateTo(0, 0, (obj) => { obj.target.activate(); });
+            event.preventDefault();
+            this.filteringService.grid.tbody.nativeElement.focus();
         }
-    }
-
-    @HostListener('keydown.esc', ['$event'])
-    public onEscKeydown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.close();
     }
 
     get disabled(): boolean {

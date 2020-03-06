@@ -50,6 +50,7 @@ export class IgxFilteringService implements OnDestroy {
     public columnToFocus: IgxColumnComponent = null;
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
+    public activeFilterCell = 0;
 
     grid: IgxGridBaseDirective;
 
