@@ -211,6 +211,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(datePicker).toBeDefined();
 
             const editTemplate = cellDomDate.query(By.css('.igx-date-picker__input-date'));
+            editTemplate.triggerEventHandler('focus', { target: editTemplate.nativeElement });
+            fixture.detectChanges();
             UIInteractions.sendInput(editTemplate, editValue);
             fixture.detectChanges();
 
