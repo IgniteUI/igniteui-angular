@@ -193,6 +193,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Pinning'
         },
         {
+            link: '/gridRowPinning',
+            icon: 'view_column',
+            name: 'Grid Row Pinning'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'

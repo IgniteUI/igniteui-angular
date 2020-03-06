@@ -4078,6 +4078,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.pinnedRecords.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
             this.notifyChanges(true);
         }
         return true;
