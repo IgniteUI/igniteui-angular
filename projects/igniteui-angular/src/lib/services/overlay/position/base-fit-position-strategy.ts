@@ -4,6 +4,7 @@ import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, C
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
     protected _initialSettings: PositionSettings;
+    protected _forceFit = false;
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
@@ -17,7 +18,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.viewPortRect = Util.getViewportRect(document);
             this.updateViewPortFit(connectedFit);
             if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0 ||
-                connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
+                connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0 || this._forceFit) {
                 this.fitInViewport(contentElement, connectedFit);
             }
         }
