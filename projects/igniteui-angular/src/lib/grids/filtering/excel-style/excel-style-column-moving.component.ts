@@ -48,18 +48,26 @@ export class IgxExcelStyleColumnMovingComponent {
     public onMoveButtonClicked(moveDirection) {
         let targetColumn;
         if (this.column.pinned) {
-            if (this.column.isLastPinned && moveDirection === 1) {
+            if (this.column.isLastPinned && moveDirection === 1 && this.grid.isPinningToStart) {
                 targetColumn = this.grid.unpinnedColumns[0];
                 moveDirection = 0;
+            } else if (this.column.isFirstPinned && moveDirection === 0 && !this.grid.isPinningToStart) {
+                targetColumn = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1];
+                moveDirection = 1;
             } else {
                 targetColumn = this.findColumn(moveDirection, this.grid.pinnedColumns);
             }
-        } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === 0) {
+        } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === 0 &&
+                    this.grid.isPinningToStart) {
             targetColumn = this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1];
             if (targetColumn.parent) {
                 targetColumn = targetColumn.topLevelParent;
             }
             moveDirection = 1;
+        } else if (this.grid.unpinnedColumns.indexOf(this.column) === this.grid.unpinnedColumns.length - 1 &&
+            moveDirection === 1 && !this.grid.isPinningToStart) {
+            targetColumn = this.grid.pinnedColumns[0];
+            moveDirection = 0;
         } else {
             targetColumn = this.findColumn(moveDirection, this.grid.unpinnedColumns);
         }

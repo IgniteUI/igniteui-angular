@@ -115,6 +115,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 
 const components = [
     AppComponent,
@@ -220,7 +221,8 @@ const components = [
     GridFilteringComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
-    AboutComponent
+    AboutComponent,
+    ReactiveFormSampleComponent
 ];
 
 @NgModule({
