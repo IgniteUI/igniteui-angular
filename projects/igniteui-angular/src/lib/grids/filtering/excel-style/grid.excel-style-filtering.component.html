@@ -52,7 +52,10 @@
         'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
     }"
     [id]="overlayComponentId"
-    (keydown)="onKeyDown($event)">
+    (keydown)="onKeyDown($event)"
+    style="height: 100%;"
+    [style.min-height]="minHeight"
+    [style.max-height]="maxHeight">
 
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>
@@ -136,7 +139,7 @@
     </footer>
 </article>
 
-<igx-drop-down 
+<igx-drop-down
     *ngIf="column"
     #subMenu
     [maxHeight]="'397px'"

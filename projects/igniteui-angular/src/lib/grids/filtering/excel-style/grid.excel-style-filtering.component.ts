@@ -206,13 +206,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('style.height')
-    height = '100%';
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('style.min-height') get minHeight() {
+    get minHeight() {
         if (!this.inline) {
             let minHeight = 600;
             switch (this.grid.displayDensity) {

@@ -15,7 +15,6 @@ export class AutoElasticPositionStrategy extends AutoPositionStrategy {
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const heightOverflow = connectedFit.contentElementRect.height - connectedFit.viewPortRect.height;
         if (heightOverflow > 0) {
-            element.classList.add('igx-overlay__content--elastic');
             element.style.width = 'auto';
             element.style.height = `${connectedFit.viewPortRect.height}px`;
         } else {

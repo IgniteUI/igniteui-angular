@@ -17,15 +17,17 @@
     %grid-excel-filter {
         display: block;
         width: 100%;
+        height: 100%;
         flex-grow: 1;
+        box-shadow: igx-elevation($elevations, 12);
+        overflow: auto;
     }
 
     %grid-excel-filter--inline {
-        overflow: auto;
+        box-shadow: none;
 
         %grid-excel-menu {
             width: 100%;
-            box-shadow: none;
         }
     }
 
@@ -58,7 +60,6 @@
         width: 320px;
         min-width: 320px;
         background: --var($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevations, 12);
         border-radius: 4px;
 
         @include igx-button-group(igx-button-group-theme(

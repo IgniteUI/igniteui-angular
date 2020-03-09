@@ -2671,7 +2671,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkbox: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
-            expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false, false]);
+            expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false ]);
         }));
 
         it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
@@ -2713,8 +2713,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkbox: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
-            expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true, false]);
-            expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false, false]);
+            expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true]);
+            expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false]);
         }));
 
         it('Should change filter when changing And/Or operator.', fakeAsync(() => {
@@ -3411,15 +3411,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 610 && scrollbar.scrollTop <= 615).toBe(true,
+            expect(scrollbar.scrollTop >= 680 && scrollbar.scrollTop <= 690).toBe(true,
                 'search scrollbar has incorrect scrollTop');
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(288, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(12, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -3691,8 +3691,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702'],
-                [true, true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
+                [true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
