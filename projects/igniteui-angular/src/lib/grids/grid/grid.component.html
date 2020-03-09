@@ -108,7 +108,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-container *ngTemplateOutlet="isRowPinningToTop ? pinnedRecordsTemplate : null">
+    <ng-container *ngTemplateOutlet="pinnedRecords.length > 0 && isRowPinningToTop ? pinnedRecordsTemplate : null">
     </ng-container>
     <ng-template #pinnedRecordsTemplate>
         <ng-container *ngIf='pinnedRecords
@@ -154,7 +154,7 @@
                 (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
-        <ng-container *ngTemplateOutlet="!isRowPinningToTop ? pinnedRecordsTemplate : null">
+        <ng-container *ngTemplateOutlet="pinnedRecords.length > 0 && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
