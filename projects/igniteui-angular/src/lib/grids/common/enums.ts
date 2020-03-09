@@ -32,3 +32,13 @@ export enum ColumnDisplayOrder {
     Alphabetical = 'Alphabetical',
     DisplayOrder = 'DisplayOrder'
 }
+
+export enum ColumnPinningPosition {
+    Start,
+    End
+}
+
+export enum RowPinningPosition {
+    Top,
+    Bottom
+}

@@ -109,7 +109,7 @@ export class IgxDaysViewNavigationService {
                 day.nativeElement.focus();
                 return;
             }
-            nextMonthView.navService.focusNextDate(day.nativeElement, key);
+            nextMonthView.daysNavService.focusNextDate(day.nativeElement, key);
         }
 
         // if iterating in the visible prev/next moths above found a day that is not focusable, ie is disabled, hidden, etc

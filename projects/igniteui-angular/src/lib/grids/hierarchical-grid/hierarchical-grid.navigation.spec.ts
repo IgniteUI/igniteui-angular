@@ -9,6 +9,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
@@ -277,7 +278,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         await wait(100);
-        const childCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        const rowCells = childGrid.dataRowList.toArray()[0].cells.toArray();
+        const childCell =  GridFunctions.sortDebugElementsHorizontally(rowCells)[0];
         expect(childCell.selected).toBe(true);
         expect(childCell.focused).toBe(true);
         expect(childCell.columnIndex).toBe(0);
@@ -323,12 +325,12 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const childCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
-        childCell.nativeElement.focus();
+        childCell.nativeElement.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         childCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
         fixture.detectChanges();
-        await wait();
+        await wait(30);
         fixture.detectChanges();
 
         const childLastRowCell =  childGrid.dataRowList.toArray()[4].cells.toArray()[0];
@@ -352,8 +354,10 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
         childLastRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
         fixture.detectChanges();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
+        await wait(100);
+
         const childFirstRowCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
         expect(childFirstRowCell.selected).toBe(true);
         expect(childFirstRowCell.columnIndex).toBe(0);
@@ -561,6 +565,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
          // collapse
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+        await wait(100);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
@@ -569,6 +574,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // expand
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+        await wait(100);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();

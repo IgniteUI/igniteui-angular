@@ -22,7 +22,7 @@ export enum ScrollMonth {
 
 /** @hidden @internal */
 @Directive({
-    selector: '[igxCalendarBase]'
+    selector: '[igxCalendarBase]',
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
@@ -317,7 +317,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      *@hidden
      */
-    public calendarModel: Calendar;
+    protected calendarModel: Calendar;
 
     /**
      * @hidden
@@ -620,7 +620,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Deselects date(s) (based on the selection type).
      */
     public deselectDate(value?: Date | Date[]) {
-        if (this.selectedDates === null || this.selectedDates.length === 0) {
+        if (!this.selectedDates || this.selectedDates.length === 0) {
             return;
         }
 

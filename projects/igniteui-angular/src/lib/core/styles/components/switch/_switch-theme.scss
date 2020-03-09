@@ -10,7 +10,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
@@ -27,6 +26,11 @@
 /// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
 /// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
+/// @param {Color} $border-color [null] - The border color of the switch.
+/// @param {Color} $border-hover-color [null] - The border color of the switch on hover.
+/// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
+/// @param {Color} $border-on-color [null] - The border color when the switch is on.
+/// @param {Color} $border-on-hover-color [null] - The border color when the switch is on and hovered.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -34,6 +38,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);

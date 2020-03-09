@@ -16,9 +16,11 @@ import {
     HostListener,
     NgModuleRef,
     OnInit,
-    AfterViewInit
+    AfterViewInit,
+    Injector,
+    AfterViewChecked
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import {
     IgxCalendarComponent,
     IgxCalendarHeaderTemplateDirective,
@@ -28,8 +30,8 @@ import {
     isDateInRanges
 } from '../calendar/index';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '../input-group/index';
-import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/index';
+import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
@@ -113,13 +115,15 @@ export enum PredefinedFormatOptions {
     FullDate = 'fullDate'
 }
 
+const noop = () => { };
+
 /**
- * **Ignite UI for Angular Date Picker** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
- *
- * The Ignite UI Date Picker displays a popup calendar that lets users select a single date.
- *
- * Example:
+ * Date Picker displays a popup calendar that lets users select a single date.
+ *@igxModule IgxDatePickerModule
+ *@igxTheme igx-calendar-theme, igx-icon-theme
+ *@igxGroup Scheduling
+ *@igxKeywords  datepicker, calendar, schedule, date
+ *@example
  * ```html
  * <igx-date-picker [(ngModel)]="selectedDate"></igx-date-picker>
  * ```
@@ -140,10 +144,13 @@ export enum PredefinedFormatOptions {
         }
     `]
 })
-export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor, EditorProvider, OnInit, AfterViewInit, OnDestroy {
+export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
+          EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /**
-     * An @Input property that sets the `IgxDatePickerComponent` label.
+     * Gets/Sets the `IgxDatePickerComponent` label.
+     * @remarks
      * The default label is 'Date'.
+     * @example
      * ```html
      * <igx-date-picker [label]="Calendar"></igx-date-picker>
      * ```
@@ -152,15 +159,19 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public label = 'Date';
 
     /**
-     * An @Input property that sets the `IgxDatePickerComponent` label visibility.
+     * Gets/Sets the `IgxDatePickerComponent` label visibility.
+     * @remarks
      * By default the visibility is set to true.
+     * @example
      * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
      */
     @Input()
     public labelVisibility = true;
 
     /**
-     *An @Input property that sets locales. Default locale is en.
+     *Gets/Sets the locales.
+     * @remarks Default locale is en.
+     * @example
      *```html
      *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      *```
@@ -168,7 +179,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Input() public locale: 'en';
 
     /**
-     *An @Input property that sets on which day the week starts.
+     *Gets/Sets on which day the week starts.
+     @example
      *```html
      *<igx-date-picker [weekStart]="WEEKDAYS.FRIDAY" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
@@ -176,13 +188,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
 
     /**
-     *Returns the format options of the `IgxDatePickerComponent`.
+     *Gets the format options of the `IgxDatePickerComponent`.
+     @example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    let formatOptions = this.datePicker.formatOptions;
-     *}
+        let formatOptions = this.datePicker.formatOptions;
      *```
      */
     @Input()
@@ -191,11 +200,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     * Sets/gets whether the inactive dates (dates that are out of the current month) will be hidden.
+     * Gets/Sets whether the inactive dates will be hidden.
+     * @remarks
+     * Apllies to dates that are out of the current month.
      * Default value is `false`.
+     * @example
      * ```html
      * <igx-date-picker [hideOutsideDays]="true"></igx-date-picker>
      * ```
+     * @example
      * ```typescript
      * let hideOutsideDays = this.datePicker.hideOutsideDays;
      * ```
@@ -204,11 +217,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public hideOutsideDays: boolean;
 
     /**
-     * Sets/gets the number of month views displayed.
+     * Gets/Sets the number of month views displayed.
+     * @remarks
      * Default value is `1`.
+     * @example
      * ```html
      * <igx-date-picker [monthsViewNumber]="2"></igx-date-picker>
      * ```
+     * @example
      * ```typescript
      * let monthViewsDisplayed = this.datePicker.monthsViewNumber;
      * ```
@@ -218,19 +234,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      *Sets the format options of the `IgxDatePickerComponent`.
+     *@example
      *```typescript
-     *public Options;
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.Options = {
-     *        day: "numeric",
-     *        month: "long",
-     *        weekday: "long",
-     *        year: "numeric"
-     *    }
-     *this.datePicker.formatOptions = this.Options;
-     *}
+     * this.datePicker.formatOptions = {  day: "numeric",  month: "long", weekday: "long", year: "numeric"};
      *```
      */
     public set formatOptions(formatOptions: IFormatOptions) {
@@ -238,54 +244,37 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Returns the date display format of the `IgxDatePickerComponent` in dropdown mode.
+     *Gets/Sets the date display format of the `IgxDatePickerComponent` in dropdown mode.
+     @example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    let format = this.datePicker.format;
-     *}
+     * let format = this.datePicker.format;
+     * this.datePicker.format = 'yyyy-M-d';
      *```
      */
     @Input()
     public get format(): string {
         return (this._format === undefined) ? PredefinedFormatOptions.ShortDate : this._format;
     }
-
-    /**
-    *Sets the date format of the `IgxDatePickerComponent` when in editable dropdown mode.
-    *```typescript
-    *@ViewChild("MyDatePicker")
-    *public datePicker: IgxDatePickerComponent;
-    *this.datePicker.format = 'yyyy-M-d';
-    *}
-    *```
-    */
     public set format(format: string) {
         this._format = format;
     }
 
     /**
-     *Returns the date mask of the `IgxDatePickerComponent` when in editable dropdown mode.
+     *Gets/Sets the date mask of the `IgxDatePickerComponent` when in editable dropdown mode.
+     *@example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    let mask = this.datePicker.mask;
-     *}
+     *let mask = this.datePicker.mask;
      *```
      */
     @Input()
     public mask: string;
 
     /**
-     *Returns the format views of the `IgxDatePickerComponent`.
+     *Gets/Sets the format views of the `IgxDatePickerComponent`.
+     *@example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    let formatViews = this.datePicker.formatViews;
-     *}
+     * let formatViews = this.datePicker.formatViews;
+     *  this.datePicker.formatViews = {day:false, month: false, year:false};
      *```
      */
     @Input()
@@ -293,76 +282,45 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return this._formatViews;
     }
 
-    /**
-     *Sets the format views of the `IgxDatePickerComponent`.
-     *```typescript
-     *public Views;
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.Views = {day:false, month: false, year:false};
-     *    this.datePicker.formatViews = this.Views;
-     *}
-     *```
-     */
     public set formatViews(formatViews: IFormatViews) {
         this._formatViews = Object.assign(this._formatViews, formatViews);
     }
 
     /**
-     * Gets the disabled dates descriptors.
+     * Gets/Sets the disabled dates descriptors.
+     * @example
      * ```typescript
      * let disabledDates = this.datepicker.disabledDates;
+     * this.datePicker.disabledDates = [ {type: DateRangeType.Weekends}, ...];
      * ```
      */
     @Input()
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
-
-    /**
-     * Sets the disabled dates' descriptors.
-     * ```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.datePicker.disabledDates = [
-     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
-     *     {type: DateRangeType.Weekends}];
-     *}
-     *```
-     */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
     }
 
     /**
-     * Gets the special dates descriptors.
+     * Gets/Sets the special dates descriptors.
+     * @example
      * ```typescript
      * let specialDates = this.datepicker.specialDates;
+     * this.datePicker.specialDates = [ {type: DateRangeType.Weekends}, ... ];
      * ```
      */
     @Input()
     public get specialDates(): DateRangeDescriptor[] {
         return this._specialDates;
     }
-
-    /**
-     * Sets the special dates' descriptors.
-     * ```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.datePicker.specialDates = [
-     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
-     *     {type: DateRangeType.Weekends}];
-     *}
-     *```
-     */
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
     }
 
+    /**
+    * Gets/Sets the modal overlay settings.
+    */
     @Input()
     public get modalOverlaySettings(): OverlaySettings {
         return this._modalOverlay;
@@ -372,6 +330,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._modalOverlay = value;
     }
 
+    /**
+    * Gets/Sets the drop-down overlay settings.
+    */
     @Input()
     public get dropDownOverlaySettings(): OverlaySettings {
         return this._dropDownOverlaySettings || this._defaultDropDownOverlaySettings;
@@ -382,17 +343,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Returns the formatted date when `IgxDatePickerComponent` is in dialog mode.
+     *Gets the formatted date when `IgxDatePickerComponent` is in dialog mode.
+     *@example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *public selection(event){
-     *    let selectedDate = this.datePicker.displayData;
-     *    alert(selectedDate);
-     *}
-     *```
-     *```html
-     *<igx-date-picker #MyDatePicker (onSelection)="selection()" todayButtonLabel="today"></igx-date-picker>
+     *let selectedDate = this.datePicker.displayData;
      *```
      */
     public get displayData(): string {
@@ -403,7 +357,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     hidden
+     @hidden @internal
      */
     public get transformedDate(): string {
         if (this._value) {
@@ -415,19 +369,26 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return this._transformedDate;
     }
 
+    /**
+     @hidden @internal
+     */
     public set transformedDate(value) {
         this._transformedDate = value;
     }
 
-    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService, public element: ElementRef,
-        private _cdr: ChangeDetectorRef, private _moduleRef: NgModuleRef<any>) { }
+    constructor(@Inject(
+        IgxOverlayService) private _overlayService: IgxOverlayService,
+        public element: ElementRef,
+        private _cdr: ChangeDetectorRef,
+        private _moduleRef: NgModuleRef<any>,
+        private _injector: Injector) { }
 
     /**
      * Gets the input group template.
+     * @example
      * ```typescript
      * let template = this.template();
      * ```
-     * @memberof IgxDatePickerComponent
      */
     get template(): TemplateRef<any> {
         if (this.datePickerTemplateDirective) {
@@ -438,7 +399,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Gets the context passed to the input group template.
-     * @memberof IgxDatePickerComponent
      */
     get context() {
         return {
@@ -458,11 +418,20 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         };
     }
 
+    private get required(): boolean {
+        if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this._ngControl.control.validator({} as AbstractControl);
+            return error && error.required;
+        }
+
+        return false;
+    }
+
+
     /**
-     *An @Input property that gets/sets the selected date.
-     *```typescript
-     *public date: Date = new Date();
-     *```
+     *Gets/Sets the selected date.
+     *@example
      *```html
      *<igx-date-picker [value]="date"></igx-date-picker>
      *```
@@ -478,7 +447,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     *Gets/Sets the value of `id` attribute.
+     *@remarks If not provided it will be automatically generated.
+     *@example
      *```html
      *<igx-date-picker [id]="'igx-date-picker-3'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
@@ -488,17 +459,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public id = `igx-date-picker-${NEXT_ID++}`;
 
     /**
-     *An @Input property that applies a custom formatter function on the selected or passed date.
-     *```typescript
-     *public date: Date = new Date();
-     *private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
-     *private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
-     *public formatter = (date: Date) => { return `You selected
-     *                     ${this.dayFormatter.format(date)},
-     *                     ${date.getDate()} ${this.monthFormatter.format(date)},
-     *                     ${date.getFullYear()}`;
-     *}
-     *```
+     * Gets/Sets a custom formatter function on the selected or passed date.
+     * @example
      *```html
      *<igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
      *```
@@ -507,7 +469,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public formatter: (val: Date) => string;
 
     /**
-     *An @Input property that disables the `IgxDatePickerComponent`.
+     *Enables/Disables the `IgxDatePickerComponent`.
+     *@example
      *```html
      *<igx-date-picker [disabled]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      * ```
@@ -516,7 +479,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public disabled: boolean;
 
     /**
-     *An @Input property that sets the orientation of the `IgxDatePickerComponent` header.
+     *Gets/Sets the orientation of the `IgxDatePickerComponent` header.
+     *@example
      *```html
      *<igx-date-picker [vertical]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
      *```
@@ -525,7 +489,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public vertical = false;
 
     /**
-     *An @Input property that renders today button with custom label.
+     *Gets/Sets the today button's label.
+     *@example
      *```html
      *<igx-date-picker cancelButtonLabel="cancel" todayButtonLabel="Tomorrow"></igx-date-picker>
      *```
@@ -534,7 +499,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public todayButtonLabel: string;
 
     /**
-     *An @Input property that renders cancel button with custom label.
+     * *Gets/Sets the cancel button's label.
+     * @example
      *```html
      *<igx-date-picker cancelButtonLabel="Close" todayButtonLabel="Today"></igx-date-picker>
      *```
@@ -543,7 +509,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public cancelButtonLabel: string;
 
     /**
-     *An @Input property that sets whether `IgxDatePickerComponent` is in dialog or drop down mode.
+     *Gets/Sets the interaction mode - dialog or drop down.
+     *@example
      *```html
      *<igx-date-picker mode="dropdown"></igx-date-picker>
      *```
@@ -552,7 +519,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public mode = InteractionMode.Dialog;
 
     /**
-     *An @Input property that sets whether the `IgxDatePickerComponent` date parts would spin continuously or stop when min/max is reached.
+     *Gets/Sets whether date should spin continuously or stop when min/max is reached.
+     *@example
      *```html
      *<igx-date-picker [isSpinLoop]="false"></igx-date-picker>
      *```
@@ -561,15 +529,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public isSpinLoop = true;
 
     /**
-     * Determines the container the popup element should be attached to.
-     *
+     * Gets/Sets the container used for the popup element.
+     * @remarks
+     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     *@example
      * ```html
      * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
      * //..
      * <igx-date-picker [outlet]="outlet"></igx-date-picker>
      * //..
      * ```
-     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
@@ -577,6 +546,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * @deprecated Use 'onOpened' instead.
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
+     *@example
      *```typescript
      *public open(event){
      *    alert("The date-picker calendar has been opened!");
@@ -597,7 +567,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
+     *Emitted when the `IgxDatePickerComponent` calendar is opened.
     */
     @Output()
     public onOpened = new EventEmitter<IgxDatePickerComponent>();
@@ -605,6 +575,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * @deprecated Use 'onClosed' instead.
      *"An event that is emitted when the `IgxDatePickerComponent` is closed.
+     *@example
      *```typescript
      *public close(event){
      *    alert("The date-picker has been closed!");
@@ -625,52 +596,40 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *An event that is emitted after the `IgxDatePickerComponent` is closed.
+     *Emitted after the `IgxDatePickerComponent` is closed.
     */
     @Output()
     public onClosed = new EventEmitter<IgxDatePickerComponent>();
 
     /**
-     * An event that is emitted when the `IgxDatePickerComponent` is being closed.
+     *Emitted when the `IgxDatePickerComponent` is being closed.
      */
     @Output()
     public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
-     *An @Output property that is fired when selection is made in the calendar.
-     *```typescript
-     *public selection(event){
-     *    alert("A date has been selected!");
-     *}
-     *```
+     *Emitted when selection is made in the calendar.
+     *@example
      *```html
-     *<igx-date-picker (onSelection)="selection($event)" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
+     *<igx-date-picker (onSelection)="selection($event)"></igx-date-picker>
      *```
      */
     @Output()
     public onSelection = new EventEmitter<Date>();
 
     /**
-     *An @Output property that is fired when date picker value is changed.
-     *```typescript
-     *public valueChanged(event){
-        *    alert("Date picker value is changed");
-        *}
-        *```
-        *```html
-        *<igx-date-picker (valueChange)="valueChanged($event)" mode="dropdown"></igx-date-picker>
-        *```
+     *Emitted when date picker value is changed.
+     *@example
+    *```html
+    *<igx-date-picker (valueChange)="valueChanged($event)" mode="dropdown"></igx-date-picker>
+    *```
     */
     @Output()
     public valueChange = new EventEmitter<Date>();
 
     /**
-    *An @Output property that fires when the user types/spins to a disabled date in the date-picker editor.
-    *```typescript
-    *public onDisabledDate(event){
-    *    alert("This date is disabled!");
-    *}
-    *```
+    *Emitted when the user types/spins to a disabled date in the date-picker editor.
+    *@example
     *```html
     *<igx-date-picker (onDisabledDate)="onDisabledDate($event)"></igx-date-picker>
     *```
@@ -679,16 +638,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public onDisabledDate = new EventEmitter<IDatePickerDisabledDateEventArgs>();
 
     /**
-    *An @Output property that fires when the user types/spins invalid date in the date-picker editor.
-    *```typescript
-    *public onValidationFailed(event){
-        *    alert("This date is not valid!");
-        *}
-        *```
-        *```html
-        *<igx-date-picker (onValidationFailed)="onValidationFailed($event)"></igx-date-picker>
-        *```
-        */
+    *Emitted when the user types/spins invalid date in the date-picker editor.
+    *@example
+    *```html
+    *<igx-date-picker (onValidationFailed)="onValidationFailed($event)"></igx-date-picker>
+    *```
+    */
     @Output()
     public onValidationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
@@ -710,23 +665,17 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
-    /*
-     * @hidden
-     */
-    @ViewChild('editableInput', { read: ElementRef })
-    protected editableInput: ElementRef;
+    @ViewChild(IgxInputDirective, { read: ElementRef })
+    private _inputElementRef: ElementRef;
 
-    /*
-    * @hidden
-    */
-    @ViewChild('readonlyInput', { read: ElementRef })
-    protected readonlyInput: ElementRef;
+    @ContentChild(IgxInputDirective, { read: ElementRef })
+    protected _inputUserTemplateElementRef: ElementRef;
 
-    /*
-    * @hidden
-    */
+    @ViewChild(IgxInputDirective)
+    private _inputDirective: IgxInputDirective;
+
     @ContentChild(IgxInputDirective)
-    protected input: IgxInputDirective;
+    private _inputDirectiveUserTemplate: IgxInputDirective;
 
     /**
      *@hidden
@@ -752,15 +701,25 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
     public datePickerActionsDirective: IgxDatePickerActionsDirective;
 
+    /**@hidden @internal*/
     public calendar: IgxCalendarComponent;
+    /**@hidden @internal*/
     public hasHeader = true;
+    /**@hidden @internal*/
     public collapsed = true;
+    /**@hidden @internal*/
     public displayValuePipe = new DatePickerDisplayValuePipe(this);
+    /**@hidden @internal*/
     public inputValuePipe = new DatePickerInputValuePipe(this);
+    /**@hidden @internal*/
     public dateFormatParts = [];
+    /**@hidden @internal*/
     public rawDateString: string;
+    /**@hidden @internal*/
     public inputMask: string;
+    /**@hidden @internal*/
     public isEmpty = true;
+    /**@hidden @internal*/
     public invalidDate = '';
 
     private readonly spinDelta = 1;
@@ -778,6 +737,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         year: false
     };
     private _destroy$ = new Subject<boolean>();
+    private _statusChanges$: Subscription;
     private _componentID: string;
     private _format: string;
     private _value: Date;
@@ -792,6 +752,31 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _transformedDate;
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
+    private _ngControl: NgControl = null;
+
+    //#region ControlValueAccessor
+
+    private _onChangeCallback: (_: Date) => void = noop;
+
+    private _onTouchedCallback: () => void = noop;
+
+    /** @hidden @internal */
+    public writeValue(value: Date) {
+        this._value = value;
+        // TODO: do we need next call
+        this._cdr.markForCheck();
+    }
+
+    /** @hidden @internal */
+    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /** @hidden @internal */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    //#endregion
 
     /**
     * @hidden
@@ -803,52 +788,22 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         event.preventDefault();
     }
 
-    /**
-     *Method that sets the selected date.
-     *```typescript
-     *public date = new Date();
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
-     *    this.datePicker.writeValue(this.date);
-     *}
-     *```
-     *@param value The date you want to select.
-     *@memberOf {@link IgxDatePickerComponent}
-     */
-    public writeValue(value: Date) {
-        this.value = value;
-        this._cdr.markForCheck();
-    }
-
-    /**
-     *@hidden
-     */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
-
-    /**
-     *@hidden
-     */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
-
-    /**
-     *@hidden
-     */
-    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
     /** @hidden */
     public getEditElement() {
-        const inputElement = this.editableInput || this.readonlyInput || this.input;
-        return (inputElement) ? inputElement.nativeElement : null;
+        const inputDirectiveElementRef = this._inputElementRef || this._inputUserTemplateElementRef;
+        return (inputDirectiveElementRef) ? inputDirectiveElementRef.nativeElement : null;
     }
 
-    /** @hidden */
+    /**
+     *@hidden @internal
+     */
     public getInputGroupElement() {
         return this.inputGroup ? this.inputGroup.element.nativeElement : null;
     }
 
     /**
-     *@hidden
+     *@hidden @internal
      */
     public ngOnInit(): void {
         this._positionSettings = {
@@ -900,6 +855,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 const input = this.getEditElement();
                 if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
                     input.focus();
+                } else {
+                    // outside click
+                    this._updateValidityOnBlur();
                 }
             });
 
@@ -910,20 +868,56 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
             this.inputMask = DatePickerUtil.getInputMask(this.dateFormatParts);
         }
+
+        this._ngControl = this._injector.get<NgControl>(NgControl, null);
     }
 
-    ngAfterViewInit() {
-        if (this.mode === InteractionMode.DropDown && this.editableInput) {
-            fromEvent(this.editableInput.nativeElement, 'keydown').pipe(
+    /**
+     *@hidden @internal
+    */
+    public ngAfterViewInit() {
+        if (this.mode === InteractionMode.DropDown && this._inputElementRef) {
+            fromEvent(this._inputElementRef.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((res) => this.onKeyDown(res));
         }
+
+        if (this._ngControl) {
+            this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+        }
+    }
+
+    public ngAfterViewChecked() {
+        // if one sets mode at run time this forces initialization of new igxInputGroup
+        // As a result a new igxInputDirective is initialized too. In ngAfterViewInit of
+        // the new directive isRequired of the igxInputGroup is set again. However
+        // ngAfterViewInit of date picker is not called again and we may finish with wrong
+        // isRequired in igxInputGroup. This is why we should set it her, only when needed
+        if (this.inputGroup && this.inputGroup.isRequired !== this.required) {
+            this.inputGroup.isRequired = this.required;
+            this._cdr.detectChanges();
+        }
+    }
+
+    protected onStatusChanged() {
+        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
+            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+            if (this.inputGroup.isFocused) {
+                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                this._inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        }
+
+        if (this.inputGroup && this.inputGroup.isRequired !== this.required) {
+            this.inputGroup.isRequired = this.required;
+        }
     }
 
     /**
-     *@hidden
-     */
+     *@hidden @internal
+    */
     public ngOnDestroy(): void {
         if (this._componentID) {
             this._overlayService.hide(this._componentID);
@@ -933,15 +927,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     *Selects today's date from calendar and change the input field value, @calendar.viewDate and @calendar.value.
+     *Selects today's date from calendar.
+     *@remarks
+     *Changes the input field value, @calendar.viewDate and @calendar.value.
+     *@example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
      *this.datePicker.triggerTodaySelection();
-     *}
      *```
-     *@memberOf {@link IgxDatePickerComponent}
      */
     public triggerTodaySelection(): void {
         const today = new Date(Date.now());
@@ -949,17 +941,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-     * Change the calendar selection and calling this method will emit the @calendar.onSelection event,
+     * Change the calendar selection.
+     * @remarks
+     * Calling this method will emit the @calendar.onSelection event,
      * which will fire @handleSelection method.
+     * @example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
      *this.datePicker.selectDate(this.date);
-     *}
      * ```
      * @param date passed date that has to be set to the calendar.
-     * @memberOf {@link IgxDatePickerComponent}
      */
     public selectDate(date: Date): void {
         const oldValue =  this.value;
@@ -971,14 +961,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     /**
      * Deselects the calendar date.
+     * @example
      *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *ngAfterViewInit(){
      *this.datePicker.deselectDate();
-     *}
      * ```
-     * @memberOf {@link IgxDatePickerComponent}
      */
     public deselectDate(): void {
         const oldValue =  this.value;
@@ -992,18 +978,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * Opens the date picker drop down or dialog.
      * @param target HTMLElement - the target element to use for positioning the drop down container according to
-     * ```html
-     * <igx-date-picker [value]="date" mode="dropdown" #retemplated>
-     *   <ng-template igxDatePickerTemplate let-openDialog="openDialog"
-     *                let-displayData="displayData">
-     *     <igx-input-group>
-     *       <input #dropDownTarget igxInput [value]="displayData" />
-     *       <igx-suffix (click)="openDialog(dropDownTarget)">
-     *         <igx-icon>alarm</igx-icon>
-     *       </igx-suffix>
-     *     </igx-input-group>
-     *   </ng-template>
-     * </igx-date-picker>
+     * @example
+     * ```typescript
+     * this.datePicker.openDialog(target);
      * ```
      */
     public openDialog(target?: HTMLElement): void {
@@ -1031,10 +1008,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
+    public mouseDown(e) {
+        // if the click is not on the input but in input group
+        // e.g. on prefix or sufix, prevent default and this way prevent blur
+        if (e.target !== this.getEditElement()) {
+            e.preventDefault();
+        }
+    }
+
     /**
      * Close the calendar.
      *
-     * @hidden
+     * @hidden @internal
      */
     public closeCalendar(): void {
         this._overlayService.hide(this._componentID);
@@ -1043,7 +1028,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * Clear the input field, date picker value and calendar selection.
      *
-     * @hidden
+     * @hidden @internal
      */
     public clear(): void {
         this.isEmpty = true;
@@ -1058,7 +1043,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *
      * @param event selected value from calendar.
      *
-     * @hidden
+     * @hidden @internal
      */
     public handleSelection(date: Date): void {
         if (this.value) {
@@ -1077,24 +1062,21 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-    * Evaluates when the input blur event was fired
-    * and re-calculate the date picker value.
-    *
-    * @param event
-    *
-    * @hidden
+    * @hidden @internal
     */
     public onBlur(event): void {
         this._isInEditMode = false;
-        this.calculateDate(event.target.value, event.type);
+        if (this.mode === InteractionMode.DropDown) {
+            this.calculateDate(event.target.value, event.type);
+        }
+
+        if (this.collapsed) {
+            this._updateValidityOnBlur();
+        }
     }
 
     /**
-    * Evaluates when the input focus event was fired
-    * and re-calculate the editor text.
-    *
-    * @param event
-    * @hidden
+    * @hidden @internal
     */
     public onFocus(): void {
         this._isInEditMode = true;
@@ -1104,12 +1086,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-    * Evaluates when the keydown event was fired for up/down keys
-    * to provide spinning of date parts.
-    *
-    * @param event
-    *
-    * @hidden
+    * @hidden @internal
     */
     public onKeyDown(event) {
         switch (event.key) {
@@ -1135,12 +1112,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-    * Evaluates when the mouse wheel event was fired
-    * to provide spinning of date parts.
-    *
-    * @param event
-    *
-    * @hidden
+    * @hidden @internal
     */
     public onWheel(event) {
         if (this._isInEditMode) {
@@ -1152,11 +1124,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /**
-    * Evaluates when input event was fired in editor.
-    *
-    * @param event
-    *
-    * @hidden
+    * @hidden @internal
     */
     public onInput(event) {
         const targetValue = event.target.value;
@@ -1259,7 +1227,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _onOpened(): void {
-        this._onTouchedCallback();
         this.onOpened.emit(this);
 
         // TODO: remove this line after deprecating 'onOpen'
@@ -1373,9 +1340,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         return DatePickerUtil.addPromptCharsEditMode(this.dateFormatParts, this.value, changedValue);
     }
 
-    private _onTouchedCallback: () => void = () => { };
-
-    private _onChangeCallback: (_: Date) => void = () => { };
+    public _updateValidityOnBlur() {
+        this._onTouchedCallback();
+        const input = this._inputDirective || this._inputDirectiveUserTemplate;
+        if (input && this._ngControl && !this._ngControl.valid) {
+            input.valid = IgxInputState.INVALID;
+        } else {
+            input.valid = IgxInputState.INITIAL;
+        }
+    }
 }
 
 /**
