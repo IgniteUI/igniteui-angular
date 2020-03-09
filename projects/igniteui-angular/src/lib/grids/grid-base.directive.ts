@@ -3782,7 +3782,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        this.onSortingDone.emit(expression);
+        requestAnimationFrame(() => this.onSortingDone.emit(expression));
     }
 
     /**
@@ -5293,10 +5293,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
-        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
-            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+            colIndex > - 1 && colIndex < cols) {
             return true;
         }
         return false;
