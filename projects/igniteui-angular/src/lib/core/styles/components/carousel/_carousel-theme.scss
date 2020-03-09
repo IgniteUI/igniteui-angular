@@ -303,6 +303,8 @@
         overflow: hidden;
         outline-style: none;
         border-radius: --var($theme, 'border-radius');
+        min-height: 300px;
+        min-width: 300px;
     }
 
     %igx-carousel-slide {
