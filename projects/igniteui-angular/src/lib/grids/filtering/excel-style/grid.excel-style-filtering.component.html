@@ -45,11 +45,11 @@
 </ng-template>
 
 <ng-template #defaultExcelStyleSelectingTemplate>
-    <div class="igx-excel-filter__actions-select"
+    <div [ngClass]="selectedClass()"
     tabindex="0"
     (click)="onSelect()">
         <span>{{grid.resourceStrings.igx_grid_excel_select }}</span>
-        <igx-checkbox  [checked]="column.selected" [disableRipple]="true" [readonly]="true"></igx-checkbox>
+        <igx-icon fontSet="material"  >done</igx-icon>
     </div>
 </ng-template>
 
@@ -66,9 +66,11 @@
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>
         <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
-            <igx-checkbox *ngIf="column.selectable"
-                [(ngModel)]="column.selected" [disableRipple]="true">
-            </igx-checkbox>
+            <button *ngIf="column.selectable" igxButton="icon"
+            [displayDensity]="grid.displayDensity" (click)="onSelect()"
+            tabindex="0" [ngClass]='selectedClass()'>
+             <igx-icon fontSet="material">done</igx-icon>
+            </button>
             <button *ngIf="!column.disablePinning && !column.pinned"
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"

@@ -351,10 +351,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     /**
-     * @hidden @internal
-     */
-    public selectClass() {
-        return this.column.searchable ? 'igx-excel-filter__actions-select' : 'igx-excel-filter__actions-select--disabled';
+    * @hidden @internal
+    */
+    public selectedClass() {
+        return this.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select';
     }
 
     /**
@@ -400,7 +400,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.closeDropdown();
     }
 
-     /**
+     /**\\\\\
      * @hidden @internal
      */
     public onSelect() {

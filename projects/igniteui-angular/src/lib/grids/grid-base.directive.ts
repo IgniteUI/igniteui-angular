@@ -4606,6 +4606,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     // Clear Sorting
                     this.gridAPI.clear_sort(record.item.field);
+
+                    // Remove column selection
+                    this.selectionService.deselectColumnsWithNoEvent([record.item.field]);
                 }
                 removed = true;
             });

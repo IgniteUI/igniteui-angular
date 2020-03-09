@@ -89,6 +89,11 @@
             @extend %grid-excel-actions__action !optional;
         }
 
+        @include e(actions-selected) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions--selected !optional;
+        }
+
         @include e(actions-filter) {
             @extend %grid-excel-actions__action !optional;
         }

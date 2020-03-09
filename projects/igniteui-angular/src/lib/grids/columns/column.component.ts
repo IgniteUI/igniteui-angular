@@ -299,11 +299,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [selected] = "true"></igx-column>
      * ```
-     *
-     * Two-way data binding.
-     * ```html
-     * <igx-column [(selected)] = "model.isSelected"></igx-column>
-     * ```
      * @memberof IgxColumnComponent
      */
     set selected(value: boolean) {
