@@ -5177,28 +5177,28 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
     * Get current selected columns.
     * @example
-    * Returns an array with selected columns' fields
+    * Returns an array with selected columns
     * ```typescript
     * const selectedColumns = this.grid.selectedColumns();
     * ```
     */
-    public getSelectedColumns(): IgxColumnComponent[] {
+    public selectedColumns(): IgxColumnComponent[] {
         const fields = this.selectionService.getSelectedColumns();
         return fields.map(field => this.getColumnByName(field)).filter(field => field);
     }
 
     /**
-     * Select specified columns by filed.
+     * Select specified columns.
      * @example
      * ```typescript
      * this.grid.selectColumns(['ID','Name'], true);
      * ```
-     * @param fields
+     * @param columns
      * @param clearCurrentSelection if true clears the current selection
     */
-    public selectColumns(fields: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
-        const fieldToSelect = fields.length === 0 || typeof fields[0] === 'string' ? fields as string[]
-            : (fields as IgxColumnComponent[]).map(c => c.field);
+    public selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
+        const fieldToSelect = columns.length === 0 || typeof columns[0] === 'string' ? columns as string[]
+            : (columns as IgxColumnComponent[]).map(c => c.field);
         this.selectionService.selectColumnsWithNoEvent(fieldToSelect, clearCurrentSelection);
         this.notifyChanges();
     }
@@ -5209,11 +5209,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         * ```typescript
         * this.grid.deselectColumns(['ID','Name']);
         * ```
-        * @param fields
-       */
-    public deselectColumns(fields: string[] | IgxColumnComponent[]) {
-        const fieldToDeselect = fields.length === 0 || typeof fields[0] === 'string' ? fields as string[]
-            : (fields as IgxColumnComponent[]).map(c => c.field);
+        * @param columns
+    */
+    public deselectColumns(columns: string[] | IgxColumnComponent[]) {
+        const fieldToDeselect = columns.length === 0 || typeof columns[0] === 'string' ? columns as string[]
+            : (columns as IgxColumnComponent[]).map(c => c.field);
         this.selectionService.deselectColumnsWithNoEvent(fieldToDeselect);
         this.notifyChanges();
     }
@@ -5224,7 +5224,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
          * ```typescript
          * this.grid.deselectAllColumns();
          * ```
-         */
+    */
     public deselectAllColumns() {
         this.selectionService.clearAllSelectedColumns();
         this.notifyChanges();
@@ -5233,17 +5233,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {
         let record = {};
         const selectedData = [];
-        const selectedColumns = this.selectionService.getSelectedColumns();
+        const selectedColumns = this.selectedColumns();
         if (selectedColumns.length === 0) {
             return [];
         }
 
         for (let rowIndex = 0; rowIndex < source.length; rowIndex++) {
-            if (!source[rowIndex] || source[rowIndex].detailsData !== undefined) {
-                continue;
-            }
-            selectedColumns.forEach((field) => {
-                const col = this.getColumnByName(field);
+            selectedColumns.forEach((col) => {
                 const key = headers ? col.header || col.field : col.field;
                 record[key] = formatters && col.formatter ? col.formatter(source[rowIndex][col.field])
                     : source[rowIndex][col.field];
@@ -5265,7 +5261,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedColumnsData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.filteredSortedData ?  this.filteredSortedData : this.data;
         return this.extractDataFromColumnsSelection(source, formatters, headers);
     }
 

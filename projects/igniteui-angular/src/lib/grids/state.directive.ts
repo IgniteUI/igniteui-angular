@@ -361,7 +361,7 @@ export class IgxGridStateDirective {
     }
 
     private getColumnSelection(): IGridState {
-        const selection = this.grid.getSelectedColumns().map(c => c.field);
+        const selection = this.grid.selectedColumns().map(c => c.field);
         return { columnSelection: selection };
     }
 

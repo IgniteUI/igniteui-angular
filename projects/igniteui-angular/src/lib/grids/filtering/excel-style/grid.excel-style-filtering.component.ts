@@ -400,7 +400,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.closeDropdown();
     }
 
-     /**\\\\\
+     /**
      * @hidden @internal
      */
     public onSelect() {

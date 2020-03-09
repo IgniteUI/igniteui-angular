@@ -725,12 +725,6 @@ export class IgxGridSelectionService {
         return this.columnSelection.size > 0 && this.columnSelection.has(field);
     }
 
-    /** Clears columns selection */
-    clearColumnSelection(event?): void {
-        const removedRec = this.getSelectedColumns();
-        this.emitColumnSelectionEvent([], [], removedRec, event);
-    }
-
     /** Select the specified column and emit event. */
     selectColumn(field: string, clearPrevSelection?, event?): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
@@ -762,8 +756,8 @@ export class IgxGridSelectionService {
 
             this.emitColumnSelectionEvent(newSelection, added, removed, event);
         } else {
-            const currIndex = this.grid.getColumnByName(this.columnsState.field).visibleIndex;
-            const filedStart = currIndex > columns[columns.length - 1].visibleIndex ? columns[0].field : columns[columns.length - 1].field;
+            const filedStart = stateColumn.visibleIndex >
+                columns[columns.length - 1].visibleIndex ? columns[0].field : columns[columns.length - 1].field;
             this.selectColumnsRange(filedStart, event);
         }
     }
@@ -772,11 +766,11 @@ export class IgxGridSelectionService {
     selectColumnsRange(field: string, event): void {
         const currIndex = this.grid.getColumnByName(this.columnsState.field).visibleIndex;
         const newIndex = this.grid.columnToVisibleIndex(field);
-        const columns = this.grid.visibleColumns
+        const columnsFields = this.grid.visibleColumns
             .filter(c => !c.columnGroup)
             .sort((a, b) => a.visibleIndex - b.visibleIndex)
-            .slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
-        const columnsFields = columns.filter(col => col.selectable).map(col => col.field);
+            .slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1)
+            .filter(col => col.selectable).map(col => col.field);
         const removed = [];
         const oldAdded = [];
         const added = columnsFields.filter(colField => !this.isColumnSelected(colField));
