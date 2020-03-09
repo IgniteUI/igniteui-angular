@@ -3783,7 +3783,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        this.onSortingDone.emit(expression);
+        requestAnimationFrame(() => this.onSortingDone.emit(expression));
     }
 
     /**
