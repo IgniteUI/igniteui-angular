@@ -236,6 +236,26 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer[0].children.length).toBe(1);
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[5]);
         });
+
+        it('should remove pinned container and recalculate sizes when all pinned records are filtered out.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.pinnedRowHeight).toBe(0);
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+        });
     });
 });
 

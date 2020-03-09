@@ -1728,8 +1728,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('pinContainer', { static: false })
-    public pinContainer: ElementRef;
+    @ViewChildren('pinContainer', { read: ElementRef })
+    public pinContainers: QueryList<ElementRef>;
 
     /**
      * @hidden @internal
@@ -2916,6 +2916,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
         vertScrDC.addEventListener('wheel', () => this.wheelHandler());
 
+        this.pinContainers.changes.subscribe(() => {
+            // on row pin containers change grid sizes should be recalculated.
+            this.notifyChanges(true);
+        });
     }
 
     /**
@@ -4087,9 +4091,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.clientHeight : 0;
-        // 2px border
-        return this.pinnedRecords.length > 0 ? containerHeight + 2 : 0;
+        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
+        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        return this.pinnedRecords.length > 0 ? containerHeight : 0;
     }
 
     get totalHeight() {
