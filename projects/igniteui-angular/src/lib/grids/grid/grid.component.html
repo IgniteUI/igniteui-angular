@@ -114,7 +114,7 @@
         <ng-container *ngIf='pinnedRecords
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
+        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger as pinnedData'>
             <div #pinContainer *ngIf='pinnedData.length > 0' 

@@ -2391,6 +2391,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredPinnedData;
+    protected _filteredUnpinnedData;
+
     /**
      * @hidden
      */
@@ -2823,6 +2826,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 firstVirtRow.virtDirRow.cdr.detectChanges();
             }
             firstVirtRow.virtDirRow.assumeMaster();
+        }
+    }
+
+    public setFilterData(data, pinned: boolean) {
+        if (this.pinnedRecords.length > 0 && pinned) {
+            this._filteredPinnedData = data;
+            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+        } else if (this.pinnedRecords.length > 0 && !pinned) {
+            this._filteredUnpinnedData = data;
+        } else {
+            this.filteredData = data;
         }
     }
 

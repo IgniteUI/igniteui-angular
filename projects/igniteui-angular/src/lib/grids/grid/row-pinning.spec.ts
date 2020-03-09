@@ -256,6 +256,29 @@ describe('Row Pinning #grid', () => {
             expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
+
+        it('should return correct filterData collection.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            let gridFilterData = grid.filteredData;
+            expect(gridFilterData.length).toBe(7);
+            expect(gridFilterData[0].ID).toBe('BLAUS');
+            expect(gridFilterData[1].ID).toBe('BERGS');
+
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            gridFilterData = grid.filteredData;
+            expect(gridFilterData.length).toBe(7);
+            expect(gridFilterData[0].ID).toBe('BLAUS');
+            expect(gridFilterData[1].ID).toBe('BERGS');
+        });
     });
 });
 
