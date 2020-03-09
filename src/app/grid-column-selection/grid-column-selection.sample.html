@@ -22,7 +22,7 @@
                         <div class="igx-grid-toolbar__button-space">
                             <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
                             </igx-checkbox>
-                            <span>{{ sampleGrid.getSelectedColumns().length }}</span>
+                            <span>{{ sampleGrid.selectedColumns().length }}</span>
                         </div>
                     </button>
                     <igx-drop-down #columnSelectionDropdown>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="igx-column-hiding__buttons">
                             <button igxButton igxRipple (click)="sampleGrid.deselectAllColumns()"
-                                [disabled]="sampleGrid.getSelectedColumns().length === 0">Deselect All</button>
+                                [disabled]="sampleGrid.selectedColumns().length === 0">Deselect All</button>
                         </div>
                     </igx-drop-down>
                 </ng-template>
@@ -51,7 +51,7 @@
                 <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
             </div>
             <div class="sample-buttons">
-
+                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
                 <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
                 <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
                 <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>

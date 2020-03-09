@@ -116,7 +116,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     }
 
     getGridSelectedColumns() {
-        console.log(this.grid1.getSelectedColumns());
+        console.log(this.grid1.selectedColumns());
     }
 
     selectedColumns() {
