@@ -3,8 +3,14 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 9.1.0
+
+### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - **Behavioral Change** - When a column is sortable sort indicator is always previewed. The column is sorted when click on it.
+    - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
+
+### Themes
+- **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
+
 ### New Features
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
