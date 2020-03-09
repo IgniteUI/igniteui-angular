@@ -1,32 +1,27 @@
 import { CommonModule } from '@angular/common';
 import {
-    Directive,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Input,
-    NgModule,
-    OnInit,
-    Output,
-    PipeTransform
+    Directive, ElementRef, EventEmitter, HostListener,
+    Output, PipeTransform, Renderer2,
+    Input, NgModule, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KEYS, MaskParsingService } from './mask-parsing.service';
-import { isIE, IBaseEventArgs } from '../../core/utils';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
+import { MaskParsingService, MaskOptions } from './mask-parsing.service';
+import { isIE, IBaseEventArgs, KEYCODES } from '../../core/utils';
 
 const noop = () => { };
 
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
-    selector: '[igxMask]'
+    selector: '[igxMask]',
+    exportAs: 'igxMask'
 })
-export class IgxMaskDirective implements OnInit, ControlValueAccessor {
+export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueAccessor {
     /**
      * Sets the input mask.
      * ```html
      * <input [igxMask] = "'00/00/0000'">
      * ```
-     * @memberof IgxMaskDirective
      */
     @Input('igxMask')
     public mask: string;
@@ -37,17 +32,15 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      * ```html
      * <input [promptChar] = "'/'">
      * ```
-     * @memberof IgxMaskDirective
      */
     @Input()
-    public promptChar: string;
+    public promptChar = '_';
 
     /**
      * Specifies if the bound value includes the formatting symbols.
      * ```html
      * <input [includeLiterals] = "true">
      * ```
-     * @memberof IgxMaskDirective
      */
     @Input()
     public includeLiterals: boolean;
@@ -57,16 +50,14 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      * ```html
      * <input placeholder = "enter text...">
      * ```
-     * @memberof IgxMaskDirective
      */
-    @Input()
+    @DeprecateProperty('"placeholder" is deprecated, use native placeholder instead.')
     public set placeholder(val: string) {
-        this._placeholder = val;
-        this.nativeElement.setAttribute('placeholder', this._placeholder);
+        this.renderer.setAttribute(this.nativeElement, 'placeholder', val);
     }
 
     public get placeholder(): string {
-        return this._placeholder;
+        return this.nativeElement.placeholder;
     }
 
     /**
@@ -74,7 +65,6 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      * ```html
      * <input [displayValuePipe] = "displayFormatPipe">
      * ```
-     * @memberof IgxMaskDirective
      */
     @Input()
     public displayValuePipe: PipeTransform;
@@ -84,16 +74,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      * ```html
      * <input [focusedValuePipe] = "inputFormatPipe">
      * ```
-     * @memberof IgxMaskDirective
      */
     @Input()
     public focusedValuePipe: PipeTransform;
-
-    /**
-     *@hidden
-     */
-    @Input()
-    private dataValue: string;
 
     /**
      * Emits an event each time the value changes.
@@ -105,264 +88,232 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     @Output()
     public onValueChange = new EventEmitter<IMaskEventArgs>();
 
-    /**
-     *@hidden
-     */
-    private get value() {
+    /** @hidden @internal; */
+    protected get inputValue(): string {
         return this.nativeElement.value;
     }
 
-    /**
-     *@hidden
-     */
-    private set value(val) {
+    /** @hidden @internal */
+    protected set inputValue(val) {
         this.nativeElement.value = val;
     }
 
-    /**
-     *@hidden
-     */
-    private get nativeElement() {
-        return this.elementRef.nativeElement;
+    /** @hidden */
+    protected get maskOptions(): MaskOptions {
+        const format = this.mask || 'CCCCCCCCCC';
+        const promptChar = this.promptChar && this.promptChar.substring(0, 1);
+        return { format, promptChar };
     }
 
-    /**
-     *@hidden
-     */
-    private get selectionStart() {
-        return this.nativeElement.selectionStart;
+    private get selectionStart(): number {
+        // Edge(classic) and FF don't select text on drop
+        return this.nativeElement.selectionStart === this.nativeElement.selectionEnd && this._hasDropAction ?
+            this.nativeElement.selectionEnd - this._droppedData.length :
+            this.nativeElement.selectionStart;
     }
 
-    /**
-     *@hidden
-     */
-    private get selectionEnd() {
+    private get selectionEnd(): number {
         return this.nativeElement.selectionEnd;
     }
 
-    /**
-     *@hidden
-     */
-    private _ctrlDown: boolean;
+    private get nativeElement(): HTMLInputElement {
+        return this.elementRef.nativeElement;
+    }
 
-    /**
-     *@hidden
-     */
-    private _paste: boolean;
-
-    /**
-     *@hidden
-     */
-    private _selection: number;
-
-    /**
-     *@hidden
-     */
-    private _placeholder: string;
-
-    /**
-     *@hidden
-     */
-    private _maskOptions = {
-        format: '',
-        promptChar: ''
-    };
-
-    /**
-     *@hidden
-     */
-    private _key;
-
-    /**
-     *@hidden
-     */
-    private _cursorOnPaste;
-
-    /**
-     *@hidden
-     */
-    private _valOnPaste;
-
+    private _end = 0;
+    private _start = 0;
+    private _key: number;
+    private _oldText = '';
+    private _dataValue = '';
+    private _focused = false;
+    private _droppedData: string;
+    private _hasDropAction: boolean;
     private _stopPropagation: boolean;
 
-    /**
-     *@hidden
-     */
     private _onTouchedCallback: () => void = noop;
-
-    /**
-     *@hidden
-     */
     private _onChangeCallback: (_: any) => void = noop;
 
-    constructor(private elementRef: ElementRef, private maskParser: MaskParsingService) { }
+    constructor(
+        protected elementRef: ElementRef,
+        protected maskParser: MaskParsingService,
+        protected renderer: Renderer2) { }
 
-    /**
-     *@hidden
-     */
+    /** @hidden */
     public ngOnInit(): void {
-        if (this.promptChar && this.promptChar.length > 1) {
-            this._maskOptions.promptChar = this.promptChar = this.promptChar.substring(0, 1);
-        }
-
-        this._maskOptions.format = this.mask ? this.mask : 'CCCCCCCCCC';
-        this._maskOptions.promptChar = this.promptChar ? this.promptChar : '_';
-        this.nativeElement.setAttribute('placeholder', this.placeholder ? this.placeholder : this._maskOptions.format);
+        this.renderer.setAttribute(this.nativeElement, 'placeholder',
+            this.placeholder ? this.placeholder : this.maskOptions.format);
     }
 
     /**
-     *@hidden
+     * TODO: Remove after date/time picker integration refactor
+     * @hidden
      */
+    public ngAfterViewChecked(): void {
+        this._oldText = this.inputValue;
+    }
+
+    /** @hidden */
     @HostListener('keydown', ['$event'])
-    public onKeydown(event): void {
+    public onKeyDown(event): void {
         const key = event.keyCode || event.charCode;
+        if (!key) { return; }
 
         if (isIE() && this._stopPropagation) {
             this._stopPropagation = false;
         }
 
-        if (key === KEYS.Ctrl) {
-            this._ctrlDown = true;
-        }
-
-        if ((this._ctrlDown && key === KEYS.Z) || (this._ctrlDown && key === KEYS.Y)) {
+        if ((key === KEYCODES.CTRL && key === KEYCODES.Z) || (key === KEYCODES.CTRL && key === KEYCODES.Y)) {
             event.preventDefault();
         }
 
         this._key = key;
-        this._selection = Math.abs(this.selectionEnd - this.selectionStart);
+        this._start = this.selectionStart;
+        this._end = this.selectionEnd;
     }
 
-    /**
-     *@hidden
-     */
-    @HostListener('keyup', ['$event'])
-    public onKeyup(event): void {
-        const key = event.keyCode || event.charCode;
-
-        if (key === KEYS.Ctrl) {
-            this._ctrlDown = false;
-        }
-    }
-
-    /**
-     *@hidden
-     */
-    @HostListener('paste', ['$event'])
-    public onPaste(event): void {
-        this._paste = true;
-
-        this._valOnPaste = this.value;
-        this._cursorOnPaste = this.getCursorPosition();
-    }
-
-    /**
-     *@hidden
-     */
-    @HostListener('input', ['$event'])
-    public onInputChanged(event): void {
+    /** @hidden */
+    @HostListener('input')
+    public onInputChanged(): void {
         if (isIE() && this._stopPropagation) {
             this._stopPropagation = false;
             return;
         }
 
-        if (this._paste) {
-            this._paste = false;
-
-            const clipboardData = this.value.substring(this._cursorOnPaste, this.getCursorPosition());
-            this.value = this.maskParser.parseValueByMaskUponCopyPaste(
-                this._valOnPaste, this._maskOptions, this._cursorOnPaste, clipboardData, this._selection);
-
-            this.setCursorPosition(this.maskParser.cursor);
-        } else {
-            const currentCursorPos = this.getCursorPosition();
-
-            this.maskParser.data = (this._key === KEYS.BACKSPACE) || (this._key === KEYS.DELETE);
-
-            this.value = this._selection && this._selection !== 0 ?
-                this.maskParser.parseValueByMaskUponSelection(this.value, this._maskOptions, currentCursorPos - 1, this._selection) :
-                this.maskParser.parseValueByMask(this.value, this._maskOptions, currentCursorPos - 1);
-
-            this.setCursorPosition(this.maskParser.cursor);
+        let valueToParse = '';
+        if (this._hasDropAction) {
+            this._start = this.selectionStart;
+        }
+        if (this.inputValue.length < this._oldText.length && this._key === KEYCODES.INPUT_METHOD) {
+            // software keyboard input delete
+            this._key = KEYCODES.BACKSPACE;
         }
 
-        const rawVal = this.maskParser.restoreValueFromMask(this.value, this._maskOptions);
+        switch (this._key) {
+            case KEYCODES.DELETE:
+                this._end = this._start === this._end ? ++this._end : this._end;
+                break;
+            case KEYCODES.BACKSPACE:
+                this._start = this.selectionStart;
+                break;
+            default:
+                valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
+                break;
+        }
 
-        this.dataValue = this.includeLiterals ? this.value : rawVal;
-        this._onChangeCallback(this.dataValue);
+        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+        this.inputValue = replacedData.value;
+        if (this._key === KEYCODES.BACKSPACE) { replacedData.end = this._start; }
+        this.setSelectionRange(replacedData.end);
 
-        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.value });
+        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
+        this._onChangeCallback(this._dataValue);
+
+        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.afterInput();
     }
 
-    /**
-     *@hidden
-     */
-    @HostListener('focus', ['$event.target.value'])
-    public onFocus(value) {
+    /** @hidden */
+    @HostListener('paste')
+    public onPaste(): void {
+        this._oldText = this.inputValue;
+        this._start = this.selectionStart;
+    }
+
+    /** @hidden */
+    @HostListener('focus')
+    public onFocus(): void {
+        this._focused = true;
+        this.showMask(this._dataValue);
+    }
+
+    /** @hidden */
+    @HostListener('blur', ['$event.target.value'])
+    public onBlur(value: string): void {
+        this._focused = false;
+        this.showDisplayValue(value);
+        this._onTouchedCallback();
+    }
+
+    /** @hidden */
+    @HostListener('dragenter')
+    public onDragEnter(): void {
+        if (!this._focused) {
+            this.showMask(this._dataValue);
+        }
+    }
+
+    /** @hidden */
+    @HostListener('dragleave')
+    public onDragLeave(): void {
+        if (!this._focused) {
+            this.showDisplayValue(this.inputValue);
+        }
+    }
+
+    /** @hidden */
+    @HostListener('drop', ['$event'])
+    public onDrop(event: DragEvent): void {
+        this._hasDropAction = true;
+        this._droppedData = event.dataTransfer.getData('text');
+    }
+
+    /** @hidden */
+    protected showMask(value: string) {
         if (this.focusedValuePipe) {
             if (isIE()) {
                 this._stopPropagation = true;
             }
-            this.value = this.focusedValuePipe.transform(value);
+            // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format
+            this.inputValue = this.focusedValuePipe.transform(value);
         } else {
-            this.value = this.maskParser.parseValueByMaskOnInit(this.value, this._maskOptions);
+            this.inputValue = this.maskParser.applyMask(this.inputValue, this.maskOptions);
         }
+
+        this._oldText = this.inputValue;
     }
 
-    /**
-     *@hidden
-     */
-    @HostListener('blur', ['$event.target.value'])
-    public onBlur(value) {
+    private showDisplayValue(value: string) {
         if (this.displayValuePipe) {
-            this.value = this.displayValuePipe.transform(value);
-        } else if (value === this.maskParser.parseMask(this._maskOptions)) {
-            this.value = '';
+            this.inputValue = this.displayValuePipe.transform(value);
+        } else if (value === this.maskParser.applyMask(null, this.maskOptions)) {
+            this.inputValue = '';
         }
     }
 
-    /**
-     *@hidden
-     */
-    private getCursorPosition(): number {
-        return this.nativeElement.selectionStart;
-    }
-
-    /**
-     *@hidden
-     */
-    private setCursorPosition(start: number, end: number = start): void {
+    private setSelectionRange(start: number, end: number = start): void {
         this.nativeElement.setSelectionRange(start, end);
     }
 
-    /**
-     *@hidden
-     */
-    public writeValue(value) {
-        if (this.promptChar && this.promptChar.length > 1) {
-            this._maskOptions.promptChar = this.promptChar.substring(0, 1);
-        }
-
-        this.value = value ? this.maskParser.parseValueByMaskOnInit(value, this._maskOptions) : '';
-        if (this.displayValuePipe) {
-            this.value = this.displayValuePipe.transform(this.value);
-        }
-
-        this.dataValue = this.includeLiterals ? this.value : value;
-        this._onChangeCallback(this.dataValue);
-
-        this.onValueChange.emit({ rawValue: value, formattedValue: this.value });
+    private afterInput() {
+        this._oldText = this.inputValue;
+        this._hasDropAction = false;
+        this._start = 0;
+        this._end = 0;
+        this._key = null;
     }
 
-    /**
-     *@hidden
-     */
-    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    /** @hidden */
+    public writeValue(value: string): void {
+        if (this.promptChar && this.promptChar.length > 1) {
+            this.maskOptions.promptChar = this.promptChar.substring(0, 1);
+        }
 
-    /**
-     *@hidden
-     */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+        this.inputValue = value ? this.maskParser.applyMask(value, this.maskOptions) : '';
+        if (this.displayValuePipe) {
+            this.inputValue = this.displayValuePipe.transform(this.inputValue);
+        }
+
+        this._dataValue = this.includeLiterals ? this.inputValue : value;
+
+        this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
+    }
+
+    /** @hidden */
+    public registerOnChange(fn: (_: any) => void): void { this._onChangeCallback = fn; }
+
+    /** @hidden */
+    public registerOnTouched(fn: () => void): void { this._onTouchedCallback = fn; }
 }
 
 /**
@@ -373,9 +324,7 @@ export interface IMaskEventArgs extends IBaseEventArgs {
     formattedValue: string;
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 @NgModule({
     declarations: [IgxMaskDirective],
     exports: [IgxMaskDirective],
