@@ -234,7 +234,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
 
             // check unpinned rows data is sorted
-            const lastIndex = fix.componentInstance.data.length - 1; 
+            const lastIndex = fix.componentInstance.data.length - 1;
             expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
         });
     });
