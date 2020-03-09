@@ -316,7 +316,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
     /**
      * Sets the header template.
      *
-     *  @example
+     * @example
      * ```html
      * <igx-calendar headerTemplateDirective = "igxCalendarHeader"></igx-calendar>
      * ```

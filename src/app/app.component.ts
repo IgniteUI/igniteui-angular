@@ -333,6 +333,11 @@ export class AppComponent implements OnInit {
             name: 'Radio Group'
         },
         {
+            link: '/reactive',
+            icon: 'web',
+            name: 'Reactive Form'
+        },
+        {
             link: '/select',
             icon: 'arrow_drop_down_circle',
             name: 'Select'

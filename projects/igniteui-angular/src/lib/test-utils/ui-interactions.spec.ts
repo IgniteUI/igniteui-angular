@@ -10,6 +10,20 @@ declare var Touch: {
 };
 export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
+    public static clickEvent = new MouseEvent('click');
+
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
+        const keyboardEvent = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new KeyboardEvent(eventType, keyboardEvent);
+    }
 
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
@@ -24,6 +38,19 @@ export class UIInteractions {
         elem.triggerEventHandler('keydown', event);
     }
 
+    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            key: keyPressed,
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        elem.triggerEventHandler('keyup', event);
+    }
+
     public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         UIInteractions.triggerEventHandlerKeyDown(keyPressed, elem, altKey, shift, ctrl);
         elem.triggerEventHandler('blur', null);
@@ -35,6 +62,21 @@ export class UIInteractions {
         element.nativeElement.dispatchEvent(new Event('input'));
         if (fix) {
             return fix.whenStable();
+        }
+    }
+
+    public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
+        inputElement.nativeElement.value = inputValue;
+        inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
+    }
+
+    public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
+        element.value = text;
+        element.dispatchEvent(new Event('keydown'));
+        element.dispatchEvent(new Event('input'));
+        element.dispatchEvent(new Event('keyup'));
+        if (fix) {
+            fix.detectChanges();
         }
     }
 
@@ -179,6 +221,13 @@ export class UIInteractions {
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
         cell.nativeElement.dispatchEvent(new Event('focus'));
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
+    }
+
+    public static simulateDropEvent(nativeElement: HTMLElement, data: any, format: string) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.setData(format, data);
+
+        nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer: dataTransfer }));
     }
 
     public static clearOverlay() {

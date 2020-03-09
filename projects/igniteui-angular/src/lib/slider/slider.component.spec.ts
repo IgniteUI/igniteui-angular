@@ -580,15 +580,15 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async() => {
@@ -599,20 +599,20 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('rendering of the slider should corresponds to the set labels', () => {
@@ -846,20 +846,22 @@ describe('IgxSlider', () => {
 
         it('labels should show/hide on pointer up/down', async() => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
+            fixture.detectChanges();
+
             sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(100);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
             sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async() => {
@@ -870,20 +872,20 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
             sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('rendering of the slider should corresponds to the set labels', () => {
@@ -897,32 +899,32 @@ describe('IgxSlider', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 1, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 1, upper: 6});
             expect(slider.lowerLabel).toEqual('Tuesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 2, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 2, upper: 6});
             expect(slider.lowerLabel).toEqual('Wednesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 3, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 3, upper: 6});
             expect(slider.lowerLabel).toEqual('Thursday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 6});
             expect(slider.lowerLabel).toEqual('Friday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 5});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 5});
             expect(slider.upperLabel).toEqual('Saturday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 4});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 4});
             expect(slider.upperLabel).toEqual('Friday');
         });
 
@@ -1743,19 +1745,21 @@ class SliderWithLabelsComponent {
 
 @Component({
     template: `
-    <igx-slider [(ngModel)]='label' [type]="type"
-        [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
+    <igx-slider
+    [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
+    [type]="type">
     </igx-slider> `
 })
 class RangeSliderWithLabelsComponent {
-    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
-    public label;
+    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true })
+    public slider: IgxSliderComponent;
+
     public type = IgxSliderType.RANGE;
 }
 
 @Component({
     template: `
-    <igx-slider [(ngModel)]='label' [type]="type"
+    <igx-slider [type]="type"
         [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']">
         <ng-template igxSliderThumbFrom let-value let-labels="labels">
             <span class="custom"> Lower {{ labels[value.lower] }}</span>
