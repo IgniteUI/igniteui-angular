@@ -4,6 +4,9 @@ All notable changes for each version of this project will be documented in this 
 
 ## 9.1.0
 
+### Themes
+- **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
+
 ### New Features
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
