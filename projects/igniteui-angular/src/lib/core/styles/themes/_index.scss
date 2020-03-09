@@ -412,7 +412,7 @@
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support [false] - If set to false, it turns off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-light-theme(
     $palette,
     $exclude: (),
