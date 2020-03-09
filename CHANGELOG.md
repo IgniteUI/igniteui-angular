@@ -1,12 +1,11 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
 ## 9.1.0
 
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
-
-## 9.1.0
 
 ### New Features
 
