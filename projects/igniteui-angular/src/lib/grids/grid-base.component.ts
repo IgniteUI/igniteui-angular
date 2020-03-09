@@ -4069,7 +4069,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        this.onSortingDone.emit(expression);
+        requestAnimationFrame(() => this.onSortingDone.emit(expression));
     }
 
     /**
