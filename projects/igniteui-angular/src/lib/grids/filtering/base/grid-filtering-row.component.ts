@@ -159,14 +159,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    @HostListener('keydown.tab', ['$event'])
-    public onTabKeydown(event) {
-        if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            event.preventDefault();
-            this.filteringService.grid.tbody.nativeElement.focus();
-        }
-    }
-
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -221,10 +213,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === KEYS.TAB) {
-            if (event.shiftKey) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (!this.dropDownConditions.collapsed) {
+            if (!this.dropDownConditions.collapsed) {
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             }
         }

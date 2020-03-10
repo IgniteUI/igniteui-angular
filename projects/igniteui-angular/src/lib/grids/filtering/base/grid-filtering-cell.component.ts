@@ -142,9 +142,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             });
             this.expressionsList[0].isSelected = true;
         }
-        if (this.filteringService.grid.navigation.shouldPerformHorizontalScroll(this.column.visibleIndex)) {
-            this.filteringService.scrollToFilterCell(this.column, true);
-        }
+        this.filteringService.grid.navigation.performHorizontalScrollToCell(this.column.visibleIndex);
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
         this.filteringService.selectedExpression = expression;

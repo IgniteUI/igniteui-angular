@@ -61,26 +61,6 @@ export class IgxFilteringService implements OnDestroy {
         this.destroy$.complete();
     }
 
-    public get displayContainerWidth() {
-        return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10);
-    }
-
-    public get displayContainerScrollLeft() {
-        return this.grid.headerContainer.scrollPosition;
-    }
-
-    public get areAllColumnsInView() {
-        return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10) === 0;
-    }
-
-    public get unpinnedFilterableColumns() {
-        return this.grid.unpinnedColumns.filter(col => !col.columnGroup && col.filterable);
-    }
-
-    public get unpinnedColumns() {
-        return this.grid.unpinnedColumns.filter(col => !col.columnGroup);
-    }
-
     public get datePipe(): IgxDatePipeComponent {
         if (!this._datePipe) {
             this._datePipe = new IgxDatePipeComponent(this.grid.locale);
@@ -397,33 +377,6 @@ export class IgxFilteringService implements OnDestroy {
 
     public get filteredData() {
         return this.grid.filteredData;
-    }
-
-    /**
-     * Scrolls to a filterCell.
-     */
-    public scrollToFilterCell(column: IgxColumnComponent, shouldFocusNext: boolean) {
-        this.grid.nativeElement.focus({preventScroll: true});
-        this.columnToFocus = column;
-        this.shouldFocusNext = shouldFocusNext;
-
-        let currentColumnRight = 0;
-        let currentColumnLeft = 0;
-        for (let index = 0; index < this.unpinnedColumns.length; index++) {
-            currentColumnRight += parseInt(this.unpinnedColumns[index].width, 10);
-            if (this.unpinnedColumns[index] === column) {
-                currentColumnLeft = currentColumnRight - parseInt(this.unpinnedColumns[index].width, 10);
-                break;
-            }
-        }
-
-        const forOfDir = this.grid.headerContainer;
-        const width = this.displayContainerWidth + this.displayContainerScrollLeft;
-        if (shouldFocusNext) {
-            forOfDir.scrollPosition += currentColumnRight - width;
-        } else {
-            forOfDir.scrollPosition = currentColumnLeft;
-        }
     }
 
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
