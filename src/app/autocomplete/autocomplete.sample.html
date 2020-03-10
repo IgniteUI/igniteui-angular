@@ -25,7 +25,7 @@
                             [igxAutocomplete]='attractionsPanel'/>
                         <label igxLabel>Attraction</label>
                     </igx-input-group>
-                    <igx-drop-down #attractionsPanel maxHeight="300px">
+                    <igx-drop-down #attractionsPanel [width]="attractionsWidth" maxHeight="300px">
                         <igx-drop-down-item *ngFor="let attraction of attractions | contains: travel.value.attraction" [value]="attraction.name">
                             <igx-icon class="logo" fontSet="material">{{attraction.image}}</igx-icon>
                             {{attraction.name}}
@@ -37,6 +37,7 @@
                     <button igxButton (click)="onSearch()" [disabled]="!travel.valid">Search</button>
                 </div>
             </form>
+            <igx-switch (change)="changeDefaultWidth($event)">Attractions Custom Width</igx-switch>
         </article>
     </section>
 </div>
