@@ -27,9 +27,9 @@
     </igx-chips-area>
 </div>
 
-<div class="igx-grid__thead" tabindex="0" (keydown)="navigation.headerNavigation($event)">
+<div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="rowgroup"
-    [style.width.px]='calcWidth' #theadRow>
+    [style.width.px]='calcWidth' tabindex="0" (keydown)="navigation.headerNavigation($event)" #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"

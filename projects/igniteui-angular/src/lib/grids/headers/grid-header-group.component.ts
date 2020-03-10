@@ -82,6 +82,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @Input()
     public gridID: string;
 
+    @HostBinding('class.igx-grid__th--active')
+    public get active() {
+        const activeNode = this.grid.navigation.activeNode;
+        return  !this.column.parent && activeNode ? activeNode.row === -1 && activeNode.column === this.column.visibleIndex : false;
+    }
+
     /**
      * @hidden
      */
@@ -225,7 +231,16 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
-       // event.preventDefault();
+        event.preventDefault();
+        this.grid.theadRow.nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('click', ['$event'])
+    public click(event): void {
+       this.grid.navigation.activeNode = {row: -1, column: this.column.visibleIndex};
     }
 
     public ngDoCheck() {

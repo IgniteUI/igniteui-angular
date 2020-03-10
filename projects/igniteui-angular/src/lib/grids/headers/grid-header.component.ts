@@ -153,7 +153,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
-            // event.stopPropagation();
             if (this.grid.filteringService.isFilterRowVisible) {
                 if (this.column.filterable && !this.column.columnGroup &&
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
@@ -163,11 +162,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                 this.triggerSort();
             }
         }
+        this.grid.theadRow.nativeElement.focus();
     }
 
     public onFilteringIconClick(event) {
-        event.stopPropagation();
-
         this.toggleFilterDropdown();
     }
 
