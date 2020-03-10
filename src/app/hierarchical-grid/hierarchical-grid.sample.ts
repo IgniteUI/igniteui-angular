@@ -33,6 +33,9 @@ export class HierarchicalGridSampleComponent {
     @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
+    @ViewChild('hGrid2', { static: true })
+    hGrid2: IgxHierarchicalGridComponent;
+
     constructor(private cdr: ChangeDetectorRef) {
         // this.localData.push({ ID: -1, Name: ''});
         // for (let i = 0; i < 10000; i++) {
@@ -58,6 +61,14 @@ export class HierarchicalGridSampleComponent {
         this.localData[1].hasChild = false;
         this.localData[2].childData[0].hasChild = false;
         this.localData[2].childData[1].hasChild = false;
+    }
+
+    public enableSummary() {
+        const childGrid = this.hGrid2.hgridAPI.getChildGrids(false)[0];
+        this.hGrid2.getColumnByName('ID').hasSummary = true;
+        if (childGrid) {
+            childGrid.getColumnByName('ID').hasSummary = true;
+        }
     }
 
     ngAfterViewInit() {
