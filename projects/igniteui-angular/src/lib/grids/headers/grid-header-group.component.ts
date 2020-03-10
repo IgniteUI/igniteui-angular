@@ -214,6 +214,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
+    */
+    get selectable() {
+        return this.column.hovered && this.column.selectable && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
+    }
+
+    /**
+     * @hidden
      */
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;

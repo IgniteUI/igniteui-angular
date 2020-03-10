@@ -5,7 +5,6 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { KEYS } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 
-
 /**
  * @hidden
  * @internal
@@ -38,6 +37,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+    private columnSelectedClass = 'igx-grid__th--selected';
 
     constructor(
         public element: ElementRef<HTMLElement>,
@@ -130,9 +130,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.ghostElement.style.minWidth = null;
         this.ghostElement.style.flexBasis = null;
         this.ghostElement.style.position = null;
-        // Remove column selection classes
-        this.ghostElement.classList.remove('igx-grid__th--selected');
-        this.ghostElement.classList.remove('igx-grid__th--selectable');
+
+        this.renderer.removeClass( this.ghostElement, this.columnSelectedClass);
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');

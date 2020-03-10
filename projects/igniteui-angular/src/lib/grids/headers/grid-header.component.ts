@@ -73,11 +73,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
-            'igx-grid__th--selectable': this.column.selectable && this.column.hovered && !this.grid.filteringService.isFilterRowVisible,
+            'igx-grid__th--selectable': this.selectable,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--sorted': this.sorted,
-            'igx-grid__th--selected': this.column.selected && (!this.grid.filteringService.isFilterRowVisible
-                || this.grid.filteringService.filteredColumn !== this.column)
+            'igx-grid__th--selected': this.selected
         };
 
         for (const klass of Object.keys(classList)) {
@@ -119,6 +118,15 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
     get filterIconClassName() {
         return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+    }
+
+    get selectable() {
+        return this.column.selectable && !this.column.selected && this.column.hovered && !this.grid.filteringService.isFilterRowVisible;
+    }
+
+    get selected() {
+        return this.column.selected
+            && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
     }
 
     @HostBinding('attr.role')
