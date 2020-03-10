@@ -288,10 +288,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      *@memberof IgxColumnComponent
      */
-    @WatchColumnChanges()
     @Input()
     get selected(): boolean {
-        return this.selectionService.isColumnSelected(this.field);
+        return this.grid.selectionService.isColumnSelected(this.field);
     }
     /**
      * Sets the column selected property.
@@ -303,8 +302,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set selected(value: boolean) {
         if (this.selectable) {
-            value ? this.selectionService.selectColumnsWithNoEvent([this.field]) :
-            this.selectionService.deselectColumnsWithNoEvent([this.field]);
+            value ? this.grid.selectionService.selectColumnsWithNoEvent([this.field]) :
+            this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
+            this.grid.notifyChanges();
         }
     }
 
@@ -1280,7 +1280,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _expanded = true;
-       /**
+    /**
      * @hidden
      */
     protected _selectable = true;
@@ -1319,7 +1319,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService, public selectionService: IgxGridSelectionService) { }
+        public rowIslandAPI: IgxRowIslandAPIService) { }
 
     /**
      * @hidden
