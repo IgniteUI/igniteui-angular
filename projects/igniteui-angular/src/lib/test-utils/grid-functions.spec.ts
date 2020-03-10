@@ -14,6 +14,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
+import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -172,7 +173,7 @@ export class GridFunctions {
         return null;
     }
 
-    public static setAllExpanded(grid, data) {
+    public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
         const allExpanded = new Map<any, boolean>();
         data.forEach(item => {
             allExpanded.set(item['ID'], true);
@@ -180,7 +181,7 @@ export class GridFunctions {
         grid.expansionStates = allExpanded;
     }
 
-    public static elementInGridView(grid, element): boolean {
+    public static elementInGridView(grid: IgxGridComponent, element: HTMLElement): boolean {
         const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
         const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
@@ -194,6 +195,41 @@ export class GridFunctions {
 
         resolve();
     })
+
+    public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
+                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        const detailRow = GridFunctions.getMasterRowDetail(masterRow);
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
+        grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
+    }
+
+    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+        const expandCellDE = rowDE.query(By.directive(IgxGridExpandableCellComponent));
+        expandCellDE.componentInstance.toggle(new MouseEvent('click'));
+        fix.detectChanges();
+    }
+
+    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+        const detailDE = rowDE.parent.children
+            .find(el => el.attributes['detail'] === 'true' && el.attributes['data-rowindex'] === row.index + 1 + '');
+        return detailDE;
+    }
+
+    public static getAllMasterRowDetailDebug(fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.css('div[detail="true"]')).sort((a, b) => a.context.index - b.context.index);
+    }
+
+    public static getRowExpandIconName(row: IgxGridRowComponent) {
+        return row.element.nativeElement.querySelector('igx-icon').innerText;
+    }
 
     public static getGroupedRows(fix): DebugElement[] {
         return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
@@ -1726,7 +1762,9 @@ export class GridFunctions {
             altKey: altKey
         });
         cellComp.dispatchEvent(keyboardEvent);
-        cellComp.onBlur();
+        if (!altKey) {
+            cellComp.onBlur();
+        }
     }
 
     public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
@@ -1738,7 +1776,9 @@ export class GridFunctions {
             altKey: altKey
         });
         rowComp.onKeydown(keyboardEvent);
-        rowComp.onBlur();
+        if (!altKey) {
+            rowComp.onBlur();
+        }
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
