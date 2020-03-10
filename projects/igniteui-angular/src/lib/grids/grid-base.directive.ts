@@ -2848,14 +2848,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
-
-        combineLatest([rowListObserver, summaryRowObserver]).pipe(takeUntil(this.destroy$))
-            .subscribe(([row, summary]) => this._horizontalForOfs = [...row, ...summary]);
-
-        this._horizontalForOfs = [
-            ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
-            ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
-        ];
+        const resetHorizontalForOfs = () => {
+            this._horizontalForOfs = [
+                ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
+                ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
+            ];
+        };
+        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
+        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
+        resetHorizontalForOfs();
     }
 
     /**
@@ -3842,7 +3843,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        this.onSortingDone.emit(expression);
+        requestAnimationFrame(() => this.onSortingDone.emit(expression));
     }
 
     /**
@@ -5355,7 +5356,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
-        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
             colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex))) {
