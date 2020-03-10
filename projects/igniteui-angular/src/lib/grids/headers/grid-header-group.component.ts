@@ -223,7 +223,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public groupClicked(event): void {
-        if (this.column.selectable) {
+        if (this.column.selectable && !this.grid.filteringService.isFilterRowVisible) {
             const columnsToSelect = [];
             this.column.allChildren.forEach(child => {
                 if (!child.columnGroup && !child.hidden && child.selectable) {
@@ -233,7 +233,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             if (!this.column.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
             } else {
-                const selectedFields = this.grid.selectionService.selectedColumns();
+                const selectedFields = this.grid.selectionService.getSelectedColumns();
                 if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
                     || event.ctrlKey) {
                     this.grid.selectionService.deselectColumns(columnsToSelect, event);

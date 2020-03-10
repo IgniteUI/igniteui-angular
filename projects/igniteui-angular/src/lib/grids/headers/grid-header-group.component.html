@@ -45,7 +45,7 @@
             'igx-grid__th--pinned-last': hasLastPinnedChildColumn,
             'igx-grid__th--pinned-first': hasFirstPinnedChildColumn,
             'igx-grid__th--collapsible': column.collapsible,
-            'igx-grid__th--selectable': column.hovered && column.selectable,
+            'igx-grid__th--selectable': column.hovered && column.selectable && !this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--selected': column.selected}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outletDirective.nativeElement"
