@@ -3,11 +3,17 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-drop-down: (
     elevation: 8
 );
 
+/// @type Map
 $_fluent-elevation-drop-down: (
     elevation: 4
 );
 
+$_bootstrap-elevation-drop-down: (
+    elevation: 0
+);

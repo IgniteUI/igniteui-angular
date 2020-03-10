@@ -7,7 +7,6 @@ import {
     TemplateRef,
     Directive,
     OnDestroy,
-    AfterViewInit,
     ElementRef,
     Input,
     ViewRef
@@ -97,7 +96,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
@@ -237,7 +236,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
      * @hidden @internal
      */
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
-    public excelStyleSearch: IgxExcelStyleSearchComponent;
+    protected excelStyleSearch: IgxExcelStyleSearchComponent;
 
     /**
      * @hidden @internal
@@ -304,7 +303,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef) {}
 
     /**
      * @hidden @internal
@@ -312,15 +311,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    ngAfterViewInit(): void {
-        requestAnimationFrame(() => {
-            this.excelStyleSearch.searchInput.nativeElement.focus();
-        });
     }
 
     private init() {
@@ -358,6 +348,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.overlayComponentId = overlayComponentId;
 
         this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
+
+        requestAnimationFrame(() => {
+            this.excelStyleSearch.searchInput.nativeElement.focus();
+        });
 
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
@@ -784,8 +778,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
      * @hidden @internal
      */
     get applyButtonDisabled() {
-        return  (this.excelStyleSearch && this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
-                (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
+        return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
     }
 
     /**

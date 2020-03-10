@@ -18,7 +18,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -93,7 +93,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(true);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(1);
+        expect(hierarchicalGrid.expansionStates.size).toEqual(1);
 
         UIInteractions.clickElement(icon.el);
         fixture.detectChanges();
@@ -105,12 +105,14 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(false);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(0);
+        expect(hierarchicalGrid.expansionStates.size).toEqual(0);
     }));
 
-    it('should allow applying initial expansions state for certain rows through hierarchicalState option', () => {
+    it('should allow applying initial expansions state for certain rows through expansionStates option', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{rowID: fixture.componentInstance.data[0]}];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
@@ -174,14 +176,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow extracting child grids using hgridAPI', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
         expect(row1.expanded).toBe(true);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
         expect(childGrid).not.toBeNull();
-        childGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0].childData[0] }];
+        const childState = new Map<any, boolean>();
+        childState.set(fixture.componentInstance.data[0].childData[0], true);
+        childGrid.expansionStates = childState;
         childGrid.cdr.detectChanges();
         const grandChildGrid = hierarchicalGrid.hgridAPI.getChildGrid([
             { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
@@ -197,7 +203,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow setting expandChildren after bound to data', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         let row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
@@ -225,7 +233,9 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
     it('should allow setting expandChildren after bound to data to rowIsland', () => {
         // set first row as expanded.
-        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        const state = new Map<any, boolean>();
+        state.set(fixture.componentInstance.data[0], true);
+        hierarchicalGrid.expansionStates = state;
         hierarchicalGrid.cdr.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         // verify row is expanded
@@ -412,7 +422,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
@@ -670,7 +680,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSizingComponent
@@ -695,12 +705,14 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-        const defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBeNull();
+        let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         childGrid.data = fixture.componentInstance.data;
         fixture.detectChanges();
-        expect(defaultHeight).toBeNull();
+
+        defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         expect(childGrid.data.length).toEqual(1);
         expect(childGrid.rowList.length).toEqual(1);
@@ -716,7 +728,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
         let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBeNull();
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         childGrid.data = fixture.componentInstance.fullData;
         tick();
@@ -739,7 +751,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
         let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBeNull();
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         childGrid.data = fixture.componentInstance.fullData;
         tick();
@@ -792,13 +804,13 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
 
         let defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBeNull();
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         childGrid.data = fixture.componentInstance.semiData;
         tick();
         fixture.detectChanges();
         defaultHeight = childGrids[0].query(By.css(TBODY_CLASS)).styles.height;
-        expect(defaultHeight).toBeNull();
+        expect(defaultHeight).toBeFalsy();
         expect(childGrid.calcHeight).toBeNull();
         expect(childGrid.data.length).toEqual(15);
         expect(childGrid.rowList.length).toEqual(15);
@@ -810,7 +822,7 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHGridRemoteOnDemandComponent
@@ -887,7 +899,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     const THEAD_CLASS = '.igx-grid__thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridColumnsUpdateComponent
@@ -1052,7 +1064,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridToggleRIComponent
@@ -1136,7 +1148,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridCustomTemplateComponent

@@ -15,7 +15,12 @@ $_square-shape-snackbar: (
     border-radius: 0%,
 );
 
-
+/// @type Map
 $_fluent-shape-snackbar: (
     border-radius: 2px,
 );
+
+$_bootstrap-shape-snackbar: (
+    border-radius: .17
+);
+

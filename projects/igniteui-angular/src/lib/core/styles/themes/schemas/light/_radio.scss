@@ -9,11 +9,12 @@
 /// Generates a light radio schema.
 /// @type {Map}
 ///
-/// @property {map} hover-color [igx-color: ('grays', 900)] - The text color used for the label text.
-/// @property {map} fill-hover-border-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {Color} hover-color [transparent] - The text color used for the label text.
+/// @property {map} fill-hover-border-color [igx-color: ('secondary', 500)] - The text color used for the label text.
 /// @property {map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
 /// @property {map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
 /// @property {map} fill-color [igx-color: ('secondary', 500)] - The checked border and dot colors.
+/// @property {map} fill-color-hover [igx-color: ('secondary', 500)] - The checked border and dot colors on hover.
 /// @property {map} disabled-color [igx-color: ('grays', 400)] - The disabled border and dot colors.
 /// @see $default-palette
 $_light-radio: extend(
@@ -40,19 +41,25 @@ $_light-radio: extend(
             igx-color: ('secondary', 500)
         ),
 
+        fill-color-hover: (
+            igx-color: ('secondary', 500)
+        ),
+
         disabled-color: (
             igx-color: ('grays', 400)
         )
     )
 );
 
-/// Generates a fluent radio radio schema.
+/// Generates a fluent radio schema.
 /// @type {Map}
 ///
 /// @property {map} hover-color [igx-color: ('grays', 800)] - The text color used for the label text.
-/// @property {map} fill-hover-border-color [igx-color: ('secondary', 600)] - The text color used for the label text.
+/// @property {map} fill-hover-border-color [igx-color: ('secondary', 600)] - The checked dot border color on hover.
 /// @property {map} empty-color [igx-color: ('grays', 800)] - The unchecked border color.
 /// @property {map} fill-color [igx-color: ('secondary', 300)] - The checked border and dot colors.
+/// @property {map} fill-color-hover [igx-color: ('secondary',3500)] - The checked border and dot colors on hover.
+
 $_fluent-radio: extend($_light-radio,(
     variant: 'fluent',
 
@@ -71,5 +78,35 @@ $_fluent-radio: extend($_light-radio,(
     fill-color: (
         igx-color: ('secondary', 300)
     ),
+
+    fill-color-hover: (
+        igx-color: ('secondary', 300)
+    ),
 ));
+
+/// Generates a bootstrap radio schema.
+/// @type {Map}
+/// @property {map} fill-hover-border-color [igx-color: ('primary', 500)] - The checked dot border color on hover.
+/// @property {map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @property {map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
+/// @property {Color} fill-color-hover [#fff] - The checked border and dot colors on hover.
+
+$_bootstrap-radio: extend(
+    $_light-radio,
+    (
+        variant: 'bootstrap',
+
+        fill-hover-border-color: #fff,
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        fill-color-hover: #fff,
+    )
+);
 

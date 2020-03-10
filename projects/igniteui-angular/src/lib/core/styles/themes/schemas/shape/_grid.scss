@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-grid: (
     drop-area-border-radius: 1
 );
@@ -15,4 +17,9 @@ $_square-shape-grid: (
 
 $_fluent-shape-grid: (
     drop-area-border-radius: 2px
+);
+
+/// @type Map
+$_bootstrap-shape-grid: (
+    drop-area-border-radius: 4px
 );

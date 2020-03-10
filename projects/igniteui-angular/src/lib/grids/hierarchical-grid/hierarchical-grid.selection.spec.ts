@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -24,7 +24,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
     let rowIsland1;
     let rowIsland2;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -100,10 +100,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should have checkboxes on each row', () => {
+        it('should have checkboxes on each row', fakeAsync(() => {
             hierarchicalGrid.expandChildren = true;
             fix.detectChanges();
+            tick(100);
             rowIsland1.expandChildren = true;
+            tick(100);
             fix.detectChanges();
 
             expect(hierarchicalGrid.rowSelection).toEqual(GridSelectionMode.multiple);
@@ -130,7 +132,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement, false, false);
             }
-        });
+        }));
 
         it('should able to change rowSelection at runtime', () => {
             hierarchicalGrid.expandChildren = true;

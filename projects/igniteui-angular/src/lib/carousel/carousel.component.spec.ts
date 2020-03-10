@@ -25,7 +25,7 @@ describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,
@@ -705,7 +705,7 @@ describe('Carousel', () => {
             carousel = fixture.componentInstance.carousel;
         });
 
-        it('should stop/play on tap ', async () => {
+        it('should stop/play on tap ', () => {
             carousel.interval = 1000;
             carousel.play();
             fixture.detectChanges();
@@ -715,15 +715,13 @@ describe('Carousel', () => {
 
             expect(carousel.isPlaying).toBeTruthy();
 
-            HelperTestFunctions.simulateTap(carousel);
+            HelperTestFunctions.simulateTap(fixture, carousel);
             fixture.detectChanges();
-            await wait(200);
 
             expect(carousel.isPlaying).toBeFalsy();
 
-            HelperTestFunctions.simulateTap(carousel);
+            HelperTestFunctions.simulateTap(fixture, carousel);
             fixture.detectChanges();
-            await wait(200);
 
             expect(carousel.isPlaying).toBeTruthy();
 
@@ -733,15 +731,13 @@ describe('Carousel', () => {
 
             expect(carousel.isPlaying).toBeFalsy();
 
-            HelperTestFunctions.simulateTap(carousel);
+            HelperTestFunctions.simulateTap(fixture, carousel);
             fixture.detectChanges();
-            await wait(200);
 
             expect(carousel.isPlaying).toBeFalsy();
 
-            HelperTestFunctions.simulateTap(carousel);
+            HelperTestFunctions.simulateTap(fixture, carousel);
             fixture.detectChanges();
-            await wait(200);
 
             expect(carousel.isPlaying).toBeFalsy();
         });
@@ -881,9 +877,11 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
-    public static simulateTap(carousel) {
+    public static simulateTap(fixture, carousel) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
-        Simulator.gestures.press(activeSlide, { duration: 180 });
+        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
+        carouselElement.triggerEventHandler('tap', {target: activeSlide});
+        // Simulator.gestures.press(activeSlide, { duration: 180 });
     }
 
     public static simulatePan(fixture, carousel, deltaXOffset, velocity) {

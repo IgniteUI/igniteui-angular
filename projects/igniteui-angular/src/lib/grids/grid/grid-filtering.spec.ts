@@ -7,10 +7,12 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips';
-import { IgxStringFilteringOperand,
+import {
+    IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
+    IgxDateFilteringOperand
+} from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -20,7 +22,7 @@ import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy'
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
@@ -29,7 +31,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
                 BrowserAnimationsModule,
                 IgxGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     let fix, grid;
@@ -89,7 +91,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Null filter
         grid.clearFilter('ProductName');
         fix.detectChanges();
-        grid.filter('ProductName', null , IgxStringFilteringOperand.instance().condition('null'), true);
+        grid.filter('ProductName', null, IgxStringFilteringOperand.instance().condition('null'), true);
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(3);
 
@@ -248,11 +250,11 @@ describe('IgxGrid - Filtering actions #grid', () => {
         const today = SampleTestData.today;
 
         // Fill expected results based on the current date
-        fillExpectedResults(grid, cal, today);
+        const expectedResults = GridFunctions.createDateFilterConditions(grid, today);
 
         // After filter
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-        IgxDateFilteringOperand.instance().condition('after'));
+            IgxDateFilteringOperand.instance().condition('after'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(2);
 
@@ -261,7 +263,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 4),
-        IgxDateFilteringOperand.instance().condition('before'));
+            IgxDateFilteringOperand.instance().condition('before'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(4);
 
@@ -269,7 +271,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
-        IgxDateFilteringOperand.instance().condition('doesNotEqual'));
+            IgxDateFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
 
@@ -277,7 +279,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.clearFilter('ReleaseDate');
         fix.detectChanges();
         grid.filter('ReleaseDate', cal.timedelta(today, 'day', 15),
-        IgxDateFilteringOperand.instance().condition('equals'));
+            IgxDateFilteringOperand.instance().condition('equals'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
 
@@ -428,7 +430,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         ];
 
         const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
-        gridExpressionsTree.filteringOperands = [ colDownloadsExprTree, colIdExprTree ];
+        gridExpressionsTree.filteringOperands = [colDownloadsExprTree, colIdExprTree];
 
         grid.filteringExpressionsTree = gridExpressionsTree;
         fix.detectChanges();
@@ -468,9 +470,9 @@ describe('IgxGrid - Filtering actions #grid', () => {
     it('Should correctly apply two conditions to string column.', fakeAsync(() => {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
-             fieldName: 'ProductName',
-             searchVal: 'Ignite',
-             condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
         };
         const expression1 = {
             fieldName: 'ProductName',
@@ -554,9 +556,9 @@ describe('IgxGrid - Filtering actions #grid', () => {
     it('Should generate the expressions UI list correctly.', fakeAsync(() => {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ProductName');
         const expression = {
-             fieldName: 'ProductName',
-             searchVal: 'Ignite',
-             condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
         };
         const expression1 = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression11 = {
@@ -668,7 +670,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filterStrategy = NoopFilteringStrategy.instance();
         fix.detectChanges();
 
-        grid.filter('ProductName' , 'some value', IgxStringFilteringOperand.instance().condition('contains'));
+        grid.filter('ProductName', 'some value', IgxStringFilteringOperand.instance().condition('contains'));
         fix.detectChanges();
 
         // Verify the grid is not filtered, because of the noop filter strategy.
@@ -680,7 +682,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringBindingComponent
@@ -689,7 +691,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
                 BrowserAnimationsModule,
                 IgxGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     let fix, grid: IgxGridComponent;
@@ -719,160 +721,6 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 });
-
-const expectedResults = [];
-
-// Fill expected results for 'date' filtering conditions based on the current date
-function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) {
-    // day + 15
-    const dateItem0 = generateICalendarDate(grid.data[0].ReleaseDate,
-        today.getFullYear(), today.getMonth());
-    // month - 1
-    const dateItem1 = generateICalendarDate(grid.data[1].ReleaseDate,
-        today.getFullYear(), today.getMonth());
-    // day - 1
-    const dateItem3 = generateICalendarDate(grid.data[3].ReleaseDate,
-        today.getFullYear(), today.getMonth());
-    // day + 1
-    const dateItem5 = generateICalendarDate(grid.data[5].ReleaseDate,
-        today.getFullYear(), today.getMonth());
-    // month + 1
-    const dateItem6 = generateICalendarDate(grid.data[6].ReleaseDate,
-        today.getFullYear(), today.getMonth());
-
-    let thisMonthCountItems = 1;
-    let nextMonthCountItems = 1;
-    let lastMonthCountItems = 1;
-    let thisYearCountItems = 6;
-    let nextYearCountItems = 0;
-    let lastYearCountItems = 0;
-
-    // LastMonth filter
-    if (dateItem3.isPrevMonth) {
-        lastMonthCountItems++;
-    }
-    expectedResults[0] = lastMonthCountItems;
-
-    // thisMonth filter
-    if (dateItem0.isCurrentMonth) {
-        thisMonthCountItems++;
-    }
-
-    if (dateItem3.isCurrentMonth) {
-        thisMonthCountItems++;
-    }
-
-    if (dateItem5.isCurrentMonth) {
-        thisMonthCountItems++;
-    }
-
-    // NextMonth filter
-    if (dateItem0.isNextMonth) {
-        nextMonthCountItems++;
-    }
-
-    if (dateItem5.isNextMonth) {
-        nextMonthCountItems++;
-    }
-    expectedResults[1] = nextMonthCountItems;
-
-    // ThisYear, NextYear, PreviousYear filter
-
-    // day + 15
-    if (!dateItem0.isThisYear) {
-        thisYearCountItems--;
-    }
-
-    if (dateItem0.isNextYear) {
-        nextYearCountItems++;
-    }
-
-    // month - 1
-    if (!dateItem1.isThisYear) {
-        thisYearCountItems--;
-    }
-
-    if (dateItem1.isLastYear) {
-        lastYearCountItems++;
-    }
-
-    // day - 1
-    if (!dateItem3.isThisYear) {
-        thisYearCountItems--;
-    }
-
-    if (dateItem3.isLastYear) {
-        lastYearCountItems++;
-    }
-
-    // day + 1
-    if (!dateItem5.isThisYear) {
-        thisYearCountItems--;
-    }
-
-    if (dateItem5.isNextYear) {
-        nextYearCountItems++;
-    }
-
-    // month + 1
-    if (!dateItem6.isThisYear) {
-        thisYearCountItems--;
-    }
-
-    if (dateItem6.isNextYear) {
-        nextYearCountItems++;
-    }
-
-    // ThisYear filter result
-    expectedResults[2] = thisYearCountItems;
-
-    // NextYear filter result
-    expectedResults[3] = nextYearCountItems;
-
-    // PreviousYear filter result
-    expectedResults[4] = lastYearCountItems;
-
-    // ThisMonth filter result
-    expectedResults[5] = thisMonthCountItems;
-}
-
-function generateICalendarDate(date: Date, year: number, month: number) {
-    return {
-        date,
-        isCurrentMonth: date.getFullYear() === year && date.getMonth() === month,
-        isLastYear: isLastYear(date, year),
-        isNextMonth: isNextMonth(date, year, month),
-        isNextYear: isNextYear(date, year),
-        isPrevMonth: isPreviousMonth(date, year, month),
-        isThisYear: isThisYear(date, year)
-    };
-}
-
-function isPreviousMonth(date: Date, year: number, month: number): boolean {
-    if (date.getFullYear() === year) {
-        return date.getMonth() < month;
-    }
-    return date.getFullYear() < year;
-}
-
-function isNextMonth(date: Date, year: number, month: number): boolean {
-    if (date.getFullYear() === year) {
-        return date.getMonth() > month;
-    }
-    return date.getFullYear() > year;
-}
-
-function isThisYear(date: Date, year: number): boolean {
-    return date.getFullYear() === year;
-}
-
-function isLastYear(date: Date, year: number): boolean {
-    return date.getFullYear() < year;
-}
-
-function isNextYear(date: Date, year: number): boolean {
-    return date.getFullYear() > year;
-}
 
 function verifyExpressionUI(expressionUI: ExpressionUI, expression: IFilteringExpression,
     afterOperator: FilteringLogic, beforeOperator: FilteringLogic) {

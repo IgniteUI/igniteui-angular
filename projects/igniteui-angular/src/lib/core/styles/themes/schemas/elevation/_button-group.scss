@@ -3,11 +3,19 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-button-group: (
     elevation: 2
 );
 
+/// @type Map
 $_fluent-elevation-button-group: (
+    elevation: 0
+);
+
+/// @type Map
+$_bootstrap-elevation-button-group: (
     elevation: 0
 );
 

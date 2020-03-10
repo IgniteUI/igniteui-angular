@@ -6,11 +6,11 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { ColumnEditablePropertyTestComponent } from './cell.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import {
     CellEditingTestComponent, CellEditingScrollTestComponent,
-    SelectionWithTransactionsComponent
+    SelectionWithTransactionsComponent,
+    ColumnEditablePropertyTestComponent
 } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCETIME = 30;
@@ -21,7 +21,7 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 CellEditingTestComponent,
@@ -211,6 +211,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(datePicker).toBeDefined();
 
             const editTemplate = cellDomDate.query(By.css('.igx-date-picker__input-date'));
+            editTemplate.triggerEventHandler('focus', { target: editTemplate.nativeElement });
+            fixture.detectChanges();
             UIInteractions.sendInput(editTemplate, editValue);
             fixture.detectChanges();
 

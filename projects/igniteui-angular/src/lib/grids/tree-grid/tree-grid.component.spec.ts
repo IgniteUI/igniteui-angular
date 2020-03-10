@@ -21,7 +21,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
@@ -85,7 +85,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 await wait(100);
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeNull();
+                expect(defaultHeight).toBeFalsy();
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(grid.rowList.length).toEqual(6);
         }));
@@ -101,7 +101,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeight).not.toBeFalsy();
                 expect(defaultHeightNum).toBeGreaterThan(300);
                 expect(defaultHeightNum).toBeLessThanOrEqual(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();

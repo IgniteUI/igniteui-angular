@@ -3,6 +3,12 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-elevation-dialog: (
     elevation: 24
+);
+
+$_bootstrap-elevation-dialog: (
+    elevation: 0
 );

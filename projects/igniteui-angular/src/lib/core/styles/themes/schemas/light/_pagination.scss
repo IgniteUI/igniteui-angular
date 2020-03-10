@@ -6,14 +6,18 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a light avatar schema.
+/// Generates a light pagination schema.
 /// @type {Map}
-/// @prop {Color} text-color [currentColor] - The text color.
+/// @prop {Map} text-color [igx-color: ('grays', 800)] - The text color.
 /// @prop {Map} background-color [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 400)] - The border color of the paging panel.
 /// @see $default-palette
 $_light-pagination: (
-    text-color: currentColor,
+    variant: 'material',
+
+    text-color: (
+        igx-color: ('grays', 800)
+    ),
 
     background-color: (
         igx-color: ('grays', 100),
@@ -25,7 +29,7 @@ $_light-pagination: (
     )
 );
 
-/// Generates a light avatar schema.
+/// Generates a light pagination schema.
 /// @type {Map}
 /// @prop {Map} background-color [igx-color: 'surface'] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 100), hexrgba: #fff] - The border color of the paging panel.
@@ -34,6 +38,8 @@ $_light-pagination: (
 $_fluent-pagination: extend(
     $_light-pagination,
     (
+        variant: 'material',
+
         background-color: (
             igx-color: 'surface'
         ),
@@ -44,3 +50,10 @@ $_fluent-pagination: extend(
         )
     )
 );
+
+/// Generates a bootstrap pagination schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-pagination
+$_bootstrap-pagination: extend($_light-pagination);
+

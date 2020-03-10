@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-carousel: (
     border-radius: 0,
 );
@@ -15,6 +17,11 @@ $_square-shape-carousel: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_fluent-shape-carousel: (
     border-radius: 0%
+);
+
+$_bootstrap-shape-carousel: (
+    border-radius: 4px
 );

@@ -105,6 +105,7 @@ import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-f
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
+import { InputGroupBoostrapSampleComponent } from './input-group/input-group-bootstrap.sample';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
@@ -114,6 +115,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 
 const components = [
     AppComponent,
@@ -141,6 +143,7 @@ const components = [
     InputGroupSampleComponent,
     InputGroupChildSampleComponent,
     InputGroupFluentSampleComponent,
+    InputGroupBoostrapSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,
@@ -218,7 +221,8 @@ const components = [
     GridFilteringComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
-    AboutComponent
+    AboutComponent,
+    ReactiveFormSampleComponent
 ];
 
 @NgModule({

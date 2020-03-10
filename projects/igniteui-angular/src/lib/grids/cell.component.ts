@@ -28,7 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { IgxGridComponent } from './grid';
+import { IgxGridComponent, ISearchInfo } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -51,6 +51,7 @@ import { IgxGridComponent } from './grid';
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
+    protected _lastSearchInfo: ISearchInfo;
 
     /**
      * Gets the column of the cell.
@@ -302,6 +303,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return this._cellSelection;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    set lastSearchInfo(value: ISearchInfo) {
+        this._lastSearchInfo = value;
+        this.highlightText(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+    }
+
     set cellSelectionMode(value) {
         if (this._cellSelection === value) { return; }
          this.zone.runOutsideAngular(() => {
@@ -318,6 +329,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     @HostBinding('class.igx-grid__td--pinned-last')
     lastPinned = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    @HostBinding('class.igx-grid__td--pinned-first')
+    firstPinned = false;
 
     /**
      * Returns whether the cell is in edit mode.
@@ -845,24 +864,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     protected handleAlt(key: string, event: KeyboardEvent) {
-        if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+        if (this.isToggleKey(key)) {
             const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
             const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            if (collapse) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            } else if (expand) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-            }
-        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
-            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
-            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
-            const expandedStates = this.grid.expansionStates;
             if (expand) {
-                expandedStates.set(this.row.rowID, true);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
             } else if (collapse) {
-                expandedStates.set(this.row.rowID, false);
+                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
             }
-            this.grid.expansionStates = expandedStates;
             this.grid.notifyChanges();
         }
     }

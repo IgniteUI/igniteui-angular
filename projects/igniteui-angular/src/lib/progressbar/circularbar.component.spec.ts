@@ -21,7 +21,7 @@ const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 describe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InitCircularProgressBarComponent,
@@ -153,6 +153,8 @@ describe('IgCircularBar', () => {
         let expectedValue = 50;
 
         fixture.componentInstance.animate = false;
+        fixture.detectChanges();
+
         fixture.componentInstance.value = expectedValue;
         fixture.detectChanges();
 
@@ -201,7 +203,12 @@ describe('IgCircularBar', () => {
     it('Value should not exceed the lower limit (0) when operating with floating numbers', fakeAsync(() => {
         const fix = TestBed.createComponent(CircularBarComponent);
         const compInstance = fix.componentInstance;
+        fix.detectChanges();
+        tick(tickTime);
+
         compInstance.max = 2.5;
+        fix.detectChanges();
+
         compInstance.value = -0.3;
         fix.detectChanges();
 
@@ -212,8 +219,9 @@ describe('IgCircularBar', () => {
         expect(bar.valueInPercent).toBe(expectedRes);
 
         compInstance.animate = false;
-        compInstance.value = -2;
+        fix.detectChanges();
 
+        compInstance.value = -2;
         fix.detectChanges();
 
         expect(bar.value).toBe(expectedRes);
@@ -225,7 +233,10 @@ describe('IgCircularBar', () => {
         const compInstance = fix.componentInstance;
         let value = 2.67;
         const max = 2.5;
+
         compInstance.max = max;
+        fix.detectChanges();
+
         compInstance.value = value;
         fix.detectChanges();
 
@@ -236,9 +247,11 @@ describe('IgCircularBar', () => {
 
         value = 3.01;
         compInstance.animate = false;
-        compInstance.value = value;
-
         fix.detectChanges();
+
+        compInstance.value = value;
+        fix.detectChanges();
+
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
     }));

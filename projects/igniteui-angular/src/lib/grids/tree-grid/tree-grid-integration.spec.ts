@@ -29,7 +29,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
@@ -1351,5 +1351,27 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.records.get(12).level).toBe(1);
             expect(treeGrid.records.get(13).level).toBe(2);
         }));
+    });
+
+    describe('Column Pinning', () => {
+        it('should have right pinning applied correctly', () => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            treeGrid.columnList.find(x => x.field === 'Age').pinned = true;
+            treeGrid.pinning.columns = 1;
+
+            fix.detectChanges();
+            const rightMostGridPart = treeGrid.nativeElement.getBoundingClientRect().right;
+            const leftMostGridPart = treeGrid.nativeElement.getBoundingClientRect().left;
+            const leftMostRightPinnedCellsPart = treeGrid.getCellByColumn(0, 'Age').nativeElement.getBoundingClientRect().left;
+            const pinnedCellWidth = treeGrid.getCellByColumn(0, 'Age').width;
+            // Expects that right pinning has been in action
+            expect(leftMostGridPart !== leftMostRightPinnedCellsPart).toBeTruthy();
+            // Expects that pinned column is in the visible grid's area
+            expect(leftMostRightPinnedCellsPart < rightMostGridPart).toBeTruthy();
+            // Expects that the whole pinned column is visible
+            expect(leftMostRightPinnedCellsPart + Number.parseInt(pinnedCellWidth, 10) <= rightMostGridPart).toBeTruthy();
+        });
     });
 });

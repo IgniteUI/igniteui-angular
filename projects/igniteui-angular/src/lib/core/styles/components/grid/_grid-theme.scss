@@ -56,6 +56,7 @@
 /// @param {Color} $drop-indicator-color [null] - The color applied to the line between the columns when dragging a column.
 ///
 /// @param {Color} $grouparea-background [null] - The grid group area background color.
+/// @param {Color} $grouparea-color [null] - The grid group area color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
 /// @param {Color} $group-row-selected-background [null] - The drop area background on drop color.
@@ -80,6 +81,11 @@
 /// @param {Color} $drop-area-background [null] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
 ///
+/// @param {Color} $filtering-background-and [null] - The background color of advanced filtering "AND" condition.
+/// @param {Color} $filtering-background-and--focus [null] - The background color on focus/selected of advanced filtering "AND" condition.
+/// @param {Color} $filtering-background-or [null] - The background color of advanced filtering "OR" condition.
+/// @param {Color} $filtering-background-or--focus [null] - The background color on focus/selected of advanced filtering "OR" condition.
+///
 /// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
 /// @param {Color} $filtering-header-text-color [null] - The text color color of the filtered column header.
 /// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
@@ -96,6 +102,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
@@ -107,6 +114,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -155,6 +163,7 @@
     $drop-indicator-color: null,
 
     $grouparea-background: null,
+    $grouparea-color: null,
 
     $group-row-background: null,
     $group-row-selected-background: null,
@@ -183,6 +192,10 @@
     $filtering-header-text-color: null,
     $filtering-row-background: null,
     $filtering-row-text-color: null,
+    $filtering-background-and: null,
+    $filtering-background-or: null,
+    $filtering-background-and--focus: null,
+    $filtering-background-or--focus: null,
     $tree-filtered-text-color: null,
 
     $body-summaries-background: null,
@@ -197,7 +210,7 @@
     $row-drag-color: null,
     $drop-area-border-radius: null,
     $grid-border-color: null,
-    $sortable-header-icon-hover-color: null
+    $sortable-header-icon-hover-color: null,
 ) {
     $name: 'igx-grid';
     $grid-schema: ();
@@ -355,9 +368,19 @@
         $grouparea-background: $header-background
     }
 
+    @if not($grouparea-color) and $grouparea-background {
+        $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+    }
+
+    @if not($grouparea-color) and $header-background {
+        $grouparea-color: rgba(text-contrast($header-background), .8)
+    }
+
     @if not($drop-area-background) and $grouparea-background {
         $drop-area-background: text-contrast($grouparea-background);
     }
+
+
 
     @if not($drop-area-on-drop-background) and $drop-area-background {
         $drop-area-on-drop-background: $drop-area-background;
@@ -461,6 +484,8 @@
         drop-indicator-color: $drop-indicator-color,
 
         grouparea-background: $grouparea-background,
+        grouparea-color: $grouparea-color,
+
         group-label-column-name-text: $group-label-column-name-text,
         group-label-icon: $group-label-icon,
         group-label-text: $group-label-text,
@@ -488,6 +513,10 @@
         filtering-header-text-color: $filtering-header-text-color,
         filtering-row-background: $filtering-row-background,
         filtering-row-text-color: $filtering-row-text-color,
+        filtering-background-and: $filtering-background-and,
+        filtering-background-or: $filtering-background-or,
+        filtering-background-and--focus: $filtering-background-and--focus,
+        filtering-background-or--focus: $filtering-background-or--focus,
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
@@ -522,7 +551,18 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
-    $cbx-size: rem(20px);
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
+    $cbx-size: map-get((
+        material: rem(20px),
+        fluent: rem(20px),
+        bootstrap: rem(14px),
+    ), $variant);
+    $cbx-bs-size: rem(14px);
+
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $left: if-ltr(left, right);
@@ -620,13 +660,15 @@
 
     $grid-border-width: map-get((
         material: 0,
-        fluent: 1px
-    ), map-get($theme, variant));
+        fluent: 1px,
+        bootstrap: 0
+    ), $variant);
 
     $grid-header-weight: map-get((
         material: 600,
-        fluent: 800
-    ), map-get($theme, variant));
+        fluent: 800,
+        bootstrap: 700
+    ), $variant);
 
     %grid-display {
         position: relative;
@@ -640,7 +682,7 @@
         border: $grid-border-width solid --var($theme, 'grid-border-color');
 
         %cbx-display {
-            min-width: rem(20px);
+            min-width: $cbx-size;
         }
     }
 
@@ -676,6 +718,11 @@
 
     %grid-thead {
         border-bottom: $grid-header-border;
+
+        @if $bootstrap-theme {
+            border-bottom-width: rem(2px);
+        }
+
         z-index: 2;
 
         %grid__group-indentation {
@@ -805,6 +852,7 @@
     %grid-mrl-block {
         display: grid;
         background: inherit;
+        position: relative;
 
         %grid-thead-item {
             display: flex;
@@ -1264,6 +1312,15 @@
             border-#{$right}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
         }
     }
+
+    %grid-cell--pinned-first {
+        border-#{$left}: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+
+        &%grid-cell--editing {
+            border-#{$left}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
+        }
+    }
+
 
     %grid-cell-header {
         flex-flow: row nowrap;
@@ -1844,6 +1901,7 @@
         flex-wrap: wrap;
         border-bottom: $grid-header-border;
         background: --var($theme, 'grouparea-background');
+        color: --var($theme, 'grouparea-color');
         min-height: map-get($grouparea-min-height, 'comfortable');
         padding: map-get($grouparea-padding, 'comfortable');
         z-index: 2;

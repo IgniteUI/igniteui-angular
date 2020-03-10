@@ -39,6 +39,9 @@
 /// @param {border-radius} $border-radius [null] - The border radius used for list component.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
 ///
+/// @param {Color} $border-width [null] - The list border width.
+/// @param {Number} $border-color [null] - The list border color.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -46,6 +49,7 @@
 /// @requires hexrgba
 /// @requires text-contrast
 /// @requires round-borders
+/// @requires luminance
 ///
 /// @example scss Change the list background color
 ///   $my-list-theme: igx-list-theme($background: black);
@@ -77,7 +81,9 @@
     $item-action-color-active: null,
     $item-thumbnail-color: null,
     $item-thumbnail-color-hover: null,
-    $item-thumbnail-color-active: null
+    $item-thumbnail-color-active: null,
+    $border-color: null,
+    $border-width: null,
 ) {
     $name: 'igx-list';
     $list-schema: ();
@@ -231,7 +237,9 @@
         item-action-color-active: $item-action-color-active,
         item-thumbnail-color: $item-thumbnail-color,
         item-thumbnail-color-hover: $item-thumbnail-color-hover,
-        item-thumbnail-color-active: $item-thumbnail-color-active
+        item-thumbnail-color-active: $item-thumbnail-color-active,
+        border-color: $border-color,
+        border-width: $border-width,
     ));
 }
 
@@ -240,6 +248,9 @@
 /// @requires --var
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'bootstrap';
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -289,6 +300,10 @@
         overflow: hidden;
         z-index: 0;
         border-radius: --var($theme, 'border-radius');
+
+        @if $bootstrap-theme {
+            border: --var($theme, 'border-width') solid --var($theme, 'border-color');
+        }
     }
 
     %igx-list-empty {
@@ -582,7 +597,7 @@
 /// categories from the typographic scale.
 /// @group typography
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
-/// @param {Map} $categories [(header: 'overline', item: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @param {Map} $categories [(header: 'overline', item: 'subtitle-1', title: 'subtitle-1', subtitle: 'caption')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-list-typography(
     $type-scale,

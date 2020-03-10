@@ -1,4 +1,5 @@
 @import '../shape/toast';
+@import '../elevation/toast';
 
 ////
 /// @group schemas
@@ -11,12 +12,15 @@
 ///
 /// @property {map} background [igx-color: ('grays', 600)] - The background color used for the toast.
 /// @property {map} text-color [igx-contrast-color: ('grays', 600)] - The text-color used for the toast.
-/// @prop {Number} border-radius [.15] - The border radius fraction, between 0-1 to be used for the toast component.
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for the toast component.
 ///
 /// @see $default-palette
 $_light-toast: extend(
     $_default-shape-toast,
+    $_default-elevation-toast,
     (
+        variant: 'material',
+
         background: (
             igx-color: ('grays', 600)
         ),
@@ -33,4 +37,29 @@ $_light-toast: extend(
 /// @requires {function} extend
 /// @requires $_light-toast
 /// @requires $_fluent-shape-toast
-$_fluent-toast: extend($_light-toast, $_fluent-shape-toast);
+$_fluent-toast: extend(
+    $_light-toast,
+    $_fluent-shape-toast,
+    (
+        variant: 'fluent',
+    )
+);
+
+/// Generates a bootstrap toast schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-toast
+$_bootstrap-toast: extend(
+    $_light-toast,
+    $_bootstrap-shape-toast,
+    $_bootstrap-elevation-toast,
+    (
+        variant: 'bootstrap',
+        background: #fff,
+
+        text-color: (
+            igx-color: ('grays', 600)
+        )
+    )
+);
+

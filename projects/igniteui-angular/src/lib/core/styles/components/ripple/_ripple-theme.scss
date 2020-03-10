@@ -43,12 +43,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
+/// @param {Map} $palette [$default-palette] - The palette used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires --var
 @mixin igx-ripple($theme, $palette: $default-palette) {
     @include igx-root-css-vars($theme);
-
-    // @debug $theme;
 
     %igx-ripple-display {
         display: block;

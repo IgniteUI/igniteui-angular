@@ -314,6 +314,7 @@
 
         @include e(label) {
             @extend %form-group-label--box !optional;
+            @extend %form-group-label--border !optional;
         }
 
         @include e(textarea) {
@@ -324,6 +325,28 @@
             @extend %form-group-helper--box !optional;
         }
     }
+
+    @include mx(border, filled) {
+        @include e(label) {
+            @extend %form-group-label-float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
+    @include mx(border, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
+    @include mx(border, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+        }
+    }
+
 
     @include mx(border, cosy) {
         @extend %form-group-display--no-margin-cosy !optional;
@@ -341,6 +364,30 @@
         }
     }
 
+    @include mx(border, cosy, filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
+    @include mx(border, cosy, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
+    @include mx(border, cosy, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-cosy !optional;
+        }
+    }
+
     @include mx(border, compact) {
         @extend %form-group-display--no-margin-compact !optional;
 
@@ -354,6 +401,30 @@
 
         @include e(textarea) {
             @extend %form-group-textarea--box-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, filled) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, focused) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
+        }
+    }
+
+    @include mx(border, compact, placeholder) {
+        @include e(label) {
+            @extend %form-group-label--float !optional;
+            @extend %form-group-label--float-border !optional;
+            @extend %form-group-label--float-border-compact !optional;
         }
     }
 
@@ -379,9 +450,13 @@
         @include e(bundle) {
             @extend %form-group-bundle-border--disabled !optional;
         }
+
+        @include e(label) {
+            @extend %form-group-label--float-border-disabled !optional;
+        }
     }
 
-    // FLUENT THEME //
+    // Fluent Theme Start //
     @include m(fluent) {
         @extend %igx-input-group-fluent !optional;
 
@@ -434,9 +509,7 @@
         }
 
         @include e(input) {
-            %fluent-input-disabled {
-                @extend %fluent-input-disabled !optional
-            }
+            @extend %fluent-input-disabled !optional;
 
             &:hover {
                 @extend %fluent-input-disabled !optional
@@ -505,7 +578,143 @@
             @extend %fluent-label-error !optional;
         }
     }
-    // FLUENT THEME END //
+    // Fluent Theme End //
+
+    // Bootstrap Theme Start //
+    @include m(bootstrap) {
+        @extend %form-group-display--bootstrap !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--bootstrap !optional;
+
+            &:hover {
+                @extend %form-group-bundle--bootstrap-hover !optional;
+            }
+        }
+
+        @include e(label) {
+            @extend %bootstrap-label !optional;
+        }
+
+        @include e(input) {
+            @extend %bootstrap-input !optional;
+        }
+
+        @include e(textarea) {
+            @extend %bootstrap-input !optional;
+        }
+    }
+
+    @include mx(focused, bootstrap) {
+        @include e(input) {
+            @extend %bootstrap-input--focus !optional;
+        }
+
+        @include e(label) {
+            @extend %bootstrap-label !optional;
+        }
+
+
+        @include e(textarea) {
+            @extend %bootstrap-input--focus !optional;
+        }
+    }
+
+    @include mx(valid, bootstrap) {
+        @include e(input) {
+            @extend %bootstrap-input--success !optional;
+
+            &:hover {
+                @extend %bootstrap-input--success !optional;
+            }
+        }
+
+        @include e(label) {
+            @extend %bootstrap-label !optional;
+        }
+
+
+        @include e(textarea) {
+            @extend %bootstrap-input--success !optional;
+
+            &:hover {
+                @extend %bootstrap-input--success !optional;
+            }
+        }
+    }
+
+    @include mx(invalid, bootstrap) {
+        @include e(input) {
+            @extend %bootstrap-input--error !optional;
+
+            &:hover {
+                @extend %bootstrap-input--error !optional;
+            }
+        }
+
+        @include e(label) {
+            @extend %bootstrap-label !optional;
+        }
+
+        @include e(textarea) {
+            @extend %bootstrap-input--error !optional;
+
+            &:hover {
+                @extend %bootstrap-input--error !optional;
+            }
+        }
+    }
+
+    @include mx(disabled, bootstrap) {
+        @include e(bundle) {
+            @extend %form-group-display--disabled-bootstrap !optional;
+        }
+
+        @include e(label) {
+            @extend %bootstrap-label--disabled !optional;
+        }
+
+        @include e(input) {
+            @extend %bootstrap-input--disabled !optional;
+        }
+
+        @include e(textarea) {
+            @extend %bootstrap-input--disabled !optional;
+        }
+    }
+
+    @include mx(cosy, bootstrap) {
+        @extend %form-group-display--cosy-bootstrap !optional;
+
+        @include e(label) {
+            @extend %bootstrap-label--cosy !optional;
+        }
+
+        @include e(input) {
+            @extend %bootstrap-input--cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %bootstrap-input--cosy !optional;
+        }
+    }
+
+    @include mx(compact, bootstrap) {
+        @extend %form-group-display--compact-bootstrap !optional;
+
+        @include e(label) {
+            @extend %bootstrap-label--compact !optional;
+        }
+
+        @include e(input) {
+            @extend %bootstrap-input--compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %bootstrap-input--compact !optional;
+        }
+    }
+    // Bootstrap Theme End //
 
     @include m(search) {
         @extend %form-group-display--no-margin !optional;
@@ -633,3 +842,4 @@
         }
     }
 }
+

@@ -36,6 +36,7 @@ import { IgxTransactionService } from '../../services/index';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -111,43 +112,29 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-    * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
-    * ```typescript
-    * this.gridState = [{ rowID: 1 }, { rowID: 4}];
-    * ```
-    * ```html
-    * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [hierarchicalState]="hgridState">
-    *      <igx-column field="ID"  [dataType]='number'></igx-column>
-    *      <igx-column field="Product"  [dataType]='string'></igx-column>
-    *      <igx-column field="Description"  [dataType]='string'></igx-column>
-    * </igx-hierarchical-grid>
-    * ```
-    *
-    * Two-way data binding.
-    * ```html
-    * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [(hierarchicalState)]="hgridState">
-    *      <igx-column field="ID"  [dataType]='number'></igx-column>
-    *      <igx-column field="Product"  [dataType]='string'></igx-column>
-    *      <igx-column field="Description"  [dataType]='string'></igx-column>
-    * </igx-hierarchical-grid>
-    * ```
-    * @memberof IgxHierarchicalGridComponent
+     *@hidden
+     *@deprecated
+     * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
     */
     @Input()
+    @DeprecateProperty(`'hierarchicalState' property is deprecated. Use 'expansionStates' instead.`)
     public get hierarchicalState() {
-        return this._hierarchicalState;
+        const res = Array.from(this.expansionStates.entries()).filter(({1: v}) => v === true).map(([k]) => k);
+        return res;
     }
     public set hierarchicalState(val) {
-        if (this._hierarchicalState !== val) {
-            this.hierarchicalStateChange.emit(val);
-        }
         if (this.hasChildrenKey) {
             val = val.filter(item => {
                 const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
                 return rec[this.hasChildrenKey];
             });
         }
-        this._hierarchicalState = val;
+        const expansionStates = new Map<any, boolean>();
+        val.forEach(item => {
+            const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
+            expansionStates.set(rec, true);
+        });
+        this.expansionStates = expansionStates;
         if (this.parent) {
             this.notifyChanges(true);
         }
@@ -155,8 +142,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      *@hidden
+     *@deprecated
      */
     @Output()
+    @DeprecateProperty(`'hierarchicalStateChange' @Output property is deprecated. Use 'expansionStates' instead.`)
     public hierarchicalStateChange = new EventEmitter<any>();
 
     /**
@@ -196,14 +185,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     @Input()
     set expandChildren(value: boolean) {
-        this._expandChildren = value;
-        if (value && this.data) {
-            this.hierarchicalState = this.data.map((rec) => {
-                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
-            });
-        } else if (this.data) {
-            this.hierarchicalState = [];
-        }
+        this._defaultExpandState  = value;
+        this.expansionStates = new Map<any, boolean>();
     }
 
     /**
@@ -215,7 +198,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @memberof IgxHierarchicalGridComponent
      */
     get expandChildren(): boolean {
-        return this._expandChildren;
+        return this._defaultExpandState ;
     }
 
     /**
@@ -293,7 +276,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public parent = null;
 
-    private _hierarchicalState = [];
     private _data;
     private _filteredData = null;
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -309,6 +291,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             // transaction service cannot be injected in a derived class in a factory manner
             this._transactions = new IgxTransactionService();
         }
+        this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
+            const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
+            this.hierarchicalStateChange.emit(res);
+        });
         super.ngOnInit();
     }
 
@@ -326,13 +312,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngAfterViewInit();
         this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
-
-        if (this.expandChildren && this.data && this.hierarchicalState.length !== this.data.length) {
-            this.hierarchicalState = this.data.map((rec) => {
-                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
-            });
-            this.cdr.detectChanges();
-        }
 
         this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
@@ -438,7 +417,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         this.updateColumnList();
         const cols = change.filter(c => c.gridAPI.grid === this);
-        if (cols.length > 0) {
+        if (cols.length > 0 || this.autoGenerate) {
             this.columnList.reset(cols);
             super.onColumnsChanged(this.columnList);
         }
@@ -585,7 +564,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
     */
     public get iconTemplate() {
-        const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+        const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
             return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
         } else {
@@ -636,7 +615,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
     */
    toggleAll() {
-    const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+    const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
     if (!expanded && this.showExpandAll) {
         this.expandAll();
     } else {
@@ -644,45 +623,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
    }
 
-    /**
-     * Collapses all rows of the current hierarchical grid.
-     * ```typescript
-     * this.grid.collapseAll();
-     * ```
-	 * @memberof IgxHierarchicalGridComponent
-     */
-    public collapseAll() {
-        this.hierarchicalState = [];
-    }
-
-    /**
-     * Expands all rows of the current hierarchical grid.
-     * ```typescript
-     * this.grid.expandAll();
-     * ```
-	 * @memberof IgxHierarchicalGridComponent
-     */
-    public expandAll() {
-        if (this.data) {
-            this.hierarchicalState = this.data.map((rec) => {
-                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
-            });
-        }
-    }
 
     /**
      * @hidden
+     * @internal
      */
+    public hasExpandedRecords() {
+       if (this.expandChildren) {
+            return true;
+       }
+       let hasExpandedEntry = false;
+       this.expansionStates.forEach((value, key) => {
+           if (value) {
+            hasExpandedEntry = value;
+           }
+        });
+        return hasExpandedEntry;
+    }
+
+    public getDefaultExpandState(record: any) {
+        return this.expandChildren;
+
+    }
+
+    /**
+    * @hidden
+    */
     public isExpanded(record: any): boolean {
-        let inState;
-        if (record.childGridsData !== undefined) {
-            inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
-        } else {
-            inState = !!this.hierarchicalState.find(v => {
-                return this.primaryKey ? v.rowID === record[this.primaryKey] : v.rowID === record;
-            });
-        }
-        return inState && this.childLayoutList.length !== 0;
+        return this.gridAPI.get_row_expansion_state(record);
     }
 
     /**

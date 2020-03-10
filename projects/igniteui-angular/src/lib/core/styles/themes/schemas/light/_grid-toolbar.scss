@@ -8,20 +8,19 @@
 
 /// Generates a light grid-toolbar schema.
 /// @type {Map}
-///
 /// @property {map} background-color [igx-color: ('grays', 50)] - The toolbar background color.
 /// @property {map} title-text-color [igx-color: ('grays', 600)] - The toolbar title text color.
-
+///
 /// @property {Color} dropdown-background [#fff] - The toolbar drop-down background color.
 /// @property {map} item-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item text color.
 /// @property {map} item-hover-background [igx-color: ('grays', 100)] - The toolbar drop-down item hover background color.
 /// @property {map} item-hover-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item hover text color.
 /// @property {map} item-focus-background [igx-color: ('grays', 100)] - The toolbar drop-down item focus background color.
 /// @property {map} item-focus-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item focus text color.
-///
 /// @see $default-palette
-
 $_light-grid-toolbar: (
+    variant: 'material',
+
     background-color: (
         igx-color: ('grays', 50)
     ),
@@ -57,14 +56,27 @@ $_light-grid-toolbar: (
 /// @type {Map}
 ///
 /// @property {map} background-color [igx-color: 'surface'] - The toolbar background color.
-///
 /// @requires {function} extend
 /// @requires {map} $_light-grid-toolbar
 $_fluent-grid-toolbar: extend(
     $_light-grid-toolbar,
     (
+        variant: 'fluent',
+
         background-color: (
             igx-color: 'surface'
         ),
     )
 );
+
+/// Generates a bootstrap grid-toolbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-toolbar
+$_bootstrap-grid-toolbar: extend(
+    $_light-grid-toolbar,
+    (
+        variant: 'bootstrap'
+    )
+);
+

@@ -3,10 +3,18 @@
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
+
+/// @type Map
 $_default-elevation-carousel: (
     button-elevation: 1,
 );
 
+/// @type Map
 $_fluent-elevation-carousel: (
     button-elevation: 0,
 );
+
+$_bootstrap-elevation-carousel: (
+    button-elevation: 0,
+);
+

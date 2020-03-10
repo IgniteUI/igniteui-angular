@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-button-group: (
     border-radius: .2,
 );
@@ -15,7 +17,12 @@ $_square-shape-button-group: (
     border-radius: 0%,
 );
 
+/// @type Map
 $_fluent-shape-button-group: (
     border-radius: 2px,
+);
+
+$_bootstrap-shape-button-group: (
+    border-radius: 4px,
 );
 

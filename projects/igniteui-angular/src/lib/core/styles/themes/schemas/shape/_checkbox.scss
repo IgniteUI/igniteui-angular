@@ -3,6 +3,8 @@
 /// @access private
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @type Map
 $_default-shape-checkbox: (
     border-radius: .2,
     border-radius-ripple: 1,
@@ -18,8 +20,14 @@ $_square-shape-checkbox: (
     border-radius-ripple: 0%
 );
 
+/// @type Map
 $_fluent-shape-checkbox: (
     border-radius: 2px,
     border-radius-ripple: 2px
+);
+
+$_bootstrap-shape-checkbox: (
+    border-radius: 4px,
+    border-radius-ripple: 4px
 );
 

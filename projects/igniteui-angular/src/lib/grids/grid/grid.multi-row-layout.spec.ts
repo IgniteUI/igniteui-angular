@@ -11,6 +11,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
+import { ICellPosition } from '../common/events';
 
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
@@ -21,7 +22,7 @@ const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
@@ -1174,6 +1175,33 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(col.hidden).toBe(false);
         expect(col.parent.hidden).toBe(false);
     });
+
+    it('should get the correct next and previous cell when in MRL scenario', () => {
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'CompanyName', rowStart: 1, rowEnd: 2, colStart: 3, colEnd: 4, dataType: 'number', editable: true },
+                { field: 'ID', rowStart: 1, rowEnd: 2, colStart: 1, colEnd: 2, dataType: 'number', editable: false },
+                { field: 'ContactName', rowStart: 1, rowEnd: 2, colStart: 2, colEnd: 3, dataType: 'string', editable: false },
+            ]
+        }];
+        const grid = fixture.componentInstance.grid;
+        fixture.detectChanges();
+        let pos: ICellPosition;
+        pos = grid.getNextCell(0, 1, col => col.editable === true);
+        expect(pos.rowIndex).toEqual(0);
+        expect(pos.visibleColumnIndex).toEqual(2);
+        pos = grid.getNextCell(0, 2, col => col.editable === true);
+        expect(pos.rowIndex).toEqual(1);
+        expect(pos.visibleColumnIndex).toEqual(2);
+        pos = grid.getPreviousCell(1, 2);
+        expect(pos.rowIndex).toEqual(1);
+        expect(pos.visibleColumnIndex).toEqual(1);
+        pos = grid.getPreviousCell(1, 2, col => col.editable === true);
+        expect(pos.rowIndex).toEqual(0);
+        expect(pos.visibleColumnIndex).toEqual(2);
+    });
 });
 
 @Component({
@@ -1182,7 +1210,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
-            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
         </igx-column-layout>
     </igx-grid>
     `

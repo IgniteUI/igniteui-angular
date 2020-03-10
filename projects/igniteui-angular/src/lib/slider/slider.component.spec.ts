@@ -1,12 +1,13 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { SliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
+import { IgxSliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
 import { FormsModule } from '@angular/forms';
+import { IgxDirectionality, DIR_DOCUMENT } from '../services/direction/directionality';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
@@ -22,10 +23,18 @@ const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-slider__tick-label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
+interface FakeDoc {
+    body: { dir?: string };
+    documentElement: { dir?: string };
+}
+
 describe('IgxSlider', () => {
+    let fakeDoc: FakeDoc;
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeAll(async(() => {
+        fakeDoc = { body: {}, documentElement: {} };
+
+        return TestBed.configureTestingModule({
             declarations: [
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
@@ -33,10 +42,14 @@ describe('IgxSlider', () => {
                 SliderWithLabelsComponent,
                 RangeSliderWithLabelsComponent,
                 RangeSliderWithCustomTemplateComponent,
-                SliderTicksComponent
+                SliderTicksComponent,
+                SliderRtlComponent
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
+            ],
+            providers: [
+                { provide: DIR_DOCUMENT, useFactory: () => fakeDoc }
             ]
         }).compileComponents();
     }));
@@ -45,7 +58,7 @@ describe('IgxSlider', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
-        beforeEach(() => {
+        beforeEach(()  => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
             fixture.detectChanges();
@@ -65,7 +78,7 @@ describe('IgxSlider', () => {
 
         it(`should have upper value equal to lower bound when
             lower value is not set and slider type is SLIDER`, () => {
-                slider.type = SliderType.SLIDER;
+                slider.type = IgxSliderType.SLIDER;
                 fixture.detectChanges();
 
                 expect(slider.value).toBe(slider.lowerBound);
@@ -175,7 +188,7 @@ describe('IgxSlider', () => {
         it('should not set upper value to outside bounds slider when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -201,7 +214,7 @@ describe('IgxSlider', () => {
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -226,7 +239,7 @@ describe('IgxSlider', () => {
         it('should not set lower value outside bounds slider when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -251,7 +264,7 @@ describe('IgxSlider', () => {
         it('should not set value lower when is more than upper value when slider is RANGE', () => {
             slider.lowerBound = 10;
             slider.upperBound = 40;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
 
             fixture.detectChanges();
 
@@ -392,7 +405,7 @@ describe('IgxSlider', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(SliderInitializeTestComponent);
             slider = fixture.componentInstance.slider;
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
             fixture.detectChanges();
         });
 
@@ -562,44 +575,44 @@ describe('IgxSlider', () => {
 
         it('labels should show/hide on pointer up/down', async() => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async() => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
-            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).not.toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-to--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('rendering of the slider should corresponds to the set labels', () => {
@@ -650,7 +663,7 @@ describe('IgxSlider', () => {
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(ticks).toBeDefined();
             expect(slider.stepDistance).toEqual(sliderWidth / 3);
         });
@@ -774,25 +787,25 @@ describe('IgxSlider', () => {
         });
 
         it('Dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = [];
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(slider.labelsViewEnabled).toBe(false);
 
             let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
             let toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
 
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(toThumb).toBeDefined();
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
-            slider.type = SliderType.RANGE;
+            slider.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
@@ -832,21 +845,23 @@ describe('IgxSlider', () => {
         });
 
         it('labels should show/hide on pointer up/down', async() => {
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
+            fixture.detectChanges();
+
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(100);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
+            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: <any>((e: any) => {})});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async() => {
@@ -857,20 +872,20 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            let activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
             sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).not.toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
-            expect(activeThumb).toBeNull();
+            activeLabel = fixture.debugElement.query(By.css('.igx-slider__label-from--active'));
+            expect(activeLabel).toBeNull();
         });
 
         it('rendering of the slider should corresponds to the set labels', () => {
@@ -884,37 +899,37 @@ describe('IgxSlider', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 1, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 1, upper: 6});
             expect(slider.lowerLabel).toEqual('Tuesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 2, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 2, upper: 6});
             expect(slider.lowerLabel).toEqual('Wednesday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 3, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 3, upper: 6});
             expect(slider.lowerLabel).toEqual('Thursday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 6});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 6});
             expect(slider.lowerLabel).toEqual('Friday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 5});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 5});
             expect(slider.upperLabel).toEqual('Saturday');
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', toThumb.nativeElement, true);
             fixture.detectChanges();
-            expect(fixture.componentInstance.label).toEqual({lower: 4, upper: 4});
+            expect(fixture.componentInstance.slider.value).toEqual({lower: 4, upper: 4});
             expect(slider.upperLabel).toEqual('Friday');
         });
 
         it('when labels are enabled should not be able to set min/max and step', () => {
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(true);
             slider.step = 5;
             fixture.detectChanges();
@@ -935,7 +950,7 @@ describe('IgxSlider', () => {
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(ticks).not.toBeNull();
             expect(slider.stepDistance).toEqual(sliderWidth / 6);
         });
@@ -1063,13 +1078,13 @@ describe('IgxSlider', () => {
         });
 
         it('dynamically change the type of the slider SLIDER, RANGE, LABEL', () => {
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(true);
 
             slider.labels = [];
             fixture.detectChanges();
 
-            expect(slider.type).toBe(SliderType.RANGE);
+            expect(slider.type).toBe(IgxSliderType.RANGE);
             expect(slider.labelsViewEnabled).toBe(false);
 
             let fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
@@ -1080,12 +1095,12 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toBe(slider.maxValue);
             expect(slider.lowerBound).toBe(slider.minValue);
 
-            slider.type = SliderType.SLIDER;
+            slider.type = IgxSliderType.SLIDER;
             fixture.detectChanges();
 
             fromThumb = fixture.nativeElement.querySelector(THUMB_FROM_CLASS);
             toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
-            expect(slider.type).toBe(SliderType.SLIDER);
+            expect(slider.type).toBe(IgxSliderType.SLIDER);
             expect(toThumb).toBeDefined();
             expect(fromThumb).toBeFalsy();
             expect(slider.upperBound).toBe(slider.maxValue);
@@ -1126,7 +1141,7 @@ describe('IgxSlider', () => {
             expect(customTemplates).toBeDefined();
             expect(customTemplates.length).toBe(2);
 
-            slider.type = SliderType.SLIDER;
+            slider.type = IgxSliderType.SLIDER;
             fixture.detectChanges();
             customTemplates = fixture.nativeElement.querySelectorAll('span.custom');
 
@@ -1174,7 +1189,7 @@ describe('IgxSlider', () => {
                 fix.detectChanges();
 
                 const slider = fix.componentInstance.slider;
-                slider.type = SliderType.RANGE;
+                slider.type = IgxSliderType.RANGE;
 
                 fix.detectChanges();
 
@@ -1262,7 +1277,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const slider = fixture.componentInstance.slider;
-            fixture.componentInstance.type = SliderType.RANGE;
+            fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             expect(slider.minValue).toBe(0);
@@ -1286,7 +1301,7 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             const slider = fixture.componentInstance.slider;
-            fixture.componentInstance.type = SliderType.RANGE;
+            fixture.componentInstance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             fixture.componentInstance.slider.value = {
@@ -1334,16 +1349,17 @@ describe('IgxSlider', () => {
             const instance = fix.componentInstance;
             const spyOnValueChanged = spyOn<any>(instance.slider.onValueChanged, 'emit').and.callThrough();
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.triggerEventHandler('focus', null);
+            const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
+            thumbTo.triggerEventHandler('focus', null);
             fix.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 200, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             let currentValue = instance.slider.value;
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 300, preventDefault: <any>( ( e: any ) => {  })});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: <any>( ( e: any ) => {  })});
             fix.detectChanges();
             expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
@@ -1559,12 +1575,35 @@ describe('IgxSlider', () => {
         it('Should return correct edit element (range)', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             const instance = fixture.componentInstance.slider;
-            instance.type = SliderType.RANGE;
+            instance.type = IgxSliderType.RANGE;
             fixture.detectChanges();
 
             const editElement = fixture.debugElement.query(By.css(THUMB_FROM_CLASS)).nativeElement;
 
             expect(instance.getEditElement()).toBe(editElement);
+        });
+    });
+
+    describe('Slider RTL', () => {
+        beforeEach(() => {
+            fakeDoc.documentElement.dir = 'rtl';
+        });
+
+        it('should reflect on the right instead of the left css property of the slider handlers', () => {
+            const fix = TestBed.createComponent(SliderRtlComponent);
+            fix.detectChanges();
+
+            const inst = fix.componentInstance;
+            const thumbs = fix.debugElement.queryAll(By.css('igx-thumb'));
+            const labels = fix.debugElement.queryAll(By.css('igx-thumb-label'));
+
+            expect(inst.dir.rtl).toEqual(true);
+
+            expect(thumbs[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
+            expect(thumbs[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
+
+            expect(labels[0].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.lower}%`);
+            expect(labels[1].nativeElement.style['right']).toEqual(`${fix.componentInstance.value.upper}%`);
         });
     });
 
@@ -1603,6 +1642,26 @@ describe('IgxSlider', () => {
         });
     }
 });
+
+@Component({
+    selector: 'igx-slider-rtl',
+    template: `
+        <igx-slider [type]="type" [value]="value"></igx-slider>
+    `
+})
+export class SliderRtlComponent {
+    public value = {
+        lower: 20,
+        upper: 80
+    };
+
+    @ViewChild(IgxSliderComponent)
+    public slider: IgxSliderComponent;
+
+    public type: IgxSliderType = IgxSliderType.RANGE;
+
+    public constructor(public dir: IgxDirectionality) { }
+}
 
 @Component({
     selector: 'igx-slider-ticks',
@@ -1664,7 +1723,7 @@ class SliderTestComponent {
 
     minValue = 0;
     maxValue = 10;
-    type = SliderType.SLIDER;
+    type = IgxSliderType.SLIDER;
 
     changeMinValue(val: number) {
         this.minValue = val;
@@ -1686,19 +1745,21 @@ class SliderWithLabelsComponent {
 
 @Component({
     template: `
-    <igx-slider [(ngModel)]='label' [type]="type"
-        [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
+    <igx-slider
+    [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"
+    [type]="type">
     </igx-slider> `
 })
 class RangeSliderWithLabelsComponent {
-    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
-    public label;
-    public type = SliderType.RANGE;
+    @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true })
+    public slider: IgxSliderComponent;
+
+    public type = IgxSliderType.RANGE;
 }
 
 @Component({
     template: `
-    <igx-slider [(ngModel)]='label' [type]="type"
+    <igx-slider [type]="type"
         [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']">
         <ng-template igxSliderThumbFrom let-value let-labels="labels">
             <span class="custom"> Lower {{ labels[value.lower] }}</span>
@@ -1712,5 +1773,5 @@ class RangeSliderWithLabelsComponent {
 })
 class RangeSliderWithCustomTemplateComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
-    public type = SliderType.RANGE;
+    public type = IgxSliderType.RANGE;
 }

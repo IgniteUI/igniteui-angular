@@ -15,12 +15,14 @@
 /// @param {Color} $item-text-color [null]- The text color for button group items.
 /// @param {Color} $item-background [null] - The background color for button group items .
 /// @param {Color} $item-border-color [null] - The border color between button group items.
+/// @param {Color} $item-disabled-border [null] - The border color for a disabled item in the button group.
 ///
 /// @param {Color} $item-hover-text-color [null] - The hover text color for button group items.
 /// @param {Color} $item-hover-background [null] - The hover background color for button group items.
 ///
 /// @param {Color} $disabled-text-color [null]- The text/icon color for a disabled item in the button group.
 /// @param {Color} $disabled-background-color [null] - The background color for a disabled item in the button group.
+/// @param {Color} $item-disabled-border [null] - The border color for a disabled item in the button group.
 ///
 /// @param {Color} $item-selected-text-color [null]- The text color for a selected item in the button group.
 /// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
@@ -86,6 +88,20 @@
         if($border-radius, $border-radius, map-get($button-group-schema, 'border-radius')), 0, 20px
     );
 
+    $shadow-color: null;
+
+    @if map-get($theme, 'variant') == 'bootstrap' {
+        $shadow-color: rgba(map-get($theme, 'item-background'), .5);
+
+        @if $item-background {
+            $shadow-color: rgba($item-background, .5);
+        }
+
+        @if $item-background and not($item-border-color) {
+            $item-border-color: $item-background;
+        }
+    }
+
     @if not($item-text-color) and $item-background {
         @if type_of($item-background) == 'color' {
             $item-text-color: text-contrast($item-background);
@@ -142,7 +158,8 @@
         item-selected-border-color: $item-selected-border-color,
         item-selected-hover-background: $item-selected-hover-background,
         border: $border,
-        shadow: $shadow
+        shadow: $shadow,
+        shadow-color: $shadow-color,
     ));
 }
 
@@ -161,6 +178,9 @@
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+
+    $variant: map-get($theme, 'variant');
+    $bootstrap-theme: $variant == 'bootstrap';
 
     %igx-group-display {
         display: flex;
@@ -223,6 +243,12 @@
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
             z-index: 1;
+        }
+
+        &:focus {
+            @if $bootstrap-theme {
+                box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
+            }
         }
     }
 

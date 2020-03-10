@@ -10,7 +10,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
@@ -27,6 +26,11 @@
 /// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
 /// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
 /// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
+/// @param {Color} $border-color [null] - The border color of the switch.
+/// @param {Color} $border-hover-color [null] - The border color of the switch on hover.
+/// @param {Color} $border-disabled-color [null] - The border color of the switch when it is disabled.
+/// @param {Color} $border-on-color [null] - The border color when the switch is on.
+/// @param {Color} $border-on-hover-color [null] - The border color when the switch is on and hovered.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -34,6 +38,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
@@ -152,50 +157,61 @@
     @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
+    $variant: map-get($theme, variant);
+
     $switch-width: map-get((
         material: 36px,
         fluent: 40px,
-    ), map-get($theme, variant));
+        bootstrap: 32px,
+    ), $variant);
 
     $switch-height: map-get((
         material: 14px,
-        fluent: 20px
-    ), map-get($theme, variant));
+        fluent: 20px,
+        bootstrap: 16px,
+    ), $variant);
 
     $switch-thumb-width: map-get((
         material: 20px,
-        fluent: 12px
-    ), map-get($theme, variant));
+        fluent: 12px,
+        bootstrap: 8px,
+    ), $variant);
 
     $switch-on-offset: map-get((
         material: 1px,
-        fluent: $switch-thumb-width / 2
-    ), map-get($theme, variant));
+        fluent: $switch-thumb-width / 2,
+        bootstrap: $switch-thumb-width / 2
+    ), $variant);
 
     $switch-off-offset: map-get((
         material: -1px,
-        fluent: $switch-thumb-width / 3
-    ), map-get($theme, variant));
+        fluent: $switch-thumb-width / 3,
+        bootstrap: $switch-thumb-width / 3
+    ), $variant);
 
     $ripple-display: map-get((
         material: block,
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $thumb-resting-shadow: map-get((
         material: --var($theme, 'resting-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none
+    ), $variant);
 
     $thumb-hover-shadow: map-get((
         material: --var($theme, 'hover-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $thumb-disabled-shadow: map-get((
         material: --var($theme, 'disabled-shadow'),
-        fluent: none
-    ), map-get($theme, variant));
+        fluent: none,
+        bootstrap: none,
+    ), $variant);
 
     $switch-thumb-height: $switch-thumb-width ;
 

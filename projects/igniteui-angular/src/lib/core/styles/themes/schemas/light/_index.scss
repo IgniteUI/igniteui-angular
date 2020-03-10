@@ -86,9 +86,6 @@
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
-
-
-/// The default light schema for all components.
 $light-schema: (
     igx-avatar: $_light-avatar,
     igx-badge: $_light-badge,
@@ -132,7 +129,6 @@ $light-schema: (
     igx-tooltip: $_light-tooltip
 );
 
-
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,
     igx-badge: $_fluent-badge,
@@ -175,3 +171,47 @@ $light-fluent-schema: (
     igx-toast: $_fluent-toast,
     igx-tooltip: $_fluent-tooltip
 );
+
+$light-bootstrap-schema: (
+    igx-avatar: $_bootstrap-avatar,
+    igx-badge: $_bootstrap-badge,
+    igx-banner: $_bootstrap-banner,
+    igx-bottom-nav: $_bootstrap-bottom-nav,
+    igx-button: $_bootstrap-button,
+    igx-button-group: $_bootstrap-button-group,
+    igx-calendar: $_bootstrap-calendar,
+    igx-card: $_bootstrap-card,
+    igx-carousel: $_bootstrap-carousel,
+    igx-checkbox: $_bootstrap-checkbox,
+    igx-chip: $_bootstrap-chip,
+    igx-column-hiding: $_bootstrap-column-hiding,
+    igx-combo: $_bootstrap-combo,
+    igx-dialog: $_bootstrap-dialog,
+    igx-divider: $_bootstrap-divider,
+    igx-drop-down: $_bootstrap-drop-down,
+    igx-expansion-panel: $_bootstrap-expansion-panel,
+    igx-grid: $_bootstrap-grid,
+    igx-grid-filtering: $_bootstrap-grid-filtering,
+    igx-paginator: $_bootstrap-pagination,
+    igx-grid-summary: $_bootstrap-grid-summary,
+    igx-grid-toolbar: $_bootstrap-grid-toolbar,
+    igx-highlight: $_bootstrap-highlight,
+    igx-icon: $_bootstrap-icon,
+    igx-input-group: $_bootstrap-input-group,
+    igx-list: $_bootstrap-list,
+    igx-navbar: $_bootstrap-navbar,
+    igx-navdrawer: $_bootstrap-navdrawer,
+    igx-overlay: $_bootstrap-overlay,
+    igx-linear-bar: $_bootstrap-progress-linear,
+    igx-circular-bar: $_bootstrap-progress-circular,
+    igx-radio: $_bootstrap-radio,
+    igx-ripple: $_bootstrap-ripple,
+    igx-slider: $_bootstrap-slider,
+    igx-snackbar: $_bootstrap-snackbar,
+    igx-switch: $_bootstrap-switch,
+    igx-tabs: $_bootstrap-tabs,
+    igx-time-picker: $_bootstrap-time-picker,
+    igx-toast: $_bootstrap-toast,
+    igx-tooltip: $_bootstrap-tooltip
+);
+

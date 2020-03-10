@@ -13,6 +13,11 @@ import { Transaction, TransactionType, State } from '../services/transaction/tra
 import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
+import { IRowToggleEventArgs } from './common/events';
+import {
+    ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
+} from '../core/utils';
+import { first, debounceTime } from 'rxjs/operators';
 /**
  *@hidden
  */
@@ -538,4 +543,75 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public atInexistingPage(): boolean {
         return this.grid.totalPages - 1 > this.grid.page;
     }
+
+    public get_row_expansion_state(record: any): boolean {
+        const grid = this.grid;
+        const states = grid.expansionStates;
+        const rowID = grid.primaryKey ? record[grid.primaryKey] : record;
+        const expanded = states.get(rowID);
+
+        if (expanded !== undefined) {
+            return expanded;
+        } else {
+            return grid.getDefaultExpandState(record);
+        }
+    }
+
+    public set_row_expansion_state(rowID: any, expanded: boolean, event?: Event) {
+        const grid = this.grid;
+        const expandedStates = grid.expansionStates;
+
+        if (!this.allow_expansion_state_change(rowID, expanded)) {
+            return;
+        }
+
+        const args: IRowToggleEventArgs = {
+            rowID: rowID,
+            expanded: expanded,
+            event: event,
+            cancel: false
+        };
+
+        grid.onRowToggle.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+        expandedStates.set(rowID, expanded);
+        grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
+        const eventKey = event && (event as any).key ? (event as any).key.toLowerCase() : null;
+        if (eventKey && this.isToggleKey(eventKey)) {
+            (this.grid as any).zone.onStable.pipe(debounceTime(30)).pipe(first()).subscribe(() => {
+                this.focusActiveCell(rowID);
+            });
+        }
+    }
+
+    public get_rec_by_id(rowID) {
+        return  this.grid.primaryKey ? this.getRowData(rowID) : rowID;
+    }
+
+    public allow_expansion_state_change(rowID, expanded) {
+        return this.grid.expansionStates.get(rowID) !== expanded;
+    }
+
+    private isToggleKey(key: string): boolean {
+        return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    }
+
+    private focusActiveCell(rowID) {
+        // persist focused cell
+        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const el = this.grid.selectionService.activeElement;
+        if (isVirtualized && el) {
+            const cell = this.get_cell_by_key(rowID, this.grid.visibleColumns[el.column].field);
+            if (cell) {
+                cell.nativeElement.focus();
+            }
+        }
+    }
+
 }

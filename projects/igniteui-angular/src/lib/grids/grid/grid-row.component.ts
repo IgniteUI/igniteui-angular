@@ -54,9 +54,20 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
         };
     }
 
+    get mrlRightPinnedOffset(): string {
+        return !this.grid.isPinningToStart ?
+            - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
+            null;
+    }
+
+    getContextMRL(pinnedCols, row) {
+        return {
+            $implicit: pinnedCols,
+            row: row
+        };
+    }
+
     get expanded() {
-        const pk = this.grid.primaryKey;
-        const rowID = pk ? this.rowData[pk] : this.rowData;
-        return this.grid.expansionStates.get(rowID);
+        return this.gridAPI.get_row_expansion_state(this.rowData);
     }
 }

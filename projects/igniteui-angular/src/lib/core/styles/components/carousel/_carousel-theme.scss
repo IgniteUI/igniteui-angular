@@ -7,6 +7,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
@@ -136,6 +137,9 @@
     $carousel-indicator-margin: 0 5px;
     $indicator-border-style: 2px solid;
 
+    $variant: map-get($theme, variant);
+    $not-bootstrap-theme: $variant != 'bootstrap';
+
     %igx-carousel-display {
         display: flex;
         position: relative;
@@ -153,7 +157,12 @@
         width: 46px;
         height: 46px;
         cursor: pointer;
-        border-radius: 50%;
+        @if $not-bootstrap-theme {
+            border-radius: 50%;
+        } @else {
+            border-radius: --var($theme, 'border-radius');
+        }
+
         outline-style: none;
         transition: all .15s ease-in-out;
         color: --var($theme, 'button-arrow-color');
@@ -294,6 +303,8 @@
         overflow: hidden;
         outline-style: none;
         border-radius: --var($theme, 'border-radius');
+        min-height: 300px;
+        min-width: 300px;
     }
 
     %igx-carousel-slide {

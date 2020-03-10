@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement, EventEmitter, NgZone, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { ComponentFixture } from '@angular/core/testing';
@@ -134,5 +134,26 @@ export class HelperUtils {
         });
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
+    }
+}
+
+@Injectable()
+export class TestNgZone extends NgZone {
+    onStable: EventEmitter<any> = new EventEmitter(false);
+
+    constructor() {
+        super({enableLongStackTrace: false, shouldCoalesceEventChangeDetection: false});
+    }
+
+    run(fn: Function): any {
+        return fn();
+    }
+
+    runOutsideAngular(fn: Function): any {
+        return fn();
+    }
+
+    simulateOnStable(): void {
+        this.onStable.emit(null);
     }
 }

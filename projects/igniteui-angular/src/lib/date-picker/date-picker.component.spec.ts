@@ -1,23 +1,24 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule } from '../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxCalendarModule } from '../calendar';
 import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
+import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs, HorizontalAlignment, VerticalAlignment } from '../services';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
@@ -206,7 +207,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When a modal datepicker is closed via outside click, the focus should remain on the input',
+        it('When a modal datepicker is closed via outside click, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -230,7 +231,7 @@ describe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+        it('When datepicker is closed upon selecting a date, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -939,7 +940,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // press arrow up
@@ -984,7 +984,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // press arrow down
@@ -1036,7 +1035,6 @@ describe('IgxDatePicker', () => {
 
             // initial input value is 20-10-11 / dd-MM-yy
             // focus the day part, position the caret at the beginning
-            input.nativeElement.focus();
             input.nativeElement.setSelectionRange(0, 0);
 
             // up
@@ -1149,7 +1147,8 @@ describe('IgxDatePicker', () => {
             expect(input).toBeDefined();
             datePicker.isSpinLoop = false;
 
-            input.nativeElement.focus();
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges(); // bound transformedDate assign
             UIInteractions.sendInput(input, '31-03-19');
             expect(input.nativeElement.value).toBe('31-03-19');
 
@@ -1262,38 +1261,133 @@ describe('IgxDatePicker', () => {
 
     describe('Reactive form', () => {
         let fixture: ComponentFixture<IgxDatePickerReactiveFormComponent>;
-        let datePicker: IgxDatePickerComponent;
+        let datePickerOnChangeComponent: IgxDatePickerComponent;
+        let datePickerOnBlurComponent: IgxDatePickerComponent;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
-            datePicker = fixture.componentInstance.datePicker;
+            datePickerOnChangeComponent = fixture.componentInstance.datePickerOnChangeComponent;
+            datePickerOnBlurComponent = fixture.componentInstance.datePickerOnBlurComponent;
             fixture.detectChanges();
         });
 
+        it('Should set date picker status to invalid when it is required and has no value', fakeAsync(() => {
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnChangeComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            datePickerOnChangeComponent.value = null;
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
+        }));
+
+        it('Should set date picker status to invalid when it is required and has no value onBlur', fakeAsync(() => {
+            datePickerOnBlurComponent.mode = InteractionMode.DropDown;
+            datePickerOnBlurComponent.mask = 'dd/mm/yyyy';
+            datePickerOnBlurComponent.inputMask = 'dd/mm/yyyy';
+            fixture.detectChanges();
+
+            const inputDirectiveElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputDirectiveElement = inputDirectiveElements.find(d => d.componentInstance === datePickerOnBlurComponent);
+            const inputDirective = inputDirectiveElement.injector.get(IgxInputDirective) as IgxInputDirective;
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            inputDirectiveElement.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            datePickerOnBlurComponent.value = null;
+            fixture.detectChanges();
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            inputDirectiveElement.triggerEventHandler('blur', { target: { value: ''}});
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
+        }));
+
         // Bug #6025 Date picker does not disable in reactive form
-        it('Should disable when form is disabled', fakeAsync(() => {
-            fixture.detectChanges();
+        it('Should disable when form is disabled', () => {
             const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
-            const inputGroup = fixture.debugElement.query(By.css('.igx-input-group'));
-
-            inputGroup.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            expect(datePicker.collapsed).toBeFalsy();
-
-            datePicker.closeCalendar();
-            fixture.detectChanges();
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === datePickerOnBlurComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+            expect(inputDirective.disabled).toBeFalsy();
 
             formGroup.disable();
-            tick();
             fixture.detectChanges();
+            expect(inputDirective.disabled).toBeTruthy();
+        });
+    });
 
-            inputGroup.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            const dateDropDown = document.getElementsByClassName('igx-date-picker--dropdown');
-            expect(dateDropDown.length).toEqual(0);
-        }));
+    describe('Control value accessor unit tests', () => {
+        let ngModel;
+        let overlay;
+        let element;
+        let cdr;
+        let moduleRef;
+        let injector;
+        let inputGroup: IgxInputGroupComponent;
+
+        beforeEach(() => {
+            ngModel = {
+                control: { touched: false, dirty: false, validator: null },
+                valid: false,
+                statusChanges: new EventEmitter(),
+            };
+            overlay = {
+                onOpening: new EventEmitter<OverlayCancelableEventArgs>(),
+                onOpened: new EventEmitter<OverlayEventArgs>(),
+                onClosed: new EventEmitter<OverlayEventArgs>(),
+                onClosing: new EventEmitter<OverlayClosingEventArgs>()
+            };
+            element = {};
+            cdr = {
+                markForCheck: () => {},
+                detectChanges: () => {},
+                detach: () => {},
+                reattach: () => {}
+            };
+            moduleRef = {};
+            injector = { get: () => ngModel };
+            inputGroup = new IgxInputGroupComponent(null, null);
+        });
+
+        it('should initialize date picker with required correctly', () => {
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector);
+            datePicker['inputGroup'] = inputGroup;
+            ngModel.control.validator = () => ({ required: true});
+            datePicker.ngOnInit();
+            datePicker.ngAfterViewInit();
+            datePicker.ngAfterViewChecked();
+
+            expect(datePicker).toBeDefined();
+            expect(inputGroup.isRequired).toBeTruthy();
+        });
+
+        it('should update inputGroup isRequired correctly', () => {
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector);
+            datePicker['inputGroup'] = inputGroup;
+            datePicker.ngOnInit();
+            datePicker.ngAfterViewInit();
+            datePicker.ngAfterViewChecked();
+
+            expect(datePicker).toBeDefined();
+            expect(inputGroup.isRequired).toBeFalsy();
+
+            ngModel.control.validator = () => ({ required: true});
+            ngModel.statusChanges.emit();
+            expect(inputGroup.isRequired).toBeTruthy();
+
+            ngModel.control.validator = () => ({ required: false});
+            ngModel.statusChanges.emit();
+            expect(inputGroup.isRequired).toBeFalsy();
+        });
     });
 });
 
@@ -1444,23 +1538,27 @@ export class IgxDatePickerOpeningComponent {
 @Component({
     template: `
     <form [formGroup]="reactiveForm">
-    <p>
-        <igx-date-picker formControlName="datePickerReactive" #datePickerReactive></igx-date-picker>
-    </p>
-</form>
+        <igx-date-picker formControlName="datePickerOnChange" #datePickerOnChangeComponent></igx-date-picker>
+        <igx-date-picker formControlName="datePickerOnBlur" #datePickerOnBlurComponent></igx-date-picker>
+    </form>
 `
 })
 class IgxDatePickerReactiveFormComponent {
-    @ViewChild('datePickerReactive', { read: IgxDatePickerComponent, static: true })
-    public datePicker: IgxDatePickerComponent;
+    @ViewChild('datePickerOnChangeComponent', { read: IgxDatePickerComponent, static: true })
+    public datePickerOnChangeComponent: IgxDatePickerComponent;
+
+    @ViewChild('datePickerOnBlurComponent', { read: IgxDatePickerComponent, static: true })
+    public datePickerOnBlurComponent: IgxDatePickerComponent;
+
     reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
+        const date = new Date(2000, 10, 15);
         this.reactiveForm = fb.group({
-            datePickerReactive: new FormControl(''),
+            datePickerOnChange: [date, Validators.required],
+            datePickerOnBlur: [date, { updateOn: 'blur', validators: Validators.required}]
         });
     }
-    onSubmitReactive() { }
 }
 
 @Component({

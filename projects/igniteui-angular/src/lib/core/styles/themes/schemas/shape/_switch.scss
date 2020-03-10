@@ -21,7 +21,12 @@ $_square-shape-switch: (
     border-radius-ripple: 0%
 );
 
+/// @type Map
 $_fluent-shape-switch: (
     border-radius-track: 10px,
 );
 
+$_bootstrap-shape-switch: (
+    border-radius-track: 4px,
+    border-radius-thumb: 2px,
+);

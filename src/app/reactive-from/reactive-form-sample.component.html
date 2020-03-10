@@ -1,0 +1,51 @@
+<div class="sample-wrapper">
+    <section class="sample-content">
+        <article class="sample-column">
+            <form class="input-group-form" [formGroup]="user" (ngSubmit)="onSubmit()">
+                <h4 class="sample-title">Book your movie ticket</h4>
+                <div class="container">
+                    <igx-select #select name="movies" formControlName="movie">
+                        <igx-select-item-group *ngFor="let genre of genres" [label]="genre.type">
+                            <igx-select-item *ngFor="let movie of genre.movies" [value]="movie">
+                                {{ movie }}
+                            </igx-select-item>
+                        </igx-select-item-group>
+                        <label igxLabel for="movies">Movie</label>
+                        <ng-template igxSelectToggleIcon><igx-icon fontSet="material">local_movies</igx-icon></ng-template>
+                    </igx-select>
+                    <igx-input-group>
+                        <input igxInput name="fullName" type="text" formControlName="fullName" />
+                        <label igxLabel for="fullName">Full Name</label>
+                        <igx-suffix>
+                            <igx-icon>person</igx-icon>
+                        </igx-suffix>
+                    </igx-input-group>
+                    <igx-input-group>
+                        <igx-prefix>+359</igx-prefix>
+                        <label igxLabel for="phone">Phone</label>
+                        <input igxInput name="phone" type="text" formControlName="phone" />
+                        <igx-suffix>
+                            <igx-icon>phone</igx-icon>
+                        </igx-suffix>
+                        <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
+                    </igx-input-group>
+                    <igx-input-group>
+                        <label igxLabel for="email">Email address</label>
+                        <input igxInput name="email" type="email" formControlName="email" />
+                        <igx-suffix>
+                            <igx-icon>email</igx-icon>
+                        </igx-suffix>
+                    </igx-input-group>
+                    <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130"
+                        [data]="genres" [valueKey]="'type'" [displayKey]="'type'"
+                        type="line" formControlName="genres" placeholder="Select your favorite genres"
+                        searchPlaceholder="Search...">
+                    </igx-combo>
+                    <igx-date-picker name="date" formControlName="date" [mode]="'dropdown'"></igx-date-picker>
+                    <igx-time-picker name="dateTime" formControlName="dateTime"></igx-time-picker>
+                    <button igxButton="raised" igxRipple type="submit" [disabled]="!user.valid">Book</button>
+                </div>
+            </form>
+        </article>
+    </section>
+</div>

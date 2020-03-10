@@ -51,7 +51,7 @@
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
 /// @requires {variable} $components
@@ -91,7 +91,7 @@
     $palette,
     $schema: $light-schema,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -412,11 +412,11 @@
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-light-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -447,11 +447,11 @@
 /// Creates a global theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -482,11 +482,11 @@
 /// Creates a global fluent theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-fluent-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -497,7 +497,6 @@
     @include igx-typography(
         $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
         $type-scale: $fluent-type-scale,
-        $base-color: #323130
     );
 
     @include igx-theme(
@@ -518,11 +517,11 @@
 /// Creates a global fluent theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
 @mixin igx-fluent-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true,
+    $legacy-support: false,
     $roundness: null,
     $elevation: true,
 ) {
@@ -532,8 +531,7 @@
 
     @include igx-typography(
         $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale,
-        $base-color: #fff
+        $type-scale: $fluent-type-scale
     );
 
     @include igx-theme(
@@ -544,6 +542,125 @@
             $grays: #fff
         ),
         $schema: $dark-fluent-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+
+/// Creates a global bootstrap-like theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
+@mixin igx-bootstrap-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: false,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+        $type-scale: $bootstrap-type-scale
+    );
+
+    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
+        weekday-labels: 'calendar-labels',
+        card-title: 'card-title',
+    ));
+
+    @include igx-card-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+        subtitle: 'body-1',
+        content: 'body-1'
+    ));
+
+    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+    ));
+
+    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
+        header: 'subtitle-1',
+        item: 'subtitle-1',
+        select-item: 'subtitle-1'
+    ));
+
+    @include igx-list-typography($bootstrap-type-scale, $categories: (
+        item: 'body-2',
+        title: 'body-1',
+        subtitle: 'subtitle-1'
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
+            $grays: #212529
+        ),
+        $schema: $light-bootstrap-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+
+/// Creates a global bootstrap-like theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
+@mixin igx-bootstrap-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: false,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+        $type-scale: $bootstrap-type-scale
+    );
+
+    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
+        weekday-labels: 'calendar-labels',
+        card-title: 'card-title',
+    ));
+
+    @include igx-card-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+        subtitle: 'body-1',
+        content: 'body-1'
+    ));
+
+    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
+        title: 'h5',
+    ));
+
+    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
+        header: 'subtitle-1',
+        item: 'subtitle-1',
+        select-item: 'subtitle-1'
+    ));
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #f8f9fa, $surface, #222),
+            $grays: #fff
+        ),
+        $schema: $dark-bootstrap-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
         $roundness: $roundness,

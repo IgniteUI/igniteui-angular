@@ -28,7 +28,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
     let fixture, grid: IgxGridComponent;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 MovableColumnsComponent,

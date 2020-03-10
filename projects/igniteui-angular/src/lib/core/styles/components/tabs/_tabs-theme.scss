@@ -25,6 +25,10 @@
 /// @param {Color} $button-background [null] - The color used for the button background.
 /// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius for the tabs.
+/// @param {Color} $border-color [null] - The border color of the tabs.
+/// @param {Color} $border-color--hover [null] - The border color of the tabs on hover.
+///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
 /// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
@@ -35,6 +39,7 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires text-contrast
+/// @requires round-borders
 ///
 /// @example scss Set a custom background color
 ///   $my-tabs-theme: igx-tabs-theme(
@@ -65,6 +70,10 @@
 
     $tab-ripple-color: null,
     $button-ripple-color: null,
+    $border-radius: null,
+
+    $border-color: null,
+    $border-color--hover: null,
 
     $disable-shadow: true
 ) {
@@ -77,7 +86,14 @@
         $tabs-schema: $schema;
     }
 
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($tabs-schema, 'border-radius')), 0, 6px
+    );
+
     $theme: apply-palette($tabs-schema, $palette);
+
+    $variant: map-get($theme, variant);
+    $bootstrap-theme: $variant == 'boostrap';
 
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
 
@@ -185,6 +201,8 @@
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
+        border-color: $border-color,
+        border-radius: $border-radius,
     ));
 }
 
@@ -200,6 +218,11 @@
 /// @requires --var
 @mixin igx-tabs($theme) {
     @include igx-root-css-vars($theme);
+
+    $variant: map-get($theme, 'variant');
+    $not-bootstrap-theme: $variant != 'bootstrap';
+    $bootstrap-theme: $variant == 'bootstrap';
+
     $item-min-width: 90px;
     $item-max-width: 360px;
 
@@ -222,7 +245,10 @@
         align-items: center;
         overflow: hidden;
         background: --var($theme, 'item-background');
-        box-shadow: --var($theme, 'tab-area-shadow');
+
+        @if $not-bootstrap-theme {
+            box-shadow: --var($theme, 'tab-area-shadow');
+        }
     }
 
     %igx-tabs__content-fixed,
@@ -243,6 +269,19 @@
         display: inline-flex;
         align-items: center;
         min-width: 100%;
+
+        @if $bootstrap-theme {
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: --var($theme, 'border-color');
+                z-index: 0;
+            }
+        }
     }
 
     %igx-tabs__content-fluid {
@@ -266,11 +305,21 @@
         overflow: hidden;
         cursor: pointer;
         position: relative;
-        transition: all .3s $tabs-animation-function;
+
+        @if $not-bootstrap-theme {
+            transition: all .3s $tabs-animation-function;
+        }
+
         user-select: none;
         background: --var($theme, 'item-background');
         color: --var($theme, 'item-text-color');
         outline: 0;
+
+        @if $bootstrap-theme {
+            border: 1px solid transparent;
+            border-top-left-radius: --var($theme, 'border-radius');
+            border-top-right-radius: --var($theme, 'border-radius');
+        }
 
         &::-moz-focus-inner {
             border: 0;
@@ -278,11 +327,25 @@
 
         &:focus {
             background: --var($theme, 'item-active-background');
+            border-bottom-color: transparent;
         }
 
         &:hover {
             background: --var($theme, 'item-hover-background');
             color: --var($theme, 'item-hover-color');
+
+            @if $bootstrap-theme {
+                border-color: --var($theme, 'border-color--hover') --var($theme, 'border-color--hover') transparent;
+            }
+        }
+
+        @if $not-bootstrap-theme {
+            border: 1px solid --var($theme, 'border-color');
+
+            &:hover,
+            &:focus {
+                border: 1px solid --var($theme, 'border-color--hover');
+            }
         }
 
         @include igx-ripple($tabs-ripple-theme);
@@ -292,6 +355,10 @@
     %igx-tabs__header-menu-item--selected {
         outline: 0;
         color: --var($theme, 'item-active-color');
+
+        @if $bootstrap-theme {
+            border-color: --var($theme, 'border-color--hover') --var($theme, 'border-color--hover') transparent;
+        }
 
         &:focus {
             background: --var($theme, 'item-active-background');
@@ -308,6 +375,36 @@
 
             igx-icon {
                 color: --var($theme, 'item-active-icon-color');
+            }
+        }
+    }
+
+    %igx-tabs__header-menu-item--selected-bootstrap {
+        @if $bootstrap-theme {
+            background: --var($theme, 'item-active-background');
+            position: relative;
+            z-index: 1;
+            border-top-color: --var($theme, 'border-color');
+            border-left-color: --var($theme, 'border-color');
+            border-right-color: --var($theme, 'border-color');
+            border-bottom-color: transparent;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 100%;
+                height: 1px;
+                background: --var($theme, 'item-active-background');
+            }
+
+            &:hover,
+            &:focus {
+                border-top-color: --var($theme, 'border-color');
+                border-left-color: --var($theme, 'border-color');
+                border-right-color: --var($theme, 'border-color');
+                border-bottom-color: transparent;
             }
         }
     }
@@ -340,6 +437,9 @@
         min-width: $item-min-width;
         background: --var($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+        @if $bootstrap-theme {
+            display: none;
+        }
     }
 
     // SCROLL BUTTONS
