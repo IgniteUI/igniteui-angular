@@ -242,10 +242,10 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
     get selected(): boolean {
         return this.selectable && this.children.toArray().every(c => c.hidden || !c.selectable || c.selected);
     }
+
     /**
      * Sets the column group selected property.
      * ```html

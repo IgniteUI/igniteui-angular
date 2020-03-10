@@ -14,7 +14,7 @@
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
                     [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
                     [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true" [selectable]="c.selectable"
-                    [selected]="c.selected" [dataType]="c.type">
+                    [dataType]="c.type">
                 </igx-column>
 
                 <ng-template igxToolbarCustomContent let-sampleGrid="grid">

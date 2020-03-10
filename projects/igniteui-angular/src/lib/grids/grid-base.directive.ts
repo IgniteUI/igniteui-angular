@@ -5198,8 +5198,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param clearCurrentSelection if true clears the current selection
     */
     public selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
-        const fieldToSelect = columns.length === 0 || typeof columns[0] === 'string' ? columns as string[]
-            : (columns as IgxColumnComponent[]).map(c => c.field);
+        let fieldToSelect: string[] = [];
+        if (columns.length === 0 || typeof columns[0] === 'string') {
+            fieldToSelect = columns as string[];
+        } else {
+            (columns as IgxColumnComponent[]).forEach(col => {
+                if (col.columnGroup) {
+                   const children =  col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
+                   fieldToSelect = [...fieldToSelect, ...children];
+                }  else {
+                    fieldToSelect.push(col.field);
+                }
+            });
+        }
+
         this.selectionService.selectColumnsWithNoEvent(fieldToSelect, clearCurrentSelection);
         this.notifyChanges();
     }
@@ -5213,8 +5225,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         * @param columns
     */
     public deselectColumns(columns: string[] | IgxColumnComponent[]) {
-        const fieldToDeselect = columns.length === 0 || typeof columns[0] === 'string' ? columns as string[]
-            : (columns as IgxColumnComponent[]).map(c => c.field);
+        let fieldToDeselect: string[] = [];
+        if (columns.length === 0 || typeof columns[0] === 'string') {
+            fieldToDeselect = columns as string[];
+        } else {
+            (columns as IgxColumnComponent[]).forEach(col => {
+                if (col.columnGroup) {
+                   const children =  col.allChildren.filter(c => !c.columnGroup).map(c => c.field);
+                   fieldToDeselect = [...fieldToDeselect, ...children];
+                }  else {
+                    fieldToDeselect.push(col.field);
+                }
+            });
+        }
         this.selectionService.deselectColumnsWithNoEvent(fieldToDeselect);
         this.notifyChanges();
     }

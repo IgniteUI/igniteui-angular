@@ -288,10 +288,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      *@memberof IgxColumnComponent
      */
-    @Input()
     get selected(): boolean {
         return this.grid.selectionService.isColumnSelected(this.field);
     }
+
     /**
      * Sets the column selected property.
      * Default value is `false`.
@@ -304,7 +304,6 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.selectable) {
             value ? this.grid.selectionService.selectColumnsWithNoEvent([this.field]) :
             this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
-            this.grid.notifyChanges();
         }
     }
 
