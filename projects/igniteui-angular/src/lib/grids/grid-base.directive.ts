@@ -5789,7 +5789,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
                 if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
-                    c.target.nativeElement.focus();
+                    c.target.activate();
                 }
             });
         }

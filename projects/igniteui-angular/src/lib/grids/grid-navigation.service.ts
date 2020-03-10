@@ -118,9 +118,7 @@ export class IgxGridNavigationService {
             if (event.shiftKey) { this.focusTbody(event, false); }
             return;
         }
-        this.activeNode.row = this.grid.dataView.length;
-        event.preventDefault();
-        this.horizontalNav(key, event.ctrlKey);
+        this.horizontalNav(event, key, this.grid.dataView.length);
     }
 
     headerNavigation(event) {
@@ -135,9 +133,7 @@ export class IgxGridNavigationService {
             this.grid.filteringRow.close();
             return;
         }
-        this.activeNode.row = -1;
-        event.preventDefault();
-        this.horizontalNav(key, event.ctrlKey);
+        this.horizontalNav(event, key, -1);
        /*
        const previous = event.key.toLowerCase() === 'arrowleft';
        const filterableCols = this.grid.visibleColumns
@@ -151,8 +147,11 @@ export class IgxGridNavigationService {
         } */
     }
 
-    horizontalNav(key, ctrl) {
+    horizontalNav(event , key, rowIndex) {
+        const ctrl = event.ctrlKey;
+        event.preventDefault();
         if (!HORIZONTAL_NAV_KEYS.has(key)) { return; }
+        this.activeNode.row = rowIndex;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column  = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
         }
