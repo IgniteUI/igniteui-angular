@@ -2414,13 +2414,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify the custom filter template is present.
             expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ProductName\` customer filter tempalte was not found.');
+                '\`ProductName\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Downloads\` customer filter tempalte was not found.');
+                '\`Downloads\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Released\` customer filter tempalte was not found.');
+                '\`Released\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ReleaseDate\` customer filter tempalte was not found.');
+                '\`ReleaseDate\` customer filter template was not found.');
         }));
     });
 });
@@ -2578,6 +2578,47 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columns[0].field).toBe('ID');
             expect(grid.columns[1].field).toBe('Downloads');
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
+        }));
+
+        it('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
+            grid.pinning.columns = 1;
+
+            const columnToPin = grid.columns[grid.columns.length - 2];
+            columnToPin.pinned = true;
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+
+            const columnToMove = grid.unpinnedColumns[grid.unpinnedColumns.length - 1];
+            columnToMove.movable = true;
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
+
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(2);
+
+            expect(grid.pinnedColumns[0].field).toBe(columnToMove.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToPin.field);
+
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToMove.field);
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
         }));
 
         it('Should pin column when clicking buttons.', fakeAsync(() => {
