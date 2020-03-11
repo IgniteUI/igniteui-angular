@@ -170,7 +170,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         }
 
         const result = collection.filter((value, index) => {
-            return pinnedRows.indexOf(value) === -1;
+            return !grid.isRecordPinned(value);
         });
         return result;
     }

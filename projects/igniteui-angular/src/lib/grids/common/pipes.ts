@@ -113,14 +113,14 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any[], id: string, pipeTrigger: number) {
+    transform(collection: any[], id: string, pipeTrigger: number, addRows = true) {
         const grid: IgxGridBaseDirective = this.gridAPI.grid;
 
         if ( grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
                 grid.transactions.getAggregatedChanges(true),
-                grid.primaryKey);
+                grid.primaryKey, false, addRows);
             return result;
         }
         return collection;

@@ -134,7 +134,7 @@ export class DataUtil {
      * @param deleteRows Should delete rows with DELETE transaction type from data
      * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false, addRows: boolean = true): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
@@ -153,10 +153,11 @@ export class DataUtil {
                     }
                 });
         }
-
-        data.push(...transactions
-            .filter(t => t.type === TransactionType.ADD)
-            .map(t => t.newValue));
+        if (addRows) {
+            data.push(...transactions
+                .filter(t => t.type === TransactionType.ADD)
+                .map(t => t.newValue));
+        }
 
         return data;
     }
