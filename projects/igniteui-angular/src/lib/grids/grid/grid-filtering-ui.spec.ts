@@ -2414,13 +2414,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify the custom filter template is present.
             expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ProductName\` customer filter tempalte was not found.');
+                '\`ProductName\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Downloads\` customer filter tempalte was not found.');
+                '\`Downloads\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Released\` customer filter tempalte was not found.');
+                '\`Released\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ReleaseDate\` customer filter tempalte was not found.');
+                '\`ReleaseDate\` customer filter template was not found.');
         }));
     });
 });
