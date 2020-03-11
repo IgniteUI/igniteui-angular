@@ -1,17 +1,12 @@
-import { ConnectedFit, Size } from './../utilities';
-import { AutoPositionStrategy } from './auto-position-strategy';
+import { AutoPositionStrategy } from '../../../services/overlay/position/auto-position-strategy';
+import { ConnectedFit } from '../../../services/overlay/utilities';
 
-/**
- * TODO
- */
-export class AutoElasticPositionStrategy extends AutoPositionStrategy {
-    /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        this._forceFit = true;
-        super.position(contentElement, size, document, initialCall);
+/** @hidden */
+export class ExcelStylePositionStrategy extends AutoPositionStrategy {
+    protected shouldFitInViewPort(connectedFit: ConnectedFit) {
+        return true;
     }
 
-    /** @inheritdoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const heightOverflow = connectedFit.contentElementRect.height - connectedFit.viewPortRect.height;
         if (heightOverflow > 0) {
