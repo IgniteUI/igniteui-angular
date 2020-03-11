@@ -734,7 +734,7 @@ export class IgxGridSelectionService {
 
             const newSelection = clearPrevSelection ? [field] : this.getSelectedColumns().indexOf(field) !== -1 ?
                 this.getSelectedColumns() : [...this.getSelectedColumns(), field];
-            const removed = clearPrevSelection ? this.getSelectedColumns() : [];
+            const removed = clearPrevSelection ? this.getSelectedColumns().filter(colField => colField !== field) : [];
             const added = this.isColumnSelected(field) ? [] : [field];
             this.emitColumnSelectionEvent(newSelection, added, removed, event);
         } else if (event && event.shiftKey) {
