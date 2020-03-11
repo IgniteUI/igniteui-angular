@@ -124,6 +124,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
         eventArgs.checkbox.nativeCheckbox.nativeElement.blur();
     }
 
+    public onInputChange(event) {
+        this.cdr.detectChanges();
+    }
+
     public get itemSize() {
         let itemSize = '40px';
         switch (this.displayDensity) {

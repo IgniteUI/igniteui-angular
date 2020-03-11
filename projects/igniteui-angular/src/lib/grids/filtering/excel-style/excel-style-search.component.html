@@ -9,8 +9,9 @@
         tabindex="0"
         [(ngModel)]="searchValue"
         [placeholder]="column.grid.resourceStrings.igx_grid_excel_search_placeholder"
-        autocomplete="off"/>
-    <igx-icon
+        autocomplete="off"
+        (input)="onInputChange($event)" />
+        <igx-icon
         igxSuffix
         *ngIf="searchValue || searchValue === 0"
         (click)="clearInput()"
