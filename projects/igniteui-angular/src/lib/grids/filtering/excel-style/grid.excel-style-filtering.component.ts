@@ -39,6 +39,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  *@hidden
@@ -201,6 +202,36 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
+
+    /**
+     * @hidden @internal
+     */
+    get minHeight() {
+        if (!this.inline) {
+            let minHeight = 600;
+            switch (this.grid.displayDensity) {
+                case DisplayDensity.cosy: minHeight = 465; break;
+                case DisplayDensity.compact: minHeight = 330; break;
+                default: break;
+            }
+            return `${minHeight}px`;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('style.max-height') get maxHeight() {
+        if (!this.inline) {
+            let maxHeight = 730;
+            switch (this.grid.displayDensity) {
+                case DisplayDensity.cosy: maxHeight = 565; break;
+                case DisplayDensity.compact: maxHeight = 405; break;
+                default: break;
+            }
+            return `${maxHeight}px`;
+        }
+    }
 
     /**
      * @hidden @internal
