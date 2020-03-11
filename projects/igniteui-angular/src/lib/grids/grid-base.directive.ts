@@ -4035,7 +4035,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public pinRow(rowID, index?): boolean {
         const rec = this.gridAPI.get_rec_by_id(rowID);
-        if (this.pinnedRecords.indexOf(rec) !== -1 || !rec || this.data.indexOf(rec) === -1) {
+        if (!rec || this.pinnedRecords.indexOf(rec) !== -1 || this.data.indexOf(rec) === -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
