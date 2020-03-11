@@ -99,7 +99,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (keydown)="navigation.dispatchEvent($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
+    <div class="igx-grid__tbody-content" tabindex="0" (keydown)="navigation.dispatchEvent($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -144,7 +144,7 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail='true' style="overflow:auto;width: 100%;" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
+            <div detail='true' style="overflow:auto;width: 100%;" id="{{id}}_{{rowIndex}}" (pointerdown)='detailsViewFocused(detailsContainer, rowIndex)' #detailsContainer [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr-container--active': isDetailActive(rowIndex)
@@ -285,6 +285,7 @@
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
+            [tabindex]="-1"
             [readonly]="true"
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
             disableRipple="true"

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { first} from 'rxjs/operators';
-import { IgxColumnComponent } from './columns/column.component';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
 import { isIE, NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS } from '../core/utils';
@@ -162,9 +161,9 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event, fisrt) {
-        this.activeNode = fisrt ? {row: 0, column: 0} :  {row: this.grid.dataView.length - 1, column: this.lastColumnIndex};
+        // this.activeNode = fisrt ? {row: 0, column: 0} :  {row: this.grid.dataView.length - 1, column: this.lastColumnIndex};
         event.preventDefault();
-        this.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => { obj.target.activate(); });
+        // this.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => { obj.target.activate(); });
         this.grid.tbody.nativeElement.focus();
     }
 
@@ -260,9 +259,7 @@ export class IgxGridNavigationService {
         : this.grid.getNextCell(this.findFirstDataRowIndex(), visibleIndex, (col) => col.filterable);
         this.activeNode.column = previous ? this.activeNode.column - 1 : this.activeNode.column + 1;
         this.grid.navigateTo(nextFilterableCell.rowIndex,
-            this.activeNode.column, () => {
-          //  this.grid.filteringService.focusFilterCellChip(filterCol, false);
-        });
+            this.activeNode.column, () => { });
     }
 
     public shouldPerformHorizontalScroll(visibleColIndex, rowIndex = -1) {
@@ -296,7 +293,7 @@ export class IgxGridNavigationService {
         this.grid.verticalScrollContainer.scrollTo(rowIndex);
         this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {
-                cb();
+                if (cb) { cb(); }
             });
     }
 
@@ -318,17 +315,17 @@ export class IgxGridNavigationService {
         return [...this.grid.rowList, ...this.grid.summariesRowList].find(r => r.index === index)?.nativeElement;
     }
 
-    protected isDataRow(rowIndex) {
+    public isDataRow(rowIndex, includeSummary = false) {
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length) { return true; }
         const curRow = this.grid.dataView[rowIndex];
-         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow) && !curRow.summaries;
+         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow) && (includeSummary || !curRow.summaries);
     }
 
     private isValidPosition(rowIndex, colIndex) {
         if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
-        const row = this.grid.dataView[rowIndex];
-        if (this.activeNode.column !== colIndex && (row.expression || row.detailsData) ) {
+        if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) {
             return false;
         }
         return true;

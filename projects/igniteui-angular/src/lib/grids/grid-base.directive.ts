@@ -28,9 +28,9 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, combineLatest, pipe } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -197,7 +197,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
-
     /**
     * @hidden @internal
     */
@@ -209,7 +208,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
-
 
     /**
      * Gets/Sets the resource strings.
@@ -261,7 +259,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public loadingGridTemplate: TemplateRef<any>;
-
 
     /**
      * Gets/Sets the filtering logic of the `IgxGridComponent`.
@@ -1892,7 +1889,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get activeDescendant() {
         const activeElem = this.navigation.activeNode;
         if (activeElem) {
-            return this.gridAPI.grid.id + '_' + activeElem.row + '_' + activeElem.column;
+            return !this.navigation.isDataRow(activeElem.row) ? this.id + '_' + activeElem.row :
+                this.id + '_' + activeElem.row + '_' + activeElem.column;
         }
         return null;
     }
@@ -2277,7 +2275,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowSelectionMode;
     }
 
-
     set rowSelection(selectionMode:  GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
@@ -2618,7 +2615,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        /** @hidden @internal */
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
@@ -3997,7 +3993,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.unpin(index);
     }
-
 
     /**
      * Recalculates grid width/height dimensions.

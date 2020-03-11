@@ -74,6 +74,7 @@
 <ng-template #rowSelectorBaseTemplate>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
+            [tabindex]="-1"
             [checked]="selected"
             [readonly]="true"
             [disabled]="deleted"
