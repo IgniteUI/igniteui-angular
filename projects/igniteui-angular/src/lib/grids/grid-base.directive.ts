@@ -2464,8 +2464,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
     */
-    public pinnedRecords = [];
+    public get pinnedRecords() {
+        return this._pinnedRecords;
+    }
 
+    protected _pinnedRecords = [];
 
     /**
      * @hidden
@@ -3287,6 +3290,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._pinnedVisible = this._pinnedColumns.filter(col => !col.hidden);
         return this._pinnedVisible;
+    }
+
+    /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     */
+    get pinnedRows(): IgxGridRowComponent[] {
+        return this.rowList.filter(x => x.pinned);
     }
 
     /**

@@ -126,13 +126,13 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
     /** The row component instance, that was pinned/unpinned.
     * May be undefined if row does not exist in the current visible data.
     */
-    row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    readonly row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
     /** The ID of the row, that was pinned/unpinned.
     *   ID is either the primaryKey value or the data record instance.
     */
-    rowID: any;
+    readonly rowID: any;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
     /** Whether or noy the row is pinned or unpinned. */
-    isPinned: boolean;
+    readonly isPinned: boolean;
 }
