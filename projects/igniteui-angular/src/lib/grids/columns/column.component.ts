@@ -103,7 +103,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public sortable = false;
       /**
-     * Gets whether the column is selectable.
+     * Returns if the column is selectable.
      * ```typescript
      * let columnSelectable = this.column.selectable;
      * ```
