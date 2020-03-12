@@ -21,7 +21,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     templateUrl: 'grid-column-selection.sample.html'
 })
 
-export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit {
+export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
     public columns: Array<any>;
@@ -65,9 +65,6 @@ export class GridColumnSelectionSampleComponent implements OnInit, AfterViewInit
 
     log(event) {
         console.log(event);
-    }
-    ngAfterViewInit(): void {
-        this.grid1.getColumnByName('ID').selected = true;
     }
 
     public ngOnInit(): void {

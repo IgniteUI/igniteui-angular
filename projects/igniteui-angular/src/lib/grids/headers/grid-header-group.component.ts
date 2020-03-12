@@ -216,7 +216,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
     */
     get selectable() {
-        return this.column.hovered && this.column.selectable && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
+        return this.column.applySelectableClass && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
     }
 
     /**
@@ -275,24 +275,14 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public onPinterEnter() {
-        if (this.column.selectable) {
-            this.column.hovered = true;
-            this.column.allChildren.forEach(child => {
-                child.hovered = true;
-            });
-        }
+        this.column.applySelectableClass = true;
     }
 
     /**
      * @hidden
     */
     public onPointerLeave() {
-        if (this.column.selectable) {
-            this.column.hovered = false;
-            this.column.allChildren.forEach(child => {
-                child.hovered = false;
-            });
-        }
+        this.column.applySelectableClass = false;
     }
 
     constructor(private cdr: ChangeDetectorRef,

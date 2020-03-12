@@ -347,6 +347,25 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
+    /**
+     *@hidden
+    */
+    public get applySelectableClass(): boolean {
+        return this._applySelectableClass;
+    }
+
+    /**
+    *@hidden
+    */
+    public set applySelectableClass(value: boolean) {
+        if (this.selectable) {
+            this._applySelectableClass = value;
+            this.children.forEach(c => {
+                c.applySelectableClass = value;
+            });
+        }
+    }
+
     // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);

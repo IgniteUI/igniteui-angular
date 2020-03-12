@@ -409,6 +409,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         } else {
             this.grid.selectionService.deselectColumn(this.column.field);
         }
+        this.grid.notifyChanges();
     }
 
     /**

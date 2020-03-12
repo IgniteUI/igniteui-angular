@@ -301,9 +301,10 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     set selected(value: boolean) {
-        if (this.selectable) {
+        if (this.selectable && value !== this.selected) {
             value ? this.grid.selectionService.selectColumnsWithNoEvent([this.field]) :
             this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
+            this.grid.notifyChanges();
         }
     }
 
@@ -422,7 +423,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
     */
-    public hovered = false;
+    protected _applySelectableClass = false;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -1900,4 +1901,20 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public populateVisibleIndexes() { }
+
+    /**
+     *@hidden
+    */
+    public get applySelectableClass(): boolean {
+        return this._applySelectableClass;
+    }
+
+    /**
+     *@hidden
+    */
+    public set applySelectableClass(value: boolean) {
+        if (this.selectable) {
+            this._applySelectableClass = value;
+        }
+    }
 }

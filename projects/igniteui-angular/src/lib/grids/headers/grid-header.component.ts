@@ -121,7 +121,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get selectable() {
-        return this.column.selectable && !this.column.selected && this.column.hovered && !this.grid.filteringService.isFilterRowVisible;
+        return  this.column.applySelectableClass && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
     }
 
     get selected() {
@@ -287,7 +287,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     */
     @HostListener('pointerenter')
     public onPinterEnter() {
-        this.column.hovered = true;
+        this.column.applySelectableClass = true;
     }
 
     /**
@@ -295,6 +295,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     */
     @HostListener('pointerleave')
     public onPointerLeave() {
-        this.column.hovered = false;
+        this.column.applySelectableClass = false;
     }
 }
