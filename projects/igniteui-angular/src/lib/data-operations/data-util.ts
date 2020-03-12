@@ -153,6 +153,7 @@ export class DataUtil {
                     }
                 });
         }
+
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
