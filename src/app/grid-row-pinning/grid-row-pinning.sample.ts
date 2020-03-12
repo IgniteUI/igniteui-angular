@@ -83,7 +83,7 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        this.grid1.pinnedRecords.indexOf(rec) === -1 ?
+        this.grid1.isRecordPinned(rec)?
         this.grid1.pinRow(this.data[index]) :
         this.grid1.unpinRow(this.data[index])
     }

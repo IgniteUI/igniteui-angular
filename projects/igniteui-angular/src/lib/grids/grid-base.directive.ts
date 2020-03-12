@@ -2460,20 +2460,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _columnPinning = false;
 
-
-    /**
-     * @hidden
-    */
-    public get pinnedRecords() {
-        const recs = this._pinnedRecordIDs.map(x => this.gridAPI.get_rec_by_id(x));
-        return recs;
-    }
-
     protected _pinnedRecordIDs = [];
 
     public isRecordPinned(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    public get hasPinnedRecords() {
+        return this._pinnedRecordIDs.length > 0;
     }
 
     /**
@@ -4108,7 +4103,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get pinnedRowHeight() {
         const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.clientHeight : 0;
         // 2px border
-        return this.pinnedRecords.length > 0 ? containerHeight + 2 : 0;
+        return this._pinnedRecordIDs.length > 0 ? containerHeight + 2 : 0;
     }
 
     get totalHeight() {
