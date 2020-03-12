@@ -166,11 +166,11 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         const grid = this.gridAPI.grid;
 
         const result = collection.filter((value, index) => {
-            return  isPinned ? grid.isRecordPinned(value): !grid.isRecordPinned(value);
+            return  isPinned ? grid.isRecordPinned(value) : !grid.isRecordPinned(value);
         });
         if (isPinned) {
             // pinned records should be ordered as they were pinned.
-            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2))
+            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
         }
         return result;
     }

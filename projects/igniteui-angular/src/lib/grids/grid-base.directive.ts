@@ -2462,20 +2462,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected _pinnedRecordIDs = [];
 
-    public isRecordPinned(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
-    }
-
-    public pinRecordIndex(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id);
-    }
-
-    public get hasPinnedRecords() {
-        return this._pinnedRecordIDs.length > 0;
-    }
-
     /**
      * @hidden
      */
@@ -2637,6 +2623,32 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.nativeElement.focus();
                 });
         });
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public isRecordPinned(rec) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public pinRecordIndex(rec) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get hasPinnedRecords() {
+        return this._pinnedRecordIDs.length > 0;
     }
 
     private keydownHandler = (event) => {
