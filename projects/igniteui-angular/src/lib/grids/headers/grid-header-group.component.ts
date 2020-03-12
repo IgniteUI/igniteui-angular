@@ -231,12 +231,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public groupClicked(event): void {
         if (this.column.selectable && !this.grid.filteringService.isFilterRowVisible) {
-            const columnsToSelect = [];
-            this.column.allChildren.forEach(child => {
-                if (!child.columnGroup && !child.hidden && child.selectable) {
-                    columnsToSelect.push(child.field);
-                }
-            });
+            const columnsToSelect = this.getChildrenToSelect(this.column.children.toArray()).map(c => c.field);
             if (!this.column.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
             } else {
@@ -249,6 +244,20 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 }
             }
         }
+    }
+
+    private getChildrenToSelect(children: IgxColumnComponent[]): IgxColumnComponent[] {
+        let result: IgxColumnComponent[] = [];
+        children.forEach(el => {
+            if (el.selectable && !el.hidden) {
+                if (el.children && el.columnGroup) {
+                    result = result.concat(this.getChildrenToSelect( el.children.toArray()));
+                } else {
+                    result.push(el);
+                }
+            }
+        });
+        return result;
     }
 
     /**
