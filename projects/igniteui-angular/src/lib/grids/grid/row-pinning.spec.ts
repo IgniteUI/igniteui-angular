@@ -216,6 +216,33 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
+
+        it('should page through unpinned collection with modified pageSize = pageSize - pinnedRows.lenght.', () => {
+            // pin 2nd row
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+            let row = grid.getRowByIndex(1);
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRecords.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            expect(grid.dataView.length).toBe(4);
+
+            // unpin
+            row = grid.getRowByIndex(0);
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRecords.length).toBe(0);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.dataView.length).toBe(5);
+        });
     });
 });
 

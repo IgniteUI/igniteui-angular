@@ -103,10 +103,10 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!this.gridAPI.grid.paging) {
             return collection;
         }
-
+        const _perPage = perPage - this.gridAPI.grid.pinnedRecords.length;
         const state = {
             index: page,
-            recordsPerPage: perPage
+            recordsPerPage: _perPage
         };
         DataUtil.correctPagingState(state, collection.data.length);
 
