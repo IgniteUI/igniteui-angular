@@ -170,9 +170,11 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
-        // Forces a new change detection to update filtered data through the pipes and then emit the event.
-        this.grid.cdr.detectChanges();
-        this.grid.onFilteringDone.emit(col.filteringExpressionsTree);
+        // Waits for a change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => {
+            this.grid.cdr.detectChanges();
+            this.grid.onFilteringDone.emit(col.filteringExpressionsTree);
+        });
     }
 
     /**
