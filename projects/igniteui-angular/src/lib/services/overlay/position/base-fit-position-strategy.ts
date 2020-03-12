@@ -16,8 +16,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             this.settings = Object.assign({}, this._initialSettings);
             connectedFit.viewPortRect = Util.getViewportRect(document);
             this.updateViewPortFit(connectedFit);
-            if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0 ||
-                connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
+            if (this.shouldFitInViewPort(connectedFit)) {
                 this.fitInViewport(contentElement, connectedFit);
             }
         }
@@ -84,6 +83,15 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     }
 
     /**
+     * Returns whether the element should fit in viewport
+     * @param connectedFit connectedFit object containing all necessary parameters
+     */
+    protected shouldFitInViewPort(connectedFit: ConnectedFit) {
+        return connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0 ||
+            connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0;
+    }
+
+    /**
      * Fits the element into viewport according to the position settings
      * @param element element to fit in viewport
      * @param connectedFit connectedFit object containing all necessary parameters
@@ -92,5 +100,3 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         element: HTMLElement,
         connectedFit: ConnectedFit);
 }
-
-
