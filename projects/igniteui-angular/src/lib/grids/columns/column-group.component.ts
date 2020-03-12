@@ -138,7 +138,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this._selectable && this.children && this.children.some(child => child.selectable);
     }
     /**
-     *  Sets  whether the column group is selectable.
+     * Enable/disable the selection of the column group.
      * ```typescript
      * this.columnGroup.selectable = false;
      * ```
