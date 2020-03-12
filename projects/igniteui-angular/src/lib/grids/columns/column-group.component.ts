@@ -236,7 +236,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     /**
-     * Gets whether the column group is selected.
+     * Returns if the column group is selected.
      * ```typescript
      * let isSelected = this.columnGroup.selected;
      * ```
