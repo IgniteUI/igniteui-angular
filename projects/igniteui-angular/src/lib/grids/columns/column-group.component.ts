@@ -247,7 +247,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     /**
-     * Sets the column group selected property.
+     * Enables/Disables the column group selection.
      * ```html
      * <igx-column [selected] = "true"></igx-column>
      * ```
