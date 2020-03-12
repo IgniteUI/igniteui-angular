@@ -185,11 +185,10 @@
         display: flex;
         box-shadow: --var($theme, 'shadow');
         transition: $transition;
-        border-radius: --var($theme, 'border-radius')
+        border-radius: --var($theme, 'border-radius');
     }
 
     %igx-group-item {
-        @include ellipsis();
         border: $group-item-border-thickness solid --var($theme, 'item-border-color');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
@@ -307,13 +306,16 @@
     %igx-group-item-content {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+        min-width: 0;
 
         * ~ * {
             margin-#{$left}: $group-items-margin;
         }
+    }
+
+    %igx-button-group__button-text {
+        width: 100%;
+        @include ellipsis();
     }
 }
 
