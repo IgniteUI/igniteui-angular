@@ -1316,25 +1316,7 @@ export class IgxHierarchicalGridTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
-        this.data = this.generateData(2, 3);
-    }
-    generateData(count: number, level: number) {
-        const prods = [];
-        const currLevel = level;
-        let children;
-        for (let i = 0; i < count; i++) {
-            const item = {
-                ID: i, ChildLevels: currLevel, ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i
-            };
-            if (currLevel > 1) {
-                children = this.generateData(count / 2, currLevel - 1);
-                const childProp = currLevel === 3 ? 'childData' : 'childData2';
-                item[childProp] = children;
-            }
-            prods.push(item);
-        }
-        return prods;
+        this.data = SampleTestData.generateHGridData(2, 3);
     }
     public onRowDrop(args) {
         args.cancel = true;
@@ -1371,25 +1353,7 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
-        this.data = this.generateData(2, 3);
-    }
-    generateData(count: number, level: number) {
-        const prods = [];
-        const currLevel = level;
-        let children;
-        for (let i = 0; i < count; i++) {
-            const item = {
-                ID: i, ChildLevels: currLevel, ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i
-            };
-            if (currLevel > 1) {
-                children = this.generateData(count / 2, currLevel - 1);
-                const childProp = currLevel === 3 ? 'childData' : 'childData2';
-                item[childProp] = children;
-            }
-            prods.push(item);
-        }
-        return prods;
+        this.data = SampleTestData.generateHGridData(2, 3);
     }
 }
 
