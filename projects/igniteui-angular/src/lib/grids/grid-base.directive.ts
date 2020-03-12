@@ -4102,9 +4102,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.clientHeight : 0;
-        // 2px border
-        return this.pinnedRecords.length > 0 ? containerHeight + 2 : 0;
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
+        return this.pinnedRecords.length > 0 ? containerHeight : 0;
     }
 
     get totalHeight() {
@@ -4423,7 +4422,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.calcHeight = this._calculateGridBodyHeight();
-        if (this.pinnedRowHeight) {
+        if (this.pinnedRowHeight && this.calcHeight) {
             this.calcHeight -= this.pinnedRowHeight;
         }
     }
