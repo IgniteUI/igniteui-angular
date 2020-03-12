@@ -1734,6 +1734,38 @@ export class CollapsibleColumnGroupTestComponent {
     data = SampleTestData.contactInfoDataFull();
 }
 
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px">
+        <igx-column-group header="General Information" >
+            <igx-column  field="CompanyName" ></igx-column>
+            <igx-column-group header="Person Details">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="Country Information">
+
+            <igx-column-group header="Region Information">
+                <igx-column  field="Country" [selectable]="false"></igx-column>
+                <igx-column field="Region" ></igx-column>
+                <igx-column field="PostalCode" ></igx-column>
+            </igx-column-group>
+            <igx-column-group header="City Information" [selectable]="false">
+                <igx-column field="City" ></igx-column>
+                <igx-column field="Address"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnSelectionGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    data = SampleTestData.contactInfoDataFull();
+}
 @Component({
     template: `
     <ng-template #indicatorTemplate let-column="column">

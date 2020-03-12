@@ -12,7 +12,7 @@ import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent, IgxColumnComponent } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
@@ -59,6 +59,9 @@ const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
+const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
+const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
+const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 
 export class GridFunctions {
 
@@ -1029,6 +1032,18 @@ export class GridFunctions {
         });
     }
 
+    public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+       const header = this.getColumnHeader(columnField, fix);
+       header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+       fix.detectChanges();
+    }
+
+    public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+        const header = this.getColumnGroupHeaderCell(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        fix.detectChanges();
+     }
+
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
             .map((header) => header.nativeElement);
@@ -1977,7 +1992,6 @@ export class GridSelectionFunctions {
         expect(selectedCellFromGrid.rowIndex).toEqual(cell.rowIndex);
     }
 
-
     public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
         expect(row.selected).toBe(selected);
         expect(row.nativeElement.classList.contains(ROW_SELECTION_CSS_CLASS)).toBe(selected);
@@ -2080,5 +2094,46 @@ export class GridSelectionFunctions {
 
     public static expandRowIsland(rowNumber = 1) {
         (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
+    }
+
+    public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
+        expect(column.selected).toEqual(selected);
+        expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+    }
+
+    public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
+        columns.forEach(c => this.verifyColumnSelected(c, selected ));
+    }
+
+    public static verifyColumnGroupSelected(fixture: ComponentFixture<any>, column: IgxColumnGroupComponent, selected = true) {
+        expect(column.selected).toEqual(selected);
+        const header = GridFunctions.getColumnGroupHeaderCell(column.header, fixture);
+        expect(header.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+    }
+
+    public static verifyColumnHeaderHasSelectableClass(header: DebugElement, hovered = true) {
+         expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
+    }
+
+    public static verifyColumnsHeadersHasSelectableClass(headers: DebugElement[], hovered = true) {
+        headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
+   }
+
+    public static verifyColumnAncCellsSelected(column: IgxColumnComponent, selected = true) {
+        expect(column.selected).toEqual(selected);
+        expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+        column.cells.forEach(cell => {
+            expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(selected);
+        });
+    }
+
+    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey= false) {
+        const event = {
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            stopPropagation: () => { }
+        };
+
+        column.headerCell.onClick(event);
     }
 }
