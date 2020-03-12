@@ -2467,6 +2467,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.indexOf(id) !== -1;
     }
 
+    public pinRecordIndex(rec) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
     public get hasPinnedRecords() {
         return this._pinnedRecordIDs.length > 0;
     }
