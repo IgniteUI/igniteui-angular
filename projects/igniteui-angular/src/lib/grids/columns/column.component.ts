@@ -282,7 +282,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     * Gets whether the column is selected.
+     * Returns if the column is selected.
      * ```typescript
      * let isSelected = this.column.selected;
      * ```
