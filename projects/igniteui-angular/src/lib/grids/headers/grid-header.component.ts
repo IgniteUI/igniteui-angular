@@ -1,3 +1,4 @@
+import { ElasticPositionStrategy } from './../../services/overlay/position/elastic-position-strategy';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -23,13 +24,13 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
-import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
 import { useAnimation } from '@angular/animations';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { GridType } from '../common/grid.interface';
+import { ExcelStylePositionStrategy } from '../filtering/excel-style/excel-style-position-strategy';
 
 /**
  * @hidden
@@ -228,7 +229,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
-            positionStrategy: new AutoPositionStrategy(this._filterMenuPositionSettings),
+            positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
 
