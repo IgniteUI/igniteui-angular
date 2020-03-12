@@ -293,7 +293,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     * Sets the column selected property.
+     * Enables/Disables column selection.
      * Default value is `false`.
      * ```html
      * <igx-column [selected] = "true"></igx-column>
