@@ -4062,6 +4062,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
+        this.endEdit(true);
+
         this._pinnedRecordIDs.splice(eventArgs.insertAtIndex || this._pinnedRecordIDs.length, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
@@ -4091,6 +4093,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             row: row
         };
         this.onRowPinning.emit(eventArgs);
+        this.endEdit(true);
         this._pinnedRecordIDs.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
