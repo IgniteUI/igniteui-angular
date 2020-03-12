@@ -116,7 +116,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
      /**
-     * Sets  whether the column is selectable.
+     * Sets if the column is selectable.
      * Default value is `true`.
      * ```html
      * <igx-column [selectable] = "false"></igx-column>
