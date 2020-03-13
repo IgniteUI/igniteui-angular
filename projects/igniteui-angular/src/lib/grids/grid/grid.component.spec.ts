@@ -1651,6 +1651,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
