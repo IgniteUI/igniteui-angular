@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -18,7 +19,8 @@ describe('Row Pinning #grid', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridRowPinningComponent
+                GridRowPinningComponent,
+                GridRowPinningWithMDVComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -217,6 +219,40 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
     });
+    fdescribe('Row pinning with Master Detail View', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should pin/unpin via row pinned setter.', () => {
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+            // pin 2nd row
+            const row = grid.getRowByIndex(0);
+            row.pinned = true;
+            fix.detectChanges();
+
+            GridFunctions.toggleMasterRow(fix, grid.pinnedRows[0]);
+            fix.detectChanges();
+
+
+            expect(grid.pinnedRecords.length).toBe(1);
+
+            const firstRowIconName = GridFunctions.getRowExpandIconName(grid.pinnedRows[0]);
+            const firstRowDetail = GridFunctions.getMasterRowDetail(grid.pinnedRows[0]);
+            expect(grid.expansionStates.size).toEqual(1);
+            expect(grid.expansionStates.has(grid.pinnedRows[0].rowID)).toBeTruthy();
+            expect(grid.expansionStates.get(grid.pinnedRows[0].rowID)).toBeTruthy();
+            expect(firstRowIconName).toEqual('expand_more');
+
+            // check last pinned and expanded is fully in view
+            expect(firstRowDetail.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);
+        });
+    });
 });
 
 @Component({
@@ -236,4 +272,26 @@ export class GridRowPinningComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+    <igx-grid
+        [pinning]='pinningConfig'
+        [width]='"800px"'
+        [height]='"500px"'
+        [data]="data"
+        [autoGenerate]="true">
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+                <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+                <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+            </div>
+        </ng-template>
+</igx-grid>`
+})
+
+export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {
+
 }
