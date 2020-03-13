@@ -306,7 +306,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
         const availableWidth = (parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh).toString();
         const locationColGroup = getColGroup(grid, 'Location');
-        const colWidth = Math.round(parseInt(availableWidth, 10) / 3);
+        const colWidth = Math.floor(parseInt(availableWidth, 10) / 3);
         const colWidthPx = colWidth + 'px';
         expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
         const countryColumn = grid.getColumnByName('Country');
@@ -329,7 +329,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
         const scrWitdh = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar').getBoundingClientRect().width;
         const gridWidthInPx = parseInt(gridWidth, 10) - scrWitdh;
-        const colWidth = Math.round(gridWidthInPx / 3);
+        const colWidth = Math.floor(gridWidthInPx / 3);
         const colWidthPx = colWidth + 'px';
         const locationColGroup = getColGroup(grid, 'Location');
         expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
@@ -356,7 +356,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
             parseInt(componentInstance.gridWrapperWidthPx, 10) - scrWitdh;
-        const colWidth = Math.round(gridWidthInPx / 3);
+        const colWidth = Math.floor(gridWidthInPx / 3);
         const colWidthPx = colWidth + 'px';
         const locationColGroup = getColGroup(grid, 'Location');
         expect(locationColGroup.width).toBe((Math.round(colWidth) * 3) + 'px');
