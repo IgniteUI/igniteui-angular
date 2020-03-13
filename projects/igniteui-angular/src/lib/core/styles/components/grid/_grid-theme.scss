@@ -1270,6 +1270,10 @@
         }
     }
 
+    %grid-cell--cross-selected {
+        background: --var($theme, 'row-selected-cell-background');
+    }
+
     %igx-grid__td--edited {
         %grid-cell-text {
             font-style: italic;
@@ -1449,7 +1453,7 @@
 
     %igx-grid__th--selected {
         color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-background');
+        background: --var($theme, 'row-selected-cell-background');
     }
 
     %igx-grid__th--sortable {

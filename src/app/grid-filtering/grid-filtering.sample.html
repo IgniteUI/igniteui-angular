@@ -3,7 +3,7 @@
         Demonstrates grid's filtering functionality.
     </app-page-header>
 
-    
+
 
     <div class="sample-content">
         <div class="sample-column">
@@ -18,17 +18,18 @@
                 [allowFiltering]="true"
                 [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true"
+                [advancedFilteringExpressionsTree]="advancedFilteringTree"
                 [rowSelectable]="true"
                 [paging]="false"
                 [width]="'980px'"
-                [height]="'600px'" 
+                [height]="'600px'"
                 [showToolbar]="true"
-                [columnHiding]="true" 
+                [columnHiding]="true"
                 [columnPinning]="true"
-                [exportExcel]="true" 
-                [exportCsv]="true" 
+                [exportExcel]="true"
+                [exportCsv]="true"
                 exportText="Export"
-                exportExcelText="Export to Excel" 
+                exportExcelText="Export to Excel"
                 exportCsvText="Export to CSV">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.header"
