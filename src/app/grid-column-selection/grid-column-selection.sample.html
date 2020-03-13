@@ -1,6 +1,6 @@
 <div class="wrapper">
-    <app-page-header title="Grid Column Moving">
-        Allows movable columns in a grid to be rearranged.
+    <app-page-header title="Grid Column Selection">
+        Allows selecting a columns
     </app-page-header>
 
     <div class="sample-content">
@@ -9,7 +9,7 @@
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
             <igx-grid #grid1 [data]="data" [displayDensity]="density" [showToolbar]="true" [columnHiding]="true"
-                [columnPinning]='true' [allowFiltering]="true" [rowSelectable]="true" [filterMode]="'excelStyleFilter'"
+                [columnPinning]='true' [allowFiltering]="true" [rowSelection] ="'multiple'" [filterMode]="'excelStyleFilter'"
                 [paging]="false" [width]="'900px'" [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
                     [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
@@ -41,6 +41,7 @@
                             </igx-checkbox>
                         </div>
                         <div class="igx-column-hiding__buttons">
+                            <button igxButton igxRipple (click)="sampleGrid.selectAllColumns()">Select All</button>
                             <button igxButton igxRipple (click)="sampleGrid.deselectAllColumns()"
                                 [disabled]="sampleGrid.selectedColumns().length === 0">Deselect All</button>
                         </div>
