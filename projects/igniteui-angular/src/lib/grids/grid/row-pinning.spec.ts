@@ -228,7 +228,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should pin/unpin via row pinned setter.', () => {
+        it('should be in view when expanded and pinning row to bottom of the grid.', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             fix.detectChanges();
             // pin 1st row
