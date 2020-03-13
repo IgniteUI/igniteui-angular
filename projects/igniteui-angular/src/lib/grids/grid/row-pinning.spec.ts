@@ -231,7 +231,7 @@ describe('Row Pinning #grid', () => {
         it('should pin/unpin via row pinned setter.', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             fix.detectChanges();
-            // pin 2nd row
+            // pin 1st row
             const row = grid.getRowByIndex(0);
             row.pinned = true;
             fix.detectChanges();
