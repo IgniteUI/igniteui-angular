@@ -314,6 +314,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
 |  `overlaySettings`       | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings         |
+|  `autoFocusSearch`     | controls whether the search input should be focused when the combo is opened | boolean |
 
 ### Getters
 | Name                     | Description                                       | Type                        |

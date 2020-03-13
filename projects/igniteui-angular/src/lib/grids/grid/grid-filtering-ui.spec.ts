@@ -2414,13 +2414,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify the custom filter template is present.
             expect(GridFunctions.getFilterCell(fix, 'ProductName').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ProductName\` customer filter tempalte was not found.');
+                '\`ProductName\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Downloads').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Downloads\` customer filter tempalte was not found.');
+                '\`Downloads\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'Released').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`Released\` customer filter tempalte was not found.');
+                '\`Released\` customer filter template was not found.');
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
-                '\`ReleaseDate\` customer filter tempalte was not found.');
+                '\`ReleaseDate\` customer filter template was not found.');
         }));
     });
 });
@@ -2580,6 +2580,47 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(moveLeft, false);
         }));
 
+        it('Should right pin and unpin column after moving it left/right when clicking buttons.', fakeAsync(() => {
+            grid.pinning.columns = 1;
+
+            const columnToPin = grid.columns[grid.columns.length - 2];
+            columnToPin.pinned = true;
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+
+            const columnToMove = grid.unpinnedColumns[grid.unpinnedColumns.length - 1];
+            columnToMove.movable = true;
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, columnToMove.field);
+
+            const moveLeft = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[0];
+            const moveRight = GridFunctions.getExcelStyleFilteringMoveButtons(fix)[1];
+
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(2);
+
+            expect(grid.pinnedColumns[0].field).toBe(columnToMove.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToPin.field);
+
+            moveRight.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+            expect(grid.pinnedColumns[1].field).toBe(columnToMove.field);
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            moveLeft.click();
+            fix.detectChanges();
+
+            expect(grid.pinnedColumns.length).toBe(1);
+            expect(grid.pinnedColumns[0].field).toBe(columnToPin.field);
+        }));
+
         it('Should pin column when clicking buttons.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
@@ -2630,7 +2671,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkbox: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
-            expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false, false]);
+            expect(checkbox.map(c => c.checked)).toEqual([false, false, false, false, false, false, false ]);
         }));
 
         it('Should not select values in list if two values with Or operator are entered and contains operand.', fakeAsync(() => {
@@ -2672,8 +2713,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkbox: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
-            expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true, false]);
-            expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false, false]);
+            expect(checkbox.map(c => c.checked)).toEqual([true, false, false, true, false, false, true]);
+            expect(checkbox.map(c => c.indeterminate)).toEqual([true, false, false, false, false, false, false]);
         }));
 
         it('Should change filter when changing And/Or operator.', fakeAsync(() => {
@@ -3370,15 +3411,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Verify scrollbar's scrollTop.
-            expect(scrollbar.scrollTop >= 610 && scrollbar.scrollTop <= 615).toBe(true,
+            expect(scrollbar.scrollTop >= 680 && scrollbar.scrollTop <= 690).toBe(true,
                 'search scrollbar has incorrect scrollTop');
             // Verify display container height.
             const displayContainer = searchComponent.querySelector('igx-display-container');
             const displayContainerRect = displayContainer.getBoundingClientRect();
-            expect(displayContainerRect.height).toBe(288, 'incorrect search display container height');
+            expect(displayContainerRect.height).toBe(216, 'incorrect search display container height');
             // Verify rendered list items count.
             const listItems = displayContainer.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(12, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         }));
 
         it('should correctly display all items in search list after filtering it', (async () => {
@@ -3650,8 +3691,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702'],
-                [true, true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
+                [true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
