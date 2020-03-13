@@ -2711,9 +2711,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
             expect(checkboxes[0].checked && checkboxes[0].indeterminate).toBeTruthy();
-            expect(!checkboxes[1].checked && !checkboxes[1].indeterminate).toBeFalsy();
-            expect(!checkboxes[2].checked && !checkboxes[2].indeterminate).toBeFalsy();
-            expect(!checkboxes[3].checked && !checkboxes[3].indeterminate).toBeFalsy();
+            expect(!checkboxes[1].checked && !checkboxes[1].indeterminate).toBeTruthy();
+            expect(!checkboxes[2].checked && !checkboxes[2].indeterminate).toBeTruthy();
+            expect(checkboxes[3].checked && !checkboxes[3].indeterminate).toBeTruthy();
         }));
 
         it('Should change filter when changing And/Or operator.', fakeAsync(() => {
@@ -3606,6 +3606,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             checkbox[2].click();
             checkbox[3].click();
             checkbox[4].click();
+            checkbox[6].click();
             tick();
             fix.detectChanges();
 
@@ -4678,17 +4679,14 @@ function verifyExcelStyleFilterAvailableOptions(fix, labels: string[], checked: 
     const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
+
     expect(labelElements.length).toBeGreaterThan(2);
     expect(checkboxElements.length).toBeGreaterThan(2);
-    labelElements.forEach((l, index) => {
-        if (index < labels.length) {
-            expect(l.innerText).toEqual(labels[index]);
-        }
+    labels.forEach((l, index) => {
+            expect(l).toEqual(labelElements[index].innerText);
     });
-    checkboxElements.forEach((c, index) => {
-        if (index < checked.length) {
-            expect(c.indeterminate ? null : c.checked).toEqual(checked[index]);
-        }
+    checked.forEach((c, index) => {
+            expect(checkboxElements[index].indeterminate ? null : checkboxElements[index].checked).toEqual(c);
     });
 }
 
