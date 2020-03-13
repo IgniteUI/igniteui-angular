@@ -5243,15 +5243,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-         * Deselects all columns
-         * @example
-         * ```typescript
-         * this.grid.deselectAllColumns();
-         * ```
+    * Deselects all columns
+    * @example
+    * ```typescript
+    * this.grid.deselectAllColumns();
+    * ```
     */
     public deselectAllColumns() {
         this.selectionService.clearAllSelectedColumns();
         this.notifyChanges();
+    }
+
+    /**
+    * Selects all columns
+    * @example
+    * ```typescript
+    * this.grid.deselectAllColumns();
+    * ```
+    */
+    public selectAllColumns() {
+        this.selectColumns(this.columnList.filter(c => !c.columnGroup));
     }
 
     protected extractDataFromColumnsSelection(source: any[], formatters = false, headers = false): any[] {

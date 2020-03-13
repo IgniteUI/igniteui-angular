@@ -2425,7 +2425,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
