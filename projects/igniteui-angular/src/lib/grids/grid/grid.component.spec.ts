@@ -1625,8 +1625,12 @@ describe('IgxGrid Component Tests #grid', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(500);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
 
         it('IgxTabs: should initialize a grid with correct height when paging and summaries are enabled', async () => {
@@ -1644,7 +1648,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(139);
+            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
@@ -1677,8 +1685,12 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            expect(grid.calcHeight).toBe(230);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
+            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            expect(grid.calcHeight).toBe(expectedHeight);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
         });
     });
