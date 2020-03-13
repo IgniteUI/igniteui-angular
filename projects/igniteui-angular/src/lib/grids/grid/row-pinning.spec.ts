@@ -219,7 +219,7 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
     });
-    fdescribe('Row pinning with Master Detail View', () => {
+    describe('Row pinning with Master Detail View', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
             fix.detectChanges();
