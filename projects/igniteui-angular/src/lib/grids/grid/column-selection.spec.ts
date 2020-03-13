@@ -628,7 +628,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
-        fit('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
             grid.allowFiltering = true;
             const colProductName = grid.getColumnByName('ProductName');
             const colProductID = grid.getColumnByName('ProductID');
@@ -660,7 +660,6 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductID.cells.forEach(cell => {
                 expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(true);
             });
-
             expect(grid.filteringRow.column.field).toEqual('ProductID');
 
             // Hover column headers
@@ -669,7 +668,6 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
-
         }));
     });
 });
