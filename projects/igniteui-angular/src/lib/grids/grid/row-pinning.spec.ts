@@ -11,7 +11,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
 
-fdescribe('Row Pinning #grid', () => {
+describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
     configureTestSuite();
