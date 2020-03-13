@@ -1195,8 +1195,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
-            // reset width to force reflow.
-            this.scrollComponent.nativeElement.style.width = '';
             this.scrollComponent.nativeElement.style.height = parseInt(this.igxForContainerSize, 10) + 'px';
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {

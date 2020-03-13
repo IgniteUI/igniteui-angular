@@ -40,7 +40,7 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
         document.body.appendChild(div);
         const scrollWidth = div.offsetWidth - div.clientWidth;
         document.body.removeChild(div);
-        return scrollWidth;
+        return scrollWidth ? scrollWidth + 1 : 0;
     }
 
 }
