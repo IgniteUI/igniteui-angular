@@ -8,9 +8,12 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxGridTransaction } from '../tree-grid';
+import { IgxTransactionService } from '../../services';
 
-describe('Row Pinning #grid', () => {
+fdescribe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
+    const CELL_CSS_CLASS = '.igx-grid__td';
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
@@ -18,7 +21,8 @@ describe('Row Pinning #grid', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridRowPinningComponent
+                GridRowPinningComponent,
+                GridRowPinningWithTransactionsComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -217,6 +221,84 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
     });
+
+    describe(' Editing ', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should allow pinning edited/deleted/added row.', () => {
+            // test with added row
+            grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test'});
+            fix.detectChanges();
+
+            grid.pinRow('Test');
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('Test');
+
+            // test with deleted row
+            grid.deleteRow('ALFKI');
+            fix.detectChanges();
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('Test');
+            expect(pinRowContainer[0].children[1].context.rowID).toBe('ALFKI');
+
+            // test with edited
+            grid.updateCell('New value', 'ANTON', 'CompanyName');
+            fix.detectChanges();
+            grid.pinRow('ANTON');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(3);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(3);
+            expect(pinRowContainer[0].children[2].context.rowID).toBe('ANTON');
+            expect(pinRowContainer[0].children[2].context.rowData.CompanyName).toBe('New value');
+        });
+
+        it('should stop editing when edited row is pinned/unpinned.', () => {
+            grid.getColumnByName('CompanyName').editable = true;
+            fix.detectChanges();
+            let cell = grid.getCellByColumn(0, 'CompanyName');
+            let cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+
+            grid.pinRow(cell.row.rowID);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(0, 'CompanyName');
+            expect(cell.editMode).toBeFalsy();
+
+            cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+            grid.unpinRow(cell.row.rowID);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, 'CompanyName');
+            expect(cell.editMode).toBeFalsy();
+        });
+
+    });
 });
 
 @Component({
@@ -236,4 +318,22 @@ export class GridRowPinningComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+}
+
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='pinningConfig'
+            primaryKey='ID'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="true">
+        </igx-grid>
+    `,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent {
+    public data = SampleTestData.contactInfoDataFull();
 }
