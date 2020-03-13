@@ -483,10 +483,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     */
     public preventContainerScroll(evt) {
         if (evt.target.scrollTop !== 0) {
-            const activeElem = document.activeElement;
             this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
             evt.target.scrollTop = 0;
-            console.log('HandleScroll');
         }
     }
 
@@ -628,6 +626,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(name);
         this.notifyChanges(true);
+    }
+
+    public preventHeaderScroll(args) {
+        if (args.target.scrollLeft !== 0) {
+            (this.navigation as any).forOfDir().getScroll().scrollLeft =  args.target.scrollLeft;
+            args.target.scrollLeft = 0;
+        }
     }
 
     /**

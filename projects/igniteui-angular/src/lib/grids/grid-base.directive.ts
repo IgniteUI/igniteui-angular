@@ -5261,7 +5261,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (this.dataView.slice(currRowIndex, currRowIndex + 1)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
@@ -5294,13 +5294,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
         if (this.dataView.slice(currRowIndex, currRowIndex + 1)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && prevCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
         } else {
-            if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex, true) === currRowIndex) {
                 return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return { rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
+                return { rowIndex: this.getNextDataRowIndex(currRowIndex, true), visibleColumnIndex: colIndexes[0] };
             }
         }
     }
@@ -5333,19 +5333,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         cb(args);
     }
 
-    private getPrevDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex <= 0) { return currentRowIndex; }
-
-        const prevRow = this.dataView.slice(0, currentRowIndex).reverse()
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
-        return prevRow ? this.dataView.indexOf(prevRow) : currentRowIndex;
-    }
-
-    private getNextDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex === this.dataView.length) { return currentRowIndex; }
-
-        const nextRow = this.dataView.slice(currentRowIndex + 1, this.dataView.length)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
+    private getNextDataRowIndex(currentRowIndex, previous = false): number {
+        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || currentRowIndex >= this.dataView.length - 1) {
+            return currentRowIndex;
+        }
+        const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :
+            this.dataView.slice(currentRowIndex + 1, this.dataView.length);
+        const nextRow = rows.find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData);
         return nextRow ? this.dataView.indexOf(nextRow) : currentRowIndex;
     }
 

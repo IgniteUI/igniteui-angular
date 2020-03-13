@@ -20,11 +20,12 @@ export class IgxGridNavigationService {
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
-        if (!this.activeNode) { return; }
+
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
-/*      This fixes IME editing issue(#6335) that happens only on IE
+        /*
+        This fixes IME editing issue(#6335) that happens only on IE
         if (isIE() && keydownArgs.event.keyCode === 229 && event.key === 'Tab') {
             return;
         }
@@ -34,8 +35,8 @@ export class IgxGridNavigationService {
             this.selectionService.clear();
             this.selectionService.keyboardState.active = true;
             return;
-        } */
-
+        }
+        */
         if (event.altKey) {
             event.preventDefault();
             this.handleAlt(key, event);
@@ -55,7 +56,7 @@ export class IgxGridNavigationService {
         let colIndex = this.activeNode.column, rowIndex = this.activeNode.row;
         switch (key) {
             case 'tab':
-                this.handleRowEditing(shift, event);
+                this.handleEditing(shift, event);
                 break;
             case 'end':
                 rowIndex = ctrl ? this.findLastDataRowIndex() : this.activeNode.row;
@@ -113,43 +114,22 @@ export class IgxGridNavigationService {
 
     summaryNav(event) {
         const key = event.key.toLowerCase();
-        if (key === 'tab') {
-            if (event.shiftKey) { this.focusTbody(event, false); }
-            return;
-        }
         this.horizontalNav(event, key, this.grid.dataView.length);
     }
 
     headerNavigation(event) {
         const key = event.key.toLowerCase();
-        const shouldFocusTBody = document.activeElement === this.grid.theadRow.nativeElement ||
-            (this.grid.filteringRow && document.activeElement === this.grid.filteringRow.closeButton.nativeElement);
-        if (key === 'tab') {
-            if (shouldFocusTBody && !event.shiftKey) { this.focusTbody(event, true); }
-            return;
-        }
         if (key === 'esc') {
             this.grid.filteringRow.close();
             return;
         }
         this.horizontalNav(event, key, -1);
-       /*
-       const previous = event.key.toLowerCase() === 'arrowleft';
-       const filterableCols = this.grid.visibleColumns
-            .filter(c => !c.columnGroup && c.filterable).map(col => col.visibleIndex);
-        if ((!previous && Math.max(...filterableCols) === this.grid.filteringService.activeFilterCell) ||
-            (previous && this.grid.filteringService.activeFilterCell === Math.min(...filterableCols)) ) {
-            return;
-        }
-        if (!this.grid.filteringService.isFilterRowVisible && ['arrowleft', 'left', 'arrowright', 'right'].indexOf(key) > -1) {
-            this.handleFilterNavigation(this.grid.filteringService.activeFilterCell, previous);
-        } */
     }
 
     horizontalNav(event , key, rowIndex) {
         const ctrl = event.ctrlKey;
-        event.preventDefault();
         if (!HORIZONTAL_NAV_KEYS.has(key)) { return; }
+        event.preventDefault();
         this.activeNode.row = rowIndex;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column  = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
@@ -160,11 +140,14 @@ export class IgxGridNavigationService {
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
-    focusTbody(event, fisrt) {
-        // this.activeNode = fisrt ? {row: 0, column: 0} :  {row: this.grid.dataView.length - 1, column: this.lastColumnIndex};
-        event.preventDefault();
-        // this.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => { obj.target.activate(); });
-        this.grid.tbody.nativeElement.focus();
+    focusTbody() {
+        if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
+        this.navigateTo(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
+    }
+
+    focusFirstCell(header = true) {
+        this.activeNode = {row: header ? -1 : this.grid.dataView.length, column: 0};
+        this.performHorizontalScrollToCell(0);
     }
 
     get lastColumnIndex() {
@@ -232,9 +215,12 @@ export class IgxGridNavigationService {
         this.grid.notifyChanges();
     }
 
-    protected handleRowEditing(shift, event) {
+    protected handleEditing(shift, event) {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
         this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
+        if (!this.isRowInEditMode(this.activeNode.row) && this.isActiveNode(next.rowIndex,  next.visibleColumnIndex)) {
+            return;
+        }
         event.preventDefault();
         if (this.isRowInEditMode(this.activeNode.row) && this.grid.rowEditTabs.length  &&
             this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex,  next.visibleColumnIndex)) {
@@ -318,7 +304,8 @@ export class IgxGridNavigationService {
     public isDataRow(rowIndex, includeSummary = false) {
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length) { return true; }
         const curRow = this.grid.dataView[rowIndex];
-         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow) && (includeSummary || !curRow.summaries);
+         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
+         && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
     private isValidPosition(rowIndex, colIndex) {
