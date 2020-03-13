@@ -107,7 +107,7 @@ export class IgxGridNavigationService {
         }
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateTo(rowIndex, colIndex, (obj) => { obj.target.activate(); });
+            this.navigateInBody(rowIndex, colIndex, (obj) => { obj.target.activate(); });
         }
         this.grid.cdr.detectChanges();
     }
@@ -126,7 +126,7 @@ export class IgxGridNavigationService {
         this.horizontalNav(event, key, -1);
     }
 
-    horizontalNav(event , key, rowIndex) {
+    protected horizontalNav(event , key, rowIndex) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(key)) { return; }
         event.preventDefault();
@@ -142,7 +142,7 @@ export class IgxGridNavigationService {
 
     focusTbody() {
         if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateTo(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
+        this.navigateInBody(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
     }
 
     focusFirstCell(header = true) {
@@ -218,25 +218,22 @@ export class IgxGridNavigationService {
     protected handleEditing(shift, event) {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
         this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
-        if (!this.isRowInEditMode(this.activeNode.row) && this.isActiveNode(next.rowIndex,  next.visibleColumnIndex)) {
+        if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex,  next.visibleColumnIndex)) {
+            this.grid.endEdit(true);
             return;
         }
         event.preventDefault();
-        if (this.isRowInEditMode(this.activeNode.row) && this.grid.rowEditTabs.length  &&
+        if (this.grid.rowInEditMode && this.grid.rowEditTabs.length  &&
             this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex,  next.visibleColumnIndex)) {
             this.grid.gridAPI.submit_value();
             shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
             return;
         }
-        this.navigateTo(next.rowIndex,  next.visibleColumnIndex, (obj) => {
+        this.navigateInBody(next.rowIndex,  next.visibleColumnIndex, (obj) => {
             obj.target.setEditMode(true);
             this.grid.cdr.detectChanges();
         });
-    }
-
-    public isRowInEditMode(rowIndex): boolean {
-        return this.grid.rowEditable && (this.grid.rowInEditMode && this.grid.rowInEditMode.index === rowIndex);
     }
 
     public handleFilterNavigation(visibleIndex: number, previous) {
@@ -260,17 +257,12 @@ export class IgxGridNavigationService {
         const targetRow = this.getRowElementByIndex(targetRowIndex);
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const targetEndTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset :
-            containerHeight + rowHeight;
-        if (!targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
-            || containerHeight && containerHeight < targetEndTopOffset) {
-            return true;
-        } else {
-            return false;
-        }
+        const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
+        return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
+            || containerHeight && containerHeight < endTopOffset;
     }
 
-    public navigateTo(rowIndex, visibleColIndex, cb: Function = null): void {
+    public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex)) { return; }
         this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
     }
@@ -293,32 +285,30 @@ export class IgxGridNavigationService {
         this.forOfDir().scrollTo(this.getColumnUnpinnedIndex(visibleColumnIndex));
     }
 
-    public getRowElementByIndex(index) {
-        if (this.grid.hasDetails) {
-            const detail = this.grid.nativeElement.querySelector(`[detail="true"][data-rowindex="${index}"]`);
-            if (detail) { return detail; }
-        }
-        return [...this.grid.rowList, ...this.grid.summariesRowList].find(r => r.index === index)?.nativeElement;
-    }
-
-    public isDataRow(rowIndex, includeSummary = false) {
+    public isDataRow(rowIndex: number, includeSummary = false) {
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length) { return true; }
         const curRow = this.grid.dataView[rowIndex];
          return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
          && !curRow.childGridsData && (includeSummary || !curRow.summaries);
     }
 
-    private isValidPosition(rowIndex, colIndex) {
+    private getRowElementByIndex(index) {
+        if (this.grid.hasDetails) {
+            const detail = this.grid.nativeElement.querySelector(`[detail="true"][data-rowindex="${index}"]`);
+            if (detail) { return detail; }
+        }
+        return this.grid.rowList.toArray().concat(this.grid.summariesRowList.toArray()).find(r => r.index === index)?.nativeElement;
+    }
+
+    private isValidPosition(rowIndex: number, colIndex: number) {
         if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
-        if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) {
-            return false;
-        }
+        if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) { return false; }
         return true;
     }
 
-    private isActiveNode(rIndex, cIndex) {
+    private isActiveNode(rIndex: number, cIndex: number) {
         return this.activeNode ? this.activeNode.row === rIndex && this.activeNode.column === cIndex : false;
     }
 

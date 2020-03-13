@@ -33,7 +33,7 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
         if (!this._cells) {
             return res;
         }
-        const cList = this._cells.filter(c => c.nativeElement.isConnected)
+        const cList = this._cells.filter((item) => item.nativeElement.parentElement !== null)
         .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
         res.reset(cList);
         return res;
