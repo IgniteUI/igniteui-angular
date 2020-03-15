@@ -129,10 +129,6 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <!-- <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
-        [style.height.px]='calcHeight'>
-        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
-    </div> -->
     <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
         <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
         <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
