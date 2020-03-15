@@ -526,6 +526,56 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
+    /**
+     * Pin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.pinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+     * @param index The index at which to insert the row in the pinned collection.
+     */
+    public pinRow(rowID, index?): boolean {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const flattenedRecord = {...rec};
+        flattenedRecord.children = [];
+        flattenedRecord.level = 0;
+
+        if (!rec || this.isRowInPinnedRecordsStructure(rec) || this.flatData.indexOf(rec.data) === -1) {
+            return false;
+        }
+        const row = this.gridAPI.get_row_by_key(rowID);
+
+        const eventArgs = {
+            insertAtIndex: index,
+            isPinned: true,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+
+        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, flattenedRecord);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private isRowInPinnedRecordsStructure(rec: ITreeGridRecord): boolean {
+        let inStructure = false;
+        this.pinnedRecords.forEach(pinnedRecord => {
+            if (JSON.stringify(pinnedRecord.data) === JSON.stringify(rec.data)) {
+                inStructure = true;
+            }
+        });
+        return inStructure;
+    }
+
     /** @hidden */
     public deleteRowById(rowId: any) {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true

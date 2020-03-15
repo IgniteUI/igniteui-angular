@@ -307,3 +307,38 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
         return collection;
     }
 }
+
+@Pipe({
+    name: 'treeGridRowPinning',
+    pure: true
+})
+export class IgxTreeGridRowPinningPipe implements PipeTransform {
+
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+    }
+
+    transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        return collection;
+    }
+}
+
+@Pipe({
+    name: 'treeGridPinnedRows',
+    pure: true
+})
+export class IgxTreeGridPinnedRowsPipe implements PipeTransform {
+
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+    }
+
+    transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        return collection;
+    }
+
+}
