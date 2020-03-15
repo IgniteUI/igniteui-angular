@@ -67,7 +67,7 @@
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'
+        [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'
         (wheel)="wheelHandler()">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -129,9 +129,16 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
+    <!-- <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
         [style.height.px]='calcHeight'>
         <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+    </div> -->
+    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
+        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
+        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
+            <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+        </div>
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
 </div>
 
