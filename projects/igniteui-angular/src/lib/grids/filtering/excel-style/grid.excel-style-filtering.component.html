@@ -61,7 +61,9 @@
         'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
     }"
     [id]="overlayComponentId"
-    (keydown)="onKeyDown($event)">
+    (keydown)="onKeyDown($event)"
+    [style.min-height]="minHeight"
+    [style.max-height]="maxHeight">
 
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>

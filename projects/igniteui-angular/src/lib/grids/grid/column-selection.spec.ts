@@ -8,6 +8,20 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
 
+const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
+const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+
+const selectedData = [{ ProductID: 1, ProductName: 'Chai' },
+{ ProductID: 2, ProductName: 'Aniseed Syrup' },
+{ ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning' },
+{ ProductID: 4, ProductName: 'Grandmas Boysenberry Spread' },
+{ ProductID: 5, ProductName: 'Uncle Bobs Dried Pears' },
+{ ProductID: 6, ProductName: 'Northwoods Cranberry Sauce' },
+{ ProductID: 7, ProductName: 'Queso Cabrales' },
+{ ProductID: 8, ProductName: 'Tofu' },
+{ ProductID: 9, ProductName: 'Teatime Chocolate Biscuits' },
+{ ProductID: 10, ProductName: 'Chocolate' }];
+
 describe('IgxGrid - Column Selection #grid', () => {
     configureTestSuite();
     let fix: ComponentFixture<any>;
@@ -373,7 +387,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
-        it('verify methods deselectColumns and deselectAllColumns ', () => {
+        it('verify method deselectColumns', () => {
             spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
             grid.columns.forEach(col => col.selected = true);
 
@@ -402,13 +416,45 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnsSelected([colProductID, colUnits, colOrderDate], false);
             GridSelectionFunctions.verifyColumnsSelected([colProductName, colInStock]);
             expect(grid.selectedColumns()).toEqual([colProductName, colInStock]);
+        });
+
+        it('verify methods selectAllColumns  and deselectAllColumns', () => {
+            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
+            // select all columns
+            grid.selectAllColumns();
+            fix.detectChanges();
+
+            grid.columnList.forEach(c => {
+                expect(c.selected).toEqual(true);
+            });
 
             // deselect all columns
             grid.deselectAllColumns();
             fix.detectChanges();
             GridSelectionFunctions.verifyColumnsSelected(grid.columns, false);
             expect(grid.selectedColumns()).toEqual([]);
+
+            // Set selectable false to a column
+            colProductName.selectable = false;
+            fix.detectChanges();
+
+            // select all columns
+            grid.selectAllColumns();
+            fix.detectChanges();
+
+            grid.columnList.forEach(c => {
+                expect(c.selected).toEqual(true);
+            });
+
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(0);
+        });
+
+        it('verify method getSelectedColumnsData', () => {
+            colProductID.selected = true;
+            colProductName.selected = true;
+            fix.detectChanges();
+
+            expect(selectedData).toEqual(grid.getSelectedColumnsData());
         });
     });
 
@@ -575,4 +621,53 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
     });
 
+    describe('Integration tests: ', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(ProductsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+            grid.allowFiltering = true;
+            const colProductName = grid.getColumnByName('ProductName');
+            const colProductID = grid.getColumnByName('ProductID');
+            const colInStock = grid.getColumnByName('InStock');
+            colProductID.selected = true;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName'); // Name column contains nested object as a value
+            tick(150);
+            fix.detectChanges();
+
+            const filterRow = GridFunctions.getFilterRow(fix);
+            expect(filterRow).toBeDefined();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+
+            GridFunctions.clickColumnHeaderUI('InStock', fix);
+            tick();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock, false);
+            expect(grid.filteringRow.column.field).toEqual('InStock');
+
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+            tick();
+
+            const productIDHeader = GridFunctions.getColumnHeader('ProductID', fix);
+            expect(productIDHeader.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toBeFalsy();
+            colProductID.cells.forEach(cell => {
+                expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(true);
+            });
+            expect(grid.filteringRow.column.field).toEqual('ProductID');
+
+            // Hover column headers
+            const productNameHeader = GridFunctions.getColumnHeader('ProductName', fix);
+            productNameHeader.triggerEventHandler('pointerenter', null);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
+        }));
+    });
 });

@@ -103,7 +103,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public sortable = false;
       /**
-     * Gets whether the column is selectable.
+     * Returns if the column is selectable.
      * ```typescript
      * let columnSelectable = this.column.selectable;
      * ```
@@ -116,7 +116,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
      /**
-     * Sets  whether the column is selectable.
+     * Sets if the column is selectable.
      * Default value is `true`.
      * ```html
      * <igx-column [selectable] = "false"></igx-column>
@@ -282,7 +282,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     * Gets whether the column is selected.
+     * Returns if the column is selected.
      * ```typescript
      * let isSelected = this.column.selected;
      * ```
@@ -293,7 +293,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     * Sets the column selected property.
+     * Enables/Disables column selection.
      * Default value is `false`.
      * ```html
      * <igx-column [selected] = "true"></igx-column>

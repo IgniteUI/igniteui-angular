@@ -301,6 +301,10 @@
         @extend %grid-cell--column-selected !optional;
     }
 
+    @include e(td, $mods: (selected, column-selected)) {
+        @extend %grid-cell--cross-selected !optional;
+    }
+
     @include e(tr, $mods: (selected, filtered)) {
         @extend %grid-row--selected--filtered !optional;
     }

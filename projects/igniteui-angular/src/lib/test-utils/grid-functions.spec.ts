@@ -939,6 +939,13 @@ export class GridFunctions {
     }
 
     /**
+     * returns the filter row debug element.
+    */
+   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(FILTER_UI_ROW));
+   }
+
+    /**
      * Open filtering row for a column.
     */
     public static clickFilterCellChip(fix, columnField: string) {
@@ -2148,8 +2155,7 @@ export class GridSelectionFunctions {
    }
 
     public static verifyColumnAncCellsSelected(column: IgxColumnComponent, selected = true) {
-        expect(column.selected).toEqual(selected);
-        expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+        this.verifyColumnSelected(column, selected);
         column.cells.forEach(cell => {
             expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(selected);
         });

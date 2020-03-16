@@ -127,7 +127,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public set filters(classRef: any) { }
 
     /**
-     * Gets the column group is selectable
+     * Returns if the column group is selectable
      * ```typescript
      * let columnGroupSelectable = this.columnGroup.selectable;
      * ```
@@ -138,7 +138,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this._selectable && this.children && this.children.some(child => child.selectable);
     }
     /**
-     *  Sets  whether the column group is selectable.
+     * Enable/disable the selection of the column group.
      * ```typescript
      * this.columnGroup.selectable = false;
      * ```
@@ -236,7 +236,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     /**
-     * Gets whether the column group is selected.
+     * Returns if the column group is selected.
      * ```typescript
      * let isSelected = this.columnGroup.selected;
      * ```
@@ -247,7 +247,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     /**
-     * Sets the column group selected property.
+     * Enables/Disables the column group selection.
      * ```html
      * <igx-column [selected] = "true"></igx-column>
      * ```
