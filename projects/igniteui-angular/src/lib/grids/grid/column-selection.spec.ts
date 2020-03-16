@@ -519,22 +519,10 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnGroupSelected(fix, regInf);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, cityInf, false);
 
-            // Set selected to a columns in not selectable group
-            city.selected = true;
-            address.selected = true;
-            fix.detectChanges();
-
-            GridSelectionFunctions.verifyColumnsSelected([region, postalCode, city, address]);
-            GridSelectionFunctions.verifyColumnsSelected([country], false);
-            GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInf);
-            GridSelectionFunctions.verifyColumnGroupSelected(fix, regInf);
-            GridSelectionFunctions.verifyColumnGroupSelected(fix, cityInf, false);
-
             // Set select to false to a column group
             countryInf.selected = false;
             fix.detectChanges();
-            GridSelectionFunctions.verifyColumnsSelected([city, address]);
-            GridSelectionFunctions.verifyColumnsSelected([country, region, postalCode], false);
+            GridSelectionFunctions.verifyColumnsSelected([country, region, postalCode, city, address], false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInf, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, regInf, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, cityInf, false);
@@ -545,9 +533,13 @@ describe('IgxGrid - Column Selection #grid', () => {
             const genInf = GridFunctions.getColGroup(grid, 'General Information');
             const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
             const companyName = grid.getColumnByName('CompanyName');
+            const contactName = grid.getColumnByName('ContactName');
+            const contactTitle = grid.getColumnByName('ContactTitle');
+            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
 
             // verify setting selected true on a column group
-            personDetails.selectable = false;
+            contactName.selectable = false;
+            contactTitle.selectable = false;
             companyName.selectable = false;
             fix.detectChanges();
 
@@ -563,7 +555,8 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify that when hover group all its selectable children have correct classes', () => {
-            const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
+            const contactName = grid.getColumnByName('ContactName');
+            const contactTitle = grid.getColumnByName('ContactTitle');
             const genInfHeader = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
             const personDetailsHeader = GridFunctions.getColumnGroupHeaderCell('Person Details', fix);
             const companyNameHeader = GridFunctions.getColumnHeader('CompanyName', fix);
@@ -575,13 +568,13 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnsHeadersHasSelectableClass([genInfHeader,
                 personDetailsHeader, companyNameHeader, contactNameHeader, contactTitleHeader]);
 
-
             genInfHeader.triggerEventHandler('pointerleave', null);
             fix.detectChanges();
             GridSelectionFunctions.verifyColumnsHeadersHasSelectableClass([genInfHeader,
                 personDetailsHeader, companyNameHeader, contactNameHeader, contactTitleHeader], false);
 
-            personDetails.selectable = false;
+            contactName.selectable = false;
+            contactTitle.selectable = false;
             fix.detectChanges();
 
             genInfHeader.triggerEventHandler('pointerenter', null);
@@ -589,7 +582,6 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnsHeadersHasSelectableClass([genInfHeader, companyNameHeader]);
             GridSelectionFunctions.verifyColumnsHeadersHasSelectableClass([personDetailsHeader,
                 contactNameHeader, contactTitleHeader], false);
-
 
             genInfHeader.triggerEventHandler('pointerleave', null);
             fix.detectChanges();
@@ -626,6 +618,47 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+        }));
+
+        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
+            grid.allowFiltering = true;
+            const colProductID = grid.getColumnByName('ProductID');
+            const colInStock = grid.getColumnByName('InStock');
+            colProductID.selected = true;
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName'); // Name column contains nested object as a value
+            tick(150);
+            fix.detectChanges();
+
+            const filterRow = GridFunctions.getFilterRow(fix);
+            expect(filterRow).toBeDefined();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+
+            GridFunctions.clickColumnHeaderUI('InStock', fix);
+            tick();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock, false);
+            expect(grid.filteringRow.column.field).toEqual('InStock');
+
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+            tick();
+
+            const productIDHeader = GridFunctions.getColumnHeader('ProductID', fix);
+            expect(productIDHeader.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toBeFalsy();
+            colProductID.cells.forEach(cell => {
+                expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(true);
+            });
+            expect(grid.filteringRow.column.field).toEqual('ProductID');
+
+            // Hover column headers
+            const productNameHeader = GridFunctions.getColumnHeader('ProductName', fix);
+            productNameHeader.triggerEventHandler('pointerenter', null);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
         }));
 
         it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
