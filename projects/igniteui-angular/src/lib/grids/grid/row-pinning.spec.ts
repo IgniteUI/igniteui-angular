@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -215,6 +216,46 @@ describe('Row Pinning #grid', () => {
 
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+        });
+
+        it('pinned rows and groupby.', () => {
+            // pin 1st and 2nd data row
+            grid.pinRow(fix.componentInstance.data[0]);
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            // group by string column
+            grid.groupBy({
+                fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            expect(grid.pinnedRecords.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[0].nativeElement).toBe(grid.getRowByIndex(0).nativeElement);
+
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[2]);
+
+            // pin 3rd data row
+            grid.pinRow(fix.componentInstance.data[2]);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[1].context.rowID).toBe(fix.componentInstance.data[2]);
+
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(3).rowID).toBe(fix.componentInstance.data[3]);
+
+            // 2 records pinned + 2px border
+            expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
     });
 });
