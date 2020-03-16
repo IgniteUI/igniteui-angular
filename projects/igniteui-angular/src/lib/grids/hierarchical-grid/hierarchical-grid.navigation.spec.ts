@@ -948,6 +948,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
 
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
         const lastCellPrevRI = child1.getCellByKey(9, 'ID');
@@ -969,6 +971,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         rowVirt.scrollTo(rowVirt.igxForOf.length - 1);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
 
         // Tab from last cell in 1st child
         const child1Cell = child1.getCellByColumn(9, 'childData');
@@ -988,6 +992,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         // Shift + Tab from 2nd child
         const child2Cell = child2.getCellByKey(0, 'ID');
         GridFunctions.simulateCellKeydown(child2Cell, 'Tab', false, true);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
@@ -1123,7 +1129,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         fixture.detectChanges();
 
         GridFunctions.simulateCellKeydown(parentCell, 'Tab', false, true);
-        await wait();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const childGrids =  fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
