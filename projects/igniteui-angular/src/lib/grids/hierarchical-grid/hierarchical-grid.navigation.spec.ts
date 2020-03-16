@@ -190,11 +190,12 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(DEBOUNCE_TIME);
 
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
 
         const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
         GridFunctions.simulateCellKeydown(parentCell, 'Tab', false, true);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const summaryCells = fixture.debugElement.queryAll(By.directive(IgxSummaryCellComponent));
@@ -1003,6 +1004,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
 
         // Arrow Up into prev child grid
         GridFunctions.simulateCellKeydown(parentCell, 'ArrowUp');
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
