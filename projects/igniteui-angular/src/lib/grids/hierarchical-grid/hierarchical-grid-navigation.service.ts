@@ -2,14 +2,159 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { ISelectionNode } from '../selection/selection.service';
-import { isIE } from '../../core/utils';
+import { isIE, SUPPORTED_KEYS } from '../../core/utils';
 import { FilterMode } from '../common/enums';
 import { IgxColumnComponent } from '../columns/column.component';
 import { Injectable } from '@angular/core';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxRowDirective, IgxGridBaseDirective } from '../grid';
+import { GridType } from '../common/grid.interface';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
+
+
+    dispatchEvent(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
+
+        const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
+        if (targetGrid !== this.grid.nativeElement) {
+            return;
+        }
+
+        if (this.activeNode && event.altKey) {             
+            const row = this.grid.getRowByIndex(this.activeNode.row) as IgxHierarchicalRowComponent;
+            if (row.added) {
+                return;
+            }
+            const collapse = row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
+            const expand = !row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
+            if (collapse) {
+                this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
+            } else if (expand) {
+                this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
+            }
+            return;
+        }
+        super.dispatchEvent(event);
+    }
+
+    public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
+        const rowObj = this.grid.getRowByIndex(rowIndex);
+        if (rowObj instanceof IgxChildGridRowComponent) {
+            // target is child grid
+            const childGrid = (rowObj as IgxChildGridRowComponent).hGrid;
+            const targetIndex = this.activeNode.row < rowIndex ? 0 : childGrid.dataView.length - 1;
+            const childGridNav =  childGrid.navigation;
+            this.activeNode.row = null;
+            childGridNav.activeNode = { row: targetIndex, column: this.activeNode.column};
+            childGrid.tbody.nativeElement.focus();
+            return;
+        }
+
+        if ((rowIndex === -1 || rowIndex === this.grid.dataView.length) &&
+            this.grid.parent !== null) {
+            // reached end of child grid
+            const isFirst = rowIndex === -1;
+            const indexInParent = this.grid.childRow.index;
+            this.activeNode.row = null;
+            const targetRowIndex =  isFirst ? indexInParent - 1 : indexInParent + 1;
+            this.grid.parent.navigation.activeNode = { 
+                row: targetRowIndex,
+                column: this.activeNode.column 
+            };
+            this.grid.parent.tbody.nativeElement.focus();
+            this.grid.parent.navigateTo(targetRowIndex, this.activeNode.column);            
+            return;
+        }
+
+        if (this.grid.parent) {
+            const cbHandler = (args) => {
+                const isNext = rowIndex > this.activeNode.row;
+                const positionInfo = this.getPositionInfo(rowObj, isNext);
+                if(!positionInfo.inView) {
+                    const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
+                    scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+                }
+                cb(args);
+            };
+            super.navigateInBody(rowIndex, visibleColIndex, cbHandler);
+            return;
+        }
+
+        super.navigateInBody(rowIndex, visibleColIndex, cb);
+    }
+
+    protected getPositionInfo(rowObj: IgxRowDirective<IgxGridBaseDirective & GridType>, isNext: boolean) {
+        const rowElem = rowObj.nativeElement;
+        const diffBottom =
+        rowElem.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+        const gridTop = this._getMaxTop(this.grid);
+        const diffTop = rowElem.getBoundingClientRect().bottom -
+        rowElem.offsetHeight - gridTop;
+
+        return { inView: diffBottom <= 0 && diffTop >= 0, offset: isNext ? diffBottom : diffTop };
+    };
+
+    protected getClosestElemByTag(sourceElem, targetTag) {
+        let result = sourceElem;
+        while (result !== null && result.nodeType === 1) {	
+            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {	
+                return result;	
+            }	
+            result = result.parentNode;	
+        }	
+        return null;	
+    }
+
+    private _getMaxTop(grid) {
+        let currGrid = grid;
+        let top = currGrid.tbody.nativeElement.getBoundingClientRect().top;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top);
+        }
+        return top;
+    }
+
+    private getNextScrollableDown(grid) {
+        let currGrid = grid.parent;
+        if (!currGrid) {
+            return { grid: grid, prev: null };
+        }
+        let scrollTop = currGrid.verticalScrollContainer.scrollPosition;
+        let scrollHeight = currGrid.verticalScrollContainer.getScroll().scrollHeight;
+        let nonScrollable = scrollHeight === 0 ||
+            Math.round(scrollTop + currGrid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
+        let prev = grid;
+        while (nonScrollable && currGrid.parent !== null) {
+            prev = currGrid;
+            currGrid = currGrid.parent;
+            scrollTop = currGrid.verticalScrollContainer.scrollPosition;
+            scrollHeight = currGrid.verticalScrollContainer.getScroll().scrollHeight;
+            nonScrollable = scrollHeight === 0 ||
+                Math.round(scrollTop + currGrid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
+        }
+        return { grid: currGrid, prev: prev };
+    }
+
+    private getNextScrollableUp(grid) {
+        let currGrid = grid.parent;
+        if (!currGrid) {
+            return { grid: grid, prev: null };
+        }
+        let nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
+        let prev = grid;
+        while (nonScrollable && currGrid.parent !== null) {
+            prev = currGrid;
+            currGrid = currGrid.parent;
+            nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
+        }
+        return { grid: currGrid, prev: prev };
+    }
 
  /*    protected getCellSelector(visibleIndex?: number, isSummary = false) {
         return isSummary ? 'igx-grid-summary-cell' : 'igx-hierarchical-grid-cell';

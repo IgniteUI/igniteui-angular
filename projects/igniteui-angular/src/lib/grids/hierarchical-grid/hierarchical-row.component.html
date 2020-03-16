@@ -1,4 +1,4 @@
-<div (click)="expanderClick($event)" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+<div (click)="expanderClick($event)" class="igx-grid__hierarchical-expander" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
 </div>
@@ -47,6 +47,7 @@
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
+        [active]="isCellActive(col.visibleIndex)"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
         [style.min-width]="col.width"
@@ -89,6 +90,7 @@
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
+        [active]="isCellActive(col.visibleIndex)"
         [firstPinned]="col.isFirstPinned"
         [lastPinned]="col.isLastPinned"
         [style.min-height.px]="grid.rowHeight || 32"

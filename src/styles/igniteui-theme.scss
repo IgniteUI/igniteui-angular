@@ -26,6 +26,10 @@ body {
     @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
 }
 
+.igx-grid-summary--active, .igx-grid__group-row--active, .igx-grid__tr-container--active, .igx-grid__th--active {
+    box-shadow: inset 0 0 0 1px #f66604;
+}
+
 
 //.dark-theme {
 //    $igx-background-color: igx-color($green-dark-palette, 'surface');

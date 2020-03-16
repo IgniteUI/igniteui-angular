@@ -73,13 +73,7 @@ private resolver;
     public index: number;
 
     @ViewChild('hgrid', { static: true })
-    private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
      * @hidden

@@ -60,11 +60,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      * @internal
      */
-    @HostListener('focus', ['$event'])
-    onFocus(event) {
-        if (this.focused) {
-            return;
-        }
+    public activate(event: FocusEvent) {
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
         let parentGrid = this.grid;
@@ -82,26 +78,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
-      //  super.onFocus(event);
-    }
-
-    // TODO: Refactor
-    /**
-     * @hidden
-     * @internal
-     */
-    dispatchEvent(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        if (event.altKey && !this.row.added) {
-            const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
-            const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
-            if (collapse) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
-            } else if (expand) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
-            }
-            return;
-        }
-       // super.dispatchEvent(event);
+        super.activate(event);
     }
 }
