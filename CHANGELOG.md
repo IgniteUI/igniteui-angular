@@ -102,6 +102,7 @@ All notable changes for each version of this project will be documented in this 
     </igx-grid>
     ```
 - `IgxSlider`:
+    - **Breaking Change** - `isContinuous` - input has been deleted. The option is not supported anymore.
     - `primaryTicks` input was added. Which sets the number of primary ticks
     - `secondaryTicks` input was added. Which sets the number of secondary ticks.
     - `showTicks` input was added. Which show/hide all slider ticks and tick labels.
@@ -110,7 +111,6 @@ All notable changes for each version of this project will be documented in this 
     - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
     - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
     - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
-    - `isContinuous` - input has been deleted. The option is not supported anymore.
     - `onValueChanged` - new output has been exposed. This event is emitted at the end of every slide interaction.
 
 - `IgxCarousel`:

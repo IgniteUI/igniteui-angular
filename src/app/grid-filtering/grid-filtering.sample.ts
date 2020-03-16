@@ -8,51 +8,20 @@ import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     styleUrls: ['grid-filtering.sample.css'],
     templateUrl: 'grid-filtering.sample.html'
 })
-export class GridFilteringComponent implements OnInit, AfterViewInit {
+export class GridFilteringComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
     public displayDensities;
     public filterModes;
     public density = 'comfortable';
+    public advancedFilteringTree: FilteringExpressionsTree;
 
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
 
     @ViewChild('applyChangesCheckbox', { static: true })
     public applyChangesCheckbox: IgxCheckboxComponent;
-
-    ngAfterViewInit(): void {
-        const tree = new FilteringExpressionsTree(FilteringLogic.And);
-        tree.filteringOperands.push({
-            fieldName: 'ID',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'a',
-            ignoreCase: true
-        });
-        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        orTree.filteringOperands.push({
-            fieldName: 'ID',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'b',
-            ignoreCase: true
-        });
-        orTree.filteringOperands.push({
-            fieldName: 'CompanyName',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'c',
-            ignoreCase: true
-        });
-        tree.filteringOperands.push(orTree);
-        tree.filteringOperands.push({
-            fieldName: 'CompanyName',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'd',
-            ignoreCase: true
-        });
-
-        this.grid1.advancedFilteringExpressionsTree = tree;
-    }
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -523,6 +492,36 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
                 'Contract': false
             }
         ];
+
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'a',
+            ignoreCase: true
+        });
+        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        orTree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'b',
+            ignoreCase: true
+        });
+        orTree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'c',
+            ignoreCase: true
+        });
+        tree.filteringOperands.push(orTree);
+        tree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'd',
+            ignoreCase: true
+        });
+
+        this.advancedFilteringTree = tree;
     }
 
     public selectDensity(event) {
