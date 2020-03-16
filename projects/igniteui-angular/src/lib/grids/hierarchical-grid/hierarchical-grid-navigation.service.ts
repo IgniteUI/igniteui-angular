@@ -82,6 +82,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected _handleScrollInChild(rowIndex: number, grid?, isNext?: boolean) {
         const currGrid = grid || this.grid;
         const rowObj = currGrid.getRowByIndex(rowIndex);
+        if (rowObj) {
+            this.positionInParent(rowIndex, currGrid, isNext);
+        } else {
+            currGrid.navigation.performVerticalScrollToCell(rowIndex, () => {
+                this.positionInParent(rowIndex, currGrid, isNext);
+            });
+        }        
+    }
+
+    protected positionInParent(rowIndex, currGrid, isNext) {
+        const rowObj = currGrid.getRowByIndex(rowIndex);
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
             const scrollableGrid = isNext ? this.getNextScrollableDown(currGrid) : this.getNextScrollableUp(currGrid);
@@ -127,8 +138,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const gridTop = this._getMaxTop(this.grid);
         const diffTop = rowElem.getBoundingClientRect().bottom -
         rowElem.offsetHeight - gridTop;
+        const isInView = isNext ? diffBottom <= 0 : diffTop >= 0;
+        const calcOffset =  isNext ? diffBottom : diffTop;
 
-        return { inView: diffBottom <= 0 && diffTop >= 0, offset: isNext ? diffBottom : diffTop };
+        return { inView: isInView, offset: calcOffset };
     };
 
     protected getClosestElemByTag(sourceElem, targetTag) {
