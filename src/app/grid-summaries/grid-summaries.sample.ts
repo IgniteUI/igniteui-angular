@@ -3,8 +3,10 @@ import {
     IgxColumnComponent,
     IgxGridComponent,
     IgxNumberSummaryOperand,
-    IgxSummaryResult
+    IgxSummaryResult,
+    ColumnPinningPosition
 } from 'igniteui-angular';
+import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 
 class MySummary extends IgxNumberSummaryOperand {
@@ -45,6 +47,8 @@ export class GridSummaryComponent implements OnInit {
     public disablePinning = false;
     public hasSummaryUnit = true;
     public hasHidden = false;
+
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
 
     data = [{
@@ -802,5 +806,13 @@ export class GridSummaryComponent implements OnInit {
 
     public scrScrollTo(index) {
         this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
+    }
+
+    onChange() {
+        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
+            this.pinningConfig = { columns: ColumnPinningPosition.Start };
+        } else {
+            this.pinningConfig = { columns: ColumnPinningPosition.End };
+        }
     }
 }
