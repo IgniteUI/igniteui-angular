@@ -112,7 +112,7 @@
             <ng-container *ngFor="let rowData of pinnedRecords
                 | visibleColumns:hasVisibleColumns
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
-                | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
+                | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
                 | gridDetails:hasDetails:expansionStates:pipeTrigger; let rowIndex = index">
                 <ng-container *ngTemplateOutlet="getRowTemplate(rowData); context: getContext(rowData, rowIndex, true)">
                 </ng-container>
