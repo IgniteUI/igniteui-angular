@@ -7,6 +7,7 @@ import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../test
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -614,15 +615,18 @@ describe('IgxGrid - Column Selection #grid', () => {
     });
 
     describe('Integration tests: ', () => {
+        let colProductID;
+        let colProductName;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            colProductID = grid.getColumnByName('ProductID');
+            colProductName = grid.getColumnByName('ProductName');
         }));
 
         it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
             grid.allowFiltering = true;
-            const colProductID = grid.getColumnByName('ProductID');
             const colInStock = grid.getColumnByName('InStock');
             colProductID.selected = true;
             fix.detectChanges();
@@ -661,46 +665,126 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
         }));
 
-        it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
-            grid.allowFiltering = true;
-            const colProductName = grid.getColumnByName('ProductName');
-            const colProductID = grid.getColumnByName('ProductID');
-            const colInStock = grid.getColumnByName('InStock');
+        it('Filtering: Verify column selection when filter', () => {
+            colProductName.selected = true;
             colProductID.selected = true;
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChipUI(fix, 'ProductName'); // Name column contains nested object as a value
-            tick(150);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+
+            grid.filter('ProductName', 'Chocolate', IgxStringFilteringOperand.instance().condition('equals'), true);
             fix.detectChanges();
 
-            const filterRow = GridFunctions.getFilterRow(fix);
-            expect(filterRow).toBeDefined();
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            expect(grid.getSelectedColumnsData()).toEqual([{ ProductID: 10, ProductName: 'Chocolate' }]);
+
+            grid.clearFilter();
+            fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+        });
 
-            GridFunctions.clickColumnHeaderUI('InStock', fix);
-            tick();
-
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock, false);
-            expect(grid.filteringRow.column.field).toEqual('InStock');
-
-            GridFunctions.clickColumnHeaderUI('ProductID', fix);
-            tick();
-
+        it('Sorting: Verify column selection is not change when click on sort indicator', () => {
             const productIDHeader = GridFunctions.getColumnHeader('ProductID', fix);
-            expect(productIDHeader.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toBeFalsy();
-            colProductID.cells.forEach(cell => {
-                expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(true);
-            });
-            expect(grid.filteringRow.column.field).toEqual('ProductID');
-
-            // Hover column headers
-            const productNameHeader = GridFunctions.getColumnHeader('ProductName', fix);
-            productNameHeader.triggerEventHandler('pointerenter', null);
+            colProductName.selected = true;
+            colProductID.sortable = true;
+            colProductID.selected = true;
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
+            GridFunctions.clickHeaderSortIcon(productIDHeader);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID, true);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, true);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+
+            GridFunctions.clickHeaderSortIcon(productIDHeader);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID, true);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, true);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData.sort(( a, b) => b.ProductID - a.ProductID));
+        });
+
+        it('Pinning: Verify that when pin/unpin the column stays selected', () => {
+            colProductName.selected = true;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+
+            // pin the column
+            colProductName.pinned = true;
+            fix.detectChanges();
+
+            GridFunctions.verifyColumnIsPinned(colProductName, true, 1);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+
+            colProductName.pinned = false;
+            fix.detectChanges();
+
+            GridFunctions.verifyColumnIsPinned(colProductName, false, 0);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+        });
+
+        it('Hiding: Verify that when hide/unhide a column the column stays selected', () => {
+            colProductID.selected = true;
+            colProductName.selected = true;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+
+            // hide the column
+            colProductName.hidden = true;
+            fix.detectChanges();
+
+            GridFunctions.verifyColumnIsHidden(colProductName, true, 4);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.selectedColumns().includes(colProductName)).toBeTruthy();
+
+            colProductName.hidden = false;
+            fix.detectChanges();
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+        });
+
+        it('Moving: Verify that when move a column, it stays selected', () => {
+            colProductID.movable = true;
+            colProductName.movable = true;
+            colProductID.selected = true;
+            fix.detectChanges();
+
+            grid.moveColumn(colProductID, colProductName);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, false);
+            expect(colProductID.visibleIndex).toEqual(1);
+        });
+
+        it('Paging: Verify column stays selected when change page', fakeAsync(() => {
+            colProductName.selected = true;
+            colProductID.selected = true;
+            grid.paging = true;
+            grid.perPage = 3;
+            fix.detectChanges();
+            tick(30);
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+
+            grid.paginate(1);
+            fix.detectChanges();
+            tick(16);
+
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
         }));
     });
 });
