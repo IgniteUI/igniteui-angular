@@ -46,7 +46,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
 
     /**
      * Gets whether the row is pinned.
-     * 
+     *
      * @example
      * ```typescript
      * let pinned = row.pinned;
@@ -113,7 +113,8 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
-        const pinnedRecordClass = this.pinned ? 'igx-grid__tr--disabled' : '';
+        const pinnedRecordClass = this.pinned && (this.grid.pinnedRecords.indexOf(this.treeRow) === -1) ?
+                'igx-grid__tr--disabled' : '';
         return `${classes} ${filteredClass} ${pinnedRecordClass}`;
     }
 
