@@ -842,21 +842,6 @@ export class GridFunctions {
         hideIcon.click();
     }
 
-    /**
-     * Click the column slection icon in the ESF by specifying whether the icon is in the header
-     * or at its default position (depending on the display density).
-    */
-    public static clickColumnSelectionIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader: boolean = true) {
-        let columnSelectionIcon: any;
-        if (isIconInHeader) {
-            const headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            columnSelectionIcon = headerIcons.find((buttonIcon: any) => buttonIcon.innerText === 'done');
-        } else {
-            columnSelectionIcon = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
-        }
-        columnSelectionIcon.click();
-    }
-
     public static getIconFromButton(iconName: string, component: any) {
         const icons = component.querySelectorAll('igx-icon');
         return Array.from(icons).find((sortIcon: any) => sortIcon.innerText === iconName);
