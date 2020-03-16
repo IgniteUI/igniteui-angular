@@ -979,9 +979,10 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
-            [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+            [filterable]="filterable" [resizable]="resizable" dataType="string" [selectable]="false"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
-        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable"
+            [selectable]="false" [resizable]="resizable" dataType="boolean"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
@@ -1095,6 +1096,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
         <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
         <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+        <ng-template igxExcelStyleSelecting><div class="esf-custom-column-selection">Column Selection Template</div></ng-template>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {

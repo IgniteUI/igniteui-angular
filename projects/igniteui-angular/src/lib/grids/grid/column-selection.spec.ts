@@ -8,7 +8,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
 
-fdescribe('IgxGrid - Column Selection #grid', () => {
+describe('IgxGrid - Column Selection #grid', () => {
     configureTestSuite();
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;

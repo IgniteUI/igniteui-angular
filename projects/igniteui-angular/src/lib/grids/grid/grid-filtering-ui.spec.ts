@@ -3186,6 +3186,29 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
+        it('display dansity is properly applied on the column selection container', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+
+            let columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
+            let headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
+
+            expect(columnSelectionContainer).not.toBeNull();
+            expect(headerIcons.length).toEqual(0);
+
+            grid.displayDensity = DisplayDensity.compact;
+            fix.detectChanges();
+
+            columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
+            headerIcons = GridFunctions.getExcelFilteringHeaderIcons(fix);
+            const columnSelectionIcon = headerIcons.find((bi: any) => bi.innerText === 'done');
+
+            expect(columnSelectionContainer.tagName).toEqual('BUTTON');
+            expect(columnSelectionIcon).not.toBeNull();
+
+        }));
+
         it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
             const column = grid.columns.find((c) => c.field === 'ProductName');
             column.sortable = true;
@@ -4168,6 +4191,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 expect(excelMenu.querySelector('.esf-custom-pinning')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringPinContainer(fix, excelMenu)).toBeNull();
                 expect(GridFunctions.getExcelFilteringUnpinContainer(fix, excelMenu)).toBeNull();
+
+                // Verify column selection custom template application.
+                expect(excelMenu.querySelector('.esf-custom-column-selection')).not.toBeNull();
+                expect(GridFunctions.getExcelFilteringColumnSelectionContainer(fix, excelMenu)).toBeNull();
             }
         }));
     });
@@ -4285,6 +4312,36 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             expect(grid.columns[1].hidden).toBeTruthy();
         }));
+
+        it('Column selection button should be visible/hidden when column is selectable/not selectable', () => {
+            let columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
+            expect(columnSelectionContainer).toBeNull();
+
+            const esf = fix.componentInstance.esf;
+            esf.column = grid.getColumnByName('Downloads');
+            fix.detectChanges();
+
+            columnSelectionContainer = GridFunctions.getExcelFilteringColumnSelectionContainer(fix);
+            expect(columnSelectionContainer).not.toBeNull();
+        });
+
+        it('should select/deselect column when interact with the column selection item throguh esf menu', () => {
+            fix.componentInstance.esf.column = grid.getColumnByName('Downloads');
+            fix.detectChanges();
+
+            GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
+            spyOn(grid.onColumnSelectionChange, 'emit');
+
+            let selectedColumn = grid.selectedColumns()[0];
+            expect(selectedColumn.field).toEqual('Downloads');
+
+            GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
+            spyOn(grid.onColumnSelectionChange, 'emit');
+
+            selectedColumn = grid.selectedColumns();
+            expect(selectedColumn.length).toEqual(0);
+        });
+
     });
 });
 
