@@ -842,7 +842,7 @@ export class GridFunctions {
         hideIcon.click();
     }
 
-    public static getIconFromButton(iconName: string, component: any, fix: ComponentFixture<any>) {
+    public static getIconFromButton(iconName: string, component: any) {
         const icons = component.querySelectorAll('igx-icon');
         return Array.from(icons).find((sortIcon: any) => sortIcon.innerText === iconName);
     }
@@ -851,15 +851,23 @@ export class GridFunctions {
     * Click the sort ascending button in the ESF.
     */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix), fix);
+        const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortAscIcon.click();
+    }
+
+    /**
+     * Click the column selection button in the ESF.
+     */
+    public static clickColumnSelectionInExcelStyleFiltering(fix: ComponentFixture<any>) {
+        const columnSelectIcon: any = this.getIconFromButton('done', GridFunctions.getExcelFilteringColumnSelectionContainer(fix));
+        columnSelectIcon.click();
     }
 
     /**
      * Click the sort descending button in the ESF.
     */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix), fix);
+        const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortDescIcon.click();
     }
 
@@ -867,18 +875,17 @@ export class GridFunctions {
      * Click the move left button in the ESF.
     */
     public static clickMoveLeftInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix), fix);
+        const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix));
         moveLeftIcon.click();
     }
 
     /**
      * Click the move right button in the ESF.
-    */
+     */
     public static clickMoveRightInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveRightIcon: any = this.getIconFromButton('arrow_forwards', GridFunctions.getExcelFilteringMoveComponent(fix), fix);
+        const moveRightIcon: any = this.getIconFromButton('arrow_forwards', GridFunctions.getExcelFilteringMoveComponent(fix));
         moveRightIcon.click();
     }
-
 
     public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex: number = 0): HTMLInputElement {
         const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
@@ -1111,6 +1118,12 @@ export class GridFunctions {
     public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('igx-excel-style-column-moving');
+    }
+
+    public static getExcelFilteringColumnSelectionContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('.igx-excel-filter__actions-select') ||
+            excelMenu.querySelector('.igx-excel-filter__actions-selected');
     }
 
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
