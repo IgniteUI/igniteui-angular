@@ -61,7 +61,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             col.selected = true;
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyColumnAncCellsSelected(col);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(col);
 
             col = grid.getColumnByName('ProductName');
             col.selectable = false;
@@ -73,7 +73,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             col.selected = true;
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyColumnAncCellsSelected(col, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(col, false);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
@@ -83,7 +83,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: [],
@@ -95,13 +95,13 @@ describe('IgxGrid - Column Selection #grid', () => {
             });
 
             GridFunctions.clickColumnHeaderUI('ProductName', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: ['ProductID'],
@@ -113,7 +113,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             });
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: ['InStock'],
@@ -317,7 +317,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
         it('verify canceling event onColumnSelectionChange', () => {
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
 
             grid.onColumnSelectionChange.subscribe((e: IColumnSelectionEventArgs) => {
                 e.cancel = true;
@@ -325,24 +325,24 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             // Click on same column to deselect it.
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
 
             // Click on different column
             GridFunctions.clickColumnHeaderUI('ProductName', fix);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(grid.selectedColumns()).toEqual([colProductID]);
 
             // Click on different column holding ctrl key
             GridFunctions.clickColumnHeaderUI('ProductName', fix, true);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(grid.selectedColumns()).toEqual([colProductID]);
 
             // Click on different column holding shift key
             GridFunctions.clickColumnHeaderUI('ProductName', fix, false, true);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
             expect(grid.selectedColumns()).toEqual([colProductID]);
         });
 
@@ -643,13 +643,13 @@ describe('IgxGrid - Column Selection #grid', () => {
             const filterRow = GridFunctions.getFilterRow(fix);
             expect(filterRow).toBeDefined();
 
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
             tick();
 
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colProductID);
-            GridSelectionFunctions.verifyColumnAncCellsSelected(colInStock, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
             expect(grid.filteringRow.column.field).toEqual('InStock');
 
             GridFunctions.clickColumnHeaderUI('ProductID', fix);

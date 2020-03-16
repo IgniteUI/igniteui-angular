@@ -3131,7 +3131,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should enable/disable the apply button correctly.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
-            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             // Verify there are filtered-in results and that apply button is enabled.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             let applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
@@ -4323,21 +4322,22 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(columnSelectionContainer).not.toBeNull();
         });
 
-        it('should select/deselect column when interact with the column selection item throguh esf menu', () => {
-            fix.componentInstance.esf.column = grid.getColumnByName('Downloads');
+        fit('should select/deselect column when interact with the column selection item throguh esf menu', () => {
+            const column = grid.getColumnByName('Downloads');
+            fix.componentInstance.esf.column = column;
             fix.detectChanges();
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
-            spyOn(grid.onColumnSelectionChange, 'emit');
+            fix.detectChanges();
 
-            let selectedColumn = grid.selectedColumns()[0];
-            expect(selectedColumn.field).toEqual('Downloads');
+            spyOn(grid.onColumnSelectionChange, 'emit');
+            GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
-            spyOn(grid.onColumnSelectionChange, 'emit');
+            fix.detectChanges();
 
-            selectedColumn = grid.selectedColumns();
-            expect(selectedColumn.length).toEqual(0);
+            spyOn(grid.onColumnSelectionChange, 'emit');
+            GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
         });
 
     });

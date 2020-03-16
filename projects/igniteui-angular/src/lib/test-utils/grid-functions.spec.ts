@@ -2139,7 +2139,7 @@ export class GridSelectionFunctions {
         headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
    }
 
-    public static verifyColumnAncCellsSelected(column: IgxColumnComponent, selected = true) {
+    public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
         this.verifyColumnSelected(column, selected);
         column.cells.forEach(cell => {
             expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(selected);
