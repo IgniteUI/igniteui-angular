@@ -23,5 +23,11 @@ $_dark-fluent-toast: extend($_fluent-toast);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-toast
-$_dark-bootstrap-toast: extend($_bootstrap-toast);
+$_dark-bootstrap-toast: extend(
+    $_bootstrap-toast, (
+        text-color: (
+            igx-contrast-color: ('grays', 600)
+        )
+    )
+);
 
