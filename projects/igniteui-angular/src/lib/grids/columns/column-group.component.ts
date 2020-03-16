@@ -135,18 +135,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     @Input()
     public get selectable(): boolean {
-        return this._selectable && this.children && this.children.some(child => child.selectable);
+        return this.children && this.children.some(child => child.selectable);
     }
     /**
      * Enable/disable the selection of the column group.
-     * ```typescript
-     * this.columnGroup.selectable = false;
-     * ```
+     * Groups gets the selectable property from their children
      * @memberof IgxColumnGroupComponent
      */
-    public set selectable(value: boolean) {
-        this._selectable = value;
-    }
+    public set selectable(value: boolean) {}
 
     /**
      * Returns a reference to the body template.
@@ -243,7 +239,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get selected(): boolean {
-        return this.selectable && this.children.toArray().every(c => c.hidden || !c.selectable || c.selected);
+        return this.selectable && this.children.toArray().every(c => !c.selectable || c.selected);
     }
 
     /**
@@ -365,7 +361,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             });
         }
     }
-
     // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);

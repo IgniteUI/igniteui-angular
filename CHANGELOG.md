@@ -123,10 +123,6 @@ All notable changes for each version of this project will be documented in this 
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
     - `expandRow(rowID)`/`collapseRow(rowID)`/`toggleRow(rowID)` API methods are added for the `igxHierarchicalGrid`. They allow expanding/collapsing a row by its id.
     - `onRowToggle` event is added for the `igxHierarchicalGrid`. It is emitted when the expanded state of a row is changed.
-    - `IgxOverlayService`:
-        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
-    - `IgxToggleDirective`:
-        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
     - `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
     ```html
     <igx-grid #grid1 [data]="remote | async" primaryKey="ProductID"
@@ -185,6 +181,12 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxDropDown`:
     - `clearSelection` method is added, which can be used to deselect the selected dropdown item
+
+- `IgxToggleDirective`:
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+
+- `IgxOverlayService`:
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 
 - `IgxCircularProgressBar`:
     - added `IgxProgressBarGradientDirective` to allow providing custom circular progress SVG gradients. Providing a custom gradient via a template is as easy as writing:

@@ -215,7 +215,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     get minHeight() {
         if (!this.inline) {
-            let minHeight = 600;
+            let minHeight = 645;
             switch (this.grid.displayDensity) {
                 case DisplayDensity.cosy: minHeight = 465; break;
                 case DisplayDensity.compact: minHeight = 330; break;
@@ -230,7 +230,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     @HostBinding('style.max-height') get maxHeight() {
         if (!this.inline) {
-            let maxHeight = 730;
+            let maxHeight = 775;
             switch (this.grid.displayDensity) {
                 case DisplayDensity.cosy: maxHeight = 565; break;
                 case DisplayDensity.compact: maxHeight = 405; break;
