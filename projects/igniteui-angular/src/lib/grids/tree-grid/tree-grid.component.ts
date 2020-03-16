@@ -566,7 +566,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    private isRowInPinnedRecordsStructure(rec: ITreeGridRecord): boolean {
+    public isRowInPinnedRecordsStructure(rec: ITreeGridRecord): boolean {
         let inStructure = false;
         this.pinnedRecords.forEach(pinnedRecord => {
             if (JSON.stringify(pinnedRecord.data) === JSON.stringify(rec.data)) {
