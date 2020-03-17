@@ -561,6 +561,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
         }
+        this.cdr.detectChanges();
     }
 
     /**
@@ -646,7 +647,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
     * @hidden
     */
-    public getContext(rowData: any, rowIndex: Number): any {
+    public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        }
+        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this.pinnedRecords.length : rowIndex;
         return {
             $implicit: rowData,
             index: rowIndex,

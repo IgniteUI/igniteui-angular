@@ -85,7 +85,7 @@
                     <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
                     </igx-tree-grid-row>
                 </ng-template>
-                <ng-container [igxTemplateOutlet]="record_template" [igxTemplateOutletContext]="getContext(rowData, rowIndex)">
+                <ng-container [igxTemplateOutlet]="record_template" [igxTemplateOutletContext]="getContext(rowData, rowIndex, true)">
                 </ng-container>
             </ng-container>
         </ng-template>
