@@ -166,7 +166,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const visibleColsLength = childGrid.visibleColumns.length - 1;
         const columnIndex = this.activeNode.column <= visibleColsLength ? this.activeNode.column : visibleColsLength;
         childGridNav.activeNode = { row: targetIndex, column: columnIndex};
-        childGrid.tbody.nativeElement.focus();
+        childGrid.tbody.nativeElement.focus({preventScroll:true});
         childGrid.navigation._handleScrollInChild(targetIndex, isNext)
     }
 
@@ -182,7 +182,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
         const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
         const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
-        this.grid.parent.tbody.nativeElement.focus();        
+        this.grid.parent.tbody.nativeElement.focus({preventScroll:true});        
         this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cb); 
     }
 
