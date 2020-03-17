@@ -8,6 +8,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { ɵɵsetComponentScope } from '@angular/core';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -601,7 +602,6 @@ describe('IgxGrid - Column Selection #grid', () => {
 
 
         it('When click on a col goup all it\'s visible and selectable child should be selected', () => {
-            pending('pending a fix of the selected getter');
             const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
             const genInfHeader = GridFunctions.getColGroup(grid, 'General Information');
             const companyName = grid.getColumnByName('CompanyName');
@@ -679,6 +679,48 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInfo, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo, false);
             GridSelectionFunctions.verifyColumnsSelected([region, postalCode], false);
+        });
+
+        it('Should select the group when all visible child are selected', () => {
+            const countryInfo = GridFunctions.getColGroup(grid, 'Country Information');
+            const regionInfo = GridFunctions.getColGroup(grid, 'Region Information');
+            const region = grid.getColumnByName('Region');
+            const country = grid.getColumnByName('Country');
+            const postalCode = grid.getColumnByName('PostalCode');
+
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInfo, false);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo, false);
+            GridSelectionFunctions.verifyColumnSelected(region, false);
+
+            country.hidden = true;
+            country.selectable = true;
+            postalCode.hidden = true;
+            fix.detectChanges();
+
+            GridFunctions.clickColumnHeaderUI('Region', fix);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInfo);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo);
+            GridSelectionFunctions.verifyColumnSelected(region);
+        });
+
+        it('group is selected if all it\'s children are selected', () => {
+            const regionInfo = GridFunctions.getColGroup(grid, 'Region Information');
+            const region = grid.getColumnByName('Region');
+            const country = grid.getColumnByName('Country');
+            const postalCode = grid.getColumnByName('PostalCode');
+
+            country.selectable = true;
+            country.selected = true;
+            region.selected = true;
+            postalCode.selected = true;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo);
+
+            postalCode.selected = false;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo, false);
         });
     });
 
