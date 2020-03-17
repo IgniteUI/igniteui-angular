@@ -4323,7 +4323,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(columnSelectionContainer).not.toBeNull();
         });
 
-        fit('should select/deselect column when interact with the column selection item throguh esf menu', () => {
+        it('should select/deselect column when interact with the column selection item through esf menu', () => {
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
