@@ -149,9 +149,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;
         const targetRec =  childGrid.dataView[targetIndex];
         if(!targetRec) {
-            // if no target rec, then move on in parent
-            const parentTargetIndex = isNext ? parentRowIndex + 1 : parentRowIndex - 1;
-            this.navigateInBody(parentTargetIndex, this.activeNode.column);
+            // if no target rec, then move on in next sibling or parent
+            childGrid.navigation.navigateInBody(targetIndex, this.activeNode.column);
             return;
         }
         if (childGrid.isChildGridRecord(targetRec)) {
