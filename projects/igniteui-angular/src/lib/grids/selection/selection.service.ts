@@ -747,7 +747,7 @@ export class IgxGridSelectionService {
         const columns = fields.map(f => this.grid.getColumnByName(f)).sort((a, b) => a.visibleIndex - b.visibleIndex);
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
         if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !event.shiftKey) {
-            this.columnsState.field = columns[0].field;
+            this.columnsState.field = columns[0] ? columns[0].field : null;
             this.columnsState.range = [];
 
             const added = fields.filter(colField => !this.isColumnSelected(colField));

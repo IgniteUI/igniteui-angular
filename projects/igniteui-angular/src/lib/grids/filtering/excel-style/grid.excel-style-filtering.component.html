@@ -104,6 +104,10 @@
 
     <section class="igx-excel-filter__actions">
 
+        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
+            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
+        </div>
+
         <div *ngIf="column.movable">
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
         </div>
@@ -114,10 +118,6 @@
 
         <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
-        </div>
-
-        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
-            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
         </div>
 
         <div
@@ -178,11 +178,11 @@
 </igx-drop-down>
 
 <igx-excel-style-custom-dialog
-*ngIf="column"
-#customDialog
-[column]="column"
-[filteringService]="filteringService"
-[overlayComponentId]="overlayComponentId"
-[overlayService]="overlayService"
-[displayDensity]="grid.displayDensity">
+    *ngIf="column"
+    #customDialog
+    [column]="column"
+    [filteringService]="filteringService"
+    [overlayComponentId]="overlayComponentId"
+    [overlayService]="overlayService"
+    [displayDensity]="grid.displayDensity">
 </igx-excel-style-custom-dialog>

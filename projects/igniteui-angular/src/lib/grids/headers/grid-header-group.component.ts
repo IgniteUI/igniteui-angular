@@ -216,7 +216,18 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
     */
     get selectable() {
-        return this.column.applySelectableClass && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
+        const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
+        return this.column.applySelectableClass
+            && !this.selected && selectableChildren.length > 0
+            && !this.grid.filteringService.isFilterRowVisible;
+    }
+
+    /**
+     * @hidden
+    */
+    get selected() {
+        const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
+        return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
 
     /**
@@ -231,8 +242,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public groupClicked(event): void {
         if (this.column.selectable && !this.grid.filteringService.isFilterRowVisible) {
-            const columnsToSelect = this.getChildrenToSelect(this.column.children.toArray()).map(c => c.field);
-            if (!this.column.selected) {
+            const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
+            if (!this.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
             } else {
                 const selectedFields = this.grid.selectionService.getSelectedColumns();
@@ -246,12 +257,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         }
     }
 
-    private getChildrenToSelect(children: IgxColumnComponent[]): IgxColumnComponent[] {
+    private getSelectableChildren(children: IgxColumnComponent[]): IgxColumnComponent[] {
         let result: IgxColumnComponent[] = [];
         children.forEach(el => {
             if (el.selectable && !el.hidden) {
                 if (el.children && el.columnGroup) {
-                    result = result.concat(this.getChildrenToSelect( el.children.toArray()));
+                    result = result.concat(this.getSelectableChildren(el.children.toArray()));
                 } else {
                     result.push(el);
                 }

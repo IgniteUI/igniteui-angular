@@ -1755,9 +1755,9 @@ export class CollapsibleColumnGroupTestComponent {
                 <igx-column field="Region" ></igx-column>
                 <igx-column field="PostalCode" ></igx-column>
             </igx-column-group>
-            <igx-column-group header="City Information" [selectable]="false">
-                <igx-column field="City" ></igx-column>
-                <igx-column field="Address"></igx-column>
+            <igx-column-group header="City Information" >
+                <igx-column field="City" [selectable]="false" ></igx-column>
+                <igx-column field="Address" [selectable]="false"></igx-column>
             </igx-column-group>
         </igx-column-group>
     </igx-grid>
