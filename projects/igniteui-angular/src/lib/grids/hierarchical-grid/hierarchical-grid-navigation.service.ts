@@ -70,7 +70,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (this.grid.parent) {
             const isNext = rowIndex > this.activeNode.row;
             const cbHandler = (args) => {                
-                this._handleScrollInChild(rowIndex, this.grid, isNext);
+                this._handleScrollInChild(rowIndex, isNext);
                 cb(args);
             };
             super.navigateInBody(rowIndex, visibleColIndex, cbHandler);
@@ -83,32 +83,30 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     /**
      * Handles scrolling in child grid and ensures target child row is in main grid view port.
      * @param rowIndex The row index which should be in view.
-     * @param grid The target grid, in which we currenrly navigate.
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
      */
-    protected _handleScrollInChild(rowIndex: number, grid?, isNext?: boolean) {
-        const currGrid = grid || this.grid;
-        const rowObj = currGrid.getRowByIndex(rowIndex);
-        if (rowObj) {
-            this.positionInParent(rowIndex, currGrid, isNext);
-        } else {
-            currGrid.navigation.performVerticalScrollToCell(rowIndex, () => {
-                this.positionInParent(rowIndex, currGrid, isNext);
+    protected _handleScrollInChild(rowIndex: number, isNext?: boolean) {
+        const currGrid = this.grid;
+        const shouldScroll = this.grid.navigation.shouldPerformVerticalScroll(rowIndex);
+        if (shouldScroll) {
+            this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
+                this.positionInParent(rowIndex, isNext);
             });
+        } else {
+            this.positionInParent(rowIndex, isNext);
         }        
     }
 
     /**
      * 
      * @param rowIndex Row index that should come in view.
-     * @param currGrid Current grid in which we navigate.
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
      */
-    protected positionInParent(rowIndex, currGrid, isNext) {
-        const rowObj = currGrid.getRowByIndex(rowIndex);
+    protected positionInParent(rowIndex, isNext) {
+        const rowObj = this.grid.getRowByIndex(rowIndex);
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
-            const scrollableGrid = isNext ? this.getNextScrollableDown(currGrid) : this.getNextScrollableUp(currGrid);
+            const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
         }
     }
@@ -116,7 +114,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     /**
      * Moves navigation to child grid.
      * @param parentRowIndex The parent row index, at which the child grid is rendered.
-     * @param childLayoutIndex The index of the child row island to which the child grid belongs to.
+     * @param childLayoutIndex Optional. The index of the child row island to which the child grid belongs to. Uses first if not set.
     */
     protected _moveToChild(parentRowIndex: number, childLayoutIndex?: number) {
         const ri = !childLayoutIndex ? this.grid.childLayoutList.first : this.grid.childLayoutList[childLayoutIndex];
@@ -127,8 +125,16 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         };
         const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
         const isNext =  this.activeNode.row < parentRowIndex;
-        const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;           
-        this._handleScrollInChild(targetIndex, childGrid, isNext)
+        const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;
+        const targetRec =  childGrid.dataView[targetIndex];
+        if (childGrid.isChildGridRecord(targetRec)) {
+            // if target is a child grid record should move into it.
+            this.grid.navigation.activeNode.row = null;
+            childGrid.navigation.activeNode = { row: targetIndex, column: this.activeNode.column};
+            childGrid.navigation._moveToChild(targetIndex, null);
+            return;
+        }
+        childGrid.navigation._handleScrollInChild(targetIndex, isNext)
         const childGridNav =  childGrid.navigation;
         this.activeNode.row = null;
         childGridNav.activeNode = { row: targetIndex, column: this.activeNode.column};
