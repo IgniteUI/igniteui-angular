@@ -160,11 +160,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             childGrid.navigation._moveToChild(targetIndex, isNext);
             return;
         }
-        childGrid.navigation._handleScrollInChild(targetIndex, isNext)
+        
         const childGridNav =  childGrid.navigation;
         this.activeNode.row = null;
         childGridNav.activeNode = { row: targetIndex, column: this.activeNode.column};
         childGrid.tbody.nativeElement.focus();
+        childGrid.navigation._handleScrollInChild(targetIndex, isNext)
     }
 
     /**
