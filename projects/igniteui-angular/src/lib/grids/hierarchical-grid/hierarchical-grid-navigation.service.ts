@@ -55,7 +55,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
              if (inView) {
                 this._moveToChild(rowIndex, isNext, targetLayoutIndex);
             } else {
-                this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
+                let scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(rowIndex, !isNext);
+                scrollAmount += isNext ? 1 : -1;
+                this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount - 1;
+                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
                     this._moveToChild(rowIndex, isNext, targetLayoutIndex);
                 });
             }
