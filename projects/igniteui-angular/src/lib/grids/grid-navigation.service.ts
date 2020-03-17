@@ -141,6 +141,12 @@ export class IgxGridNavigationService {
     }
 
     focusTbody() {
+        if (!this.activeNode) {
+            this.activeNode = {
+                row: 0,
+                column: 0
+            }
+        }
         if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
         this.navigateInBody(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
     }
