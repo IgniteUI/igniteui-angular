@@ -240,8 +240,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public groupClicked(event): void {
-        if (this.column.selectable && !this.grid.filteringService.isFilterRowVisible) {
-            const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
+        const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
+        if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
             if (!this.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
             } else {

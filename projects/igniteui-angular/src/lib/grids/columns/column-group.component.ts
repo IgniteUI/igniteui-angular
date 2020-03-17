@@ -233,7 +233,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get selected(): boolean {
-        const selectableChildren = this.children.filter(c => c.selectable && !c.hidden);
+        const selectableChildren = this.allChildren.filter(c => !c.columnGroup && c.selectable && !c.hidden);
         return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
 
