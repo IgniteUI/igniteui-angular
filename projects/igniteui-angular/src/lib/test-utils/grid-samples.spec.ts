@@ -1739,7 +1739,7 @@ export class CollapsibleColumnGroupTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px">
+    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
         <igx-column-group header="General Information" >
             <igx-column  field="CompanyName" ></igx-column>
             <igx-column-group header="Person Details">

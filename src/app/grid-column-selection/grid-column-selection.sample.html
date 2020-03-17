@@ -48,6 +48,30 @@
                     </igx-drop-down>
                 </ng-template>
             </igx-grid>
+
+            <h1>TEST EXAMPLE</h1>
+            <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
+                <igx-column-group header="General Information" >
+                    <igx-column  field="CompanyName" ></igx-column>
+                    <igx-column-group header="Person Details">
+                        <igx-column  field="ContactName" [hidden]="true"></igx-column>
+                        <igx-column  field="ContactTitle" [selectable]="false"></igx-column>
+                    </igx-column-group>
+                </igx-column-group>
+                <igx-column field="ID"></igx-column>
+                <igx-column-group header="Country Information">
+
+                    <igx-column-group header="Region Information">
+                        <igx-column  field="Country" [selectable]="false"></igx-column>
+                        <igx-column field="Region" ></igx-column>
+                        <igx-column field="PostalCode" ></igx-column>
+                    </igx-column-group>
+                    <igx-column-group header="City Information" >
+                        <igx-column field="City" [selectable]="false" ></igx-column>
+                        <igx-column field="Address" [selectable]="false"></igx-column>
+                    </igx-column-group>
+                </igx-column-group>
+            </igx-grid>
             <div class="sample-buttons">
                 <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
             </div>
@@ -58,6 +82,7 @@
                 <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>
                 <button igxButton="raised" (click)="deselectCol()">Deselect ID</button>
                 <button igxButton="raised" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
+                <button igxButton="raised" (click)="getGenInfoState()">get gen info state</button>
             </div>
 
             <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px">

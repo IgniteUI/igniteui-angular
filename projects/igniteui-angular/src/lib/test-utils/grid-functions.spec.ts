@@ -2118,7 +2118,9 @@ export class GridSelectionFunctions {
 
     public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
         expect(column.selected).toEqual(selected);
-        expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+        if (!column.hidden) {
+            expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+        }
     }
 
     public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
@@ -2139,7 +2141,7 @@ export class GridSelectionFunctions {
         headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
    }
 
-    public static verifyColumnAncCellsSelected(column: IgxColumnComponent, selected = true) {
+    public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
         this.verifyColumnSelected(column, selected);
         column.cells.forEach(cell => {
             expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(selected);
