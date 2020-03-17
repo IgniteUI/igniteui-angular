@@ -129,6 +129,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const isNext =  this.activeNode.row < parentRowIndex;
         const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;
         const targetRec =  childGrid.dataView[targetIndex];
+        if(!targetRec) {
+            // if no target rec, then move on in parent
+            const parentTargetIndex = isNext ? parentRowIndex + 1 : parentRowIndex - 1;
+            this.navigateInBody(parentTargetIndex, this.activeNode.column);
+            return;
+        }
         if (childGrid.isChildGridRecord(targetRec)) {
             // if target is a child grid record should move into it.
             this.grid.navigation.activeNode.row = null;
@@ -147,7 +153,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * Moves navigation back to parent grid.
      * @param rowIndex 
      */
-    protected _moveToParent(isNext: boolean, columnIndex, cb) {
+    protected _moveToParent(isNext: boolean, columnIndex, cb?) {
         const indexInParent = this.grid.childRow.index;
         if (this.activeNode) {
             this.activeNode.row = null;
