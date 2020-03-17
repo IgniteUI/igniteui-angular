@@ -24,7 +24,6 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
-    public groupsData = [];
     public columns: Array<any>;
     // public data = [];
     public filterModes = [
