@@ -163,7 +163,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         
         const childGridNav =  childGrid.navigation;
         this.activeNode.row = null;
-        childGridNav.activeNode = { row: targetIndex, column: this.activeNode.column};
+        const visibleColsLength = childGrid.visibleColumns.length - 1;
+        const columnIndex = this.activeNode.column <= visibleColsLength ? this.activeNode.column : visibleColsLength;
+        childGridNav.activeNode = { row: targetIndex, column: columnIndex};
         childGrid.tbody.nativeElement.focus();
         childGrid.navigation._handleScrollInChild(targetIndex, isNext)
     }
@@ -178,8 +180,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             this.activeNode.row = null;
         }
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
+        const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
+        const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
         this.grid.parent.tbody.nativeElement.focus();        
-        this.grid.parent.navigation.navigateInBody(targetRowIndex, columnIndex, cb); 
+        this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cb); 
     }
 
     /**
