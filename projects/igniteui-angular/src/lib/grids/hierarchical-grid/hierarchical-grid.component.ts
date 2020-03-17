@@ -414,6 +414,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
+    protected filterExpansionStates(expStates: Map<any, boolean>) {
+        const results = new Map<any, boolean>(expStates);
+        if (this.hasChildrenKey) {
+            expStates.forEach((value, item) => {
+                const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item) : item;
+                if (!rec[this.hasChildrenKey]) {
+                    results.delete(item);
+                }
+            });
+        }
+        return results;
+    }
+
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         this.updateColumnList();
         const cols = change.filter(c => c.gridAPI.grid === this);
