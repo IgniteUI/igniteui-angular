@@ -24,6 +24,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
+    public groupsData = [];
     public columns: Array<any>;
     public filterModes = [
         {
@@ -53,7 +54,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     };
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
-
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
     @ViewChild('columnSelectionDropdown', { read: IgxDropDownComponent })
     public columnSelectionDropdown: IgxDropDownComponent;
 
