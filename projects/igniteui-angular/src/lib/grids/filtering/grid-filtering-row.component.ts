@@ -765,7 +765,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private conditionChangedCallback() {
-        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
+        if (!this.expression.searchVal || this.expression.searchVal === 0) {
             this.filter();
         } else if (this.value) {
             this.value = null;
