@@ -3007,16 +3007,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set expansionStates(value) {
-        value = this.filterExpansionStates(value);
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
         }
-    }
-
-    protected filterExpansionStates(value) {
-        return value;
     }
 
    /**
