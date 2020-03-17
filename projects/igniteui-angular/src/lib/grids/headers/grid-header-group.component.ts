@@ -226,8 +226,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
     */
     get selected() {
-        const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
-        return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
+       return this.column.selected;
     }
 
     /**

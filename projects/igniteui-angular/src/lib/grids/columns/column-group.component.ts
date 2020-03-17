@@ -137,12 +137,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public get selectable(): boolean {
         return this.children && this.children.some(child => child.selectable);
     }
-    /**
-     * Enable/disable the selection of the column group.
-     * Groups gets the selectable property from their children
-     * @memberof IgxColumnGroupComponent
-     */
-    public set selectable(value: boolean) {}
 
     /**
      * Returns a reference to the body template.
@@ -239,7 +233,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get selected(): boolean {
-        return this.selectable && this.children.toArray().every(c => !c.selectable || c.selected);
+        const selectableChildren = this.children.filter(c => c.selectable && !c.hidden);
+        return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
 
     /**
