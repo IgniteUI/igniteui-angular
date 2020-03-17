@@ -63,7 +63,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if ((rowIndex === -1 || isLast) &&
             this.grid.parent !== null) {
             // reached end of child grid
-            this._moveToParent(isLast);
+            this._moveToParent(isLast, visibleColIndex, cb);
             return;
         }
 
@@ -77,6 +77,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             return;
         }
 
+        if (!this.activeNode) {
+            this.activeNode = { row: null, column: null };
+        }
         super.navigateInBody(rowIndex, visibleColIndex, cb);
     }
 
@@ -86,7 +89,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
      */
     protected _handleScrollInChild(rowIndex: number, isNext?: boolean) {
-        const currGrid = this.grid;
         const shouldScroll = this.grid.navigation.shouldPerformVerticalScroll(rowIndex);
         if (shouldScroll) {
             this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
@@ -145,16 +147,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * Moves navigation back to parent grid.
      * @param rowIndex 
      */
-    protected _moveToParent(isNext: boolean) {
+    protected _moveToParent(isNext: boolean, columnIndex, cb) {
         const indexInParent = this.grid.childRow.index;
-        this.activeNode.row = null;
+        if (this.activeNode) {
+            this.activeNode.row = null;
+        }
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
-        this.grid.parent.navigation.activeNode = { 
-            row: targetRowIndex,
-            column: this.activeNode.column 
-        };
-        this.grid.parent.tbody.nativeElement.focus();
-        this.grid.parent.navigateTo(targetRowIndex, this.activeNode.column); 
+        this.grid.parent.tbody.nativeElement.focus();        
+        this.grid.parent.navigation.navigateInBody(targetRowIndex, columnIndex, cb); 
     }
 
     /**
