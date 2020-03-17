@@ -57,6 +57,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
+const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const DISPLAY_CONTAINER = 'igx-display-container';
 
 export class GridFunctions {
@@ -67,14 +68,18 @@ export class GridFunctions {
         return rows;
     }
 
-    public static getRowCells(fix, rowIndex: number): DebugElement[] {
-        const allRows = GridFunctions.getRows(fix);
-        return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+    public static getRowCells(fix, rowIndex: number, row: DebugElement = null): DebugElement[] {
+        const rowElement = row ? row : GridFunctions.getRows(fix)[rowIndex];
+        return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
         const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
         return gridBody.query(By.css(DISPLAY_CONTAINER));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -1781,6 +1786,11 @@ export class GridFunctions {
     }
 }
 export class GridSummaryFunctions {
+    public static getRootSummaryRow(fix): DebugElement {
+        const footer = GridFunctions.getGridFooter(fix);
+        return footer.query(By.css(SUMMARY_ROW));
+    }
+
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
