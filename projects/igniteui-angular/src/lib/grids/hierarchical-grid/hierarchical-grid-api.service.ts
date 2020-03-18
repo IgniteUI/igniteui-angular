@@ -112,6 +112,10 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
 
     public allow_expansion_state_change(rowID, expanded): boolean {
         const rec = this.get_rec_by_id(rowID);
+        const grid = (this.grid as any);
+        if (grid.hasChildrenKey && !rec[grid.hasChildrenKey]) {
+            return false;
+        }
         return !!rec && this.grid.expansionStates.get(rowID) !== expanded;
     }
 
