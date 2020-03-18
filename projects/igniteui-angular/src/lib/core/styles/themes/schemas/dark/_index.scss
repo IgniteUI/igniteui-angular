@@ -35,6 +35,7 @@
 @import './progress';
 @import './radio';
 @import './ripple';
+@import './scrollbar';
 @import './slider';
 @import './snackbar';
 @import './switch';
@@ -78,6 +79,7 @@
 /// @property {Map} igx-progress-circular [$_dark-progress-circular]
 /// @property {Map} igx-radio [$_dark-radio]
 /// @property {Map} igx-ripple [$_dark-ripple]
+/// @property {Map} igx-scrollbar [$_dark-scrollbar]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
 /// @property {Map} igx-switch [$_dark-switch]
@@ -119,6 +121,7 @@ $dark-schema: (
     igx-circular-bar: $_dark-progress-circular,
     igx-radio: $_dark-radio,
     igx-ripple: $_dark-ripple,
+    igx-scrollbar: $_dark-scrollbar,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
     igx-switch: $_dark-switch,
@@ -163,6 +166,7 @@ $dark-schema: (
 /// @property {map} igx-circular-bar [$_dark-fluent-progress-circular],
 /// @property {map} igx-radio [$_dark-fluent-radio],
 /// @property {map} igx-ripple [$_dark-fluent-ripple],
+/// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
 /// @property {map} igx-switch [$_dark-fluent-switch],
@@ -204,6 +208,7 @@ $dark-fluent-schema: (
     igx-circular-bar: $_dark-fluent-progress-circular,
     igx-radio: $_dark-fluent-radio,
     igx-ripple: $_dark-fluent-ripple,
+    igx-scrollbar: $_dark-fluent-scrollbar,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
     igx-switch: $_dark-fluent-switch,
@@ -248,6 +253,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-circular-bar [$_dark-bootstrap-progress-circular],
 /// @property {map} igx-radio [$_dark-bootstrap-radio],
 /// @property {map} igx-ripple [$_dark-bootstrap-ripple],
+/// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
 /// @property {map} igx-switch [$_dark-bootstrap-switch],
@@ -289,6 +295,7 @@ $dark-bootstrap-schema: (
     igx-circular-bar: $_dark-bootstrap-progress-circular,
     igx-radio: $_dark-bootstrap-radio,
     igx-ripple: $_dark-bootstrap-ripple,
+    igx-scrollbar: $_dark-bootstrap-scrollbar,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
     igx-switch: $_dark-bootstrap-switch,

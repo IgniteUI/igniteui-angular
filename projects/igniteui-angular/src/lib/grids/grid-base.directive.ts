@@ -109,7 +109,8 @@ import {
     GridSummaryPosition,
     GridSummaryCalculationMode,
     FilterMode,
-    ColumnPinningPosition
+    ColumnPinningPosition,
+    RowPinningPosition
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -129,7 +130,8 @@ import {
     IGridToolbarExportEventArgs,
     ISearchInfo,
     ICellPosition,
-    IRowToggleEventArgs
+    IRowToggleEventArgs,
+    IPinRowEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType, IPinningConfig } from './common/grid.interface';
@@ -161,14 +163,13 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 })
 export class IgxGridBaseDirective extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
-    private _scrollWidth: number;
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 
     public get scrollWidth() {
-        return this._scrollWidth;
+        return this.verticalScrollContainer.getScrollbarWidth();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -1376,6 +1377,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
+     * Emitted when the pinned state of a row is changed.
+     * @example
+     * ```html
+     * <igx-grid [data]="employeeData" (onRowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     */
+    @Output()
+    public onRowPinning = new EventEmitter<IPinRowEventArgs>();
+
+    /**
      * @hidden @internal
      */
     @ViewChild(IgxGridColumnResizerComponent)
@@ -1617,6 +1628,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    get isRowPinningToTop() {
+        return this.pinning.rows !== RowPinningPosition.Bottom;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
             return this.rowSelectorsTemplates.first.templateRef;
@@ -1704,6 +1723,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ViewChild('tbody', { static: true })
     public tbody: ElementRef;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('pinContainer', { static: false })
+    public pinContainer: ElementRef;
 
     /**
      * @hidden @internal
@@ -2437,6 +2462,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+    */
+    public get pinnedRecords() {
+        return this._pinnedRecords;
+    }
+
+    protected _pinnedRecords = [];
+
+    /**
+     * @hidden
      */
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
@@ -2756,7 +2790,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
-        this._scrollWidth = this.getScrollWidth();
     }
 
     protected setupColumns() {
@@ -3255,6 +3288,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._pinnedVisible = this._pinnedColumns.filter(col => !col.hidden);
         return this._pinnedVisible;
+    }
+
+    /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     */
+    get pinnedRows(): IgxGridRowComponent[] {
+        return this.rowList.filter(x => x.pinned);
     }
 
     /**
@@ -3990,6 +4034,87 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.unpin(index);
     }
 
+    /**
+     * Pin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.pinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+     * @param index The index at which to insert the row in the pinned collection.
+     */
+    public pinRow(rowID: any, index?: number): boolean {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        if (!rec || this.pinnedRecords.indexOf(rec) !== -1 || this.data.indexOf(rec) === -1) {
+            return false;
+        }
+        const row = this.gridAPI.get_row_by_key(rowID);
+
+        const eventArgs: IPinRowEventArgs = {
+            insertAtIndex: index,
+            isPinned: true,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+
+        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, rec);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Unpin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.unpinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+    */
+    public unpinRow(rowID: any) {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const index =  this.pinnedRecords.indexOf(rec);
+        if (index === -1 || !rec) {
+            return false;
+        }
+        const row = this.gridAPI.get_row_by_key(rowID);
+        const eventArgs: IPinRowEventArgs = {
+            isPinned: false,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+        this.pinnedRecords.splice(index, 1);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+            this.notifyChanges(true);
+        }
+        return true;
+    }
+
+    get pinnedRowHeight() {
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
+        return this.pinnedRecords.length > 0 ? containerHeight : 0;
+    }
+
+    get totalHeight() {
+        return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
+    }
+
+    get pinnedBottom() {
+        const start = this.verticalScrollContainer.state.startIndex;
+        const end = this.verticalScrollContainer.state.startIndex + this.verticalScrollContainer.state.chunkSize - 1;
+        const bottom = this.verticalScrollContainer.getScrollForIndex(end, true) - this.verticalScrollContainer.getScrollForIndex(start);
+        return bottom;
+    }
+
 
     /**
      * Recalculates grid width/height dimensions.
@@ -4295,6 +4420,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.calcHeight = this._calculateGridBodyHeight();
+        if (this.pinnedRowHeight && this.calcHeight) {
+            this.calcHeight -= this.pinnedRowHeight;
+        }
     }
 
     /**
@@ -4753,21 +4881,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return DataType.Date;
         }
         return DataType.String;
-    }
-
-    private getScrollWidth() {
-        const div = document.createElement('div');
-        const style = div.style;
-        style.width = '100px';
-        style.height = '100px';
-        style.position = 'absolute';
-        style.top = '-10000px';
-        style.top = '-10000px';
-        style.overflow = 'scroll';
-        document.body.appendChild(div);
-        const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
-        return scrollWidth;
     }
 
     /**
