@@ -722,6 +722,34 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnGroupSelected(fix, regionInfo, false);
         });
+
+        it('when column(s) is/are hidden, selection should not reflect on them', () => {
+            const postalCode = grid.getColumnByName('PostalCode');
+            const region = grid.getColumnByName('Region');
+            const contactName = grid.getColumnByName('ContactName');
+            const contactTitle = grid.getColumnByName('ContactTitle');
+            const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
+            const regionInfo = GridFunctions.getColGroup(grid, 'Region Information');
+
+            postalCode.hidden = true;
+            contactTitle.hidden = true;
+            fix.detectChanges();
+
+            GridFunctions.clickColumnGroupHeaderUI('Person Details', fix, true);
+            GridFunctions.clickColumnGroupHeaderUI('Region Information', fix, true);
+
+            GridSelectionFunctions.verifyColumnsSelected([postalCode, contactTitle], false);
+            GridSelectionFunctions.verifyColumnsSelected([contactName, region]);
+
+            grid.deselectAllColumns();
+            fix.detectChanges();
+            GridSelectionFunctions.verifyColumnsSelected([contactName, region], false);
+
+            personDetails.selected = true;
+            regionInfo.selected = true;
+            fix.detectChanges();
+            GridSelectionFunctions.verifyColumnsSelected([postalCode, contactTitle, contactName, region]);
+        });
     });
 
     describe('Integration tests: ', () => {
