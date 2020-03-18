@@ -153,7 +153,9 @@ export class IgxGridFilteringPipe implements PipeTransform {
     }
 }
 
-
+/**
+ *@hidden
+ */
 @Pipe({
     name: 'rowPinning',
     pure: true
