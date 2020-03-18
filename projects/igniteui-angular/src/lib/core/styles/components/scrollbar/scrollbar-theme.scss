@@ -1,0 +1,75 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $thumb-background [null] - The background color used for the thumb.
+/// @param {Color} $track-background [null] - The background color used for the track.
+/// @param {Number | String} $size [null] - The size of the track.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires text-contrast
+/// @requires extend
+///
+/// @example scss Change the background and track colors
+///   $my-scrollbar-theme: igx-scrollbar-theme($thumb-background: black, $track-background: gray);
+///   // Pass the theme to the igx-scrollbar component mixin
+///   @include igx-scrollbar($my-avatar-theme);
+@function igx-scrollbar-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $size: null,
+    $thumb-background: null,
+    $track-background: null,
+) {
+    $name: 'igx-scrollbar';
+    $scrollbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $scrollbar-schema: map-get($schema, $name);
+    } @else {
+        $scrollbar-schema: $schema;
+    }
+
+    $theme: apply-palette($scrollbar-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+        thumb-background: $thumb-background,
+        track-background: $track-background,
+        size: $size
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-scrollbar($theme) {
+    @include igx-root-css-vars($theme);
+
+    %scrollbar-display {
+        @if type-of(map-get($theme, 'size') == 'string') {
+            scrollbar-width: --var($theme, 'size');
+        }
+
+        scrollbar-color: --var($theme, 'thumb-background') --var($theme, 'track-background');
+
+        ::-webkit-scrollbar {
+            width: --var($theme, 'size');
+            height: --var($theme, 'size');
+            background: --var($theme, 'track-background');
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: --var($theme, 'thumb-background');
+        }
+    }
+}
+
