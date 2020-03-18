@@ -126,6 +126,10 @@
         @extend %igx-grid__tr--drag !optional;
     }
 
+    @include e(tr, $m: 'disabled') {
+        @extend %igx-grid__tr--disabled !optional;
+    }
+
     @include e(tr, $m: 'ghost') {
         @extend %igx-grid__tr--ghost !optional;
     }

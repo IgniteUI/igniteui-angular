@@ -91,6 +91,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
+    @Input()
+    public disabled: boolean;
+
+    /**
+     * @hidden
+     */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
     public virtDirRow: IgxGridForOfDirective<any>;
 
@@ -416,8 +422,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
+        const disabledClass = this.disabled ? 'igx-grid__tr--disabled' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
-         ${deletedClass} ${mrlClass} ${dragClass}`.trim();
+         ${deletedClass} ${mrlClass} ${dragClass} ${disabledClass}`.trim();
     }
 
     /**
