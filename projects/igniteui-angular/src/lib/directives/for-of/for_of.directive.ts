@@ -710,6 +710,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.sizesCache[index + 1] - this.sizesCache[index];
     }
 
+    public getScrollbarWidth() {
+        return this.scrollComponent ? (this.scrollComponent as VirtualHelperComponent).scrollWidth : 0;
+    }
+
     /**
      * Returns the scroll offset of the element at the specified index.
      * ```typescript

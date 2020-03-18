@@ -5,26 +5,6 @@
     background-position: 16px center;
 }
 
-@mixin scrollbar-love($scrollbar-color: null) {
-    $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
-    $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
-
-    @if $scrollbar-color and luminance($scrollbar-color) < .5 {
-        $scrollbar-track: darken($scrollbar-color, 8%);
-        $scrollbar-thumb: lighten($scrollbar-color, 20%);
-    }
-
-    ::-webkit-scrollbar {
-        width: 16px;
-        height: 16px;
-        background-color: $scrollbar-track;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: $scrollbar-thumb;
-    }
-}
-
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
