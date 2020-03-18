@@ -601,10 +601,6 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css(FILTER_CHIP_CLASS));
     }
 
-    public static getFilterRow(fix): DebugElement {
-        return fix.debugElement.query(By.css(FILTER_UI_ROW));
-    }
-
     public static getFilteringChipPerIndex(fix, index) {
         return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
     }
