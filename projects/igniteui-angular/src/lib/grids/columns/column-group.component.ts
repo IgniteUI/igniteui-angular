@@ -138,6 +138,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this.children && this.children.some(child => child.selectable);
     }
 
+    public set selectable(value: boolean) {}
+
     /**
      * Returns a reference to the body template.
      * ```typescript
