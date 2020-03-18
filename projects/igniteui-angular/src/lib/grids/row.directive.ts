@@ -28,7 +28,7 @@ import { GridType } from './common/grid.interface';
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
     private _rowData: any;
-    private _disabledRowShadow: boolean = false;
+    private _disabledRowShadow = false;
     /**
      *  The data passed to the row component.
      *
