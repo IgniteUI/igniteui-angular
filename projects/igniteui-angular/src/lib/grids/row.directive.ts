@@ -28,6 +28,7 @@ import { GridType } from './common/grid.interface';
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
     private _rowData: any;
+    private _disabledRowShadow: boolean = false;
     /**
      *  The data passed to the row component.
      *
@@ -92,7 +93,12 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     @Input()
-    public disabled: boolean;
+    public set disabledRowShadow(value) {
+        this._disabledRowShadow = value;
+    }
+    public get disabledRowShadow(): boolean {
+        return this._disabledRowShadow;
+    }
 
     /**
      * @hidden
@@ -142,7 +148,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @Input()
     @HostBinding('attr.aria-selected')
     get selected(): boolean {
-        return this.selectionService.isRowSelected(this.rowID);
+        return !this.disabledRowShadow && this.selectionService.isRowSelected(this.rowID);
     }
 
     set selected(value: boolean) {
@@ -234,7 +240,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     // TODO: Refactor
     public get inEditMode(): boolean {
-        if (this.grid.rowEditable) {
+        if (this.grid.rowEditable && !this.disabledRowShadow) {
             const editRowState = this.crudService.row;
             return (editRowState && editRowState.id === this.rowID) || false;
         } else {
@@ -422,7 +428,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         const mrlClass = this.grid.hasColumnLayouts ? 'igx-grid__tr--mrl' : '';
         const dragClass = this.dragging ? 'igx-grid__tr--drag' : '';
-        const disabledClass = this.disabled ? 'igx-grid__tr--disabled' : '';
+        const disabledClass = this.disabledRowShadow ? 'igx-grid__tr--disabled' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass}
          ${deletedClass} ${mrlClass} ${dragClass} ${disabledClass}`.trim();
     }

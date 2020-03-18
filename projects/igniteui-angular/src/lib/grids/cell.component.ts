@@ -636,7 +636,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const editableCell = this.crudService.cell;
         const editMode = !!(crud.row || crud.cell);
 
-        if (this.editable && editMode && !this.row.deleted) {
+        if (this.editable && editMode && !this.row.deleted && !this.row.disabledRowShadow) {
             if (editableCell) {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
                 /* This check is related with the following issue #6517:
@@ -785,7 +785,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.editable && !this.editMode && !this.row.deleted) {
+        if (this.editable && !this.editMode && !this.row.deleted && !this.row.disabledRowShadow) {
             this.crudService.begin(this);
         }
 

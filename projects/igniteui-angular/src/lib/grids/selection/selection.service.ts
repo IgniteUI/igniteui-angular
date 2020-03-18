@@ -170,7 +170,7 @@ export class IgxGridCRUDService {
             return;
         }
 
-        if (this.rowEditing) {
+        if (this.rowEditing && !this.isRowDisabled(newCell.id.rowID)) {
             if (this.row && !this.sameRow(newCell.id.rowID)) {
                 this.grid.endEdit(true);
                 this.cell = newCell;
@@ -200,6 +200,10 @@ export class IgxGridCRUDService {
             return false;
         }
         return this.cell.column.index === columnIndex && this.cell.rowIndex === rowIndex;
+    }
+
+    isRowDisabled(rowID): boolean {
+        return this.grid.gridAPI.get_row_by_key(rowID).disabledRowShadow;
     }
 }
 
@@ -606,10 +610,6 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
-    isRowDisabled(rowID): boolean {
-        return this.grid.gridAPI.get_row_by_key(rowID).disabled;
-    }
-
     /** Select range from last selected row to the current specified row.*/
     selectMultipleRows(rowID, rowData, event?): void  {
         this.allRowsSelected = undefined;
@@ -698,6 +698,10 @@ export class IgxGridSelectionService {
         const grid = this.grid as IgxGridBaseDirective;
         return !FilteringExpressionsTree.empty(grid.filteringExpressionsTree) ||
             !FilteringExpressionsTree.empty(grid.advancedFilteringExpressionsTree);
+    }
+
+    private isRowDisabled(rowID): boolean {
+        return this.grid.gridAPI.get_row_by_key(rowID)?.disabledRowShadow;
     }
 
     private isRowDeleted(rowID): boolean {

@@ -14,4 +14,5 @@ export interface RowType {
     focused: boolean;
     expanded?: boolean;
     treeRow?: any;
+    disabledRowShadow?: boolean;
 }
