@@ -12,17 +12,18 @@ import { ɵɵsetComponentScope } from '@angular/core';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
-
-const selectedData = [{ ProductID: 1, ProductName: 'Chai' },
-{ ProductID: 2, ProductName: 'Aniseed Syrup' },
-{ ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning' },
-{ ProductID: 4, ProductName: 'Grandmas Boysenberry Spread' },
-{ ProductID: 5, ProductName: 'Uncle Bobs Dried Pears' },
-{ ProductID: 6, ProductName: 'Northwoods Cranberry Sauce' },
-{ ProductID: 7, ProductName: 'Queso Cabrales' },
-{ ProductID: 8, ProductName: 'Tofu' },
-{ ProductID: 9, ProductName: 'Teatime Chocolate Biscuits' },
-{ ProductID: 10, ProductName: 'Chocolate' }];
+function selectedData() {
+    return [{ ProductID: 1, ProductName: 'Chai' },
+    { ProductID: 2, ProductName: 'Aniseed Syrup' },
+    { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning' },
+    { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread' },
+    { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears' },
+    { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce' },
+    { ProductID: 7, ProductName: 'Queso Cabrales' },
+    { ProductID: 8, ProductName: 'Tofu' },
+    { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits' },
+    { ProductID: 10, ProductName: 'Chocolate' }];
+}
 
 describe('IgxGrid - Column Selection #grid', () => {
     configureTestSuite();
@@ -456,7 +457,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductName.selected = true;
             fix.detectChanges();
 
-            expect(selectedData).toEqual(grid.getSelectedColumnsData());
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
         });
     });
 
@@ -823,7 +824,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
         });
 
         it('Sorting: Verify column selection is not change when click on sort indicator', () => {
@@ -838,13 +839,13 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, true);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
 
             GridFunctions.clickHeaderSortIcon(productIDHeader);
             fix.detectChanges();
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, true);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData.sort(( a, b) => b.ProductID - a.ProductID));
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData().sort((a, b) => b.ProductID - a.ProductID));
         });
 
         it('Pinning: Verify that when pin/unpin the column stays selected', () => {
@@ -881,7 +882,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridFunctions.verifyColumnIsHidden(colProductName, true, 4);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
             expect(grid.selectedColumns().includes(colProductName)).toBeTruthy();
 
             colProductName.hidden = false;
@@ -914,7 +915,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
 
             grid.paginate(1);
             fix.detectChanges();
@@ -922,7 +923,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
-            expect(grid.getSelectedColumnsData()).toEqual(selectedData);
+            expect(grid.getSelectedColumnsData()).toEqual(selectedData());
         }));
     });
 });
