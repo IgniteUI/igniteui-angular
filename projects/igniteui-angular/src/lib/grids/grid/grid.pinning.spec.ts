@@ -23,6 +23,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
     const FIXED_CELL_CSS = 'igx-grid__td--pinned';
     const FIRST_PINNED_CELL_CSS = 'igx-grid__td--pinned-first';
+    const DEBOUNCETIME = 30;
 
     describe('To Start', () => {
         configureTestSuite();
@@ -417,6 +418,41 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.pinnedColumns.length).toEqual(1);
             expect(grid.unpinnedColumns.length).toEqual(2);
         }));
+
+        it('should allow navigating to/from pinned area', (async() => {
+            pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+
+            const cellContactName = grid.getCellByColumn(0, 'ContactName');
+            const range = {
+                rowStart: cellContactName.rowIndex,
+                rowEnd: cellContactName.rowIndex,
+                columnStart: cellContactName.visibleColumnIndex,
+                columnEnd: cellContactName.visibleColumnIndex
+            };
+            grid.selectRange(range);
+            grid.navigation.activeNode = {row: cellContactName.rowIndex, column: cellContactName.visibleColumnIndex};
+            fix.detectChanges();
+
+            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight'});
+            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const cellID = grid.getCellByColumn(0, 'ID');
+            expect(cellID.active).toBe(true);
+            expect(cellContactName.active).toBe(false);
+
+            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft'});
+            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(cellID.active).toBe(false);
+            expect(cellContactName.active).toBe(true);
+        }));
     });
 
     describe('To End', () => {
@@ -639,6 +675,65 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(fistPinnedHeaders.classes['igx-grid__mrl-block']).toBeTruthy();
             expect(fistPinnedHeaders.classes['igx-grid__th--pinned-first']).toBeTruthy();
         });
+
+        it('should allow navigating to/from pinned area', (async() => {
+            pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
+            const fix = TestBed.createComponent(GridRightPinningComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance as any;
+
+            const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
+            const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
+            grid.selectRange(range);
+            grid.navigation.activeNode = {row: 0, column: 9};
+            fix.detectChanges();
+            expect(cellCompanyName.active).toBe(true);
+
+            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft'});
+            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const cellFax = grid.getCellByColumn(0, 'Fax');
+            expect(cellFax.active).toBe(true);
+            expect(cellCompanyName.active).toBe(false);
+
+            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight'});
+            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(cellFax.active).toBe(false);
+            expect(cellCompanyName.active).toBe(true);
+        }));
+
+        it('should allow navigating to/from pinned area using Ctrl+Left/Right', (async() => {
+            pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
+            const fix = TestBed.createComponent(GridRightPinningComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance as any;
+
+            const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
+            const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
+            grid.selectRange(range);
+            grid.navigation.activeNode = {row: 0, column: 9};
+            fix.detectChanges();
+            expect(cellCompanyName.active).toBe(true);
+
+            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft', ctrlKey: true});
+            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const cellID = grid.getCellByColumn(0, 'ID');
+            expect(cellID.active).toBe(true);
+            expect(cellCompanyName.active).toBe(false);
+
+            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight', ctrlKey: true});
+            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const cellContactName = grid.getCellByColumn(0, 'ContactName');
+            expect(cellID.active).toBe(false);
+            expect(cellContactName.active).toBe(true);
+        }));
     });
 });
 
