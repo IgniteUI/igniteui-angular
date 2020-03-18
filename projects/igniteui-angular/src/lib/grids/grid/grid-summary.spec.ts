@@ -116,7 +116,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 await wait(30);
                 fixture.detectChanges();
 
-                const summaryRow =  GridSummaryFunctions.getRootSummaryRow(fixture);
+                const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'],
                     ['11', '0', '99,000', '138,004', '12,545.818']);
             }));
@@ -140,7 +140,7 @@ describe('IgxGrid - Summaries #grid', () => {
             let fixture: ComponentFixture<CustomSummariesComponent>;
             let grid: IgxGridComponent;
 
-            beforeEach( fakeAsync(() => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(CustomSummariesComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid1;
@@ -1017,7 +1017,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(true);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
-            const summaryRow =  GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             let summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell);
             fix.detectChanges();
@@ -1061,16 +1061,15 @@ describe('IgxGrid - Summaries #grid', () => {
 
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
 
-            const summaryRow =  GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             UIInteractions.triggerEventHandlerKeyDown('Tab', summaryCell, false, true);
 
             fix.detectChanges();
-              const closeButton = GridFunctions.getFilterRowCloseButton(fix);
+            const closeButton = GridFunctions.getFilterRowCloseButton(fix);
             expect(document.activeElement).toEqual(closeButton.nativeElement);
 
-            const filterRow = GridFunctions.getFilterRow(fix);
-            UIInteractions.triggerEventHandlerKeyDown('Tab', filterRow);
+            grid.filteringRow.onTabKeydown(UIInteractions.getKeyboardEvent('keydown', 'tab'));
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 0);
