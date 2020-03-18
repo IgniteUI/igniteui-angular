@@ -826,7 +826,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
     * @hidden @internal
     */
-    public getContext(rowData, rowIndex): any {
+    public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        }
+        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this.pinnedRecords.length : rowIndex;
         if (this.isDetailRecord(rowData)) {
             const cachedData = this.childDetailTemplates.get(rowData.detailsData);
             const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
