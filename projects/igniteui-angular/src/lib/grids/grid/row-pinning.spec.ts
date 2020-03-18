@@ -218,7 +218,7 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
 
-        fit('pinned rows and groupby.', () => {
+        it('pinned rows and groupby.', () => {
             // pin 1st and 2nd data row
             grid.pinRow(fix.componentInstance.data[0]);
             grid.pinRow(fix.componentInstance.data[1]);
