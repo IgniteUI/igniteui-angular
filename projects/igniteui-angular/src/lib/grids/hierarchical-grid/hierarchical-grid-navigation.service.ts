@@ -135,9 +135,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             // stop event from triggering multiple times before scrolling is complete.
             this.grid.tbody.nativeElement.blur();
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
+            scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
             scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
-                this.grid.tbody.nativeElement.focus();
+                this.grid.tbody.nativeElement.focus({preventScroll:true});
             });
         }
     }

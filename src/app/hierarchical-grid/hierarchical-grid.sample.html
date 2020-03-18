@@ -24,7 +24,7 @@
         <ng-template igxRowCollapsedIndicator>
             <igx-icon role="button" fontSet="material">add</igx-icon>
         </ng-template>
-        <igx-row-island [rowDraggable]="true" [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
+        <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
                 <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
                 <igx-column-group header="Information2">
                     <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
