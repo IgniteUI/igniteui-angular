@@ -24,8 +24,8 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
-    public groupsData = [];
     public columns: Array<any>;
+    // public data = [];
     public filterModes = [
         {
             label: 'Filter Row',
@@ -55,6 +55,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+
     @ViewChild('columnSelectionDropdown', { read: IgxDropDownComponent })
     public columnSelectionDropdown: IgxDropDownComponent;
 
@@ -74,8 +75,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
-
-        this.data = SAMPLE_DATA.slice(0);
+         this.data = SAMPLE_DATA.slice(0);
 
         this.columns = [
             { field: 'ID', width: 150, groupable: true, summary: true, selectable: true,  type: 'string' },
@@ -92,6 +92,11 @@ export class GridColumnSelectionSampleComponent implements OnInit {
             { field: 'DateCreated', width: 150, resizable: true, selectable: true, type: 'date' },
             { field: 'Contract', width: 150, resizable: true, selectable: true, type: 'boolean' }
         ];
+    }
+
+    public getGenInfoState() {
+        console.log('general info', this.grid.getColumnByName('CompanyName').parent.selected);
+        console.log('company name', this.grid.getColumnByName('CompanyName').selected);
     }
 
     public selectDensity(event) {

@@ -48,24 +48,14 @@
                     </igx-drop-down>
                 </ng-template>
             </igx-grid>
-            <div class="sample-buttons">
-                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
-            </div>
-            <div class="sample-buttons">
-                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
-                <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
-                <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
-                <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>
-                <button igxButton="raised" (click)="deselectCol()">Deselect ID</button>
-                <button igxButton="raised" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
-            </div>
 
-            <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px">
+            <h1>TEST EXAMPLE</h1>
+            <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
                 <igx-column-group header="General Information" >
                     <igx-column  field="CompanyName" ></igx-column>
                     <igx-column-group header="Person Details">
-                        <igx-column  field="ContactName" [selectable]="false"></igx-column>
-                        <igx-column  field="ContactTitle" [hidden]="true"></igx-column>
+                        <igx-column  field="ContactName" [hidden]="true"></igx-column>
+                        <igx-column  field="ContactTitle" [selectable]="false"></igx-column>
                     </igx-column-group>
                 </igx-column-group>
                 <igx-column field="ID"></igx-column>
@@ -82,6 +72,18 @@
                     </igx-column-group>
                 </igx-column-group>
             </igx-grid>
+            <div class="sample-buttons">
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
+            </div>
+            <div class="sample-buttons">
+                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <button igxButton="raised" (click)="getGridSelectedColunsData()">Get Selected Columns Data</button>
+                <button igxButton="raised" (click)="getGridSelectedColumns()">Get Selected Columns</button>
+                <button igxButton="raised" (click)="selectedColumns()">Select Columns</button>
+                <button igxButton="raised" (click)="deselectCol()">Deselect ID</button>
+                <button igxButton="raised" (click)="grid1.deselectAllColumns()">Deselect all columns</button>
+                <button igxButton="raised" (click)="getGenInfoState()">get gen info state</button>
+            </div>
         </div>
     </div>
 </div>
