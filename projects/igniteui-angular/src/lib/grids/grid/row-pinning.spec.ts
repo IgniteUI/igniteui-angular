@@ -219,7 +219,7 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
     });
-    fdescribe('Row pinning with MRL', () => {
+    describe('Row pinning with MRL', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
             fix.detectChanges();
