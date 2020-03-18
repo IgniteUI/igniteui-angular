@@ -549,9 +549,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         const grid = fixture.componentInstance.grid;
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
-        const expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+        let expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height;
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.columns[0].width).toEqual('100px');
@@ -574,8 +575,11 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         const hScroll = fixture.componentInstance.grid.headerContainer.getScroll();
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
-        // Should 243 - 18, because the horizontal scrollbar has 18px height
-        expect(grid.calcHeight).toEqual(expectedHeight - 18);
+        expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+        expect(grid.calcHeight).toEqual(expectedHeight);
         expect(hScrollVisible).toBe(true);
     });
 
