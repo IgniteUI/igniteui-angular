@@ -131,8 +131,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const rowObj = this.grid.getRowByIndex(rowIndex);
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
+            // stop event from triggering multiple times before scrolling is complete.
+            this.grid.tbody.nativeElement.blur();
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+            scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this.grid.tbody.nativeElement.focus();
+            });
         }
     }
 
@@ -163,7 +168,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             childGrid.navigation._moveToChild(targetIndex, isNext);
             return;
         }
-        
+
         const childGridNav =  childGrid.navigation;
         this.activeNode.row = null;
         const visibleColsLength = childGrid.visibleColumns.length - 1;
