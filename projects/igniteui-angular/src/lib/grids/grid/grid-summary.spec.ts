@@ -27,7 +27,7 @@ import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
-fdescribe('IgxGrid - Summaries #grid', () => {
+describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -500,11 +500,11 @@ fdescribe('IgxGrid - Summaries #grid', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
-            });
+            }));
 
             it('Filtering: should calculate summaries only over filteredData', fakeAsync(() => {
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'), true);
@@ -767,7 +767,7 @@ fdescribe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to select summaries with arrow keys', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
-            await wait(DEBOUNCETIME);
+
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
@@ -792,7 +792,6 @@ fdescribe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to select summaries with tab and shift+tab', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
-            await wait(DEBOUNCETIME);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
@@ -816,10 +815,9 @@ fdescribe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
-            await wait(DEBOUNCETIME);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 0, 1, 'ArrowRight', false, true);
-            await wait(100);
+
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
@@ -827,7 +825,7 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, 5, 'ArrowLeft', false, true);
-            await wait(100);
+
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -853,12 +851,9 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait();
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 0);
-            await wait(DEBOUNCETIME);
-
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, 3, i);
                 await GridSummaryFunctions.moveSummaryCell(fix, 3, i, 'ArrowRight');
@@ -907,9 +902,8 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 1);
-            await wait(DEBOUNCETIME);
-
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'ArrowRight', false, true);
+
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 5);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
@@ -917,6 +911,7 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 5, 'ArrowLeft', false, true);
+
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -950,7 +945,6 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 0);
-            await wait(DEBOUNCETIME);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             for (let i = 0; i < 5; i++) {
