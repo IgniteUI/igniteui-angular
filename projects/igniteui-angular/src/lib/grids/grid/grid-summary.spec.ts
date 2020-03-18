@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -23,19 +23,17 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxChipComponent } from '../../chips/chip.component';
 
-describe('IgxGrid - Summaries #grid', () => {
+fdescribe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
     const SUMMARY_ROW = 'igx-grid-summary-row';
     const SUMMARY_CELL = 'igx-grid-summary-cell';
-    const EMPTY_SUMMARY_CLASS ='igx-grid-summary--empty';
+    const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
     beforeAll(async(() => {
@@ -45,7 +43,6 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummaryColumnComponent,
                 CustomSummariesComponent,
                 FilteringComponent,
-                ColumnGroupFourLevelTestComponent,
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ],
@@ -499,7 +496,7 @@ describe('IgxGrid - Summaries #grid', () => {
         });
     });
 
-    describe('Integration Scenarious: ', () => {
+    describe('Integration Scenarios: ', () => {
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
@@ -553,7 +550,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
-            it('Moving: should move summaries when move colomn', () => {
+            it('Moving: should move summaries when move column', () => {
                 const colUnitsInStock = grid.getColumnByName('UnitsInStock');
                 const colProductID = grid.getColumnByName('ProductID');
                 colUnitsInStock.movable = true;
@@ -593,17 +590,16 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
 
-                let summaryArea = fix.debugElement.query(By.css('.igx-grid__summaries'));
-                expect(summaryArea).toBeNull();
+                summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                expect(summaryRow).toBeNull();
                 expect(grid.hasSummarizedColumns).toBe(false);
 
                 grid.getColumnByName('UnitsInStock').hidden = false;
                 tick();
                 fix.detectChanges();
-                summaryArea = fix.debugElement.query(By.css('.igx-grid__summaries'));
-                expect(summaryArea).toBeDefined();
-                expect(grid.hasSummarizedColumns).toBe(true);
                 summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
+                expect(summaryRow).toBeDefined();
+                expect(grid.hasSummarizedColumns).toBe(true);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, [], []);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, [], []);
@@ -753,29 +749,6 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '52', '20,000', '22,812', '7,604']);
             });
         });
-
-        // To change
-        it('MCH - verify summaries when there are grouped columns', fakeAsync(/** height/width setter rAF */() => {
-            const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
-            const allColumns = grid.columnList;
-            allColumns.forEach((col) => {
-                if (!col.columnGroup) {
-                    col.hasSummary = true;
-                }
-            });
-            fixture.detectChanges();
-
-            const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['27']);
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 6, ['Count'], ['27']);
-        }));
     });
 
     describe('Keyboard Navigation', () => {
@@ -794,20 +767,21 @@ describe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to select summaries with arrow keys', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
-
+            await wait(DEBOUNCETIME);
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             for (let i = 0; i < 5; i++) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 0, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 0, i, 'ArrowRight');
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'ArrowRight');
             }
 
-            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             for (let i = 5; i > 0; i--) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 0, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 0, i, 'ArrowLeft');
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'ArrowLeft');
             }
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
@@ -818,20 +792,21 @@ describe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to select summaries with tab and shift+tab', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
-
+            await wait(DEBOUNCETIME);
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             for (let i = 0; i < 5; i++) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 0, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 0, i, 'Tab');
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'Tab');
             }
 
-            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
             for (let i = 5; i > 0; i--) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 0, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 0, i, 'Tab', true);
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'Tab', true);
             }
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -841,31 +816,36 @@ describe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
+            await wait(DEBOUNCETIME);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 0, 1, 'ArrowRight', false, true);
             await wait(100);
-            GridSummaryFunctions.verifySummaryCellActive(fix, 0, 5);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 0, 5, 'ArrowLeft', false, true);
+            await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, 5, 'ArrowLeft', false, true);
             await wait(100);
-            GridSummaryFunctions.verifySummaryCellActive(fix, 0, 0);
+            GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 0);
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
         });
 
-        it('should not change active summary cell when press Arrow Down and Up', async () => {
+        it('should not change active summary cell when press Arrow Down and Up', () => {
             GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 0, 1, 'ArrowDown');
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 0, 1, 'ArrowUp');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', summaryCell);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
         });
 
@@ -873,7 +853,7 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
+            await wait();
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 0);
@@ -899,21 +879,24 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
         });
-        // To change
-        it('Grouping: should not change active summary cell when press Ctrl+ArrowUp/Down', async () => {
+
+        it('Grouping: should not change active summary cell when press Ctrl+ArrowUp/Down', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 1);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'ArrowDown', false, true);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell, false, false, true);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'ArrowUp', false, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', summaryCell, false, false, true);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
         });
 
@@ -921,13 +904,12 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 1);
+            await wait(DEBOUNCETIME);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'ArrowRight', false, true);
-            await wait(100);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 5);
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
@@ -935,27 +917,29 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 5, 'ArrowLeft', false, true);
-            await wait(100);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
         });
 
-        it('Grouping: should not change active summary cell when press CTRL+Home/End ', async () => {
+        it('Grouping: should not change active summary cell when press CTRL+Home/End ', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 1);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'End', false, true);
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
+            UIInteractions.triggerEventHandlerKeyDown('End', summaryCell, false, false, true);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'Home', false, true);
+            UIInteractions.triggerEventHandlerKeyDown('Home', summaryCell, false, false, true);
+            fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
         });
 
@@ -963,24 +947,24 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 0);
-
-            for (let i = 0; i < 5; i++) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 3, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 3, i, 'Tab');
-            }
+            await wait(DEBOUNCETIME);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            for (let i = 0; i < 5; i++) {
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'Tab');
+            }
+
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
 
             for (let i = 5; i > 0; i--) {
-                GridSummaryFunctions.verifySummaryCellActive(fix, 3, i);
-                await GridSummaryFunctions.moveSummaryCell(fix, 3, i, 'Tab', true);
+                GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
+                await GridSummaryFunctions.moveSummaryCell(fix, summaryRow, i, 'Tab', true);
             }
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -991,16 +975,13 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.focusSummaryCell(fix, 3, 0);
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 0, 'Tab', true);
-            await wait(100);
 
             let cell = grid.getCellByColumn(2, 'OnPTO');
             expect(cell.selected).toBe(true);
-            expect(cell.focused).toBe(true);
 
             let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
@@ -1017,36 +998,34 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
 
             await GridSummaryFunctions.moveSummaryCell(fix, 3, 0, 'ArrowRight', false, true);
-            await wait(100);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 5);
             cell = grid.getCellByColumn(2, 'OnPTO');
             expect(cell.selected).toBe(true);
         });
 
-        it('Grouping: should navigate with arrow keys from cell to summary row ', async () => {
+        it('Grouping: should navigate with arrow keys from cell to summary row ', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-
-            await wait(DEBOUNCETIME);
+            cell.onFocus(null);
             fix.detectChanges();
+
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', cell.nativeElement, true);
-            await wait(100);
             fix.detectChanges();
+
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 0, 'ArrowDown');
-            await wait(DEBOUNCETIME);
+            const summaryRow =  GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            let summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0, false);
@@ -1058,8 +1037,6 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row.nativeElement, true);
-
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
@@ -1067,48 +1044,39 @@ describe('IgxGrid - Summaries #grid', () => {
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 0, 'ArrowRight');
-            await wait(DEBOUNCETIME);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', summaryCell);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 3, 1, 'ArrowUp');
-            await wait(DEBOUNCETIME);
+            summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', summaryCell);
             fix.detectChanges();
             cell = grid.getCellByColumn(2, 'ParentID');
             expect(cell.selected).toBe(true);
-            expect(cell.focused).toBe(true);
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(false);
         });
 
-        it('should navigate with tab to filter row if the grid is empty', async () => {
+        it('should navigate with tab to filter row if the grid is empty', () => {
             grid.allowFiltering = true;
-            await wait();
-            fix.detectChanges();
-
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
-
-            const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const stringCellChip = initialChips[1].nativeElement;
-
-            stringCellChip.click();
-            await wait();
             fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, 'ParentID');
 
             GridSummaryFunctions.focusSummaryCell(fix, 0, 0);
 
-            await GridSummaryFunctions.moveSummaryCell(fix, 0, 0, 'Tab', true);
-            await wait();
+            const summaryRow =  GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', summaryCell, false, true);
 
-            const filterUIRow = fix.debugElement.query(By.css('igx-grid-filtering-row'));
-            const allButtons = filterUIRow.queryAll(By.css('button'));
-            const closeButton = allButtons[allButtons.length - 1];
+            fix.detectChanges();
+              const closeButton = GridFunctions.getFilterRowCloseButton(fix);
             expect(document.activeElement).toEqual(closeButton.nativeElement);
 
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterUIRow.nativeElement, true);
-            await wait();
+            const filterRow = GridFunctions.getFilterRow(fix);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', filterRow);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 0);
@@ -1484,34 +1452,30 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
         });
 
-        it('Grouping: Update row and keep grouping', (async () => {
+        it('Grouping: Update row and keep grouping', () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
 
             const newRow = {
-                ID: 225,
-                ParentID: 847,
+                ID: 101,
+                ParentID: 17,
                 Name: 'New Employee',
                 HireDate: new Date(2019, 3, 3),
                 Age: 19
             };
-            grid.updateRow(newRow, 225);
+            grid.updateRow(newRow, 101);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(50);
-            fix.detectChanges();
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '50']);
+        });
 
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['19', '25']);
-        }));
-        // To change
-        it('CRUD: summaries should be updated when row is submitted when rowEditable=true', (async () => {
+        it('CRUD: summaries should be updated when row is submitted when rowEditable=true', fakeAsync(() => {
             grid.getColumnByName('Age').editable = true;
             grid.getColumnByName('HireDate').editable = true;
             fix.detectChanges();
@@ -1528,15 +1492,16 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
-            await wait(50);
+            flush();
             fix.detectChanges();
 
             const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
             UIInteractions.sendInput(editTemplate, 87);
+            flush();
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
-            await wait(50);
+            flush();
             fix.detectChanges();
 
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
@@ -1544,52 +1509,53 @@ describe('IgxGrid - Summaries #grid', () => {
 
             const hireDateCell = grid.getCellByColumn(1, 'HireDate');
             UIInteractions.triggerKeyDownEvtUponElem('enter', hireDateCell.nativeElement, true);
-            await wait(50);
+            flush();
             fix.detectChanges();
 
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '87']);
         }));
-        // To change
+
         it('Grouping: Update row and change grouping', (async () => {
+            grid.getColumnByName('HireDate').hasSummary = false;
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
 
             const newRow = {
-                ID: 225,
-                ParentID: 17,
+                ID: 101,
+                ParentID: 19,
                 Name: 'New Employee',
                 HireDate: new Date(2019, 3, 3),
                 Age: 19
             };
-            grid.updateRow(newRow, 225);
+            grid.updateRow(newRow, 101);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 2, ['Count'], ['3']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
-
-            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(50);
-            fix.detectChanges();
-
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['1']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '25']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 4, ['Min', 'Max'], ['19', '44']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['50', '50']);
 
             // Undo transactions
             grid.transactions.undo();
-            await wait(50);
             fix.detectChanges();
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 2, ['Count'], ['1']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 4, ['Min', 'Max'], ['44', '44']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50']);
 
             // Redo transactions
             grid.transactions.redo();
-            await wait(50);
             fix.detectChanges();
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['1']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 4, ['Min', 'Max'], ['19', '44']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['50', '50']);
+
         }));
 
         it('Grouping: Update row and add new group', () => {
@@ -1687,8 +1653,9 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60']);
         });
-        // To change
-        it('Grouping: Update cell and change grouping', (async () => {
+
+        it('Grouping: Update cell and change grouping', () => {
+            grid.getColumnByName('HireDate').hasSummary = false;
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
@@ -1706,35 +1673,24 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(17);
 
-            grid.updateCell(847, grid.getRowByKey(12).rowID, 'ParentID');
+            grid.updateCell(19, grid.getRowByKey(12).rowID, 'ParentID');
             fix.detectChanges();
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(19);
 
-            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(50);
-            fix.detectChanges();
-
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['3']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '50']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 2, ['Count'], ['2']);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 4, ['Min', 'Max'], ['44', '50']);
 
             // Clear transactions
             grid.transactions.clear();
-            await wait(50);
             fix.detectChanges();
 
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
-            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '44']);
-
-            grid.verticalScrollContainer.scrollTo(0);
-            await wait(50);
-            fix.detectChanges();
-            groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(17);
+            GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 6, 2, ['Count'], ['1']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50']);
-        }));
+        });
     });
 
     describe('Grouping tests: ', () => {
@@ -1750,7 +1706,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should render correct summaries when there is grouped colomn', () => {
+        it('should render correct summaries when there is grouped column', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             const groupRows = grid.groupsRowList.toArray();
@@ -1945,7 +1901,7 @@ describe('IgxGrid - Summaries #grid', () => {
             verifyBaseSummaries(fix);
         });
 
-        it('Hiding: should render correct summaries when show/hide a colomn', () => {
+        it('Hiding: should render correct summaries when show/hide a column', () => {
             grid.getColumnByName('Age').hidden = true;
             grid.getColumnByName('ParentID').hidden = true;
             fix.detectChanges();
@@ -1989,7 +1945,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
         });
 
-        it('Filtering: should render correct summaries when filter', fakeAsync(() => {
+        it('Filtering: should render correct summaries when filter', () => {
             grid.filter('ID', 12, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -2012,9 +1968,9 @@ describe('IgxGrid - Summaries #grid', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
-        }));
+        });
 
-        it('Filtering: should render correct summaries when filter with no results found', fakeAsync(() => {
+        it('Filtering: should render correct summaries when filter with no results found', () => {
             grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));
             fix.detectChanges();
 
@@ -2030,7 +1986,7 @@ describe('IgxGrid - Summaries #grid', () => {
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
-        }));
+        });
 
         it('Paging: should render correct summaries when paging is enable and position is buttom', fakeAsync(() => {
             grid.paging = true;
@@ -2267,59 +2223,11 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'May 4, 2014', 'Apr 3, 2019']);
         });
 
-        it('CRUD: should not recalc summaries when update cell and rowEditing is set to TRUE', async () => {
-            grid.getColumnByName('ParentID').editable = true;
-            fix.detectChanges();
-            grid.rowEditable = true;
-            grid.width = '400px';
-            grid.height = '800px';
-            await wait(50);
-            fix.detectChanges();
-
-            grid.groupBy({
-                fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false
-            });
-            fix.detectChanges();
-            const cell = grid.getCellByColumn(1, 'ParentID');
-            cell.nativeElement.focus();
-            fix.detectChanges();
-
-            let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
-
-            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
-            await wait(50);
-            fix.detectChanges();
-
-            const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInput(editTemplate, 87);
-            await wait(50);
-            fix.detectChanges();
-
-            summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
-
-            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
-            await wait(50);
-            fix.detectChanges();
-
-            summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1,
-                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '87', '87', '87', '87']);
-        });
-
         it('CRUD and GroupBy: recalculate summaries when update cell which is grouped', fakeAsync(/** height/width setter rAF */() => {
             grid.width = '400px';
             grid.height = '800px';
             fix.detectChanges();
             tick(100);
-
-            grid.groupBy({
-                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
-            });
-            fix.detectChanges();
 
             grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
             fix.detectChanges();

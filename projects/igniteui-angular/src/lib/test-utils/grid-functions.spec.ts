@@ -23,6 +23,7 @@ const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
+const FILTER_ROW_BUTTONS_CLASS = '.igx-grid__filtering-row-editing-buttons';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 const FILTER_CHIP_CLASS = '.igx-filtering-chips';
 const ESF_MENU_CLASS = '.igx-excel-filter__menu';
@@ -600,8 +601,18 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css(FILTER_CHIP_CLASS));
     }
 
+    public static getFilterRow(fix): DebugElement {
+        return fix.debugElement.query(By.css(FILTER_UI_ROW));
+    }
+
     public static getFilteringChipPerIndex(fix, index) {
         return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
+    public static getFilterRowCloseButton(fix): DebugElement {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const buttonsContainer = filterUIRow.query(By.css(FILTER_ROW_BUTTONS_CLASS));
+        return buttonsContainer.queryAll(By.css('button'))[1];
     }
 
     public static removeFilterChipByIndex(index: number, filterUIRow) {
@@ -1860,32 +1871,31 @@ export class GridSummaryFunctions {
         });
     }
 
-    public static verifySummaryCellActive(fix, rowIndex, cellIndex, active: boolean = true) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
+        const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
     public static moveSummaryCell =
-        (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
+            const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
+            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
         })
 
-    public static focusSummaryCell =
-        (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
+    public static focusSummaryCell(fix, rowIndex, cellIndex) {
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.nativeElement.dispatchEvent(new Event('focus'));
+            summaryCell.triggerEventHandler('focus', {});
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            resolve();
-        })
+        }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
