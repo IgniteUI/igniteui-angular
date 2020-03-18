@@ -133,7 +133,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    @Input()
     public get selectable(): boolean {
         return this.children && this.children.some(child => child.selectable);
     }
