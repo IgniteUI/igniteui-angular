@@ -7,7 +7,6 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
-    GridWithPrimaryKeyComponent,
     RowSelectionComponent,
     SelectionWithScrollsComponent,
     SingleRowSelectionComponent,
@@ -30,7 +29,6 @@ describe('IgxGrid - Row Selection #grid', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridWithPrimaryKeyComponent,
                 RowSelectionComponent,
                 SelectionWithScrollsComponent,
                 RowSelectionWithoutPrimaryKeyComponent,
@@ -1236,42 +1234,44 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    describe('Selection with primaryKey', () => {
+    fdescribe('Selection with primaryKey', () => {
         let fix;
         let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
+            fix = TestBed.createComponent(RowSelectionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            grid.data = grid.data.slice(0, 10);
+            fix.detectChanges();
         }));
 
         it('Should be able to select row through primaryKey and index', () => {
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['Name']).toMatch('Gilberto Todd');
-            expect(grid.getRowByIndex(1).rowData['Name']).toMatch('Gilberto Todd');
+            expect(grid.getRowByKey(2).rowData['ProductName']).toMatch('Aniseed Syrup');
+            expect(grid.getRowByIndex(1).rowData['ProductName']).toMatch('Aniseed Syrup');
         });
 
         it('Should be able to update a cell in a row through primaryKey', () => {
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
-            grid.updateCell('Vice President', 2, 'JobTitle');
+            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(198);
+            grid.updateCell(300, 2, 'UnitsInStock');
             fix.detectChanges();
-            expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Vice President');
+            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(300);
         });
 
         it('Should be able to update row through primaryKey', () => {
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
-            grid.updateRow({ ID: 2, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
+            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(198);
+            grid.updateRow({ ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 300 }, 2);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
             fix.detectChanges();
-            expect(grid.getRowByIndex(1).rowData['JobTitle']).toMatch('Vice President');
-            expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Vice President');
+            expect(grid.getRowByIndex(1).rowData['UnitsInStock']).toEqual(300);
+            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(300);
         });
 
         it('Should be able to delete a row through primaryKey', () => {
@@ -1288,7 +1288,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
             expect(grid.getRowByKey(2)).toBeDefined();
-            grid.updateRow({ ID: 7, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
+            grid.updateRow({ ProductID: 7, ProductName: 'Aniseed Syrup', UnitsInStock: 300 }, 2);
             fix.detectChanges();
             expect(grid.getRowByKey(7)).toBeDefined();
             expect(grid.getRowByIndex(1)).toBeDefined();
