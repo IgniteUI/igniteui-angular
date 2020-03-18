@@ -57,7 +57,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             } else {
                 let scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(rowIndex, !isNext);
                 scrollAmount += isNext ? 1 : -1;
-                this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount - 1;
+                this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
+                this.grid.tbody.nativeElement.blur();
                 this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
                     this._moveToChild(rowIndex, isNext, targetLayoutIndex);
                 });
@@ -190,8 +191,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
         const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
         const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
-        this.grid.parent.tbody.nativeElement.focus({preventScroll:true});        
-        this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cb); 
+        this.grid.tbody.nativeElement.blur();
+        const cbFunc = (args) => {
+            this.grid.parent.tbody.nativeElement.focus({preventScroll:true});
+            cb(args);
+        }
+        this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cbFunc); 
     }
 
     /**
