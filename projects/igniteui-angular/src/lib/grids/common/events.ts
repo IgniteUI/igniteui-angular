@@ -2,7 +2,7 @@ import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IGridDataBindable } from './grid.interface';
+import { IGridDataBindable, GridType } from './grid.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -57,6 +57,14 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     newSelection: any[];
     added: any[];
     removed: any[];
+    event?: Event;
+}
+
+export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    oldSelection: string[];
+    newSelection: string[];
+    added: string[];
+    removed: string[];
     event?: Event;
 }
 
@@ -117,4 +125,22 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
     expanded: boolean;
     event?: Event;
     cancel: boolean;
+}
+
+/**
+ * Event emitted when a row's pin state changes.
+ */
+export interface IPinRowEventArgs extends IBaseEventArgs {
+    /** The row component instance, that was pinned/unpinned.
+    * May be undefined if row does not exist in the current visible data.
+    */
+    readonly row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    /** The ID of the row, that was pinned/unpinned.
+    *   ID is either the primaryKey value or the data record instance.
+    */
+    readonly rowID: any;
+    /** The index at which to pin the row in the pinned rows collection. */
+    insertAtIndex?: number;
+    /** Whether or noy the row is pinned or unpinned. */
+    readonly isPinned: boolean;
 }

@@ -12,7 +12,7 @@ import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent, IgxColumnComponent } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
@@ -60,6 +60,10 @@ const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const DISPLAY_CONTAINER = 'igx-display-container';
+const SORT_ICON_CLASS = '.sort-icon';
+const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
+const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
+const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 
 export class GridFunctions {
 
@@ -854,7 +858,7 @@ export class GridFunctions {
         hideIcon.click();
     }
 
-    public static getIconFromButton(iconName: string, component: any, fix: ComponentFixture<any>) {
+    public static getIconFromButton(iconName: string, component: any) {
         const icons = component.querySelectorAll('igx-icon');
         return Array.from(icons).find((sortIcon: any) => sortIcon.innerText === iconName);
     }
@@ -863,15 +867,23 @@ export class GridFunctions {
     * Click the sort ascending button in the ESF.
     */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix), fix);
+        const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortAscIcon.click();
+    }
+
+    /**
+     * Click the column selection button in the ESF.
+     */
+    public static clickColumnSelectionInExcelStyleFiltering(fix: ComponentFixture<any>) {
+        const columnSelectIcon: any = this.getIconFromButton('done', GridFunctions.getExcelFilteringColumnSelectionContainer(fix));
+        columnSelectIcon.click();
     }
 
     /**
      * Click the sort descending button in the ESF.
     */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix), fix);
+        const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortDescIcon.click();
     }
 
@@ -879,18 +891,17 @@ export class GridFunctions {
      * Click the move left button in the ESF.
     */
     public static clickMoveLeftInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix), fix);
+        const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix));
         moveLeftIcon.click();
     }
 
     /**
      * Click the move right button in the ESF.
-    */
+     */
     public static clickMoveRightInExcelStyleFiltering(fix: ComponentFixture<any>) {
-        const moveRightIcon: any = this.getIconFromButton('arrow_forwards', GridFunctions.getExcelFilteringMoveComponent(fix), fix);
+        const moveRightIcon: any = this.getIconFromButton('arrow_forwards', GridFunctions.getExcelFilteringMoveComponent(fix));
         moveRightIcon.click();
     }
-
 
     public static getExcelFilteringInput(fix: ComponentFixture<any>, expressionIndex: number = 0): HTMLInputElement {
         const expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[expressionIndex];
@@ -927,6 +938,13 @@ export class GridFunctions {
         const clearIcon = GridFunctions.getClearFilterInExcelStyleFiltering(fix, menu);
         clearIcon.click();
     }
+
+    /**
+     * returns the filter row debug element.
+    */
+   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(FILTER_UI_ROW));
+   }
 
     /**
      * Open filtering row for a column.
@@ -992,8 +1010,8 @@ export class GridFunctions {
         return excelMenu;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
-        return GridFunctions.sortNativeElementsVertically(Array.from(excelMenu.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
+        const searchComp =  GridFunctions.getExcelStyleSearchComponent(fix, menu);
+        return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
     public static getExcelStyleFilteringSortContainer(fix, menu = null) {
@@ -1043,6 +1061,18 @@ export class GridFunctions {
             return header.componentInstance.column.field === columnField;
         });
     }
+
+    public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+       const header = this.getColumnHeader(columnField, fix);
+       header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+       fix.detectChanges();
+    }
+
+    public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+        const header = this.getColumnGroupHeaderCell(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        fix.detectChanges();
+     }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
@@ -1104,6 +1134,12 @@ export class GridFunctions {
     public static getExcelFilteringMoveComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         return excelMenu.querySelector('igx-excel-style-column-moving');
+    }
+
+    public static getExcelFilteringColumnSelectionContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('.igx-excel-filter__actions-select') ||
+            excelMenu.querySelector('.igx-excel-filter__actions-selected');
     }
 
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
@@ -1795,6 +1831,15 @@ export class GridFunctions {
             rowComp.onBlur();
         }
     }
+
+    public static getHeaderSortIcon(header: DebugElement): DebugElement {
+        return  header.query(By.css(SORT_ICON_CLASS));
+    }
+
+    public static clickHeaderSortIcon(header: DebugElement) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        sortIcon.triggerEventHandler('click', new Event('click'));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -1987,7 +2032,6 @@ export class GridSelectionFunctions {
         expect(selectedCellFromGrid.rowIndex).toEqual(cell.rowIndex);
     }
 
-
     public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
         expect(row.selected).toBe(selected);
         expect(row.nativeElement.classList.contains(ROW_SELECTION_CSS_CLASS)).toBe(selected);
@@ -2090,5 +2134,47 @@ export class GridSelectionFunctions {
 
     public static expandRowIsland(rowNumber = 1) {
         (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
+    }
+
+    public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
+        expect(column.selected).toEqual(selected);
+        if (!column.hidden) {
+            expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+        }
+    }
+
+    public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
+        columns.forEach(c => this.verifyColumnSelected(c, selected ));
+    }
+
+    public static verifyColumnGroupSelected(fixture: ComponentFixture<any>, column: IgxColumnGroupComponent, selected = true) {
+        expect(column.selected).toEqual(selected);
+        const header = GridFunctions.getColumnGroupHeaderCell(column.header, fixture);
+        expect(header.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+    }
+
+    public static verifyColumnHeaderHasSelectableClass(header: DebugElement, hovered = true) {
+         expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
+    }
+
+    public static verifyColumnsHeadersHasSelectableClass(headers: DebugElement[], hovered = true) {
+        headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
+   }
+
+    public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
+        this.verifyColumnSelected(column, selected);
+        column.cells.forEach(cell => {
+            expect(cell.nativeElement.classList.contains(SELECTED_COLUMN_CELL_CLASS)).toEqual(selected);
+        });
+    }
+
+    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey= false) {
+        const event = {
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            stopPropagation: () => { }
+        };
+
+        column.headerCell.onClick(event);
     }
 }
