@@ -163,14 +163,13 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 })
 export class IgxGridBaseDirective extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
-    private _scrollWidth: number;
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 
     public get scrollWidth() {
-        return this._scrollWidth;
+        return this.verticalScrollContainer.getScrollbarWidth();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -2464,8 +2463,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
     */
-    public pinnedRecords = [];
+    public get pinnedRecords() {
+        return this._pinnedRecords;
+    }
 
+    protected _pinnedRecords = [];
 
     /**
      * @hidden
@@ -2788,7 +2790,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
-        this._scrollWidth = this.getScrollWidth();
     }
 
     protected setupColumns() {
@@ -2877,14 +2878,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const extractForOfs = pipe(map((collection: any[]) => collection.filter(elementFilter).map(item => item.virtDirRow)));
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
-
-        combineLatest([rowListObserver, summaryRowObserver]).pipe(takeUntil(this.destroy$))
-            .subscribe(([row, summary]) => this._horizontalForOfs = [...row, ...summary]);
-
-        this._horizontalForOfs = [
-            ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
-            ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
-        ];
+        const resetHorizontalForOfs = () => {
+            this._horizontalForOfs = [
+                ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
+                ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
+            ];
+        };
+        rowListObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
+        summaryRowObserver.pipe(takeUntil(this.destroy$)).subscribe(resetHorizontalForOfs);
+        resetHorizontalForOfs();
     }
 
     /**
@@ -3286,6 +3288,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._pinnedVisible = this._pinnedColumns.filter(col => !col.hidden);
         return this._pinnedVisible;
+    }
+
+    /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     */
+    get pinnedRows(): IgxGridRowComponent[] {
+        return this.rowList.filter(x => x.pinned);
     }
 
     /**
@@ -3866,7 +3879,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        this.onSortingDone.emit(expression);
+        requestAnimationFrame(() => this.onSortingDone.emit(expression));
     }
 
     /**
@@ -4032,9 +4045,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
      * @param index The index at which to insert the row in the pinned collection.
      */
-    public pinRow(rowID, index?): boolean {
-        const rec = this.primaryKey ? this.gridAPI.get_rec_by_id(rowID) : rowID;
-        if (this.pinnedRecords.indexOf(rec) !== -1) {
+    public pinRow(rowID: any, index?: number): boolean {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        if (!rec || this.pinnedRecords.indexOf(rec) !== -1 || this.data.indexOf(rec) === -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4064,10 +4077,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
     */
-    public unpinRow(rowID) {
-        const rec = this.primaryKey ? this.gridAPI.get_rec_by_id(rowID) : rowID;
+    public unpinRow(rowID: any) {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
         const index =  this.pinnedRecords.indexOf(rec);
-        if (index === -1) {
+        if (index === -1 || !rec) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4087,9 +4100,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.clientHeight : 0;
-        // 2px border
-        return this.pinnedRecords.length > 0 ? containerHeight + 2 : 0;
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
+        return this.pinnedRecords.length > 0 ? containerHeight : 0;
     }
 
     get totalHeight() {
@@ -4408,7 +4420,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.calcHeight = this._calculateGridBodyHeight();
-        if (this.pinnedRowHeight) {
+        if (this.pinnedRowHeight && this.calcHeight) {
             this.calcHeight -= this.pinnedRowHeight;
         }
     }
@@ -4869,21 +4881,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return DataType.Date;
         }
         return DataType.String;
-    }
-
-    private getScrollWidth() {
-        const div = document.createElement('div');
-        const style = div.style;
-        style.width = '100px';
-        style.height = '100px';
-        style.position = 'absolute';
-        style.top = '-10000px';
-        style.top = '-10000px';
-        style.overflow = 'scroll';
-        document.body.appendChild(div);
-        const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
-        return scrollWidth;
     }
 
     /**
@@ -5468,10 +5465,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
-        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
+        const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
-            colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
+            colIndex > - 1 && colIndex < cols) {
             return true;
         }
         return false;

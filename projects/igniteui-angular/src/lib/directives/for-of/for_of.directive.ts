@@ -710,6 +710,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.sizesCache[index + 1] - this.sizesCache[index];
     }
 
+    public getScrollbarWidth() {
+        return this.scrollComponent ? (this.scrollComponent as VirtualHelperComponent).scrollWidth : 0;
+    }
+
     /**
      * Returns the scroll offset of the element at the specified index.
      * ```typescript
@@ -1185,6 +1189,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
+                // Need to reset the scrollAmount value here, because horizontalScrollBar is hidden, therefore
+                // onScroll event handler for VirtualHelperBaseDirective will not be called
+                this.scrollComponent.scrollAmount = 0;
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
@@ -1192,8 +1199,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
-                // Need to reset the scrollAmount value here, because
-                // Firefox will not fire the scrollComponent scroll event handler
+                // Need to reset the scrollAmount value here, because verticalScrollBar is hidden, therefore
+                // onScroll event handler for VirtualHelperBaseDirective will not be called
                 this.scrollComponent.scrollAmount = 0;
             }
         }

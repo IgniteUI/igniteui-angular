@@ -119,9 +119,20 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
     cancel: boolean;
 }
 
+/**
+ * Event emitted when a row's pin state changes.
+ */
 export interface IPinRowEventArgs extends IBaseEventArgs {
-    row: IgxRowDirective<IgxGridBaseDirective & GridType>;
-    rowID: any;
+    /** The row component instance, that was pinned/unpinned.
+    * May be undefined if row does not exist in the current visible data.
+    */
+    readonly row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    /** The ID of the row, that was pinned/unpinned.
+    *   ID is either the primaryKey value or the data record instance.
+    */
+    readonly rowID: any;
+    /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
-    isPinned: boolean;
+    /** Whether or noy the row is pinned or unpinned. */
+    readonly isPinned: boolean;
 }

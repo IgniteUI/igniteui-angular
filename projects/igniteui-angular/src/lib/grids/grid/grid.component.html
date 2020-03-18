@@ -110,7 +110,6 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngFor="let rowData of pinnedRecords
-                | gridTransaction:id:pipeTrigger
                 | visibleColumns:hasVisibleColumns
                 | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
                 | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
@@ -210,7 +209,7 @@
         [style.width.px]="scrollWidth"></div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
+<div class="igx-grid__scroll" #scr [hidden]="isHorizontalScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
