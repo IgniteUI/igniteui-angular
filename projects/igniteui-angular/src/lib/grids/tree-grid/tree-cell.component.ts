@@ -10,6 +10,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/select
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
+import { IgxChipComponent } from '../../chips';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +20,9 @@ import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.componen
 })
 export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
+
+    @ViewChild('pinnedIndicator') 
+    public pinnedIndicator: IgxChipComponent;
 
     constructor(
                 selectionService: IgxGridSelectionService,

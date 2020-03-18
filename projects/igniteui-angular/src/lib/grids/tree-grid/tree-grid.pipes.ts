@@ -168,7 +168,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                 data.push(hierarchicalRecord);
             }
 
-            const pinnedRow = this.gridAPI.get_row_by_key(hierarchicalRecord.rowID) !== undefined ? 
+            const pinnedRow = this.gridAPI.get_row_by_key(hierarchicalRecord.rowID) !== undefined ?
                     this.gridAPI.get_row_by_key(hierarchicalRecord.rowID).pinned :
                     false;
 
