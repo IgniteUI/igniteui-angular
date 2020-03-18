@@ -91,11 +91,11 @@ $green-palette: igx-palette(
 /// Dark green palette,
 /// @type {Map}
 /// @group palettes
-$green-dark-palette: extend(
-    $green-palette,
-    (
-        surface: (500: #222)
-    )
+$green-dark-palette: igx-palette(
+    $primary: igx-color($green-palette, 'primary'),
+    $secondary: igx-color($green-palette, 'secondary'),
+    $surface: #222,
+    $grays: #fff
 ) !default;
 
 /// Purple palette
@@ -109,11 +109,11 @@ $purple-palette: igx-palette(
 /// Dark purple palette
 /// @type {Map}
 /// @group palettes
-$purple-dark-palette: extend(
-    $purple-palette,
-    (
-        surface: (500: #333)
-    )
+$purple-dark-palette: igx-palette(
+    $primary: igx-color($purple-palette, 'primary'),
+    $secondary: igx-color($purple-palette, 'secondary'),
+    $surface: #333,
+    $grays: #fff
 ) !default;
 
 /// Fluent Excel palette
@@ -130,11 +130,14 @@ $fluent-excel-palette: igx-palette(
 /// Fluent Excel dark palette
 /// @type {Map}
 /// @group palettes
-$fluent-excel-dark-palette: extend(
-    $fluent-excel-palette,
-    (
-        surface: (500: #222)
-    )
+$fluent-excel-dark-palette: igx-palette(
+    $primary: igx-color($fluent-excel-palette, 'primary'),
+    $secondary: igx-color($fluent-excel-palette, 'secondary'),
+    $success: igx-color($fluent-excel-palette, 'success'),
+    $warn: igx-color($fluent-excel-palette, 'warn'),
+    $error: igx-color($fluent-excel-palette, 'error'),
+    $surface: #222,
+    $grays: #fff
 ) !default;
 
 /// Fluent Word palette
@@ -151,11 +154,14 @@ $fluent-word-palette: igx-palette(
 /// Fluent Word dark palette
 /// @type {Map}
 /// @group palettes
-$fluent-word-dark-palette: extend(
-    $fluent-word-palette,
-    (
-        surface: (500: #222)
-    )
+$fluent-word-dark-palette: igx-palette(
+    $primary: igx-color($fluent-word-palette, 'primary'),
+    $secondary: igx-color($fluent-word-palette, 'secondary'),
+    $success: igx-color($fluent-word-palette, 'success'),
+    $warn: igx-color($fluent-word-palette, 'warn'),
+    $error: igx-color($fluent-word-palette, 'error'),
+    $surface: #222,
+    $grays: #fff
 ) !default;
 
 /// Bootstrap palette
@@ -174,10 +180,14 @@ $bootstrap-palette: igx-palette(
 /// Bootstrap dark palette
 /// @type {Map}
 /// @group palettes
-$bootstrap-dark-palette: extend(
-    $bootstrap-palette,
-    (
-        surface: (500: #333)
-    )
+$bootstrap-dark-palette: igx-palette(
+    $primary: igx-color($bootstrap-palette, 'primary'),
+    $secondary: igx-color($bootstrap-palette, 'secondary'),
+    $info: igx-color($bootstrap-palette, 'info'),
+    $success: igx-color($bootstrap-palette, 'success'),
+    $warn: igx-color($bootstrap-palette, 'warn'),
+    $error: igx-color($bootstrap-palette, 'error'),
+    $surface: #333,
+    $grays: #fff
 ) !default;
 
