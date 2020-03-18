@@ -163,14 +163,13 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 })
 export class IgxGridBaseDirective extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
-    private _scrollWidth: number;
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 
     public get scrollWidth() {
-        return this._scrollWidth;
+        return this.verticalScrollContainer.getScrollbarWidth();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -2809,7 +2808,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
-        this._scrollWidth = this.getScrollWidth();
     }
 
     protected setupColumns() {
@@ -4902,21 +4900,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return DataType.Date;
         }
         return DataType.String;
-    }
-
-    private getScrollWidth() {
-        const div = document.createElement('div');
-        const style = div.style;
-        style.width = '100px';
-        style.height = '100px';
-        style.position = 'absolute';
-        style.top = '-10000px';
-        style.top = '-10000px';
-        style.overflow = 'scroll';
-        document.body.appendChild(div);
-        const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
-        return scrollWidth;
     }
 
     /**
