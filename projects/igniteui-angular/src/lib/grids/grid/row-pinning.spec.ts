@@ -219,7 +219,7 @@ describe('Row Pinning #grid', () => {
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
     });
-    describe('Row pinning with MRL', () => {
+    fdescribe('Row pinning with MRL', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
             fix.detectChanges();
@@ -329,13 +329,6 @@ export class GridRowPinningComponent {
 @Component({
     template: `
     <igx-grid [data]="data" height="500px" [pinning]='pinningConfig'>
-        <igx-column-group header="General Information">
-        <igx-column field="CompanyName"></igx-column>
-            <igx-column-group [movable]="true" header="Person Details">
-                <igx-column field="ContactName"></igx-column>
-                <igx-column field="ContactTitle"></igx-column>
-            </igx-column-group>
-        </igx-column-group>
         <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
