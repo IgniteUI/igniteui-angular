@@ -571,7 +571,7 @@ export class IgxGridSelectionService {
 
     /** Select the specified row and emit event. */
     selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) { return; }
+        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID) || this.isRowDisabled(rowID)) { return; }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
 
         const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
@@ -604,6 +604,10 @@ export class IgxGridSelectionService {
 
     isRowSelected(rowID): boolean {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
+    }
+
+    isRowDisabled(rowID): boolean {
+        return this.grid.gridAPI.get_row_by_key(rowID).disabled;
     }
 
     /** Select range from last selected row to the current specified row.*/

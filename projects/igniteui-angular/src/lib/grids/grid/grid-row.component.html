@@ -74,9 +74,9 @@
 <ng-template #rowSelectorBaseTemplate>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
-            [checked]="selected"
+            [checked]="selected && !disabled"
             [readonly]="true"
-            [disabled]="deleted"
+            [disabled]="deleted || disabled"
             disableRipple="true"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">
