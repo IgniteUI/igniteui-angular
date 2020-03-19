@@ -1,0 +1,34 @@
+<app-page-header title="DateTime Editor">
+    Allows the user to manipulate date and time strings in a specified format.
+</app-page-header>
+
+<div class="content">
+    <div>
+        <h5>Simple date-time editor</h5>
+        <igx-input-group>
+            <input igxInput igxDateTimeEditor [value]="date1" [displayFormat]="'shortDate'">
+        </igx-input-group>
+    </div>
+
+    <div>
+        <h5>DateTime editor in a form </h5>
+        <form>
+            <igx-input-group [supressInputAutofocus]="true" style="max-width: 300px;">
+                <input #dateEditor="igxDateTimeEditor" type="text" [(ngModel)]="date" #formControl="ngModel" name="form"
+                    igxInput (valueChanged)="onValueChanged($event)" (validationFailed)="onValidationFailed($event)"
+                    [igxDateTimeEditor]="'dd/MM/yyyy'" [minValue]="minDate" [maxValue]="maxDate" required
+                    [isSpinLoop]="true" />
+                <igx-suffix>
+                    <button igxRipple igxRippleCentered="true" igxButton="icon" (click)="dateEditor.increment()">
+                        <igx-icon>expand_less</igx-icon>
+                    </button>
+                </igx-suffix>
+                <igx-suffix>
+                    <button igxRipple igxRippleCentered="true" igxButton="icon" (click)="dateEditor.decrement()">
+                        <igx-icon>expand_more</igx-icon>
+                    </button>
+                </igx-suffix>
+            </igx-input-group>
+        </form>
+    </div>
+</div>

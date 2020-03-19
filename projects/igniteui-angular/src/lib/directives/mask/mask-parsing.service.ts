@@ -100,7 +100,9 @@ export class MaskParsingService {
                 }
                 continue;
             }
-            if (chars[0] && !this.validateCharOnPosition(chars[0], i, maskOptions.format)) {
+            if (chars[0]
+                && !this.validateCharOnPosition(chars[0], i, maskOptions.format)
+                && chars[0] !== maskOptions.promptChar) {
                 break;
             }
 
@@ -113,6 +115,12 @@ export class MaskParsingService {
         }
 
         return { value: maskedValue, end: cursor };
+    }
+
+    public replaceCharAt(strValue: string, index: number, char: string): string {
+        if (strValue !== undefined) {
+            return strValue.substring(0, index) + char + strValue.substring(index + 1);
+        }
     }
 
     /** Validates only non literal positions. */
@@ -169,11 +177,6 @@ export class MaskParsingService {
         }
 
         return isValid;
-    }
-    private replaceCharAt(strValue: string, index: number, char: string): string {
-        if (strValue !== undefined) {
-            return strValue.substring(0, index) + char + strValue.substring(index + 1);
-        }
     }
     private getMaskLiterals(mask: string): Map<number, string> {
         const literals = new Map<number, string>();
