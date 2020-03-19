@@ -14,7 +14,7 @@ import { IGridCellEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column Pinning #grid', () => {
@@ -436,8 +436,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             grid.navigation.activeNode = {row: cellContactName.rowIndex, column: cellContactName.visibleColumnIndex};
             fix.detectChanges();
 
-            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight'});
-            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -445,8 +444,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(cellID.active).toBe(true);
             expect(cellContactName.active).toBe(false);
 
-            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft'});
-            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -689,16 +687,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
             fix.detectChanges();
             expect(cellCompanyName.active).toBe(true);
 
-            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft'});
-            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const cellFax = grid.getCellByColumn(0, 'Fax');
             expect(cellFax.active).toBe(true);
             expect(cellCompanyName.active).toBe(false);
 
-            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight'});
-            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight'));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             expect(cellFax.active).toBe(false);
@@ -718,16 +714,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
             fix.detectChanges();
             expect(cellCompanyName.active).toBe(true);
 
-            const keydownArrowLeftEvent = new KeyboardEvent('keydown', {key: 'ArrowLeft', ctrlKey: true});
-            grid.navigation.dispatchEvent(keydownArrowLeftEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft', false, false, true));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const cellID = grid.getCellByColumn(0, 'ID');
             expect(cellID.active).toBe(true);
             expect(cellCompanyName.active).toBe(false);
 
-            const keydownArrowRightEvent = new KeyboardEvent('keydown', {key: 'ArrowRight', ctrlKey: true});
-            grid.navigation.dispatchEvent(keydownArrowRightEvent);
+            grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight', false, false, true));
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const cellContactName = grid.getCellByColumn(0, 'ContactName');
