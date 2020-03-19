@@ -18,6 +18,9 @@
                 <igx-switch [(ngModel)]="options.cellSelection" (change)="onChange($event, 'cellSelection')">Cell Selection</igx-switch>
             </div>
             <div class="control-item">
+                <igx-switch [(ngModel)]="options.columnSelection" (change)="onChange($event, 'columnSelection')">Column Selection</igx-switch>
+            </div>
+            <div class="control-item">
                 <igx-switch [(ngModel)]="options.filtering" (change)="onChange($event, 'filtering')">Filtering</igx-switch>
             </div>
             <div class="control-item">
@@ -82,7 +85,7 @@
     <igx-grid [id]="gridId" #grid1 [igxGridState]="options"
         width="1200px" height="550px" [autoGenerate]="false"
         [data]="localData"
-        [primaryKey]="'EmployeeID'" 
+        [primaryKey]="'EmployeeID'"
         [rowEditable]="false"
         [allowFiltering]="true" [allowAdvancedFiltering]="true" [filterMode]="'excelStyleFilter'"
         [paging]="true"

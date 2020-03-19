@@ -16,8 +16,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
@@ -28,8 +27,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
-    const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
-    const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
@@ -675,23 +672,23 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        // click header
-        headers[0].triggerEventHandler('click', new Event('click'));
+        // click header sort icon
+        GridFunctions.clickHeaderSortIcon(headers[0]);
         tick();
         fix.detectChanges();
 
         const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
-        // click header again
-        headers[0].triggerEventHandler('click', new Event('click'));
+        // click header sort icon again
+        GridFunctions.clickHeaderSortIcon(headers[0]);
         tick();
         fix.detectChanges();
 
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
 
-        // click header again
-        headers[0].triggerEventHandler('click', new Event('click'));
+        // click header sort icon again
+        GridFunctions.clickHeaderSortIcon(headers[0]);
         tick();
         fix.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);

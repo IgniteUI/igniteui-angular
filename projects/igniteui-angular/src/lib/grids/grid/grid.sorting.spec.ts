@@ -240,7 +240,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     it('Should sort grid ascending by clicking once on first header cell UI', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
 
         const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
@@ -258,12 +258,12 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
     });
 
-    it('Should sort grid descending by clicking twice on header cell UI', () => {
+    it('Should sort grid descending by clicking twice on sort icon UI', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
 
         const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
@@ -281,15 +281,15 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
     });
 
-    it('Should sort grid none when we click three time on header cell UI', () => {
+    it('Should sort grid none when we click three time on header sort icon UI', () => {
         const gridData = fixture.componentInstance.data;
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
 
         const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
@@ -361,7 +361,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         const gridData = fixture.componentInstance.data;
         const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
 
         // Verify that the grid is NOT sorted.
@@ -370,7 +370,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         grid.rowList.map((item, index) =>
             expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
 
-        clickCurrentRow(firstHeaderCell);
+        GridFunctions.clickHeaderSortIcon(firstHeaderCell);
         fixture.detectChanges();
 
         // Verify that the grid is NOT sorted.
@@ -450,10 +450,6 @@ function getCurrentCellFromGrid(grid, row, cell) {
     const gridRow = grid.rowList.toArray()[row];
     const gridCell = gridRow.cells.toArray()[cell];
     return gridCell;
-}
-
-function clickCurrentRow(row) {
-    return row.triggerEventHandler('click', new Event('click'));
 }
 
 function getValueFromCellElement(cell) {
