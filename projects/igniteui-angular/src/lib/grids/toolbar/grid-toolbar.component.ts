@@ -76,7 +76,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      */
     @Input()
     get defaultDropDownsMaxHeight() {
-        const gridHeight = this.grid.calcHeight;
+        const gridHeight = this.grid.totalHeight;
         return (gridHeight) ? gridHeight * 0.7 + 'px' : '100%';
     }
 

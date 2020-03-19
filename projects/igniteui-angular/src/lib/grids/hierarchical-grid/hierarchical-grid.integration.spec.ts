@@ -259,17 +259,18 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // enable sorting
             const childGrid =  hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             childGrid.columnList.toArray()[0].sortable = true;
+            tick();
             fixture.detectChanges();
 
             const childHeaders = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'));
-            childHeaders[0].nativeElement.click();
+            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
             fixture.detectChanges();
-            childHeaders[0].nativeElement.click();
+            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
             fixture.detectChanges();
 
             const fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
             expect(fChildCell.value).toBe('09');
-            const icon = childHeaders[0].query(By.css('.sort-icon'));
+            const icon = GridFunctions.getHeaderSortIcon(childHeaders[0]);
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_downward');
         }));

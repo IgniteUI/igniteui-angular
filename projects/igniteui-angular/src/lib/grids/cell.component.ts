@@ -430,6 +430,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     @HostBinding('class.igx-grid__td--active')
     public active: boolean;
+
+    @HostBinding('attr.aria-selected')
+    get ariaSelected() {
+        return this.selected || this.column.selected  || this.row.selected;
+    }
+
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -437,7 +443,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
     get selected() {
         return this.selectionService.selected(this.selectionNode);
@@ -454,6 +459,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const node = this.selectionNode;
         val ? this.selectionService.add(node) : this.selectionService.remove(node);
         this.grid.notifyChanges();
+    }
+
+    /**
+     * Gets whether the cell column is selected.
+     * ```typescript
+     * let isCellColumnSelected = this.cell.columnSelected;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @HostBinding('class.igx-grid__td--column-selected')
+    get columnSelected() {
+        return this.selectionService.isColumnSelected(this.column.field);
     }
 
     @HostBinding('class.igx-grid__td--edited')
@@ -736,7 +753,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        this.grid.navigation.activeNode = this.selectionNode;
+        this.grid.navigation.activeNode = Object.assign({}, this.selectionNode);
         this.activate(event);
     }
 
@@ -757,9 +774,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerup = (event: PointerEvent) => {
-        if (this.grid.hasColumnLayouts) {
-            this.grid.navigation.setStartNavigationCell(this.colStart, this.rowStart, null);
-        }
         if (!isLeftClick(event)) { return; }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
