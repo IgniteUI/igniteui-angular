@@ -122,25 +122,27 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * Handles scrolling in child grid and ensures target child row is in main grid view port.
      * @param rowIndex The row index which should be in view.
      * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
+     * @param cb  Optional.Callback function called when operation is complete.
      */
-    protected _handleScrollInChild(rowIndex: number, isNext?: boolean) {
+    protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: Function) {
         const shouldScroll = this.grid.navigation.shouldPerformVerticalScroll(rowIndex);
         if (shouldScroll) {
             this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
-                this.positionInParent(rowIndex, isNext);
+                this.positionInParent(rowIndex, isNext, cb);
             });
         } else {
-            this.positionInParent(rowIndex, isNext);
+            this.positionInParent(rowIndex, isNext, cb);
         }        
     }
 
     /**
      * 
      * @param rowIndex Row index that should come in view.
-     * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
+     * @param isNext  Whether we are navigating to next. Used to determine scroll direction.
+     * @param cb  Optional.Callback function called when operation is complete.
      */
-    protected positionInParent(rowIndex, isNext) {
-        const rowObj = this.grid.getRowByIndex(rowIndex);
+    protected positionInParent(rowIndex, isNext, cb?: Function) {
+        const rowObj = this.grid.getRowByIndex(rowIndex);       
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
             // stop event from triggering multiple times before scrolling is complete.
@@ -150,7 +152,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
             scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
                 this._pendingNavigation = false;
+                if (cb) {
+                    cb();
+                };
             });
+        } else {
+            if (cb) {
+                cb();
+            };
         }
     }
 
@@ -178,7 +187,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             // if target is a child grid record should move into it.
             this.grid.navigation.activeNode.row = null;
             childGrid.navigation.activeNode = { row: targetIndex, column: this.activeNode.column};
-            childGrid.navigation._moveToChild(targetIndex, isNext);
+            childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
+                childGrid.navigation._moveToChild(targetIndex, isNext);
+            });
             return;
         }
 
@@ -220,7 +231,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param isNext 
      */
     protected getPositionInfo(rowObj: IgxRowDirective<IgxGridBaseDirective & GridType>, isNext: boolean) {
-        const rowElem = rowObj.nativeElement;
+        let rowElem = rowObj.nativeElement;
+        if (rowObj instanceof IgxChildGridRowComponent) {
+            rowElem = (rowObj as any).hGrid.tfoot.nativeElement;
+        }
         const gridBottom = this._getMinBottom(this.grid);
         const diffBottom =
         rowElem.getBoundingClientRect().bottom - gridBottom;
