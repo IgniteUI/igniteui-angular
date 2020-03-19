@@ -10,7 +10,6 @@ import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
-import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -223,7 +222,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    describe(' Editing ', () => {
+    fdescribe(' Editing ', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
             fix.detectChanges();
@@ -232,46 +231,45 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should allow pinning edited/deleted/added row.', async() => {
-            // test with added row
+        it('should allow pinning edited row.', () => {
+            grid.updateCell('New value', 'ANTON', 'CompanyName');
+            fix.detectChanges();
+            grid.pinRow('ANTON');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('ANTON');
+            expect(pinRowContainer[0].children[0].context.rowData.CompanyName).toBe('New value');
+        });
+
+        it('should allow pinning deleted row.', () => {
+            grid.deleteRow('ALFKI');
+            fix.detectChanges();
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('ALFKI');
+        });
+
+        it('should allow pinning added row.', () => {
+
             grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test'});
             fix.detectChanges();
 
             grid.pinRow('Test');
             fix.detectChanges();
             expect(grid.pinnedRows.length).toBe(1);
-            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
             expect(pinRowContainer[0].children[0].context.rowID).toBe('Test');
-
-            // test with deleted row
-            grid.deleteRow('ALFKI');
-            fix.detectChanges();
-            grid.pinRow('ALFKI');
-            fix.detectChanges();
-
-            expect(grid.pinnedRows.length).toBe(2);
-            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(1);
-            expect(pinRowContainer[0].children.length).toBe(2);
-            expect(pinRowContainer[0].children[0].context.rowID).toBe('Test');
-            expect(pinRowContainer[0].children[1].context.rowID).toBe('ALFKI');
-
-            // test with edited
-            grid.updateCell('New value', 'ANTON', 'CompanyName');
-            fix.detectChanges();
-            grid.pinRow('ANTON');
-            fix.detectChanges();
-            await wait(100);
-            fix.detectChanges();
-
-            expect(grid.pinnedRows.length).toBe(3);
-            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(1);
-            expect(pinRowContainer[0].children.length).toBe(3);
-            expect(pinRowContainer[0].children[2].context.rowID).toBe('ANTON');
-            expect(pinRowContainer[0].children[2].context.rowData.CompanyName).toBe('New value');
         });
 
         it('should stop editing when edited row is pinned/unpinned.', () => {
