@@ -217,7 +217,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             this.grid.navigation.activeNode.row = null;
             childGrid.navigation.activeNode = { row: targetIndex, column: this.activeNode.column};
             childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
-                childGrid.navigation._moveToChild(targetIndex, isNext);
+                const targetLayoutIndex = isNext ? 0 : childGrid.childLayoutList.toArray().length - 1;
+                childGrid.navigation._moveToChild(targetIndex, isNext, targetLayoutIndex);
             });
             return;
         }
@@ -262,7 +263,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected getPositionInfo(rowObj: IgxRowDirective<IgxGridBaseDirective & GridType>, isNext: boolean) {
         let rowElem = rowObj.nativeElement;
         if (rowObj instanceof IgxChildGridRowComponent) {
-            rowElem = (rowObj as any).hGrid.tfoot.nativeElement;
+            const childLayoutKeys = this.grid.childLayoutKeys;
+            const riKey = isNext ? childLayoutKeys[0] : childLayoutKeys[childLayoutKeys.length - 1];
+            const pathSegment: IPathSegment = {
+                rowID: rowObj.rowData.rowID,
+                rowIslandKey: riKey
+            };
+            const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
+            rowElem = childGrid.tfoot.nativeElement;
         }
         const gridBottom = this._getMinBottom(this.grid);
         const diffBottom =
