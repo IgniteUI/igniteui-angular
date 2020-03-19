@@ -30,8 +30,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
 
         if (this._pendingNavigation && NAVIGATION_KEYS.has(key)) {
+            // In case focus needs to be moved from one grid to another, however there is a pending scroll operation
+            // which is an async operation, any additional navigation keys should be ignored
+            // untill operation complete. 
             event.preventDefault();
-            console.log('prevented');
             return;
         }
 
