@@ -66,7 +66,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
-     * Gets whether the current row is pinned and is in the grid's body, 
+     * Gets whether the current row is pinned and is in the grid's body,
      * and not in the grid's pinned area.
      * @hidden @internal
      */

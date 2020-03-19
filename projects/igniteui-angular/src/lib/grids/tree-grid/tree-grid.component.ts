@@ -18,7 +18,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from '../common/events';
+import { IRowToggleEventArgs, IPinRowEventArgs } from '../common/events';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -548,7 +548,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         const row = this.gridAPI.get_row_by_key(rowID);
 
-        const eventArgs = {
+        const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
             rowID: rowID,
@@ -562,6 +562,38 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.notifyChanges(true);
         }
         this.cdr.detectChanges();
+    }
+
+    /**
+     * Unpin the row by its id.
+     * @remarks
+     * ID is either the primaryKey value or the data record instance.
+     * @example
+     * ```typescript
+     * this.grid.unpinRow(rowID);
+     * ```
+     * @param rowID The row id - primaryKey value or the data record instance.
+    */
+    public unpinRow(rowID: any) {
+        const rec = this.gridAPI.get_rec_by_id(rowID);
+        const index =  this.pinnedRecords.findIndex((x) => JSON.stringify(x.data) === JSON.stringify(rec.data));
+        if (index === -1 || !rec) {
+            return false;
+        }
+        const row = this.gridAPI.get_row_by_key(rowID);
+        const eventArgs: IPinRowEventArgs = {
+            isPinned: false,
+            rowID: rowID,
+            row: row
+        };
+        this.onRowPinning.emit(eventArgs);
+        this.pinnedRecords.splice(index, 1);
+        this._pipeTrigger++;
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+            this.notifyChanges(true);
+        }
+        return true;
     }
 
     /**

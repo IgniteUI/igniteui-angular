@@ -21,7 +21,7 @@ import { IgxChipComponent } from '../../chips';
 export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
 
-    @ViewChild('pinnedIndicator') 
+    @ViewChild('pinnedIndicator')
     public pinnedIndicator: IgxChipComponent;
 
     constructor(
