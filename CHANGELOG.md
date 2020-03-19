@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 9.1.0
 
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
+
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
 
@@ -17,6 +21,17 @@ All notable changes for each version of this project will be documented in this 
     ```typescript
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
+    - Added functionality for column selection.
+    - `selected` property has been added to the IgxColumnComponent; Allows you to set whether the column is selected.
+    - `selectable` property has been added to the IgxColumnComponent; Allows you to set whether the column is selectable.
+    - `onColumnSelectionChange` event is added for the `IgxGrid`. It is emitted when the column selection is changed.
+    - `excelStyleSelectingTemplate` property is introduced to IgxGrid, which allows you to set a custom template for the selecting a column in the Excel Style Filter.
+    - `selectedColumns` API method is added for the `IgxGrid`. It allows to get all selected columns.
+    - `selectColumns` API method is added for the `IgxGrid`. It allows to select columns by passing array of IgxColumnComponent or column fields.
+    - `deselectColumns` API method is added for the `IgxGrid`. It allows to deselect columns by passing array of IgxColumnComponent or column fields.
+    - `deselectAllColumns` API method is added for the `IgxGrid`. It allows to deselect all columns.
+    - `getSelectedColumnsData` API method is added for the `IgxGrid`. It allows to get the selected columns data.
+
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
 
@@ -24,7 +39,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxSlider` have full right-to-left (RTL) support.
 
 ## 9.0.1
-- **Breaking Changes** 
+- **Breaking Changes**
     - Remove `$base-color` from igx-typography. The igx-typography class now inherits the parent color.
 
 ## 9.0.0
