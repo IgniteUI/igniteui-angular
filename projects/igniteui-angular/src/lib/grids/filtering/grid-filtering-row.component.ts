@@ -654,7 +654,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges(); }
+                    this.cdr.detectChanges();
+                }
             }
         });
     }
@@ -765,7 +766,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private conditionChangedCallback() {
-        if (!this.expression.searchVal || this.expression.searchVal === 0) {
+        if (this.expressionsList.length > 0 && !this.expression.searchVal && !this.expression.condition.isUnary) {
+            const selectedItem = this.expressionsList.find(ex => ex.isSelected === true);
+            if (selectedItem) {
+                this.value = null;
+            }
+        }
+        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.filter();
         } else if (this.value) {
             this.value = null;
