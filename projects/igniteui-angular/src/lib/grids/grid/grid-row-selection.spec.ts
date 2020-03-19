@@ -22,6 +22,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 const DEBOUNCETIME = 30;
+const SCROLL_DEBOUNCETIME = 100;
+
 
 describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
@@ -64,7 +66,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             }
 
             GridFunctions.scrollTop(grid, 1000);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
@@ -88,14 +90,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows()).toEqual([1]);
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([1]);
             GridSelectionFunctions.verifyRowSelected(grid.rowList.first, false);
 
             GridFunctions.scrollTop(grid, 0);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -109,13 +111,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 1000);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 0);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
@@ -708,7 +710,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             }
 
             GridFunctions.scrollTop(grid, 1000);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
@@ -1191,14 +1193,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows()).toEqual([gridData[0]]);
 
             GridFunctions.scrollTop(grid, 500);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([gridData[0]]);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList, false);
 
             GridFunctions.scrollTop(grid, 0);
-            await wait(100);
+            await wait(SCROLL_DEBOUNCETIME);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1234,7 +1236,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
     });
 
-    fdescribe('Selection with primaryKey', () => {
+    describe('Selection with primaryKey', () => {
         let fix;
         let grid: IgxGridComponent;
 
