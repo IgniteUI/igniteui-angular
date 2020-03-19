@@ -29,6 +29,8 @@ export interface ColumnType {
     hasSummary: boolean;
     summaries: any;
     pinned: boolean;
+    selected: boolean;
+    selectable: boolean;
     level: number;
     rowStart: number;
     rowEnd: number;
