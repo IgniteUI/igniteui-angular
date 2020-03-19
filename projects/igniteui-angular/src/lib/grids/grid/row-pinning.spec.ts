@@ -10,6 +10,7 @@ import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -231,7 +232,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should allow pinning edited/deleted/added row.', () => {
+        it('should allow pinning edited/deleted/added row.', async() => {
             // test with added row
             grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test'});
             fix.detectChanges();
@@ -261,6 +262,8 @@ describe('Row Pinning #grid', () => {
             grid.updateCell('New value', 'ANTON', 'CompanyName');
             fix.detectChanges();
             grid.pinRow('ANTON');
+            fix.detectChanges();
+            await wait(100);
             fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(3);
