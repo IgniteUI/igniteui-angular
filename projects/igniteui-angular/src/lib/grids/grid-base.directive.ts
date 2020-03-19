@@ -3362,7 +3362,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public getColumnByVisibleIndex(index: number): IgxColumnComponent {
-        return this.visibleColumns.find((col) => col.visibleIndex === index);
+        return this.visibleColumns.find((col) => !col.columnLayout && col.visibleIndex === index);
     }
 
     /**
