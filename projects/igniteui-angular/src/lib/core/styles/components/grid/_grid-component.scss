@@ -78,6 +78,18 @@
         @extend %grid-tbody-scrollbar !optional;
     }
 
+    @include e(tbody-scrollbar-main) {
+        @extend %grid-tbody-scrollbar-main !optional;
+    }
+
+    @include e(tbody-scrollbar-start) {
+        @extend %grid-tbody-scrollbar-start !optional;
+    }
+
+    @include e(tbody-scrollbar-end) {
+        @extend %grid-tbody-scrollbar-end !optional;
+    }
+
     @include e(scroll) {
         @extend %grid-scroll !optional;
     }
@@ -221,6 +233,10 @@
         @extend %igx-grid__th--sortable !optional;
     }
 
+    @include e(th, $m: selectable) {
+        @extend %igx-grid__th--selectable !optional;
+    }
+
     @include e(th, $m: filtrable) {
         @extend %igx-grid__th--filtrable !optional;
     }
@@ -231,6 +247,10 @@
 
     @include e(th, $m: sorted) {
         @extend %igx-grid__th--sorted !optional;
+    }
+
+    @include e(th, $m: selected) {
+        @extend %igx-grid__th--selected !optional;
     }
 
     @include e(th, $m: number) {
@@ -289,6 +309,14 @@
         @extend %grid-cell--selected !optional;
     }
 
+    @include e(td, $m: column-selected) {
+        @extend %grid-cell--column-selected !optional;
+    }
+
+    @include e(td, $mods: (selected, column-selected)) {
+        @extend %grid-cell--cross-selected !optional;
+    }
+
     @include e(tr, $mods: (selected, filtered)) {
         @extend %grid-row--selected--filtered !optional;
     }
@@ -299,6 +327,18 @@
 
     @include e(tr, $m: expanded) {
         @extend %igx-grid__tr--expanded !optional;
+    }
+
+    @include e(tr, $m: pinned) {
+        @extend %igx-grid__tr--pinned !optional;
+    }
+
+    @include e(tr, $m: pinned-top) {
+        @extend %igx-grid__tr--pinned-top !optional;
+    }
+
+    @include e(tr, $m: pinned-bottom) {
+        @extend %igx-grid__tr--pinned-bottom !optional;
     }
 
     @include e(tree-grouping-indicator) {
@@ -346,6 +386,10 @@
 
     @include e(td, $mods: (pinned, selected)) {
         @extend %grid-cell--pinned-selected !optional;
+    }
+
+    @include e(td, $mods: (pinned, column-selected)) {
+        @extend %grid-cell--pinned--column-selected !optional;
     }
 
     @include e(td-text) {

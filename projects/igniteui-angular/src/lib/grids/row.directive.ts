@@ -59,6 +59,30 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public index: number;
 
     /**
+     * Gets whether the row is pinned.
+     * ```typescript
+     * let isPinned = row.pinned;
+     * ```
+     */
+    public get pinned(): boolean {
+        return this.grid.pinnedRecords.indexOf(this.rowData) !== -1;
+    }
+    /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    public set pinned(value: boolean) {
+        if (value) {
+            this.grid.pinRow(this.rowID);
+        } else {
+            this.grid.unpinRow(this.rowID);
+        }
+    }
+
+    /**
      * @hidden
      */
     @Input()
@@ -342,6 +366,32 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public isCellActive(visibleColumnIndex) {
         const node = this.grid.navigation.activeNode;
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
+    }
+
+    /**
+     * Pins the specified row.
+     * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // pin the selected row from the grid
+     * this.grid.selectedRows[0].pin();
+     * ```
+     */
+    public pin() {
+        return this.grid.pinRow(this.rowID);
+    }
+
+    /**
+     * Unpins the specified row.
+     * This method emits `onRowPinning` event.
+     *
+     * ```typescript
+     * // unpin the selected row from the grid
+     * this.grid.selectedRows[0].unpin();
+     * ```
+     */
+    public unpin() {
+        return this.grid.unpinRow(this.rowID);
     }
 
     /**
