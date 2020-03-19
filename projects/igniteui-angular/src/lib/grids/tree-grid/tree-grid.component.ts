@@ -330,6 +330,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public dragIndicatorIconBase: TemplateRef<any>;
 
     /**
+     * @hidden @internal
+     */
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    protected recordTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('summary_template', { read: TemplateRef, static: true })
+    protected summaryTemplate: TemplateRef<any>;
+
+    /**
      * @hidden
      */
     public ngOnInit() {
@@ -432,6 +444,17 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     public getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
+    }
+
+     /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     */
+    public get pinnedRows(): any[] {
+        return this.rowList.filter(x => x.pinned && !x.pinnedBodyInstance);
     }
 
     /**

@@ -81,11 +81,7 @@
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
                 | treeGridPinnedRows:id:pipeTrigger
                 | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger; let rowIndex = index">
-                <ng-template #record_template let-rowIndex="index">
-                    <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
-                    </igx-tree-grid-row>
-                </ng-template>
-                <ng-container [igxTemplateOutlet]="record_template" [igxTemplateOutletContext]="getContext(rowData, rowIndex, true)">
+                <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
                 </ng-container>
             </ng-container>
         </ng-template>
@@ -112,6 +108,10 @@
                 (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
+        <div #pinContainer *ngIf='pinnedRecords.length > 0 && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
+            <ng-container *ngTemplateOutlet="pinnedRecordsTemplate">
+            </ng-container>  
+        </div>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
             </igx-tree-grid-row>
