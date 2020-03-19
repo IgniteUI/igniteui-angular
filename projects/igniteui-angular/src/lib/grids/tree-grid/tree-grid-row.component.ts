@@ -66,6 +66,21 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    public set pinned(value: boolean) {
+        if (value) {
+            this.grid.pinRow(this.rowID);
+        } else {
+            this.grid.unpinRow(this.rowID);
+        }
+    }
+
+    /**
      * Gets whether the current row is pinned and is in the grid's body,
      * and not in the grid's pinned area.
      * @hidden @internal
