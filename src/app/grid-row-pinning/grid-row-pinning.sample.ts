@@ -1,37 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
     providers: [],
-    selector: 'app-grid-column-pinning-sample',
-    styleUrls: ['grid-column-pinning.sample.css'],
-    templateUrl: 'grid-column-pinning.sample.html'
+    selector: 'app-grid-row-pinning-sample',
+    styleUrls: ['grid-row-pinning.sample.css'],
+    templateUrl: 'grid-row-pinning.sample.html'
 })
 
-export class GridColumnPinningSampleComponent implements OnInit {
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
-    public get rightPinning() {
-        return (this.pinningConfig.columns === ColumnPinningPosition.End);
-    }
-    public set rightPinning(rightPinning) {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig.columns = ColumnPinningPosition.Start;
-        } else {
-            this.pinningConfig.columns = ColumnPinningPosition.End;
-        }
-    }
+export class GridRowPinningSampleComponent implements OnInit {
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
-
-    onChange() {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
-        } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
-        }
-    }
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -41,15 +23,23 @@ export class GridColumnPinningSampleComponent implements OnInit {
         }
     }
 
+    onChange() {
+        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
+            this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
+        } else {
+            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
+        }
+    }
+
     data: any[];
     columns: any[];
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '200px', hidden: false },
-            { field: 'CompanyName', width: '200px' },
-            { field: 'ContactName', width: '200px', pinned: false },
-            { field: 'ContactTitle', width: '300px', pinned: false },
+            { field: 'ID', width: '200px', hidden: true },
+            { field: 'CompanyName', width: '200px', groupable: true },
+            { field: 'ContactName', width: '200px', pinned: false, groupable: true  },
+            { field: 'ContactTitle', width: '300px', pinned: false, groupable: true },
             { field: 'Address', width: '250px' },
             { field: 'City', width: '200px' },
             { field: 'Region', width: '300px' },
@@ -91,21 +81,20 @@ export class GridColumnPinningSampleComponent implements OnInit {
         // tslint:enable:max-line-length
     }
 
-    toggleColumn(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.pinned = !col.pinned;
-    }
-
-    toggleVisibility(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.hidden = !col.hidden;
-    }
-
     togglePinRow(index) {
         const rec = this.data[index];
         this.grid1.pinnedRecords.indexOf(rec) === -1 ?
-         this.grid1.pinRow(this.data[index]) :
-         this.grid1.unpinRow(this.data[index])
+        this.grid1.pinRow(this.data[index]) :
+        this.grid1.unpinRow(this.data[index])
+    }
+
+    togglePining(row: IgxGridRowComponent, event) {
+        event.preventDefault();
+        if(row.pinned) {
+            row.unpin();
+        } else {
+            row.pin();
+        }
     }
 
 }

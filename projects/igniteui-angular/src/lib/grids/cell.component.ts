@@ -430,6 +430,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     @HostBinding('class.igx-grid__td--active')
     public active: boolean;
+
+    @HostBinding('attr.aria-selected')
+    get ariaSelected() {
+        return this.selected || this.column.selected  || this.row.selected;
+    }
+
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -437,7 +443,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
     get selected() {
         return this.selectionService.selected(this.selectionNode);
@@ -454,6 +459,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const node = this.selectionNode;
         val ? this.selectionService.add(node) : this.selectionService.remove(node);
         this.grid.notifyChanges();
+    }
+
+    /**
+     * Gets whether the cell column is selected.
+     * ```typescript
+     * let isCellColumnSelected = this.cell.columnSelected;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    @HostBinding('class.igx-grid__td--column-selected')
+    get columnSelected() {
+        return this.selectionService.isColumnSelected(this.column.field);
     }
 
     @HostBinding('class.igx-grid__td--edited')

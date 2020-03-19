@@ -102,16 +102,31 @@
     <div class="igx-grid__tbody-content" tabindex="0" (keydown)="navigation.dispatchEvent($event)" (focus)="navigation.focusTbody()"
         role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody>
+        [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+        <ng-template #pinnedRecordsTemplate>
+            <ng-container *ngFor="let rowData of pinnedRecords
+                | visibleColumns:hasVisibleColumns
+                | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
+                | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
+                | gridDetails:hasDetails:expansionStates:pipeTrigger; let rowIndex = index">
+                <ng-container *ngTemplateOutlet="getRowTemplate(rowData); context: getContext(rowData, rowIndex, true)">
+                </ng-container>
+            </ng-container>
+        </ng-template>
+        <div #pinContainer *ngIf='pinnedRecords.length > 0 && isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-top'>
+            <ng-container *ngTemplateOutlet="pinnedRecordsTemplate">
+            </ng-container>  
+        </div>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
+        | rowPinning:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
@@ -131,6 +146,10 @@
                 (onViewMoved)='viewMovedHandler($event)'>
             </ng-template>
         </ng-template>
+        <div #pinContainer *ngIf='pinnedRecords.length > 0 && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
+            <ng-container *ngTemplateOutlet="pinnedRecordsTemplate">
+            </ng-container>   
+        </div>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
@@ -171,9 +190,12 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
-        [style.height.px]='calcHeight'>
-        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
+        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
+        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
+            <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+        </div>
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>        
     </div>
 </div>
 

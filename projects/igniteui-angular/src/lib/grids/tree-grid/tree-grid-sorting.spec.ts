@@ -7,6 +7,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
     configureTestSuite();
@@ -203,8 +204,9 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
 
     describe('UI sorting', () => {
         it('should sort descending all treeGrid levels by column name through UI', () => {
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            const header =  TreeGridFunctions.getHeaderCell(fix, 'Name');
+            GridFunctions.clickHeaderSortIcon(header);
+            GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
             // Verify first level records are desc sorted
@@ -224,7 +226,8 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through UI', () => {
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            const header =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
             // Verify first level records are asc sorted
@@ -250,7 +253,8 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
 
             // Click header once
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            const header =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
             // Verify first record of all 3 levels (sorted layout)
@@ -259,9 +263,9 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             expect(treeGrid.getCellByColumn(6, 'Age').value).toEqual(25);
 
             // Click header two more times
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(header);
             fix.detectChanges();
 
             // Verify first record of all 3 levels (default layout)
@@ -278,11 +282,13 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            const headerName =  TreeGridFunctions.getHeaderCell(fix, 'Name');
+            const headerAge =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerAge);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerAge);
             fix.detectChanges();
 
             expect(treeGrid.sortingExpressions.length).toBe(2);
@@ -326,17 +332,19 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
             fix.detectChanges();
 
             // Sort by 'Name' in asc order and by 'Age' in desc order
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            const headerName =  TreeGridFunctions.getHeaderCell(fix, 'Name');
+            const headerAge =  TreeGridFunctions.getHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerAge);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Age');
+            GridFunctions.clickHeaderSortIcon(headerAge);
             fix.detectChanges();
 
             // Clear sorting for 'Name' column
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
-            TreeGridFunctions.clickHeaderCell(fix, 'Name');
+            GridFunctions.clickHeaderSortIcon(headerName);
             fix.detectChanges();
 
             expect(treeGrid.sortingExpressions.length).toBe(1);
