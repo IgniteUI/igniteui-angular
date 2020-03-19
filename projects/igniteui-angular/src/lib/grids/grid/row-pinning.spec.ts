@@ -222,7 +222,7 @@ describe('Row Pinning #grid', () => {
         });
     });
 
-    fdescribe(' Editing ', () => {
+    describe(' Editing ', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
             fix.detectChanges();
