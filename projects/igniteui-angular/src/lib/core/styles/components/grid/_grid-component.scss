@@ -237,6 +237,10 @@
         @extend %igx-grid__th--sortable !optional;
     }
 
+    @include e(th, $m: selectable) {
+        @extend %igx-grid__th--selectable !optional;
+    }
+
     @include e(th, $m: filtrable) {
         @extend %igx-grid__th--filtrable !optional;
     }
@@ -247,6 +251,10 @@
 
     @include e(th, $m: sorted) {
         @extend %igx-grid__th--sorted !optional;
+    }
+
+    @include e(th, $m: selected) {
+        @extend %igx-grid__th--selected !optional;
     }
 
     @include e(th, $m: number) {
@@ -303,6 +311,14 @@
 
     @include e(td, $m: selected) {
         @extend %grid-cell--selected !optional;
+    }
+
+    @include e(td, $m: column-selected) {
+        @extend %grid-cell--column-selected !optional;
+    }
+
+    @include e(td, $mods: (selected, column-selected)) {
+        @extend %grid-cell--cross-selected !optional;
     }
 
     @include e(tr, $mods: (selected, filtered)) {
@@ -374,6 +390,10 @@
 
     @include e(td, $mods: (pinned, selected)) {
         @extend %grid-cell--pinned-selected !optional;
+    }
+
+    @include e(td, $mods: (pinned, column-selected)) {
+        @extend %grid-cell--pinned--column-selected !optional;
     }
 
     @include e(td-text) {

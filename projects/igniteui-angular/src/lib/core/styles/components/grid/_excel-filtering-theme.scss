@@ -144,6 +144,12 @@
         padding: rem(8px) rem(16px);
     }
 
+    %grid-excel-actions--selected {
+        igx-icon {
+            color: igx-color($palette, 'secondary');
+        }
+    }
+
     %grid-excel-move {
         margin-bottom: rem(8px);
 
