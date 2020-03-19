@@ -2,7 +2,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { ISelectionNode } from '../selection/selection.service';
-import { isIE, SUPPORTED_KEYS } from '../../core/utils';
+import { isIE, SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { FilterMode } from '../common/enums';
 import { IgxColumnComponent } from '../columns/column.component';
 import { Injectable } from '@angular/core';
@@ -17,6 +17,8 @@ import { isNumber } from 'util';
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
+    protected _pendingNavigation = false;
+
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -24,6 +26,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
         const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
         if (targetGrid !== this.grid.nativeElement) {
+            return;
+        }
+
+        if (this._pendingNavigation && NAVIGATION_KEYS.has(key)) {
+            event.preventDefault();
+            console.log('prevented');
             return;
         }
 
@@ -58,9 +66,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 let scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(rowIndex, !isNext);
                 scrollAmount += isNext ? 1 : -1;
                 this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
-                this.grid.tbody.nativeElement.blur();
-                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this._pendingNavigation = true;
+                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {                    
                     this._moveToChild(rowIndex, isNext, targetLayoutIndex);
+                    this._pendingNavigation = false;
                 });
             }
             return;
@@ -133,12 +142,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
             // stop event from triggering multiple times before scrolling is complete.
-            this.grid.tbody.nativeElement.blur();
+            this._pendingNavigation = true;
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
             scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
-                this.grid.tbody.nativeElement.focus({preventScroll:true});
+                this._pendingNavigation = false;
             });
         }
     }
@@ -177,6 +186,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const columnIndex = this.activeNode.column <= visibleColsLength ? this.activeNode.column : visibleColsLength;
         childGridNav.activeNode = { row: targetIndex, column: columnIndex};
         childGrid.tbody.nativeElement.focus({preventScroll:true});
+        this._pendingNavigation = false;
         childGrid.navigation._handleScrollInChild(targetIndex, isNext)
     }
 
@@ -192,9 +202,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
         const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
         const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
-        this.grid.tbody.nativeElement.blur();
+        this._pendingNavigation = true;
         const cbFunc = (args) => {
             this.grid.parent.tbody.nativeElement.focus({preventScroll:true});
+            this._pendingNavigation = false;            
             cb(args);
         }
         this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cbFunc); 
