@@ -107,6 +107,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         super.navigateInBody(rowIndex, visibleColIndex, cb);
     }
 
+    public shouldPerformVerticalScroll(index, isNext?) {
+        const targetRec = this.grid.dataView[index];
+        if (this.grid.isChildGridRecord(targetRec)) {
+            const scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(index, !isNext);
+            const currScroll = this.grid.verticalScrollContainer.getScroll().scrollTop;
+            const shouldScroll = !isNext ? scrollAmount > currScroll : currScroll < scrollAmount;
+            return shouldScroll;
+        } else {
+            return super.shouldPerformVerticalScroll(index);
+        }
+    }
+
     protected nextSiblingIndex(isNext) {
         const layoutKey = this.grid.childRow.layout.key;
         const layoutIndex = this.grid.parent.childLayoutKeys.indexOf(layoutKey);
@@ -125,7 +137,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: Function) {
-        const shouldScroll = this.grid.navigation.shouldPerformVerticalScroll(rowIndex);
+        const shouldScroll = this.shouldPerformVerticalScroll(rowIndex, isNext);
         if (shouldScroll) {
             this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
                 this.positionInParent(rowIndex, isNext, cb);
@@ -142,7 +154,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected positionInParent(rowIndex, isNext, cb?: Function) {
-        const rowObj = this.grid.getRowByIndex(rowIndex);       
+        const rowObj = this.grid.getRowByIndex(rowIndex);
+        if(!rowObj) { 
+            if (cb) {
+                cb();
+            };
+            return;
+        }
         const positionInfo = this.getPositionInfo(rowObj, isNext);
         if(!positionInfo.inView) {
             // stop event from triggering multiple times before scrolling is complete.
