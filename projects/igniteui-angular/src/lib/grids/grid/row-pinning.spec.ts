@@ -223,6 +223,17 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should allow pinning onInit', () => {
+            expect(() => {
+                fix = TestBed.createComponent(GridRowPinningComponent);
+                grid = fix.componentInstance.instance;
+                grid.pinRow(fix.componentInstance.data[1]);
+                fix.detectChanges();
+            }).not.toThrow();
+            expect(grid.pinnedRows.length).toBe(1);
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+        });
+
         it('should pin rows when columns are grouped.', () => {
             grid.height = '550px';
             fix.detectChanges();
