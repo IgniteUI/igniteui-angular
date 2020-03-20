@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
 
@@ -230,7 +231,7 @@ describe('Row Pinning #grid', () => {
             row.pin();
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
 
@@ -241,11 +242,31 @@ describe('Row Pinning #grid', () => {
             row.unpin();
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(0);
 
             expect(grid.dataView.length).toBe(5);
+        });
+
+        it('should apply sorting to both pinned and unpinned rows.', () => {
+            grid.getRowByIndex(1).pin();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[5]);
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            // check pinned rows data is sorted
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[5]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+
+            // check unpinned rows data is sorted
+            const lastIndex = fix.componentInstance.data.length - 1;
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
         });
     });
 
