@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
-    providers: [],
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
     selector: 'app-grid-row-pinning-sample',
     styleUrls: ['grid-row-pinning.sample.css'],
     templateUrl: 'grid-row-pinning.sample.html'
@@ -83,7 +83,7 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        this.grid1.pinnedRecords.indexOf(rec) === -1 ?
+        this.grid1.isRecordPinned(rec)?
         this.grid1.pinRow(this.data[index]) :
         this.grid1.unpinRow(this.data[index])
     }
