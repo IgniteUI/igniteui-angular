@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -282,6 +283,26 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData.length).toBe(7);
             expect(gridFilterData[0].ID).toBe('BLAUS');
             expect(gridFilterData[1].ID).toBe('BERGS');
+        });
+
+        it('should apply sorting to both pinned and unpinned rows.', () => {
+            grid.getRowByIndex(1).pin();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[5]);
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            // check pinned rows data is sorted
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[5]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+
+            // check unpinned rows data is sorted
+            const lastIndex = fix.componentInstance.data.length - 1;
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
         });
     });
 
