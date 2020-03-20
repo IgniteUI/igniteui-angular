@@ -2,6 +2,7 @@
     <app-page-header title="Grid Column Pinning">
         Allows rows to be pinned to the beginning/end of the grid.
     </app-page-header>
+    <button (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-switches">
@@ -16,8 +17,13 @@
                     </igx-icon>
                 </ng-template>
             </igx-column>
+            <igx-column width='100px' [filterable]='false'>
+                <ng-template igxCell let-cell="cell" let-val>
+                    <button (click)="grid1.deleteRow(cell.row.rowID)">Delete</button>
+                </ng-template>
+            </igx-column>
             <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'
-                [hidden]='c.hidden'>
+                [hidden]='c.hidden' [editable]='true'>
             </igx-column>
         </igx-grid>
         </div>
