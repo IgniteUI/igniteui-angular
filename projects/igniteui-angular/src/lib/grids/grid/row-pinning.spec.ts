@@ -9,6 +9,7 @@ import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
@@ -25,6 +26,7 @@ describe('Row Pinning #grid', () => {
             declarations: [
                 GridRowPinningComponent,
                 GridRowPinningWithMRLComponent,
+                GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent
             ],
             imports: [
@@ -32,7 +34,7 @@ describe('Row Pinning #grid', () => {
                 IgxGridModule
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     describe('', () => {
@@ -73,7 +75,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
@@ -112,7 +114,7 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
@@ -197,31 +199,63 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should pin/unpin via row pinned setter.', () => {
-              // pin 2nd row
-              let row = grid.getRowByIndex(1);
-              row.pinned = true;
-              fix.detectChanges();
+            // pin 2nd row
+            let row = grid.getRowByIndex(1);
+            row.pinned = true;
+            fix.detectChanges();
 
-              expect(grid.pinnedRows.length).toBe(1);
-              let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-              expect(pinRowContainer.length).toBe(1);
-              expect(pinRowContainer[0].children.length).toBe(1);
-              expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
 
-              expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
-              expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[0]);
 
-              // unpin
-              row = grid.getRowByIndex(0);
-              row.pinned = false;
-              fix.detectChanges();
+            // unpin
+            row = grid.getRowByIndex(0);
+            row.pinned = false;
+            fix.detectChanges();
 
-              expect(grid.pinnedRows.length).toBe(0);
-              pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-              expect(pinRowContainer.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
 
-              expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
-              expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+        });
+
+        it('should pin rows when columns are grouped.', () => {
+            // pin 1st and 2nd data row
+            grid.pinRow(fix.componentInstance.data[0]);
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            // group by string column
+            grid.groupBy({
+                fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+
+            // verify rows
+            const groupRows = grid.groupsRowList.toArray();
+            const dataRows = grid.dataRowList.toArray();
+
+            expect(groupRows.length).toEqual(2);
+            expect(dataRows.length).toEqual(7);
+            expect(groupRows[0].groupRow.records[0].ID).toEqual('AROUT');
+
+            // pin 4th data row with ID:AROUT
+            grid.pinRow(fix.componentInstance.data[3]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(3);
+
+            // make sure the pinned row is out of the first groupBy group
+            expect(groupRows[0].groupRow.records[0].ID).toEqual('BLAUS');
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
@@ -242,6 +276,40 @@ describe('Row Pinning #grid', () => {
             // check unpinned rows data is sorted
             const lastIndex = fix.componentInstance.data.length - 1;
             expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
+        });
+    });
+    describe('Row pinning with Master Detail View', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should be in view when expanded and pinning row to bottom of the grid.', () => {
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+            // pin 1st row
+            const row = grid.getRowByIndex(0);
+            row.pinned = true;
+            fix.detectChanges();
+
+            GridFunctions.toggleMasterRow(fix, grid.pinnedRows[0]);
+            fix.detectChanges();
+
+
+            expect(grid.pinnedRows.length).toBe(1);
+
+            const firstRowIconName = GridFunctions.getRowExpandIconName(grid.pinnedRows[0]);
+            const firstRowDetail = GridFunctions.getMasterRowDetail(grid.pinnedRows[0]);
+            expect(grid.expansionStates.size).toEqual(1);
+            expect(grid.expansionStates.has(grid.pinnedRows[0].rowID)).toBeTruthy();
+            expect(grid.expansionStates.get(grid.pinnedRows[0].rowID)).toBeTruthy();
+            expect(firstRowIconName).toEqual('expand_more');
+
+            // check last pinned and expanded is fully in view
+            expect(firstRowDetail.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);
         });
     });
 
@@ -283,7 +351,7 @@ describe('Row Pinning #grid', () => {
 
         it('should allow pinning added row.', () => {
 
-            grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test'});
+            grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test' });
             fix.detectChanges();
 
             grid.pinRow('Test');
@@ -455,6 +523,26 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         }
     ];
 }
+
+@Component({
+    template: `
+    <igx-grid
+        [pinning]='pinningConfig'
+        [width]='"800px"'
+        [height]='"500px"'
+        [data]="data"
+        [autoGenerate]="true">
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+                <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+                <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+            </div>
+        </ng-template>
+</igx-grid>`
+})
+export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {}
+
 
 @Component({
     template: `
