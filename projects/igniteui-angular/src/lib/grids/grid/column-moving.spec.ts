@@ -18,7 +18,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
@@ -168,7 +168,6 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[1].field).toEqual('ID');
             expect(columnsList[2].field).toEqual('LastName');
 
-
             // step 2 - verify resizing is not broken
             const resizeHandle = headers[0].parent.nativeElement.children[2];
             UIInteractions.simulateMouseEvent('mousedown', resizeHandle, 200, 80);
@@ -183,10 +182,9 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             expect(grid.columns[0].width).toEqual('250px');
 
-
             // step 3 - verify sorting is not broken
-            headers[0].triggerEventHandler('click', new Event('click'));
-            headers[0].triggerEventHandler('click', new Event('click'));
+            GridFunctions.clickHeaderSortIcon(headers[0]);
+            GridFunctions.clickHeaderSortIcon(headers[0]);
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(6);

@@ -195,7 +195,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @memberof IgxGridHeaderGroupComponent
      */
     get isHeaderDragged(): boolean {
-        return this.grid.draggedColumn ===  this.column;
+        return this.grid.draggedColumn === this.column;
     }
 
     /**
@@ -214,9 +214,68 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
+    */
+    get selectable() {
+        const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
+        return this.column.applySelectableClass
+            && !this.selected && selectableChildren.length > 0
+            && !this.grid.filteringService.isFilterRowVisible;
+    }
+
+    /**
+     * @hidden
+    */
+    get selected() {
+       return this.column.selected;
+    }
+
+    /**
+     * @hidden
      */
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    public groupClicked(event): void {
+        const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
+        if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+            if (!this.selected) {
+                this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+            } else {
+                const selectedFields = this.grid.selectionService.getSelectedColumns();
+                if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
+                    || event.ctrlKey) {
+                    this.grid.selectionService.deselectColumns(columnsToSelect, event);
+                } else {
+                    this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                }
+            }
+        }
+    }
+
+    private getSelectableChildren(children: IgxColumnComponent[]): IgxColumnComponent[] {
+        let result: IgxColumnComponent[] = [];
+        children.forEach(el => {
+            if (el.selectable && !el.hidden) {
+                if (el.children && el.columnGroup) {
+                    result = result.concat(this.getSelectableChildren(el.children.toArray()));
+                } else {
+                    result.push(el);
+                }
+            }
+        });
+        return result;
+    }
+
+    /**
+    * @hidden
+    */
+    public toggleExpandState(event): void {
+        event.stopPropagation();
+        this.column.expanded = !this.column.expanded;
     }
 
     /**
@@ -231,10 +290,23 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public ngDoCheck() {
         this.cdr.markForCheck();
     }
+    /**
+     * @hidden
+     */
+    public onPinterEnter() {
+        this.column.applySelectableClass = true;
+    }
+
+    /**
+     * @hidden
+    */
+    public onPointerLeave() {
+        this.column.applySelectableClass = false;
+    }
 
     constructor(private cdr: ChangeDetectorRef,
-                public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                public element: ElementRef,
-                public colResizingService: IgxColumnResizingService,
-                public filteringService: IgxFilteringService) { }
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public element: ElementRef,
+        public colResizingService: IgxColumnResizingService,
+        public filteringService: IgxFilteringService) { }
 }
