@@ -224,6 +224,8 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should pin rows when columns are grouped.', () => {
+            grid.height = '550px';
+            fix.detectChanges();
             // pin 1st and 2nd data row
             grid.pinRow(fix.componentInstance.data[0]);
             grid.pinRow(fix.componentInstance.data[1]);
