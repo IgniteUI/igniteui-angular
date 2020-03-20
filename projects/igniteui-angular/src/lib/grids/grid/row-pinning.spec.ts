@@ -9,9 +9,13 @@ import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxGridTransaction } from '../tree-grid';
+import { IgxTransactionService } from '../../services';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
+    const CELL_CSS_CLASS = '.igx-grid__td';
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
@@ -20,7 +24,8 @@ describe('Row Pinning #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,
-                GridRowPinningWithMRLComponent
+                GridRowPinningWithMRLComponent,
+                GridRowPinningWithTransactionsComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -44,7 +49,7 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -80,7 +85,7 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -140,7 +145,7 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -155,7 +160,7 @@ describe('Row Pinning #grid', () => {
             grid.unpinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(0);
 
@@ -169,7 +174,7 @@ describe('Row Pinning #grid', () => {
             row.pin();
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -183,7 +188,7 @@ describe('Row Pinning #grid', () => {
             row.unpin();
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(0);
 
@@ -197,7 +202,7 @@ describe('Row Pinning #grid', () => {
               row.pinned = true;
               fix.detectChanges();
 
-              expect(grid.pinnedRecords.length).toBe(1);
+              expect(grid.pinnedRows.length).toBe(1);
               let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
               expect(pinRowContainer.length).toBe(1);
               expect(pinRowContainer[0].children.length).toBe(1);
@@ -211,13 +216,112 @@ describe('Row Pinning #grid', () => {
               row.pinned = false;
               fix.detectChanges();
 
-              expect(grid.pinnedRecords.length).toBe(0);
+              expect(grid.pinnedRows.length).toBe(0);
               pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
               expect(pinRowContainer.length).toBe(0);
 
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
+
+        it('should apply sorting to both pinned and unpinned rows.', () => {
+            grid.getRowByIndex(1).pin();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[5]);
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            // check pinned rows data is sorted
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[5]);
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+
+            // check unpinned rows data is sorted
+            const lastIndex = fix.componentInstance.data.length - 1;
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
+        });
+    });
+
+    describe(' Editing ', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should allow pinning edited row.', () => {
+            grid.updateCell('New value', 'ANTON', 'CompanyName');
+            fix.detectChanges();
+            grid.pinRow('ANTON');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('ANTON');
+            expect(pinRowContainer[0].children[0].context.rowData.CompanyName).toBe('New value');
+        });
+
+        it('should allow pinning deleted row.', () => {
+            grid.deleteRow('ALFKI');
+            fix.detectChanges();
+            grid.pinRow('ALFKI');
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('ALFKI');
+        });
+
+        it('should allow pinning added row.', () => {
+
+            grid.addRow({ 'ID': 'Test', 'CompanyName': 'Test'});
+            fix.detectChanges();
+
+            grid.pinRow('Test');
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('Test');
+        });
+
+        it('should stop editing when edited row is pinned/unpinned.', () => {
+            grid.getColumnByName('CompanyName').editable = true;
+            fix.detectChanges();
+            let cell = grid.getCellByColumn(0, 'CompanyName');
+            let cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+
+            grid.pinRow(cell.row.rowID);
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(0, 'CompanyName');
+            expect(cell.editMode).toBeFalsy();
+
+            cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
+            cellDomNumber.triggerEventHandler('dblclick', {});
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+            grid.unpinRow(cell.row.rowID);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(0, 'CompanyName');
+            expect(cell.editMode).toBeFalsy();
+        });
+
     });
     describe('Row pinning with MRL', () => {
         beforeEach(fakeAsync(() => {
@@ -233,7 +337,7 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -254,7 +358,7 @@ describe('Row Pinning #grid', () => {
             row.pinned = false;
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.getRowByIndex(1);
@@ -273,7 +377,7 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[1]);
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(1);
+            expect(grid.pinnedRows.length).toBe(1);
             const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].children.length).toBe(1);
@@ -295,7 +399,7 @@ describe('Row Pinning #grid', () => {
             row.pinned = false;
             fix.detectChanges();
 
-            expect(grid.pinnedRecords.length).toBe(0);
+            expect(grid.pinnedRows.length).toBe(0);
             expect(row.pinned).toBeFalsy();
 
             const gridUnpinnedRow = grid.getRowByIndex(1);
@@ -351,3 +455,18 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         }
     ];
 }
+
+@Component({
+    template: `
+        <igx-grid
+            [pinning]='pinningConfig'
+            primaryKey='ID'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="true">
+        </igx-grid>
+    `,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent {}

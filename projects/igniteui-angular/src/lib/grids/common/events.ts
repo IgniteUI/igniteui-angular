@@ -60,6 +60,14 @@ export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventA
     event?: Event;
 }
 
+export interface IColumnSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    oldSelection: string[];
+    newSelection: string[];
+    added: string[];
+    removed: string[];
+    event?: Event;
+}
+
 export interface ISearchInfo {
     searchText: string;
     caseSensitive: boolean;

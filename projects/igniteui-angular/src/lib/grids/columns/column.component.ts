@@ -44,7 +44,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
-import { ColumnPinningPosition } from '../common/enums';
+import { IgxGridSelectionService } from '../selection/selection.service';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -102,6 +102,31 @@ export class IgxColumnComponent implements AfterContentInit {
     @WatchColumnChanges()
     @Input()
     public sortable = false;
+      /**
+     * Returns if the column is selectable.
+     * ```typescript
+     * let columnSelectable = this.column.selectable;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @WatchColumnChanges()
+    @Input()
+    get selectable(): boolean  {
+        return this._selectable;
+    }
+
+     /**
+     * Sets if the column is selectable.
+     * Default value is `true`.
+     * ```html
+     * <igx-column [selectable] = "false"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set selectable(value: boolean) {
+        this._selectable = value;
+    }
+
     /**
      * Sets/gets whether the column is groupable.
      * Default value is `false`.
@@ -257,6 +282,33 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
+     * Returns if the column is selected.
+     * ```typescript
+     * let isSelected = this.column.selected;
+     * ```
+     *@memberof IgxColumnComponent
+     */
+    get selected(): boolean {
+        return this.grid.selectionService.isColumnSelected(this.field);
+    }
+
+    /**
+     * Enables/Disables column selection.
+     * Default value is `false`.
+     * ```html
+     * <igx-column [selected] = "true"></igx-column>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    set selected(value: boolean) {
+        if (this.selectable && value !== this.selected) {
+            value ? this.grid.selectionService.selectColumnsWithNoEvent([this.field]) :
+            this.grid.selectionService.deselectColumnsWithNoEvent([this.field]);
+            this.grid.notifyChanges();
+        }
+    }
+
+    /**
      *@hidden
      */
     @Output()
@@ -368,6 +420,10 @@ export class IgxColumnComponent implements AfterContentInit {
 
     private _calcWidth = null;
     public calcPixelWidth: number;
+    /**
+     * @hidden
+    */
+    protected _applySelectableClass = false;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -1227,6 +1283,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
      */
+    protected _selectable = true;
+    /**
+     * @hidden
+     */
     protected get isPrimaryColumn(): boolean {
         return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
     }
@@ -1829,6 +1889,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return (cols.some(c => c === true) && cols.some(c => c === false));
     }
 
+
     /**
      *@hidden
     */
@@ -1840,4 +1901,20 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public populateVisibleIndexes() { }
+
+    /**
+     *@hidden
+    */
+    public get applySelectableClass(): boolean {
+        return this._applySelectableClass;
+    }
+
+    /**
+     *@hidden
+    */
+    public set applySelectableClass(value: boolean) {
+        if (this.selectable) {
+            this._applySelectableClass = value;
+        }
+    }
 }
