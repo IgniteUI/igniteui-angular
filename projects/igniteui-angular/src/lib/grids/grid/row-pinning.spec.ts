@@ -10,6 +10,8 @@ import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -219,6 +221,63 @@ describe('Row Pinning #grid', () => {
 
               expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[0]);
               expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
+        });
+
+        it('should calculate global summaries with both pinned and unpinned collections', () => {
+            // enable summaries for each column
+            grid.columns.forEach(c => {
+                c.hasSummary = true;
+            });
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            let row = grid.getRowByIndex(1);
+            row.pinned = true;
+            fix.detectChanges();
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
+
+            row = grid.pinnedRows[0];
+            row.pinned = false;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(0);
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
+        });
+
+        it('should calculate groupby row summaries only within unpinned collection', () => {
+            // enable summaries for each column
+            grid.columns.forEach(c => {
+                c.hasSummary = true;
+            });
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ContactTitle', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            let row = grid.getRowByIndex(1);
+            row.pinned = true;
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+
+            // get first summary row and make sure that the pinned record is not contained within the calculations
+            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+
+            // unpin the row and check if the summary is recalculated
+            row = grid.pinnedRows[0];
+            row.pinned = false;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(0);
+            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['2']);
         });
     });
 
