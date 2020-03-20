@@ -7,6 +7,7 @@ export abstract class IgxTabsBase {
     groups: QueryList<IgxTabsGroupBase>;
     offset: number;
     selectedIndex: number;
+    focusedIndex: number;
     viewPort: ElementRef;
     contentsContainer: ElementRef;
     tabsContainer: ElementRef;

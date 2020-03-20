@@ -84,6 +84,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
                 }
             } else {
                 this._selectedIndex = newIndex;
+                this.focusedIndex = newIndex;
             }
         }
     }
@@ -228,6 +229,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public offset = 0;
+
+    /**
+     * @hidden
+     */
+    public focusedIndex: number;
 
     private _groupChanges$: Subscription;
     private _selectedIndex = -1;
@@ -419,6 +425,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     private performSelection(newTab: IgxTabItemBase): void {
         newTab.setSelectedInternal(true);
         this._selectedIndex = newTab.index;
+        this.focusedIndex = newTab.index;
 
         let newTabRelatedGroup = null;
         if (!this.hasContentTabs && this.groups) {
