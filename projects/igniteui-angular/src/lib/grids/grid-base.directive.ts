@@ -2970,9 +2970,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
         vertScrDC.addEventListener('wheel', () => this.wheelHandler());
 
-        this.pinContainers.changes.subscribe(() => {
-            // on row pin containers change grid sizes should be recalculated.
-            this.calculateGridSizes();
+        this.pinContainers.changes.subscribe((c) => {            
+            if (this.hasPinnedRecords) {
+                // on row pin containers change grid sizes should be recalculated.
+                this.calculateGridSizes();
+            }
         });
     }
 
