@@ -45,6 +45,7 @@ import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.s
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
+import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
@@ -333,6 +334,10 @@ const appRoutes = [
     {
         path: 'gridColumnMoving',
         component: GridColumnMovingSampleComponent
+    },
+    {
+        path: 'gridColumnSelecting',
+        component: GridColumnSelectionSampleComponent
     },
     {
         path: 'gridColumnPinning',
