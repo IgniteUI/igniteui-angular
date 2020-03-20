@@ -1,0 +1,17 @@
+.sample-buttons,
+.sample-switches {
+    margin-top: 24px;
+}
+
+[igxButton]+[igxButton] {
+    margin-left: 8px;
+}
+
+.pin-icon {
+    cursor: pointer;
+    color: #999;
+}
+
+.pin-icon:hover {
+    color: #444
+}

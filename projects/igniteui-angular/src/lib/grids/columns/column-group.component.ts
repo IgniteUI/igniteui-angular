@@ -127,6 +127,19 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public set filters(classRef: any) { }
 
     /**
+     * Returns if the column group is selectable
+     * ```typescript
+     * let columnGroupSelectable = this.columnGroup.selectable;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    public get selectable(): boolean {
+        return this.children && this.children.some(child => child.selectable);
+    }
+
+    public set selectable(value: boolean) {}
+
+    /**
      * Returns a reference to the body template.
      * ```typescript
      * let bodyTemplate = this.columnGroup.bodyTemplate;
@@ -206,9 +219,36 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this._hidden || !this.collapsible) {
             this.children.forEach(child => child.hidden = this._hidden);
         } else {
-            this.children.forEach(c =>  {
-                if (c.visibleWhenCollapsed === undefined) {c.hidden = false; return; }
+            this.children.forEach(c => {
+                if (c.visibleWhenCollapsed === undefined) { c.hidden = false; return; }
                 c.hidden = this.expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
+            });
+        }
+    }
+
+    /**
+     * Returns if the column group is selected.
+     * ```typescript
+     * let isSelected = this.columnGroup.selected;
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    get selected(): boolean {
+        const selectableChildren = this.allChildren.filter(c => !c.columnGroup && c.selectable && !c.hidden);
+        return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
+    }
+
+    /**
+     * Enables/Disables the column group selection.
+     * ```html
+     * <igx-column [selected] = "true"></igx-column>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    set selected(value: boolean) {
+        if (this.selectable) {
+            this.children.forEach(c => {
+                c.selected = value;
             });
         }
     }
@@ -299,6 +339,24 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
+    /**
+     *@hidden
+    */
+    public get applySelectableClass(): boolean {
+        return this._applySelectableClass;
+    }
+
+    /**
+    *@hidden
+    */
+    public set applySelectableClass(value: boolean) {
+        if (this.selectable) {
+            this._applySelectableClass = value;
+            this.children.forEach(c => {
+                c.applySelectableClass = value;
+            });
+        }
+    }
     // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);

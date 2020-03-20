@@ -40,6 +40,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public options = {
     cellSelection: true,
     rowSelection: true,
+    columnSelection: true,
     filtering: true,
     advancedFiltering: true,
     paging: true,
@@ -171,6 +172,15 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     if (rowSelectionState) {
       const gridRowSelectionState: IGridState = { rowSelection: rowSelectionState };
       this.state.setState(gridRowSelectionState);
+    }
+  }
+
+  public restoreColumnSelection() {
+    const state = window.localStorage.getItem(this.stateKey);
+    const columnSelectionState = state ? JSON.parse(state).columnSelection : null;
+    if (columnSelectionState) {
+      const gridColumnSelectionState: IGridState = { columnSelection: columnSelectionState };
+      this.state.setState(gridColumnSelectionState);
     }
   }
 
