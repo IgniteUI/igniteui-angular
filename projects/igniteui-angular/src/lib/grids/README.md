@@ -232,6 +232,7 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`onSelection`|Emitted when a cell is selected. Returns the cell object.|
 |`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
+|`onColumnSelectionChange`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
 |`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
 |`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
 |`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
@@ -290,6 +291,11 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`deselectRows(rowIDs: any[])`|Removes the specified row(s) from the grid's selection in the `selectionAPI`.|
 |`selectAllRows()`|Marks all rows as selected in the grid `selectionAPI`.|
 |`deselectAllRows()`|Sets the grid's row selection in the `selectionAPI` to `[]`.|
+|`selectedColumns()`|Returns array of the currently selected columns|
+|`selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean)`|Marks the specified columns as selected in the grid `selectionAPI`. `clearCurrentSelection` first empties the grid's selection array.|
+|`deselectColumns(columns: string[] | IgxColumnComponent[])`|Removes the specified columns from the grid's selection in the `selectionAPI`.|
+|`deselectAllColumns()`|Sets the grid's column selection in the `selectionAPI` to `[]`.|
+|`getSelectedColumnsData()`|Gets the the data form current selected columns.|
 |`findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean)`|Highlights all occurrences of the specified text and marks the next occurrence as active.|
 |`findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
 |`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
@@ -324,6 +330,8 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`hidden`|boolean|Visibility of the column|
 |`movable`|boolean|Set column to be movable|
 |`resizable`|boolean|Set column to be resizable|
+|`selectable`|boolean|Set column to be selectable|
+|`selected`|boolean|Set column to be selected|
 |`width`|string|Columns width|
 |`minWidth`|string|Columns minimal width|
 |`maxWidth`|string|Columns miximum width|
