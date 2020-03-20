@@ -44,6 +44,15 @@
     </div>
 </ng-template>
 
+<ng-template #defaultExcelStyleSelectingTemplate>
+    <div [ngClass]="selectedClass()"
+    tabindex="0"
+    (click)="onSelect()">
+        <span>{{grid.resourceStrings.igx_grid_excel_select }}</span>
+        <igx-icon fontSet="material"  >done</igx-icon>
+    </div>
+</ng-template>
+
 <article #dropdown
     *ngIf="column"
     class="igx-excel-filter__menu"
@@ -59,6 +68,11 @@
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>
         <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
+            <button *ngIf="column.selectable" igxButton="icon"
+            [displayDensity]="grid.displayDensity" (click)="onSelect()"
+            tabindex="0" [ngClass]='selectedClass()'>
+             <igx-icon fontSet="material">done</igx-icon>
+            </button>
             <button *ngIf="!column.disablePinning && !column.pinned"
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
@@ -90,6 +104,10 @@
 
     <section class="igx-excel-filter__actions">
 
+        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
+            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
+        </div>
+
         <div *ngIf="column.movable">
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
         </div>
@@ -119,7 +137,7 @@
             [igxDropDownItemNavigation]="subMenu" >
             <span>{{ subMenuText }}</span>
             <igx-icon>keyboard_arrow_right</igx-icon>
-        </div>
+    </div>
     </section>
 
     <igx-excel-style-search
@@ -147,8 +165,8 @@
     (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
-            *ngFor="let condition of conditions"
-            [value]="condition">
+        *ngFor="let condition of conditions"
+        [value]="condition">
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
