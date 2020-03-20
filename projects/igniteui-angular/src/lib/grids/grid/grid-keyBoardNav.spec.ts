@@ -110,34 +110,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(selectedCell.column.field).toMatch('ID');
         });
 
-        it('Should handle keydown events on cells properly even when primaryKey is specified', () => {
-            expect(grid.primaryKey).toBeTruthy();
-            expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-
-            const targetCell = grid.getCellByKey(2, 'Name');
-            const targetCellElement = GridFunctions.getRowCells(fix, 1)[1];
-            spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
-            expect(targetCell.focused).toEqual(false);
-
-            targetCellElement.triggerEventHandler('focus', null);
-            fix.detectChanges();
-
-            spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
-            fix.detectChanges();
-
-            expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
-            expect(targetCell.focused).toEqual(true);
-
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', targetCellElement);
-            fix.detectChanges();
-
-            expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
-            expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
-            expect(targetCell.focused).toEqual(false);
-            expect(grid.selectedCells.length).toEqual(1);
-            expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
-        });
-
         it('Should properly handle TAB / SHIFT + TAB on row selectors', () => {
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();

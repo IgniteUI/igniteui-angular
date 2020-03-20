@@ -722,7 +722,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const targetCell = grid.getCellByColumn(0, 'Downloads');
             targetCell.nativeElement.focus();
             fix.detectChanges();
-            targetCell.onKeydownEnterEditMode();
+            targetCell.setEditMode(true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -2266,19 +2266,19 @@ describe('IgxGrid - Row Editing #grid', () => {
             const initialState = grid.transactions.getAggregatedChanges(false);
 
             // Enter edit mode
-            cellDate.onKeydownEnterEditMode();
+            cellDate.setEditMode(true);
             tick(16);
             fix.detectChanges();
             // Exit edit mode without change
-            cellDate.onKeydownExitEditMode();
+            cellDate.setEditMode(true);
             tick(16);
             fix.detectChanges();
             cellDate = grid.getCellByColumn(0, 'UnitsInStock');
-            cellDate.onKeydownEnterEditMode();
+            cellDate.setEditMode(true);
             tick(16);
             fix.detectChanges();
             expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
-            cellDate.onKeydownExitEditMode();
+            cellDate.setEditMode(true);
 
             cellDate = grid.getCellByColumn(0, 'OrderDate');
             const newValue = new Date('01/01/2000');

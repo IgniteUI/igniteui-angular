@@ -436,7 +436,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
             code: 'ArrowUp',
             key: 'ArrowUp'
         });
-        parentCell.dispatchEvent(keyboardEvent);
+        parentCell.nativeElement.dispatchEvent(keyboardEvent);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
@@ -913,7 +913,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
                 code: 'ArrowUp',
                 key: 'ArrowUp'
             });
-            parentCell.dispatchEvent(keyboardEvent);
+            parentCell.nativeElement.dispatchEvent(keyboardEvent);
             await wait(100);
             fixture.detectChanges();
 

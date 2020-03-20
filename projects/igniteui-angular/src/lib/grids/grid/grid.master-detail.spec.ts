@@ -391,7 +391,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
 
-            targetCellElement.onFocus(null);
+            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
             fix.detectChanges();
 
             GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
@@ -488,7 +488,7 @@ describe('IgxGrid Master Detail #grid', () => {
          it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async() => {
             const row = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
-            targetCellElement.onFocus(null);
+            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
             fix.detectChanges();
             expect(targetCellElement.focused).toBeTruthy();
 
@@ -533,7 +533,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const row = grid.getRowByIndex(52) as IgxGridRowComponent;
             let targetCellElement = grid.getCellByColumn(52, 'ContactName');
 
-            targetCellElement.onFocus(null);
+            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
             fix.detectChanges();
             expect(targetCellElement.focused).toBeTruthy();
 

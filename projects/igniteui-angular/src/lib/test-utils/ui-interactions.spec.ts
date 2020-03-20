@@ -12,6 +12,19 @@ export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
 
+
+    public static getClickEvent(eventType: string, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new MouseEvent(eventType, event);
+    }
+
     public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = {
             key: keyPressed,
