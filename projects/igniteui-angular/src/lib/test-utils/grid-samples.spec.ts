@@ -979,9 +979,10 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
-            [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+            [filterable]="filterable" [resizable]="resizable" dataType="string" [selectable]="false"></igx-column>
         <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
-        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable"
+            [selectable]="false" [resizable]="resizable" dataType="boolean"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
@@ -1095,6 +1096,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
         <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
         <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+        <ng-template igxExcelStyleSelecting><div class="esf-custom-column-selection">Column Selection Template</div></ng-template>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
@@ -1734,6 +1736,38 @@ export class CollapsibleColumnGroupTestComponent {
     data = SampleTestData.contactInfoDataFull();
 }
 
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
+        <igx-column-group header="General Information" >
+            <igx-column  field="CompanyName" ></igx-column>
+            <igx-column-group header="Person Details">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="Country Information">
+
+            <igx-column-group header="Region Information">
+                <igx-column  field="Country" [selectable]="false"></igx-column>
+                <igx-column field="Region" ></igx-column>
+                <igx-column field="PostalCode" ></igx-column>
+            </igx-column-group>
+            <igx-column-group header="City Information" >
+                <igx-column field="City" [selectable]="false" ></igx-column>
+                <igx-column field="Address" [selectable]="false"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnSelectionGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    data = SampleTestData.contactInfoDataFull();
+}
 @Component({
     template: `
     <ng-template #indicatorTemplate let-column="column">

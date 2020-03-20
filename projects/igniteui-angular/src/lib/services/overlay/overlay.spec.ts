@@ -2601,7 +2601,7 @@ describe('igxOverlay', () => {
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
             tick();
             const styles = css(overlayWrapper);
-            const expectedBackgroundColor = 'background: rgba(0, 0, 0, 0.38)';
+            const expectedBackgroundColor = 'background: var(--igx-overlay-background-color)';
             const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));

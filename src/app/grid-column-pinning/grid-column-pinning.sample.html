@@ -5,6 +5,8 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="sample-buttons">
+                <button igxButton="raised" (click)="grid1.pinRow({})">Pin non-existent rec</button>
+                <button igxButton="raised" (click)="grid1.unpinRow({})">Unpin non-existent rec</button>
                 <button igxButton="raised" (click)="togglePinRow(0)">Pin/Unpin first row</button>
                 <button igxButton="raised" (click)="togglePinRow(1)">Pin/Unpin second row'</button>
                 <button igxButton="raised" (click)="togglePinRow(2)">Pin/Unpin third row'</button>

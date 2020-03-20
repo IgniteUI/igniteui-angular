@@ -188,6 +188,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
+            link: '/gridColumnSelecting',
+            icon: 'view_column',
+            name: 'Grid Column Selection'
+        },
+        {
             link: '/gridColumnPinning',
             icon: 'view_column',
             name: 'Grid Column Pinning'
@@ -336,6 +341,11 @@ export class AppComponent implements OnInit {
             link: '/radio',
             icon: 'radio_button_checked',
             name: 'Radio Group'
+        },
+        {
+            link: '/reactive',
+            icon: 'web',
+            name: 'Reactive Form'
         },
         {
             link: '/select',

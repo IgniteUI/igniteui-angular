@@ -115,6 +115,8 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } from './grid-column-selection/grid-column-selection.sample';
+import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 
 const components = [
@@ -176,6 +178,8 @@ const components = [
     GridCellEditingComponent,
     GridSampleComponent,
     GridColumnMovingSampleComponent,
+    GridColumnSelectionSampleComponent,
+    GridColumnSelectionFilterPipe,
     GridColumnPinningSampleComponent,
     GridRowPinningSampleComponent,
     GridColumnResizingSampleComponent,
@@ -222,7 +226,8 @@ const components = [
     GridFilteringComponent,
     GridExternalFilteringComponent,
     GridSaveStateComponent,
-    AboutComponent
+    AboutComponent,
+    ReactiveFormSampleComponent
 ];
 
 @NgModule({

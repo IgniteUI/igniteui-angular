@@ -45,6 +45,7 @@ import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.s
 import { GridCellEditingComponent } from './grid-cellEditing/grid-cellEditing.component';
 import { GridSampleComponent } from './grid/grid.sample';
 import { GridColumnMovingSampleComponent } from './grid-column-moving/grid-column-moving.sample';
+import { GridColumnSelectionSampleComponent } from './grid-column-selection/grid-column-selection.sample';
 import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-column-pinning.sample';
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
@@ -93,6 +94,7 @@ import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
+import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 
 const appRoutes = [
     {
@@ -237,6 +239,10 @@ const appRoutes = [
         component: RadioSampleComponent
     },
     {
+        path: 'reactive',
+        component: ReactiveFormSampleComponent
+    },
+    {
         path: 'ripple',
         component: RippleSampleComponent
     },
@@ -328,6 +334,10 @@ const appRoutes = [
     {
         path: 'gridColumnMoving',
         component: GridColumnMovingSampleComponent
+    },
+    {
+        path: 'gridColumnSelecting',
+        component: GridColumnSelectionSampleComponent
     },
     {
         path: 'gridColumnPinning',
