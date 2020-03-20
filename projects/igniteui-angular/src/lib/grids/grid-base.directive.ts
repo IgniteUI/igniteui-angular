@@ -2972,7 +2972,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.pinContainers.changes.subscribe(() => {
             // on row pin containers change grid sizes should be recalculated.
-            this.calculateGridSizes();            
+            this.calculateGridSizes();
         });
     }
 
