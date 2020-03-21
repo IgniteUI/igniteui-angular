@@ -1747,8 +1747,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('pinContainer', { static: false })
-    public pinContainer: ElementRef;
+    @ViewChildren('pinContainer', { read: ElementRef })
+    public pinContainers: QueryList<ElementRef>;
 
     /**
      * @hidden @internal
@@ -2410,6 +2410,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredPinnedData;
+    protected _filteredUnpinnedData;
+
     /**
      * @hidden
      */
@@ -2865,6 +2868,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    public setFilterData(data, pinned: boolean) {
+        if (this.hasPinnedRecords && pinned) {
+            this._filteredPinnedData = data;
+            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+        } else if (this.hasPinnedRecords && !pinned) {
+            this._filteredUnpinnedData = data;
+        } else {
+            this.filteredData = data;
+        }
+    }
+
     /**
      * @hidden
      * @internal
@@ -2956,6 +2970,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
         vertScrDC.addEventListener('wheel', () => this.wheelHandler());
 
+        this.pinContainers.changes.subscribe((c) => {
+            if (this.hasPinnedRecords) {
+                // on row pin containers change grid sizes should be recalculated.
+                this.calculateGridSizes();
+            }
+        });
     }
 
     /**
@@ -3080,6 +3100,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
+        this.notifyChanges(true);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
         }
@@ -4139,8 +4160,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
-        return this._pinnedRecordIDs.length > 0 ? containerHeight : 0;
+        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
+        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        return this.hasPinnedRecords ? containerHeight : 0;
     }
 
     get totalHeight() {
