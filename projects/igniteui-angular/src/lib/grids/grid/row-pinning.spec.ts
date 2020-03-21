@@ -13,7 +13,6 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Row Pinning #grid', () => {
