@@ -8,6 +8,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
@@ -26,6 +27,7 @@ describe('Row Pinning #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,
+                GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent
             ],
@@ -448,6 +450,92 @@ describe('Row Pinning #grid', () => {
         });
 
     });
+    describe('Row pinning with MRL', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should pin/unpin correctly to top', () => {
+            // pin
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[0].nativeElement).toBe(grid.getRowByIndex(0).nativeElement);
+
+            expect(grid.getRowByIndex(0).pinned).toBeTruthy();
+            const gridPinnedRow = grid.pinnedRows[0];
+            const pinnedRowCells = gridPinnedRow.cells.toArray();
+            const headerCells = grid.headerGroups.first.children.toArray();
+
+            // headers are aligned to cells
+            verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+
+            // unpin
+            const row = grid.pinnedRows[0];
+            row.pinned = false;
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(0);
+            expect(row.pinned).toBeFalsy();
+
+            const gridUnpinnedRow = grid.getRowByIndex(1);
+            const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
+
+            verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
+            verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+        });
+
+        it('should pin/unpin correctly to bottom', () => {
+
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            // pin
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[0].nativeElement)
+                .toBe(grid.getRowByIndex(fix.componentInstance.data.length - 1).nativeElement);
+
+            expect(grid.getRowByIndex(fix.componentInstance.data.length - 1).pinned).toBeTruthy();
+            const gridPinnedRow = grid.pinnedRows[0];
+            const pinnedRowCells = gridPinnedRow.cells.toArray();
+            const headerCells = grid.headerGroups.first.children.toArray();
+
+            // headers are aligned to cells
+            verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+
+            // unpin
+            const row = grid.pinnedRows[0];
+            row.pinned = false;
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(0);
+            expect(row.pinned).toBeFalsy();
+
+            const gridUnpinnedRow = grid.getRowByIndex(1);
+            const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
+
+            verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
+            verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+        });
+    });
 });
 
 @Component({
@@ -467,6 +555,32 @@ export class GridRowPinningComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" [pinning]='pinningConfig'>
+        <igx-column-layout *ngFor='let group of colGroups'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
+    cols: Array<any> = [
+        { field: 'ID', rowStart: 1, colStart: 1 },
+        { field: 'CompanyName', rowStart: 1, colStart: 2 },
+        { field: 'ContactName', rowStart: 1, colStart: 3 },
+        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+    ];
+    colGroups = [
+        {
+            group: 'group1',
+            columns: this.cols
+        }
+    ];
 }
 
 @Component({
