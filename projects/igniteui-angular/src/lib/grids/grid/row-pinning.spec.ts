@@ -14,6 +14,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -227,7 +228,20 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should allow pinning onInit', () => {
+            expect(() => {
+                fix = TestBed.createComponent(GridRowPinningComponent);
+                grid = fix.componentInstance.instance;
+                grid.pinRow(fix.componentInstance.data[1]);
+                fix.detectChanges();
+            }).not.toThrow();
+            expect(grid.pinnedRows.length).toBe(1);
+            expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
+        });
+
         it('should pin rows when columns are grouped.', () => {
+            grid.height = '550px';
+            fix.detectChanges();
             // pin 1st and 2nd data row
             grid.pinRow(fix.componentInstance.data[0]);
             grid.pinRow(fix.componentInstance.data[1]);
@@ -257,6 +271,68 @@ describe('Row Pinning #grid', () => {
 
             // make sure the pinned row is out of the first groupBy group
             expect(groupRows[0].groupRow.records[0].ID).toEqual('BLAUS');
+        });
+
+        it('should apply filtering to both pinned and unpinned rows.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[1].context.rowID).toBe(fix.componentInstance.data[5]);
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[5]);
+        });
+
+        it('should remove pinned container and recalculate sizes when all pinned records are filtered out.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
+            fix.detectChanges();
+
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.pinnedRowHeight).toBe(0);
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+        });
+
+        it('should return correct filterData collection.', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+
+            grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            let gridFilterData = grid.filteredData;
+            expect(gridFilterData.length).toBe(7);
+            expect(gridFilterData[0].ID).toBe('BLAUS');
+            expect(gridFilterData[1].ID).toBe('BERGS');
+
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            gridFilterData = grid.filteredData;
+            expect(gridFilterData.length).toBe(7);
+            expect(gridFilterData[0].ID).toBe('BLAUS');
+            expect(gridFilterData[1].ID).toBe('BERGS');
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
@@ -540,6 +616,7 @@ describe('Row Pinning #grid', () => {
 @Component({
     template: `
         <igx-grid
+            [allowFiltering]='true'
             [pinning]='pinningConfig'
             [width]='"800px"'
             [height]='"500px"'
