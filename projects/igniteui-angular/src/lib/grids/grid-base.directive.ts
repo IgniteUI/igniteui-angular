@@ -2819,6 +2819,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.endEdit(true);
             this.cdr.markForCheck();
         });
+
+        this.onRowPinning.subscribe(() => {
+            this.summaryService.clearSummaryCache();
+        });
     }
 
     /**
