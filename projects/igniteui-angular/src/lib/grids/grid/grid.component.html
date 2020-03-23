@@ -101,16 +101,40 @@
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody>
+        [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+    <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
+    </ng-container>
+    <ng-template #pinnedRecordsTemplate>
+        <ng-container *ngIf='data
+        | gridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
+        | rowPinning:id:true:pipeTrigger
+        | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
+        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
+        | gridDetails:hasDetails:expansionStates:pipeTrigger as pinnedData'>
+            <div #pinContainer *ngIf='pinnedData.length > 0' 
+                [ngClass]="{
+                    'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
+                    'igx-grid__tr--pinned-top': isRowPinningToTop
+                }"
+                class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
+                    <ng-container *ngTemplateOutlet="getRowTemplate(rowData); context: getContext(rowData, rowIndex, true)">
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </ng-template>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
+        | rowPinning:id:false:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
@@ -131,6 +155,8 @@
                 (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
+        <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
+        </ng-container>
         <ng-template #record_template let-rowIndex="index" let-rowData>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-grid-row>
@@ -170,9 +196,12 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
-        [style.height.px]='calcHeight'>
-        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
+        <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
+        <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
+            <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
+        </div>
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>        
     </div>
 </div>
 
@@ -187,7 +216,7 @@
         [style.width.px]="scrollWidth"></div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
+<div class="igx-grid__scroll" #scr [hidden]="isHorizontalScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
