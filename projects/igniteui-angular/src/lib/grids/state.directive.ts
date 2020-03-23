@@ -12,6 +12,7 @@ import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
+import { IPinningConfig } from './common/grid.interface';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -24,6 +25,7 @@ export interface IGridState {
     rowSelection?: any[];
     columnSelection?: string[];
     rowPinning?: any[];
+    pinningConfig?: IPinningConfig;
 }
 
 export interface IGridStateOptions {
@@ -37,6 +39,7 @@ export interface IGridStateOptions {
     rowSelection?: boolean;
     columnSelection?: boolean;
     rowPinning?: boolean;
+    pinningConfig?: boolean;
 }
 
 export interface IColumnState {
@@ -69,6 +72,7 @@ const GROUPBY = 'groupBy';
 const PAGING = 'paging';
 const ROW_SELECTION = 'rowSelection';
 const ROW_PINNING = 'rowPinning';
+const PINNING_CONFIG = 'pinningConfig';
 const CELL_SELECTION = 'cellSelection';
 const COLUMN_SELECTION = 'columnSelection';
 
@@ -224,6 +228,10 @@ export class IgxGridStateDirective {
                 this.restoreRowPinning(state as any[]);
                 break;
               }
+              case PINNING_CONFIG: {
+                this.restorePinningConfig(state as IPinningConfig);
+                break;
+              }
               case CELL_SELECTION: {
                 this.restoreCellSelection(state as GridSelectionRange[]);
                 break;
@@ -289,6 +297,10 @@ export class IgxGridStateDirective {
               }
               case ROW_PINNING: {
                 Object.assign(state, this.getRowPinning());
+                break;
+              }
+              case PINNING_CONFIG: {
+                Object.assign(state, this.getPinningConfig());
                 break;
               }
               case CELL_SELECTION: {
@@ -377,6 +389,10 @@ export class IgxGridStateDirective {
         return { rowPinning: pinned };
     }
 
+    private getPinningConfig(): IGridState {
+        return { pinningConfig: this.grid.pinning };
+    }
+
     private getColumnSelection(): IGridState {
         const selection = this.grid.selectedColumns().map(c => c.field);
         return { columnSelection: selection };
@@ -463,6 +479,10 @@ export class IgxGridStateDirective {
 
     private restoreRowPinning(state: any[]) {
         state.forEach(rowID => this.grid.pinRow(rowID));
+    }
+
+    private restorePinningConfig(state: IPinningConfig) {
+       this.grid.pinning = state;
     }
 
     private restoreColumnSelection(state: string[]) {

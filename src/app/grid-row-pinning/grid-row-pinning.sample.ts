@@ -21,7 +21,8 @@ export class GridRowPinningSampleComponent implements OnInit {
         sorting: true,
         groupBy: true,
         columns: false,
-        rowPinning: true
+        rowPinning: true,
+        pinningConfig: true
       };
 
     @ViewChild('grid1', { static: true })
