@@ -70,7 +70,7 @@
                 <h5 class="sample-title">Template Form</h5>
                 <form>
                     <igx-combo class="input-container" [placeholder]="'Locations'"
-                        name="anyName" required [(ngModel)]="values1"
+                        name="anyName" required [(ngModel)]="values1" [ngModelOptions]="{ updateOn: 'blur' }" #comboModel="ngModel"
                         [data]="items" [filterable]="filterableFlag"
                         [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                         [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">

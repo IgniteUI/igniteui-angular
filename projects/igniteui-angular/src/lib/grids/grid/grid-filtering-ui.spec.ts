@@ -1251,6 +1251,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
 
         const firstMonth = calendar.querySelector('.igx-calendar__month');
+        const firstMonthText = (firstMonth as HTMLElement).innerText;
         firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
@@ -1258,7 +1259,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         calendar = outlet.getElementsByClassName('igx-calendar')[0];
         const month = calendar.querySelector('.igx-calendar-picker__date');
 
-        expect(month.innerHTML.trim()).toEqual('Jan');
+        expect(month.innerHTML.trim()).toEqual(firstMonthText);
     }));
 
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
@@ -3319,23 +3320,30 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.applyFilter('a', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('e', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('i', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('o', fix);
             // wait for chip to be scrolled in view
-            await wait(200);
             fix.detectChanges();
-            await wait(100);
+            await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             GridFunctions.removeFilterChipByIndex(3, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(200);
+            await wait(300);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -3344,7 +3352,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.removeFilterChipByIndex(2, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(200);
+            await wait(300);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -4394,40 +4403,27 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
         }));
 
-        it('Should filter, clear and enable/disable the apply button correctly.', fakeAsync(() => {
+        it('Should enable/disable the apply button correctly.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
             fix.detectChanges();
 
-            // Type string in search box.
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
-            sendInputNativeElement(inputNativeElement, 'hello there', fix);
-            tick(100);
-            fix.detectChanges();
-
-            // Verify there are no filtered-in results and that apply button is disabled.
-            let listItems = searchComponent.querySelectorAll('igx-list-item');
-            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            let raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-            let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
-            expect(listItems.length).toBe(0, 'ESF search result should be empty');
-            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
-
-            // Clear filtering.
-            const icons = Array.from(searchComponent.querySelectorAll('igx-icon'));
-            const clearIcon: any = icons.find((ic: any) => ic.innerText === 'clear');
-            clearIcon.click();
-            tick(100);
-            fix.detectChanges();
-
             // Verify there are filtered-in results and that apply button is enabled.
-            listItems = searchComponent.querySelectorAll('igx-list-item');
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
-            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = searchComponent.querySelectorAll('igx-list-item');
+            const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
+            let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
             expect(listItems.length).toBe(6, 'ESF search result should NOT be empty');
             expect(applyButton.classList.contains('igx-button--disabled')).toBe(false);
+
+            // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
+            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+            checkbox[0].click(); // Select All
+            tick();
+            fix.detectChanges();
+            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
         }));
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {

@@ -182,6 +182,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onChunkLoad = new EventEmitter<IForOfState>();
 
     /**
+     * @hidden @internal
+     * An event that is emitted when scrollbar visibility has changed.
+     */
+    @Output()
+    public onScrollbarVisibilityChanged = new EventEmitter<any>();
+
+    /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
     */
     @Output()
@@ -397,7 +404,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             });
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(destructor,
-            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), throttleTime(40))
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
+             throttleTime(40, undefined, {leading: true, trailing: true}))
             .subscribe(() => {
                 this._zone.runTask(() => {
                     this.updateSizes();
@@ -1155,12 +1163,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        const scrollable = this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
-            this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+            this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
+                // Need to reset the scrollAmount value here, because horizontalScrollBar is hidden, therefore
+                // onScroll event handler for VirtualHelperBaseDirective will not be called
+                this.scrollComponent.scrollAmount = 0;
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
@@ -1168,7 +1180,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.size = this._calcHeight();
             if ( this.scrollComponent.size <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
+                // Need to reset the scrollAmount value here, because verticalScrollBar is hidden, therefore
+                // onScroll event handler for VirtualHelperBaseDirective will not be called
+                this.scrollComponent.scrollAmount = 0;
             }
+        }
+        if (scrollable !== this.isScrollable()) {
+            // scrollbar visibility has changed
+            this.onScrollbarVisibilityChanged.emit();
         }
     }
 

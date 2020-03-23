@@ -188,6 +188,14 @@ export class CSVWrapper {
         `Eduardo Ramirez${this._delimiter}10${this._delimiter}Manager${this._eor}`;
     }
 
+    get gridWithAdvancedFilters() {
+        return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
+        `6${this._delimiter}Erma Walsh${this._delimiter}CEO${this._eor}` +
+        `7${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._eor}` +
+        `8${this._delimiter}Erika Wells${this._delimiter}Software Development Team Lead${this._eor}` +
+        `10${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._eor}`;
+    }
+
     get treeGridData() {
         return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
 `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
@@ -244,5 +252,14 @@ export class CSVWrapper {
 `4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}Software Developer${this._delimiter}33${this._eor}` +
 `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
 `7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}`;
+    }
+
+    get treeGridWithAdvancedFilters() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+        `1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
+        `2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
+        `7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}` +
+        `6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
+        `10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}`;
     }
 }

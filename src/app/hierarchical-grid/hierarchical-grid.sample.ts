@@ -13,6 +13,9 @@ import {
 })
 export class HierarchicalGridSampleComponent {
     localData = [];
+    localData1 = [];
+    data1 = [];
+    data2 = [];
     isRowSelectable = false;
     firstLevelExpanded = false;
     rootExpanded = false;
@@ -48,6 +51,9 @@ export class HierarchicalGridSampleComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
+        this.data1 = this.localData.slice(0, 10);
+        this.data2 = this.localData.slice(10, 20);
+        this.localData1 = this.data1;
         this.localData[0].hasChild = false;
         this.localData[1].hasChild = false;
         this.localData[2].childData[0].hasChild = false;
@@ -134,5 +140,14 @@ export class HierarchicalGridSampleComponent {
     public LoadMoreColumns() {
         this.columns = ['Col1', 'Col2', 'Col3'];
         this.childColumns = ['ChildCol1', 'ChildCol2'];
+    }
+
+    public changeData() {
+        debugger;
+        if (this.localData1 === this.data1) {
+            this.localData1 = this.data2;
+        } else {
+            this.localData1 = this.data1;
+        }
     }
 }

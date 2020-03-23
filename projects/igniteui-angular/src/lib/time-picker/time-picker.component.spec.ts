@@ -1,16 +1,17 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, NgModule, ElementRef, EventEmitter } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule } from '../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -198,10 +199,32 @@ describe('IgxTimePicker', () => {
         expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
     }));
 
+    it('Should display mask on cancel button click with bound null value', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
+        fixture.componentInstance.dateValue = null;
+        fixture.componentInstance.mode = 'dropdown';
+        fixture.detectChanges();
+        const timePicker = fixture.componentInstance.timePicker;
+        const dom = fixture.debugElement;
+        const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+        spyOn(timePicker.onValidationFailed, 'emit');
+
+        UIInteractions.clickElement(timePickerTarget);
+        tick();
+        fixture.detectChanges();
+
+        const cancelButton = dom.query(By.css('.igx-button--flat'));
+        UIInteractions.clickElement(cancelButton);
+        tick();
+        fixture.detectChanges();
+
+        expect(timePicker.onValidationFailed.emit).not.toHaveBeenCalled();
+        expect(timePicker.displayValue).toEqual('--:-- --');
+    }));
+
     it('TimePicker cancel button', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithPmTimeComponent);
         fixture.detectChanges();
-
         const timePicker = fixture.componentInstance.timePicker;
         const dom = fixture.debugElement;
         const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
@@ -1478,6 +1501,98 @@ describe('IgxTimePicker', () => {
             expect(document.getElementsByClassName('igx-time-picker__buttons').length).toEqual(0);
         }));
 
+        it('should focus input on user interaction with OK btn, Cancel btn, Enter Key, Escape key', fakeAsync(() => {
+            fixture.detectChanges();
+            let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle.length).toEqual(0);
+
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            const buttons = document.getElementsByClassName('igx-time-picker__buttons')[0];
+            expect(buttons.children.length).toEqual(2);
+
+            const okBtn = dom.queryAll(By.css('.igx-button--flat'))[1];
+            expect(okBtn.nativeElement.innerText).toBe('OK');
+
+            // OK btn
+            okBtn.triggerEventHandler('click', {});
+            tick();
+            fixture.detectChanges();
+
+            input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
+
+            // Cancel btn
+            UIInteractions.clickElement(iconTime);
+            tick();
+            fixture.detectChanges();
+            const cancelBtn = dom.queryAll(By.css('.igx-button--flat'))[0];
+            expect(cancelBtn.nativeElement.innerText).toBe('Cancel');
+            cancelBtn.triggerEventHandler('click', {});
+            tick();
+            fixture.detectChanges();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
+
+            // Enter key
+            UIInteractions.clickElement(iconTime);
+            tick(100);
+            fixture.detectChanges();
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
+
+            // Esc key
+            UIInteractions.clickElement(iconTime);
+            tick(100);
+            fixture.detectChanges();
+            document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+            tick();
+            fixture.detectChanges();
+
+            overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+            expect(overlayToggle[0]).toEqual(undefined);
+            expect(input).toEqual(document.activeElement);
+        }));
+
+        it('When timepicker is closed via outside click, the focus should NOT remain on the input',
+            fakeAsync(() => {
+                fixture.detectChanges();
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+
+                expect(overlayToggle.length).toEqual(0);
+
+                const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+                UIInteractions.clickElement(iconTime);
+                tick();
+                fixture.detectChanges();
+
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                expect(overlayToggle[0]).not.toBeNull();
+                expect(overlayToggle[0]).not.toBeUndefined();
+
+                const dummyInput = fixture.componentInstance.dummyInput.nativeElement;
+                dummyInput.focus();
+                dummyInput.click();
+                tick();
+                fixture.detectChanges();
+
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
+                input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                expect(overlayToggle[0]).toEqual(undefined);
+                expect(input).not.toEqual(document.activeElement);
+                expect(dummyInput).toEqual(document.activeElement);
+            }));
     });
 
     describe('Timepicker with outlet', () => {
@@ -1804,38 +1919,139 @@ describe('IgxTimePicker', () => {
 
     describe('Reactive form', () => {
         let fixture: ComponentFixture<IgxTimePickerReactiveFormComponent>;
-        let timePicker: IgxTimePickerComponent;
+        let timePickerOnChangeComponent: IgxTimePickerComponent;
+        let timePickerOnBlurComponent: IgxTimePickerComponent;
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
-            timePicker = fixture.componentInstance.timePicker;
+            timePickerOnChangeComponent = fixture.componentInstance.timePickerOnChangeComponent;
+            timePickerOnBlurComponent = fixture.componentInstance.timePickerOnBlurComponent;
             fixture.detectChanges();
         });
 
+        it('Should set time picker status to invalid when it is required and has no value', fakeAsync(() => {
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === timePickerOnChangeComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            timePickerOnChangeComponent.value = new Date();
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            timePickerOnChangeComponent.value = null;
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
+        }));
+
+        it('Should set time picker status to invalid when it is required and has no value onBlur', fakeAsync(() => {
+            timePickerOnBlurComponent.mode = InteractionMode.DropDown;
+            timePickerOnBlurComponent.mask = 'dd/mm/yyyy';
+            fixture.detectChanges();
+
+            const inputDirectiveElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputDirectiveElement = inputDirectiveElements.find(d => d.componentInstance === timePickerOnBlurComponent);
+            const inputDirective = inputDirectiveElement.injector.get(IgxInputDirective) as IgxInputDirective;
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            inputDirectiveElement.triggerEventHandler('focus', { target: { value: null }});
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            timePickerOnBlurComponent.value = new Date();
+            fixture.detectChanges();
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            timePickerOnBlurComponent.value = null;
+            fixture.detectChanges();
+            expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
+
+            inputDirectiveElement.triggerEventHandler('blur', { target: { value: null}});
+            fixture.detectChanges();
+
+            expect(inputDirective.valid).toEqual(IgxInputState.INVALID);
+        }));
+
         // Bug #6025 Date picker does not disable in reactive form
         it('Should disable when form is disabled', fakeAsync(() => {
-            fixture.detectChanges();
             const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
-            const timeIcon = fixture.debugElement.query(By.css('.igx-icon'));
-
-            timeIcon.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            const timeDropDown = fixture.debugElement.query(By.css('.igx-time-picker--dropdown'));
-            expect(timeDropDown.properties.hidden).toBeFalsy();
-
-            timePicker.close();
-            fixture.detectChanges();
+            const inputGroupsElements = fixture.debugElement.queryAll(By.directive(IgxInputDirective));
+            const inputGroupElement = inputGroupsElements.find(d => d.componentInstance === timePickerOnBlurComponent);
+            const inputDirective = inputGroupElement.injector.get(IgxInputDirective) as IgxInputDirective;
+            expect(inputDirective.disabled).toBeFalsy();
 
             formGroup.disable();
-            tick();
             fixture.detectChanges();
-
-            timeIcon.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            expect(timeDropDown.properties).toEqual({});
+            expect(inputDirective.disabled).toBeTruthy();
         }));
+    });
+
+    describe('Control value accessor unit tests', () => {
+        let ngModel;
+        let element;
+        let cdr;
+        let toggleRef;
+        let injector;
+        let inputGroup: IgxInputGroupComponent;
+
+        beforeEach(() => {
+            ngModel = {
+                control: { touched: false, dirty: false, validator: null },
+                valid: false,
+                statusChanges: new EventEmitter(),
+            };
+            element = {
+                nativeElement: { getBoundingClientRect: () => 0 },
+                style: { width: null }
+            };
+            cdr = { detectChanges: () => {}};
+            toggleRef = {
+                onOpened: new EventEmitter<any>(),
+                onClosed: new EventEmitter<any>(),
+                onClosing: new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>(),
+                element
+            };
+            injector = { get: () => ngModel };
+            inputGroup = new IgxInputGroupComponent(element, null);
+        });
+
+        it('should initialize time picker with required correctly', () => {
+            const timePicker = new IgxTimePickerComponent(injector, cdr);
+            timePicker['_inputGroup'] = inputGroup;
+            timePicker['toggleRef'] = toggleRef;
+            ngModel.control.validator = () => ({ required: true});
+            timePicker.ngOnInit();
+            timePicker.ngAfterViewInit();
+            timePicker.ngAfterViewChecked();
+
+            expect(timePicker).toBeDefined();
+            expect(inputGroup.isRequired).toBeTruthy();
+        });
+
+        it('should update inputGroup isRequired correctly', () => {
+            const timePicker = new IgxTimePickerComponent(injector, cdr);
+            timePicker['_inputGroup'] = inputGroup;
+            timePicker['toggleRef'] = toggleRef;
+            timePicker.ngOnInit();
+            timePicker.ngAfterViewInit();
+            timePicker.ngAfterViewChecked();
+
+            expect(timePicker).toBeDefined();
+            expect(inputGroup.isRequired).toBeFalsy();
+
+            ngModel.control.validator = () => ({ required: true});
+            ngModel.statusChanges.emit();
+            expect(inputGroup.isRequired).toBeTruthy();
+
+            ngModel.control.validator = () => ({ required: false});
+            ngModel.statusChanges.emit();
+            expect(inputGroup.isRequired).toBeFalsy();
+        });
     });
 });
 
@@ -1862,12 +2078,13 @@ export class IgxTimePickerWithPassedTimeComponent {
 
 @Component({
     template: `
-        <igx-time-picker [value]="dateValue" [format]="customFormat"></igx-time-picker>
+        <igx-time-picker [mode]="mode" [value]="dateValue" [format]="customFormat"></igx-time-picker>
     `
 })
 export class IgxTimePickerWithPmTimeComponent {
-    public dateValue: Date = new Date(2017, 7, 7, 12, 27);
-    public customFormat = 'h:mm tt';
+    public dateValue: Date = new Date(2017, 7, 7, 12, 27, 23);
+    public customFormat = 'h:mm:ss tt';
+    public mode = 'dialog';
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
@@ -1948,6 +2165,7 @@ export class IgxTimePickerRetemplatedComponent { }
 
 @Component({
     template: `
+    <input class="dummyInput" #dummyInput/>
     <igx-time-picker mode="dropdown"
             [isSpinLoop]="isSpinLoop"
             [(ngModel)]="date"
@@ -1964,6 +2182,7 @@ export class IgxTimePickerDropDownComponent {
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    @ViewChild('dummyInput', { static: true }) public dummyInput: ElementRef;
 }
 @Component({
     template: `
@@ -2036,20 +2255,24 @@ export class IgxTimePickerWithOutletComponent {
 @Component({
     template: `
     <form [formGroup]="reactiveForm">
-    <p>
-        <igx-time-picker formControlName="timePickerReactive" #timePickerReactive mode="dropdown"></igx-time-picker>
-    </p>
+        <igx-time-picker formControlName="timePickerOnChange" #timePickerOnChange></igx-time-picker>
+        <igx-time-picker formControlName="timePickerOnBlur" #timePickerOnBlur></igx-time-picker>
 </form>
 `
 })
-class IgxTimePickerReactiveFormComponent {
-    @ViewChild('timePickerReactive', { read: IgxTimePickerComponent, static: true })
-    public timePicker: IgxTimePickerComponent;
+export class IgxTimePickerReactiveFormComponent {
     reactiveForm: FormGroup;
+
+    @ViewChild('timePickerOnChange', { read: IgxTimePickerComponent, static: true })
+    public timePickerOnChangeComponent: IgxTimePickerComponent;
+
+    @ViewChild('timePickerOnBlur', { read: IgxTimePickerComponent, static: true })
+    public timePickerOnBlurComponent: IgxTimePickerComponent;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            timePickerReactive: new FormControl(''),
+            timePickerOnChange: [null, Validators.required],
+            timePickerOnBlur: [null, { updateOn: 'blur', validators: Validators.required}]
         });
     }
     onSubmitReactive() { }

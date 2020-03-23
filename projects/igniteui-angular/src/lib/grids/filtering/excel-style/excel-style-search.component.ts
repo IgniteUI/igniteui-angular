@@ -54,8 +54,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public data: FilterListItem[];
 
-    public filteredData: FilterListItem[];
-
     @Input()
     public column: IgxColumnComponent;
 

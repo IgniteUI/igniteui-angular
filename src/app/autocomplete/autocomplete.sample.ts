@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { worldInfo, attractions } from './data';
 import { IgxDialogComponent } from 'igniteui-angular';
 
+const ATTRACTIONS_CUSTOM_WIDTH = '300px';
 @Component({
     selector: 'app-autocomplete-sample',
     styleUrls: ['autocomplete.sample.css'],
@@ -13,6 +14,7 @@ export class AutocompleteSampleComponent {
     public travel: FormGroup;
     worldInfo;
     attractions;
+    public attractionsWidth = '';
 
     constructor(fb: FormBuilder) {
         this.worldInfo = worldInfo;
@@ -33,6 +35,10 @@ export class AutocompleteSampleComponent {
             this.alert.message = 'Please enter correct country and attraction.';
         }
         this.alert.open();
+    }
+
+    changeDefaultWidth(event: any) {
+        this.attractionsWidth = event.checked ? ATTRACTIONS_CUSTOM_WIDTH : '';
     }
 }
 

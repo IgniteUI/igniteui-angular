@@ -15,6 +15,7 @@ import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
+import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 
 /**
  * @hidden
@@ -31,7 +32,9 @@ import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
         IgxCalendarScrollMonthDirective,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
-        IgxMonthPickerComponent
+        IgxMonthPickerComponent,
+        IgxMonthViewSlotsCalendar,
+        IgxGetViewDateCalendar
     ],
     exports: [
         IgxCalendarComponent,
