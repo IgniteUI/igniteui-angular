@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction, IgxGridStateDirective } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -12,8 +12,22 @@ import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/g
 export class GridRowPinningSampleComponent implements OnInit {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
+    public options = {
+        cellSelection: true,
+        rowSelection: true,
+        filtering: true,
+        advancedFiltering: true,
+        paging: true,
+        sorting: true,
+        groupBy: true,
+        columns: false,
+        rowPinning: true
+      };
+
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -95,6 +109,16 @@ export class GridRowPinningSampleComponent implements OnInit {
         } else {
             row.pin();
         }
+    }
+
+    public saveGridState() {
+        const state = this.state.getState() as string;
+        window.localStorage.setItem("grid1-state", state);
+    }
+  
+    public restoreGridState() {
+        const state = window.localStorage.getItem("grid1-state");
+        this.state.setState(state);
     }
 
 }
