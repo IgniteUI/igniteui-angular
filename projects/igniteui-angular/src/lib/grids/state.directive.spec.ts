@@ -72,7 +72,7 @@ describe('IgxGridState - input properties #grid', () => {
 
     it('getState should return corect JSON string', () => {
         // tslint:disable-next-line:max-line-length
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true},"paging":{"index":0,"recordsPerPage":15,"metadata":{"countPages":1,"countRecords":10,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[]}';
+        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true},"paging":{"index":0,"recordsPerPage":15,"metadata":{"countPages":1,"countRecords":10,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[]}';
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
 
@@ -390,6 +390,31 @@ describe('IgxGridState - input properties #grid', () => {
         HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
         gridState = state.getState(true, 'rowSelection');
         expect(gridState).toBe(rowSelectionState);
+    });
+
+    it('setState should correctly restore grid row pinning state from object', () => {
+        const fix = TestBed.createComponent(IgxGridStateComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        grid.primaryKey = 'ProductID';
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+        const rowPinState = '{"rowPinning":[1,3]}';
+        const initialState = '{"rowPinning":[]}';
+        const rowPinStateObject = JSON.parse(rowPinState);
+
+        let gridState = state.getState(true, 'rowPinning');
+        expect(gridState).toBe(initialState);
+
+        state.setState(rowPinStateObject);
+        fix.detectChanges();
+
+        expect(grid.pinnedRows.length).toBe(2);
+        expect(grid.pinnedRows[0].rowID).toBe(1);
+        expect(grid.pinnedRows[1].rowID).toBe(3);
+       
+        gridState = state.getState(true, 'rowPinning');
+        expect(gridState).toBe(rowPinState);
     });
 
     it('setState should correctly restore grid cell selection state from string', () => {
