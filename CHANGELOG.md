@@ -14,6 +14,17 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added ability to pin rows to top or bottom depending on the new `pinning` input.
+    And new API methods `pinRow` and `unpinRow`.
+    ```html
+    <igx-grid [data]="data" [pinning]="pinningConfiguration"></igx-grid>
+    ```
+    ```typescript
+    public pinningConfiguration: IPinningConfig = { rows: RowPinningPosition.Bottom };
+    ```
+    ```typescript
+    this.grid.pinRow(rowID);
+    ```
     - Added support for pinning columns on the right. Change the position of pinning using the new `pinning` input.
     ```html
     <igx-grid [data]="data" [pinning]="pinningConfiguration"></igx-grid>
