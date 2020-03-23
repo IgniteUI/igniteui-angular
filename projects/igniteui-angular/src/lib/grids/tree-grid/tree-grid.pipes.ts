@@ -324,8 +324,20 @@ export class IgxTreeGridRowPinningPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService> gridAPI;
     }
 
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        return collection;
+    transform(collection: any[], id: string, isPinned = false, pipeTrigger: number): any[] {
+        const grid = this.gridAPI.grid;
+
+        if (!grid.hasPinnedRecords) {
+            return isPinned ? [] : collection;
+        }
+
+        const result = (isPinned) ? collection.filter((value, index) => grid.isRecordPinned(value)) : collection;
+
+        if (isPinned) {
+            // pinned records should be ordered as they were pinned.
+            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
+        }
+        return result;
     }
 }
 

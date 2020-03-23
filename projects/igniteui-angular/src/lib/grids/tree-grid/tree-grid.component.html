@@ -76,8 +76,10 @@
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
-            <ng-container *ngFor="let rowData of pinnedRecords
+            <ng-container *ngFor="let rowData of data
                 | visibleColumns:hasVisibleColumns
+                | treeGridRowPinning:id:true:pipeTrigger
+                | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
                 | treeGridPinnedRows:id:pipeTrigger
                 | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger; let rowIndex = index">
@@ -85,14 +87,14 @@
                 </ng-container>
             </ng-container>
         </ng-template>
-        <div #pinContainer *ngIf='pinnedRecords.length > 0 && isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-top'>
+        <div #pinContainer *ngIf='hasPinnedRecords && isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-top'>
             <ng-container *ngTemplateOutlet="pinnedRecordsTemplate">
             </ng-container>  
         </div>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | treeGridRowPinning:id:pipeTrigger
+        | treeGridRowPinning:id:false:pipeTrigger
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger
@@ -108,7 +110,7 @@
                 (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
-        <div #pinContainer *ngIf='pinnedRecords.length > 0 && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
+        <div #pinContainer *ngIf='hasPinnedRecords && !isRowPinningToTop' class='igx-grid__tr--pinned igx-grid__tr--pinned-bottom' [style.bottom.px]='pinnedBottom'>
             <ng-container *ngTemplateOutlet="pinnedRecordsTemplate">
             </ng-container>  
         </div>

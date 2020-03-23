@@ -74,8 +74,8 @@
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
             [readonly]="true"
-            [checked]="selected && !pinnedBodyInstance"
-            [disabled]="deleted || pinnedBodyInstance"
+            [checked]="selected"
+            [disabled]="deleted"
             disableRipple="true"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">

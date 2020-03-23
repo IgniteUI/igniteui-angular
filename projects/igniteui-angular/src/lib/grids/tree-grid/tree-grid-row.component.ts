@@ -25,15 +25,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public cells: QueryList<any>;
 
     /**
-     * @hidden
-     */
-    @Input()
-    @HostBinding('attr.aria-selected')
-    get selected(): boolean {
-        return !this.pinnedBodyInstance && this.selectionService.isRowSelected(this.rowID);
-    }
-
-    /**
      * The `ITreeGridRecord` passed to the row component.
      *
      * ```typescript
@@ -81,12 +72,27 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
-     * Gets whether the current row is pinned and is in the grid's body,
-     * and not in the grid's pinned area.
-     * @hidden @internal
+     * Gets the ID of the row.
+     * A row in the grid is identified either by:
+     * - primaryKey data value,
+     * - the whole rowData, if the primaryKey is omitted.
+     *
+     * ```typescript
+     * let rowID = this.grid.selectedRows[2].rowID;
+     * ```
      */
-    public get pinnedBodyInstance(): boolean {
-        return this.pinned && (this.grid.pinnedRecords.indexOf(this.treeRow) === -1);
+    public get rowID() {
+        const primaryKey = this.grid.primaryKey;
+        return primaryKey ? this.rowData[primaryKey] : this.rowData;
+    }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    @HostBinding('attr.aria-selected')
+    get selected(): boolean {
+        return this.selectionService.isRowSelected(this.rowID);
     }
 
     /**
@@ -146,7 +152,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
-        const pinnedRecordClass = this.pinnedBodyInstance ? 'igx-grid__tr--disabled' : '';
+        const pinnedRecordClass = false ? 'igx-grid__tr--disabled' : '';
         return `${classes} ${filteredClass} ${pinnedRecordClass}`;
     }
 

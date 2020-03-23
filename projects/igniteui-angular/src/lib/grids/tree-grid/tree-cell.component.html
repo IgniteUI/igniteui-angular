@@ -36,13 +36,13 @@
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
          <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
         </ng-container>
-        <igx-chip [hidden]="!row.pinnedBodyInstance"
+        <!-- <igx-chip [hidden]="!row.pinnedBodyInstance"
                     draggable="false"
                     disabled="true"
                     displayDensity="cosy"
                     #pinnedIndicator>
             Pinned
-        </igx-chip>
+        </igx-chip> -->
     </div>
     <div *ngIf="isLoading"
          (dblclick)="onLoadingDblClick($event)"

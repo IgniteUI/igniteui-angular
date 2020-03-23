@@ -446,17 +446,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
 
-     /**
-     * Gets an array of the pinned `IgxRowComponent`s.
-     * @example
-     * ```typescript
-     * const pinnedRow = this.grid.pinnedRows;
-     * ```
-     */
-    public get pinnedRows(): any[] {
-        return this.rowList.filter(x => x.pinned && !x.pinnedBodyInstance);
-    }
-
     /**
      * Expands all rows.
      * ```typescript
@@ -550,82 +539,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Pin the row by its id.
-     * @remarks
-     * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.pinRow(rowID);
-     * ```
-     * @param rowID The row id - primaryKey value or the data record instance.
-     * @param index The index at which to insert the row in the pinned collection.
-     */
-    public pinRow(rowID, index?): boolean {
-        const rec = this.gridAPI.get_rec_by_id(rowID);
-        const flattenedRecord = {...rec};
-        flattenedRecord.children = [];
-        flattenedRecord.level = 0;
-
-        if (!rec || this.isRowInPinnedRecordsStructure(rec) || this.flatData.indexOf(rec.data) === -1) {
-            return false;
-        }
-        const row = this.gridAPI.get_row_by_key(rowID);
-
-        const eventArgs: IPinRowEventArgs = {
-            insertAtIndex: index,
-            isPinned: true,
-            rowID: rowID,
-            row: row
-        };
-        this.onRowPinning.emit(eventArgs);
-
-        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, flattenedRecord);
-        this._pipeTrigger++;
-        if (this.gridAPI.grid) {
-            this.notifyChanges(true);
-        }
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * Unpin the row by its id.
-     * @remarks
-     * ID is either the primaryKey value or the data record instance.
-     * @example
-     * ```typescript
-     * this.grid.unpinRow(rowID);
-     * ```
-     * @param rowID The row id - primaryKey value or the data record instance.
-    */
-    public unpinRow(rowID: any) {
-        const rec = this.gridAPI.get_rec_by_id(rowID);
-        const index =  this.pinnedRecords.findIndex((x) => JSON.stringify(x.data) === JSON.stringify(rec.data));
-        if (index === -1 || !rec) {
-            return false;
-        }
-        const row = this.gridAPI.get_row_by_key(rowID);
-        const eventArgs: IPinRowEventArgs = {
-            isPinned: false,
-            rowID: rowID,
-            row: row
-        };
-        this.onRowPinning.emit(eventArgs);
-        this.pinnedRecords.splice(index, 1);
-        this._pipeTrigger++;
-        if (this.gridAPI.grid) {
-            this.cdr.detectChanges();
-            this.notifyChanges(true);
-        }
-        return true;
-    }
-
-    /**
      * @hidden @internal
      */
-    public isRowInPinnedRecordsStructure(rec: ITreeGridRecord): boolean {
+    public isRowInPinnedRecordsStructure(rec): boolean {
         let inStructure = false;
-        this.pinnedRecords.forEach(pinnedRecord => {
-            if (JSON.stringify(pinnedRecord.data) === JSON.stringify(rec.data)) {
+        const rowId = this.primaryKey ? rec.data[this.primaryKey] : rec.data;
+        this._pinnedRecordIDs.forEach(pinnedRecord => {
+            if (pinnedRecord === rowId) {
                 inStructure = true;
             }
         });
@@ -706,7 +626,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (pinned && !this.isRowPinningToTop) {
             rowIndex = rowIndex + this.dataView.length;
         }
-        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this.pinnedRecords.length : rowIndex;
+        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this._pinnedRecordIDs.length : rowIndex;
         return {
             $implicit: rowData,
             index: rowIndex,
