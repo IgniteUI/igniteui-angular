@@ -14,6 +14,7 @@ import {
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 const nativeValidationAttributes = ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step'];
 
@@ -72,13 +73,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @Input('value')
+    @DeprecateProperty('"value" is deprecated, set native value instead.')
     set value(value: any) {
         this.nativeElement.value = value;
         this.checkValidity();
     }
     /**
-     * Gets the `value` propery.
+     * Gets the `value` property.
      *
      * @example
      * ```typescript

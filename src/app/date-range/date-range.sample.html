@@ -1,0 +1,107 @@
+<div style="padding: 30px;">
+    <div style="max-width: 200px;">
+        <igx-date-range [mode]="'dropdown'"></igx-date-range>
+    </div>
+
+    <div style="max-width: 200px;">
+        <igx-date-range [mode]="'dropdown'">
+            <igx-suffix>
+                <!--*replacerDirective-->
+                <igx-icon>
+                    calendar_view_day
+                </igx-icon>
+            </igx-suffix>
+        </igx-date-range>
+    </div>
+
+    <div class="inline">
+        <igx-date-range [mode]="'dropdown'">
+
+            <igx-date-start>
+                <input igxInput igxDateTimeEditor type="text">
+            </igx-date-start>
+
+            <igx-date-end>
+                <input igxInput igxDateTimeEditor type="text">
+                <igx-suffix>
+                    <igx-icon>
+                        expand_more
+                    </igx-icon>
+                </igx-suffix>
+            </igx-date-end>
+
+        </igx-date-range>
+    </div>
+
+    <div class="inline">
+        <igx-date-range #formControl="ngModel" [(ngModel)]="range">
+            <igx-date-start>
+                <input igxInput igxDateTimeEditor type="text" required>
+            </igx-date-start>
+            <igx-date-end>
+                <input igxInput igxDateTimeEditor type="text" required>
+            </igx-date-end>
+        </igx-date-range>
+
+        <div style="display: flex; flex-flow: column;">
+            <div>Valid: {{ formControl.valid }}</div>
+            <div>Dirty: {{ formControl.dirty }}</div>
+            <div>Touched: {{ formControl.touched }}</div>
+            <div>Value: {{ formControl.value | json }}</div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="content-wrap">
+    <form class="book-room-form" [formGroup]="twoInputForm" (ngSubmit)="submitTwoInputForm()">
+        <div class="container">
+            <h4 class="title">Book your room</h4>
+
+            <div class="date-range-wrapper">
+                <igx-date-range #defDateRange [mode]="'dropdown'" formControlName="dateRange">
+                    <igx-date-start>
+                        <input igxInput igxDateTimeEditor type="text">
+                    </igx-date-start>
+                    <igx-date-end>
+                        <input igxInput igxDateTimeEditor type="text">
+                    </igx-date-end>
+                </igx-date-range>
+            </div>
+
+            <div class="button-wrap">
+                <button igxButton>Submit Form</button>
+                <button igxButton (click)="selectDatRangeDefTemplate()"> Select Range </button>
+            </div>
+        </div>
+    </form>
+
+    <form class="book-room-form">
+        <div class="container">
+            <div class="date-range-wrapper">
+                <igx-date-range #singleInputDateRange (rangeSelected)="onRangeSelected($event)" [(ngModel)]="content"
+                    [ngModelOptions]="{ standalone: true }" [mode]="'dropdown'">
+                    <igx-date-single>
+                        <input igxInput type="text">
+                    </igx-date-single>
+                </igx-date-range>
+            </div>
+            <div class="button-wrap">
+                <button igxButton (click)="selectDateRangeSingleInput()"> Select Range </button>
+            </div>
+        </div>
+    </form>
+</div> -->

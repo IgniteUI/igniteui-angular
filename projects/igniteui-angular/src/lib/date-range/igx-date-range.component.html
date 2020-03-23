@@ -1,0 +1,80 @@
+<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()">
+    <!-- TODO: create dynamic with overlay service api, move to separate component -->
+    <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
+        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
+        (onSelection)="handleSelection($event)"></igx-calendar>
+    <div class="buttonsWrapper">
+        <div *ngIf="mode === 'dialog'">
+            <div class="todayButton">
+                <button igxButton type="button" (click)="selectToday()">{{ todayButtonText }}</button>
+            </div>
+            <div class="doneButton">
+                <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngTemplateOutlet="this.start || this.end ? startEndTemplate : defTemplate"></ng-container>
+
+<ng-template #singleTemplate>
+    <div (click)="open()" class="content-wrap">
+        <ng-content select="igx-date-single"></ng-content>
+    </div>
+</ng-template>
+
+<ng-template #suffixTemplate>
+    <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+</ng-template>
+
+<ng-template #prefixTemplate>
+    <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+</ng-template>
+
+<ng-template #hintTemplate>
+    <ng-content select="igx-hint,[igxHint]"></ng-content>
+</ng-template>
+
+<ng-template #labelTemplate>
+    <ng-content select="[igxLabel]"></ng-content>
+</ng-template>
+
+<ng-template #defSuffix>
+    <igx-suffix>
+        <igx-icon>
+            calendar_today
+        </igx-icon>
+    </igx-suffix>
+</ng-template>
+
+<ng-template #defLabel>
+    <label for="singleInput" igxLabel>Range</label>
+</ng-template>
+
+<ng-template #startEndTemplate>
+    <div (click)="open()" class="content-wrap" style="display: flex; flex-flow: row;">
+        <ng-content select="igx-date-start"></ng-content>
+        <ng-content select="igx-date-end"></ng-content>
+    </div>
+</ng-template>
+
+<ng-template #defTemplate>
+    <div (click)="open()" class="content-wrap">
+        <igx-date-single>
+            <input #singleInput igxInput type="text" readonly>
+
+            <ng-container ngProjectAs="igx-suffix">
+                <ng-container *ngTemplateOutlet="this.suffix ? suffixTemplate : defSuffix"></ng-container>
+            </ng-container>
+            <ng-container ngProjectAs="igxLabel">
+                <ng-container *ngTemplateOutlet="this.label ? labelTemplate : defLabel"></ng-container>
+            </ng-container>
+            <ng-container ngProjectAs="igx-prefix">
+                <ng-container *ngTemplateOutlet="prefixTemplate"></ng-container>
+            </ng-container>
+            <ng-container ngProjectAs="igx-hint">
+                <ng-container *ngTemplateOutlet="hintTemplate"></ng-container>
+            </ng-container>
+        </igx-date-single>
+    </div>
+</ng-template>
