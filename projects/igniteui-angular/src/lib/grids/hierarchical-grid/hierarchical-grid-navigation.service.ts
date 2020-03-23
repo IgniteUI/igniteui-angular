@@ -92,7 +92,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
 
         if (this.grid.parent) {
-            const isNext = this.activeNode && this.activeNode.row ? rowIndex > this.activeNode.row : false;
+            const isNext = this.activeNode && isNumber(this.activeNode.row) ? rowIndex > this.activeNode.row : false;
             const cbHandler = (args) => {
                 this._handleScrollInChild(rowIndex, isNext);
                 cb(args);
