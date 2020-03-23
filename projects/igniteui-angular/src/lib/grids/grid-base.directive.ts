@@ -2911,10 +2911,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public setFilteredSortedData(data, pinned: boolean) {
-        if (this.pinnedRows.length > 0 && pinned) {
+        if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.filteredSortedData = [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData];
-        } else if (this.pinnedRows.length > 0 && !pinned) {
+        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
             this.filteredSortedData = data;
