@@ -116,23 +116,21 @@ export class WorksheetFile implements IExcelFile {
 
             cols.push('</cols>');
 
-            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
-                !worksheetData.options.ignorePinning &&
-                !worksheetData.options.ignoreColumnsOrder) {
-                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
-                const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
-                freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
-            }
-            if (worksheetData.indexOfLastPinnedRow !== -1 &&
-                !worksheetData.options.ignorePinning ) {
-                 // header should also be fixed.
-                 const frozenRowCount = worksheetData.indexOfLastPinnedRow + 2;
-                 const hasFrozenCols = worksheetData.indexOfLastPinnedColumn !== -1;
-                 const frozenColumnCount = hasFrozenCols ? worksheetData.indexOfLastPinnedColumn + 1 : null;
-                 const frozenColumn = !hasFrozenCols ? 'A' : ExcelStrings.getExcelColumn(worksheetData.indexOfLastPinnedColumn + 1);
-                 const firstCell = frozenColumn + (frozenRowCount + 1);
-                 freezePane = `<pane xSplit="${frozenColumnCount}" ySplit="${frozenRowCount}"
-                  topLeftCell="${firstCell}" activePane="bottomLeft" state="frozen"/>`;
+            const hasFrozenElements = !worksheetData.options.ignorePinning &&
+             (worksheetData.indexOfLastPinnedColumn !== -1 || worksheetData.indexOfLastPinnedRow !== -1);
+
+            if (hasFrozenElements) {
+                const hasFrozenCols = !worksheetData.options.ignoreColumnsOrder && worksheetData.indexOfLastPinnedColumn !== -1;
+                const hasFrozenRows = worksheetData.indexOfLastPinnedRow !== -1;
+
+                const frozenColumnCount = hasFrozenCols ? worksheetData.indexOfLastPinnedColumn + 1 : null;
+                const frozenRowCount = hasFrozenRows ? worksheetData.indexOfLastPinnedRow + 2 : null;
+
+                const frozenColumn = !hasFrozenCols ? 'A' : ExcelStrings.getExcelColumn(frozenColumnCount);
+                const firstCell = frozenColumn + (frozenRowCount + 1);
+
+                freezePane = `<pane xSplit="${frozenColumnCount}" ySplit="${frozenRowCount}"
+                topLeftCell="${firstCell}" activePane="bottomRight" state="frozen"/>`;
             }
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
