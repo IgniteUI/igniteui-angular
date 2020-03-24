@@ -3312,7 +3312,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             await wait(100);
         }));
 
-        it('should scroll correct chip in view when one is deleted', async() => {
+        it('should scroll correct chip in view when one is deleted', async () => {
             grid.width = '700px';
             fix.detectChanges();
 
@@ -3400,11 +3400,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyColumnIsHidden(prodNameCol, true, 5);
         }));
 
-        it('Unary conditions should be committable', fakeAsync (() => {
+        it('Unary conditions should be committable', fakeAsync(() => {
             grid.height = '700px';
             fix.detectChanges();
 
-            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
 
@@ -3429,36 +3428,57 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             tick(100);
             expect(chip.componentInstance.selected).toBeTruthy();
-    }));
+        }));
 
-    it('Should close filterRow when changing filterMode from \'quickFilter\' to \'excelStyleFilter\'', (async () => {
-        GridFunctions.clickFilterCellChip(fix, 'ProductName');
-        fix.detectChanges();
+        it('Should close filterRow when changing filterMode from \'quickFilter\' to \'excelStyleFilter\'', (async () => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
 
-        // Add a condition chip without submitting it.
-        GridFunctions.typeValueInFilterRowInput('a', fix);
-        await wait(16);
+            // Add a condition chip without submitting it.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
 
-        // Change filterMode to 'excelStyleFilter`
-        grid.filterMode = FilterMode.excelStyleFilter;
-        fix.detectChanges();
+            // Change filterMode to 'excelStyleFilter`
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
 
-        // Verify the the filterRow is closed.
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        expect(filterUIRow).toBeNull('filterRow is visible');
+            // Verify the the filterRow is closed.
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull('filterRow is visible');
 
-        // Verify the ESF icons are visible.
-        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
-        const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
-        expect(filterIcons.length).toEqual(4, 'incorrect esf filter icons count');
+            // Verify the ESF icons are visible.
+            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+            const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
+            const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
+            expect(filterIcons.length).toEqual(4, 'incorrect esf filter icons count');
 
-        // Verify the condition was submitted.
-        const header = GridFunctions.getColumnHeader('ProductName', fix);
-        const activeFilterIcon = header.nativeElement.querySelector('.igx-excel-filter__icon--filtered');
-        expect(activeFilterIcon).toBeDefined('no active filter icon was found');
-    }));
-});
+            // Verify the condition was submitted.
+            const header = GridFunctions.getColumnHeader('ProductName', fix);
+            const activeFilterIcon = header.nativeElement.querySelector('.igx-excel-filter__icon--filtered');
+            expect(activeFilterIcon).toBeDefined('no active filter icon was found');
+        }));
+
+        it('Should clear non-unary conditions with null searchVal when close', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.openFilterDD(fix.debugElement);
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            GridFunctions.selectFilteringCondition('Empty', dropdownList);
+            fix.detectChanges();
+            tick(16);
+            GridFunctions.openFilterDD(fix.debugElement);
+            GridFunctions.selectFilteringCondition('Contains', dropdownList);
+            fix.detectChanges();
+            tick(16);
+
+            GridFunctions.closeFilterRow(fix);
+            tick(16);
+
+            const headerChip = GridFunctions.getFilterChipsForColumn('ProductName', fix);
+            expect(headerChip.length).toBe(1);
+        }));
+    });
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
@@ -5887,11 +5907,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should be able to set custom filtering strategy', () => {
-           expect(grid.filterStrategy).toBeUndefined();
-           grid.filterStrategy = fix.componentInstance.strategy;
-           fix.detectChanges();
+            expect(grid.filterStrategy).toBeUndefined();
+            grid.filterStrategy = fix.componentInstance.strategy;
+            fix.detectChanges();
 
-           expect(grid.filterStrategy).toEqual(fix.componentInstance.strategy);
+            expect(grid.filterStrategy).toEqual(fix.componentInstance.strategy);
         });
 
         it('Should be able to override getFieldValue method', fakeAsync(() => {
@@ -5933,8 +5953,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             expect(grid.filteredData).toEqual([
-                { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' } , JobTitle: 'Director', Company: 'Company C' },
-                { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' } , JobTitle: 'Director', Company: 'Company A' }]);
+                { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' }, JobTitle: 'Director', Company: 'Company C' },
+                { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' }, JobTitle: 'Director', Company: 'Company A' }]);
             GridFunctions.resetFilterRow(fix);
             GridFunctions.closeFilterRow(fix);
             fix.detectChanges();
@@ -5961,8 +5981,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             expect(grid.filteredData).toEqual([
-                { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } ,
-                    JobTitle: 'Associate Software Developer', Company: 'Company B' },
+                {
+                    ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' },
+                    JobTitle: 'Associate Software Developer', Company: 'Company B'
+                },
                 { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
         }));
     });
@@ -6478,7 +6500,7 @@ function clickElemAndBlur(clickElem, blurElem) {
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
     (clickElem as DebugElement).nativeElement.focus();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
     UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
 }
