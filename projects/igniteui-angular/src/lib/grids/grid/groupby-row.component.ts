@@ -173,15 +173,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     public toggle() {
-        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
-        if (isVirtualized) {
-            const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
-            if (groupRow) {
-                groupRow.focus();
-            }
-        }
     }
 
     public get iconTemplate() {

@@ -136,12 +136,14 @@ export class IgxGridNavigationService {
     }
 
     focusTbody() {
+        this.activeNode = !this.activeNode ? {row: 0, column: 0} : this.activeNode;
         if (!this.activeNode || !(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
         this.navigateInBody(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
     }
 
     focusFirstCell(header = true) {
-        this.activeNode = {row: header ? -1 : this.grid.dataView.length, column: 0};
+        const c = !this.activeNode || (this.activeNode.row !== (header ? -1 : this.grid.dataView.length)) ? 0 : this.activeNode.column;
+        this.activeNode = {row: header ? -1 : this.grid.dataView.length, column: c};
         this.performHorizontalScrollToCell(0);
     }
 
@@ -184,8 +186,10 @@ export class IgxGridNavigationService {
         if (!this.isToggleKey(key) || !row) { return; }
 
         if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
+            !row.rowID ? row.toggle() :
             this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
+            !row.rowID ? row.toggle() :
             this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
         }
         this.grid.notifyChanges();
