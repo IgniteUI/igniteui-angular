@@ -421,7 +421,7 @@ export class TreeGridFunctions {
 
     public static moveGridCellWithTab =
         (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 resolve();

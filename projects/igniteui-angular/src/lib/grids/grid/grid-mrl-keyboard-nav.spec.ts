@@ -1770,11 +1770,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(document.activeElement).toEqual(doneButtonElement);
 
                 // shift+ tab into Cancel
-                UIInteractions.triggerKeyDownWithBlur('tab', doneButtonElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('tab', doneButtonElement, true, false, true);
                 fix.detectChanges();
 
                 // shift+ tab into last cell
-                UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('tab', cancelButtonElement, true, false, true);
                 fix.detectChanges();
 
                 targetCell = grid.getCellByColumn(0, 'PostalCode');

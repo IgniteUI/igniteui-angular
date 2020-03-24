@@ -109,11 +109,6 @@ export class UIInteractions {
         elem.dispatchEvent(keyboardEvent);
     }
 
-    public static triggerKeyDownWithBlur(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
-        UIInteractions.triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey, shift, ctrl);
-        elem.dispatchEvent(new Event('blur'));
-    }
-
     public static findCellByInputElem(elem, focusedElem) {
         if (!focusedElem.parentElement) {
             return null;
@@ -239,13 +234,19 @@ export class UIInteractions {
 
     public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
-        element.nativeElement.dispatchEvent(new Event('focus'));
+        element.nativeElement.dispatchEvent(new MouseEvent('click'));
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+    }
+
+    public static simulateDoubleClickAndSelectCellEvent(element) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
+        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
     }
 
     public static simulateNonPrimaryClick(cell) {
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
-        cell.nativeElement.dispatchEvent(new Event('focus'));
+        cell.nativeElement.dispatchEvent(new Event('click'));
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
     }
 

@@ -59,6 +59,8 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
@@ -78,8 +80,20 @@ export class GridFunctions {
         return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
     public static getGridDisplayContainer(fix): DebugElement {
-        const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
+        const gridBody = this.getGridBody(fix);
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
@@ -117,6 +131,16 @@ export class GridFunctions {
         return expectedLength;
     }
 
+    /**
+     * Focus the first cell in the grid
+    */
+    public static focusFirstCell(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
         const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
@@ -152,7 +176,7 @@ export class GridFunctions {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -1940,7 +1964,6 @@ export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
@@ -1954,7 +1977,6 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-        startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
         UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);

@@ -698,7 +698,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // go to last editable cell
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fix);
-            UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cancelButtonElement, true, false, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -1959,7 +1959,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(0);
             fix.componentInstance.cellInEditMode.editValue = 'Spiro';
-            UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
             tick(16);
             fix.detectChanges();
 
