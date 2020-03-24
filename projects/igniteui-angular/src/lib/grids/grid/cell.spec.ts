@@ -245,17 +245,23 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         });
 
-        it('Should blur selected cell when scrolling with mouse wheel', (async () => {
-            const cell = grid.getCellByColumn(3, 'value');
-            cell.nativeElement.focus();
-            cell.nativeElement.click();
+        it('Should not clear selected cell when scrolling with mouse wheel', (async () => {
+            let cell = grid.getCellByColumn(3, 'value');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
-            expect(document.activeElement).toEqual(cell.nativeElement);
+
             const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             await UIInteractions.simulateWheelEvent(displayContainer, 0, 200);
             fix.detectChanges();
             await wait(16);
-            expect(document.activeElement).toEqual(document.body);
+
+            const gridContent = GridFunctions.getGridContent(fix);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
+            fix.detectChanges();
+            await wait(30);
+
+            cell = grid.getCellByColumn(2, 'value');
+            expect(cell.selected).toBeTruthy();
         }));
     });
 

@@ -64,12 +64,6 @@ export class UIInteractions {
         elem.triggerEventHandler('keyup', event);
     }
 
-    public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
-        UIInteractions.triggerEventHandlerKeyDown(keyPressed, elem, altKey, shift, ctrl);
-        elem.triggerEventHandler('blur', null);
-    }
-
-
     public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));

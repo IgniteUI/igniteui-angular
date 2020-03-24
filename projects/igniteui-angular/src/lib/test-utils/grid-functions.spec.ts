@@ -135,9 +135,17 @@ export class GridFunctions {
      * Focus the first cell in the grid
     */
     public static focusFirstCell(fix: ComponentFixture<any>) {
-        this.getGridHeader(fix).triggerEventHandler('focus', null);
-        fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
+    /**
+     * Focus the first cell in the grid
+    */
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        cell.activate(null);
         fix.detectChanges();
     }
 
@@ -230,7 +238,7 @@ export class GridFunctions {
     })
 
     public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        altKey = false, shiftKey = false, ctrlKey = false) {
         const detailRow = GridFunctions.getMasterRowDetail(masterRow);
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyName,
@@ -962,9 +970,9 @@ export class GridFunctions {
     /**
      * returns the filter row debug element.
     */
-   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+    public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.query(By.css(FILTER_UI_ROW));
-   }
+    }
 
     /**
      * Open filtering row for a column.
@@ -1030,7 +1038,7 @@ export class GridFunctions {
         return excelMenu;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const searchComp =  GridFunctions.getExcelStyleSearchComponent(fix, menu);
+        const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
@@ -1083,16 +1091,16 @@ export class GridFunctions {
     }
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
-       const header = this.getColumnHeader(columnField, fix);
-       header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
-       fix.detectChanges();
+        const header = this.getColumnHeader(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        fix.detectChanges();
     }
 
     public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnGroupHeaderCell(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
         fix.detectChanges();
-     }
+    }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
@@ -1851,7 +1859,7 @@ export class GridFunctions {
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return  header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS));
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
@@ -1935,7 +1943,7 @@ export class GridSummaryFunctions {
     }
 
     public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
-        const summaryRow =  typeof row === 'number' ?
+        const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
@@ -1944,8 +1952,8 @@ export class GridSummaryFunctions {
 
     public static moveSummaryCell =
         (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow =  typeof row === 'number' ?
-            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
+            const summaryRow = typeof row === 'number' ?
+                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
             UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
             await wait(DEBOUNCETIME);
@@ -1954,11 +1962,11 @@ export class GridSummaryFunctions {
         })
 
     public static focusSummaryCell(fix, rowIndex, cellIndex) {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.triggerEventHandler('focus', {});
-            fix.detectChanges();
-        }
+        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+        summaryCell.triggerEventHandler('focus', {});
+        fix.detectChanges();
+    }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
@@ -2160,7 +2168,7 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
-        columns.forEach(c => this.verifyColumnSelected(c, selected ));
+        columns.forEach(c => this.verifyColumnSelected(c, selected));
     }
 
     public static verifyColumnGroupSelected(fixture: ComponentFixture<any>, column: IgxColumnGroupComponent, selected = true) {
@@ -2170,12 +2178,12 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnHeaderHasSelectableClass(header: DebugElement, hovered = true) {
-         expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
+        expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
     }
 
     public static verifyColumnsHeadersHasSelectableClass(headers: DebugElement[], hovered = true) {
         headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
-   }
+    }
 
     public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
         this.verifyColumnSelected(column, selected);
@@ -2184,7 +2192,7 @@ export class GridSelectionFunctions {
         });
     }
 
-    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey= false) {
+    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey = false) {
         const event = {
             shiftKey: shiftKey,
             ctrlKey: ctrlKey,

@@ -47,25 +47,25 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let cell = treeGrid.getCellByColumn(0, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', firstCell);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', firstCell);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(1, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', secondCell);
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', secondCell);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(1, 'Name');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', thirdCell);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', thirdCell);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'Name');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', fourthCell);
+            UIInteractions.triggerEventHandlerKeyDown('arrowleft', fourthCell);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'ID');
@@ -85,26 +85,26 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let cell = treeGrid.getCellByColumn(5, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', middleCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', middleCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+Arrow down on the last cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowdown', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', lastCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', lastCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+Arrow up on the first cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowup', firstCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', firstCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -123,26 +123,26 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let cell = treeGrid.getCellByColumn(0, 'HireDate');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', middleCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', middleCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'OnPTO');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+Arrow right on the last cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowright', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', lastCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowleft', lastCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+Arrow left on the first cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('arrowleft', firstCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowleft', firstCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -161,26 +161,26 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let cell = treeGrid.getCellByColumn(4, 'Name');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('end', middleCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('end', middleCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(9, 'OnPTO');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+end on the last cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('end', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('end', lastCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('home', lastCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('home', lastCell, false, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(0, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // press Ctrl+home on the first cell
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('home', firstCell, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('home', firstCell, false, false, true);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -197,42 +197,42 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(3, 'OnPTO');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cellElement = GridFunctions.getRowCells(fix, 3)[4];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('tab', cellElement);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(4, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cellElement = GridFunctions.getRowCells(fix, 4)[0];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('tab', cellElement);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(4, 'Name');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cellElement = GridFunctions.getRowCells(fix, 4)[1];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('tab', cellElement, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(4, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cellElement = GridFunctions.getRowCells(fix, 4)[0];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('tab', cellElement, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(3, 'OnPTO');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             cellElement = GridFunctions.getRowCells(fix, 3)[4];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('tab', cellElement, false, true);
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(3, 'Age');
@@ -252,7 +252,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowLeft', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -261,7 +261,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowLeft', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -270,7 +270,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowRight', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -279,7 +279,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowRight', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -301,7 +301,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowUp', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -310,7 +310,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowUp', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -319,7 +319,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowDown', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -328,7 +328,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowDown', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -350,7 +350,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowLeft', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -358,7 +358,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(0);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('ArrowRight', cellElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', cellElement, true);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -382,13 +382,13 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Enter', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', cellElement);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.editMode).toBe(true);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
@@ -397,7 +397,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(cell.editMode).toBe(true);
 
             cellElement = GridFunctions.getRowCells(fix, 3)[4];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
@@ -407,7 +407,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // Press tab when next cell is not editable
             cellElement = GridFunctions.getRowCells(fix, 4)[0];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
@@ -431,13 +431,13 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Enter', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', cellElement);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.editMode).toBe(true);
 
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement, false, true);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
@@ -446,7 +446,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(cell.editMode).toBe(true);
 
             cellElement = GridFunctions.getRowCells(fix, 3)[0];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement, false, true);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
@@ -456,7 +456,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // Press Shift+Tab when next cell is not editable
             cellElement = GridFunctions.getRowCells(fix, 2)[4];
-            UIInteractions.triggerEventHandlerKeyDownWithBlur('Tab', cellElement, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement, false, true);
             fix.detectChanges();
 
             expect(cell.editMode).toBe(false);
