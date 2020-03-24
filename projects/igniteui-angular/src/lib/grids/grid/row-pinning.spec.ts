@@ -120,6 +120,31 @@ describe('Row Pinning #grid', () => {
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
+        it('should allow pinning row at specified index via API.', () => {
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 0
+            grid.pinRow(fix.componentInstance.data[2], 0);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 1
+            grid.pinRow(fix.componentInstance.data[3], 1);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(3);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[3]);
+            expect(grid.pinnedRows[2].rowData).toBe(fix.componentInstance.data[1]);
+        });
+
         it('should emit onRowPinning on pin/unpin.', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
@@ -333,6 +358,33 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData.length).toBe(7);
             expect(gridFilterData[0].ID).toBe('BLAUS');
             expect(gridFilterData[1].ID).toBe('BERGS');
+        });
+
+        it('should page through unpinned collection with modified pageSize = pageSize - pinnedRows.lenght.', () => {
+            // pin 2nd row
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+            let row = grid.getRowByIndex(1);
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            expect(grid.dataView.length).toBe(4);
+
+            // unpin
+            row = grid.getRowByIndex(0);
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(0);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.dataView.length).toBe(5);
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
