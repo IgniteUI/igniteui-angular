@@ -13,7 +13,7 @@ import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-ut
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxSummaryCellComponent } from '../summaries/summary-cell.component';
 
-const DEBOUNCE_TIME = 30;
+const DEBOUNCE_TIME = 60;
 const CHIP_ITEM_CLASS = '.igx-chip__item';
 const FILTER_CELL_CLASS = '.igx-grid__filtering-cell';
 
@@ -961,7 +961,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         expect(child2Cell.selected).toBe(true);
     }));
 
-    it('should allow navigating with Tab between sibling child grids.', (async () => {
+    fit('should allow navigating with Tab between sibling child grids.', (async () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(DEBOUNCE_TIME);
