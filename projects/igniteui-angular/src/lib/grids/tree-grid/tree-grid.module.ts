@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridCommonModule } from '../grid-common.module';
-import { IgxTreeGridHierarchizingPipe, IgxTreeGridRowPinningPipe, IgxTreeGridPinnedRowsPipe } from './tree-grid.pipes';
+import { IgxTreeGridHierarchizingPipe, IgxTreeGridRowPinningPipe, IgxTreeGridShadowRowsPipe } from './tree-grid.pipes';
 import { IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
@@ -26,7 +26,7 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
     IgxTreeGridSummaryPipe,
     IgxRowLoadingIndicatorTemplateDirective,
     IgxTreeGridRowPinningPipe,
-    IgxTreeGridPinnedRowsPipe
+    IgxTreeGridShadowRowsPipe
   ],
   exports: [
     IgxTreeGridComponent,

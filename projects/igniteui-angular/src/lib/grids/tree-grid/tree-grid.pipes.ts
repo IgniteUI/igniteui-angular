@@ -324,28 +324,27 @@ export class IgxTreeGridRowPinningPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService> gridAPI;
     }
 
-    transform(collection: any[], id: string, isPinned = false, pipeTrigger: number): any[] {
+    transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid = this.gridAPI.grid;
 
         if (!grid.hasPinnedRecords) {
-            return isPinned ? [] : collection;
+            return [];
         }
 
-        const result = (isPinned) ? collection.filter((value, index) => grid.isRecordPinned(value)) : collection;
+        const result = collection.filter((value, index) => grid.isRecordPinned(value));
 
-        if (isPinned) {
-            // pinned records should be ordered as they were pinned.
-            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-        }
+        // pinned records should be ordered as they were pinned.
+        result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
+
         return result;
     }
 }
 
 @Pipe({
-    name: 'treeGridPinnedRows',
+    name: 'treeGridShadowRows',
     pure: true
 })
-export class IgxTreeGridPinnedRowsPipe implements PipeTransform {
+export class IgxTreeGridShadowRowsPipe implements PipeTransform {
 
     private gridAPI: IgxTreeGridAPIService;
 
@@ -354,7 +353,24 @@ export class IgxTreeGridPinnedRowsPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
+
+        this.modifyPinnedRecordsIDs(collection);
+
         return collection;
+    }
+
+    private modifyPinnedRecordsIDs(records: ITreeGridRecord[]) {
+        if (records && records.length) {
+            records.map((value, idx) => {
+                if (this.gridAPI.grid.isRecordPinned(value.data)) {
+                    // Modify the rowID in order to make a recognizeable shadow row
+                    // value.rowID += "_shadow";
+                }
+                if (value.children) {
+                    this.modifyPinnedRecordsIDs(value.children);
+                }
+            });
+        }
     }
 
 }

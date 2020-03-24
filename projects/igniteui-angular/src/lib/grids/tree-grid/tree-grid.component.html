@@ -78,10 +78,9 @@
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngFor="let rowData of data
                 | visibleColumns:hasVisibleColumns
-                | treeGridRowPinning:id:true:pipeTrigger
+                | treeGridRowPinning:id:pipeTrigger
                 | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
-                | treeGridPinnedRows:id:pipeTrigger
                 | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger; let rowIndex = index">
                 <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
                 </ng-container>
@@ -94,8 +93,8 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | treeGridRowPinning:id:false:pipeTrigger
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
+        | treeGridShadowRows:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
