@@ -27,7 +27,7 @@ const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles:
 const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
 const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Space', bubbles: true });
+const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
 describe('IgxTabs', () => {
     configureTestSuite();
@@ -592,34 +592,34 @@ describe('IgxTabs', () => {
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(1);
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
 
             theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
 
             theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
 
             theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
 
             theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(1);
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
         }));
 
-        it('should select first/last tab when pressing home/end button', fakeAsync(() => {
+        it('should focus first/last tab when pressing home/end button', fakeAsync(() => {
             theTabs[0].nativeTabItem.nativeElement.click();
             tick(200);
             fixture.detectChanges();
@@ -629,13 +629,13 @@ describe('IgxTabs', () => {
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
 
             theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
         }));
 
         it('should select focused tabs on enter/space', fakeAsync(() => {
@@ -643,31 +643,30 @@ describe('IgxTabs', () => {
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(0);
 
             theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_ENTER_EVENT);
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_ENTER_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
-            expect(tabsComp.focusedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
 
             theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
-            expect(tabsComp.focusedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
 
             theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_SPACE_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(tabsComp.focusedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
         }));
 
         it('should not focus disabled tabs when navigating with keyboard', fakeAsync(() => {
@@ -679,22 +678,21 @@ describe('IgxTabs', () => {
             theTabs[1].nativeTabItem.nativeElement.click();
             tick(200);
             fixture.detectChanges();
-            expect(tabsComp.focusedIndex).toBe(1);
 
             theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(tabsComp.focusedIndex).toBe(3);
+            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
 
             theTabs[3].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(tabsComp.focusedIndex).toBe(1);
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
 
             theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(tabsComp.focusedIndex).toBe(3);
+            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
         }));
 
         it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
