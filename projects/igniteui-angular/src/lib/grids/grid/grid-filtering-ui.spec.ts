@@ -3466,14 +3466,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
             GridFunctions.selectFilteringCondition('Empty', dropdownList);
             fix.detectChanges();
-            tick(16);
             GridFunctions.openFilterDD(fix.debugElement);
             GridFunctions.selectFilteringCondition('Contains', dropdownList);
             fix.detectChanges();
-            tick(16);
-
             GridFunctions.closeFilterRow(fix);
-            tick(16);
 
             const headerChip = GridFunctions.getFilterChipsForColumn('ProductName', fix);
             expect(headerChip.length).toBe(1);
