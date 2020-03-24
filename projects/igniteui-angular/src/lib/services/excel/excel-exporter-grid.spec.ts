@@ -24,7 +24,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
-describe('Excel Exporter', () => {
+fdescribe('Excel Exporter', () => {
     configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
@@ -212,6 +212,17 @@ describe('Excel Exporter', () => {
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
             await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
+        });
+
+        it('should honor all pinned rows.', async() => {
+            const result = await TestMethods.createGridAndPinRow(0, 2);
+            const fix = result.fixture;
+            const grid = result.grid;
+
+            const wrapper = await getExportedData(grid, options);
+            wrapper.verifyStructure();
+            await wrapper.verifyPinRowData('<pane ySplit="3" topLeftCell="A4" activePane="topRight" state="frozen"/>',
+             'Not all pinned rows are frozen in the export!');
         });
 
         it('should honor applied sorting.', async () => {
