@@ -412,7 +412,6 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.pinnedRows.length).toBe(2);
         expect(grid.pinnedRows[0].rowID).toBe(1);
         expect(grid.pinnedRows[1].rowID).toBe(3);
-       
         gridState = state.getState(true, 'rowPinning');
         expect(gridState).toBe(rowPinState);
     });
