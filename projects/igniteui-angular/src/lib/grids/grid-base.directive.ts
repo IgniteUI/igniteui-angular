@@ -2937,6 +2937,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.setupColumns();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public setFilteredSortedData(data, pinned: boolean) {
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
