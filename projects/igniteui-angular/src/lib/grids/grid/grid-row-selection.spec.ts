@@ -25,7 +25,7 @@ const DEBOUNCETIME = 30;
 const SCROLL_DEBOUNCETIME = 100;
 
 
-describe('IgxGrid - Row Selection #grid', () => {
+fdescribe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeAll(async(() => {
@@ -43,8 +43,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 IgxGridModule,
                 IgxGridSelectionModule
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     describe('Base tests', () => {
@@ -587,7 +586,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
         it('ARIA support', () => {
             const firstRow = grid.getRowByIndex(0).nativeElement;
-            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+            const headerCheckbox = GridSelectionFunctions.getRowCheckboxInput(GridSelectionFunctions.getHeaderRow(fix));
+
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all');
@@ -612,19 +612,19 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const firstRow = grid.getRowByIndex(0).nativeElement;
-            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+            const headerCheckbox = GridSelectionFunctions.getRowCheckboxInput(GridSelectionFunctions.getHeaderRow(fix));
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all filtered');
 
-            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all filtered');
 
-            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
@@ -701,7 +701,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
-        it('Should have checkbox on each row nd do not have header checkbox', (async () => {
+        it('Should have checkbox on each row and do not have header checkbox', (async () => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
@@ -871,7 +871,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.hideRowSelectors).toBe(false);
 
-            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            firstRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -1185,7 +1185,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.height = '200px';
             fix.detectChanges();
 
-            GridSelectionFunctions.clickRowCheckbox(selectedRow);
+            selectedRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1324,9 +1324,10 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             const middleRow = grid.getRowByIndex(3);
 
-            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            secondRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
-            GridSelectionFunctions.clickRowCheckbox(middleRow);
+            tick();
+            middleRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -1341,7 +1342,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(middleRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            firstRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -1359,7 +1360,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
-        fit('Paging: Should persist all rows selection through paging', fakeAsync(() => {
+        it('Paging: Should persist all rows selection through paging', fakeAsync(() => {
             grid.paging = true;
             tick();
             fix.detectChanges();
@@ -1378,7 +1379,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             // Click on a single row
-            UIInteractions.simulateClickEvent(secondRow.nativeElement);
+            secondRow.onClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1392,7 +1393,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
         }));
 
-        fit('Paging: Should be able to select rows with Shift and Click', fakeAsync(() => {
+        it('Paging: Should be able to select rows with Shift and Click', fakeAsync(() => {
             grid.paging = true;
             tick();
             fix.detectChanges();
@@ -1403,7 +1404,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             // Select first row on first page
-            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            firstRow.onClick(UIInteractions.getMouseEvent('click'));
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1416,8 +1418,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
 
-            // Click on the last row in page holding Shifth
-            UIInteractions.simulateClickEvent(thirdRow.nativeElement, true);
+            // Click on the last row in page holding Shift
+            thirdRow.onClick(UIInteractions.getMouseEvent('click', false, true, false));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
@@ -1770,7 +1772,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
-        fit('Should have correct header checkbox when delete a row', () => {
+        it('Should have correct header checkbox when delete a row', () => {
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
 
@@ -1850,7 +1852,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
-        fit('Should have correct header checkbox when undo row deleting', () => {
+        it('Should have correct header checkbox when undo row deleting', () => {
             const firstRow = grid.getRowByIndex(0);
 
             grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
