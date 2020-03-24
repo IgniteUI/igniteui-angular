@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction, IgxExcelExporterService, IgxExcelExporterOptions } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -14,6 +14,9 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    constructor(private excelExportService: IgxExcelExporterService) {
+    }
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -95,6 +98,10 @@ export class GridRowPinningSampleComponent implements OnInit {
         } else {
             row.pin();
         }
+    }
+
+    public exportButtonHandler() {
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions("ExportFileFromGrid"));
     }
 
 }
