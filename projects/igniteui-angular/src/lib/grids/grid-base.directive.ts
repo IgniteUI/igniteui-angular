@@ -147,6 +147,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { isNumber } from 'util';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1747,8 +1748,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('pinContainer', { static: false })
-    public pinContainer: ElementRef;
+    @ViewChildren('pinContainer', { read: ElementRef })
+    public pinContainers: QueryList<ElementRef>;
 
     /**
      * @hidden @internal
@@ -2410,6 +2411,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredPinnedData;
+    protected _filteredUnpinnedData;
+
     /**
      * @hidden
      */
@@ -2670,6 +2674,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length > 0;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
+    public get pinnedRecordsCount() {
+        return this._pinnedRecordIDs.length;
+    }
+
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
@@ -2816,6 +2828,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.endEdit(true);
             this.cdr.markForCheck();
         });
+
+        this.onRowPinning.subscribe(() => {
+            this.summaryService.clearSummaryCache();
+        });
     }
 
     /**
@@ -2862,6 +2878,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 firstVirtRow.virtDirRow.cdr.detectChanges();
             }
             firstVirtRow.virtDirRow.assumeMaster();
+        }
+    }
+
+    public setFilterData(data, pinned: boolean) {
+        if (this.hasPinnedRecords && pinned) {
+            this._filteredPinnedData = data;
+            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+        } else if (this.hasPinnedRecords && !pinned) {
+            this._filteredUnpinnedData = data;
+        } else {
+            this.filteredData = data;
         }
     }
 
@@ -2956,6 +2983,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
         vertScrDC.addEventListener('wheel', () => this.wheelHandler());
 
+        this.pinContainers.changes.subscribe((c) => {
+            if (this.hasPinnedRecords) {
+                // on row pin containers change grid sizes should be recalculated.
+                this.calculateGridSizes();
+            }
+        });
     }
 
     /**
@@ -3080,6 +3113,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
+        this.notifyChanges(true);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
         }
@@ -4099,7 +4133,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        this._pinnedRecordIDs.splice(eventArgs.insertAtIndex || this._pinnedRecordIDs.length, 0, rowID);
+        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
@@ -4139,8 +4174,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
-        return this._pinnedRecordIDs.length > 0 ? containerHeight : 0;
+        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
+        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        return this.hasPinnedRecords ? containerHeight : 0;
     }
 
     get totalHeight() {

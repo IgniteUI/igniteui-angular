@@ -103,10 +103,10 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!this.gridAPI.grid.paging) {
             return collection;
         }
-
+        const _perPage = perPage - this.gridAPI.grid.pinnedRecordsCount;
         const state = {
             index: page,
-            recordsPerPage: perPage
+            recordsPerPage: _perPage
         };
         DataUtil.correctPagingState(state, collection.data.length);
 
@@ -135,7 +135,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number) {
+        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number, pinned?) {
         const grid = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
@@ -148,7 +148,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        grid.filteredData = result;
+        grid.setFilterData(result, pinned);
         return result;
     }
 }
