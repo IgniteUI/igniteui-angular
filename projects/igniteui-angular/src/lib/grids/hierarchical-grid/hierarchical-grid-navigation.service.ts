@@ -123,8 +123,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     focusTbody() {
         if (!this.activeNode) {
             this.activeNode = {
-                row: 0,
-                column: 0
+                row: null,
+                column: null
             };
         }
 
