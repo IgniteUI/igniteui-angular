@@ -8,7 +8,8 @@ import {
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
     IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent,
     IgxTreeGridRowEditingTransactionComponent,
-    IgxTreeGridRowEditingHierarchicalDSTransactionComponent
+    IgxTreeGridRowEditingHierarchicalDSTransactionComponent,
+    IgxTreeGridRowPinningComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -38,6 +39,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 IgxTreeGridDateTreeColumnComponent,
                 IgxTreeGridBooleanTreeColumnComponent,
                 IgxTreeGridRowEditingComponent,
+                IgxTreeGridRowPinningComponent,
                 IgxTreeGridMultiColHeadersComponent,
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridRowEditingHierarchicalDSTransactionComponent
@@ -1373,5 +1375,36 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             // Expects that the whole pinned column is visible
             expect(leftMostRightPinnedCellsPart + Number.parseInt(pinnedCellWidth, 10) <= rightMostGridPart).toBeTruthy();
         });
+    });
+
+    describe('Row Pinning', () => {
+        it('should pin/unpin a row', () => {
+            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            treeGrid.pinRow(711);
+            treeGrid.cdr.detectChanges();
+
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+            expect(treeGrid.getRowByKey(711).pinned).toBe(true);
+
+            treeGrid.unpinRow(711);
+            treeGrid.cdr.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
+            expect(treeGrid.getRowByKey(711).pinned).toBe(false);
+
+            treeGrid.getRowByKey(711).pin();
+            treeGrid.cdr.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+
+            treeGrid.getRowByKey(711).unpin();
+            treeGrid.cdr.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
+        });
+        it('should pin/unpin a row at the bottom', () => {});
+        it('should calculate row indices correctly after row pinning', () => {});
+        it('should disable pinned row instance in the body', () => {});
+        it('should add pinned badge in the pinned row instance in the body', () => {});
     });
 });
