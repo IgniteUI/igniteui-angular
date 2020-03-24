@@ -129,8 +129,10 @@ export class WorksheetFile implements IExcelFile {
                 const frozenColumn = !hasFrozenCols ? 'A' : ExcelStrings.getExcelColumn(frozenColumnCount);
                 const firstCell = frozenColumn + (frozenRowCount + 1);
 
-                freezePane = `<pane xSplit="${frozenColumnCount}" ySplit="${frozenRowCount}"
-                topLeftCell="${firstCell}" activePane="bottomRight" state="frozen"/>`;
+                const xSplit = hasFrozenCols ? `xSplit="${frozenColumnCount}" ` : '';
+                const ySplit = hasFrozenRows ? `ySplit="${frozenRowCount}" ` : '';
+                const xySplit = (xSplit + ySplit).trim();
+                freezePane = `<pane ${xySplit} topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
             }
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
