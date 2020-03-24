@@ -23,6 +23,7 @@ const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
+const FILTER_ROW_BUTTONS_CLASS = '.igx-grid__filtering-row-editing-buttons';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 const FILTER_CHIP_CLASS = '.igx-filtering-chips';
 const ESF_MENU_CLASS = '.igx-excel-filter__menu';
@@ -57,6 +58,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
+const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const DISPLAY_CONTAINER = 'igx-display-container';
 
 export class GridFunctions {
@@ -67,14 +69,18 @@ export class GridFunctions {
         return rows;
     }
 
-    public static getRowCells(fix, rowIndex: number): DebugElement[] {
-        const allRows = GridFunctions.getRows(fix);
-        return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+    public static getRowCells(fix, rowIndex: number, row: DebugElement = null): DebugElement[] {
+        const rowElement = row ? row : GridFunctions.getRows(fix)[rowIndex];
+        return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
         const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
         return gridBody.query(By.css(DISPLAY_CONTAINER));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -597,6 +603,12 @@ export class GridFunctions {
 
     public static getFilteringChipPerIndex(fix, index) {
         return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
+    public static getFilterRowCloseButton(fix): DebugElement {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const buttonsContainer = filterUIRow.query(By.css(FILTER_ROW_BUTTONS_CLASS));
+        return buttonsContainer.queryAll(By.css('button'))[1];
     }
 
     public static removeFilterChipByIndex(index: number, filterUIRow) {
@@ -1781,6 +1793,11 @@ export class GridFunctions {
     }
 }
 export class GridSummaryFunctions {
+    public static getRootSummaryRow(fix): DebugElement {
+        const footer = GridFunctions.getGridFooter(fix);
+        return footer.query(By.css(SUMMARY_ROW));
+    }
+
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
@@ -1850,32 +1867,31 @@ export class GridSummaryFunctions {
         });
     }
 
-    public static verifySummaryCellActive(fix, rowIndex, cellIndex, active: boolean = true) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
+        const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
     public static moveSummaryCell =
-        (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
+            const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
+            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
         })
 
-    public static focusSummaryCell =
-        (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
+    public static focusSummaryCell(fix, rowIndex, cellIndex) {
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.nativeElement.dispatchEvent(new Event('focus'));
+            summaryCell.triggerEventHandler('focus', {});
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            resolve();
-        })
+        }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =

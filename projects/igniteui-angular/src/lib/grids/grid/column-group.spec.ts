@@ -13,6 +13,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
+import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -178,6 +179,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
         testGroupsAndColumns(17, 10);
         expect(getColGroup(grid, 'General Information').hidden).toEqual(false);
     }));
+
+
 
     it('Width should be correct. Column group with column. No width.', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
@@ -1211,6 +1214,28 @@ describe('IgxGrid - multi-column headers #grid', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
     }));
 
+    it('summaries - verify summaries when there are grouped columns', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        const allColumns = grid.columnList;
+        allColumns.forEach((col) => {
+            if (!col.columnGroup) {
+                col.hasSummary = true;
+            }
+        });
+        fixture.detectChanges();
+
+        const summaryRow = GridSummaryFunctions.getRootSummaryRow(fixture);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['27']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 6, ['Count'], ['27']);
+    }));
+
     it('filtering - filter a grouped column', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
@@ -1269,6 +1294,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
     }));
+
 
 
     it('grouping - verify grouping when there are grouped columns', fakeAsync(/** height/width setter rAF */() => {
