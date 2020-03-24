@@ -961,7 +961,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         expect(child2Cell.selected).toBe(true);
     }));
 
-    fit('should allow navigating with Tab between sibling child grids.', (async () => {
+    it('should allow navigating with Tab between sibling child grids.', (async () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(DEBOUNCE_TIME);
