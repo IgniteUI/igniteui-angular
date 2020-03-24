@@ -53,7 +53,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
      * ```
      */
     public get pinned(): boolean {
-        return this.grid.isRowInPinnedRecordsStructure(this._treeRow);
+        return this.grid.isRecordPinned(this.rowData);
     }
 
     /**

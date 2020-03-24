@@ -538,20 +538,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    public isRowInPinnedRecordsStructure(rec): boolean {
-        let inStructure = false;
-        const rowId = this.primaryKey ? rec.data[this.primaryKey] : rec.data;
-        this._pinnedRecordIDs.forEach(pinnedRecord => {
-            if (pinnedRecord === rowId) {
-                inStructure = true;
-            }
-        });
-        return inStructure;
-    }
-
     /** @hidden */
     public deleteRowById(rowId: any) {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
