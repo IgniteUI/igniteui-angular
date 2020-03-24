@@ -331,7 +331,7 @@ export class IgxTreeGridRowPinningPipe implements PipeTransform {
             return [];
         }
 
-        const result = collection.filter((value, index) => grid.isRecordPinned(value));
+        const result = grid.flatData.filter((value, index) => grid.isRecordPinned(value));
 
         // pinned records should be ordered as they were pinned.
         result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
