@@ -120,6 +120,31 @@ describe('Row Pinning #grid', () => {
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
+        it('should allow pinning row at specified index via API.', () => {
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 0
+            grid.pinRow(fix.componentInstance.data[2], 0);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 1
+            grid.pinRow(fix.componentInstance.data[3], 1);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(3);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[3]);
+            expect(grid.pinnedRows[2].rowData).toBe(fix.componentInstance.data[1]);
+        });
+
         it('should emit onRowPinning on pin/unpin.', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
