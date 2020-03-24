@@ -360,6 +360,33 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData[1].ID).toBe('BERGS');
         });
 
+        it('should page through unpinned collection with modified pageSize = pageSize - pinnedRows.lenght.', () => {
+            // pin 2nd row
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+            let row = grid.getRowByIndex(1);
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            expect(grid.dataView.length).toBe(4);
+
+            // unpin
+            row = grid.getRowByIndex(0);
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(0);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.dataView.length).toBe(5);
+        });
+
         it('should apply sorting to both pinned and unpinned rows.', () => {
             grid.getRowByIndex(1).pin();
             grid.getRowByIndex(5).pin();
