@@ -147,6 +147,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { isNumber } from 'util';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -4124,7 +4125,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        this._pinnedRecordIDs.splice(eventArgs.insertAtIndex || this._pinnedRecordIDs.length, 0, rowID);
+        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
