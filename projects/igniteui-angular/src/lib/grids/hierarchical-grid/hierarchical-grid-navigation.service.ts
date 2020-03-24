@@ -38,6 +38,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
 
         if (this.activeNode && event.altKey) {
+            event.preventDefault();
             const row = this.grid.getRowByIndex(this.activeNode.row) as IgxHierarchicalRowComponent;
             if (row.added) {
                 return;
