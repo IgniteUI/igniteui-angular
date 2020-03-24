@@ -24,7 +24,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
-fdescribe('Excel Exporter', () => {
+describe('Excel Exporter', () => {
     configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
