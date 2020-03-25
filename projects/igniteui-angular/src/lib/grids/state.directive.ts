@@ -12,6 +12,7 @@ import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
+import { IPinningConfig } from './common/grid.interface';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -22,6 +23,9 @@ export interface IGridState {
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
     rowSelection?: any[];
+    columnSelection?: string[];
+    rowPinning?: any[];
+    pinningConfig?: IPinningConfig;
 }
 
 export interface IGridStateOptions {
@@ -33,6 +37,9 @@ export interface IGridStateOptions {
     paging?: boolean;
     cellSelection?: boolean;
     rowSelection?: boolean;
+    columnSelection?: boolean;
+    rowPinning?: boolean;
+    pinningConfig?: boolean;
 }
 
 export interface IColumnState {
@@ -64,7 +71,10 @@ const SORTING = 'sorting';
 const GROUPBY = 'groupBy';
 const PAGING = 'paging';
 const ROW_SELECTION = 'rowSelection';
+const ROW_PINNING = 'rowPinning';
+const PINNING_CONFIG = 'pinningConfig';
 const CELL_SELECTION = 'cellSelection';
+const COLUMN_SELECTION = 'columnSelection';
 
 @Directive({
     selector: '[igxGridState]'
@@ -79,7 +89,9 @@ export class IgxGridStateDirective {
         groupBy: true,
         paging: true,
         cellSelection: true,
-        rowSelection: true
+        rowSelection: true,
+        columnSelection: true,
+        rowPinning: true
     };
 
     private state: IGridState;
@@ -212,8 +224,20 @@ export class IgxGridStateDirective {
                 this.restoreRowSelection(state as any[]);
                 break;
               }
+              case ROW_PINNING: {
+                this.restoreRowPinning(state as any[]);
+                break;
+              }
+              case PINNING_CONFIG: {
+                this.restorePinningConfig(state as IPinningConfig);
+                break;
+              }
               case CELL_SELECTION: {
                 this.restoreCellSelection(state as GridSelectionRange[]);
+                break;
+              }
+              case COLUMN_SELECTION: {
+                this.restoreColumnSelection(state as string[]);
                 break;
               }
          }
@@ -271,8 +295,20 @@ export class IgxGridStateDirective {
                 Object.assign(state, this.getRowSelection());
                 break;
               }
+              case ROW_PINNING: {
+                Object.assign(state, this.getRowPinning());
+                break;
+              }
+              case PINNING_CONFIG: {
+                Object.assign(state, this.getPinningConfig());
+                break;
+              }
               case CELL_SELECTION: {
                 Object.assign(state, this.getCellSelection());
+                break;
+              }
+              case COLUMN_SELECTION: {
+                Object.assign(state, this.getColumnSelection());
                 break;
               }
          }
@@ -346,6 +382,20 @@ export class IgxGridStateDirective {
     private getRowSelection(): IGridState {
         const selection = this.grid.selectedRows();
         return { rowSelection: selection };
+    }
+
+    private getRowPinning(): IGridState {
+        const pinned = this.grid.pinnedRows.map(x => x.rowID);
+        return { rowPinning: pinned };
+    }
+
+    private getPinningConfig(): IGridState {
+        return { pinningConfig: this.grid.pinning };
+    }
+
+    private getColumnSelection(): IGridState {
+        const selection = this.grid.selectedColumns().map(c => c.field);
+        return { columnSelection: selection };
     }
 
     private getCellSelection(): IGridState {
@@ -425,6 +475,18 @@ export class IgxGridStateDirective {
 
     private restoreRowSelection(state: any[]) {
         this.grid.selectRows(state);
+    }
+
+    private restoreRowPinning(state: any[]) {
+        state.forEach(rowID => this.grid.pinRow(rowID));
+    }
+
+    private restorePinningConfig(state: IPinningConfig) {
+       this.grid.pinning = state;
+    }
+
+    private restoreColumnSelection(state: string[]) {
+        this.grid.selectColumns(state);
     }
 
     private restoreCellSelection(state: GridSelectionRange[]) {

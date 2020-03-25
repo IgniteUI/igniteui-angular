@@ -39,6 +39,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  *@hidden
@@ -69,6 +70,13 @@ export class IgxExcelStyleMovingTemplateDirective {
     selector: '[igxExcelStyleHiding]'
 })
 export class IgxExcelStyleHidingTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
+    selector: '[igxExcelStyleSelecting]'
+})
+export class IgxExcelStyleSelectingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
@@ -205,6 +213,36 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    get minHeight() {
+        if (!this.inline) {
+            let minHeight = 645;
+            switch (this.grid.displayDensity) {
+                case DisplayDensity.cosy: minHeight = 465; break;
+                case DisplayDensity.compact: minHeight = 330; break;
+                default: break;
+            }
+            return `${minHeight}px`;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('style.max-height') get maxHeight() {
+        if (!this.inline) {
+            let maxHeight = 775;
+            switch (this.grid.displayDensity) {
+                case DisplayDensity.cosy: maxHeight = 565; break;
+                case DisplayDensity.compact: maxHeight = 405; break;
+                default: break;
+            }
+            return `${maxHeight}px`;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
@@ -255,6 +293,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultExcelStyleSelectingTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleSelectingTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -338,6 +382,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     /**
+    * @hidden @internal
+    */
+    public selectedClass() {
+        return this.column.selected ? 'igx-excel-filter__actions-selected' : 'igx-excel-filter__actions-select';
+    }
+
+    /**
      * @hidden @internal
      */
     public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
@@ -378,6 +429,18 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     public onPin() {
         this.column.pinned = !this.column.pinned;
         this.closeDropdown();
+    }
+
+     /**
+     * @hidden @internal
+     */
+    public onSelect() {
+        if (!this.column.selected) {
+            this.grid.selectionService.selectColumn(this.column.field);
+        } else {
+            this.grid.selectionService.deselectColumn(this.column.field);
+        }
+        this.grid.notifyChanges();
     }
 
     /**
@@ -771,6 +834,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             return this.grid.excelStyleHidingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleHidingTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get selectingTemplate() {
+        if (this.grid.excelStyleSelectingTemplateDirective) {
+            return this.grid.excelStyleSelectingTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleSelectingTemplate;
         }
     }
 

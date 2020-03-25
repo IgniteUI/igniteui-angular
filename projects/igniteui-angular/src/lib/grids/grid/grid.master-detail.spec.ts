@@ -373,7 +373,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
 
             GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(row);
@@ -468,7 +468,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(document.activeElement).toBe(detailRow);
          });
 
-         it(`Should focus detail row after hitting Shift+Tab on first cell in next data row and continue to the prev row.`, async() => {
+       it(`Should focus detail row after hitting Shift+Tab on first cell in next data row and continue to the prev row.`, async() => {
             const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
 
@@ -479,7 +479,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(document.activeElement).toBe(detailRow);
 
             GridFunctions.simulateDetailKeydown(grid, prevRow, 'Tab', false, true);
-            await wait();
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             expect(document.activeElement).toBe(grid.getCellByColumn(0, 'CompanyName').nativeElement);

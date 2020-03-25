@@ -1,3 +1,4 @@
+import { ElasticPositionStrategy } from './../../services/overlay/position/elastic-position-strategy';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -17,19 +18,18 @@ import { DataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
-import { AutoPositionStrategy } from '../../services/overlay/position/auto-position-strategy';
 import { useAnimation } from '@angular/animations';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../../animations/main';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { GridType } from '../common/grid.interface';
+import { ExcelStylePositionStrategy } from '../filtering/excel-style/excel-style-position-strategy';
 
 /**
  * @hidden
@@ -53,6 +53,14 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @Input()
     public gridID: string;
 
+    /**
+     * Returns the `aria-selected` of the header.
+     */
+    @HostBinding('attr.aria-selected')
+    public get ariaSelected(): boolean {
+        return this.column.selected;
+    }
+
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = [
@@ -66,8 +74,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
+            'igx-grid__th--selectable': this.selectable,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
-            'igx-grid__th--sorted': this.sorted
+            'igx-grid__th--sorted': this.sorted,
+            'igx-grid__th--selected': this.selected
         };
 
         for (const klass of Object.keys(classList)) {
@@ -111,6 +121,15 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
+    get selectable() {
+        return  this.column.applySelectableClass && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
+    }
+
+    get selected() {
+        return this.column.selected
+            && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
+    }
+
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 
@@ -130,7 +149,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,
-        private _filteringService: IgxFilteringService,
         private _moduleRef: NgModuleRef<any>,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService
     ) { }
@@ -162,8 +180,12 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
-            } else if (this.column.sortable) {
-                this.triggerSort();
+            } else if (this.column.selectable) {
+                if (!this.column.selected || ( this.grid.selectionService.getSelectedColumns().length > 1 && !event.ctrlKey)) {
+                    this.grid.selectionService.selectColumn(this.column.field, !event.ctrlKey, event);
+                } else {
+                    this.grid.selectionService.deselectColumn(this.column.field, event);
+                }
             }
         }
     }
@@ -184,10 +206,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     public onSortingIconClick(event) {
-        if (this.grid.filteringService.isFilterRowVisible) {
-            event.stopPropagation();
-            this.triggerSort();
-        }
+        event.stopPropagation();
+        this.triggerSort();
     }
 
     private triggerSort() {
@@ -197,8 +217,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
             : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
         this.sortDirection = sortDir;
-        this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
-            strategy: this.column.sortStrategy });
+        this.grid.sort({
+            fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
+            strategy: this.column.sortStrategy
+        });
     }
 
     private toggleFilterDropdown() {
@@ -233,7 +255,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
-            positionStrategy: new AutoPositionStrategy(this._filterMenuPositionSettings),
+            positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
 
@@ -259,5 +281,21 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
     private onOverlayClosed() {
         this._componentOverlayId = null;
+    }
+
+    /**
+    * @hidden
+    */
+    @HostListener('pointerenter')
+    public onPinterEnter() {
+        this.column.applySelectableClass = true;
+    }
+
+    /**
+    * @hidden
+    */
+    @HostListener('pointerleave')
+    public onPointerLeave() {
+        this.column.applySelectableClass = false;
     }
 }
