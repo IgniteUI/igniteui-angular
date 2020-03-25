@@ -23,6 +23,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SplitterSampleComponent } from './splitter/slitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -249,6 +250,10 @@ const appRoutes = [
     {
         path: 'slider',
         component: SliderSampleComponent
+    },
+    {
+        path: 'splitter',
+        component: SplitterSampleComponent
     },
     {
         path: 'snackbar',

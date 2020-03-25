@@ -1,0 +1,36 @@
+
+@mixin square($size, $radius: 0) {
+    width: $size;
+    height: $size;
+
+    @if $radius != 0 {
+        border-radius: $radius;
+    }
+}
+
+$splitter-color: rgba(235,235,235,0.8);
+$splitter-border-width: (1);
+$splitter-border-style: (solid);
+$splitter-border-color: ($splitter-color);
+$splitter-dot-size: rem(2px);
+$splitter-dot-border-radius: rem(1px);
+
+
+.split-bar {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    background: $splitter-color;
+    border-width: $splitter-border-width;
+    border-style: $splitter-border-style;
+    border-color: $splitter-border-color;
+}
+
+.split-bar-indicator {
+    
+    @include square($splitter-dot-size, $splitter-dot-border-radius);
+    margin: $splitter-dot-size;
+    background: 'black';
+    //background: $main-color-4;
+}
