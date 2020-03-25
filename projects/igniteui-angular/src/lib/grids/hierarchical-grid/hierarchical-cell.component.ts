@@ -73,6 +73,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             currentElement.classList.add('igx-grid__tr--highlighted');
         }
 
+        this.grid.navigation.activeNode = this.selectionNode;
         // add highligh to the current grid
         while (this._rootGrid.id !== parentGrid.id) {
             childGrid = parentGrid;
