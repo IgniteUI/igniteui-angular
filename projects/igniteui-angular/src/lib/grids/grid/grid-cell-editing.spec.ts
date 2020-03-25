@@ -567,6 +567,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             // press enter on a cell
             cell = grid.getCellByColumn(0, 'age');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fixture.detectChanges();
+
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 

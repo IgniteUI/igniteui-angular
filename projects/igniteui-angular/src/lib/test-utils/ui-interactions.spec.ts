@@ -234,8 +234,8 @@ export class UIInteractions {
 
     public static simulateDoubleClickAndSelectCellEvent(element) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
-        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
     }
 
     public static simulateNonPrimaryClick(cell) {

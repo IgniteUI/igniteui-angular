@@ -135,6 +135,8 @@ export class GridFunctions {
      * Focus the first cell in the grid
     */
     public static focusFirstCell(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
     }
