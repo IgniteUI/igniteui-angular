@@ -49,21 +49,20 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.',  () => {
             hierarchicalGrid.height = '500px';
             hierarchicalGrid.reflow();
             fix.detectChanges();
 
-            let firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
             fix.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
 
-            let fCell = firstRow.cells.toArray()[0];
+            const fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
             fCell.nativeElement.focus();
-            await wait(100);
             fix.detectChanges();
 
             expect(fCell.selected).toBeTruthy();
@@ -74,21 +73,17 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // select child cell
             fChildCell.nativeElement.focus();
-            await wait(100);
             fix.detectChanges();
 
             expect(fChildCell.selected).toBeTruthy();
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-            fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
-            await wait(100);
             fix.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
-        }));
+        });
     });
 
     describe('Row Selection', () => {
