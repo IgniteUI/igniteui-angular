@@ -2674,6 +2674,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length > 0;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
+    public get pinnedRecordsCount() {
+        return this._pinnedRecordIDs.length;
+    }
+
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
