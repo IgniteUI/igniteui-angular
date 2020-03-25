@@ -2411,6 +2411,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredSortedPinnedData;
+    protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
     protected _filteredUnpinnedData;
 
@@ -2933,6 +2935,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data, pinned: boolean) {
+        if (this._pinnedRecordIDs.length > 0 && pinned) {
+            this._filteredSortedPinnedData = data;
+            this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
+            [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
+        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+            this._filteredSortedUnpinnedData = data;
+        } else {
+            this.filteredSortedData = data;
+        }
     }
 
     /**
