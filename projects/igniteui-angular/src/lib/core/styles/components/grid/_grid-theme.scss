@@ -1033,11 +1033,7 @@
         color: --var($theme, 'row-drag-color');
     }
 
-    %igx-grid__tr--drag {
-        opacity: .5;
-    }
-
-    %igx-grid__tr--disabled {
+    %igx-grid__tr--drag, %igx-grid__tr--disabled {
         opacity: .5;
     }
 
