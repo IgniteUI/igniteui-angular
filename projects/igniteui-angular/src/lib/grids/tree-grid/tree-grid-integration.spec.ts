@@ -1419,7 +1419,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.getRowByIndex(visibleRecordsLength).rowID).toBe(711);
         });
 
-        fit('should calculate row indices correctly after row pinning', async () => {
+        it('should calculate row indices correctly after row pinning', async () => {
             fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
             fix.detectChanges();
 
