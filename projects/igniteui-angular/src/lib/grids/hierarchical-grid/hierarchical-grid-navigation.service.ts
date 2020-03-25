@@ -226,6 +226,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      */
     protected _moveToParent(isNext: boolean, columnIndex, cb?) {
         const indexInParent = this.grid.childRow.index;
+        const hasNextTarget = this.hasNextTarget(this.grid.parent, indexInParent, isNext);
+        if (!hasNextTarget) {
+            return;
+        }
         if (this.activeNode) {
             this.activeNode.row = null;
         }
@@ -269,6 +273,21 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const calcOffset =  isNext ? diffBottom : diffTop;
 
         return { inView: isInView, offset: calcOffset };
+    }
+
+    private hasNextTarget(grid, index: number, isNext: boolean) {
+        const targetRowIndex =  isNext ? index + 1 : index - 1;
+        const hasTargetRecord = !!grid.dataView[targetRowIndex];
+        if (hasTargetRecord) {
+            return true;
+        } else {
+            let hasTargetRecordInParent = false;
+            if (grid.parent) {
+                const indexInParent = grid.childRow.index;
+                hasTargetRecordInParent = this.hasNextTarget(grid.parent, indexInParent, isNext);
+            }
+            return hasTargetRecordInParent;
+        }
     }
 
     /**
