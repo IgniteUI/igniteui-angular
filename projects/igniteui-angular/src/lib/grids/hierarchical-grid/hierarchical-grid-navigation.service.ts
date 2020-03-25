@@ -1,12 +1,8 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
-import { ISelectionNode } from '../selection/selection.service';
-import { isIE, SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
-import { FilterMode } from '../common/enums';
-import { IgxColumnComponent } from '../columns/column.component';
+import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
-import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxRowDirective, IgxGridBaseDirective } from '../grid';
 import { GridType } from '../common/grid.interface';
