@@ -704,22 +704,22 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(hierarchicalGrid.rowEditable).toBe(true);
         const cellID = hierarchicalGrid.getCellByColumn(0, 'ID');
         GridFunctions.simulateCellKeydown(cellID, 'End');
-        await wait();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const cell = hierarchicalGrid.getCellByColumn(0, 'childData2');
         GridFunctions.simulateCellKeydown(cell, 'Enter');
-        await wait();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         GridFunctions.simulateCellKeydown(cell, 'Tab');
-        await wait();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         const activeEl = document.activeElement;
         expect(activeEl.innerHTML).toEqual('Cancel');
 
         UIInteractions.triggerKeyDownEvtUponElem('tab', activeEl, true, false, true);
-        await wait();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
        expect(document.activeElement.tagName.toLowerCase()).toBe('igx-hierarchical-grid-cell');
