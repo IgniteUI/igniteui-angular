@@ -5,6 +5,7 @@ export interface RowType {
     checkboxElement: IgxCheckboxComponent;
     rowID: any;
     rowData: any;
+    editable: boolean;
     rowSelectable: boolean;
     index: number;
     gridID: string;

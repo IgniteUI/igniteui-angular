@@ -494,6 +494,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public isHierarchicalRecord(record: any): boolean {
+        if (this.isGhostRecord(record)) {
+            record = record.recordData;
+        }
         return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
@@ -503,6 +506,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record.childGridsData !== undefined;
+    }
+
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRec !== undefined;
     }
 
     /**
@@ -519,7 +526,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public getContext(rowData): any {
+    public getContext(rowData, rowIndex, pinned): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this.childGridTemplates.get(rowData.rowID);
             if (cachedData) {
@@ -540,13 +547,31 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     index: this.dataView.indexOf(rowData)
                 };
             }
+        } else if (this.isGhostRecord(rowData)) {
+            return {
+                $implicit: rowData.recordData,
+                templateID: 'ghostRow',
+                index: this.getRowIndex(rowIndex, pinned)
+            };
         } else {
             return {
                 $implicit: rowData,
                 templateID: 'dataRow',
-                index: this.dataView.indexOf(rowData)
+                index: this.getRowIndex(rowIndex, pinned)
             };
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
     }
 
     /**

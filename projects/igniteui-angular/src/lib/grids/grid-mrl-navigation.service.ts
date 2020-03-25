@@ -219,7 +219,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             } else if (prevRow) {
                 prevRow.nativeElement.focus({ preventScroll: true });
             } else {
-                const prevElem = this.getRowByIndex(rowIndex, '') as any;
+                const prevElem = this.getRowByIndex(rowIndex) as any;
                 prevElem.focus({ preventScroll: true });
             }
         };
@@ -264,7 +264,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             } else if (nextRow) {
                 nextRow.nativeElement.focus({ preventScroll: true });
             } else {
-                const nextElem = this.getRowByIndex(rowIndex, '') as any;
+                const nextElem = this.getRowByIndex(rowIndex) as any;
                 nextElem.focus({ preventScroll: true });
             }
         };

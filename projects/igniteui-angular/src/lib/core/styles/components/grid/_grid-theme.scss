@@ -2454,6 +2454,11 @@
         @include if-rtl() {
             transform: scaleX(-1);
         }
+
+        &--empty {
+            cursor: default;
+            pointer-events: none;
+        }
     }
 
     %igx-grid__hierarchical-expander--cosy {

@@ -11,7 +11,7 @@ import { PlatformUtil } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-cell',
-    templateUrl: './../cell.component.html',
+    templateUrl: './hierarchical-cell.component.html',
     providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {

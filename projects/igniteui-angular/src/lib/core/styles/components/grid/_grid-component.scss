@@ -553,6 +553,11 @@
         @extend %igx-grid__hierarchical-expander !optional;
     }
 
+    @include e(hierarchical-expander, $m: empty) {
+        @extend %igx-grid__hierarchical-expander !optional;
+        @extend %igx-grid__hierarchical-expander--empty !optional;
+    }
+
     @include e(hierarchical-expander, $m: header) {
         @extend %igx-grid__hierarchical-expander--header !optional;
     }

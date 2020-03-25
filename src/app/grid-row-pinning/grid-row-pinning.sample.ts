@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction, IgxHierarchicalRowComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -14,6 +14,9 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    @ViewChild('hGrid', { static: true })
+    hGrid: IgxHierarchicalGridComponent;
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -32,7 +35,9 @@ export class GridRowPinningSampleComponent implements OnInit {
     }
 
     data: any[];
+    hierarchicalData: any[];
     columns: any[];
+    hColumns: any[];
 
     ngOnInit(): void {
         this.columns = [
@@ -47,6 +52,18 @@ export class GridRowPinningSampleComponent implements OnInit {
             { field: 'Phone', width: '200px' },
             { field: 'Fax', width: '200px' }
         ];
+
+        this.hColumns = [
+            { field: 'ID', width: '200px' },
+            { field: 'ChildLevels', width: '200px' },
+            { field: 'ProductName', width: '200px' },
+            { field: 'Col1', width: '200px' },
+            { field: 'Col2', width: '200px' },
+            { field: 'Col3', width: '200px' },
+            { field: 'childData', width: '200px' },
+            { field: 'childData2', width: '200px' },
+            { field: 'hasChild', width: '200px' }
+        ]
 
         this.data = [
             // tslint:disable:max-line-length
@@ -78,6 +95,8 @@ export class GridRowPinningSampleComponent implements OnInit {
             { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
+        this.hierarchicalData = this.generateDataUneven(100, 3);
+        this
         // tslint:enable:max-line-length
     }
 
@@ -97,4 +116,37 @@ export class GridRowPinningSampleComponent implements OnInit {
         }
     }
 
+    clickUnpin() {
+        this.grid1.unpinRow('aaaa');
+    }
+
+    generateDataUneven(count: number, level: number, parendID: string = null) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+            if (level > 0) {
+                // Have child grids for row with even id less rows by not multiplying by 2
+                children = this.generateDataUneven(((i % 2) + 1) * Math.round(count / 3), currLevel - 1, rowID);
+            }
+            prods.push({
+                ID: rowID,
+                ChildLevels: currLevel,
+                ProductName: 'Product: A' + i,
+                Col1: i,
+                Col2: i,
+                Col3: i,
+                childData: children,
+                childData2: children,
+                hasChild: true
+            });
+        }
+        return prods;
+    }
+
+    public isPinned(cell) {
+        console.log(cell);
+        return true;
+    }
 }

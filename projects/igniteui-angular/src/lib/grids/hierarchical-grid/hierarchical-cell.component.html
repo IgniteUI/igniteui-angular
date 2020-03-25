@@ -1,4 +1,6 @@
 <ng-template #defaultCell>
+    <div *ngIf="row.pinned && !row.editable && (!grid.visibleColumns[visibleColumnIndex - 1] || grid.visibleColumns[visibleColumnIndex - 1].cellTemplate)"
+        style="color: #999; background-color: #eaeaea; border-radius: 1em; margin: 0.5em; padding-left: 0.2em; padding-right: 0.2em;">Pinned</div>
     <div igxTextHighlight style="pointer-events: none" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID" [ngStyle]="{ color: !row.editable ? '#999' : ''}"
         [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
         [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"

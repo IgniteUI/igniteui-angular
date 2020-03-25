@@ -35,8 +35,12 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
     public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[]): T[] {
         const result = [];
 
-        data.forEach((v) => {
+        data.forEach((v: any) => {
             result.push(v);
+            if (v.ghostRec !== undefined) {
+                v = v.recordData;
+            }
+
             const childGridsData = {};
             childKeys.forEach((childKey) => {
                 const childData = v[childKey] ? v[childKey] : null;
@@ -74,6 +78,31 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
         const result: any[] = DataUtil.page(cloneArray(collection), state);
         this.gridAPI.grid.pagingState = state;
+        return result;
+    }
+}
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'gridHierarchicalRowPinning',
+    pure: true
+})
+export class IgxGridHierarchicalRowPinning implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
+
+    public transform(collection: any[], pinnedArea: boolean, pipeTrigger: number): any[] {
+        const grid = this.gridAPI.grid;
+
+        if (grid.hasPinnedRecords && pinnedArea) {
+            return collection.filter(rec => grid.isRecordPinned(rec));
+        }
+
+        const result = collection.map((value) => {
+            return grid.isRecordPinned(value) ? { recordData: value, ghostRec: true} : value;
+        });
         return result;
     }
 }
