@@ -1383,27 +1383,68 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+
             treeGrid.pinRow(711);
-            treeGrid.cdr.detectChanges();
+            fix.detectChanges();
 
             expect(treeGrid.pinnedRecordsCount).toBe(1);
             expect(treeGrid.getRowByKey(711).pinned).toBe(true);
 
             treeGrid.unpinRow(711);
-            treeGrid.cdr.detectChanges();
+            fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(0);
             expect(treeGrid.getRowByKey(711).pinned).toBe(false);
 
             treeGrid.getRowByKey(711).pin();
-            treeGrid.cdr.detectChanges();
+            fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(1);
 
             treeGrid.getRowByKey(711).unpin();
-            treeGrid.cdr.detectChanges();
+            fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(0);
         });
-        it('should pin/unpin a row at the bottom', () => {});
-        it('should calculate row indices correctly after row pinning', () => {});
+
+        it('should pin/unpin a row at the bottom', () => {
+            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            /* Pin rows to bottom */
+            treeGrid.pinning.rows = 1;
+
+            const visibleRecordsLength = treeGrid.records.size;
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(visibleRecordsLength).rowID).toBe(711);
+        });
+
+        fit('should calculate row indices correctly after row pinning', async () => {
+            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+
+            const firstRow = treeGrid.getRowByIndex(0);
+            const secondRow = treeGrid.getRowByIndex(1);
+
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            await wait();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(firstRow.rowID);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(secondRow.rowID);
+
+            treeGrid.unpinRow(711);
+            fix.detectChanges();
+
+            await wait();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(firstRow.rowID);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(secondRow.rowID);
+        });
         it('should disable pinned row instance in the body', () => {});
         it('should add pinned badge in the pinned row instance in the body', () => {});
     });
