@@ -14,6 +14,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
+import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -22,6 +23,7 @@ const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
+const FILTER_ROW_BUTTONS_CLASS = '.igx-grid__filtering-row-editing-buttons';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 const FILTER_CHIP_CLASS = '.igx-filtering-chips';
 const ESF_MENU_CLASS = '.igx-excel-filter__menu';
@@ -56,6 +58,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
+const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const DISPLAY_CONTAINER = 'igx-display-container';
 
 export class GridFunctions {
@@ -66,14 +69,18 @@ export class GridFunctions {
         return rows;
     }
 
-    public static getRowCells(fix, rowIndex: number): DebugElement[] {
-        const allRows = GridFunctions.getRows(fix);
-        return allRows[rowIndex].queryAll(By.css(CELL_CSS_CLASS));
+    public static getRowCells(fix, rowIndex: number, row: DebugElement = null): DebugElement[] {
+        const rowElement = row ? row : GridFunctions.getRows(fix)[rowIndex];
+        return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
         const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
         return gridBody.query(By.css(DISPLAY_CONTAINER));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -171,7 +178,7 @@ export class GridFunctions {
         return null;
     }
 
-    public static setAllExpanded(grid, data) {
+    public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
         const allExpanded = new Map<any, boolean>();
         data.forEach(item => {
             allExpanded.set(item['ID'], true);
@@ -179,7 +186,7 @@ export class GridFunctions {
         grid.expansionStates = allExpanded;
     }
 
-    public static elementInGridView(grid, element): boolean {
+    public static elementInGridView(grid: IgxGridComponent, element: HTMLElement): boolean {
         const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
         const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
@@ -193,6 +200,41 @@ export class GridFunctions {
 
         resolve();
     })
+
+    public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
+                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        const detailRow = GridFunctions.getMasterRowDetail(masterRow);
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
+        grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
+    }
+
+    public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+        const expandCellDE = rowDE.query(By.directive(IgxGridExpandableCellComponent));
+        expandCellDE.componentInstance.toggle(new MouseEvent('click'));
+        fix.detectChanges();
+    }
+
+    public static getMasterRowDetailDebug(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
+        const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
+        const detailDE = rowDE.parent.children
+            .find(el => el.attributes['detail'] === 'true' && el.attributes['data-rowindex'] === row.index + 1 + '');
+        return detailDE;
+    }
+
+    public static getAllMasterRowDetailDebug(fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.css('div[detail="true"]')).sort((a, b) => a.context.index - b.context.index);
+    }
+
+    public static getRowExpandIconName(row: IgxGridRowComponent) {
+        return row.element.nativeElement.querySelector('igx-icon').innerText;
+    }
 
     public static getGroupedRows(fix): DebugElement[] {
         return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
@@ -561,6 +603,12 @@ export class GridFunctions {
 
     public static getFilteringChipPerIndex(fix, index) {
         return this.getFilteringCells(fix)[index].queryAll(By.css(FILTER_CHIP_CLASS));
+    }
+
+    public static getFilterRowCloseButton(fix): DebugElement {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const buttonsContainer = filterUIRow.query(By.css(FILTER_ROW_BUTTONS_CLASS));
+        return buttonsContainer.queryAll(By.css('button'))[1];
     }
 
     public static removeFilterChipByIndex(index: number, filterUIRow) {
@@ -1472,6 +1520,11 @@ export class GridFunctions {
         return initialButtons;
     }
 
+    public static clickAdvancedFilteringInitialAddGroupButton(fix: ComponentFixture<any>, buttonIndex: number) {
+        const addAndGroupButton = this.getAdvancedFilteringInitialAddGroupButtons(fix)[buttonIndex];
+        addAndGroupButton.click();
+    }
+
     public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');
@@ -1712,7 +1765,7 @@ export class GridFunctions {
     }
 
     public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
-            altKey = false, shiftKey = false, ctrlKey = false) {
+        altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyName,
             shiftKey: shiftKey,
@@ -1720,11 +1773,13 @@ export class GridFunctions {
             altKey: altKey
         });
         cellComp.dispatchEvent(keyboardEvent);
-        cellComp.onBlur();
+        if (!altKey) {
+            cellComp.onBlur();
+        }
     }
 
     public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
+        altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyName,
             shiftKey: shiftKey,
@@ -1732,10 +1787,17 @@ export class GridFunctions {
             altKey: altKey
         });
         rowComp.onKeydown(keyboardEvent);
-        rowComp.onBlur();
+        if (!altKey) {
+            rowComp.onBlur();
+        }
     }
 }
 export class GridSummaryFunctions {
+    public static getRootSummaryRow(fix): DebugElement {
+        const footer = GridFunctions.getGridFooter(fix);
+        return footer.query(By.css(SUMMARY_ROW));
+    }
+
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
@@ -1805,32 +1867,31 @@ export class GridSummaryFunctions {
         });
     }
 
-    public static verifySummaryCellActive(fix, rowIndex, cellIndex, active: boolean = true) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
+        const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
     public static moveSummaryCell =
-        (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
+            const summaryRow =  typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
+            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
         })
 
-    public static focusSummaryCell =
-        (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
+    public static focusSummaryCell(fix, rowIndex, cellIndex) {
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.nativeElement.dispatchEvent(new Event('focus'));
+            summaryCell.triggerEventHandler('focus', {});
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            resolve();
-        })
+        }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =

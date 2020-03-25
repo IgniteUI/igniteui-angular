@@ -16,8 +16,6 @@ import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
 import { IgxListComponent } from '../../../list';
 
-const SEARCH_LIST_HEIGHT = 250;
-
 @Directive({
     selector: '[igxExcelStyleLoading]'
 })
@@ -134,11 +132,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
         return itemSize;
     }
 
-    public get listSize() {
-        return this.inline ? null : SEARCH_LIST_HEIGHT;
-    }
-
     public get containerSize() {
-        return this.inline ? this.list.element.nativeElement.offsetHeight : SEARCH_LIST_HEIGHT;
+        return this.list.element.nativeElement.offsetHeight;
     }
 }
