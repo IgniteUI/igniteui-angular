@@ -753,7 +753,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        this.grid.navigation.activeNode = Object.assign({}, this.selectionNode);
+        this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex, layout: this.selectionNode.layout };
         this.activate(event);
     }
 
