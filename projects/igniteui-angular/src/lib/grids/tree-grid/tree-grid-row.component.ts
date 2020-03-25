@@ -72,21 +72,6 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
-     * Gets the ID of the row.
-     * A row in the grid is identified either by:
-     * - primaryKey data value,
-     * - the whole rowData, if the primaryKey is omitted.
-     *
-     * ```typescript
-     * let rowID = this.grid.selectedRows[2].rowID;
-     * ```
-     */
-    public get rowID() {
-        const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this.rowData[primaryKey] : this.rowData;
-    }
-
-    /**
      * @hidden
      */
     @Input()
