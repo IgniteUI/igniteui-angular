@@ -1,9 +1,9 @@
-<ng-content select="split-pane"></ng-content>
+<ng-content select="igx-splitter-pane"></ng-content>
 <ng-container *ngFor="let pane of panes; let last = last">
-    <split-bar *ngIf="!last" [style.order]="pane.order + 1"
+    <igx-split-bar *ngIf="!last" [style.order]="pane.order + 1"
                     [type]="type"
                     [pane]="pane"
                     (moveStart)="onMoveStart($event)"
                     (moving)="onMoving($event)">
-    </split-bar>
+    </igx-split-bar>
 </ng-container>

@@ -1,6 +1,6 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 import { SplitterType } from '../splitter.component';
-import { SplitPaneComponent } from '../splitpane/split-pane.component';
+import { IgxSplitterPaneComponent } from '../splitpane/split-pane.component';
 
 /**
  * Provides reference to `SplitBarComponent` component.
@@ -9,16 +9,15 @@ import { SplitPaneComponent } from '../splitpane/split-pane.component';
  * @class SplitBarComponent
  */
 @Component({
-    selector: 'split-bar',
+    selector: 'igx-split-bar',
     styleUrls: ['./split-bar.component.scss'],
     templateUrl: './split-bar.component.html'
 })
-export class SplitBarComponent {
+export class IgxSplitBarComponent {
 
     /**
-     * Sets/gets `SplitterComponent` orientation.
+     * Sets/gets `IgxSplitBarComponent` orientation.
      * @type SplitterType
-     * @memberof SplitBarComponent
      */
     @Input()
     public type: SplitterType = SplitterType.Vertical;
@@ -28,14 +27,14 @@ export class SplitBarComponent {
      * @memberof SplitBarComponent
      */
     @Input()
-    public pane!: SplitPaneComponent;
+    public pane!: IgxSplitterPaneComponent;
 
     /**
      * An event that is emitted whenever we start dragging the current `SplitBarComponent`.
      * @memberof SplitBarComponent
      */
     @Output()
-    public moveStart = new EventEmitter<SplitPaneComponent>();
+    public moveStart = new EventEmitter<IgxSplitterPaneComponent>();
 
     /**
      * An event that is emitted while we are dragging the current `SplitBarComponent`.

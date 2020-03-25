@@ -16,7 +16,7 @@ $splitter-dot-size: rem(2px);
 $splitter-dot-border-radius: rem(1px);
 
 
-.split-bar {
+.igx-split-bar {
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -27,7 +27,7 @@ $splitter-dot-border-radius: rem(1px);
     border-color: $splitter-border-color;
 }
 
-.split-bar-indicator {
+.igx-split-bar-indicator {
     
     @include square($splitter-dot-size, $splitter-dot-border-radius);
     margin: $splitter-dot-size;

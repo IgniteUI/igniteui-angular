@@ -7,35 +7,31 @@ import { Component, HostBinding, Input, ElementRef } from '@angular/core';
  * @class SplitPaneComponent
  */
 @Component({
-    selector: 'split-pane',
+    selector: 'igx-splitter-pane',
     templateUrl: './split-pane.component.html'
 })
-export class SplitPaneComponent {
+export class IgxSplitterPaneComponent {
 
     /**
-     * Sets/gets the size of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the size of the current `IgxSplitterPaneComponent`.
      */
     @Input()
     public size = 'auto';
 
     /**
-     * Sets/gets the minimum allowable size of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the minimum allowable size of the current `IgxSplitterPaneComponent`.
      */
     @Input()
     public minSize!: string;
 
     /**
-     * Sets/gets the maximum allowable size of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the maximum allowable size of the current `IgxSplitterPaneComponent`.
      */
     @Input()
     public maxSize!: string;
 
     /**
-     * Sets/gets the `order` property of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the `order` property of the current `IgxSplitterPaneComponent`.
      */
     @Input()
     @HostBinding('style.order')
@@ -45,22 +41,19 @@ export class SplitPaneComponent {
      * Gets the host native element.
      * @readonly
      * @type *
-     * @memberof SplitPaneComponent
      */
     public get element(): any {
         return this.el.nativeElement;
     }
 
     /**
-     * Sets/gets the `overflow` property of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the `overflow` property of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.overflow')
     public overflow = 'auto';
 
     /**
-     * Sets/gets the `minHeight` and `minWidth` propertis of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
+     * Sets/gets the `minHeight` and `minWidth` propertis of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.min-height')
     @HostBinding('style.min-width')
@@ -68,16 +61,14 @@ export class SplitPaneComponent {
 
     /**
      * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `SplitPaneComponent`.
-     * @memberof SplitPaneComponent
      */
     @HostBinding('style.max-height')
     @HostBinding('style.max-width')
     public maxHeight = '100%';
 
     /**
-     * Gets the `flex` property of the current `SplitPaneComponent`.
+     * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
      * @readonly
-     * @memberof SplitPaneComponent
      */
     @HostBinding('style.flex')
     public get flex() {

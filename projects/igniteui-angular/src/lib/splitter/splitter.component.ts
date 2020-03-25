@@ -1,5 +1,5 @@
 import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { SplitPaneComponent } from './splitpane/split-pane.component';
+import { IgxSplitterPaneComponent } from './splitpane/split-pane.component';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
@@ -20,10 +20,10 @@ export enum SplitterType {
  * @implements AfterContentInit
  */
 @Component({
-    selector: 'splitter',
+    selector: 'igx-splitter',
     templateUrl: './splitter.component.html'
 })
-export class SplitterComponent implements AfterContentInit {
+export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * Sets/gets `SplitterComponent` orientation.
@@ -34,14 +34,14 @@ export class SplitterComponent implements AfterContentInit {
     public type: SplitterType = SplitterType.Vertical;
 
     @Output()
-    public panesChange = new EventEmitter<SplitPaneComponent[]>();
+    public panesChange = new EventEmitter<IgxSplitterPaneComponent[]>();
 
     /**
-     * A list of all `SplitPaneComponent` items.
+     * A list of all `IgxSplitterPaneComponent` items.
      * @memberof SplitterComponent
      */
-    @ContentChildren(SplitPaneComponent, { read: SplitPaneComponent })
-    public panes!: QueryList<SplitPaneComponent>;
+    @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
+    public panes!: QueryList<IgxSplitterPaneComponent>;
 
     /**
      * Gets the `flex-direction` property of the current `SplitterComponent`.
@@ -69,32 +69,32 @@ export class SplitterComponent implements AfterContentInit {
     public display = 'flex';
 
     /**
-     * A field that holds the initial size of the main `SplitPaneComponent` in each couple of panes devided by a gripper.
+     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
      * @memberof SplitterComponent
      */
     private initialPaneSize!: number;
 
     /**
-     * A field that holds the initial size of the sibling `SplitPaneComponent` in each couple of panes devided by a gripper.
+     * A field that holds the initial size of the sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
      * @memberof SplitterComponent
      */
     private initialSiblingSize!: number;
 
     /**
-     * The main `SplitPaneComponent` in each couple of panes devided by a gripper.
+     * The main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
      * @memberof SplitterComponent
      */
-    private pane!: SplitPaneComponent;
+    private pane!: IgxSplitterPaneComponent;
 
     /**
-     * The sibling `SplitPaneComponent` in each couple of panes devided by a gripper.
+     * The sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
      * @memberof SplitterComponent
      */
-    private sibling!: SplitPaneComponent;
+    private sibling!: IgxSplitterPaneComponent;
 
     public ngAfterContentInit(): void {
         this.assignFlexOrder();
@@ -108,10 +108,10 @@ export class SplitterComponent implements AfterContentInit {
 
     /**
      * This method performs some initialization logic when the user starts dragging the gripper between each couple of panes.
-     * @param  {SplitPaneComponent} pane The main `SplitPaneComponent` associated with the currently dragged `SplitBarComponent`.
+     * @param  {IgxSplitterPaneComponent} pane The main `IgxSplitterPaneComponent` associated with the currently dragged `SplitBarComponent`.
      * @return {void}@memberof SplitterComponent
      */
-    public onMoveStart(pane: SplitPaneComponent) {
+    public onMoveStart(pane: IgxSplitterPaneComponent) {
         const panes = this.panes.toArray();
         this.pane = pane;
         this.sibling = panes[panes.indexOf(this.pane) + 1];
@@ -151,13 +151,13 @@ export class SplitterComponent implements AfterContentInit {
     }
 
     /**
-     * This method takes care for assigning an `order` property on each `SplitPaneComponent`.
+     * This method takes care for assigning an `order` property on each `IgxSplitterPaneComponent`.
      * @private
      * @return {void}@memberof SplitterComponent
      */
     private assignFlexOrder() {
         let k = 0;
-        this.panes.forEach((pane: SplitPaneComponent) => {
+        this.panes.forEach((pane: IgxSplitterPaneComponent) => {
             pane.order = k;
             k += 2;
         });

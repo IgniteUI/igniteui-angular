@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SplitBarComponent } from './splitbar/split-bar.component';
-import { SplitPaneComponent } from './splitpane/split-pane.component';
-import { SplitterComponent } from './splitter.component';
+import { IgxSplitBarComponent } from './splitbar/split-bar.component';
+import { IgxSplitterPaneComponent } from './splitpane/split-pane.component';
+import { IgxSplitterComponent } from './splitter.component';
 import { SplitterDirective } from './splitter.directives';
 
 @NgModule({
@@ -10,16 +10,16 @@ import { SplitterDirective } from './splitter.directives';
         CommonModule
     ],
     declarations: [
-        SplitterComponent,
-        SplitPaneComponent,
-        SplitBarComponent,
+        IgxSplitterComponent,
+        IgxSplitterPaneComponent,
+        IgxSplitBarComponent,
         SplitterDirective
     ],
     exports: [
-        SplitterComponent,
-        SplitPaneComponent,
-        SplitBarComponent,
+        IgxSplitterComponent,
+        IgxSplitterPaneComponent,
+        IgxSplitBarComponent,
         SplitterDirective
     ]
 })
-export class SplitterModule { }
+export class IgxSplitterModule { }
