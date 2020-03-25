@@ -253,6 +253,42 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should search in both pinned and unpinned rows.', () => {
+            // pin 1st row
+            let row = grid.getRowByIndex(0);
+            row.pinned = true;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+
+            let finds = grid.findNext('mari');
+            fix.detectChanges();
+
+            const fixNativeElement = fix.debugElement.nativeElement;
+            let spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(1);
+            expect(finds).toEqual(2);
+
+            finds = grid.findNext('antonio');
+            fix.detectChanges();
+
+            spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(2);
+            expect(finds).toEqual(2);
+
+            // pin 3rd row
+            row = grid.getRowByIndex(2);
+            row.pinned = true;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(2);
+
+            finds = grid.findNext('antonio');
+            fix.detectChanges();
+
+            spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(2);
+            expect(finds).toEqual(2);
+        });
+
         it('should allow pinning onInit', () => {
             expect(() => {
                 fix = TestBed.createComponent(GridRowPinningComponent);
