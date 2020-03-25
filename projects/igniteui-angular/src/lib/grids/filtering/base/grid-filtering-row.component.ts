@@ -462,12 +462,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.expressionsList[0].expression.searchVal === null &&
             this.expressionsList[0].expression.condition.isUnary === false) {
             this.filteringService.getExpressions(this.column.field).pop();
+
+            this.filter();
         } else {
-            this.expressionsList.forEach((item) => {
-                if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
-                    this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
-                }
-            });
+            const condToRemove = this.expressionsList.filter(ex => ex.expression.searchVal === null && !ex.expression.condition.isUnary);
+            if (condToRemove && condToRemove.length > 0) {
+                condToRemove.forEach(c => this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(c)));
+                this.filter();
+            }
         }
 
         this.filteringService.isFilterRowVisible = false;

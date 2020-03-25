@@ -147,6 +147,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { isNumber } from 'util';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1747,8 +1748,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChild('pinContainer', { static: false })
-    public pinContainer: ElementRef;
+    @ViewChildren('pinContainer', { read: ElementRef })
+    public pinContainers: QueryList<ElementRef>;
 
     /**
      * @hidden @internal
@@ -2410,6 +2411,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredSortedPinnedData;
+    protected _filteredSortedUnpinnedData;
+    protected _filteredPinnedData;
+    protected _filteredUnpinnedData;
+
     /**
      * @hidden
      */
@@ -2479,15 +2485,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _columnPinning = false;
 
-
-    /**
-     * @hidden
-    */
-    public get pinnedRecords() {
-        return this._pinnedRecords;
-    }
-
-    protected _pinnedRecords = [];
+    protected _pinnedRecordIDs = [];
 
     /**
      * @hidden
@@ -2652,6 +2650,40 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
+    public isRecordPinned(rec) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public pinRecordIndex(rec) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get hasPinnedRecords() {
+        return this._pinnedRecordIDs.length > 0;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get pinnedRecordsCount() {
+        return this._pinnedRecordIDs.length;
+    }
+
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
@@ -2798,6 +2830,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.endEdit(true);
             this.cdr.markForCheck();
         });
+
+        this.onRowPinning.subscribe(() => {
+            this.summaryService.clearSummaryCache();
+        });
     }
 
     /**
@@ -2847,6 +2883,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    public setFilterData(data, pinned: boolean) {
+        if (this.hasPinnedRecords && pinned) {
+            this._filteredPinnedData = data;
+            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+        } else if (this.hasPinnedRecords && !pinned) {
+            this._filteredUnpinnedData = data;
+        } else {
+            this.filteredData = data;
+        }
+    }
+
     /**
      * @hidden
      * @internal
@@ -2888,6 +2935,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data, pinned: boolean) {
+        if (this._pinnedRecordIDs.length > 0 && pinned) {
+            this._filteredSortedPinnedData = data;
+            this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
+            [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
+        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+            this._filteredSortedUnpinnedData = data;
+        } else {
+            this.filteredSortedData = data;
+        }
     }
 
     /**
@@ -2938,6 +3001,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', this.scrollHandler);
         vertScrDC.addEventListener('wheel', () => this.wheelHandler());
 
+        this.pinContainers.changes.subscribe((c) => {
+            if (this.hasPinnedRecords) {
+                // on row pin containers change grid sizes should be recalculated.
+                this.calculateGridSizes();
+            }
+        });
     }
 
     /**
@@ -3062,6 +3131,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set expansionStates(value) {
         this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
+        this.notifyChanges(true);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
         }
@@ -4066,8 +4136,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID: any, index?: number): boolean {
-        const rec = this.gridAPI.get_rec_by_id(rowID);
-        if (!rec || this.pinnedRecords.indexOf(rec) !== -1 || this.data.indexOf(rec) === -1) {
+        if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4080,7 +4149,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
-        this.pinnedRecords.splice(eventArgs.insertAtIndex || this.pinnedRecords.length, 0, rec);
+        this.endEdit(true);
+
+        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);
@@ -4098,9 +4170,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
     */
     public unpinRow(rowID: any) {
-        const rec = this.gridAPI.get_rec_by_id(rowID);
-        const index =  this.pinnedRecords.indexOf(rec);
-        if (index === -1 || !rec) {
+        const index =  this._pinnedRecordIDs.indexOf(rowID);
+        if (index === -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4110,7 +4181,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             row: row
         };
         this.onRowPinning.emit(eventArgs);
-        this.pinnedRecords.splice(index, 1);
+        this.endEdit(true);
+        this._pinnedRecordIDs.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
@@ -4120,8 +4192,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     get pinnedRowHeight() {
-        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
-        return this.pinnedRecords.length > 0 ? containerHeight : 0;
+        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
+        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        return this.hasPinnedRecords ? containerHeight : 0;
     }
 
     get totalHeight() {

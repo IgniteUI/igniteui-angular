@@ -66,7 +66,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public get pinned(): boolean {
-        return this.grid.pinnedRecords.indexOf(this.rowData) !== -1;
+        return this.grid.isRecordPinned(this.rowData);
     }
     /**
      * Sets whether the row is pinned.
