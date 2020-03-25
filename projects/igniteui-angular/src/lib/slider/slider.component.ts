@@ -411,7 +411,7 @@ export class IgxSliderComponent implements
     /**
      *Returns the minimal value of the `IgxSliderComponent`.
      *```typescript
-     *@ViewChild("slider2")
+     * @ViewChild("slider2")
      *public slider: IgxSliderComponent;
      *ngAfterViewInit(){
      *    let sliderMin = this.slider.minValue;
@@ -459,7 +459,7 @@ export class IgxSliderComponent implements
         /**
      * Returns the maximum value for the {@link IgxSliderComponent}.
      * ```typescript
-     *@ViewChild("slider")
+     * @ViewChild("slider")
      *public slider: IgxSliderComponent;
      *ngAfterViewInit(){
      *    let sliderMax = this.slider.maxValue;
@@ -505,7 +505,7 @@ export class IgxSliderComponent implements
     /**
      * Returns the lower boundary of the `IgxSliderComponent`.
      *```typescript
-     *@ViewChild("slider")
+     * @ViewChild("slider")
      *public slider: IgxSliderComponent;
      *ngAfterViewInit(){
      *    let sliderLowBound = this.slider.lowerBound;
@@ -543,7 +543,7 @@ export class IgxSliderComponent implements
     /**
      * Returns the upper boundary of the `IgxSliderComponent`.
      * ```typescript
-     *@ViewChild("slider")
+     * @ViewChild("slider")
      *public slider: IgxSliderComponent;
      *ngAfterViewInit(){
      *    let sliderUpBound = this.slider.upperBound;
@@ -582,7 +582,7 @@ export class IgxSliderComponent implements
      * If the slider type is {@link IgxSliderType.RANGE}.
      * The returned value represents an object of {@link lowerValue} and {@link upperValue}.
      *```typescript
-     *@ViewChild("slider2")
+     * @ViewChild("slider2")
      *public slider: IgxSliderComponent;
      *public sliderValue(event){
      *    let sliderVal = this.slider.value;
@@ -831,7 +831,7 @@ export class IgxSliderComponent implements
     /**
      *Returns whether the `IgxSliderComponent` type is RANGE.
      *```typescript
-     *@ViewChild("slider")
+     * @ViewChild("slider")
      *public slider: IgxSliderComponent;
      *ngAfterViewInit(){
      *    let sliderRange = this.slider.isRange;
@@ -863,7 +863,7 @@ export class IgxSliderComponent implements
     /**
      *Sets the lower value of the `IgxSliderComponent`.
      *```typescript
-     *@ViewChild("slider2")
+     * @ViewChild("slider2")
      *public slider: IgxSliderComponent;
      *public lowValue(event){
      *    this.slider.lowerValue = 120;
@@ -879,7 +879,7 @@ export class IgxSliderComponent implements
     /**
      *Returns the upper value of the `IgxSliderComponent`.
      *```typescript
-     *@ViewChild("slider2")
+     * @ViewChild("slider2")
      *public slider: IgxSliderComponent;
      *public upperValue(event){
      *    let upperValue = this.slider.upperValue;
@@ -897,7 +897,7 @@ export class IgxSliderComponent implements
     /**
      *Sets the upper value of the `IgxSliderComponent`.
      *```typescript
-     *@ViewChild("slider2")
+     * @ViewChild("slider2")
      *public slider: IgxSliderComponent;
      *public upperValue(event){
      *    this.slider.upperValue = 120;

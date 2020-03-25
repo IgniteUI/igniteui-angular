@@ -163,14 +163,14 @@ export class IgxBottomNavComponent implements AfterViewInit {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public get hasContentTabs(): boolean {
         return (this.contentTabs && this.contentTabs.length > 0);
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _itemStyle = 'igx-bottom-nav';
 
@@ -191,7 +191,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public ngAfterViewInit() {
         // initial selection
@@ -207,7 +207,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('onTabSelected', ['$event'])
     public _selectedPanelHandler(args) {
@@ -231,7 +231,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _deselectPanel(panel: IgxTabPanelComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
@@ -258,12 +258,12 @@ export class IgxBottomNavComponent implements AfterViewInit {
 export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked {
 
     /**
-     *@hidden
+     * @hidden
      */
     private _itemStyle = 'igx-tab-panel';
 
     /**
-     *@hidden
+     * @hidden
      */
     private _isSelected = false;
 
@@ -417,12 +417,12 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _tabTemplate: TemplateRef<any>;
 
     /**
-     *@hidden
+     * @hidden
      */
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected tabTemplate: IgxTabTemplateDirective;
@@ -431,7 +431,7 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public ngAfterContentInit(): void {
         if (this.tabTemplate) {
@@ -440,7 +440,7 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-${this.index}`);
@@ -522,7 +522,7 @@ export class IgxTabComponent {
     public relatedPanel: IgxTabPanelComponent;
 
     /**
-     *@hidden
+     * @hidden
      */
     private _label: string;
 
@@ -548,7 +548,7 @@ export class IgxTabComponent {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _icon: string;
 
@@ -574,7 +574,7 @@ export class IgxTabComponent {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
@@ -660,11 +660,11 @@ export class IgxTabComponent {
         }
     }
 
-    /**@hidden*/
+    /** @hidden*/
     @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /**@hidden*/
+    /** @hidden*/
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected customTabTemplateDir: IgxTabTemplateDirective;
 

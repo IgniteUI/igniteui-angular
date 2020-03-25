@@ -434,7 +434,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the current page index.
-    *@example
+    * @example
     * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      * ```
@@ -459,7 +459,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public pageChange = new EventEmitter<number>();
@@ -491,7 +491,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
@@ -748,7 +748,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the grid is going to show a loading indicator.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
      * ```
@@ -1090,7 +1090,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * (e.g. `Esc` key was pressed)
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
@@ -1103,7 +1103,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when cell enters edit mode.
      * @remarks
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
@@ -1131,7 +1131,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Emitted when [rowEditable]="true".
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1148,7 +1148,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * performing paging operation, column resizing, pinning, moving or hitting  `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1164,7 +1164,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1376,7 +1376,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
@@ -1426,37 +1426,37 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleSelectingTemplateDirective, { read: IgxExcelStyleSelectingTemplateDirective })
     public excelStyleSelectingTemplateDirective: IgxExcelStyleSelectingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
@@ -4033,9 +4033,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * grid.disableSummaries('ProductName');
      * ```
-     *@remarks
+     * @remarks
      * Disable summaries for the listed columns.
-     *@example
+     * @example
      * ```typescript
      * grid.disableSummaries([{ fieldName: 'ProductName' }]);
      * ```
@@ -4050,9 +4050,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * If name is provided, clears the filtering state of the corresponding `IgxColumnComponent`.
-     *@remarks
+     * @remarks
      Otherwise clears the filtering state of all `IgxColumnComponent`s.
-     *@example
+     * @example
      * ```typescript
      * this.grid.clearFilter();
      * ```

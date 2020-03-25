@@ -32,7 +32,7 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     @Input()
     public relatedGroup: IgxTabsGroupComponent;
 
-    /**@hidden*/
+    /** @hidden*/
     private _icon: string;
 
     /**
@@ -53,7 +53,7 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
         this._icon = newValue;
     }
 
-    /**@hidden*/
+    /** @hidden*/
     private _label: string;
 
     /**
@@ -73,11 +73,11 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
         this._label = newValue;
     }
 
-    /**@hidden*/
+    /** @hidden*/
     @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /**@hidden*/
+    /** @hidden*/
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected customTabTemplateDir: IgxTabItemTemplateDirective;
 

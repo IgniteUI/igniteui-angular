@@ -105,7 +105,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     }
 
     /**
-     *@hidden
+     * @hidden
     */
     ngAfterContentInit() {
         super.ngAfterContentInit();
@@ -143,7 +143,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     }
 
     /**
-     *@hidden
+     * @hidden
     */
     public populateVisibleIndexes() {
         this.childrenVisibleIndexes = [];

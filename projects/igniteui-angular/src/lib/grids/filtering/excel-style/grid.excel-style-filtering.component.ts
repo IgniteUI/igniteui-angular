@@ -42,7 +42,7 @@ import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 
 /**
- *@hidden
+ * @hidden
  */
 export class FilterListItem {
     public value: any;

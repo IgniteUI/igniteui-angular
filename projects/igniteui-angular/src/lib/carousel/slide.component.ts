@@ -124,7 +124,7 @@ export class IgxSlideComponent implements OnDestroy {
     @Input() public previous = false;
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output() public activeChange = new EventEmitter<boolean>();
 

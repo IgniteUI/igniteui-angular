@@ -254,13 +254,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
     /**
-     *@hidden
+     * @hidden
      */
     ngAfterContentInit() {
         /*
@@ -340,14 +340,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set width(val) { }
 
     /**
-     *@hidden
+     * @hidden
     */
     public get applySelectableClass(): boolean {
         return this._applySelectableClass;
     }
 
     /**
-    *@hidden
+    * @hidden
     */
     public set applySelectableClass(value: boolean) {
         if (this.selectable) {

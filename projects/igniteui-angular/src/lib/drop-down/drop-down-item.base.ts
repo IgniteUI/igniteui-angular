@@ -147,7 +147,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public selectedChange = new EventEmitter<boolean>();

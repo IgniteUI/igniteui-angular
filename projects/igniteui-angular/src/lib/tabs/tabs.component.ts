@@ -89,7 +89,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public selectedIndexChange = new EventEmitter<number>();
@@ -208,7 +208,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public get hasContentTabs(): boolean {
         return (this.contentTabs && this.contentTabs.length > 0);

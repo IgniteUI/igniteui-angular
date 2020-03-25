@@ -322,7 +322,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * Returns the value of state. Possible state values are "open" or "close".
      *```typescript
-     *@ViewChild("MyDialog")
+     * @ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
      *    let dialogState = this.dialog.state;
@@ -336,7 +336,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * Returns whether the dialog is visible to the end user.
      *```typescript
-     *@ViewChild("MyDialog")
+     * @ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
      *    let dialogOpen = this.dialog.isOpen;
@@ -356,7 +356,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      *Returns the value of the role of the dialog. The valid values are `dialog`, `alertdialog`, `alert`.
      *```typescript
-     *@ViewChild("MyDialog")
+     * @ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
      *    let dialogRole = this.dialog.role;
@@ -380,7 +380,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      *Returns the value of the title id.
      *```typescript
-     *@ViewChild("MyDialog")
+     * @ViewChild("MyDialog")
      *public dialog: IgxDialogComponent;
      *ngAfterViewInit() {
      *    let dialogTitle = this.dialog.titleId;
@@ -432,7 +432,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     /**
      *A method that that closes the dialog.
-     *@memberOf {@link IgxDialogComponent}
+     * @memberOf {@link IgxDialogComponent}
      *```html
      *<button (click)="dialog.close() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      *<igx-dialog #dialog></igx-dialog>
@@ -446,7 +446,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     /**
      * A method that opens/closes the dialog.
-     *@memberOf {@link IgxDialogComponent}
+     * @memberOf {@link IgxDialogComponent}
      *```html
      *<button (click)="dialog.toggle() igxButton="raised" igxButtonColor="white" igxRipple="white">Trigger Dialog</button>
      *<igx-dialog #dialog></igx-dialog>

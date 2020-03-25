@@ -134,7 +134,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
@@ -161,7 +161,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * A method that sets the focus on a tab.
      * @memberof {@link IgxTabsGroupComponent}
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *public tab : IgxTabsGroupComponent;
      *ngAfterViewInit(){
      *    this.tab.select();

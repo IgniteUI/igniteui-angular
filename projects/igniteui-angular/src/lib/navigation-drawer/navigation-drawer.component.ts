@@ -144,7 +144,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output() public isOpenChange = new EventEmitter<boolean>();
 

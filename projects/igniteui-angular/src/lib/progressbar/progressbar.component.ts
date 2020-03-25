@@ -75,7 +75,7 @@ export abstract class BaseProgress {
     /**
      *Returns the value which update the progress indicator of the `progress bar`.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      *public stepValue(event) {
      *    let step = this.progressBar.step;
@@ -118,7 +118,7 @@ export abstract class BaseProgress {
     /**
      *Returns whether the `progress bar` has animation true/false.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      *public animationStatus(event) {
      *    let animationStatus = this.progressBar.animate;
@@ -146,7 +146,7 @@ export abstract class BaseProgress {
     /**
      *Returns the the maximum progress value of the `progress bar`.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
      *public maxValue(event) {
      *    let max = this.progressBar.max;
@@ -161,7 +161,7 @@ export abstract class BaseProgress {
     /**
      *Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
      *    public setValue(event){
      *    this.progressBar.valueInPercent = 56;
@@ -175,7 +175,7 @@ export abstract class BaseProgress {
     /**
      *Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
      *public valuePercent(event){
      *    let percentValue = this.progressBar.valueInPercent;
@@ -402,7 +402,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements After
     /**
     *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
     *```typescript
-    *@ViewChild("MyProgressBar")
+    * @ViewChild("MyProgressBar")
     *public progressBar: IgxLinearProgressBarComponent;
     *public getValue(event) {
     *    let value = this.progressBar.value;
@@ -551,7 +551,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     /**
      *Returns value that indicates the current `IgxCircularProgressBarComponent` position.
      *```typescript
-     *@ViewChild("MyProgressBar")
+     * @ViewChild("MyProgressBar")
      *public progressBar: IgxCircularProgressBarComponent;
      *public getValue(event) {
      *    let value = this.progressBar.value;

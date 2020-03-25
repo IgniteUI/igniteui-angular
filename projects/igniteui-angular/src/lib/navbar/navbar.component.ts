@@ -66,7 +66,7 @@ export class IgxNavbarComponent {
     /**
      *Returns whether the `IgxNavbarComponent` action button is visible, true/false.
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *public navBar: IgxNavbarComponent;
      *ngAfterViewInit(){
      *    let actionButtonVisibile = this.navBar.isActionButtonVisible;
@@ -137,7 +137,7 @@ export class IgxNavbarComponent {
     protected actionIconTemplate: IgxActionIconDirective;
 
     /**
-     *@hidden
+     * @hidden
      */
     public _triggerAction() {
         this.onAction.emit(this);

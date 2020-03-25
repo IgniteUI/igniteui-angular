@@ -158,7 +158,7 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('focus')
     public onFocus() {
@@ -166,7 +166,7 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('blur')
     public onBlur() {

@@ -103,7 +103,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Returns the CSS class of the item content of the `IgxButtonGroup`.
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *public buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *   let buttonSelect = this.buttonG.itemContentCssClass;
@@ -190,7 +190,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Returns the alignment of the `igx-buttongroup`.
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *public buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *    let buttonAlignment = this.buttonG.alignment;
@@ -204,7 +204,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * An @Ouput property that emits an event when a button is selected.
      *```typescript
-     *@ViewChild("toast")
+     * @ViewChild("toast")
      *private toast: IgxToastComponent;
      *public onSelect(buttongroup){
      *    this.toast.show()
@@ -221,7 +221,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * An @Ouput property that emits an event when a button is deselected.
      *```typescript
-     *@ViewChild("toast")
+     * @ViewChild("toast")
      *private toast: IgxToastComponent;
      *public onUnselect(buttongroup){
      *    this.toast.show()
@@ -243,7 +243,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      * ```typescript
      * //...
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *    let orientation = this.buttonG.isVertical;
@@ -264,7 +264,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Gets the selected button/buttons.
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *    let selectedButton = this.buttonG.selectedButtons;
@@ -281,7 +281,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Selects a button by its index.
      *```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *    this.buttonG.selectButton(2);
@@ -324,7 +324,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Deselects a button by its index.
      * ```typescript
-     *@ViewChild("MyChild")
+     * @ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
      *ngAfterViewInit(){
      *    this.buttonG.deselectButton(2);
@@ -412,7 +412,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public _clickHandler(event, i) {
         if (this.selectedIndexes.indexOf(i) !== -1) {

@@ -4,7 +4,7 @@ import { DateRangeDescriptor } from '../../core/dates';
 import { CalendarSelection } from '../calendar-base';
 
 /**
- *@hidden
+ * @hidden
 */
 @Component({
     selector: 'igx-day-item',

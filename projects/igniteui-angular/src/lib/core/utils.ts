@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
 
 /**
- *@hidden
+ * @hidden
  */
 export function cloneArray(array: any[], deep?: boolean) {
     const arr = [];
@@ -67,7 +67,7 @@ export function mergeObjects(obj1: {}, obj2: {}): any {
  * If passed value is array returns shallow copy of the array.
  * @param value value to clone
  * @returns Deep copy of provided value
- *@hidden
+ * @hidden
  */
 export function cloneValue(value: any): any {
     if (isDate(value)) {
@@ -96,7 +96,7 @@ export function cloneValue(value: any): any {
  * Checks if provided variable is Object
  * @param value Value to check
  * @returns true if provided variable is Object
- *@hidden
+ * @hidden
  */
 export function isObject(value: any): boolean {
     return value && value.toString() === '[object Object]';
@@ -106,7 +106,7 @@ export function isObject(value: any): boolean {
  * Checks if provided variable is Date
  * @param value Value to check
  * @returns true if provided variable is Date
- *@hidden
+ * @hidden
  */
 export function isDate(value: any) {
     return Object.prototype.toString.call(value) === '[object Date]';
@@ -128,7 +128,7 @@ export function isEqual(obj1, obj2): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export const enum KEYCODES {
     ENTER = 13,
@@ -150,7 +150,7 @@ export const enum KEYCODES {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export const enum KEYS {
     ENTER = 'Enter',
@@ -171,7 +171,7 @@ export const enum KEYS {
 }
 
 /**
- *@hidden
+ * @hidden
 * Returns the actual size of the node content, using Range
 * ```typescript
 * let range = document.createRange();
@@ -199,7 +199,7 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
     return width;
 }
 /**
- *@hidden
+ * @hidden
 * Returns the actual size of the node content, using Canvas
 * ```typescript
 * let ctx = document.createElement('canvas').getContext('2d');
@@ -217,13 +217,13 @@ export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
     return canvas2dCtx.measureText(node.textContent).width;
 }
 /**
- *@hidden
+ * @hidden
  */
 export function isIE(): boolean {
     return navigator.appVersion.indexOf('Trident/') > 0;
 }
 /**
- *@hidden
+ * @hidden
  */
 export function isEdge(): boolean {
     const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -231,7 +231,7 @@ export function isEdge(): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export function isFirefox(): boolean {
     const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -278,7 +278,7 @@ export function isNavigationKey(key: string): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export function flatten(arr: any[]) {
     let result = [];
