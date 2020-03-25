@@ -6,12 +6,13 @@ import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity
+    IgxIconService, DisplayDensityToken, DisplayDensity, IgxActionStripModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
@@ -120,6 +121,7 @@ import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sampl
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 
 const components = [
+    ActionStripSampleComponent,
     AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
@@ -241,6 +243,7 @@ const components = [
         HttpClientModule,
         IgxIconModule,
         IgxInputGroupModule,
+        IgxActionStripModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,

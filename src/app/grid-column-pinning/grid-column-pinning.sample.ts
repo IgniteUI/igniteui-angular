@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridCellComponent } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -103,9 +103,15 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        this.grid1.isRecordPinned(rec) ?
+        !this.grid1.isRecordPinned(rec) ?
          this.grid1.pinRow(rec) :
          this.grid1.unpinRow(rec)
+    }
+
+    doSomeAction(cell: IgxGridCellComponent) {
+        !this.grid1.isRecordPinned(cell.rowData) ?
+         this.grid1.pinRow(cell.rowData) :
+         this.grid1.unpinRow(cell.rowData)
     }
 
 }

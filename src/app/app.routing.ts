@@ -69,12 +69,17 @@ import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'action-strip',
+        component: ActionStripSampleComponent
     },
     {
         path: 'autocomplete',

@@ -21,6 +21,7 @@ import { IgxProgressBarModule } from '../../progressbar/progressbar.component';
 import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/index';
 import { IgxGridStateModule } from '../state.directive';
+import { IgxActionStripComponent, IgxActionStripModule } from '../../action-strip/action-strip.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { IgxGridStateModule } from '../state.directive';
         IgxButtonGroupModule,
         IgxProgressBarModule,
         IgxSelectModule,
-        IgxGridStateModule
+        IgxGridStateModule,
+        IgxActionStripModule
     ],
     exports: [
         CommonModule,
@@ -70,7 +72,8 @@ import { IgxGridStateModule } from '../state.directive';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxProgressBarModule,
-        IgxSelectModule
+        IgxSelectModule,
+        IgxActionStripModule
     ]
 })
 export class IgxGridSharedModules {}

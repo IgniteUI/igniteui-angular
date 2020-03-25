@@ -1,0 +1,21 @@
+<div class="sample-wrapper">
+    <app-page-header title="Action Strip">
+        The Action Strip provide templatable area for one or more actions.
+    </app-page-header>
+    <div class="sample-content">
+        <div class="sample-column">
+            <div class="parent" (mouseenter)="showActions()" (mouseleave)="hideActions()">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+                <igx-action-strip #actionstrip class="my-action-strip" [hidden]="true">
+                    <igx-icon (click)="doSomeAction()">alarm</igx-icon>
+                </igx-action-strip>
+            </div>
+        </div>
+        <div class="sample-column">
+            <p>{{result}}</p>
+        </div>
+    </div>
+</div>

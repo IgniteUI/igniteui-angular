@@ -1,0 +1,11 @@
+.parent {
+    width: 400px;
+    height: 200px;
+    background-color: coral;
+    position: relative;
+}
+
+.my-action-strip>div {
+    background-color: azure;
+    opacity: .2;
+}

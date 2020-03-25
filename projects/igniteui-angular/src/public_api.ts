@@ -51,6 +51,7 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
+export * from './lib/action-strip/action-strip.component';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/banner.component';
