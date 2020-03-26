@@ -1,6 +1,7 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 import { SplitterType } from '../splitter.component';
 import { IgxSplitterPaneComponent } from '../splitpane/split-pane.component';
+import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-drop/drag-drop.directive';
 
 /**
  * Provides reference to `SplitBarComponent` component.
@@ -96,4 +97,28 @@ export class IgxSplitBarComponent {
         const delta = this.startPoint - (this.type === SplitterType.Horizontal ? event.clientX : event.clientY);
         this.moving.emit(delta);
     }
+
+    public onDragStart(event: IDragStartEventArgs) {
+        this.startPoint = this.type === SplitterType.Horizontal ? event.startX : event.startY;
+        this.moveStart.emit(this.pane);
+    }
+
+    public onDragMove(event: IDragMoveEventArgs) {
+        const isHorizontal = this.type === SplitterType.Horizontal;
+        const curr =  isHorizontal ? event.pageX : event.pageY;     
+        if (isHorizontal) {
+            event.nextPageY = event.pageY;
+        } else {
+            event.nextPageX = event.pageX;
+        }
+        const delta = this.startPoint - curr;
+        if (delta !== 0 ) {
+            this.moving.emit(delta);
+        }
+    }
+
+    public onDragEnd(event: IDragMoveEventArgs) {
+        event.owner.element.nativeElement.style.transform = '';
+    }
+
 }

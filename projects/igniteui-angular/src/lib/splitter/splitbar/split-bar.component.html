@@ -1,11 +1,15 @@
-<div class="igx-splitter-bar" [style.flex-direction]="direction">
+<div class="igx-splitter-bar" [style.flex-direction]="direction" igxDrag [ghost]="false"
+(dragStart)='onDragStart($event)'
+(dragMove)="onDragMove($event)"
+(dragEnd)="onDragEnd($event)">
     <div class="igx-splitter-bar-expander">
         <!-- <igx-icon fontSet="material">arrow_right</igx-icon> -->
     </div>    
     <div class="igx-splitter-bar-indicator" [style.cursor]='cursor'
     [class.igx-splitter-bar-indicator-vertical]='type === 0'
     [class.igx-splitter-bar-indicator-horizontal]='type === 1'
-    splitter (pointerDown)="onPointerDown($event)" (pointerMove)="onPointerMove($event)"></div>
+    igxDragHandle
+    ></div>
     <div class="igx-splitter-bar-expander">
         <!-- <igx-icon fontSet="material">arrow_left</igx-icon> -->
     </div>

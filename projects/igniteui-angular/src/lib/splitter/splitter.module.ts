@@ -3,24 +3,22 @@ import { CommonModule } from '@angular/common';
 import { IgxSplitBarComponent } from './splitbar/split-bar.component';
 import { IgxSplitterPaneComponent } from './splitpane/split-pane.component';
 import { IgxSplitterComponent } from './splitter.component';
-import { SplitterDirective } from './splitter.directives';
 import { IgxIconModule } from '../icon';
+import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 
 @NgModule({
     imports: [
-        CommonModule, IgxIconModule
+        CommonModule, IgxIconModule, IgxDragDropModule
     ],
     declarations: [
         IgxSplitterComponent,
         IgxSplitterPaneComponent,
-        IgxSplitBarComponent,
-        SplitterDirective
+        IgxSplitBarComponent
     ],
     exports: [
         IgxSplitterComponent,
         IgxSplitterPaneComponent,
-        IgxSplitBarComponent,
-        SplitterDirective
+        IgxSplitBarComponent
     ]
 })
 export class IgxSplitterModule { }
