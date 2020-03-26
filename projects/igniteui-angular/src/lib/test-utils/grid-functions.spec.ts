@@ -1957,16 +1957,18 @@ export class GridSummaryFunctions {
             const summaryRow = typeof row === 'number' ?
                 GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+
             UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
         })
 
-    public static focusSummaryCell(fix, rowIndex, cellIndex) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static focusSummaryCell(fix, row, cellIndex) {
+        const summaryRow = typeof row === 'number' ?
+                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        summaryCell.triggerEventHandler('focus', {});
+        UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
         fix.detectChanges();
     }
 }

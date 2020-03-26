@@ -224,9 +224,9 @@ export class TreeGridFunctions {
         });
     }
 
-    public static getElementWithMinHeight (arr) {
+    public static getElementWithMinHeight(arr) {
         return arr.reduce((a, b) =>
-            (a.nativeElement.getBoundingClientRect().height < b.nativeElement.getBoundingClientRect().height) ? a : b );
+            (a.nativeElement.getBoundingClientRect().height < b.nativeElement.getBoundingClientRect().height) ? a : b);
     }
 
     public static sortElementsVertically(arr) {
@@ -391,39 +391,41 @@ export class TreeGridFunctions {
         }
     }
 
-    public static moveCellUpDown (fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown: boolean = true) {
-                const cell = treeGrid.getCellByColumn(rowIndex, columnName);
-                const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
-                const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
+    public static moveCellUpDown(fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown: boolean = true) {
+        const cell = treeGrid.getCellByColumn(rowIndex, columnName);
+        const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
+        const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
+        const gridContent = GridFunctions.getGridContent(fix);
 
-                GridFunctions.simulateCellKeydown(cell, keyboardEventKey);
-                fix.detectChanges();
+        UIInteractions.triggerEventHandlerKeyDown(keyboardEventKey, gridContent);
+        fix.detectChanges();
 
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+        TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
 
-                const newCell = treeGrid.getCellByColumn(newRowIndex, columnName);
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
-            }
+        const newCell = treeGrid.getCellByColumn(newRowIndex, columnName);
+        TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+    }
 
-    public static moveCellLeftRight (fix, treeGrid: IgxTreeGridComponent, rowIndex: number,
+    public static moveCellLeftRight(fix, treeGrid: IgxTreeGridComponent, rowIndex: number,
         firstColumnName: string, nextColumnName: string, moveRight: boolean = true) {
-                const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
-                const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
+        const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
+        const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
+        const gridContent = GridFunctions.getGridContent(fix);
 
-                GridFunctions.simulateCellKeydown(cell, keyboardEventKey);
-                fix.detectChanges();
+        UIInteractions.triggerEventHandlerKeyDown(keyboardEventKey, gridContent);
+        fix.detectChanges();
 
-                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
-                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
-            }
+        TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+        const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
+        TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+    }
 
 
     public static moveGridCellWithTab =
         (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
-                await wait(DEBOUNCETIME);
-                fix.detectChanges();
-                resolve();
-            })
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            resolve();
+        })
 }

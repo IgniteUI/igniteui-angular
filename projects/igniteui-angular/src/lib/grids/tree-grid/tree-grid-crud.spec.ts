@@ -9,6 +9,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { DebugElement } from '@angular/core';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -18,6 +20,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
+    let gridContent: DebugElement;
 
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -729,92 +732,74 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 for (const col of treeGrid.columns) {
                     col.editable = true;
                 }
+                gridContent = GridFunctions.getGridContent(fix);
             }));
 
-            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', async() => {
+            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
                 const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                const cellDOM = allCells[0];
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                cellDOM.nativeElement.dispatchEvent(new Event('focus'));
-                fix.detectChanges();
-
-                cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
+
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
-            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', async() => {
+            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
                 const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 const cellDOM = allCells[1];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                cellDOM.nativeElement.dispatchEvent(new Event('focus'));
-                fix.detectChanges();
-
-                cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
-            it('should be able to edit a tree-grid cell through UI', async() => {
+            it('should be able to edit a tree-grid cell through UI', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -822,11 +807,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, 146);
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(false);
@@ -835,12 +818,11 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 0, 'ID', '146');
             });
 
-            it('should be able to edit a non-tree-grid cell through UI', async() => {
+            it('should be able to edit a non-tree-grid cell through UI', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -848,9 +830,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, 'Abc Def');
-                await wait(DEBOUNCETIME);
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(false);
@@ -859,7 +839,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async() => {
+            it('should emit an event when editing a tree-grid cell through UI', () => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -867,8 +847,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cellComponent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -876,10 +855,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, '146');
-                await wait(DEBOUNCETIME);
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(false);
@@ -899,92 +876,74 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 for (const col of treeGrid.columns) {
                     col.editable = true;
                 }
+                gridContent = GridFunctions.getGridContent(fix);
             }));
 
-            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', async() => {
+            it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
                 const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 const cellDOM = allCells[0];
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                cellDOM.nativeElement.dispatchEvent(new Event('focus'));
-                fix.detectChanges();
-
-                cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
-            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', async() => {
+            it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
                 const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 const cellDOM = allCells[2];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                cellDOM.nativeElement.dispatchEvent(new Event('focus'));
-                fix.detectChanges();
-
-                cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
-                UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('f2', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
-                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
-            it('should be able to edit a tree-grid cell through UI', async() => {
+            it('should be able to edit a tree-grid cell through UI', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -992,9 +951,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, 146);
-                await wait(DEBOUNCETIME);
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(false);
@@ -1003,12 +960,11 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 0, 'ID', '146');
             });
 
-            it('should be able to edit a non-tree-grid cell through UI', async() => {
+            it('should be able to edit a non-tree-grid cell through UI', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -1016,9 +972,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, 'Abc Def');
-                await wait(DEBOUNCETIME);
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(false);
@@ -1027,7 +981,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async() => {
+            it('should emit an event when editing a tree-grid cell through UI', () => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1035,8 +989,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
-                await wait(DEBOUNCETIME);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cellComponent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -1044,9 +997,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeDefined();
 
                 UIInteractions.sendInput(editTemplate, '146');
-                await wait(DEBOUNCETIME);
-                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(false);
