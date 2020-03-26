@@ -114,6 +114,7 @@ export class IgxSplitBarComponent {
         const delta = this.startPoint - curr;
         if (delta !== 0 ) {
             this.moving.emit(delta);
+            event.owner.element.nativeElement.style.transform = ''
         }
     }
 
