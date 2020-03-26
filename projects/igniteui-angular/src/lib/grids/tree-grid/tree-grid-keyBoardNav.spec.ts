@@ -534,7 +534,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             cell = treeGrid.getCellByColumn(4, treeColumns[treeColumns.length - 1]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(cell.focused).toEqual(true);
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
@@ -543,7 +542,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             cell = treeGrid.getCellByColumn(4, treeColumns[0]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(cell.focused).toEqual(true);
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
@@ -551,8 +549,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(4, treeColumns[treeColumns.length - 1]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(cell.focused).toEqual(true);
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(4);
         });
 
@@ -572,7 +568,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             cell = treeGrid.getCellByColumn(9, treeColumns[treeColumns.length - 1]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(cell.focused).toEqual(true);
             expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
