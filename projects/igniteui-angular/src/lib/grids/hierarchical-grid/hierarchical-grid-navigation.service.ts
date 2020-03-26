@@ -212,7 +212,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         childGrid.tbody.nativeElement.focus({preventScroll: true});
         this._pendingNavigation = false;
         childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
-            childGrid.executeCallback(targetIndex, columnIndex, cb);
+            childGrid.navigateTo(targetIndex, columnIndex, cb);
         });
     }
 
