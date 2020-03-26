@@ -155,5 +155,6 @@
 
     %igx-navbar-title {
         @include igx-type-style($type-scale, $title);
+        margin-bottom: 0;
     }
 }
