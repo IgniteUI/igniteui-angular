@@ -158,8 +158,8 @@
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
-    <div [style.display]="shouldOverlayLoading ? 'flex' : 'none'" #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true">
+    <div #loadingOverlay>
+        <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
