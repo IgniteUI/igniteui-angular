@@ -358,6 +358,10 @@
         @extend %igx-grid__td--editing !optional;
     }
 
+    @include e(tr, $m: ghost-copy) {
+        @extend %igx-grid__tr--ghost-copy !optional;
+    }
+
     @include e(td, $m: number) {
         @extend %grid-cell-number !optional;
     }

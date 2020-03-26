@@ -31,6 +31,10 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     * @hidden
     */
     @Input()
+        /**
+     * @hidden
+     */
+    @HostBinding('class.igx-grid__tr--ghost-copy')
     public set ghostRow(value: boolean) {
         this.editable = !value;
         this._ghostRow = value;

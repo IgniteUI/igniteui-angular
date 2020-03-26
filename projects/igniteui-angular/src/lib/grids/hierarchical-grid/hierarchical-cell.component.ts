@@ -32,16 +32,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         return this.row as HierarchicalRowType;
     }
 
-    /**
-     * @hidden
-     */
-    public get textClasses() {
-        return {
-            ['igx-grid__td-text']: !this.hierarchicalRow.ghostRow,
-            ['igx-grid__td-text--disabled']: this.hierarchicalRow.ghostRow
-        };
-    }
-
     // protected hSelection;
     protected _rootGrid;
 
