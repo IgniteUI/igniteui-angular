@@ -1,22 +1,13 @@
 
-@mixin square($size, $radius: 0) {
-    width: $size;
-    height: $size;
-
-    @if $radius != 0 {
-        border-radius: $radius;
-    }
-}
-
 $splitter-color: rgba(235,235,235,0.8);
-$splitter-border-width: (1);
-$splitter-border-style: (solid);
+$splitter-border-width: 1px;
+$splitter-border-style: solid;
 $splitter-border-color: ($splitter-color);
-$splitter-dot-size: rem(2px);
-$splitter-dot-border-radius: rem(1px);
+$splitter-dot-size: .125rem;
+$splitter-dot-border-radius: .0625rem;
 
 
-.igx-split-bar {
+.igx-splitter-bar {
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -27,10 +18,10 @@ $splitter-dot-border-radius: rem(1px);
     border-color: $splitter-border-color;
 }
 
-.igx-split-bar-indicator {
-    
-    @include square($splitter-dot-size, $splitter-dot-border-radius);
+.igx-splitter-bar-indicator {
+    width: $splitter-dot-size;
+    height: $splitter-dot-size;
+    border-radius: $splitter-dot-border-radius;
     margin: $splitter-dot-size;
-    background: 'black';
-    //background: $main-color-4;
+   background: grey;
 }
