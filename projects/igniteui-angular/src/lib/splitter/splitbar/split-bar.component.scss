@@ -1,10 +1,9 @@
 
-$splitter-color: rgba(235,235,235,0.8);
+$splitter-color: rgba(189,189,189,0.8);
 $splitter-border-width: 1px;
 $splitter-border-style: solid;
 $splitter-border-color: ($splitter-color);
 $splitter-indicator-size: .125rem;
-$splitter-size: 0.5rem;
 
 
 
@@ -17,7 +16,6 @@ $splitter-size: 0.5rem;
     border-width: $splitter-border-width;
     border-style: $splitter-border-style;
     border-color: $splitter-border-color;
-    width: $splitter-size;
 
     .igx-icon {
         color: white;
@@ -25,8 +23,18 @@ $splitter-size: 0.5rem;
 }
 
 .igx-splitter-bar-indicator {
-    width: $splitter-indicator-size;
-    height: 25%;
     margin: $splitter-indicator-size;
     background: white;
+}
+
+.igx-splitter-bar-indicator-vertical {
+    height: 25%;
+    width: 100%;
+    margin: $splitter-indicator-size;
+    background: white;
+}
+
+.igx-splitter-bar-indicator-horizontal {
+    height: 100%;
+    width: 25%;
 }

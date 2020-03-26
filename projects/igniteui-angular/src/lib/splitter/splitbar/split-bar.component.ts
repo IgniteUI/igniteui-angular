@@ -49,7 +49,6 @@ export class IgxSplitBarComponent {
      * @type string
      * @memberof SplitBarComponent
      */
-    @HostBinding('style.cursor')
     public get cursor(): string {
         return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
     }
