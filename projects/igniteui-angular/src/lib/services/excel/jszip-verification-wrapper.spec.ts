@@ -141,6 +141,14 @@ export class JSZipWrapper {
         });
     }
 
+    public async verifyPinRowData(pinData: string, message = '') {
+        let result;
+        await this.readDataFiles().then(() => {
+            result = this.dataFilesContent[1];
+            expect(result.fileContent.indexOf(pinData) !== -1).toBeTruthy(message);
+        });
+    }
+
     /* Verifies the contents of all files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
     public async verifyFilesContent(expectedData: IFileContent[], message = '') {
