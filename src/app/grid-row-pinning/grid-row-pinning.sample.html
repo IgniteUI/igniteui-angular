@@ -6,27 +6,34 @@
     <button (click)="exportButtonHandler()">Export</button>
     <div class="sample-content">
         <div class="sample-column">
+            <div class="sample-buttons">
+                <button igxButton="raised" (click)="saveGridState()">Save state</button>
+                <button igxButton="raised" (click)="restoreGridState()">Restore state</button>
+            </div>
             <div class="sample-switches">
                 <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
                 <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
             </div>
-        <igx-grid [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
-            <igx-column width='70px' [filterable]='false'>
-                <ng-template igxCell let-cell="cell" let-val>
-                    <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
-                        {{cell.row.pinned ? 'lock' : 'lock_open'}}
-                    </igx-icon>
-                </ng-template>
-            </igx-column>
-            <igx-column width='100px' [filterable]='false'>
-                <ng-template igxCell let-cell="cell" let-val>
-                    <button (click)="grid1.deleteRow(cell.row.rowID)">Delete</button>
-                </ng-template>
-            </igx-column>
-            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'
-                [hidden]='c.hidden' [editable]='true'>
-            </igx-column>
-        </igx-grid>
+            <igx-grid [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig"
+                [columnHiding]='true' [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'"
+                [height]="'500px'" [rowSelectable]="false">
+                <igx-column width='70px' [filterable]='false'>
+                    <ng-template igxCell let-cell="cell" let-val>
+                        <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
+                            {{cell.row.pinned ? 'lock' : 'lock_open'}}
+                        </igx-icon>
+                    </ng-template>
+                </igx-column>
+                <igx-column width='100px' [filterable]='false'>
+                    <ng-template igxCell let-cell="cell" let-val>
+                        <button (click)="grid1.deleteRow(cell.row.rowID)">Delete</button>
+                    </ng-template>
+                </igx-column>
+                <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                    [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden'
+                    [editable]='true'>
+                </igx-column>
+            </igx-grid>
         </div>
     </div>
 </div>
