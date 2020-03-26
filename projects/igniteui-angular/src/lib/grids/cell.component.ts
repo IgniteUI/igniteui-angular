@@ -750,6 +750,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
+            this.gridAPI.submit_value();
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);

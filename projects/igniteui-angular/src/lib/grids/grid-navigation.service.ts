@@ -33,7 +33,7 @@ export class IgxGridNavigationService {
             this.handleAlt(key, event);
             return;
         }
-        if (this.isDataRow(this.activeNode.row)) {
+        if (this.isDataRow(this.activeNode.row) && [' ', 'spacebar', 'space'].indexOf(key) === -1) {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
@@ -211,6 +211,7 @@ export class IgxGridNavigationService {
             return;
         }
         this.navigateInBody(next.rowIndex,  next.visibleColumnIndex, (obj) => {
+            obj.target.activate();
             obj.target.setEditMode(true);
             this.grid.cdr.detectChanges();
         });
@@ -242,7 +243,7 @@ export class IgxGridNavigationService {
     }
 
     public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
-        if (!this.isValidPosition(rowIndex, visibleColIndex)) { return; }
+        if (!this.isValidPosition(rowIndex, visibleColIndex) && this.isActiveNode(rowIndex, visibleColIndex)) { return; }
         this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
     }
 
