@@ -25,15 +25,13 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
-        id: string, pinned: boolean = false, pipeTrigger: number): ITreeGridRecord[] {
+        id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
         const flatData: any[] = [];
 
-        if (pinned) {
-            hierarchicalRecords = this.normalizePinnedRecords(collection, primaryKey);
-        } else if (primaryKey && foreignKey) {
+        if (primaryKey && foreignKey) {
             hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         } else if (childDataKey) {
             hierarchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
@@ -41,7 +39,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         }
 
         grid.flatData = flatData;
-        grid.records = (pinned) ? grid.records : treeGridRecordsMap;
+        grid.records = treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
     }
@@ -121,19 +119,6 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             result.push(record);
         }
 
-        return result;
-    }
-
-    private normalizePinnedRecords(collection: any[], primaryKey: string) {
-        const result: ITreeGridRecord[] = [];
-        collection.forEach(row => {
-            const record: ITreeGridRecord = {
-                rowID: this.getRowID(primaryKey, row),
-                data: row,
-                children: []
-            };
-            result.push(record);
-        });
         return result;
     }
 }
@@ -342,12 +327,31 @@ export class IgxTreeGridRowPinningPipe implements PipeTransform {
             return [];
         }
 
-        const result = grid.flatData.filter((value, index) => grid.isRecordPinned(value));
+        let result = grid.flatData.filter((value, index) => grid.isRecordPinned(value));
 
         // pinned records should be ordered as they were pinned.
         result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
 
+        result = this.normalizePinnedRecords(result, this.gridAPI.grid.primaryKey);
+
         return result;
+    }
+
+    private normalizePinnedRecords(collection: any[], primaryKey: string) {
+        const result: ITreeGridRecord[] = [];
+        collection.forEach(row => {
+            const record: ITreeGridRecord = {
+                rowID: this.getRowID(primaryKey, row),
+                data: row,
+                children: []
+            };
+            result.push(record);
+        });
+        return result;
+    }
+
+    private getRowID(primaryKey: any, rowData: any) {
+        return primaryKey ? rowData[primaryKey] : rowData;
     }
 }
 

@@ -79,7 +79,6 @@
             <ng-container *ngFor="let rowData of data
                 | visibleColumns:hasVisibleColumns
                 | treeGridRowPinning:id:pipeTrigger
-                | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:true:pipeTrigger
                 | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
                 | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger; let rowIndex = index">
                 <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
@@ -93,7 +92,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:false:pipeTrigger
+        | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
         | treeGridShadowRows:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger
