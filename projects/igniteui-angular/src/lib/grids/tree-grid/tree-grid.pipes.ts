@@ -31,7 +31,9 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
         const flatData: any[] = [];
 
-        if (primaryKey && foreignKey) {
+        if (pinned) {
+            hierarchicalRecords = this.normalizePinnedRecords(collection, primaryKey);
+        } else if (primaryKey && foreignKey) {
             hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         } else if (childDataKey) {
             hierarchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
@@ -119,6 +121,19 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             result.push(record);
         }
 
+        return result;
+    }
+
+    private normalizePinnedRecords(collection: any[], primaryKey: string) {
+        const result: ITreeGridRecord[] = [];
+        collection.forEach(row => {
+            const record: ITreeGridRecord = {
+                rowID: this.getRowID(primaryKey, row),
+                data: row,
+                children: []
+            };
+            result.push(record);
+        });
         return result;
     }
 }
