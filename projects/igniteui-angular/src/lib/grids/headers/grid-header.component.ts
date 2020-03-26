@@ -126,8 +126,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get selected() {
-        return this.column.selected
-            && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
+        return this.column.selected && !this.grid.filteringService.isFilterRowVisible;
     }
 
     @HostBinding('attr.role')

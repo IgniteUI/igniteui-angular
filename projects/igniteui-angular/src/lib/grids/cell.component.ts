@@ -471,7 +471,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('class.igx-grid__td--column-selected')
     get columnSelected() {
-        return this.selectionService.isColumnSelected(this.column.field);
+        return this.selectionService.isColumnSelected(this.column.field) && !this.grid.filteringService.isFilterRowVisible;
     }
 
     @HostBinding('class.igx-grid__td--edited')

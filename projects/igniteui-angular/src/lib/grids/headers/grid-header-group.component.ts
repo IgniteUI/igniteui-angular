@@ -226,7 +226,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
     */
     get selected() {
-       return this.column.selected;
+       return this.column.selected && !this.grid.filteringService.isFilterRowVisible;
     }
 
     /**
