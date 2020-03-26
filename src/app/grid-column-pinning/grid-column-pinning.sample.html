@@ -15,25 +15,26 @@
                 [rowSelectable]="false">
                 <igx-column field="CompanyName" header="Company" width="200px">
                     <ng-template igxCell let-cell="cell" let-val>
-                        <div (mouseover)="actionstrip.show(cell)" (mouseout)="actionstrip.hide()">
+                        <div (mouseover)="actionstrip.show(cell.row)">
                             <!-- <igx-avatar igxListThumbnail [src]="value.TeamAvatar" [initials]="value.TeamName"
                                 roundShape="true">
                             </igx-avatar> -->
-                            <span>{{ val }}</span>
+                            <!-- <span>{{ val }}</span> -->
+                            <span>Hover me to see the Action Strip</span>
                         </div>
-                        
-                        <igx-action-strip #actionstrip>
-                            <igx-icon (click)="doSomeAction(cell)">lock</igx-icon>
-                            <!-- <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
-                            <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions> -->
-                          </igx-action-strip>
                     </ng-template>
                 </igx-column>
                 <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                     [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                 </igx-column>
 
-                
+                <igx-action-strip #actionstrip (mouseleave)="actionstrip.hide()">
+                    <div class="actions">
+                        <igx-icon (click)="doSomeAction(actionstrip.context)" class="pin-icon">lock</igx-icon>
+                    </div>
+                    <!-- <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
+                    <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions> -->
+                  </igx-action-strip>
             </igx-grid>
             <div class="sample-buttons">
                 <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>

@@ -7,6 +7,7 @@
 @import 'core';
 
 // Import all component mixins
+@import '../components/action-strip/action-strip-theme';
 @import '../components/avatar/avatar-theme';
 @import '../components/badge/badge-theme';
 @import '../components/bottom-nav/bottom-nav-theme';
@@ -116,6 +117,10 @@
 
     @if not(index($exclude, 'igx-avatar')) {
         @include igx-avatar(igx-avatar-theme($palette, $schema));
+    }
+
+    @if not(index($exclude, 'igx-action-strip')) {
+        @include igx-action-strip(igx-action-strip-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-badge')) {
