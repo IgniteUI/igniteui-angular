@@ -1,0 +1,28 @@
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block	/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem	/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod	/// @requires {mixin} bem-mod
+////
+
+@include b(igx-splitter) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @include e(bar) {
+        @extend %igx-splitter-bar !optional;
+    }
+
+    @include e(bar-handle) {
+        @extend %igx-splitter-bar-handle !optional;
+    }
+
+    @include e(handle-vertical) {
+        @extend %igx-splitter-handle-vertical !optional;
+    }
+
+    @include e(handle-horizontal) {
+        @extend %igx-splitter-handle-horizontal !optional;
+    }
+}

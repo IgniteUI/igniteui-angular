@@ -1,0 +1,67 @@
+////
+/// @group themes
+@function igx-splitter-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $elevations: $elevations,
+
+    $border-radius: null,
+    $button-shadow: null,
+) {
+    $name: 'igx-splitter';
+    $splitter-schema: ();
+
+    $theme: apply-palette($splitter-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-splitter($theme) {
+    @include igx-root-css-vars($theme);
+
+    
+    $splitter-color: rgba(189,189,189,0.8);
+    $splitter-border-width: 1px;
+    $splitter-border-style: solid;
+    $splitter-border-color: ($splitter-color);
+    $splitter-indicator-size: .125rem;
+
+    %igx-splitter-bar {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        background: $splitter-color;
+        border-width: $splitter-border-width;
+        border-style: $splitter-border-style;
+        border-color: $splitter-border-color;
+    
+        .igx-icon {
+            color: white;
+        }
+    }
+
+    %igx-splitter-bar-handle {
+        margin: $splitter-indicator-size;
+        background: white;
+    }
+
+    %igx-splitter-handle-vertical {
+        height: 25%;
+        width: 100%;
+        margin: $splitter-indicator-size;
+        background: white;
+    }
+    
+    %igx-splitter-handle-horizontal {
+        height: 100%;
+        width: 25%;
+    }
+}

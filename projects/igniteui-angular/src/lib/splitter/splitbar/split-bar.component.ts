@@ -11,7 +11,6 @@ import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-d
  */
 @Component({
     selector: 'igx-split-bar',
-    styleUrls: ['./split-bar.component.scss'],
     templateUrl: './split-bar.component.html'
 })
 export class IgxSplitBarComponent {
