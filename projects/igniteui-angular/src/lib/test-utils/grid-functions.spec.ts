@@ -64,6 +64,7 @@ const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
 
@@ -2172,5 +2173,75 @@ export class GridSelectionFunctions {
         };
 
         column.headerCell.onClick(event);
+    }
+}
+
+export class GridPagingFunctions {
+
+    public static verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
+        const disabled = 'igx-button--disabled';
+        const grid = fix.componentInstance.grid;
+
+        expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
+        expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+
+        if (pagerText != null) {
+            expect(grid.nativeElement.querySelector(PAGER_CLASS)).toBeDefined();
+            expect(grid.nativeElement.querySelectorAll('igx-select').length).toEqual(1);
+            expect(grid.nativeElement.querySelector('.igx-paginator__pager > div').textContent).toMatch(pagerText);
+        }
+        if (buttonsVisibility != null && buttonsVisibility.length === 4) {
+            const pagingButtons = GridFunctions.getPagingButtons(grid.nativeElement);
+            expect(pagingButtons.length).toEqual(4);
+            expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
+            expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);
+            expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
+            expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
+        }
+    }
+
+
+    public static testPagingAPI(fix, grid: IgxGridComponent, page: (page: number) => void, desiredPageIndex: number = 2) {
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // non-existent page, should not paginate
+        page(-2);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // non-existent page, should not paginate
+        page(666);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // first page
+        desiredPageIndex = 0;
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // last page
+        desiredPageIndex = grid.totalPages - 1;
+        page(desiredPageIndex);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+
+        // last page + 1, should not paginate
+        page(grid.totalPages);
+        tick();
+        fix.detectChanges();
+        expect(grid.page).toBe(desiredPageIndex);
+    }
+
+    public static getGridPaginator(grid) {
+        return grid.nativeElement.querySelector(PAGER_CLASS);
     }
 }
