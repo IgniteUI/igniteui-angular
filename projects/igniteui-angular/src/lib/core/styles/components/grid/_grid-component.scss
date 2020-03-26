@@ -392,6 +392,10 @@
         @extend %grid-cell--pinned--column-selected !optional;
     }
 
+    @include e(td, $m: pinned-chip) {
+        @extend %grid-cell--pinned-chip !optional;
+    }
+
     @include e(td-text) {
         @extend %grid-cell-text !optional;
     }

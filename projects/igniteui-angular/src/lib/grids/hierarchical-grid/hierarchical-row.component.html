@@ -71,7 +71,7 @@
             [readonly]="true"
             [checked]="selected"
             disableRipple="true"
-            [disabled]="deleted"
+            [disabled]="ghostRow || deleted"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">
         </igx-checkbox>

@@ -124,12 +124,8 @@
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #hierarchical_record_template>
-                <igx-hierarchical-grid-row [gridID]="id" [index]="getRowIndex(rowIndex, false)" [rowData]="rowData" #row>
+                <igx-hierarchical-grid-row [gridID]="id" [index]="getRowIndex(rowIndex, false)" [ghostRow]="isGhostRecord(rowData)" [rowData]="!isGhostRecord(rowData) ? rowData : rowData.recordData" #row>
                 </igx-hierarchical-grid-row>
-            </ng-template>
-            <ng-template #hierarchical_record_ghost_template>
-                <igx-hierarchical-grid-row-ghost [gridID]="id" [index]="getRowIndex(rowIndex, false)" [rowData]="rowData" #row>
-                </igx-hierarchical-grid-row-ghost>
             </ng-template>
             <ng-template #child_record_template let-rowIndex="index" let-rowData>
                 <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
@@ -143,8 +139,8 @@
                 </div>
             </ng-template>
             <ng-template
-            [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? (isGhostRecord(rowData) ? hierarchical_record_ghost_template : hierarchical_record_template) : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
-            [igxTemplateOutletContext]='getContext(rowData, rowIndex)' (onViewCreated)='viewCreatedHandler($event)'
+            [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
+            [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (onViewCreated)='viewCreatedHandler($event)'
             (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'
             (onBeforeViewDetach)='viewDetachHandler($event)'></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->

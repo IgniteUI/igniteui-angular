@@ -10,6 +10,7 @@ export interface RowType {
     index: number;
     gridID: string;
     added: boolean;
+    pinned: boolean;
     deleted: boolean;
     selected: boolean;
     focused: boolean;

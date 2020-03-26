@@ -7,7 +7,9 @@ import {
     ViewChildren,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    Input,
+    HostListener
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowDirective } from '../row.directive';
@@ -22,15 +24,29 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
 
+    protected _ghostRow = false;
     protected expanderClass = 'igx-grid__hierarchical-expander';
+
+    /**
+    * @hidden
+    */
+    @Input()
+    public set ghostRow(value: boolean) {
+        this.editable = !value;
+        this._ghostRow = value;
+    }
+
+    public get ghostRow() {
+        return this._ghostRow;
+    }
 
     /**
     * @hidden
     */
     public get expanderClassResolved() {
         return {
-            [this.expanderClass]: !this.pinned,
-            [`${this.expanderClass}--empty`]: this.pinned
+            [this.expanderClass]: !this.pinned || this.ghostRow,
+            [`${this.expanderClass}--empty`]: this.pinned && !this.ghostRow
         };
     }
 
@@ -154,7 +170,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         if (this.grid.hasChildrenKey) {
             expandable = this.rowData[this.grid.hasChildrenKey];
         }
-        if (!expandable || this.pinned) {
+        if (!expandable || (this.pinned && !this.ghostRow)) {
             return this.defaultEmptyTemplate;
         }
         if (this.expanded) {
@@ -173,4 +189,22 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
             g.endEdit();
         }});
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (this.ghostRow) { return; }
+        super.onClick(event);
+     }
+
+    /**
+     * @hidden
+     */
+    public onRowSelectorClick(event) {
+        if (this.ghostRow) { return; }
+        super.onRowSelectorClick(event);
+     }
 }

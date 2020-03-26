@@ -1,11 +1,12 @@
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
-     OnInit, HostListener, NgZone } from '@angular/core';
+     OnInit, HostListener, NgZone, HostBinding } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
+import { HierarchicalRowType } from './hierarchical-row.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +16,31 @@ import { PlatformUtil } from '../../core/utils';
     providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
+
+    /**
+     * @hidden
+     */
+    public get displayPinnedChip() {
+        return this.hierarchicalRow.ghostRow &&
+            (!this.grid.visibleColumns[this.visibleColumnIndex - 1] || this.grid.visibleColumns[this.visibleColumnIndex - 1].cellTemplate);
+    }
+
+    /**
+     * @hidden
+     */
+    public get hierarchicalRow(): HierarchicalRowType {
+        return this.row as HierarchicalRowType;
+    }
+
+    /**
+     * @hidden
+     */
+    public get textClasses() {
+        return {
+            ['igx-grid__td-text']: !this.hierarchicalRow.ghostRow,
+            ['igx-grid__td-text--disabled']: this.hierarchicalRow.ghostRow
+        };
+    }
 
     // protected hSelection;
     protected _rootGrid;

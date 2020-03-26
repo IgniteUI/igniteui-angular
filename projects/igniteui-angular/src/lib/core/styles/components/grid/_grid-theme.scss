@@ -1371,6 +1371,9 @@
         }
     }
 
+    %grid-cell--pinned-chip {
+        margin-right: rem(4px);
+    }
 
     %grid-cell-header {
         flex-flow: row nowrap;

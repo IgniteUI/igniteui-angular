@@ -8,7 +8,6 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IgxHierarchicalRowGhostComponent } from './hierarchical-row-ghost.component';
 
 /**
  * @hidden
@@ -18,7 +17,6 @@ import { IgxHierarchicalRowGhostComponent } from './hierarchical-row-ghost.compo
     IgxHierarchicalGridBaseDirective,
     IgxHierarchicalGridComponent,
     IgxHierarchicalRowComponent,
-    IgxHierarchicalRowGhostComponent,
     IgxRowIslandComponent,
     IgxChildGridRowComponent,
     IgxHierarchicalGridCellComponent,
@@ -30,7 +28,6 @@ import { IgxHierarchicalRowGhostComponent } from './hierarchical-row-ghost.compo
     IgxGridModule,
     IgxHierarchicalGridComponent,
     IgxHierarchicalRowComponent,
-    IgxHierarchicalRowGhostComponent,
     IgxHierarchicalGridCellComponent,
     IgxRowIslandComponent,
     IgxChildGridRowComponent
