@@ -25,7 +25,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
-        id: string, pipeTrigger: number): ITreeGridRecord[] {
+        id: string, pinned: boolean = false, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
@@ -39,7 +39,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         }
 
         grid.flatData = flatData;
-        grid.records = treeGridRecordsMap;
+        grid.records = (pinned) ? grid.records : treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
     }
@@ -168,11 +168,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                 data.push(hierarchicalRecord);
             }
 
-            const pinnedRow = this.gridAPI.get_row_by_key(hierarchicalRecord.rowID) !== undefined ?
-                    this.gridAPI.get_row_by_key(hierarchicalRecord.rowID).pinned :
-                    false;
-
-            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(hierarchicalRecord) || pinnedRow;
+            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(hierarchicalRecord);
 
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 
