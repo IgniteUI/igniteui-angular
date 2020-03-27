@@ -1,9 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent } from 'igniteui-angular';
+import {
+    IgxGridComponent,
+    ColumnPinningPosition,
+    RowPinningPosition, IgxGridRowComponent,
+    IgxTransactionService,
+    IgxGridTransaction,
+    IgxGridStateDirective,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions
+} from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
-    providers: [],
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
     selector: 'app-grid-row-pinning-sample',
     styleUrls: ['grid-row-pinning.sample.css'],
     templateUrl: 'grid-row-pinning.sample.html'
@@ -12,8 +21,26 @@ import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/g
 export class GridRowPinningSampleComponent implements OnInit {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
+    public options = {
+        cellSelection: true,
+        rowSelection: true,
+        filtering: true,
+        advancedFiltering: true,
+        paging: true,
+        sorting: true,
+        groupBy: true,
+        columns: false,
+        rowPinning: true,
+        pinningConfig: true
+    };
+
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
+
+    constructor(private excelExportService: IgxExcelExporterService) {
+    }
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -27,7 +54,7 @@ export class GridRowPinningSampleComponent implements OnInit {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
             this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
         } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
+            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows };
         }
     }
 
@@ -38,7 +65,7 @@ export class GridRowPinningSampleComponent implements OnInit {
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
             { field: 'CompanyName', width: '200px', groupable: true },
-            { field: 'ContactName', width: '200px', pinned: false, groupable: true  },
+            { field: 'ContactName', width: '200px', pinned: false, groupable: true },
             { field: 'ContactTitle', width: '300px', pinned: false, groupable: true },
             { field: 'Address', width: '250px' },
             { field: 'City', width: '200px' },
@@ -83,18 +110,31 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     togglePinRow(index) {
         const rec = this.data[index];
-        this.grid1.pinnedRecords.indexOf(rec) === -1 ?
-        this.grid1.pinRow(this.data[index]) :
-        this.grid1.unpinRow(this.data[index])
+        this.grid1.isRecordPinned(rec) ?
+            this.grid1.pinRow(this.data[index]) :
+            this.grid1.unpinRow(this.data[index])
     }
 
     togglePining(row: IgxGridRowComponent, event) {
         event.preventDefault();
-        if(row.pinned) {
+        if (row.pinned) {
             row.unpin();
         } else {
             row.pin();
         }
     }
 
+    public exportButtonHandler() {
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions("ExportFileFromGrid"));
+    }
+
+    public saveGridState() {
+        const state = this.state.getState() as string;
+        window.localStorage.setItem("grid1-state", state);
+    }
+
+    public restoreGridState() {
+        const state = window.localStorage.getItem("grid1-state");
+        this.state.setState(state);
+    }
 }
