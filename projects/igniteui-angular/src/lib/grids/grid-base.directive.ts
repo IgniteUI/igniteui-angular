@@ -602,6 +602,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
+
+    /**
      * Gets/Sets the height.
      * @example
      * ```html
@@ -630,6 +637,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get hostWidth() {
         return this._width || this._hostWidth;
     }
+
     /**
      * Gets/Sets the width of the grid.
      * @example
@@ -1946,7 +1954,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+        const classes = [this.getComponentDensityClass('igx-grid')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
     }
 
     get bannerClass(): string {
@@ -2688,11 +2699,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
-        if (key === 'pagedown') {
-            this.verticalScrollContainer.scrollNextPage();
-            this.nativeElement.focus();
-        } else if (key === 'pageup') {
-            this.verticalScrollContainer.scrollPrevPage();
+        if (key === 'pagedown' || key === 'pageup') {
+            event.preventDefault();
+            key === 'pagedown' ? this.verticalScrollContainer.scrollNextPage() : this.verticalScrollContainer.scrollPrevPage();
             this.nativeElement.focus();
         }
     }
@@ -2824,10 +2833,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
-            this._headerFeaturesWidth = NaN;
-            this.summaryService.summaryHeight = 0;
             this.endEdit(true);
-            this.cdr.markForCheck();
+            this.summaryService.summaryHeight = 0;
+            this.notifyChanges(true);
         });
 
         this.onRowPinning.subscribe(() => {

@@ -38,6 +38,18 @@ export class UIInteractions {
         return new KeyboardEvent(eventType, keyboardEvent);
     }
 
+    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false) {
+        const clickEvent = {
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new MouseEvent(eventType, clickEvent);
+    }
+
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
             key: keyPressed,

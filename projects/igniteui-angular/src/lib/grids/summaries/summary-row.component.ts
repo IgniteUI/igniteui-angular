@@ -60,9 +60,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
         res.reset(cList);
         return res;
     }
-    public set summaryCells(cells) {
-
-    }
+    public set summaryCells(cells) { }
 
     /**
      * @hidden

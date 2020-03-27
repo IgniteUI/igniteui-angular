@@ -1970,6 +1970,23 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const activeFilterIcon = header.nativeElement.querySelector('.igx-excel-filter__icon--filtered');
             expect(activeFilterIcon).toBeDefined('no active filter icon was found');
         }));
+
+        it('Should clear non-unary conditions with null searchVal when close', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.openFilterDD(fix.debugElement);
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            GridFunctions.selectFilteringCondition('Empty', dropdownList);
+            fix.detectChanges();
+            GridFunctions.openFilterDD(fix.debugElement);
+            GridFunctions.selectFilteringCondition('Contains', dropdownList);
+            fix.detectChanges();
+            GridFunctions.closeFilterRow(fix);
+
+            const headerChip = GridFunctions.getFilterChipsForColumn('ProductName', fix);
+            expect(headerChip.length).toBe(1);
+        }));
     });
 
     describe('Integration scenarios', () => {
