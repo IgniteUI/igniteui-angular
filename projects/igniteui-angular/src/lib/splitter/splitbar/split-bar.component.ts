@@ -104,7 +104,7 @@ export class IgxSplitBarComponent {
 
     public onDragMove(event: IDragMoveEventArgs) {
         const isHorizontal = this.type === SplitterType.Horizontal;
-        const curr =  isHorizontal ? event.pageX : event.pageY;     
+        const curr =  isHorizontal ? event.pageX : event.pageY;
         if (isHorizontal) {
             event.nextPageY = event.pageY;
         } else {

@@ -12,7 +12,7 @@ import { Component, HostBinding, Input, ElementRef } from '@angular/core';
 })
 export class IgxSplitterPaneComponent {
 
-    public _size = 'auto'
+    public _size = 'auto';
     /**
      * Sets/gets the size of the current `IgxSplitterPaneComponent`.
      */

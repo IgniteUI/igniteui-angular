@@ -108,7 +108,8 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * This method performs some initialization logic when the user starts dragging the gripper between each couple of panes.
-     * @param  {IgxSplitterPaneComponent} pane The main `IgxSplitterPaneComponent` associated with the currently dragged `SplitBarComponent`.
+     * @param  {IgxSplitterPaneComponent} pane
+     * The main `IgxSplitterPaneComponent` associated with the currently dragged `SplitBarComponent`.
      * @return {void}@memberof SplitterComponent
      */
     public onMoveStart(pane: IgxSplitterPaneComponent) {
