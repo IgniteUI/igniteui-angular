@@ -79,7 +79,6 @@
             <ng-container *ngFor="let rowData of data
                 | visibleColumns:hasVisibleColumns
                 | treeGridRowPinning:id:pipeTrigger
-                | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
                 | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger; let rowIndex = index">
                 <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
                 </ng-container>
