@@ -70,6 +70,15 @@ export class IgxSplitBarComponent {
         return this.type === SplitterType.Horizontal ? 'column' : 'row';
     }
 
+    get collapseNextIcon() {
+        return this.type === SplitterType.Horizontal ? 'arrow_right' : 'arrow_drop_down';
+    }
+
+    get collapsePrevIcon() {
+        return this.type === SplitterType.Horizontal ? 'arrow_left' : 'arrow_drop_up';
+    }
+
+
     /**
      * A temporary holder for the pointer coordinates.
      * @private

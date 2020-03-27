@@ -2,7 +2,7 @@
 (dragStart)='onDragStart($event)'
 (dragMove)="onDragMove($event)">
     <div class="igx-splitter-bar-expander">
-        <!-- <igx-icon fontSet="material">arrow_right</igx-icon> -->
+        <igx-icon fontSet="material">{{collapsePrevIcon}}</igx-icon>
     </div>    
     <div class="igx-splitter__bar-handle" [style.cursor]='cursor'
     [class.igx-splitter__handle-vertical]='type === 0'
@@ -10,6 +10,6 @@
     igxDragHandle
     ></div>
     <div class="igx-splitter-bar-expander">
-        <!-- <igx-icon fontSet="material">arrow_left</igx-icon> -->
+        <igx-icon fontSet="material">{{collapseNextIcon}}</igx-icon>
     </div>
 </div>
