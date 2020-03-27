@@ -14,7 +14,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { DebugElement } from '@angular/core';
 
-fdescribe('IgxGrid - Grid Paging #grid', () => {
+describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
 
     beforeAll(async(() => {
@@ -47,7 +47,6 @@ fdescribe('IgxGrid - Grid Paging #grid', () => {
         it('should paginate data UI', () => {
 
             expect(grid.paging).toBeTruthy();
-
             GridFunctions.verifyGridPager(fix, 3, '1', '1\xA0of\xA04', [true, true, false, false]);
 
             // Go to next page
@@ -73,8 +72,7 @@ fdescribe('IgxGrid - Grid Paging #grid', () => {
 
         it('should paginate data API', () => {
 
-            // Goto page 3 through API and listen for event
-
+         // Goto page 3 through API and listen for event
             spyOn(grid.onPagingDone, 'emit');
             grid.paginate(2);
 
@@ -259,9 +257,7 @@ fdescribe('IgxGrid - Grid Paging #grid', () => {
 
         it('should work correct with filtering', () => {
 
-
             grid.getColumnByName('ID').filterable = true;
-
             fix.detectChanges();
 
             // Filter column
@@ -281,7 +277,6 @@ fdescribe('IgxGrid - Grid Paging #grid', () => {
         });
 
         it('should work correct with crud operations', () => {
-
 
             grid.primaryKey = 'ID';
             fix.detectChanges();
