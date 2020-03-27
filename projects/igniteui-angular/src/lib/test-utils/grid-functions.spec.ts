@@ -66,6 +66,7 @@ const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 
 export class GridFunctions {
 
@@ -216,6 +217,10 @@ export class GridFunctions {
         return null;
     }
 
+    public static verifyMasterDetailRowFocused(row: HTMLElement, focused = true) {
+        expect(row.classList.contains(FOCUSED_DETAILS_ROW_CLASS)).toEqual(focused);
+    }
+
     public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
         const allExpanded = new Map<any, boolean>();
         data.forEach(item => {
@@ -238,19 +243,6 @@ export class GridFunctions {
 
         resolve();
     })
-
-    public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        const detailRow = GridFunctions.getMasterRowDetail(masterRow);
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
-        // grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
-    }
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);

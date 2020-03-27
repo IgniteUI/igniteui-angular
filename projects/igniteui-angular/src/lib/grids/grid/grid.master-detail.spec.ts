@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -345,24 +345,29 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
+        let gridContent: DebugElement;
         beforeEach(async() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fix);
             await wait(DEBOUNCETIME * 4);
             fix.detectChanges();
         });
 
         it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.', () => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
             fix.detectChanges();
 
             const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
-            expect(document.activeElement).toBe(firstRowDetail);
+            GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
+            expect(targetCellElement.selected).toBeTruthy();
 
-            GridFunctions.simulateDetailKeydown(grid, grid.rowList.first, 'ArrowDown');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
             fix.detectChanges();
 
             expect(grid.getCellByColumn(2, 'ContactName').selected).toBeTruthy();
@@ -371,13 +376,15 @@ describe('IgxGrid Master Detail #grid', () => {
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
             const row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(row);
-            expect(document.activeElement).toBe(detailRow);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
@@ -390,11 +397,10 @@ describe('IgxGrid Master Detail #grid', () => {
 
             const row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
-
-            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
             fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -402,21 +408,24 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(row);
-            expect(document.activeElement).toBe(detailRow);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
         it('Should navigate up through a detail view by focusing the whole row and continuing onto the next with arrow up.', () => {
             const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
             fix.detectChanges();
 
             const detailRow = GridFunctions.getMasterRowDetail(prevRow);
-            expect(document.activeElement).toBe(detailRow);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
+            expect(targetCellElement.selected).toBeTruthy();
 
-            GridFunctions.simulateDetailKeydown(grid, prevRow, 'ArrowUp');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
             fix.detectChanges();
 
             expect(prevRow.cells.toArray()[0].selected).toBeTruthy();
@@ -429,13 +438,15 @@ describe('IgxGrid Master Detail #grid', () => {
 
             const row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
-            await wait(DEBOUNCETIME);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
+                       await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
-            expect(document.activeElement).toBe(detailRow);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
@@ -447,78 +458,52 @@ describe('IgxGrid Master Detail #grid', () => {
 
             const row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
-            expect(document.activeElement).toBe(detailRow);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
-
-        it(`Should focus detail row after hitting Tab on last cell in prev data row.`, () => {
-            const row = grid.getRowByIndex(0) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(0, 'CompanyName');
-
-            GridFunctions.simulateCellKeydown(targetCellElement, 'tab');
-            fix.detectChanges();
-
-            const detailRow = GridFunctions.getMasterRowDetail(row);
-            expect(document.activeElement).toBe(detailRow);
-         });
-
-       it(`Should focus detail row after hitting Shift+Tab on first cell in next data row and continue to the prev row.`, async() => {
-            const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
-            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
-
-            GridFunctions.simulateCellKeydown(targetCellElement, 'tab', false, true);
-            fix.detectChanges();
-
-            const detailRow = GridFunctions.getMasterRowDetail(prevRow);
-            expect(document.activeElement).toBe(detailRow);
-
-            GridFunctions.simulateDetailKeydown(grid, prevRow, 'Tab', false, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-
-            expect(document.activeElement).toBe(grid.getCellByColumn(0, 'CompanyName').nativeElement);
-         });
 
          it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async() => {
             const row = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
-            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
             fix.detectChanges();
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
 
             // collapse with alt + arrowup
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp', true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             expect(row.expanded).toBeFalsy();
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + ArrowDown
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown', true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             expect(row.expanded).toBeTruthy();
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
 
              // collapse with alt + arrowleft
-             GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowLeft', true);
+             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
              await wait(DEBOUNCETIME);
              fix.detectChanges();
              expect(row.expanded).toBeFalsy();
-             expect(targetCellElement.focused).toBeTruthy();
+             expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + arrowright
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowRight', true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             expect(row.expanded).toBeTruthy();
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
          });
 
         it(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
@@ -533,12 +518,12 @@ describe('IgxGrid Master Detail #grid', () => {
             const row = grid.getRowByIndex(52) as IgxGridRowComponent;
             let targetCellElement = grid.getCellByColumn(52, 'ContactName');
 
-            targetCellElement.onClick(UIInteractions.getClickEvent('click'));
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
             fix.detectChanges();
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
 
             // collapse with alt + arrowup
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp', true);
+            UIInteractions.triggerEventHandlerKeyDown('Arrowp', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -546,10 +531,10 @@ describe('IgxGrid Master Detail #grid', () => {
 
             expect(row.expanded).toBeFalsy();
             targetCellElement = grid.getCellByColumn(52, 'ContactName');
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + ArrowDown
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown', true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -557,7 +542,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             expect(row.expanded).toBeTruthy();
             targetCellElement = grid.getCellByColumn(52, 'ContactName');
-            expect(targetCellElement.focused).toBeTruthy();
+            expect(targetCellElement.active).toBeTruthy();
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
@@ -585,8 +570,10 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it('Should navigate to the last data cell in the grid using Ctrl + End.', async() => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'End', false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -595,7 +582,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.getRowByIndex(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(lastRow.cells.last.nativeElement);
+            expect(lastRow.cells.last.active).toBeTruthy();
         });
 
         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async() => {
@@ -606,8 +593,10 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             const targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
 
-            GridFunctions.simulateCellKeydown(targetCellElement, 'Home', false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -616,12 +605,15 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.getRowByIndex(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(fRow.cells.first.nativeElement);
+            expect(fRow.cells.first.active).toBeTruthy();
         });
 
         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async() => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown', false, false, true);
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -630,7 +622,7 @@ describe('IgxGrid Master Detail #grid', () => {
             const lastRow = grid.getRowByIndex(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(lastRow.cells.first.nativeElement);
+            expect(lastRow.cells.first.active).toBeTruthy();
         });
 
         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async() => {
@@ -641,7 +633,10 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             const targetCellElement = grid.getCellByColumn(52, 'CompanyName');
-            GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp', false, false, true);
+            UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+            fix.detectChanges();
+
+           UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -650,12 +645,19 @@ describe('IgxGrid Master Detail #grid', () => {
             const fRow = grid.getRowByIndex(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(fRow.cells.last.nativeElement);
+            expect(fRow.cells.last.active).toBeTruthy();
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
                 and focus is on the detail row container.`, async() => {
-            GridFunctions.simulateDetailKeydown(grid, grid.rowList.first, 'ArrowDown', false, false, true);
+            // Focus first cell
+            let detailRow = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            UIInteractions.simulateClickAndSelectHTMLElement(detailRow);
+            fix.detectChanges();
+
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -664,9 +666,16 @@ describe('IgxGrid Master Detail #grid', () => {
             let row = grid.getRowByIndex(52) as IgxGridRowComponent;
             expect(row).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(row.cells.first.nativeElement);
+            expect(row.cells.first.active).toBeTruthy();
 
-            GridFunctions.simulateDetailKeydown(grid, row, 'ArrowUp', false, false, true);
+            // Got to details row
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            detailRow = GridFunctions.getMasterRowDetail(row);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -675,7 +684,7 @@ describe('IgxGrid Master Detail #grid', () => {
             row = grid.getRowByIndex(0) as IgxGridRowComponent;
             expect(row).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
-            expect(document.activeElement).toBe(row.cells.first.nativeElement);
+            expect(row.cells.first.active).toBeTruthy();
         });
 
         it('Should not navigate if keydown is done on an element inside the details template.', () => {
@@ -810,10 +819,10 @@ describe('IgxGrid Master Detail #grid', () => {
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
 
                 UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
-                startCell.nativeElement.dispatchEvent(new Event('focus'));
+                startCell.nativeElement.dispatchEvent(new Event('click'));
                 grid.cdr.detectChanges();
 
-                expect(startCell.focused).toBe(true);
+                expect(startCell.active).toBe(true);
 
                 for (let i = 2; i < 6; i++) {
                     const cell = grid.getCellByColumn(i, 'ContactName');
@@ -831,7 +840,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 5, 0, 1, true);
                 grid.cdr.detectChanges();
 
-                expect(startCell.focused).toBe(true);
+                expect(startCell.active).toBe(true);
 
                 const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
                 expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1022,48 +1031,56 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it(`Should navigate down through a detail view by focusing the whole row and continuing
             onto the next with arrow down in multi-row layout grid.`, async() => {
+                const gridContent = GridFunctions.getGridContent(fix);
                 let targetCellElement = grid.getCellByColumn(0, 'ContactName');
-                GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
+                UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+                fix.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(0, 'Address');
-                expect(targetCellElement.focused).toBeTruthy();
+                expect(targetCellElement.active).toBeTruthy();
 
-                GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowDown');
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
-                expect(document.activeElement).toBe(firstRowDetail);
+                GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
-                GridFunctions.simulateDetailKeydown(grid, grid.rowList.first, 'ArrowDown');
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 await wait();
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(2, 'CompanyName');
-                expect(targetCellElement.focused).toBeTruthy();
+                expect(targetCellElement.active).toBeTruthy();
             });
 
             it(`Should navigate up through a detail view by
             focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async() => {
+                const  gridContent = GridFunctions.getGridContent(fix);
                 let targetCellElement = grid.getCellByColumn(2, 'ContactName');
-                GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
+                UIInteractions.simulateClickAndSelectCellEvent(targetCellElement);
+                fix.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 await wait();
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(2, 'CompanyName');
-                expect(targetCellElement.focused).toBeTruthy();
+                expect(targetCellElement.active).toBeTruthy();
 
-                GridFunctions.simulateCellKeydown(targetCellElement, 'ArrowUp');
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 fix.detectChanges();
 
                 const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
-                expect(document.activeElement).toBe(firstRowDetail);
+                GridFunctions.verifyMasterDetailRowFocused(firstRowDetail);
 
-                GridFunctions.simulateDetailKeydown(grid, grid.rowList.first, 'ArrowUp');
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 fix.detectChanges();
 
                 targetCellElement = grid.getCellByColumn(0, 'Address');
-                expect(targetCellElement.focused).toBeTruthy();
+                expect(targetCellElement.active).toBeTruthy();
             });
         });
 
