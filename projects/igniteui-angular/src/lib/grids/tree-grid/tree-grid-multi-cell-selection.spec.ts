@@ -431,7 +431,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
-            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             await wait(30);
             fix.detectChanges();
 

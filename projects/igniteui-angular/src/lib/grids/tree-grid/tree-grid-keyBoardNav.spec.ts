@@ -39,11 +39,11 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow keys', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
+            let cell = treeGrid.getCellByColumn(0, 'ID');
 
-            GridFunctions.focusFirstCell(fix);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            let cell = treeGrid.getCellByColumn(0, 'ID');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
@@ -180,7 +180,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
 
-            GridFunctions.focusFirstCell(fix);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -305,9 +305,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             treeGrid.getColumnByName('OnPTO').editable = true;
             fix.detectChanges();
 
-            let cellElement = GridFunctions.getRowCells(fix, 3)[3];
             let cell = treeGrid.getCellByColumn(3, 'Age');
-
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
@@ -327,7 +325,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.editMode).toBe(true);
 
-            cellElement = GridFunctions.getRowCells(fix, 3)[4];
             UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
             fix.detectChanges();
 
@@ -337,13 +334,12 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(cell.editMode).toBe(true);
 
             // Press tab when next cell is not editable
-            cellElement = GridFunctions.getRowCells(fix, 4)[0];
-            UIInteractions.triggerEventHandlerKeyDown('Tab', cellElement);
+            UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
             fix.detectChanges();
 
             // The next editable cell should be opened in edit mode
             expect(cell.editMode).toBe(false);
-            cell = treeGrid.getCellByColumn(4, 'HireDate');
+            cell = treeGrid.getCellByColumn(4, 'Name');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.editMode).toBe(true);
         });
