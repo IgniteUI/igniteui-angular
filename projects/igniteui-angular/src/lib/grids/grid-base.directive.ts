@@ -2699,11 +2699,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
-        if (key === 'pagedown') {
-            this.verticalScrollContainer.scrollNextPage();
-            this.nativeElement.focus();
-        } else if (key === 'pageup') {
-            this.verticalScrollContainer.scrollPrevPage();
+        if (key === 'pagedown' || key === 'pageup') {
+            event.preventDefault();
+            key === 'pagedown' ? this.verticalScrollContainer.scrollNextPage() : this.verticalScrollContainer.scrollPrevPage();
             this.nativeElement.focus();
         }
     }
