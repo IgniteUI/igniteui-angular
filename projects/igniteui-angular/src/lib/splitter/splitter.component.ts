@@ -1,5 +1,5 @@
 import { Component, QueryList, Input, ContentChildren, AfterContentInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { IgxSplitterPaneComponent } from './splitpane/split-pane.component';
+import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.

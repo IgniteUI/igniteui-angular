@@ -8,7 +8,7 @@ import { Component, HostBinding, Input, ElementRef } from '@angular/core';
  */
 @Component({
     selector: 'igx-splitter-pane',
-    templateUrl: './split-pane.component.html'
+    templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
 

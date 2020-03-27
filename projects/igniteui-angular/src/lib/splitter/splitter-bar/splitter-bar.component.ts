@@ -1,6 +1,6 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 import { SplitterType } from '../splitter.component';
-import { IgxSplitterPaneComponent } from '../splitpane/split-pane.component';
+import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
 import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-drop/drag-drop.directive';
 
 /**
@@ -10,8 +10,8 @@ import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-d
  * @class SplitBarComponent
  */
 @Component({
-    selector: 'igx-split-bar',
-    templateUrl: './split-bar.component.html'
+    selector: 'igx-splitter-bar',
+    templateUrl: './splitter-bar.component.html'
 })
 export class IgxSplitBarComponent {
 
