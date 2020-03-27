@@ -1,4 +1,5 @@
 import { isIE } from '../core/utils';
+import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
 
 /**
  * This enum is used to keep the date validation result.
@@ -18,6 +19,11 @@ const enum FormatDesc {
     TwoDigits = '2-digit'
 }
 
+export interface DateTimeValue {
+    state: DateState;
+    value: Date;
+}
+
 /**
  *@hidden
  */
@@ -26,6 +32,9 @@ const enum DateChars {
     MonthChar = 'M',
     DayChar = 'd'
 }
+
+const TimeCharsArr = ['h', 'H', 'm', 's', 'S', 't', 'T'];
+const DateCharsArr = ['d', 'D', 'M', 'y', 'Y'];
 
 /**
  *@hidden
@@ -37,7 +46,7 @@ const enum DateParts {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export abstract class DatePickerUtil {
     private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
@@ -45,6 +54,282 @@ export abstract class DatePickerUtil {
     private static readonly NUMBER_OF_MONTHS = 12;
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
+
+    public static parseDateTimeArray(dateTimeParts: DatePartInfo[], inputData: string): DateTimeValue {
+        const parts: { [key in DatePart]: number } = {} as any;
+        dateTimeParts.forEach(dp => {
+            let value = parseInt(this.getCleanVal(inputData, dp), 10);
+            if (!value) {
+                value = dp.type === DatePart.Date || dp.type === DatePart.Month ? 1 : 0;
+            }
+            parts[dp.type] = value;
+        });
+
+        if (parts[DatePart.Month] < 1 || 12 < parts[DatePart.Month]) {
+            return { state: DateState.Invalid, value: new Date(NaN) };
+        }
+
+        // TODO: Century threshold
+        if (parts[DatePart.Year] < 50) {
+            parts[DatePart.Year] += 2000;
+        }
+
+        if (parts[DatePart.Date] > DatePickerUtil.daysInMonth(parts[DatePart.Year], parts[DatePart.Month])) {
+            return { state: DateState.Invalid, value: new Date(NaN) };
+        }
+
+        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59 || parts[DatePart.Seconds] > 59) {
+            return { state: DateState.Invalid, value: new Date(NaN) };
+        }
+
+        return {
+            state: DateState.Valid,
+            value: new Date(
+                parts[DatePart.Year] || 2000,
+                parts[DatePart.Month] - 1 || 0,
+                parts[DatePart.Date] || 1,
+                parts[DatePart.Hours] || 0,
+                parts[DatePart.Minutes] || 0,
+                parts[DatePart.Seconds] || 0
+            )
+        };
+    }
+
+    public static parseDateTimeFormat(mask: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): DatePartInfo[] {
+        let format = DatePickerUtil.setInputFormat(mask);
+        let dateTimeData: DatePartInfo[] = [];
+        if (!format && !isIE()) {
+            dateTimeData = DatePickerUtil.getDefaultLocaleMask(locale);
+        } else {
+            format = (format) ? format : DatePickerUtil.SHORT_DATE_MASK;
+            const formatArray = Array.from(format);
+            for (let i = 0; i < formatArray.length; i++) {
+                const datePartRange = this.getDatePartInfoRange(formatArray[i], format, i);
+                const dateTimeInfo = {
+                    type: DatePickerUtil.determineDatePart(formatArray[i]),
+                    start: datePartRange.start,
+                    end: datePartRange.end,
+                    format: mask.match(new RegExp(`${format[i]}+`, 'g'))[0],
+                };
+                while (DatePickerUtil.isDateOrTimeChar(formatArray[i])) {
+                    if (dateTimeData.indexOf(dateTimeInfo) === -1) {
+                        dateTimeData.push(dateTimeInfo);
+                    }
+                    i++;
+                }
+            }
+        }
+
+        return dateTimeData;
+    }
+
+    public static setInputFormat(format: string): string {
+        if (!format) { return ''; }
+        let chars = '';
+        let newFormat = '';
+        for (let i = 0; ; i++) {
+            while (DatePickerUtil.isDateOrTimeChar(format[i])) {
+                chars += format[i];
+                i++;
+            }
+            const datePartType = DatePickerUtil.determineDatePart(chars[0]);
+            if (datePartType !== DatePart.Year) {
+                newFormat += chars[0].repeat(2);
+            } else {
+                newFormat += chars;
+            }
+
+            if (i >= format.length) { break; }
+
+            if (!DatePickerUtil.isDateOrTimeChar(format[i])) {
+                newFormat += format[i];
+            }
+            chars = '';
+        }
+
+        return newFormat;
+    }
+
+    public static isDateOrTimeChar(char: string): boolean {
+        return TimeCharsArr.indexOf(char) !== -1 || DateCharsArr.indexOf(char) !== -1;
+    }
+
+    public static calculateDateOnSpin(delta: number, newDate: Date, currentDate: Date, isSpinLoop: boolean): Date {
+        if (isSpinLoop) {
+            const maxDate = DatePickerUtil.daysInMonth(currentDate.getFullYear(), currentDate.getMonth() + 1);
+            const deltaSign = delta > 1 ? delta % (Math.abs(delta) - 1) : delta;
+            let date = currentDate.getDate();
+            for (let i = Math.abs(delta); i > 0; i--) {
+                if (deltaSign > 0) {
+                    date = date < maxDate ? date + deltaSign : 1;
+                } else {
+                    date = date > 1 ? date + deltaSign : maxDate;
+                }
+            }
+
+            return new Date(currentDate.setDate(date));
+        }
+        newDate = new Date(newDate.setDate(newDate.getDate() + delta));
+        if (currentDate.getMonth() === newDate.getMonth()) {
+            return newDate;
+        }
+
+        return currentDate;
+    }
+
+    public static calculateMonthOnSpin(delta: number, newDate: Date, currentDate: Date, isSpinLoop: boolean): Date {
+        const maxDate = DatePickerUtil.daysInMonth(currentDate.getFullYear(), currentDate.getMonth() + 1 + delta);
+        if (newDate.getDate() > maxDate) {
+            newDate.setDate(maxDate);
+        }
+        if (isSpinLoop) {
+            const deltaSign = delta > 1 ? delta % (Math.abs(delta) - 1) : delta;
+            let month = currentDate.getMonth();
+            for (let i = Math.abs(delta); i > 0; i--) {
+                if (deltaSign > 0) {
+                    month = month < 11 ? month + deltaSign : 0;
+                } else {
+                    month = month > 0 ? month + deltaSign : 11;
+                }
+            }
+
+            return new Date(newDate.setMonth(month));
+        }
+        newDate = new Date(newDate.setMonth(newDate.getMonth() + delta));
+        if (currentDate.getFullYear() === newDate.getFullYear()) {
+            return newDate;
+        }
+
+        return currentDate;
+    }
+
+    public static calculateYearOnSpin(delta: number, newDate: Date, currentDate: Date): Date {
+        const maxDate = DatePickerUtil.daysInMonth(currentDate.getFullYear() + delta, currentDate.getMonth() + 1);
+        if (newDate.getDate() > maxDate) {
+            newDate.setDate(maxDate);
+        }
+        return new Date(newDate.setFullYear(newDate.getFullYear() + delta));
+    }
+
+    public static calculateHoursOnSpin(delta: number, newDate: Date, currentDate: Date, isSpinLoop: boolean): Date {
+        if (isSpinLoop) {
+            const deltaSign = delta > 1 ? delta % (Math.abs(delta) - 1) : delta;
+            let hours = currentDate.getHours();
+            for (let i = Math.abs(delta); i > 0; i--) {
+                if (deltaSign > 0) {
+                    hours = hours < 23 ? hours + deltaSign : 0;
+                } else {
+                    hours = hours > 0 ? hours + deltaSign : 23;
+                }
+            }
+
+            return new Date(currentDate.setHours(hours));
+        }
+        newDate = new Date(newDate.setHours(newDate.getHours() + delta));
+        if (currentDate.getDate() === newDate.getDate()) {
+            return newDate;
+        }
+
+        return currentDate;
+    }
+
+    public static calculateMinutesOnSpin(delta: number, newDate: Date, currentDate: Date, isSpinLoop: boolean): Date {
+        if (isSpinLoop) {
+            const deltaSign = delta > 1 ? delta % (Math.abs(delta) - 1) : delta;
+            let minutes = currentDate.getMinutes();
+            for (let i = Math.abs(delta); i > 0; i--) {
+                if (deltaSign > 0) {
+                    minutes = minutes < 59 ? minutes + deltaSign : 0;
+                } else {
+                    minutes = minutes > 0 ? minutes + deltaSign : 59;
+                }
+            }
+
+            return new Date(currentDate.setMinutes(minutes));
+        }
+        newDate = new Date(newDate.setMinutes(newDate.getMinutes() + delta));
+        if (currentDate.getHours() === newDate.getHours()) {
+            return newDate;
+        }
+
+        return currentDate;
+    }
+
+    public static calculateSecondsOnSpin(delta: number, newDate: Date, currentDate: Date, isSpinLoop: boolean): Date {
+        if (isSpinLoop) {
+            const deltaSign = delta > 1 ? delta % (Math.abs(delta) - 1) : delta;
+            let seconds = currentDate.getSeconds();
+            for (let i = Math.abs(delta); i > 0; i--) {
+                if (deltaSign > 0) {
+                    seconds = seconds < 59 ? seconds + deltaSign : 0;
+                } else {
+                    seconds = seconds > 0 ? seconds + deltaSign : 59;
+                }
+            }
+
+            return new Date(currentDate.setSeconds(seconds));
+        }
+        newDate = new Date(newDate.setSeconds(newDate.getSeconds() + delta));
+        if (currentDate.getMinutes() === newDate.getMinutes()) {
+            return newDate;
+        }
+
+        return currentDate;
+    }
+
+    public static calculateAmPmOnSpin(newDate: Date, currentDate: Date, amPmFromMask: string) {
+        switch (amPmFromMask) {
+            case 'AM':
+                newDate = new Date(newDate.setHours(newDate.getHours() + 12));
+                break;
+            case 'PM':
+                newDate = new Date(newDate.setHours(newDate.getHours() - 12));
+                break;
+        }
+        if (newDate.getDate() !== currentDate.getDate()) {
+            return currentDate;
+        }
+
+        return newDate;
+    }
+
+    private static getCleanVal(inputData: string, datePart: DatePartInfo): string {
+        return DatePickerUtil.trimUnderlines(inputData.substring(datePart.start, datePart.end));
+    }
+
+    private static getDatePartInfoRange(datePartChars: string, mask: string, index: number): any {
+        const start = mask.indexOf(datePartChars, index);
+        let end = start;
+        while (this.isDateOrTimeChar(mask[end])) {
+            end++;
+        }
+
+        return { start, end };
+    }
+
+    private static determineDatePart(char: string): DatePart {
+        switch (char) {
+            case 'd':
+            case 'D':
+                return DatePart.Date;
+            case 'M':
+                return DatePart.Month;
+            case 'y':
+            case 'Y':
+                return DatePart.Year;
+            case 'h':
+            case 'H':
+                return DatePart.Hours;
+            case 'm':
+                return DatePart.Minutes;
+            case 's':
+            case 'S':
+                return DatePart.Seconds;
+            case 't':
+            case 'T':
+                return DatePart.AmPm;
+        }
+    }
 
     /**
      * This method generates date parts structure based on editor mask and locale.
@@ -169,12 +454,12 @@ export abstract class DatePickerUtil {
         return mask.join('');
     }
     /**
-     * This method parses an input string base on date parts and returns a date and its validation state.
-     * @param dateFormatParts
-     * @param prevDateValue
-     * @param inputValue
-     * @returns object containing a date and its validation state
-     */
+  * This method parses an input string base on date parts and returns a date and its validation state.
+  * @param dateFormatParts
+  * @param prevDateValue
+  * @param inputValue
+  * @returns object containing a date and its validation state
+  */
     public static parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any {
         const dayStr = DatePickerUtil.getDayValueFromInput(dateFormatParts, inputValue);
         const monthStr = DatePickerUtil.getMonthValueFromInput(dateFormatParts, inputValue);
@@ -339,6 +624,10 @@ export abstract class DatePickerUtil {
         return '';
     }
 
+    public static daysInMonth(fullYear: number, month: number): number {
+        return new Date(fullYear, month, 0).getDate();
+    }
+
     private static getYearFormatType(format: string): string {
         switch (format.match(new RegExp(DateChars.YearChar, 'g')).length) {
             case 1: {
@@ -462,10 +751,6 @@ export abstract class DatePickerUtil {
             }
         }
         return { min: minValue, max: maxValue };
-    }
-
-    private static daysInMonth(fullYear: number, month: number): number {
-        return new Date(fullYear, month, 0).getDate();
     }
 
     private static getDateValueFromInput(dateFormatParts: any[], type: DateParts, inputValue: string, trim: boolean = true): string {
