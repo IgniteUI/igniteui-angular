@@ -69,6 +69,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     private _filterColumnsPrompt = 'Filter columns list ...';
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
+
+    /**
      * Gets the height for the `IgxGridToolbarComponent`'s drop down panels.
      * ```typescript
      * const dropdownHeight = this.grid.toolbar.defaultDropDownsMaxHeight;
@@ -211,6 +218,10 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
 
     @HostBinding('attr.class')
     get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-grid-toolbar')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
         return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
