@@ -605,6 +605,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
+
+    /**
      * Gets/Sets the height.
      * @example
      * ```html
@@ -633,6 +640,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get hostWidth() {
         return this._width || this._hostWidth;
     }
+
     /**
      * Gets/Sets the width of the grid.
      * @example
@@ -1940,7 +1948,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+        const classes = [this.getComponentDensityClass('igx-grid')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
     }
 
     get bannerClass(): string {
@@ -2411,6 +2422,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredSortedPinnedData;
+    protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
     protected _filteredUnpinnedData;
 
@@ -2933,6 +2946,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data, pinned: boolean) {
+        if (this._pinnedRecordIDs.length > 0 && pinned) {
+            this._filteredSortedPinnedData = data;
+            this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
+            [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
+        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+            this._filteredSortedUnpinnedData = data;
+        } else {
+            this.filteredSortedData = data;
+        }
     }
 
     /**
