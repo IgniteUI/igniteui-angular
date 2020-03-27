@@ -147,6 +147,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
+import { isNumber } from 'util';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -604,6 +605,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
+
+    /**
      * Gets/Sets the height.
      * @example
      * ```html
@@ -632,6 +640,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get hostWidth() {
         return this._width || this._hostWidth;
     }
+
     /**
      * Gets/Sets the width of the grid.
      * @example
@@ -1939,7 +1948,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+        const classes = [this.getComponentDensityClass('igx-grid')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
     }
 
     get bannerClass(): string {
@@ -2410,6 +2422,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    protected _filteredSortedPinnedData;
+    protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
     protected _filteredUnpinnedData;
 
@@ -2673,6 +2687,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length > 0;
     }
 
+    /**
+    * @hidden
+    * @internal
+    */
+    public get pinnedRecordsCount() {
+        return this._pinnedRecordIDs.length;
+    }
+
     private keydownHandler = (event) => {
         const key = event.key.toLowerCase();
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
@@ -2924,6 +2946,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data, pinned: boolean) {
+        if (this._pinnedRecordIDs.length > 0 && pinned) {
+            this._filteredSortedPinnedData = data;
+            this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
+            [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
+        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+            this._filteredSortedUnpinnedData = data;
+        } else {
+            this.filteredSortedData = data;
+        }
     }
 
     /**
@@ -4124,7 +4162,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        this._pinnedRecordIDs.splice(eventArgs.insertAtIndex || this._pinnedRecordIDs.length, 0, rowID);
+        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges(true);

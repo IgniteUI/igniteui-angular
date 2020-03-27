@@ -120,6 +120,31 @@ describe('Row Pinning #grid', () => {
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
+        it('should allow pinning row at specified index via API.', () => {
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 0
+            grid.pinRow(fix.componentInstance.data[2], 0);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[1]);
+
+            // pin at index 1
+            grid.pinRow(fix.componentInstance.data[3], 1);
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(3);
+            expect(grid.pinnedRows[0].rowData).toBe(fix.componentInstance.data[2]);
+            expect(grid.pinnedRows[1].rowData).toBe(fix.componentInstance.data[3]);
+            expect(grid.pinnedRows[2].rowData).toBe(fix.componentInstance.data[1]);
+        });
+
         it('should emit onRowPinning on pin/unpin.', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
@@ -228,6 +253,42 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should search in both pinned and unpinned rows.', () => {
+            // pin 1st row
+            let row = grid.getRowByIndex(0);
+            row.pinned = true;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+
+            let finds = grid.findNext('mari');
+            fix.detectChanges();
+
+            const fixNativeElement = fix.debugElement.nativeElement;
+            let spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(1);
+            expect(finds).toEqual(2);
+
+            finds = grid.findNext('antonio');
+            fix.detectChanges();
+
+            spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(2);
+            expect(finds).toEqual(2);
+
+            // pin 3rd row
+            row = grid.getRowByIndex(2);
+            row.pinned = true;
+            fix.detectChanges();
+            expect(grid.pinnedRows.length).toBe(2);
+
+            finds = grid.findNext('antonio');
+            fix.detectChanges();
+
+            spans = fixNativeElement.querySelectorAll('.igx-highlight');
+            expect(spans.length).toBe(2);
+            expect(finds).toEqual(2);
+        });
+
         it('should allow pinning onInit', () => {
             expect(() => {
                 fix = TestBed.createComponent(GridRowPinningComponent);
@@ -333,6 +394,33 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData.length).toBe(7);
             expect(gridFilterData[0].ID).toBe('BLAUS');
             expect(gridFilterData[1].ID).toBe('BERGS');
+        });
+
+        it('should page through unpinned collection with modified pageSize = pageSize - pinnedRows.lenght.', () => {
+            // pin 2nd row
+            grid.paging = true;
+            grid.perPage = 5;
+            fix.detectChanges();
+            let row = grid.getRowByIndex(1);
+            row.pin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+
+            expect(grid.dataView.length).toBe(4);
+
+            // unpin
+            row = grid.getRowByIndex(0);
+            row.unpin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(0);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(0);
+
+            expect(grid.dataView.length).toBe(5);
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
@@ -609,6 +697,50 @@ describe('Row Pinning #grid', () => {
 
             verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
             verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+        });
+    });
+    describe(' Hiding', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.instance;
+            tick();
+            fix.detectChanges();
+        }));
+
+        it('should hide columns in pinned and unpinned area', () => {
+            // pin 2nd data row
+            grid.pinRow(fix.componentInstance.data[1]);
+            fix.detectChanges();
+            const hiddenCol = grid.columns[1];
+            hiddenCol.hidden = true;
+            fix.detectChanges();
+
+            const pinnedCells = grid.pinnedRows[0].cells;
+            expect(pinnedCells.filter(cell => cell.column.field === hiddenCol.field).length).toBe(0);
+
+            const unpinnedCells = grid.rowList.first.cells;
+            expect(unpinnedCells.filter(cell => cell.column.field === hiddenCol.field).length).toBe(0);
+
+            expect(pinnedCells.length).toBe(unpinnedCells.length);
+
+            const headerCells = grid.headerCellList;
+            expect(headerCells.filter(cell => cell.column.field === hiddenCol.field).length).toBe(0);
+
+            expect(grid.pinnedRows.length).toBe(1);
+            const pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
+            expect(pinRowContainer[0].children[0].nativeElement).toBe(grid.getRowByIndex(0).nativeElement);
+
+            expect(grid.getRowByIndex(1).rowID).toBe(fix.componentInstance.data[0]);
+            expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[2]);
+
+            // 1 records pinned + 2px border
+            expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
     });
 });
