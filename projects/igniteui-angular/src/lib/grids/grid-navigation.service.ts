@@ -33,7 +33,7 @@ export class IgxGridNavigationService {
             this.handleAlt(key, event);
             return;
         }
-        if (this.isDataRow(this.activeNode.row) && [' ', 'spacebar', 'space'].indexOf(key) === -1) {
+        if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {

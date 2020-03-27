@@ -413,7 +413,7 @@ export class IgxGridSelectionService {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
-
+        if (!this.grid.navigation.isDataRow(node.row)) { return; }
         // Kb navigation with shift and no previous node.
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
