@@ -86,6 +86,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     }
 
     public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
+        if (!this.grid) {
+            return null;
+        }
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
