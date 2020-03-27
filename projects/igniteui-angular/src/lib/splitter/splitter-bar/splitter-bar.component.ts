@@ -86,26 +86,6 @@ export class IgxSplitBarComponent {
      */
     private startPoint!: number;
 
-    /**
-     * A method that handles the `PoinerDown` event firing.
-     * @param  {PointerEvent} event The `PoinerDown` event payload.
-     * @return {void}@memberof SplitBarComponent
-     */
-    public onPointerDown(event: PointerEvent) {
-        this.startPoint = this.type === SplitterType.Horizontal ? event.clientX : event.clientY;
-        this.moveStart.emit(this.pane);
-    }
-
-    /**
-     * A method that handles the `PoinerMove` event firing.
-     * @param  {PointerEvent} event The `PoinerMove` event payload.
-     * @return {void}@memberof SplitBarComponent
-     */
-    public onPointerMove(event: PointerEvent) {
-        const delta = this.startPoint - (this.type === SplitterType.Horizontal ? event.clientX : event.clientY);
-        this.moving.emit(delta);
-    }
-
     public onDragStart(event: IDragStartEventArgs) {
         this.startPoint = this.type === SplitterType.Horizontal ? event.startX : event.startY;
         this.moveStart.emit(this.pane);
