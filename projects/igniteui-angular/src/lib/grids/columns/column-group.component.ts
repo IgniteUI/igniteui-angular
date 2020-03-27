@@ -341,14 +341,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     /**
      * @hidden
-    */
+     */
     public get applySelectableClass(): boolean {
         return this._applySelectableClass;
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public set applySelectableClass(value: boolean) {
         if (this.selectable) {
             this._applySelectableClass = value;

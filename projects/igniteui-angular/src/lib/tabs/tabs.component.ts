@@ -40,35 +40,35 @@ export enum IgxTabsType {
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
-    * Provides an observable collection of all `IgxTabsGroupComponent`s.
-    * ```typescript
-    * const groupItems = this.myTabComponent.groups;
-    * ```
-    */
+     * Provides an observable collection of all `IgxTabsGroupComponent`s.
+     * ```typescript
+     * const groupItems = this.myTabComponent.groups;
+     * ```
+     */
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
     public groups: QueryList<IgxTabsGroupComponent>;
 
     /**
-    * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
-    * ```typescript
-    * const tabItems = this.myTabComponent.contentTabs;
-    * ```
-    */
+     * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
+     * ```typescript
+     * const tabItems = this.myTabComponent.contentTabs;
+     * ```
+     */
     @ContentChildren(forwardRef(() => IgxTabItemComponent))
     public contentTabs: QueryList<IgxTabItemComponent>;
 
     /**
-    * An @Input property that sets the value of the `selectedIndex`.
-    * Default value is 0.
-    * ```html
-    * <igx-tabs selectedIndex="1">
-    * ```
-    *
-    * Two-way data binding.
-    * ```html
-    * <igx-tabs [(selectedIndex)]="model.selectedIndex">
-    * ```
-    */
+     * An @Input property that sets the value of the `selectedIndex`.
+     * Default value is 0.
+     * ```html
+     * <igx-tabs selectedIndex="1">
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-tabs [(selectedIndex)]="model.selectedIndex">
+     * ```
+     */
     @Input()
     public get selectedIndex(): number {
         return this._selectedIndex;
@@ -107,8 +107,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public type: string | IgxTabsType = 'contentfit';
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @Input()
     public class = '';
 
@@ -131,20 +131,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public onTabItemDeselected = new EventEmitter();
 
     /**
-    * Emitted when a tab item is selected.
-    * ```html
-    * <igx-tabs (onTabItemSelected)="itemSelected($event)">
-    *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-    *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
-    * </igx-tabs>
-    * ```
-    * ```typescript
-    * itemSelected(e){
-    *      const tabGroup = e.group;
-    *      const tabItem = e.tab;
-    * }
-    * ```
-    */
+     * Emitted when a tab item is selected.
+     * ```html
+     * <igx-tabs (onTabItemSelected)="itemSelected($event)">
+     *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+     *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+     * </igx-tabs>
+     * ```
+     * ```typescript
+     * itemSelected(e){
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
+     * }
+     * ```
+     */
     @Output()
     public onTabItemSelected = new EventEmitter();
 
@@ -173,8 +173,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public selectedIndicator: ElementRef;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('tabsContainer', { static: true })
     public tabsContainer: ElementRef;
 

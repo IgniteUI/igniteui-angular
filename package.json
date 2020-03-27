@@ -27,6 +27,8 @@
     "build:schematics": "gulp copySchematics && tsc --listEmittedFiles --project ./projects/igniteui-angular/schematics/tsconfig.json",
     "build:docs": "sassdoc projects/igniteui-angular/src/lib/core/styles && gulp typedocBuildTheme",
     "lint:lib": "tslint 'projects/igniteui-angular/src/**/*.ts' && stylelint 'projects/igniteui-angular/src/lib/core/styles'",
+    "lint-fix:lib": "tslint  --fix 'projects/igniteui-angular/src/**/*.ts' -t verbose",
+    "lint:fix": "tslint -- --fix 'projects/igniteui-angular/src/**/*.ts'",
     "typedoc:dev": "gulp typedocServe",
     "typedoc-build:export": "gulp exportTypedocJson ",
     "typedoc-build:import": "gulp importTypedocJson",

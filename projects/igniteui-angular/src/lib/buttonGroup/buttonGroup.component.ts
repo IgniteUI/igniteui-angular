@@ -88,13 +88,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
      * The value should be the CSS class name that will be applied to the button group.
-     *```typescript
-     *public style1 = "styleClass";
-     * //..
-     *```
-     * ```html
-     *<igx-buttongroup [itemContentCssClass]="style1" [multiSelection]="!multi" [values]="alignOptions">
-     *```
+     * ```typescript
+     * public style1 = "styleClass";
+     *  //..
+     * ```
+     *  ```html
+     * <igx-buttongroup [itemContentCssClass]="style1" [multiSelection]="!multi" [values]="alignOptions">
+     * ```
      */
     @Input() set itemContentCssClass(value: string) {
         this._itemContentCssClass = value || this._itemContentCssClass;
@@ -102,13 +102,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * Returns the CSS class of the item content of the `IgxButtonGroup`.
-     *```typescript
-     * @ViewChild("MyChild")
-     *public buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
-     *   let buttonSelect = this.buttonG.itemContentCssClass;
-     *}
-     *```
+     * ```typescript
+     *  @ViewChild("MyChild")
+     * public buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
+     *    let buttonSelect = this.buttonG.itemContentCssClass;
+     * }
+     * ```
      */
     get itemContentCssClass(): string {
         return this._itemContentCssClass;
@@ -177,11 +177,11 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * Allows you to set the button group alignment.
      * Available options are `ButtonGroupAlignment.horizontal` (default) and `ButtonGroupAlignment.vertical`.
      * ```typescript
-     *public alignment = ButtonGroupAlignment.vertical;
+     * public alignment = ButtonGroupAlignment.vertical;
      * //..
      * ```
      * ```html
-     *<igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment"></igx-buttongroup>
+     * <igx-buttongroup [multiSelection]="false" [values]="cities" [alignment]="alignment"></igx-buttongroup>
      * ```
      */
     @Input() set alignment(value: ButtonGroupAlignment) {
@@ -189,13 +189,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     }
     /**
      * Returns the alignment of the `igx-buttongroup`.
-     *```typescript
+     * ```typescript
      * @ViewChild("MyChild")
-     *public buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
+     * public buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
      *    let buttonAlignment = this.buttonG.alignment;
-     *}
-     *```
+     * }
+     * ```
      */
     get alignment(): ButtonGroupAlignment {
         return this._isVertical ? ButtonGroupAlignment.vertical : ButtonGroupAlignment.horizontal;
@@ -203,35 +203,35 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * An @Ouput property that emits an event when a button is selected.
-     *```typescript
+     * ```typescript
      * @ViewChild("toast")
-     *private toast: IgxToastComponent;
-     *public onSelect(buttongroup){
-     *    this.toast.show()
-     *}
-     * //...
-     *```
-     *```html
+     * private toast: IgxToastComponent;
+     * public onSelect(buttongroup){
+     *     this.toast.show()
+     * }
+     *  //...
+     * ```
+     * ```html
      * <igx-buttongroup #MyChild [multiSelection]="!multi" (onSelect)="onSelect($event)"></igx-buttongroup>
-     *<igx-toast #toast message="You have made a selection!"></igx-toast>
-     *```
+     * <igx-toast #toast message="You have made a selection!"></igx-toast>
+     * ```
      */
     @Output() public onSelect = new EventEmitter<IButtonGroupEventArgs>();
 
     /**
      * An @Ouput property that emits an event when a button is deselected.
-     *```typescript
-     * @ViewChild("toast")
-     *private toast: IgxToastComponent;
-     *public onUnselect(buttongroup){
-     *    this.toast.show()
-     *}
-     * //...
-     *```
-     *```html
-     * igx-buttongroup #MyChild [multiSelection]="multi" (onUnselect)="onUnselect($event)"></igx-buttongroup>
-     *<igx-toast #toast message="You have deselected a button!"></igx-toast>
-     *```
+     * ```typescript
+     *  @ViewChild("toast")
+     *  private toast: IgxToastComponent;
+     *  public onUnselect(buttongroup){
+     *     this.toast.show()
+     * }
+     *  //...
+     * ```
+     * ```html
+     * <igx-buttongroup> #MyChild [multiSelection]="multi" (onUnselect)="onUnselect($event)"></igx-buttongroup>
+     * <igx-toast #toast message="You have deselected a button!"></igx-toast>
+     * ```
      */
     @Output() public onUnselect = new EventEmitter<IButtonGroupEventArgs>();
 
@@ -244,11 +244,11 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```typescript
      * //...
      * @ViewChild("MyChild")
-     *private buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
+     * private buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
      *    let orientation = this.buttonG.isVertical;
-     *}
-     *```
+     * }
+     * ```
      */
     public get isVertical(): boolean {
         return this._isVertical;
@@ -263,13 +263,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * Gets the selected button/buttons.
-     *```typescript
+     * ```typescript
      * @ViewChild("MyChild")
-     *private buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
+     * private buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
      *    let selectedButton = this.buttonG.selectedButtons;
-     *}
-     *```
+     * }
+     * ```
      */
     get selectedButtons(): IgxButtonDirective[] {
         return this.buttons.filter((b, i) => {
@@ -280,14 +280,14 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * Selects a button by its index.
-     *```typescript
+     * ```typescript
      * @ViewChild("MyChild")
-     *private buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
+     * private buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
      *    this.buttonG.selectButton(2);
      *    this.cdr.detectChanges();
-     *}
-     *```
+     * }
+     * ```
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
@@ -325,11 +325,11 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * Deselects a button by its index.
      * ```typescript
      * @ViewChild("MyChild")
-     *private buttonG: IgxButtonGroupComponent;
-     *ngAfterViewInit(){
+     * private buttonG: IgxButtonGroupComponent;
+     * ngAfterViewInit(){
      *    this.buttonG.deselectButton(2);
      *    this.cdr.detectChanges();
-     *}
+     * }
      * ```
      * @memberOf {@link IgxButtonGroupComponent}
      */

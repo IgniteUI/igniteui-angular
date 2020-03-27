@@ -160,9 +160,9 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * Sets the color of the avatar's initials or icon.
      *
      * @example
-     *```html
-     *<igx-avatar color="blue"></igx-avatar>
-     *```
+     * ```html
+     * <igx-avatar color="blue"></igx-avatar>
+     * ```
      */
 
     @HostBinding('style.color')

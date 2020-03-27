@@ -57,31 +57,31 @@ export abstract class BaseProgress {
     protected _step;
 
     /**
-     *An event, which is triggered after a progress is changed.
-     *```typescript
-     *public progressChange(event) {
-     *    alert("Progress made!");
-     *}
-     * //...
-     *```
-     *```html
-     *<igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>
-     *<igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>
-     *```
+     * An event, which is triggered after a progress is changed.
+     * ```typescript
+     * public progressChange(event) {
+     *     alert("Progress made!");
+     * }
+     *  //...
+     * ```
+     * ```html
+     * <igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>
+     * <igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>
+     * ```
      */
     @Output()
     public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     /**
-     *Returns the value which update the progress indicator of the `progress bar`.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
-     *public stepValue(event) {
-     *    let step = this.progressBar.step;
-     *    alert(step);
-     *}
-     *```
+     * Returns the value which update the progress indicator of the `progress bar`.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
+     * public stepValue(event) {
+     *     let step = this.progressBar.step;
+     *     alert(step);
+     * }
+     * ```
      */
     @Input()
     get step(): number {
@@ -93,22 +93,22 @@ export abstract class BaseProgress {
     }
 
     /**
-     *Sets the value by which progress indicator is updated. By default it is 1% of the maximum value.
-     *```html
-     *<igx-linear-bar [max]="200" [value]="0" [step]="1"></igx-linear-bar>
-     *<igx-circular-bar [max]="200" [value]="0" [step]="1"></igx-circular-bar>
-     *```
+     * Sets the value by which progress indicator is updated. By default it is 1% of the maximum value.
+     * ```html
+     * <igx-linear-bar [max]="200" [value]="0" [step]="1"></igx-linear-bar>
+     * <igx-circular-bar [max]="200" [value]="0" [step]="1"></igx-circular-bar>
+     * ```
      */
     set step(val: number) {
         this._step = Number(val);
     }
 
     /**
-     *Animating the progress. By default it is set to true.
-     *```html
-     *<igx-linear-bar [animate]="false" [max]="200" [value]="50"></igx-linear-bar>
-     *<igx-circular-bar [animate]="false" [max]="200" [value]="50"></igx-circular-bar>
-     *```
+     * Animating the progress. By default it is set to true.
+     * ```html
+     * <igx-linear-bar [animate]="false" [max]="200" [value]="50"></igx-linear-bar>
+     * <igx-circular-bar [animate]="false" [max]="200" [value]="50"></igx-circular-bar>
+     * ```
      */
     @Input()
     public set animate(animate: boolean) {
@@ -116,26 +116,26 @@ export abstract class BaseProgress {
     }
 
     /**
-     *Returns whether the `progress bar` has animation true/false.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
-     *public animationStatus(event) {
-     *    let animationStatus = this.progressBar.animate;
-     *    alert(animationStatus);
-     *}
-     *```
+     * Returns whether the `progress bar` has animation true/false.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
+     * public animationStatus(event) {
+     *     let animationStatus = this.progressBar.animate;
+     *     alert(animationStatus);
+     * }
+     * ```
      */
     public get animate(): boolean {
         return this._animate;
     }
 
     /**
-     *Set maximum value that can be passed. By default it is set to 100.
-     *```html
-     *<igx-linear-bar [max]="200" [value]="0"></igx-linear-bar>
-     *<igx-circular-bar [max]="200" [value]="0"></igx-circular-bar>
-     *```
+     * Set maximum value that can be passed. By default it is set to 100.
+     * ```html
+     * <igx-linear-bar [max]="200" [value]="0"></igx-linear-bar>
+     * <igx-circular-bar [max]="200" [value]="0"></igx-circular-bar>
+     * ```
      */
     @HostBinding('attr.aria-valuemax')
     @Input()
@@ -144,44 +144,44 @@ export abstract class BaseProgress {
     }
 
     /**
-     *Returns the the maximum progress value of the `progress bar`.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
-     *public maxValue(event) {
-     *    let max = this.progressBar.max;
-     *    alert(max);
-     *}
-     *```
+     * Returns the the maximum progress value of the `progress bar`.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent | IgxCircularBarComponent;
+     * public maxValue(event) {
+     *     let max = this.progressBar.max;
+     *     alert(max);
+     * }
+     * ```
      */
     get max() {
         return this._max;
     }
 
     /**
-     *Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
-     *    public setValue(event){
-     *    this.progressBar.valueInPercent = 56;
-     *}
-     *```
+     * Sets the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     *     public setValue(event){
+     *     this.progressBar.valueInPercent = 56;
+     * }
+     * ```
      */
     public set valueInPercent(value: number) {
         this._valueInPercent = value;
     }
 
     /**
-     *Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
-     *public valuePercent(event){
-     *    let percentValue = this.progressBar.valueInPercent;
-     *    alert(percentValue);
-     *}
-     *```
+     * Returns the `IgxLinearProgressBarComponent`/`IgxCircularProgressBarComponent` value in percentage.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxLinearProgressBarComponent; // IgxCircularProgressBarComponent
+     * public valuePercent(event){
+     *     let percentValue = this.progressBar.valueInPercent;
+     *     alert(percentValue);
+     * }
+     * ```
      */
     public get valueInPercent(): number {
         return this._valueInPercent;
@@ -308,37 +308,39 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements After
     public cssClass = 'igx-linear-bar';
 
     /**
-     *Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
-     *```html
-     *<igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
-     *```
+     * Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
+     * ```html
+     * <igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
+     * ```
      */
     @HostBinding('class.igx-linear-bar--striped')
     @Input()
     public striped = false;
 
     /**
-     *Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
-     *```html
-     *<igx-linear-bar [indeterminate]="true"></igx-linear-bar>
-     *```
+     * Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
+     * ```html
+     * <igx-linear-bar [indeterminate]="true"></igx-linear-bar>
+     * ```
      */
     @HostBinding('class.igx-linear-bar--indeterminate')
     @Input()
     public indeterminate = false;
 
-    /**An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
+    /**
+     * An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
      * ```html
-     *<igx-linear-bar role="progressbar"></igx-linear-bar>
+     * <igx-linear-bar role="progressbar"></igx-linear-bar>
      * ```
      */
     @HostBinding('attr.role')
     @Input()
     public role = 'progressbar';
 
-    /**An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+    /**
+     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
-     *<igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
+     * <igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
      * ```
      */
     @HostBinding('attr.id')
@@ -346,69 +348,68 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements After
     public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
 
     /**
-     *Set the position that defines where the text is aligned.
-     Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
-     *```typescript
-     *public positionCenter: IgxTextAlign;
-     *public ngOnInit() {
-     *    this.positionCenter = IgxTextAlign.CENTER;
-     *}
-     * //...
-     *```
-     * ```html
-     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
-     *```
+     * Set the position that defines where the text is aligned.
+     * Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
+     * ```typescript
+     * public positionCenter: IgxTextAlign;
+     * public ngOnInit() {
+     *     this.positionCenter = IgxTextAlign.CENTER;
+     * }
+     *  //...
+     * ```
+     *  ```html
+     * <igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
+     * ```
      */
     @Input()
     public textAlign: IgxTextAlign = IgxTextAlign.START;
 
     /**
-     *Set the text to be visible. By default it is set to true.
+     * Set the text to be visible. By default it is set to true.
      * ```html
-     *<igx-linear-bar type="default" [textVisibility]="false"></igx-linear-bar>
-     *```
+     *  <igx-linear-bar type="default" [textVisibility]="false"></igx-linear-bar>
+     * ```
      */
     @Input()
     public textVisibility = true;
 
     /**
-     *Set the position that defines if the text should be aligned above the progress line. By default is set to false.
-     *```html
-     *<igx-linear-bar type="error" [textTop]="true"></igx-linear-bar>
-     *```
+     * Set the position that defines if the text should be aligned above the progress line. By default is set to false.
+     * ```html
+     *  <igx-linear-bar type="error" [textTop]="true"></igx-linear-bar>
+     * ```
      */
     @Input()
     public textTop = false;
 
     /**
-     *Set a custom text that is displayed according to the defined position.
-     * ```html
-     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
-     *```
+     * Set a custom text that is displayed according to the defined position.
+     *  ```html
+     * <igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
+     * ```
      */
     @Input()
     public text: string;
 
     /**
-     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
-     *```html
-     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="error"></igx-linear-bar>
-     *```
+     * Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `error`.
+     * ```html
+     * <igx-linear-bar [striped]="false" [max]="100" [value]="0" type="error"></igx-linear-bar>
+     * ```
      */
-
     @Input()
     public type = 'default';
 
-    /**
-    *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
-    *```typescript
-    * @ViewChild("MyProgressBar")
-    *public progressBar: IgxLinearProgressBarComponent;
-    *public getValue(event) {
-    *    let value = this.progressBar.value;
-    *    alert(value);
-    *}
-    *```
+   /**
+    * Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+    * ```typescript
+    *  @ViewChild("MyProgressBar")
+    * public progressBar: IgxLinearProgressBarComponent;
+    * public getValue(event) {
+    *     let value = this.progressBar.value;
+    *     alert(value);
+    * }
+    * ```
     */
     @HostBinding('attr.aria-valuenow')
     @Input()
@@ -417,10 +418,10 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements After
     }
 
     /**
-     *Set value that indicates the current `IgxLinearProgressBarComponent` position.
-     *```html
-     *<igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
-     *```
+     * Set value that indicates the current `IgxLinearProgressBarComponent` position.
+     * ```html
+     * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
+     * ```
      */
     set value(val) {
         const valInRange = valueInRange(val, this.max);
@@ -488,10 +489,10 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     public cssClass = 'igx-circular-bar';
 
     /**
-     *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
-     *```html
-     *<igx-circular-bar [id]="'igx-circular-bar-55'" [value]="50"></igx-circular-bar>
-     *```
+     * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * ```html
+     * <igx-circular-bar [id]="'igx-circular-bar-55'" [value]="50"></igx-circular-bar>
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
@@ -503,32 +504,32 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     public gradientId = `igx-circular-gradient-${NEXT_GRADIENT_ID++}`;
 
     /**
-     *An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
-     *```html
-     *<igx-circular-bar [indeterminate]="true"></igx-circular-bar>
-     *```
+     * An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
+     * ```html
+     * <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+     * ```
      */
     @HostBinding('class.igx-circular-bar--indeterminate')
     @Input()
     public indeterminate = false;
 
     /**
-     *Sets the text visibility. By default it is set to true.
-     *```html
-     *<igx-circular-bar [textVisibility]="false"></igx-circular-bar>
-     *```
+     * Sets the text visibility. By default it is set to true.
+     * ```html
+     * <igx-circular-bar [textVisibility]="false"></igx-circular-bar>
+     * ```
      */
     @Input()
     public textVisibility = true;
 
     /**
      * Sets/gets the text to be displayed inside the `igxCircularBar`.
-     *```html
-     *<igx-circular-bar text="Progress"></igx-circular-bar>
-     *```
-     *```typescript
-     *let text = this.circularBar.text;
-     *```
+     * ```html
+     * <igx-circular-bar text="Progress"></igx-circular-bar>
+     * ```
+     * ```typescript
+     * let text = this.circularBar.text;
+     * ```
      */
     @Input()
     public text: string;
@@ -541,7 +542,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     /**
      * @hidden
-    */
+     */
     public get context(): any {
         return {
             $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max }
@@ -549,18 +550,18 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     /**
-     *Returns value that indicates the current `IgxCircularProgressBarComponent` position.
-     *```typescript
-     * @ViewChild("MyProgressBar")
-     *public progressBar: IgxCircularProgressBarComponent;
-     *public getValue(event) {
-     *    let value = this.progressBar.value;
-     *    alert(value);
-     *}
-     *```
-     *```html
-     *<button igxButton="fab" igxRipple="" (click)="getValue()">Click</button>
-     *```
+     * Returns value that indicates the current `IgxCircularProgressBarComponent` position.
+     * ```typescript
+     *  @ViewChild("MyProgressBar")
+     * public progressBar: IgxCircularProgressBarComponent;
+     * public getValue(event) {
+     *     let value = this.progressBar.value;
+     *     alert(value);
+     * }
+     * ```
+     * ```html
+     * <button igxButton="fab" igxRipple="" (click)="getValue()">Click</button>
+     * ```
      */
     @Input()
     get value(): number {
@@ -568,10 +569,10 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     }
 
     /**
-     *Set value that indicates the current `IgxCircularProgressBarComponent` position.
-     *```html
-     *<igx-circular-bar [value]="50"></igx-circular-bar>
-     *```
+     * Set value that indicates the current `IgxCircularProgressBarComponent` position.
+     * ```html
+     * <igx-circular-bar [value]="50"></igx-circular-bar>
+     * ```
      */
     set value(val: number) {
         const valInRange = valueInRange(val, this.max);
@@ -632,14 +633,14 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
 
     /**
      * @hidden
-    */
+     */
     public get textContent(): string {
         return this.text;
     }
 
     /**
      * @hidden
-    */
+     */
     public updateProgressDirectly(val: number) {
         super.updateProgressDirectly(val);
 

@@ -183,13 +183,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the disabled dates' descriptors.
      * ```typescript
      * @ViewChild("MyCalendar")
-     *public calendar: IgxCalendarComponent;
-     *ngOnInit(){
+     * public calendar: IgxCalendarComponent;
+     * ngOnInit(){
      *    this.calendar.disabledDates = [
      *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
      *     {type: DateRangeType.Weekends}];
-     *}
-     *```
+     * }
+     * ```
      */
     public set disabledDates(value: DateRangeDescriptor[]) {
         this._disabledDates = value;
@@ -207,13 +207,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * Sets the special dates' descriptors.
      * ```typescript
      * @ViewChild("MyCalendar")
-     *public calendar: IgxCalendarComponent;
-     *ngOnInit(){
+     * public calendar: IgxCalendarComponent;
+     * ngOnInit(){
      *    this.calendar.specialDates = [
      *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
      *     {type: DateRangeType.Weekends}];
-     *}
-     *```
+     * }
+     * ```
      */
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
@@ -251,8 +251,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     public rangeStarted = false;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     private _locale = 'en';
 
     /**

@@ -102,7 +102,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @WatchColumnChanges()
     @Input()
     public sortable = false;
-      /**
+    /**
      * Returns if the column is selectable.
      * ```typescript
      * let columnSelectable = this.column.selectable;
@@ -115,7 +115,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return this._selectable;
     }
 
-     /**
+    /**
      * Sets if the column is selectable.
      * Default value is `true`.
      * ```html
@@ -422,7 +422,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public calcPixelWidth: number;
     /**
      * @hidden
-    */
+     */
     protected _applySelectableClass = false;
 
     /**
@@ -754,12 +754,12 @@ export class IgxColumnComponent implements AfterContentInit {
         this._sortStrategy = classRef;
     }
     /**
-    * Gets the function that compares values for grouping.
-    * ```typescript
-    * let groupingComparer = this.column.groupingComparer'
-    * ```
-    * @memberof IgxColumnComponent
-    */
+     * Gets the function that compares values for grouping.
+     * ```typescript
+     * let groupingComparer = this.column.groupingComparer'
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input()
     public get groupingComparer(): (a: any, b: any) => number {
         return this._groupingComparer;
@@ -1009,12 +1009,12 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-    * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
-    * ```typescript
-    * let columnLayoutChild =  this.column.columnLayoutChild;
-    * ```
-    * @memberof IgxColumnComponent
-    */
+     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnLayoutChild =  this.column.columnLayoutChild;
+     * ```
+     * @memberof IgxColumnComponent
+     */
     get columnLayoutChild() {
         return this.parent && this.parent.columnLayout;
     }
@@ -1270,7 +1270,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected _editable: boolean;
     /**
      *  @hidden
-    */
+     */
     protected _visibleWhenCollapsed;
     /**
      * @hidden
@@ -1426,7 +1426,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 /**
                  *  If replaced column has bigger span, we want to fill the remaining columns
                  *  that the replacing column does not fill with the old one.
-                 **/
+                 */
                 if (bothWidthsSet && newSpanSmaller) {
                     // Start from where the new column set would end and apply the old column to the rest depending on how much it spans.
                     // We have not yet replaced it so we can use it directly from the columnSizes collection.
@@ -1718,13 +1718,13 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-    * Returns a reference to the filter cell of the column.
-    * ```typescript
-    * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-    * let filterell = column.filterell;
-    * ```
-    * @memberof IgxColumnComponent
-    */
+     * Returns a reference to the filter cell of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let filterell = column.filterell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
     get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
@@ -1879,7 +1879,7 @@ export class IgxColumnComponent implements AfterContentInit {
             c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
         });
     }
-     /**
+    /**
      * @hidden
      * @internal
      */
@@ -1892,7 +1892,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     /**
      * @hidden
-    */
+     */
     public get pinnable() {
         return (this.grid as any)._init || !this.pinned;
     }
@@ -1904,14 +1904,14 @@ export class IgxColumnComponent implements AfterContentInit {
 
     /**
      * @hidden
-    */
+     */
     public get applySelectableClass(): boolean {
         return this._applySelectableClass;
     }
 
     /**
      * @hidden
-    */
+     */
     public set applySelectableClass(value: boolean) {
         if (this.selectable) {
             this._applySelectableClass = value;

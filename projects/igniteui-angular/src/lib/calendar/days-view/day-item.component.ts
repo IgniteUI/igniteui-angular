@@ -5,7 +5,7 @@ import { CalendarSelection } from '../calendar-base';
 
 /**
  * @hidden
-*/
+ */
 @Component({
     selector: 'igx-day-item',
     templateUrl: 'day-item.component.html'

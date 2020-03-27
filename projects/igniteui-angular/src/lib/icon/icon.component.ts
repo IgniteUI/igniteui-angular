@@ -52,66 +52,66 @@ export class IgxIconComponent implements OnInit {
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon") public icon: IgxIconComponent;
-     *constructor(private cdRef:ChangeDetectorRef) {}
-     *ngAfterViewInit() {
-     *    this.icon.ariaHidden = false;
-     *    this.cdRef.detectChanges();
-     *}
+     * constructor(private cdRef:ChangeDetectorRef) {}
+     * ngAfterViewInit() {
+     *     this.icon.ariaHidden = false;
+     *     this.cdRef.detectChanges();
+     * }
      * ```
      */
     @HostBinding('attr.aria-hidden')
     public ariaHidden = true;
 
     /**
-    *  An @Input property that sets the value of the `id` attribute.
-    * @example
-    *```html
-    *<igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
-    *```
-    */
+     * An @Input property that sets the value of the `id` attribute.
+     * @example
+     * ```html
+     * <igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
+     * ```
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-icon-${NEXT_ID++}`;
 
     /**
-    *  An @Input property that sets the value of the `fontSet`. By default it's "material".
-    * @example
-    *```html
-    *<igx-icon fontSet="material">settings</igx-icon>
-    *```
-    */
+     * An @Input property that sets the value of the `fontSet`. By default it's "material".
+     * @example
+     * ```html
+     * <igx-icon fontSet="material">settings</igx-icon>
+     * ```
+     */
     @Input('fontSet')
     public font: string;
 
     /**
-    *  An @Input property that allows you to disable the `active` property. By default it's applied.
-    * @example
-    *```html
-    *<igx-icon [isActive]="false">settings</igx-icon>
-    *```
-    */
+     * An @Input property that allows you to disable the `active` property. By default it's applied.
+     * @example
+     * ```html
+     * <igx-icon [isActive]="false">settings</igx-icon>
+     * ```
+     */
     @Input('isActive')
     public active = true;
 
     /**
-    *  An @Input property that allows you to change the `iconColor` of the icon.
-    * @example
-    *```html
-    *<igx-icon color="blue">settings</igx-icon>
-    *```
-    */
+     * An @Input property that allows you to change the `iconColor` of the icon.
+     * @example
+     * ```html
+     * <igx-icon color="blue">settings</igx-icon>
+     * ```
+     */
     @Input('color')
     public iconColor: string;
 
     /**
-    *  An @Input property that allows you to set the `iconName` of the icon.
-    *  @example
-    *```html
-    *<igx-icon name="contains" fontSet="filter-icons"></igx-icon>
-    *```
-    */
+     *  An @Input property that allows you to set the `iconName` of the icon.
+     *  @example
+     * ```html
+     * <igx-icon name="contains" fontSet="filter-icons"></igx-icon>
+     * ```
+     */
     @Input('name')
     public iconName: string;
 
@@ -135,12 +135,12 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *  An accessor that returns the value of the font property.
+     * An accessor that returns the value of the font property.
      * @example
-     *```typescript
-     * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * ```typescript
+     *  @ViewChild("MyIcon")
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconFont = this.icon.getFontSet;
      * }
      * ```
@@ -152,10 +152,10 @@ export class IgxIconComponent implements OnInit {
     /**
      *  An accessor that returns the value of the active property.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconActive = this.icon.getActive;
      * }
      * ```
@@ -167,10 +167,10 @@ export class IgxIconComponent implements OnInit {
     /**
      *  An accessor that returns inactive property.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconActive = this.icon.getInactive;
      * }
      * ```
@@ -181,12 +181,12 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *  An accessor that returns the opposite value of the `iconColor` property.
+     * An accessor that returns the opposite value of the `iconColor` property.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconColor = this.icon.getIconColor;
      * }
      * ```
@@ -197,12 +197,12 @@ export class IgxIconComponent implements OnInit {
     }
 
     /**
-     *  An accessor that returns the value of the iconName property.
+     * An accessor that returns the value of the iconName property.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconName = this.icon.getIconName;
      * }
      * ```
@@ -215,10 +215,10 @@ export class IgxIconComponent implements OnInit {
      *  An accessor that returns the key of the SVG image.
      *  The key consists of the fontSet and the iconName separated by underscore.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let svgKey = this.icon.getSvgKey;
      * }
      * ```
@@ -234,10 +234,10 @@ export class IgxIconComponent implements OnInit {
     /**
      *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
      * @example
-     *```typescript
+     * ```typescript
      * @ViewChild("MyIcon")
-     *public icon: IgxIconComponent;
-     *ngAfterViewInit() {
+     * public icon: IgxIconComponent;
+     * ngAfterViewInit() {
      *    let iconTemplate = this.icon.template;
      * }
      * ```

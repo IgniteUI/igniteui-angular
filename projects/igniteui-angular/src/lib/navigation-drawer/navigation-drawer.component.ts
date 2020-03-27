@@ -335,8 +335,8 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
 
     /**
-      * @hidden
-      */
+     * @hidden
+     */
     get drawer() {
         return this._drawer.nativeElement;
     }

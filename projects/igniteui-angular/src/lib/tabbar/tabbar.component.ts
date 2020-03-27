@@ -660,11 +660,11 @@ export class IgxTabComponent {
         }
     }
 
-    /** @hidden*/
+    /** @hidden */
     @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /** @hidden*/
+    /** @hidden */
     @ContentChild(IgxTabTemplateDirective, { read: IgxTabTemplateDirective })
     protected customTabTemplateDir: IgxTabTemplateDirective;
 

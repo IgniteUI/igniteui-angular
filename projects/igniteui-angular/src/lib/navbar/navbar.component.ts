@@ -55,23 +55,23 @@ export class IgxNavbarComponent {
     private isVisible = true;
 
     /**
-     *An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
-     *```html
-     *<igx-navbar [id]="'igx-navbar-12'" title="Sample App" actionButtonIcon="menu">
-     *```
+     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * ```html
+     * <igx-navbar [id]="'igx-navbar-12'" title="Sample App" actionButtonIcon="menu">
+     * ```
      */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-navbar-${NEXT_ID++}`;
     /**
-     *Returns whether the `IgxNavbarComponent` action button is visible, true/false.
-     *```typescript
-     * @ViewChild("MyChild")
-     *public navBar: IgxNavbarComponent;
-     *ngAfterViewInit(){
-     *    let actionButtonVisibile = this.navBar.isActionButtonVisible;
-     *}
-     *```
+     * Returns whether the `IgxNavbarComponent` action button is visible, true/false.
+     * ```typescript
+     *  @ViewChild("MyChild")
+     * public navBar: IgxNavbarComponent;
+     * ngAfterViewInit(){
+     *     let actionButtonVisibile = this.navBar.isActionButtonVisible;
+     * }
+     * ```
      */
     @Input()
     public get isActionButtonVisible(): boolean {
@@ -82,50 +82,50 @@ export class IgxNavbarComponent {
     }
 
     /**
-     *Sets whether the action button of the `IgxNavbarComponent` is visible.
-     *```html
-     *<igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
-     *```
+     * Sets whether the action button of the `IgxNavbarComponent` is visible.
+     * ```html
+     * <igx-navbar [title]="currentView" [isActionButtonVisible]="'false'"></igx-navbar>
+     * ```
      */
     public set isActionButtonVisible(value: boolean) {
         this.isVisible = value;
     }
     /**
-     *An @Input property that sets the icon of the `IgxNavbarComponent`.
-     *```html
-     *<igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
-     *```
+     * An @Input property that sets the icon of the `IgxNavbarComponent`.
+     * ```html
+     * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
+     * ```
      */
     @Input() public actionButtonIcon: string;
 
     /**
-     *An @Input property that sets the title of the `IgxNavbarComponent`.
-     *```html
-     *<igx-navbar title="Sample App" actionButtonIcon="menu">
-     *```
+     * An @Input property that sets the title of the `IgxNavbarComponent`.
+     * ```html
+     * <igx-navbar title="Sample App" actionButtonIcon="menu">
+     * ```
      */
     @Input() public title: string;
 
     /**
-     *The event that will be thrown when the action is executed,
-     *provides reference to the `IgxNavbar` component as argument
-     *```typescript
-     *public actionExc(event){
-     *    alert("Action Execute!");
-     *}
-     * //..
-     *```
-     *```html
-     *<igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu">
-     *```
+     * The event that will be thrown when the action is executed,
+     * provides reference to the `IgxNavbar` component as argument
+     * ```typescript
+     * public actionExc(event){
+     *     alert("Action Execute!");
+     * }
+     *  //..
+     * ```
+     * ```html
+     * <igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu">
+     * ```
      */
     @Output() public onAction = new EventEmitter<IgxNavbarComponent>();
 
     /**
-     *An @Input property that sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
-     *```html
-     *<igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
-     *```
+     * An @Input property that sets the titleId of the `IgxNavbarComponent`. If not set it will be automatically generated.
+     * ```html
+     * <igx-navbar [titleId]="'igx-navbar-7'" title="Sample App" actionButtonIcon="menu">
+     * ```
      */
     @Input()
     public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;

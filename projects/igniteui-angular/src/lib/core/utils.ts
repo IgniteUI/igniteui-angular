@@ -172,13 +172,13 @@ export const enum KEYS {
 
 /**
  * @hidden
-* Returns the actual size of the node content, using Range
-* ```typescript
-* let range = document.createRange();
-* let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-*
-* let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
-* ```
+ * Returns the actual size of the node content, using Range
+ * ```typescript
+ * let range = document.createRange();
+ * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+ *
+ * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+ * ```
  */
 export function getNodeSizeViaRange(range: Range, node: any): number {
     let overflow = null;
@@ -200,13 +200,13 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
 }
 /**
  * @hidden
-* Returns the actual size of the node content, using Canvas
-* ```typescript
-* let ctx = document.createElement('canvas').getContext('2d');
-* let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-*
-* let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
-* ```
+ * Returns the actual size of the node content, using Canvas
+ * ```typescript
+ * let ctx = document.createElement('canvas').getContext('2d');
+ * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+ *
+ * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
+ * ```
  */
 export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
     const s = this.grid.document.defaultView.getComputedStyle(node);

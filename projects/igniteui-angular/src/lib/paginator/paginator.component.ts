@@ -43,7 +43,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this.displayDensity === DisplayDensity.comfortable;
     }
 
-    /**
+  /**
    * An @Input property, sets current page of the `IgxPaginatorComponent`.
    * The default is 0.
    * ```typescript
@@ -61,7 +61,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.pageChange.emit(this._page);
     }
 
-    /**
+  /**
    * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
    * The default is 15.
    * ```typescript
@@ -81,7 +81,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.totalPages = Math.ceil(this.totalRecords / this._perPage);
     }
 
-    /**
+   /**
     * An @Input property that sets the total records.
     * ```typescript
     * let totalRecords = this.paginator.totalRecords;
@@ -98,7 +98,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.totalPages = Math.ceil(this.totalRecords / this.perPage);
     }
 
-    /**
+   /**
     * An @Input property that sets custom options in the select of the paginator
     * ```typescript
     * let options = this.paginator.selectOptions;
@@ -114,7 +114,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._selectOptions = this.sortUniqueOptions(value, this._perPage);
         this.defaultSelectValues = [...value];
     }
-    /**
+
+   /**
     * An @Input property that sets if the pager in the paginator should be enabled.
     * ```html
     * <igx-paginator [pagerEnabled]="true"></igx-paginator>
@@ -124,7 +125,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public pagerEnabled = true;
 
-    /**
+   /**
     * An @Input property that sets if the pager in the paginator should be hidden.
     * ```html
     * <igx-paginator [pagerHidden]="true"></igx-paginator>
@@ -134,7 +135,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public pagerHidden = false;
 
-    /**
+   /**
     * An @Input property that sets if the dropdown in the paginator should be enabled.
     * ```html
     * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
@@ -144,7 +145,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public dropdownEnabled = true;
 
-    /**
+   /**
     * An @Input property that sets if the dropdown in the paginator should be hidden.
     * ```html
     * <igx-paginator [dropdownHidden]="true"></igx-paginator>
@@ -154,7 +155,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public dropdownHidden = false;
 
-    /**
+   /**
     * An @Input property, sets number of label of the select.
     * The default is 'Items per page' localized string.
     * ```html
@@ -166,13 +167,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
 
     /**
-     *An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
-    */
+     * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
+     */
     @Output()
     public perPageChange = new EventEmitter<number>();
+
     /**
-     *An event that is emitted when the paginating is used.
-    */
+     * An event that is emitted when the paginating is used.
+     */
     @Output()
     public pageChange = new EventEmitter<number>();
 
@@ -220,7 +222,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.nextPage();
      * ```
-	 * @memberof IgxPaginatorComponent
+     * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
         if (!this.isLastPage) {
@@ -232,7 +234,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * ```typescript
      * this.paginator.previousPage();
      * ```
-	 * @memberof IgxPaginatorComponent
+     * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
         if (!this.isFirstPage) {

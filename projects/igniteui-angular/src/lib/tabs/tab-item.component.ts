@@ -24,24 +24,24 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit, OnDestroy {
     /**
-    * Gets the group associated with the tab.
-    * ```html
-    * const relatedGroup = this.tabbar.tabs.toArray()[1].relatedGroup;
-    * ```
-    */
+     * Gets the group associated with the tab.
+     * ```html
+     * const relatedGroup = this.tabbar.tabs.toArray()[1].relatedGroup;
+     * ```
+     */
     @Input()
     public relatedGroup: IgxTabsGroupComponent;
 
-    /** @hidden*/
+    /** @hidden */
     private _icon: string;
 
     /**
-    * An @Input property that sets the value of the `icon`.
-    * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
-    *```html
-    *<igx-tab-item label="Tab 1" icon="home">
-    *```
-    */
+     * An @Input property that sets the value of the `icon`.
+     * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
+     * ```html
+     * <igx-tab-item label="Tab 1" icon="home">
+     * ```
+     */
     @Input()
     public get icon(): string {
         return this.relatedGroup ? this.relatedGroup.icon : this._icon;
@@ -53,15 +53,15 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
         this._icon = newValue;
     }
 
-    /** @hidden*/
+    /** @hidden */
     private _label: string;
 
     /**
-    * An @Input property that sets the value of the `label`.
-    *```html
-    *<igx-tabs-item label="Tab 2" icon="folder">
-    *```
-    */
+     * An @Input property that sets the value of the `label`.
+     * ```html
+     * <igx-tabs-item label="Tab 2" icon="folder">
+     * ```
+     */
     @Input()
     public get label(): string {
         return this.relatedGroup ? this.relatedGroup.label : this._label;
@@ -73,11 +73,11 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
         this._label = newValue;
     }
 
-    /** @hidden*/
+    /** @hidden */
     @ViewChild('defaultTabTemplate', { read: TemplateRef, static: true })
     protected defaultTabTemplate: TemplateRef<any>;
 
-    /** @hidden*/
+    /** @hidden */
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected customTabTemplateDir: IgxTabItemTemplateDirective;
 
@@ -220,11 +220,11 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     }
 
     /**
-    * 	Gets whether the tab is disabled.
-    * ```
-    * const disabledItem = this.myTabComponent.tabs.first.disabled;
-    * ```
-    */
+     * 	Gets whether the tab is disabled.
+     * ```
+     * const disabledItem = this.myTabComponent.tabs.first.disabled;
+     * ```
+     */
     @Input()
     get disabled(): boolean {
         return this.relatedGroup ? this.relatedGroup.disabled : this._disabled;
