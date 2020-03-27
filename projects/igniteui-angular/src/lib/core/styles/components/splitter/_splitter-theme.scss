@@ -27,7 +27,7 @@
     @include igx-root-css-vars($theme);
 
     
-    $splitter-color: rgba(189,189,189,0.8);
+    $splitter-color: rgba(189, 189, 189, .8);
     $splitter-border-width: 1px;
     $splitter-border-style: solid;
     $splitter-border-color: ($splitter-color);
