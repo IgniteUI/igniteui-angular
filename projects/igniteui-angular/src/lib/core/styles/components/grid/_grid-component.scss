@@ -681,6 +681,11 @@
             @extend %igx-grid__hierarchical-expander--cosy !optional;
         }
 
+        @include e(hierarchical-expander, $m: empty) {
+            @extend %igx-grid__hierarchical-expander--cosy !optional;
+            @extend %igx-grid__hierarchical-expander--empty !optional;
+        }
+
         @include e(hierarchical-expander, $m: push) {
             @extend %igx-grid__hierarchical-expander--push--cosy !optional;
         }
@@ -779,6 +784,11 @@
 
         @include e(hierarchical-expander) {
             @extend %igx-grid__hierarchical-expander--compact !optional;
+        }
+        
+        @include e(hierarchical-expander, $m: empty) {
+            @extend %igx-grid__hierarchical-expander--compact !optional;
+            @extend %igx-grid__hierarchical-expander--empty !optional;
         }
 
         @include e(hierarchical-expander, $m: push) {

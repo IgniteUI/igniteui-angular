@@ -1,12 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent, IgxTransactionService, IgxGridTransaction, IgxHierarchicalRowComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
+import { 
+    IgxGridComponent,
+    ColumnPinningPosition,
+    RowPinningPosition,
+    IgxGridRowComponent,
+    IgxTransactionService,
+    IgxGridTransaction,
+    IgxHierarchicalGridComponent,
+    DisplayDensityToken,
+    DisplayDensity,
+    IDisplayDensityOptions } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
-    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
     selector: 'app-grid-row-pinning-sample',
     styleUrls: ['grid-row-pinning.sample.css'],
-    templateUrl: 'grid-row-pinning.sample.html'
+    templateUrl: 'grid-row-pinning.sample.html',
+    providers: [
+        { provide: IgxGridTransaction, useClass: IgxTransactionService },
+        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} }
+    ],
 })
 
 export class GridRowPinningSampleComponent implements OnInit {
@@ -17,6 +30,8 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
+
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -148,5 +163,13 @@ export class GridRowPinningSampleComponent implements OnInit {
     public isPinned(cell) {
         console.log(cell);
         return true;
+    }
+
+    toggleDensity() {
+        switch (this.displayDensityOptions.displayDensity ) {
+            case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
+            case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
+            case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
+        }
     }
 }

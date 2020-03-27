@@ -5,10 +5,13 @@
     <button (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
     <div class="sample-content">
         <div class="sample-column">
+            <div>
+                <input igxButton="raised" type="button" name="Density" (click)="toggleDensity()" value="Density"/>
+                <span> Current: {{displayDensityOptions.displayDensity}}</span>
+            </div>
             <div class="sample-switches">
                 <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
                 <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
-                <input igxButton type="button" name="Unpin" (click)="clickUnpin()"/>
             </div>
         <igx-grid [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
             <igx-column width='70px' [filterable]='false'>
@@ -29,7 +32,7 @@
         </igx-grid>
         </div>
         <div class="sample-column">
-            <igx-hierarchical-grid [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' [width]="'800px'" [height]="'500px'" [rowSelectable]="true" #hGrid>
+            <igx-hierarchical-grid [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' [columnHiding]='true' [width]="'800px'" [height]="'500px'" [rowSelectable]="true" #hGrid>
                 <igx-column width='70px' [filterable]='false'>
                     <ng-template igxCell let-cell="cell" let-val>
                         <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">

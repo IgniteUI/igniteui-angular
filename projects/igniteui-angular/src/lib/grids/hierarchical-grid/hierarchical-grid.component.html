@@ -97,13 +97,10 @@
             | gridHierarchicalRowPinning:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
             | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData">
-                <div #pinContainer *ngIf='pinnedData.length > 0' [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }">
-                    <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
-                        <ng-template #hierarchical_record_template>
-                            <igx-hierarchical-grid-row [gridID]="id" [index]="getRowIndex(rowIndex, true)" [rowData]="rowData">
-                            </igx-hierarchical-grid-row>
-                        </ng-template>
-        
+                <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
+                    [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
+                    [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                    <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">        
                         <ng-container *ngTemplateOutlet="hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
                     </ng-container>
@@ -112,38 +109,39 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>
-        <ng-template igxGridFor let-rowData [igxGridForOf]="data
+        <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridHierarchicalRowPinning:false:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
+        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
-            <ng-template #hierarchical_record_template>
-                <igx-hierarchical-grid-row [gridID]="id" [index]="getRowIndex(rowIndex, false)" [ghostRow]="isGhostRecord(rowData)" [rowData]="!isGhostRecord(rowData) ? rowData : rowData.recordData" #row>
-                </igx-hierarchical-grid-row>
-            </ng-template>
-            <ng-template #child_record_template let-rowIndex="index" let-rowData>
-                <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
-                    [ngClass]="{
-                    'igx-grid__tr-container': true,
-                    'igx-grid__tr--highlighted':isRowHighlighted(rowData)
-                }">
-                    <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="getRowIndex(rowIndex, false)"
-                        [rowData]="rowData" [layout]='layout' #row>
-                    </igx-child-grid-row>
-                </div>
-            </ng-template>
             <ng-template
-            [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
-            [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (onViewCreated)='viewCreatedHandler($event)'
-            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'
-            (onBeforeViewDetach)='viewDetachHandler($event)'></ng-template>
+                [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
+                [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (onViewCreated)='viewCreatedHandler($event)'
+                (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'
+                (onBeforeViewDetach)='viewDetachHandler($event)'>
+            </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
+        </ng-template>
+        <ng-template #hierarchical_record_template let-rowIndex="index" let-ghost="ghostRow" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [ghostRow]="ghost" [rowData]="rowData" #row>
+            </igx-hierarchical-grid-row>
+        </ng-template>
+        <ng-template #child_record_template let-rowIndex="index" let-rowData>
+            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
+                [ngClass]="{
+                'igx-grid__tr-container': true,
+                'igx-grid__tr--highlighted':isRowHighlighted(rowData)
+            }">
+                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="getRowIndex(rowIndex, false)"
+                    [rowData]="rowData" [layout]='layout' #row>
+                </igx-child-grid-row>
+            </div>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">
         </ng-container>

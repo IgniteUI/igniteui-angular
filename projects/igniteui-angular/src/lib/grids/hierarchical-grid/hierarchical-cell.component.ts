@@ -21,8 +21,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      */
     public get displayPinnedChip() {
-        return this.hierarchicalRow.ghostRow &&
-            (!this.grid.visibleColumns[this.visibleColumnIndex - 1] || this.grid.visibleColumns[this.visibleColumnIndex - 1].cellTemplate);
+        return this.hierarchicalRow.pinned && this.hierarchicalRow.ghostRow && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
     }
 
     /**

@@ -323,7 +323,8 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    rowElement = this.getRowByIndex(currentRowIndex);
+                    const tag = rowElement.tagName.toLowerCase();
+                    rowElement = this.getRowByIndex(currentRowIndex, tag);
                     this.focusPreviousElement(rowElement, visibleColumnIndex);
                 });
         } else {
@@ -593,7 +594,7 @@ export class IgxGridNavigationService {
         if (visibleColumnIndex === 0 && prevIsDetailRow) {
             let target = currentRowEl.previousElementSibling;
             const applyFocusFunc = () => {
-                    target = this.getRowByIndex(rowIndex - 1);
+                    target = this.getRowByIndex(rowIndex - 1, '');
                     target.focus({ preventScroll: true });
             };
             if (target) {
@@ -627,7 +628,7 @@ export class IgxGridNavigationService {
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColumnIndex: number): boolean {
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
-        const targetRow = this.getRowByIndex(targetRowIndex) as any;
+        const targetRow = this.getRowByIndex(targetRowIndex, '') as any;
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const targetEndTopOffset = targetRow ? targetRow.offsetTop + rowHeight + containerTopOffset :
@@ -671,10 +672,10 @@ export class IgxGridNavigationService {
         return this.grid;
     }
 
-    protected getRowByIndex(index) {
+    protected getRowByIndex(index, selector = this.getRowSelector()) {
         const gridTag = this.grid.nativeElement.tagName.toLocaleLowerCase();
         const row = Array.from(this.grid.tbody.nativeElement.querySelectorAll(
-            `[data-rowindex="${index}"]`))
+            `${selector}[data-rowindex="${index}"]`))
             .find(x => this.getClosestElemByTag(x, gridTag).getAttribute('id') === this.grid.id);
             return row;
         }
