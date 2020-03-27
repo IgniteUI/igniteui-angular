@@ -271,8 +271,7 @@ export class GridFunctions {
     }
 
     public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
-        expect(groupRow.focused).toBe(focused);
-        expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
@@ -1826,30 +1825,10 @@ export class GridFunctions {
         expandInd.dispatchEvent(new Event('click', {}));
     }
 
-    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string,
         altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        cellComp.nativeElement.dispatchEvent(keyboardEvent);
-    }
-
-    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        // TODO: fix alt+arrow keys on a group row
-        // rowComp.onKeydown(keyboardEvent);
-        // if (!altKey) {
-        //     rowComp.onBlur();
-        // }
+        const gridContent = GridFunctions.getGridContent(fix);
+        UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
