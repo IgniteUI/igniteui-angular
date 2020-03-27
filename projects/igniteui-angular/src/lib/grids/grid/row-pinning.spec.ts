@@ -492,14 +492,14 @@ describe('Row Pinning #grid', () => {
             let row = grid.getRowByIndex(1);
             row.pinned = true;
             fix.detectChanges();
-            let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
 
             row = grid.pinnedRows[0];
             row.pinned = false;
             fix.detectChanges();
             expect(grid.pinnedRows.length).toBe(0);
-            summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+            summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['27']);
         });
 

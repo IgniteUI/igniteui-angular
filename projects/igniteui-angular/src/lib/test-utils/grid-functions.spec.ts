@@ -1876,7 +1876,8 @@ export class GridSummaryFunctions {
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summaryRow = rowIndex ? GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex)
+            : GridSummaryFunctions.getRootSummaryRow(fix);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
@@ -1952,21 +1953,9 @@ export class GridSummaryFunctions {
         expect(hasClass === active).toBeTruthy();
     }
 
-    public static moveSummaryCell =
-        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = typeof row === 'number' ?
-                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-
-            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            resolve();
-        })
-
     public static focusSummaryCell(fix, row, cellIndex) {
         const summaryRow = typeof row === 'number' ?
-                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
         fix.detectChanges();
