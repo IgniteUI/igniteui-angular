@@ -602,6 +602,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
+
+    /**
      * Gets/Sets the height.
      * @example
      * ```html
@@ -630,6 +637,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get hostWidth() {
         return this._width || this._hostWidth;
     }
+
     /**
      * Gets/Sets the width of the grid.
      * @example
@@ -1946,7 +1954,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.getComponentDensityClass('igx-grid');
+        const classes = [this.getComponentDensityClass('igx-grid')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
     }
 
     get bannerClass(): string {
