@@ -3,6 +3,7 @@
     <igx-splitter-bar *ngIf="!last" [style.order]="pane.order + 1"
                     [type]="type"
                     [pane]="pane"
+                    [siblings]='getSiblings(pane)'
                     (moveStart)="onMoveStart($event)"
                     (moving)="onMoving($event)">
     </igx-splitter-bar>

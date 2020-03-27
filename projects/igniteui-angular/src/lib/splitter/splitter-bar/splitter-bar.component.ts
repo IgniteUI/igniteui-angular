@@ -30,6 +30,12 @@ export class IgxSplitBarComponent {
     public pane!: IgxSplitterPaneComponent;
 
     /**
+     * Sets/Gets the `SplitPaneComponent` sibling components associated with the current `SplitBarComponent`.
+     */
+    @Input()
+    public siblings!: Array<IgxSplitterPaneComponent>;
+
+    /**
      * An event that is emitted whenever we start dragging the current `SplitBarComponent`.
      * @memberof SplitBarComponent
      */
@@ -87,6 +93,10 @@ export class IgxSplitBarComponent {
     private startPoint!: number;
 
     public onDragStart(event: IDragStartEventArgs) {
+        if (this.resizeDisallowed) {
+            event.cancel = true;
+            return;
+        }
         this.startPoint = this.type === SplitterType.Horizontal ? event.startX : event.startY;
         this.moveStart.emit(this.pane);
     }
@@ -105,6 +115,11 @@ export class IgxSplitBarComponent {
             event.cancel = true;
             event.owner.element.nativeElement.style.transform = '';
         }
+    }
+
+    protected get resizeDisallowed() {
+        const relatedTabs = [this.pane, ... this.siblings];
+        return !!relatedTabs.find(x => x.resizable === false);
     }
 
 }

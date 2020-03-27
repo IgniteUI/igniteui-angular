@@ -39,6 +39,13 @@ export class IgxSplitterPaneComponent {
     public maxSize!: string;
 
     /**
+     * Sets/Gets whether pane is resizable.
+     */
+    @Input()
+    public resizable = true;
+
+
+    /**
      * Sets/gets the `order` property of the current `IgxSplitterPaneComponent`.
      */
     @Input()

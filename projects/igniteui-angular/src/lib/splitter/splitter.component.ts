@@ -163,4 +163,14 @@ export class IgxSplitterComponent implements AfterContentInit {
             k += 2;
         });
     }
+
+    public getSiblings(pane: IgxSplitterPaneComponent): Array<IgxSplitterPaneComponent> {
+        const panes = this.panes.toArray();
+        const index = panes.indexOf(pane);
+        const siblings = [panes[index + 1]];
+        if (index > 0) {
+            siblings.push(panes[index - 1]);
+        }
+        return siblings;
+    }
 }

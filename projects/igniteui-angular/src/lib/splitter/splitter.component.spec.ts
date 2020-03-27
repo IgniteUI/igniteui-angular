@@ -123,6 +123,15 @@ describe('IgxSplitter', () => {
         expect(pane2.size).toBe('100px');
     });
 
+    it('should not allow drag resize if resizable is set to false.', () => {
+        const pane1 =  splitter.panes.toArray()[0];
+        pane1.resizable = false;
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        const args = {cancel: false};
+        splitterBarComponent.onDragStart(args);
+        expect(args.cancel).toBeTruthy();
+    });
+
 });
 
 @Component({
