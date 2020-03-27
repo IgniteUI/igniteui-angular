@@ -29,7 +29,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
-                     id: string, pipeTrigger: number): any[] {
+                     id: string, pipeTrigger: number, pinned?): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
@@ -38,7 +38,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions, sorting);
         }
-        grid.filteredSortedData = result;
+        grid.setFilteredSortedData(result, pinned);
 
         return result;
     }
