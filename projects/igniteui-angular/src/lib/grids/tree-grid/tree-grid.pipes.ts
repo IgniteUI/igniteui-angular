@@ -202,7 +202,8 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         id: string,
-        pipeTrigger: number): ITreeGridRecord[] {
+        pipeTrigger: number, 
+        pinned?: boolean): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
 
         let result: ITreeGridRecord[];
@@ -211,20 +212,9 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting);
         }
-        const filteredSortedData = [];
-        this.flattenTreeGridRecords(result, filteredSortedData);
-        grid.filteredSortedData = filteredSortedData;
+        grid.setFilteredSortedData(result, pinned);
 
         return result;
-    }
-
-    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
-        if (records && records.length) {
-            for (const record of records) {
-                flatData.push(record.data);
-                this.flattenTreeGridRecords(record.children, flatData);
-            }
-        }
     }
 }
 

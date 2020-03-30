@@ -137,8 +137,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     set filteredData(value) {
         this._filteredData = value;
-
     }
+    
 
     /**
      * Get transactions service for the grid.
@@ -364,6 +364,28 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this._rowLoadingIndicatorTemplate = this.rowLoadingTemplate.template;
         }
         super.ngAfterContentInit();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public setFilteredSortedData(data, pinned: boolean) {
+        super.setFilteredSortedData(data, pinned);
+        const flatFilteredSortedData = [];
+        this.flattenTreeGridRecords(this.filteredSortedData, flatFilteredSortedData);
+        this.filteredSortedData = flatFilteredSortedData;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
+        if (records && records.length) {
+            for (const record of records) {
+                flatData.push(record.data);
+                this.flattenTreeGridRecords(record.children, flatData);
+            }
+        }
     }
 
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
