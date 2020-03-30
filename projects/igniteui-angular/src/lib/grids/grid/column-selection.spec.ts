@@ -12,6 +12,8 @@ import { ɵɵsetComponentScope } from '@angular/core';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell-selected';
+
 function selectedData() {
     return [{ ProductID: 1, ProductName: 'Chai' },
     { ProductID: 2, ProductName: 'Aniseed Syrup' },
@@ -766,11 +768,15 @@ describe('IgxGrid - Column Selection #grid', () => {
 
         it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
             grid.allowFiltering = true;
+            fix.detectChanges();
+            const filterCell = GridFunctions.getFilterCell(fix , 'ProductID');
+            expect(filterCell.nativeElement.classList.contains(SELECTED_FILTER_CELL_CLASS)).toBeFalsy();
             const colInStock = grid.getColumnByName('InStock');
             colProductID.selected = true;
             fix.detectChanges();
 
-            GridFunctions.clickFilterCellChipUI(fix, 'ProductName'); // Name column contains nested object as a value
+            expect(filterCell.nativeElement.classList.contains(SELECTED_FILTER_CELL_CLASS)).toBeTruthy();
+            GridFunctions.clickFilterCellChipUI(fix, 'InStock'); // Name column contains nested object as a value
             tick(150);
             fix.detectChanges();
 

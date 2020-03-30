@@ -59,8 +59,14 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @ViewChild('complexChip', { read: IgxChipComponent })
     protected complexChip: IgxChipComponent;
 
-    @HostBinding('class.igx-grid__filtering-cell')
-    public cssClass = 'igx-grid__filtering-cell';
+
+    @HostBinding('class')
+    get styleClasses(): string {
+        if (this.column && this.column.selected) {
+            return 'igx-grid__filtering-cell-selected';
+        }
+        return 'igx-grid__filtering-cell';
+    }
 
     constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
         this.filteringService.subscribeToEvents();
