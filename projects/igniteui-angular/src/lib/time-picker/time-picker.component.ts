@@ -121,9 +121,9 @@ export class IgxTimePickerComponent implements
     /**
      * An accessor that allows you to set a time using the `value` input.
      * ```html
-     *public date: Date = new Date(Date.now());
+     * public date: Date = new Date(Date.now());
      *  //...
-     *<igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
+     * <igx-time-picker [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
@@ -157,9 +157,9 @@ export class IgxTimePickerComponent implements
     /**
      * An accessor that returns the value of `igx-time-picker` component.
      * ```html
-     *@ViewChild("MyPick")
-     *public pick: IgxTimePickerComponent;
-     *ngAfterViewInit(){
+     * @ViewChild("MyPick")
+     * public pick: IgxTimePickerComponent;
+     * ngAfterViewInit(){
      *    let pickSelect = this.pick.value;
      * }
      * ```
@@ -180,7 +180,7 @@ export class IgxTimePickerComponent implements
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
-    */
+     */
     @Input()
     set resourceStrings(value: ITimePickerResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -188,7 +188,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * An accessor that returns the resource strings.
-    */
+     */
     get resourceStrings(): ITimePickerResourceStrings {
         return this._resourceStrings;
     }
@@ -206,7 +206,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * An accessor that returns the label of ok button.
-    */
+     */
     get okButtonLabel(): string {
         if (this._okButtonLabel === null) {
             return this.resourceStrings.igx_time_picker_ok;
@@ -227,8 +227,8 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-    * An accessor that returns the label of cancel button.
-    */
+     * An accessor that returns the label of cancel button.
+     */
     get cancelButtonLabel(): string {
         if (this._cancelButtonLabel === null) {
             return this.resourceStrings.igx_time_picker_cancel;
@@ -241,8 +241,8 @@ export class IgxTimePickerComponent implements
      * when the user presses the Up/Down keys.
      * By default `itemsDelta` is set to `{hours: 1, minutes: 1, seconds: 1}`
      * ```html
-     *<igx-time-picker [itemsDelta]="{hours:3, minutes:5, seconds:10}" id="time-picker"></igx-time-picker>
-     *```
+     * <igx-time-picker [itemsDelta]="{hours:3, minutes:5, seconds:10}" id="time-picker"></igx-time-picker>
+     * ```
      */
     @Input()
     set itemsDelta(value) {
@@ -255,22 +255,22 @@ export class IgxTimePickerComponent implements
 
     /**
      * An @Input property that allows you to set the `minValue` to limit the user input.
-     *```html
-     *public min: string = "09:00";
+     * ```html
+     * public min: string = "09:00";
      *  //..
-     *<igx-time-picker format="HH:mm" [vertical]="true" [minValue]="min"></igx-time-picker>
-     *```
+     * <igx-time-picker format="HH:mm" [vertical]="true" [minValue]="min"></igx-time-picker>
+     * ```
      */
     @Input()
     public minValue: string;
 
     /**
      * An @Input property that allows you to set the `maxValue` to limit the user input.
-     *```html
-     *public max: string = "18:00";
+     * ```html
+     * public max: string = "18:00";
      *  //..
-     *<igx-time-picker format="HH:mm" [vertical]="true" [maxValue]="max"></igx-time-picker>
-     *```
+     * <igx-time-picker format="HH:mm" [vertical]="true" [maxValue]="max"></igx-time-picker>
+     * ```
      */
     @Input()
     public maxValue: string;
@@ -278,9 +278,9 @@ export class IgxTimePickerComponent implements
     /**
      * An @Input property that determines the spin behavior. By default `isSpinLoop` is set to true.
      * The seconds, minutes and hour spinning will wrap around by default.
-     *```html
-     *<igx-time-picker [isSpinLoop]="false" id="time-picker"></igx-time-picker>
-     *```
+     * ```html
+     * <igx-time-picker [isSpinLoop]="false" id="time-picker"></igx-time-picker>
+     * ```
      */
     @Input()
     public isSpinLoop = true;
@@ -288,7 +288,7 @@ export class IgxTimePickerComponent implements
     /**
      * An @Input property that Gets/Sets the orientation of the `igxTimePicker`. By default `vertical` is set to false.
      * ```html
-     *<igx-time-picker [vertical]="true" id="time-picker"></igx-time-picker>
+     * <igx-time-picker [vertical]="true" id="time-picker"></igx-time-picker>
      * ```
      */
     @Input()
@@ -308,7 +308,7 @@ export class IgxTimePickerComponent implements
      * `ss` : seconds field with leading zero <br>
      * `tt` : 2 character string which represents AM/PM field <br>
      * ```html
-     *<igx-time-picker format="HH:m" id="time-picker"></igx-time-picker>
+     * <igx-time-picker format="HH:m" id="time-picker"></igx-time-picker>
      * ```
      */
     @Input()
@@ -350,11 +350,11 @@ export class IgxTimePickerComponent implements
      * An @Input property that allows you to switch the interaction mode between
      * a dialog picker or dropdown with editable masked input.
      * Deafult is dialog picker.
-     *```html
-     *public mode = InteractionMode.DROPDOWN;
+     * ```html
+     * public mode = InteractionMode.DROPDOWN;
      *  //..
-     *<igx-time-picker [mode]="mode"></igx-time-picker>
-     *```
+     * <igx-time-picker [mode]="mode"></igx-time-picker>
+     * ```
      * @memberof IgxTimePickerComponent
      */
     @Input()
@@ -375,17 +375,17 @@ export class IgxTimePickerComponent implements
     public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
-    * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
-    * ```typescript
-    * const settings: OverlaySettings = {
-    *      closeOnOutsideClick: true,
-    *      modal: false
-    *  }
-    * ```
-    * ---
-    * ```html
-    * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
-    * ```
+     * An @Input property that allows you to modify overlay positioning, interaction and scroll behavior.
+     * ```typescript
+     * const settings: OverlaySettings = {
+     *      closeOnOutsideClick: true,
+     *      modal: false
+     *  }
+     * ```
+     * ---
+     * ```html
+     * <igx-time-picker [overlaySettings]="settings"></igx-time-picker>
+     * ```
      * @memberof IgxTimePickerComponent
      */
     @Input()
@@ -400,18 +400,18 @@ export class IgxTimePickerComponent implements
 
     /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
-     *```typescript
-     * @ViewChild("toast")
-     *private toast: IgxToastComponent;
-     *public onValueChanged(timepicker){
-     *    this.toast.show()
-     *}
-     * //...
+     * ```typescript
+     *  @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public onValueChanged(timepicker){
+     *     this.toast.show()
+     * }
+     *  //...
+     *  ```
+     *  ```html
+     * <igx-time-picker (onValueChanged)="onValueChanged($event)"></igx-time-picker>
+     * <igx-toast #toast message="The value has been changed!"></igx-toast>
      * ```
-     * ```html
-     *<igx-time-picker (onValueChanged)="onValueChanged($event)"></igx-time-picker>
-     *<igx-toast #toast message="The value has been changed!"></igx-toast>
-     *```
      */
     @Output()
     public onValueChanged = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
@@ -419,18 +419,18 @@ export class IgxTimePickerComponent implements
     /**
      * Emitted when an invalid value is being set. Returns {`timePicker`: `any`, `currentValue`: `Date`, `setThroughUI`: `boolean`}
      * ```typescript
-     *public min: string = "09:00";
-     *public max: string = "18:00";
-     *@ViewChild("toast")
-     *private toast: IgxToastComponent;
-     *public onValidationFailed(timepicker){
-     *    this.toast.show();
-     *}
-     * //...
-     * ```
-     * ```html
-     *<igx-time-picker [minValue]="min" [maxValue]="max" (onValidationFailed)="onValidationFailed($event)"></igx-time-picker>
-     *<igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
+     * public min: string = "09:00";
+     * public max: string = "18:00";
+     *  @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public onValidationFailed(timepicker){
+     *     this.toast.show();
+     * }
+     *  //...
+     *  ```
+     *  ```html
+     * <igx-time-picker [minValue]="min" [maxValue]="max" (onValidationFailed)="onValidationFailed($event)"></igx-time-picker>
+     * <igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
      * ```
      */
     @Output()
@@ -440,16 +440,16 @@ export class IgxTimePickerComponent implements
      * @deprecated Use 'onOpened' instead.
      * Emitted when a timePicker is being opened.
      * ```html
-     *@ViewChild("toast")
-     *private toast: IgxToastComponent;
-     *public onOpen(timepicker){
+     * @ViewChild("toast")
+     * private toast: IgxToastComponent;
+     * public onOpen(timepicker){
      *    this.toast.show();
-     *}
+     * }
      * //...
      * ```
      * ```html
-     *<igx-time-picker [minValue]="min" [maxValue]="max" (onOpen)="onOpen($event)"></igx-time-picker>
-     *<igx-toast #toast message="The time picker has been opened!"></igx-toast>
+     * <igx-time-picker [minValue]="min" [maxValue]="max" (onOpen)="onOpen($event)"></igx-time-picker>
+     * <igx-toast #toast message="The time picker has been opened!"></igx-toast>
      * ```
      */
     @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
@@ -528,13 +528,13 @@ export class IgxTimePickerComponent implements
     private dropdownInputTemplate: TemplateRef<any>;
 
     /**
-     *@hidden
+     * @hidden
      */
     @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
 
     /**
-     *@hidden
+     * @hidden
      */
     @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
@@ -581,22 +581,22 @@ export class IgxTimePickerComponent implements
 
     /**
      * @hidden
-    */
+     */
     public cleared = false;
 
     /**
      * @hidden
-    */
+     */
     public isNotEmpty = false;
 
     /**
      * @hidden
-    */
+     */
     public displayFormat = new TimeDisplayFormatPipe(this);
 
     /**
      * @hidden
-    */
+     */
     public inputFormat = new TimeInputFormatPipe(this);
 
     /**
@@ -693,7 +693,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * @hidden
-    */
+     */
     get mask(): string {
         return this._mask || '00:00 LL';
     }
@@ -719,13 +719,13 @@ export class IgxTimePickerComponent implements
     /**
      * Returns the current time formatted as string using the `format` option.
      * If there is no set time the return is an empty string.
-     *```typescript
-     *@ViewChild("MyChild")
-     *private picker: IgxTimePickerComponent;
-     *ngAfterViewInit(){
+     * ```typescript
+     * @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
      *    let time = this.picker.displayTime;
-     *}
-     *```
+     * }
+     * ```
      */
     public get displayTime(): string {
         if (this.value) {
@@ -1621,14 +1621,14 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a hour item into view.
      * ```typescript
-     *scrhintoView(picker) {
-     *picker.scrollHourIntoView('2');
-     *}
+     * scrhintoView(picker) {
+     * picker.scrollHourIntoView('2');
+     * }
+     *  ```
+     * ```html
+     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrhintoView(picker)"></igx-time-picker>
      * ```
-     *```html
-     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrhintoView(picker)"></igx-time-picker>
-     *```
-     *@param item to be scrolled in view.
+     * @param item to be scrolled in view.
      */
     public scrollHourIntoView(item: string): void {
         if (this.showHoursList) {
@@ -1644,13 +1644,13 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a minute item into view.
      * ```typescript
-     *scrMintoView(picker) {
-     *picker.scrollMinuteIntoView('3');
-     *}
+     * scrMintoView(picker) {
+     * picker.scrollMinuteIntoView('3');
+     * }
+     *  ```
+     * ```html
+     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
      * ```
-     *```html
-     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
-     *```
      * @param item to be scrolled in view.
      */
     public scrollMinuteIntoView(item: string): void {
@@ -1667,13 +1667,13 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls a seconds item into view.
      * ```typescript
-     *scrMintoView(picker) {
-     *picker.scrollSecondsIntoView('4');
-     *}
+     * scrMintoView(picker) {
+     * picker.scrollSecondsIntoView('4');
+     * }
+     *  ```
+     * ```html
+     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
      * ```
-     *```html
-     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
-     *```
      * @param item to be scrolled in view.
      */
     public scrollSecondsIntoView(item: string): void {
@@ -1691,13 +1691,13 @@ export class IgxTimePickerComponent implements
     /**
      * Scrolls an ampm item into view.
      * ```typescript
-     *scrAmPmIntoView(picker) {
-     *picker.scrollAmPmIntoView('PM');
-     *}
+     * scrAmPmIntoView(picker) {
+     * picker.scrollAmPmIntoView('PM');
+     * }
+     *  ```
+     * ```html
+     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrAmPmIntoView(picker)"></igx-time-picker>
      * ```
-     *```html
-     *<igx-time-picker #picker format="h:mm tt" (onOpen)="scrAmPmIntoView(picker)"></igx-time-picker>
-     *```
      * @param item to be scrolled in view.
      */
     public scrollAmPmIntoView(item: string): void {
@@ -1853,13 +1853,13 @@ export class IgxTimePickerComponent implements
 
     /**
      * Returns an array of the hours currently in view.
-     *```html
-     *@ViewChild("MyChild")
-     *private picker: IgxTimePickerComponent;
-     *ngAfterViewInit(){
-     *    let hInView = this.picker.hoursInView;
-     *}
-     *```
+     * ```html
+     *  @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *     let hInView = this.picker.hoursInView;
+     * }
+     * ```
      */
     public hoursInView(): string[] {
         return this._hourView.filter((hour) => hour !== '');
@@ -1867,13 +1867,13 @@ export class IgxTimePickerComponent implements
 
     /**
      * Returns an array of the minutes currently in view.
-     *```html
-     *@ViewChild("MyChild")
-     *private picker: IgxTimePickerComponent;
-     *ngAfterViewInit(){
-     *    let minInView = this.picker.minutesInView;
-     *}
-     *```
+     * ```html
+     *  @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *     let minInView = this.picker.minutesInView;
+     * }
+     * ```
      */
     public minutesInView(): string[] {
         return this._minuteView.filter((minute) => minute !== '');
@@ -1881,13 +1881,13 @@ export class IgxTimePickerComponent implements
 
     /**
      * Returns an array of the seconds currently in view.
-     *```html
-     *@ViewChild("MyChild")
-     *private picker: IgxTimePickerComponent;
-     *ngAfterViewInit(){
-     *    let minInView = this.picker.secondsInView;
-     *}
-     *```
+     * ```html
+     *  @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *     let minInView = this.picker.secondsInView;
+     * }
+     * ```
      */
     public secondsInView(): string[] {
         return this._secondsView.filter((seconds) => seconds !== '');
@@ -1895,13 +1895,13 @@ export class IgxTimePickerComponent implements
 
     /**
      * Returns an array of the AM/PM currently in view.
-     *```html
-     *@ViewChild("MyChild")
-     *private picker: IgxTimePickerComponent;
-     *ngAfterViewInit(){
-     *    let ApInView = this.picker.ampmInView;
-     *}
-     *```
+     * ```html
+     *  @ViewChild("MyChild")
+     * private picker: IgxTimePickerComponent;
+     * ngAfterViewInit(){
+     *     let ApInView = this.picker.ampmInView;
+     * }
+     * ```
      */
     public ampmInView(): string[] {
         return this._ampmView.filter((ampm) => ampm !== '');
@@ -1910,7 +1910,7 @@ export class IgxTimePickerComponent implements
     /**
      * Closes the dropdown/dialog.
      * ```html
-     *<igx-time-picker #timePicker></igx-time-picker>
+     * <igx-time-picker #timePicker></igx-time-picker>
      * ```
      * ```typescript
      * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;

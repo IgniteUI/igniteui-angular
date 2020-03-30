@@ -65,7 +65,7 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _activeView = CalendarView.DEFAULT;
 

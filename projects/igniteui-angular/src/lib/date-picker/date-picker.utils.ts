@@ -3,7 +3,7 @@ import { isIE } from '../core/utils';
 /**
  * This enum is used to keep the date validation result.
  *
- *@hidden
+ * @hidden
  */
 export const enum DateState {
     Valid = 'valid',
@@ -11,7 +11,7 @@ export const enum DateState {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 const enum FormatDesc {
     Numeric = 'numeric',
@@ -19,7 +19,7 @@ const enum FormatDesc {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 const enum DateChars {
     YearChar = 'y',
@@ -28,7 +28,7 @@ const enum DateChars {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 const enum DateParts {
     Day = 'day',
@@ -37,7 +37,7 @@ const enum DateParts {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export abstract class DatePickerUtil {
     private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
