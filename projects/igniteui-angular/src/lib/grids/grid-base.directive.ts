@@ -2896,8 +2896,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public setFilterData(data, pinned: boolean) {
         if (this.hasPinnedRecords && pinned) {
-            this._filteredPinnedData = data;
-            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+            this._filteredPinnedData = data || [];
+            const filteredUnpinned =  this._filteredUnpinnedData || [];
+            this.filteredData = [... this._filteredPinnedData, ... filteredUnpinned];
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {

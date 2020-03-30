@@ -79,6 +79,7 @@
             <ng-container *ngIf='data
             | visibleColumns:hasVisibleColumns
             | treeGridRowPinning:id:pipeTrigger
+            | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData'>
             <div #pinContainer *ngIf='pinnedData.length > 0' 
                 [ngClass]="{

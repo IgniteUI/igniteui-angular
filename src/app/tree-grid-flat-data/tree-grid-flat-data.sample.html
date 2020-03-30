@@ -12,7 +12,7 @@
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
             </div>
 
-            <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+            <igx-tree-grid #grid1 [allowFiltering]='true' [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
                 [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
                 [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
                 exportExcelText="Export to Excel" exportCsvText="Export to CSV" [summaryCalculationMode]="summaryMode">
