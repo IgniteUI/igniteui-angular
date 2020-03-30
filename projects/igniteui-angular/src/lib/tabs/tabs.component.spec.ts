@@ -17,7 +17,17 @@ import { Location } from '@angular/common';
 import { TabsRoutingViewComponentsModule,
     TabsRoutingView1Component,
     TabsRoutingView2Component,
-    TabsRoutingView3Component } from './tabs-routing-view-components.spec';
+    TabsRoutingView3Component,
+    TabsRoutingView4Component,
+    TabsRoutingView5Component } from './tabs-routing-view-components.spec';
+import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
+
+const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
+const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
+const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
+const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
+const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
+const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
 describe('IgxTabs', () => {
     configureTestSuite();
@@ -26,19 +36,21 @@ describe('IgxTabs', () => {
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
 
     beforeAll(async(() => {
-
         const testRoutes = [
-            { path: 'view1', component: TabsRoutingView1Component },
-            { path: 'view2', component: TabsRoutingView2Component },
-            { path: 'view3', component: TabsRoutingView3Component }
+            { path: 'view1', component: TabsRoutingView1Component, canActivate: [TabRoutingTestGuard] },
+            { path: 'view2', component: TabsRoutingView2Component, canActivate: [TabRoutingTestGuard] },
+            { path: 'view3', component: TabsRoutingView3Component, canActivate: [TabRoutingTestGuard] },
+            { path: 'view4', component: TabsRoutingView4Component, canActivate: [TabRoutingTestGuard] },
+            { path: 'view5', component: TabsRoutingView5Component, canActivate: [TabRoutingTestGuard] }
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
+            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsRoutingDisabledTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
-                TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component],
+                TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent, TabsRoutingGuardTestComponent],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
-                TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
+                TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
+            providers: [TabRoutingTestGuard]
         }).compileComponents();
     }));
 
@@ -222,19 +234,27 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
-            let args = { key: 'ArrowRight', bubbles: true };
-            tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+            tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            args = { key: 'ArrowLeft', bubbles: true };
-            tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+            tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(0);
+
+            tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(2);
+
+            tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
@@ -245,15 +265,12 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
-
-            let args = { key: 'End', bubbles: true };
-            tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+            tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            args = { key: 'Home', bubbles: true };
-            tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
+            tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
@@ -301,6 +318,43 @@ describe('IgxTabs', () => {
             expect(tabs.selectedIndex).toBe(0);
         }));
 
+        it('should not select disabled tabs when navigating with left/right/home/end', fakeAsync(() => {
+            fixture = TestBed.createComponent(TabsDisabledTestComponent);
+            tabs = fixture.componentInstance.tabs;
+            tick(100);
+            fixture.detectChanges();
+
+            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.click();
+            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(3);
+
+            tabs.tabs.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(1);
+
+            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(3);
+
+            tabs.tabs.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(1);
+
+            tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(3);
+
+            tabs.tabs.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabs.selectedIndex).toBe(1);
+        }));
     });
 
     describe('IgxTabs Component with Custom Template', () => {
@@ -528,6 +582,146 @@ describe('IgxTabs', () => {
             expect(theTabs[2].isSelected).toBe(false);
         }));
 
+        it('should focus next/previous tab when pressing right/left arrow', fakeAsync(() => {
+            theTabs[0].nativeTabItem.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+
+            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+
+            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+
+            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+        }));
+
+        it('should focus first/last tab when pressing home/end button', fakeAsync(() => {
+            theTabs[0].nativeTabItem.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+
+            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+        }));
+
+        it('should select focused tabs on enter/space', fakeAsync(() => {
+            theTabs[0].nativeTabItem.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+
+            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_ENTER_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+
+            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(2);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+
+            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_SPACE_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+        }));
+
+        it('should not focus disabled tabs when navigating with keyboard', fakeAsync(() => {
+            fixture = TestBed.createComponent(TabsRoutingDisabledTestComponent);
+            tabsComp = fixture.componentInstance.tabs;
+            fixture.detectChanges();
+            theTabs = tabsComp.contentTabs.toArray();
+
+            theTabs[1].nativeTabItem.nativeElement.click();
+            tick(200);
+            fixture.detectChanges();
+
+            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
+
+            theTabs[3].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+
+            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            tick(200);
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
+        }));
+
+        it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+            fixture = TestBed.createComponent(TabsRoutingGuardTestComponent);
+            tabsComp = fixture.componentInstance.tabs;
+            fixture.detectChanges();
+            theTabs = tabsComp.contentTabs.toArray();
+
+            fixture.ngZone.run(() => { router.initialNavigation(); });
+            tick();
+            expect(location.path()).toBe('/');
+
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].nativeTabItem); });
+            tick();
+            expect(location.path()).toBe('/view1');
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].nativeTabItem); });
+            tick();
+            expect(location.path()).toBe('/view1');
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndex).toBe(0);
+            expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+        }));
+
     });
 
     describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
@@ -555,36 +749,12 @@ describe('IgxTabs', () => {
             expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
         });
 
-        it('should clear old selection and assign new selection after clicking on a tab item with an initial selection', () => {
-            expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            expect(theTabs[1].isSelected).toBe(true);
-            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
-
-            expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            UIInteractions.clickElement(theTabs[2].nativeTabItem);
-            fixture.detectChanges();
-
-            expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            expect(theTabs[1].isSelected).toBe(false);
-            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            expect(theTabs[2].isSelected).toBe(true);
-            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
-        });
-
         it('should hide the selection indicator when no tab item is selected', () => {
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('visible');
             theTabs[1].isSelected = false;
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
-
     });
 
     describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
@@ -828,6 +998,55 @@ class TabsRoutingTestComponent {
     template: `
         <div #wrapperDiv>
             <igx-tabs>
+                <igx-tab-item label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive"
+                    [disabled]="true">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive"
+                    [disabled]="true">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 4" routerLink="/view4" routerLinkActive #rla4="routerLinkActive" [isSelected]="rla4.isActive">
+                </igx-tab-item>
+                <igx-tab-item label="Tab 5" routerLink="/view5" routerLinkActive #rla5="routerLinkActive" [isSelected]="rla5.isActive"
+                    [disabled]="true">
+                </igx-tab-item>
+            </igx-tabs>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    `
+})
+class TabsRoutingDisabledTestComponent {
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tab-item label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                </igx-tab-item>
+                <igx-tab-item label="Tab X" routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [isSelected]="rlaX.isActive">
+                </igx-tab-item>
+            </igx-tabs>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    `
+})
+class TabsRoutingGuardTestComponent {
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
                 <igx-tab-item label="Tab 1">
                 </igx-tab-item>
                 <igx-tab-item label="Tab 2" [isSelected]="true">
@@ -860,4 +1079,26 @@ class TabsTabsOnlyModeTest1Component {
 class TabsTabsOnlyModeTest2Component {
     @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tabs-group label="Tab 1" [disabled]="true">
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 2">
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 3" [disabled]="true">
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 4">
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 5" [disabled]="true">
+                </igx-tabs-group>
+            </igx-tabs>
+        </div>
+    `
+})
+class TabsDisabledTestComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
 }
