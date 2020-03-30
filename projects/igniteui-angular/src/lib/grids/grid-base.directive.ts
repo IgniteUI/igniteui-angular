@@ -2796,7 +2796,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
