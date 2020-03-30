@@ -59,11 +59,14 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 
 export class GridFunctions {
 
@@ -78,8 +81,20 @@ export class GridFunctions {
         return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
     public static getGridDisplayContainer(fix): DebugElement {
-        const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
+        const gridBody = this.getGridBody(fix);
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
@@ -117,6 +132,26 @@ export class GridFunctions {
         return expectedLength;
     }
 
+    /**
+     * Focus the first cell in the grid
+    */
+    public static focusFirstCell(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
+    /**
+     * Focus the first cell in the grid
+    */
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        cell.activate(null);
+        fix.detectChanges();
+    }
+
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
         const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
@@ -152,7 +187,7 @@ export class GridFunctions {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -182,6 +217,10 @@ export class GridFunctions {
         return null;
     }
 
+    public static verifyMasterDetailRowFocused(row: HTMLElement, focused = true) {
+        expect(row.classList.contains(FOCUSED_DETAILS_ROW_CLASS)).toEqual(focused);
+    }
+
     public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
         const allExpanded = new Map<any, boolean>();
         data.forEach(item => {
@@ -204,19 +243,6 @@ export class GridFunctions {
 
         resolve();
     })
-
-    public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
-        const detailRow = GridFunctions.getMasterRowDetail(masterRow);
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
-        grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
-    }
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
@@ -245,8 +271,7 @@ export class GridFunctions {
     }
 
     public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
-        expect(groupRow.focused).toBe(focused);
-        expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
@@ -938,9 +963,9 @@ export class GridFunctions {
     /**
      * returns the filter row debug element.
     */
-   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+    public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.query(By.css(FILTER_UI_ROW));
-   }
+    }
 
     /**
      * Open filtering row for a column.
@@ -1006,7 +1031,7 @@ export class GridFunctions {
         return excelMenu;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const searchComp =  GridFunctions.getExcelStyleSearchComponent(fix, menu);
+        const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
@@ -1059,16 +1084,16 @@ export class GridFunctions {
     }
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
-       const header = this.getColumnHeader(columnField, fix);
-       header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
-       fix.detectChanges();
+        const header = this.getColumnHeader(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        fix.detectChanges();
     }
 
     public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnGroupHeaderCell(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
         fix.detectChanges();
-     }
+    }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
@@ -1800,36 +1825,14 @@ export class GridFunctions {
         expandInd.dispatchEvent(new Event('click', {}));
     }
 
-    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string,
         altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        cellComp.dispatchEvent(keyboardEvent);
-        if (!altKey) {
-            cellComp.onBlur();
-        }
-    }
-
-    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        rowComp.onKeydown(keyboardEvent);
-        if (!altKey) {
-            rowComp.onBlur();
-        }
+        const gridContent = GridFunctions.getGridContent(fix);
+        UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return  header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS));
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
@@ -1844,7 +1847,8 @@ export class GridSummaryFunctions {
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summaryRow = rowIndex ? GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex)
+            : GridSummaryFunctions.getRootSummaryRow(fix);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
@@ -1913,36 +1917,25 @@ export class GridSummaryFunctions {
     }
 
     public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
-        const summaryRow =  typeof row === 'number' ?
+        const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
-    public static moveSummaryCell =
-        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow =  typeof row === 'number' ?
+    public static focusSummaryCell(fix, row, cellIndex) {
+        const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            resolve();
-        })
-
-    public static focusSummaryCell(fix, rowIndex, cellIndex) {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.triggerEventHandler('focus', {});
-            fix.detectChanges();
-        }
+        const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+        UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+        fix.detectChanges();
+    }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
@@ -1956,7 +1949,6 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-        startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
         UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
@@ -2140,7 +2132,7 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
-        columns.forEach(c => this.verifyColumnSelected(c, selected ));
+        columns.forEach(c => this.verifyColumnSelected(c, selected));
     }
 
     public static verifyColumnGroupSelected(fixture: ComponentFixture<any>, column: IgxColumnGroupComponent, selected = true) {
@@ -2150,12 +2142,12 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnHeaderHasSelectableClass(header: DebugElement, hovered = true) {
-         expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
+        expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
     }
 
     public static verifyColumnsHeadersHasSelectableClass(headers: DebugElement[], hovered = true) {
         headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
-   }
+    }
 
     public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
         this.verifyColumnSelected(column, selected);
@@ -2164,7 +2156,7 @@ export class GridSelectionFunctions {
         });
     }
 
-    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey= false) {
+    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey = false) {
         const event = {
             shiftKey: shiftKey,
             ctrlKey: ctrlKey,

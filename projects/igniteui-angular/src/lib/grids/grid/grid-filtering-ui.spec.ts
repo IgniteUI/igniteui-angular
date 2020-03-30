@@ -1113,7 +1113,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
-            grid.filteringRow.onEscKeydown(UIInteractions.escapeEvent);
+            // To Do update to exit row correct
+            // grid.filteringRow.onEscKeydown(UIInteractions.escapeEvent);
             tick(100);
             fix.detectChanges();
 

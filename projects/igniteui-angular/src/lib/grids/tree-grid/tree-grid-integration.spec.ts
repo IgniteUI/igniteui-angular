@@ -498,7 +498,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            dateCell.setEditMode(true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(dateCell);
             await wait(30);
             fix.detectChanges();
 
