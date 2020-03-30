@@ -437,6 +437,12 @@ export class IgxChipComponent extends DisplayDensityBase {
         return !this.disabled ? 0 : '';
     }
 
+    /**
+     * @hidden
+     * @internal
+    */
+    public hideBaseElement = false;
+
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
@@ -622,6 +628,22 @@ export class IgxChipComponent extends DisplayDensityBase {
         if (this.selected) {
             this.chipArea.nativeElement.focus();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onChipGhostCreate() {
+        this.hideBaseElement = true;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public onChipGhostDestroy() {
+        this.hideBaseElement = false;
     }
 
     /**

@@ -2,9 +2,11 @@
     [attr.tabindex]="chipTabindex"
     (keydown)="onChipKeyDown($event)"
     [igxDrag]="{chip: this}"
-    [hideBaseOnDrag]="hideBaseOnDrag"
+    [style.visibility]='hideBaseElement ? "hidden" : "visible"'
     [ghostClass]="ghostClass"
     (dragStart)="onChipDragStart($event)"
+    (ghostCreate)="onChipGhostCreate()"
+    (ghostDestroy)="onChipGhostDestroy()"
     (dragEnd)="onChipDragEnd()"
     (transitioned)="onChipMoveEnd($event)"
     (dragClick)="onChipDragClicked($event)"
