@@ -145,8 +145,8 @@ export class IgxSummaryCellComponent {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public get grid() {
         return (this.column.grid as any);
     }

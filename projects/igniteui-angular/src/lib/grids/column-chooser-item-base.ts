@@ -7,7 +7,7 @@ export interface IValueChangedEventArgs extends IBaseEventArgs {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Directive()
 export abstract class ItemPropertyValueChangedDirective {

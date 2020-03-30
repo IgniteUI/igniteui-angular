@@ -38,7 +38,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
 
-     /**
+    /**
      * @hidden
      */
     public initialDensity: DisplayDensity;

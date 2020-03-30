@@ -508,7 +508,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <!--set-->
      * <igx-combo [id]='combo1'></igx-combo>
      * ```
-    */
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-combo-${NEXT_ID++}`;
@@ -594,7 +594,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <!--set-->
      * <igx-combo [itemsMaxHeight]='320'></igx-combo>
      * ```
-    */
+     */
     @Input()
     public get itemsMaxHeight(): number {
         if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
@@ -778,7 +778,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
-     *<igx-combo [filterable]="false">
+     * <igx-combo [filterable]="false">
      * ```
      */
     @Input()
@@ -787,7 +787,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * An @Input property that set aria-labelledby attribute
      * ```html
-     *<igx-combo [ariaLabelledBy]="'label1'">
+     * <igx-combo [ariaLabelledBy]="'label1'">
      * ```
      */
     @Input()
@@ -797,7 +797,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * An @Input property that enabled/disables combo. The default is `false`.
      * ```html
-     *<igx-combo [disabled]="'true'">
+     * <igx-combo [disabled]="'true'">
      * ```
      */
     @Input()
@@ -807,7 +807,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * An @Input property that sets how the combo will be styled.
      * The allowed values are `line`, `box`, `border` and `search`. The default is `box`.
      * ```html
-     *<igx-combo [type]="'line'">
+     * <igx-combo [type]="'line'">
      * ```
      */
     @Input()
@@ -828,19 +828,19 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * // get
      * let valid = this.combo.valid;
      * ```
-     * */
+     */
     public get valid(): IgxComboState {
         return this._valid;
     }
 
     /**
-    * Sets if control is valid, when used in a form
-    *
-    * ```typescript
-    * // set
-    * this.combo.valid = IgxComboState.INVALID;
-    * ```
-   */
+     * Sets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // set
+     * this.combo.valid = IgxComboState.INVALID;
+     * ```
+     */
     public set valid(valid: IgxComboState) {
         this._valid = valid;
         this.comboInput.valid = IgxInputState[IgxComboState[valid]];
@@ -878,7 +878,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * // get
      * let state = this.combo.virtualizationState;
      * ```
-    */
+     */
     get virtualizationState(): IForOfState {
         return this.virtDir.state;
     }
@@ -901,7 +901,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * // get
      * let count = this.combo.totalItemCount;
      * ```
-    */
+     */
     get totalItemCount(): number {
         return this.virtDir.totalItemCount;
     }
@@ -1020,7 +1020,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-    /** For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`*/
+    /**
+     * For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`
+     */
     private getValueDisplayPairs(ids: any[]) {
         return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => {
             return {
@@ -1261,10 +1263,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * A method that opens/closes the combo.
      *
-     *```html
-     *<button (click)="combo.toggle()">Toggle Combo</button>
-     *<igx-combo #combo></igx-combo>
-     *```
+     * ```html
+     * <button (click)="combo.toggle()">Toggle Combo</button>
+     * <igx-combo #combo></igx-combo>
+     * ```
      */
     public toggle(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
@@ -1274,10 +1276,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * A method that opens the combo.
      *
-     *```html
-     *<button (click)="combo.open()">Open Combo</button>
-     *<igx-combo #combo></igx-combo>
-     *```
+     * ```html
+     * <button (click)="combo.open()">Open Combo</button>
+     * <igx-combo #combo></igx-combo>
+     * ```
      */
     public open(): void {
         const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
@@ -1287,10 +1289,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * A method that closes the combo.
      *
-     *```html
-     *<button (click)="combo.close()">Close Combo</button>
-     *<igx-combo #combo></igx-combo>
-     *```
+     * ```html
+     * <button (click)="combo.close()">Close Combo</button>
+     * <igx-combo #combo></igx-combo>
+     * ```
      */
     public close(): void {
         this.dropdown.close();
@@ -1302,7 +1304,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```typescript
      * let state = this.combo.collapsed;
      * ```
-    */
+     */
     public get collapsed(): boolean {
         return this.dropdown.collapsed;
     }
@@ -1440,7 +1442,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         return value;
     }
 
-    /** Constructs the combo display value
+    /**
+     * Constructs the combo display value
      * If remote, caches the key displayText
      * If not, just combine the object.displayKeys
      */

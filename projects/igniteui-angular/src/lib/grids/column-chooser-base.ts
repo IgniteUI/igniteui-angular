@@ -191,38 +191,38 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
     @HostBinding('attr.class')
     public cssClass = 'igx-column-hiding';
     /**
-     *@hidden
+     * @hidden
      */
     private _currentColumns = [];
     /**
-     *@hidden
+     * @hidden
      */
     private _gridColumns = [];
     /**
-     *@hidden
+     * @hidden
      */
     private _rawColumns = [];
     /**
-     *@hidden
+     * @hidden
      */
     private _columnDisplayOrder = ColumnDisplayOrder.DisplayOrder;
     /**
-     *@hidden
+     * @hidden
      */
     private _filterCriteria = '';
     /**
-     *@hidden
+     * @hidden
      */
     private _filterColumnsPrompt = '';
     /**
-     *@hidden
+     * @hidden
      */
     private _title = '';
 
     constructor(public cdr: ChangeDetectorRef) {
     }
     /**
-     *@hidden
+     * @hidden
      */
     ngOnDestroy() {
         for (const item of this._currentColumns) {
@@ -230,7 +230,7 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     private createColumnItems() {
         if (this._gridColumns.length > 0) {
@@ -246,11 +246,11 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     protected abstract createColumnItem(container: any, column: any);
     /**
-     *@hidden
+     * @hidden
      */
     private orderColumns(value) {
         this._columnDisplayOrder = value;
@@ -264,7 +264,7 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     protected filter() {
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
@@ -276,7 +276,7 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
         this._currentColumns = strategy.filter(this._currentColumns, filteringExpressionsTree);
     }
     /**
-     *@hidden
+     * @hidden
      */
     protected createFilteringExpression(fieldName: string): IFilteringExpression {
         return {
@@ -287,7 +287,7 @@ export abstract class ColumnChooserBaseDirective implements OnDestroy {
         };
     }
     /**
-     *@hidden
+     * @hidden
      */
     protected clearFiltering() {
         this.createColumnItems();
