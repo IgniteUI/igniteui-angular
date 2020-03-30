@@ -5,7 +5,7 @@ import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.comm
 /**
  * Formats `IgxTimePickerComponent` display value according to the `format` property,
  * when the input element loses focus.
- **/
+ */
 @Pipe({ name: 'displayFormat' })
 export class TimeDisplayFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
@@ -102,7 +102,7 @@ export class TimeDisplayFormatPipe implements PipeTransform {
 /**
  * Formats `IgxTimePickerComponent` display value according to the `format` property,
  * when the input element gets focus.
- **/
+ */
 @Pipe({ name: 'inputFormat' })
 export class TimeInputFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
