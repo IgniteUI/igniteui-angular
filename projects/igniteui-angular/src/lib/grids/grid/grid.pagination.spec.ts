@@ -1,9 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
-import {
-    GridWithUndefinedDataComponent, PagingAndEditingComponent
-} from '../../test-utils/grid-samples.spec';
+import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -12,7 +9,6 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions, PAGER_CLASS } from '../../test-utils/grid-functions.spec';
 import { ControlsFunction, BUTTON_DISABLED_CLASS } from '../../test-utils/controls-functions.spec';
-import { DebugElement } from '@angular/core';
 
 function verifyGridPager (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
     const grid = fix.componentInstance.grid;
@@ -42,7 +38,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,
-                PagingAndEditingComponent,
                 GridWithUndefinedDataComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
@@ -58,11 +53,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix = TestBed.createComponent(PagingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
-
-        afterAll(fakeAsync(() => {
-            fix = undefined;
-            grid = undefined;
         }));
 
         it('should paginate data UI', () => {
@@ -452,47 +442,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
             fix.detectChanges();
             expect(GridFunctions.getGridPaginator(grid)).not.toBeNull();
         });
-    });
-
-    it('change paging with button', () => {
-
-        fix = TestBed.createComponent(PagingAndEditingComponent);
-        fix.detectChanges();
-        grid = fix.componentInstance.grid;
-
-        const nextBtn: DebugElement = fix.debugElement.query(By.css('#nextPageBtn'));
-        const prevBtn: DebugElement = fix.debugElement.query(By.css('#prevPageBtn'));
-        const idxPageBtn: DebugElement = fix.debugElement.query(By.css('#idxPageBtn'));
-
-        expect(nextBtn.nativeElement).toBeTruthy();
-        expect(nextBtn.nativeElement).toBeTruthy();
-        expect(nextBtn.nativeElement).toBeTruthy();
-
-        expect(grid.paging).toBeTruthy();
-        expect(grid.page).toEqual(0);
-        expect(grid.perPage).toMatch('4', 'Invalid page size');
-        verifyGridPager(fix, 4, '1', '1\xA0of\xA03', []);
-
-        // Next page button click
-        GridFunctions.clickOnPaginatorButton(nextBtn);
-        fix.detectChanges();
-
-        expect(grid.page).toEqual(1, 'Invalid page index');
-        verifyGridPager(fix, 4, '5', '2\xA0of\xA03', []);
-
-        // Previous page button click
-        GridFunctions.clickOnPaginatorButton(prevBtn);
-        fix.detectChanges();
-
-        expect(grid.page).toEqual(0, 'Invalid page index');
-        verifyGridPager(fix, 4, '1', '1\xA0of\xA03', []);
-
-        // Go to 3rd page button click
-        GridFunctions.clickOnPaginatorButton(idxPageBtn);
-        fix.detectChanges();
-
-        expect(grid.page).toEqual(2, 'Invalid page index');
-        verifyGridPager(fix, 2, '9', '3\xA0of\xA03', []);
     });
 
     it('should not throw error when data is undefined', fakeAsync(() => {
