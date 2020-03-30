@@ -119,7 +119,7 @@ export class HierarchicalGridSampleComponent {
                 Col2: i,
                 Col3: i,
                 childData: children,
-                childData2: children,
+                childData2: [],
                 hasChild: true
             });
         }

@@ -63,7 +63,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             // reached end of child grid
             const nextSiblingIndex = this.nextSiblingIndex(isLast);
             if (nextSiblingIndex !== null) {
-                this.activeNode.row = null;
+                this.clearActivation();
                 this.grid.parent.navigation._moveToChild(this.grid.childRow.index, visibleColIndex, isLast, nextSiblingIndex, cb);
             } else {
                 this._moveToParent(isLast, visibleColIndex, cb);
@@ -205,7 +205,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
 
         const childGridNav =  childGrid.navigation;
-        this.activeNode.row = null;
+        this.clearActivation();
         const visibleColsLength = childGrid.visibleColumns.length - 1;
         const columnIndex = visibleColIndex <= visibleColsLength ? visibleColIndex : visibleColsLength;
         childGridNav.activeNode = { row: targetIndex, column: columnIndex};
@@ -226,9 +226,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (!hasNextTarget) {
             return;
         }
-        if (this.activeNode) {
-            this.activeNode.row = null;
-        }
+        this.clearActivation();
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
         const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
         const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
@@ -269,6 +267,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const calcOffset =  isNext ? diffBottom : diffTop;
 
         return { inView: isInView, offset: calcOffset };
+    }
+
+    private clearActivation() {
+        // clear if previous activation exists.
+        if (this.activeNode) {
+            this.activeNode.row = null;
+        }
     }
 
     private hasNextTarget(grid, index: number, isNext: boolean) {
