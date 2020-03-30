@@ -40,7 +40,7 @@ export interface IgxDragCustomEventDetails {
 }
 
 export interface IDropBaseEventArgs extends IBaseEventArgs {
-        /**
+    /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
      */
@@ -99,7 +99,7 @@ export interface IDragBaseEventArgs extends IBaseEventArgs {
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
      */
     pageX: number;
-        /**
+    /**
      * The current position of the pointer on Y axis when the event was triggered.
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
      */
@@ -1337,7 +1337,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
         return this._dropStrategy;
     }
 
-    /** Event triggered when dragged element enters the area of the element.
+    /**
+     * Event triggered when dragged element enters the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1352,7 +1353,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public enter = new EventEmitter<IDropBaseEventArgs>();
 
-        /** Event triggered when dragged element enters the area of the element.
+    /**
+     * Event triggered when dragged element enters the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1367,7 +1369,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public over = new EventEmitter<IDropBaseEventArgs>();
 
-    /** Event triggered when dragged element leaves the area of the element.
+    /**
+     * Event triggered when dragged element leaves the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (leave)="dragLeave()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1382,7 +1385,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public leave = new EventEmitter<IDropBaseEventArgs>();
 
-    /** Event triggered when dragged element is dropped in the area of the element.
+    /**
+     * Event triggered when dragged element is dropped in the area of the element.
      * Since the `igxDrop` has default logic that appends the dropped element as a child, it can be canceled here.
      * To cancel the default logic the `cancel` property of the event needs to be set to true.
      * ```html
