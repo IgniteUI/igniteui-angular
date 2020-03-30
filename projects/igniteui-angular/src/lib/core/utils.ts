@@ -158,7 +158,9 @@ export const enum KEYS {
     DOWN_ARROW = 'ArrowDown',
     DOWN_ARROW_IE = 'Down',
     F2 = 'F2',
-    TAB = 'Tab'
+    TAB = 'Tab',
+    HOME = 'Home',
+    END = 'End'
 }
 
 /**
