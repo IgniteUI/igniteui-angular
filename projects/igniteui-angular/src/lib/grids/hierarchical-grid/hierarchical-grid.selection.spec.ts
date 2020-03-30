@@ -49,7 +49,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should allow only one cell to be selected in the whole hierarchical grid.',  () => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
             hierarchicalGrid.height = '500px';
             hierarchicalGrid.reflow();
             fix.detectChanges();
@@ -63,6 +63,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // select parent cell
             fCell.nativeElement.focus();
+            await wait(100);
             fix.detectChanges();
 
             expect(fCell.selected).toBeTruthy();
@@ -73,6 +74,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // select child cell
             fChildCell.nativeElement.focus();
+            await wait(100);
             fix.detectChanges();
 
             expect(fChildCell.selected).toBeTruthy();
@@ -82,10 +84,11 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
+            await wait(100);
             fix.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();
-        });
+        }));
     });
 
     describe('Row Selection', () => {
@@ -97,10 +100,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should have checkboxes on each row', () => {
+        it('should have checkboxes on each row', ( async() => {
             hierarchicalGrid.expandChildren = true;
+            await wait(100);
             fix.detectChanges();
             rowIsland1.expandChildren = true;
+            await wait(100);
             fix.detectChanges();
 
             expect(hierarchicalGrid.rowSelection).toEqual(GridSelectionMode.multiple);
@@ -127,7 +132,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement, false, false);
             }
-        });
+        }));
 
         it('should able to change rowSelection at runtime', () => {
             hierarchicalGrid.expandChildren = true;
@@ -556,13 +561,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(childGrid.dataRowList.toArray());
         });
 
-        it('should not be able to select deleted row', () => {
+        it('should not be able to select deleted row', fakeAsync(() => {
             // Expand first row
             const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
             fix.detectChanges();
 
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -578,6 +584,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // Click on deleted row
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -606,13 +613,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             const childGridFirstRow = childGrid.getRowByIndex(0);
             childGridFirstRow.onClick(UIInteractions.getMouseEvent('click', false, false, true));
+            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(hierarchicalGrid.selectedRows()).toEqual(['1', '2', '3', '4']);
             expect(childGrid.selectedRows()).toEqual(['00']);
-        });
+        }));
 
         it('should be able to select added row', () => {
             // Set multiple selection to first row island
