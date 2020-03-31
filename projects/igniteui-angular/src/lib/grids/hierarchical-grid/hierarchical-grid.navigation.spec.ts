@@ -883,6 +883,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
+    let baseHGridContent;
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -897,16 +898,17 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
+        baseHGridContent = GridFunctions.getGridContent(fixture);
     }));
 
     it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', (async () => {
         const parentCell = hierarchicalGrid.getCellByColumn(0, 'Col2');
-        parentCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, parentCell);
 
         await wait(100);
         fixture.detectChanges();
 
-        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, false, false, false);
 
         await wait(100);
         fixture.detectChanges();
@@ -916,7 +918,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         const childLastCell =  childGrid.getCellByColumn(0, 'Col1');
 
         expect(childLastCell.selected).toBe(true);
-        expect(childLastCell.focused).toBe(true);
+        expect(childLastCell.active).toBe(true);
     }));
 
     it('should navigate to last cell in next row for child grid using Arrow Up from last cell of parent with more columns', (async () => {
@@ -925,12 +927,12 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const parentCell = hierarchicalGrid.getCellByColumn(2, 'Col2');
-        parentCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, parentCell);
 
         await wait(100);
         fixture.detectChanges();
 
-        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent, false, false, false);
 
         await wait(100);
         fixture.detectChanges();
@@ -941,31 +943,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         const childLastCell =  childGrid.getCellByColumn(9, 'ProductName');
 
         expect(childLastCell.selected).toBe(true);
-        expect(childLastCell.focused).toBe(true);
-    }));
-
-    it('should navigate to last cell in previous row for child grid using Shift+Tab from parent with more columns', (async () => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        await wait(100);
-        fixture.detectChanges();
-
-        const parentCell = hierarchicalGrid.getCellByColumn(2, 'ID');
-        parentCell.nativeElement.focus();
-
-        await wait(100);
-        fixture.detectChanges();
-
-        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-
-        await wait(100);
-        fixture.detectChanges();
-
-        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-        const childGrid = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
-        const childLastCell =  childGrid.getCellByColumn(9, 'ProductName');
-
-        expect(childLastCell.selected).toBe(true);
-        expect(childLastCell.focused).toBe(true);
+        expect(childLastCell.active).toBe(true);
     }));
 
     it('should navigate to last cell in next child using Arrow Down from last cell of previous child with more columns', (async () => {
@@ -978,18 +956,19 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const firstChildCell =  firstChildGrid.getCellByColumn(9, 'Col1');
-        firstChildCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, firstChildCell);
         await wait(100);
         fixture.detectChanges();
 
-        firstChildCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
+        UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, false);
         await wait(100);
         fixture.detectChanges();
 
 
         const secondChildCell =  secondChildGrid.getCellByColumn(0, 'ProductName');
         expect(secondChildCell.selected).toBe(true);
-        expect(secondChildCell.focused).toBe(true);
+        expect(secondChildCell.active).toBe(true);
     }));
 });
 
