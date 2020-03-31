@@ -25,6 +25,18 @@ export class UIInteractions {
         return new KeyboardEvent(eventType, keyboardEvent);
     }
 
+    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false) {
+        const clickEvent = {
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new MouseEvent(eventType, clickEvent);
+    }
+
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
             key: keyPressed,
@@ -157,6 +169,19 @@ export class UIInteractions {
             element.dispatchEvent(keypressEvent);
             resolve();
         });
+    }
+
+    public static createPointerEvent(eventName: string, point: Point) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1
+        };
+        const pointerEvent = new PointerEvent(eventName, options);
+        Object.defineProperty(pointerEvent, 'pageX', { value: point.x, enumerable: true });
+        Object.defineProperty(pointerEvent, 'pageY', { value: point.y, enumerable: true });
+        return pointerEvent;
     }
 
     public static simulatePointerEvent(eventName: string, element, x, y) {

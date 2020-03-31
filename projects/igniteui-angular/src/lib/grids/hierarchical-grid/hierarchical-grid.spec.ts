@@ -416,6 +416,43 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         expect(childGrid.calcWidth - 370 ).toBeLessThan(3);
     });
+
+    it('should not expand children when hasChildrenKey is false for the row', () => {
+        hierarchicalGrid.hasChildrenKey = 'hasChild';
+        fixture.componentInstance.data = [
+            {ID: 1, ProductName: 'Product: A1', hasChild: false, childData: fixture.componentInstance.generateDataUneven(1, 1)},
+            {ID: 2, ProductName: 'Product: A2', hasChild: true, childData: fixture.componentInstance.generateDataUneven(1, 1)}
+        ];
+        fixture.detectChanges();
+        const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
+        const row2 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
+        hierarchicalGrid.expandRow(row1.rowData);
+        hierarchicalGrid.expandRow(row2.rowData);
+        expect(row1.expanded).toBe(false);
+        expect(row2.expanded).toBe(true);
+    });
+
+    it('should not expand children when hasChildrenKey is false for the row and there is primaryKey', () => {
+        hierarchicalGrid.hasChildrenKey = 'hasChild';
+        hierarchicalGrid.primaryKey = 'ID';
+        fixture.componentInstance.data = [
+            {ID: 1, ProductName: 'Product: A1', hasChild: false, childData: fixture.componentInstance.generateDataUneven(1, 1)},
+            {ID: 2, ProductName: 'Product: A2', hasChild: true, childData: fixture.componentInstance.generateDataUneven(1, 1)}
+        ];
+        fixture.detectChanges();
+        const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
+        const row2 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
+        hierarchicalGrid.expandRow(1);
+        hierarchicalGrid.expandRow(2);
+        expect(row1.expanded).toBe(false);
+        expect(row2.expanded).toBe(true);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
@@ -1080,8 +1117,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    xit('should allow changing row islands runtime in root grid.', () => {
-        pending('Related to issue #6731');
+    it('should allow changing row islands runtime in root grid.', () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
