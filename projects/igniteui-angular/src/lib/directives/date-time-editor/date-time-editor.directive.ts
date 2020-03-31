@@ -200,6 +200,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
     this.renderer.setAttribute(this.nativeElement, 'placeholder', this.inputFormat);
     this.updateMask();
   }
+
   /**
    * Clear the input element value.
    */
