@@ -54,12 +54,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             hierarchicalGrid.reflow();
             fix.detectChanges();
 
-            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            let firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
             fix.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
 
-            const fCell = firstRow.cells.toArray()[0];
+            let fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
             fCell.nativeElement.focus();
@@ -81,6 +81,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
+            firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
             await wait(100);
             fix.detectChanges();
