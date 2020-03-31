@@ -40,14 +40,14 @@ export class IgxGridGroupByRowComponent {
     protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultGroupByExpandedTemplate: TemplateRef<any>;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
 

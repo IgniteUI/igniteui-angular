@@ -424,7 +424,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     width = '';
 
-     /**
+    /**
      * @hidden
      */
     @Input()

@@ -11,6 +11,7 @@ export interface IActiveNode {
     gridID?: string;
     row: number;
     column?: number;
+    level?: number;
     layout?: IMultiRowLayoutNode;
 }
 
@@ -121,6 +122,17 @@ export class IgxGridNavigationService {
         if (key === 'esc') {
             this.grid.filteringRow.close();
             return;
+        }
+        const ctrl = event.ctrlKey;
+        if (this.grid.hasColumnGroups) {
+            if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
+                // const col = this.grid.visibleColumns.filter
+                this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+            }
+            if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
+                this.activeNode.column = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
+            }
+            this.activeNode.level = this.grid.getColumnByVisibleIndex(this.activeNode.column).level;
         }
         this.horizontalNav(event, key, -1);
     }

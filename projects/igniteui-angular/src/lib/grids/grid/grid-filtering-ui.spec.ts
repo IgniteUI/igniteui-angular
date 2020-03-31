@@ -4727,7 +4727,7 @@ function getInputGroupDensityClass(displayDensity: DisplayDensity) {
 /**
  * Gets the corresponding class that a flat/raised/outlined button
  * has added to it additionally based on displayDensity input.
-*/
+ */
 function getButtonDensityClass(displayDensity: DisplayDensity) {
     let densityClass;
     switch (displayDensity) {
@@ -4789,7 +4789,7 @@ function toggleExcelStyleFilteringItems(fix, shouldApply: boolean, ...itemIndice
 /**
  * Verfiy multiple condition chips on their respective indices (asc order left to right)
  * are whether fully visible or not.
-*/
+ */
 function verifyMultipleChipsVisibility(fix, expectedVisibilities: boolean[]) {
     for (let index = 0; index < expectedVisibilities.length; index++) {
         verifyChipVisibility(fix, index, expectedVisibilities[index]);
@@ -4799,7 +4799,7 @@ function verifyMultipleChipsVisibility(fix, expectedVisibilities: boolean[]) {
 /**
  * Verfiy that the condition chip on the respective index (asc order left to right)
  * is whether fully visible or not.
-*/
+ */
 function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean) {
     const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
     const visibleChipArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));

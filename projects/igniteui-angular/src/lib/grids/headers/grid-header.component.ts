@@ -279,16 +279,16 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @HostListener('pointerenter')
     public onPinterEnter() {
         this.column.applySelectableClass = true;
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @HostListener('pointerleave')
     public onPointerLeave() {
         this.column.applySelectableClass = false;
