@@ -56,6 +56,7 @@ export class UIInteractions {
             altKey: altKey,
             shiftKey: shift,
             ctrlKey: ctrl,
+            target: elem.nativeElement,
             stopPropagation: () => { },
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
