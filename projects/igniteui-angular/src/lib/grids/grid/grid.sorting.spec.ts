@@ -28,7 +28,7 @@ function getValueFromCellElement(cell) {
     return cell.nativeElement.textContent.trim();
 }
 
-fdescribe('IgxGrid - Grid Sorting #grid', () => {
+describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite();
     let fixture;
