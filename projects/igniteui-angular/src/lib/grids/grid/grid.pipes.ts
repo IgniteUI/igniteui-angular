@@ -15,7 +15,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridSort',
@@ -45,7 +45,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridGroupBy',
@@ -88,7 +88,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridPaging',
@@ -123,7 +123,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridFiltering',
@@ -154,7 +154,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'rowPinning',
