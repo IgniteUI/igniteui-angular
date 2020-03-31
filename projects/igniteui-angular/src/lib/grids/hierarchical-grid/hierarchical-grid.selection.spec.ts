@@ -54,12 +54,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             hierarchicalGrid.reflow();
             fix.detectChanges();
 
-            let firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
             fix.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
 
-            let fCell = firstRow.cells.toArray()[0];
+            const fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
             fCell.nativeElement.focus();
@@ -81,8 +81,6 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-            fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
             await wait(100);
             fix.detectChanges();
@@ -100,10 +98,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should have checkboxes on each row', () => {
+        it('should have checkboxes on each row', fakeAsync(() => {
             hierarchicalGrid.expandChildren = true;
             fix.detectChanges();
+            tick(100);
             rowIsland1.expandChildren = true;
+            tick(100);
             fix.detectChanges();
 
             expect(hierarchicalGrid.rowSelection).toEqual(GridSelectionMode.multiple);
@@ -130,7 +130,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             for (const r of childGrid.dataRowList.toArray()) {
                 GridSelectionFunctions.verifyRowHasCheckbox(r.nativeElement, false, false);
             }
-        });
+        }));
 
         it('should able to change rowSelection at runtime', () => {
             hierarchicalGrid.expandChildren = true;
@@ -142,7 +142,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGridLevel2 = childGridLevel1.hgridAPI.getChildGrids(false)[0];
 
             hierarchicalGrid.selectAllRows();
-            childGridLevel1.selectRows(['00']);
+            childGridLevel1.selectedRows(['00']);
             fix.detectChanges();
 
             // Change row selection for grids
@@ -491,7 +491,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.selectedRows()).toEqual(['1', '2', '3', '4']);
 
             // Click on a row
-            secondRow.onClick(UIInteractions.getMouseEvent('click'));
+            secondRow.nativeElement.dispatchEvent(new MouseEvent('click'));
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(secondRow);
@@ -501,7 +501,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('should retain selected row when filtering', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
-            firstRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
@@ -511,7 +511,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         });
 
-        it('child grid selection should not be changed when filter parent', () => {
+        it('should child grid selection should not be changed when filter parent', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
@@ -565,7 +565,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             firstRow.toggle();
             fix.detectChanges();
 
-            firstRow.onClick(UIInteractions.getMouseEvent('click'));
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -580,7 +580,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.selectedRows()).toEqual([]);
 
             // Click on deleted row
-            firstRow.onClick(UIInteractions.getMouseEvent('click'));
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -588,7 +588,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hierarchicalGrid.selectedRows()).toEqual([]);
 
             // Click on checkbox for deleted row
-            firstRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -608,7 +608,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(childGrid.selectedRows()).toEqual([]);
 
             const childGridFirstRow = childGrid.getRowByIndex(0);
-            childGridFirstRow.onClick(UIInteractions.getMouseEvent('click', false, false, true));
+            UIInteractions.simulateClickEvent(childGridFirstRow.nativeElement, false, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -682,7 +682,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
 
         it('should deselect deleted row', () => {
-            hierarchicalGrid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(hierarchicalGrid);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(hierarchicalGrid, true);
