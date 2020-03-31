@@ -97,8 +97,10 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         // parent should scroll down so that cell in child is in view.
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
-        .toBeGreaterThanOrEqual(childGrid.rowHeight);
+        const selectedCell = fixture.componentInstance.selectedCell;
+        const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
+        const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+        expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
     it('should allow navigating up in child grid when child grid selected cell moves outside the parent view port.',  (async () => {
