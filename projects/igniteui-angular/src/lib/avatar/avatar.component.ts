@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit,
     Component,
     ElementRef,
     HostBinding,
@@ -53,7 +52,7 @@ export enum IgxAvatarType {
     selector: 'igx-avatar',
     templateUrl: 'avatar.component.html'
 })
-export class IgxAvatarComponent implements OnInit, AfterViewInit {
+export class IgxAvatarComponent implements OnInit {
 
     /**
      * This is a reference to the avatar image element in the DOM.
@@ -160,9 +159,9 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      * Sets the color of the avatar's initials or icon.
      *
      * @example
-     *```html
-     *<igx-avatar color="blue"></igx-avatar>
-     *```
+     * ```html
+     * <igx-avatar color="blue"></igx-avatar>
+     * ```
      */
 
     @HostBinding('style.color')
@@ -256,6 +255,22 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         }
     }
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--small')
+    get _isSmallSize(): boolean {
+        return this.size === 'small';
+    }
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--medium')
+    get _isMediumSize(): boolean {
+        return this.size === 'medium';
+    }
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--large')
+    get _isLargeSize(): boolean {
+        return this.size === 'large';
+    }
+
     /**
      * Returns the type of the avatar.
      *
@@ -278,6 +293,22 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
         }
 
         return IgxAvatarType.CUSTOM;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--image')
+    get _isImageType(): boolean {
+        return this.type === IgxAvatarType.IMAGE;
+    }
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--icon')
+    get _isIconType(): boolean {
+        return this.type === IgxAvatarType.ICON;
+    }
+    /** @hidden @internal */
+    @HostBinding('class.igx-avatar--initials')
+    get _isInitialsType(): boolean {
+        return this.type === IgxAvatarType.INITIALS;
     }
 
     /**
@@ -304,15 +335,6 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     /** @hidden @internal */
     public ngOnInit() {
         this.roleDescription = this.getRole();
-    }
-
-    /** @hidden @internal */
-    public ngAfterViewInit() {
-        if (this.type !== IgxAvatarType.CUSTOM) {
-            this.elementRef.nativeElement.classList.add(`igx-avatar--${this.type}`);
-        }
-
-        this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
     }
 
     /** @hidden @internal */

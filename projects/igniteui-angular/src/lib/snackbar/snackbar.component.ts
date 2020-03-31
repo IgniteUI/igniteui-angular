@@ -183,7 +183,7 @@ export class IgxSnackbarComponent {
      */
     @Output() public animationDone = new EventEmitter<AnimationEvent>();
     /**
-     *@hidden
+     * @hidden
      */
     private timeoutId;
 
@@ -218,13 +218,13 @@ export class IgxSnackbarComponent {
         clearTimeout(this.timeoutId);
     }
     /**
-     *@hidden
+     * @hidden
      */
     public triggerAction(): void {
         this.onAction.emit(this);
     }
     /**
-     *@hidden
+     * @hidden
      * @memberof IgxSnackbarComponent
      */
     public snackbarAnimationStarted(evt: AnimationEvent): void {
@@ -233,7 +233,7 @@ export class IgxSnackbarComponent {
         }
     }
     /**
-     *@hidden
+     * @hidden
      * @memberof IgxSnackbarComponent
      */
     public snackbarAnimationDone(evt: AnimationEvent): void {
