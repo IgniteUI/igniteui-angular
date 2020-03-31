@@ -111,7 +111,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     @Input()
     public draggable = false;
 
-        /**
+    /**
      * An @Input property that enables/disables the draggable element animation when the element is released.
      * By default it's set to true.
      * @example

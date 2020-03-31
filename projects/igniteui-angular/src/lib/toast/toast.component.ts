@@ -190,7 +190,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public isVisibleChange = new EventEmitter<boolean>();
@@ -233,7 +233,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         return this.elementRef.nativeElement;
     }
     /**
-     *@hidden
+     * @hidden
      */
     private timeoutId;
 
@@ -325,7 +325,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     public ngOnInit() {
         if (this.navService && this.id) {
@@ -333,7 +333,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     public ngOnDestroy() {
         if (this.navService && this.id) {

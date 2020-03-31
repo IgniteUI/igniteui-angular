@@ -8,9 +8,10 @@ const DROP_DOWN_SELECTED_ITEM_CLASS = '.igx-drop-down__item--selected';
 const DROP_DOWN_SCROLL_CLASS = '.igx-drop-down__list-scroll';
 const DROP_DOWN__ITEM_CLASS = '.igx-drop-down__item';
 const BUTTON_SELECTED_CLASS = 'igx-button-group__item--selected';
-const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
 const CHECKBOX_CHECKED_CLASS = 'igx-checkbox--checked';
 const CHECKBOX_IND_CLASS = 'igx-checkbox--indeterminate';
+
+export const BUTTON_DISABLED_CLASS = 'igx-button--disabled';
 export class ControlsFunction {
 
     public static getChipRemoveButton(chip: HTMLElement): HTMLElement {
