@@ -1846,6 +1846,10 @@ export class GridFunctions {
         }
     }
 
+    public static getHeaderCellByIndex(fix: ComponentFixture<any>, index: number) {
+        return fix.debugElement.queryAll(By.css('igx-grid-header'))[index];
+    }
+
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return  header.query(By.css(SORT_ICON_CLASS));
     }
