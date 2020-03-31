@@ -440,7 +440,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      * @internal
-    */
+     */
     public hideBaseElement = false;
 
     protected _selected = false;
