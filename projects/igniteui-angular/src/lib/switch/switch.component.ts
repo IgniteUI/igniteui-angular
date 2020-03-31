@@ -323,7 +323,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     /**
      * @hidden
      * @internal
-     * */
+     */
     public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }

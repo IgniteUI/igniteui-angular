@@ -204,14 +204,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultExpandedTemplate: TemplateRef<any>;
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
@@ -219,7 +219,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets the resource strings.
      * @remarks
      * By default it uses EN resources.
-    */
+     */
     @Input()
     set resourceStrings(value: IGridResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -242,8 +242,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public autoGenerate = false;
 
     /**
-    * @hidden @internal
-    */
+     * @hidden @internal
+     */
     public id: string;
 
     /**
@@ -337,7 +337,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
      *              (filteringExpressionsTreeChange)="filteringExprTreeChange($event)"></igx-grid>
      * ```
-    */
+     */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
@@ -350,7 +350,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
      *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
      * ```
-    */
+     */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
@@ -431,9 +431,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the current page index.
-    *@example
-    * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     * @example
+     * ```html
+     *  <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      * ```
      * @remarks
      * Supports two-way binding.
@@ -456,7 +456,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public pageChange = new EventEmitter<number>();
@@ -488,7 +488,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
@@ -541,7 +541,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets if the row selectors are hidden.
      * @remarks
      *  By default row selectors are shown
-    */
+     */
     @WatchChanges()
     @Input()
     get hideRowSelectors() {
@@ -578,7 +578,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowDragging = false;
 
 
-    /**
+   /**
     * Gets/Sets whether the rows are editable.
     * @remarks
     * By default it is set to false.
@@ -632,7 +632,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     @HostBinding('style.width')
     get hostWidth() {
         return this._width || this._hostWidth;
@@ -753,7 +753,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the grid is going to show a loading indicator.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
      * ```
@@ -839,7 +839,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets if the built-in column pinning UI should be shown in the toolbar.
      * @example
-    * ```html
+     * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
@@ -1064,7 +1064,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @Output()
     public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
 
-    /**
+   /**
     *  Emitted when `IgxColumnComponent` is selected.
     * @example
     * ```html
@@ -1095,7 +1095,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * (e.g. `Esc` key was pressed)
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
@@ -1108,7 +1108,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when cell enters edit mode.
      * @remarks
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="data" [primaryKey]="'ProductID'">
      * </igx-grid>
@@ -1136,7 +1136,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Emitted when [rowEditable]="true".
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1153,7 +1153,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * performing paging operation, column resizing, pinning, moving or hitting  `Done`
      * button inside of the rowEditingOverlay, or hitting the `Enter` key while editing a cell.
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1169,7 +1169,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      * This event is cancelable.
-     *@example
+     * @example
      * ```html
      * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true">
      * </igx-grid>
@@ -1381,7 +1381,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
@@ -1431,37 +1431,37 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleSelectingTemplateDirective, { read: IgxExcelStyleSelectingTemplateDirective })
     public excelStyleSelectingTemplateDirective: IgxExcelStyleSelectingTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
@@ -1513,7 +1513,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public get summariesRowList() {
         const res = new QueryList<any>();
         if (!this._summaryRowList) {
@@ -1595,7 +1595,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     @ViewChild('defaultLoadingGrid', { read: TemplateRef, static: true })
     public loadingGridDefaultTemplate: TemplateRef<any>;
 
@@ -1611,7 +1611,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
      * ```
-    */
+     */
     public get toolbarCustomContentTemplate(): IgxGridToolbarCustomContentDirective {
         return this.toolbarCustomContentTemplates.first;
     }
@@ -1758,7 +1758,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     @ViewChild('tfoot', { static: true })
     public tfoot: ElementRef;
 
@@ -1784,21 +1784,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
     public tmpOutlets: QueryList<any> = new QueryList<any>();
 
 
     /**
      * @hidden @internal
-    */
+     */
     public get rowOutletDirective() {
         return this.rowEditingOutletDirective;
     }
 
     /**
      * @hidden @internal
-    */
+     */
     public get parentRowOutletDirective() {
         return this.outletDirective;
     }
@@ -1812,13 +1812,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
     private defaultRowEditTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
-    */
+     */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
@@ -1842,26 +1842,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     /**
-    * The custom template, if any, that should be used when rendering a row expand indicator.
-    */
+     * The custom template, if any, that should be used when rendering a row expand indicator.
+     */
     @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef })
     public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
-    * The custom template, if any, that should be used when rendering a row collapse indicator.
-    */
+     * The custom template, if any, that should be used when rendering a row collapse indicator.
+     */
     @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef })
     public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
-    * The custom template, if any, that should be used when rendering a header expand indicator.
-    */
+     * The custom template, if any, that should be used when rendering a header expand indicator.
+     */
     @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
     public headerExpandIndicatorTemplate: TemplateRef<any> = null;
 
     /**
-    * The custom template, if any, that should be used when rendering a header collapse indicator.
-    */
+     * The custom template, if any, that should be used when rendering a header collapse indicator.
+     */
     @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
     public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
@@ -1873,8 +1873,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
 
     /**
-    * The custom template, if any, that should be used when rendering the row drag indicator icon
-    */
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     */
     public get dragIndicatorIconTemplate(): TemplateRef<any> {
         return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
     }
@@ -1885,7 +1885,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
         const editRowState = this.crudService.row;
         return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
@@ -2021,7 +2021,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
      * ```
-    */
+     */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 
@@ -2095,7 +2095,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public columnsWithNoSetWidths = null;
 
     /* Toolbar related definitions */
@@ -2111,7 +2111,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _filteredSortedData = null;
     /**
      * @hidden @internal
-    */
+     */
     public get currentRowState(): any {
         return this._currentRowState;
     }
@@ -2305,7 +2305,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * By default the cell selection mode is multiple
      * @param selectionMode: GridSelectionMode
-    */
+     */
     @WatchChanges()
     @Input()
     get cellSelection() {
@@ -2325,7 +2325,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * By default the row selection mode is none
      * @param selectionMode: GridSelectionMode
-    */
+     */
     @WatchChanges()
     @Input()
     get rowSelection() {
@@ -2597,33 +2597,33 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public get headerFeaturesWidth() {
         return this._headerFeaturesWidth;
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public isDetailRecord(rec) {
         return false;
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public isGroupByRecord(rec) {
         return false;
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public get hasDetails() {
         return false;
     }
@@ -2649,9 +2649,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.hide(overlayID);
@@ -2664,35 +2664,35 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public isRecordPinned(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id) !== -1;
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public pinRecordIndex(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id);
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public get hasPinnedRecords() {
         return this._pinnedRecordIDs.length > 0;
     }
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     public get pinnedRecordsCount() {
         return this._pinnedRecordIDs.length;
     }
@@ -2981,7 +2981,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('keydown', this.keydownHandler);
@@ -3015,7 +3015,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public notifyChanges(repaint = false) {
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
@@ -3029,7 +3029,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public ngDoCheck() {
         super.ngDoCheck();
         if (this._init) {
@@ -3052,7 +3052,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      * @internal
-    */
+     */
     public getDragGhostCustomTemplate() {
         if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
             return this.dragGhostCustomTemplates.first;
@@ -3089,7 +3089,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
     }
@@ -3141,11 +3141,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-      * Expands all rows.
-      * @example
-      * ```typescript
-      * this.grid.expandAll();
-      * ```
+     * Expands all rows.
+     * @example
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
      */
     public expandAll() {
         this._defaultExpandState = true;
@@ -3153,11 +3153,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-      * Collapses all rows.
-      * @example
-      * ```typescript
-      * this.grid.collapseAll();
-      * ```
+     * Collapses all rows.
+     * @example
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
      */
     public collapseAll() {
         this._defaultExpandState = false;
@@ -3187,7 +3187,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.collapseRow(rowID);
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
-    */
+     */
     public collapseRow(rowID: any) {
         this.gridAPI.set_row_expansion_state(rowID, false);
     }
@@ -3202,7 +3202,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.toggleRow(rowID);
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
-    */
+     */
     public toggleRow(rowID: any) {
         const rec = this.gridAPI.get_rec_by_id(rowID);
         const state = this.gridAPI.get_row_expansion_state(rec);
@@ -3212,7 +3212,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      * @internal
-    */
+     */
     public getDefaultExpandState(rec: any) {
         return this._defaultExpandState;
     }
@@ -3326,7 +3326,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     get isHorizontalScrollHidden() {
         const diff = this.unpinnedWidth - this.totalWidth;
         return this.width === null || diff >= 0;
@@ -3352,7 +3352,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     get summariesMargin() {
         return this.featureColumnsWidth();
     }
@@ -3434,7 +3434,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const myCol = this.grid1.getColumnByName("ID");
      * ```
      * @param name
-    */
+     */
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
     }
@@ -3450,7 +3450,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const myRow = this.grid1.getRowByIndex(1);
      * ```
      * @param index
-    */
+     */
     public getRowByIndex(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.gridAPI.get_row_by_index(index);
     }
@@ -3464,7 +3464,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const myRow = this.grid1.getRowByKey("cell5");
      * ```
      * @param keyValue
-    */
+     */
     public getRowByKey(keyValue: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.gridAPI.get_row_by_key(keyValue);
     }
@@ -3492,7 +3492,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowIndex
      * @param columnField
-    */
+     */
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
         const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
         if (columnId !== -1) {
@@ -3515,7 +3515,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowSelector match any rowID
      * @param columnField
-    */
+     */
     public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
         return this.gridAPI.get_cell_by_key(rowSelector, columnField);
     }
@@ -3721,7 +3721,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * grid.moveColumn(compName, persDetails);
      * ```
-	  */
+     */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
         let position = pos;
@@ -3810,7 +3810,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.paginate(1);
      * ```
      * @param val
-    */
+     */
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {
             return;
@@ -3837,7 +3837,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.addRow(record);
      * ```
      * @param data
-    */
+     */
     public addRow(data: any): void {
         // commit pending states prior to adding a row
         this.endEdit(true);
@@ -3858,7 +3858,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid1.deleteRow(0);
      * ```
      * @param rowSelector
-    */
+     */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             this.deleteRowById(rowSelector);
@@ -3900,7 +3900,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param value the new value which is to be set.
      * @param rowSelector corresponds to rowID.
      * @param column corresponds to column field.
-    */
+     */
     public updateCell(value: any, rowSelector: any, column: string): void {
         if (this.isDefined(this.primaryKey)) {
             const col = this.columnList.toArray().find(c => c.field === column);
@@ -3946,7 +3946,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param value
      * @param rowSelector correspond to rowID
-    */
+     */
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
@@ -3996,7 +3996,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param value
      * @param conditionOrExpressionTree
      * @param ignoreCase
-    */
+     */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
         this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
@@ -4011,7 +4011,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param value
      * @param condition
      * @param ignoreCase
-    */
+     */
     public filterGlobal(value: any, condition, ignoreCase?) {
         this.filteringService.filterGlobal(value, condition, ignoreCase);
     }
@@ -4030,7 +4030,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * grid.enableSummaries('ProductName');
      * ```
      * @param rest
-    */
+     */
     public enableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
             this._multipleSummaries(rest[0], true);
@@ -4045,9 +4045,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * grid.disableSummaries('ProductName');
      * ```
-     *@remarks
+     * @remarks
      * Disable summaries for the listed columns.
-     *@example
+     * @example
      * ```typescript
      * grid.disableSummaries([{ fieldName: 'ProductName' }]);
      * ```
@@ -4062,14 +4062,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * If name is provided, clears the filtering state of the corresponding `IgxColumnComponent`.
-     *@remarks
-     Otherwise clears the filtering state of all `IgxColumnComponent`s.
-     *@example
+     * @remarks
+     * Otherwise clears the filtering state of all `IgxColumnComponent`s.
+     * @example
      * ```typescript
      * this.grid.clearFilter();
      * ```
      * @param name
-    */
+     */
     public clearFilter(name?: string) {
         this.filteringService.clearFilter(name);
     }
@@ -4083,7 +4083,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.clearSort();
      * ```
      * @param name
-    */
+     */
     public clearSort(name?: string) {
         if (!name) {
             this.sortingExpressions = [];
@@ -4116,7 +4116,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param columnName
      * @param index
-    */
+     */
     public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.pin(index);
@@ -4130,7 +4130,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param columnName
      * @param index
-    */
+     */
     public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
         return col.unpin(index);
@@ -4180,7 +4180,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.unpinRow(rowID);
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
-    */
+     */
     public unpinRow(rowID: any) {
         const index =  this._pinnedRecordIDs.indexOf(rowID);
         if (index === -1) {
@@ -4245,7 +4245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value  (defaults to false).
-    */
+     */
     public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, 1, caseSensitive, exactMatch);
     }
@@ -4261,7 +4261,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
-    */
+     */
     public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, -1, caseSensitive, exactMatch);
     }
@@ -4275,7 +4275,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.refreshSearch();
      * ```
      * @param updateActiveInfo
-    */
+     */
     public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
@@ -4910,7 +4910,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const pinnedWidth = this.grid.getPinnedWidth();
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-    */
+     */
     public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
         let sum = 0;
@@ -4930,7 +4930,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-    */
+     */
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
@@ -5080,14 +5080,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public isColumnGrouped(fieldName: string): boolean {
         return false;
     }
 
     /**
      * @hidden @internal
-    */
+     */
     public onHeaderSelectorClick(event) {
         if (!this.isMultiRowSelectionEnabled) { return; }
         this.selectionService.areAllRowSelected() ?
@@ -5148,7 +5148,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowIDs
      * @param clearCurrentSelection if true clears the current selection
-    */
+     */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
         this.notifyChanges();
@@ -5161,7 +5161,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * this.grid.deselectRows([1,2,5]);
      * ```
      * @param rowIDs
-    */
+     */
     public deselectRows(rowIDs: any[]) {
         this.selectionService.deselectRowsWithNoEvent(rowIDs);
         this.notifyChanges();
@@ -5215,7 +5215,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public dragScroll(dir: DragScrollDirection): void {
         const scrollDelta = 48;
         const horizontal = this.headerContainer.getScroll();
@@ -5256,7 +5256,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public isDefined(arg: any): boolean {
         return arg !== undefined && arg !== null;
     }
@@ -5279,7 +5279,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public columnToVisibleIndex(field: string | number): number {
         const visibleColumns = this.visibleColumns;
         if (typeof field === 'number') {
@@ -5290,7 +5290,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public setSelection(range: GridSelectionRange): void {
         const startNode = { row: range.rowStart, column: this.columnToVisibleIndex(range.columnStart) };
         const endNode = { row: range.rowEnd, column: this.columnToVisibleIndex(range.columnEnd) };
@@ -5372,7 +5372,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
-    /**
+   /**
     * Get current selected columns.
     * @example
     * Returns an array with selected columns
@@ -5393,7 +5393,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param columns
      * @param clearCurrentSelection if true clears the current selection
-    */
+     */
     public selectColumns(columns: string[] | IgxColumnComponent[], clearCurrentSelection?: boolean) {
         let fieldToSelect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
@@ -5414,13 +5414,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-        * Deselect specified columns by filed.
-        * @example
-        * ```typescript
-        * this.grid.deselectColumns(['ID','Name']);
-        * ```
-        * @param columns
-    */
+     * Deselect specified columns by filed.
+     * @example
+     * ```typescript
+     * this.grid.deselectColumns(['ID','Name']);
+     * ```
+     * @param columns
+     */
     public deselectColumns(columns: string[] | IgxColumnComponent[]) {
         let fieldToDeselect: string[] = [];
         if (columns.length === 0 || typeof columns[0] === 'string') {
@@ -5439,7 +5439,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
-    /**
+   /**
     * Deselects all columns
     * @example
     * ```typescript
@@ -5451,7 +5451,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
-    /**
+   /**
     * Selects all columns
     * @example
     * ```typescript
@@ -5499,7 +5499,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public scrollHandler = (event) => {
         this.headerContainer.scrollPosition += event.target.scrollLeft;
         this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
@@ -5554,7 +5554,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         event.clipboardData.setData('text/plain', result);
     }
 
-    /**Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
+    /**
+     * Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
@@ -5582,7 +5583,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    /**
+   /**
     * Returns `ICellPosition` which defines the next cell,
     * according to the current position, that match specific criteria.
     * @remarks
@@ -5615,7 +5616,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    /**
+   /**
     * Returns `ICellPosition` which defines the previous cell,
     * according to the current position, that match specific criteria.
     * @remarks
@@ -5781,7 +5782,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
-    */
+     */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
     }
@@ -5985,7 +5986,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
@@ -6006,7 +6007,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public toggleRowEditingOverlay(show) {
         const rowStyle = this.rowEditingOverlay.element.style;
         if (show) {
@@ -6045,7 +6046,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public get rowChangesCount() {
         if (!this.crudService.row) {
             return 0;
@@ -6082,7 +6083,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public gridOutletKeyboardHandler(event) {
         // TODO: This should be removed after grid keyboard refactoring
         // call stopPropagation for keydown event for the outlet not to propagate event to the grid
@@ -6153,7 +6154,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public get dataLength() {
         return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data().length;
     }
@@ -6201,7 +6202,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public isSummaryRow(rowData): boolean {
         return rowData.summaries && (rowData.summaries instanceof Map);
     }
