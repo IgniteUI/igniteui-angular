@@ -508,9 +508,9 @@
         @extend %igx-grid__filtering-cell !optional;
     }
 
-    @include e(filtering-cell-selected) {
+    @include e(filtering-cell, $m: 'selected') {
         @extend %igx-grid__filtering-cell !optional;
-        @extend %igx-grid__filtering-cell-selected !optional;
+        @extend %igx-grid__filtering-cell--selected !optional;
     }
 
     @include e(filtering-cell-indicator) {

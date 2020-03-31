@@ -2207,7 +2207,7 @@
         }
     }
 
-    %igx-grid__filtering-cell-selected {
+    %igx-grid__filtering-cell--selected {
         color: --var($theme, 'row-selected-text-color');
         background: --var($theme, 'row-selected-cell-background');
     }

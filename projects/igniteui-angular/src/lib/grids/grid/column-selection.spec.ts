@@ -12,7 +12,7 @@ import { ɵɵsetComponentScope } from '@angular/core';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
-const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell-selected';
+const SELECTED_FILTER_CELL_CLASS = 'igx-grid__filtering-cell--selected';
 
 function selectedData() {
     return [{ ProductID: 1, ProductName: 'Chai' },
