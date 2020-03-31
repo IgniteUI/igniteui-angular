@@ -1,24 +1,32 @@
-import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
-import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DefaultSortingStrategy, ISortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
-describe('IgxGrid - Grid Sorting #grid', () => {
+
+function getCurrentCellFromGrid(grid, rowIndex, cellIndex) {
+    const gridRow = grid.rowList.toArray()[rowIndex];
+    const gridCell = gridRow.cells.toArray()[cellIndex];
+    return gridCell;
+}
+
+function getValueFromCellElement(cell) {
+    return cell.nativeElement.textContent.trim();
+}
+
+fdescribe('IgxGrid - Grid Sorting #grid', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
@@ -38,6 +46,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
+        grid.width = '800px';
     }));
 
     it('Should sort grid ascending by column name', () => {
@@ -236,7 +245,6 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     });
 
     // UI Tests
-
     it('Should sort grid ascending by clicking once on first header cell UI', () => {
         const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
 
@@ -405,53 +413,3 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     });
 });
 
-@Component({
-    template: GridTemplateStrings.declareGrid(
-            '',
-            '',
-            ColumnDefinitions.idFirstLastNameSortable)
-})
-
-export class GridDeclaredColumnsComponent extends BasicGridComponent {
-
-    public data = SampleTestData.personIDNameRegionData();
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
-    @ViewChild('nameColumn', { static: true }) public nameColumn;
-    public width = '800px';
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(
-            '',
-            '',
-            ColumnDefinitions.idFirstLastNameSortable)
-})
-export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
-     public sort(data: any[], fieldName: string, dir: SortingDirection) {
-        const key = fieldName;
-        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse);
-        };
-        return data.sort(cmpFunc);
-    }
-     protected sortByParity(a: any, b: any) {
-        return a % 2 === 0 ? -1 : b % 2 === 0 ? 1 : 0;
-    }
-     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number) {
-        const a = obj1[key];
-        const b = obj2[key];
-        return reverse * this.sortByParity(a, b);
-    }
-}
-
-function getCurrentCellFromGrid(grid, row, cell) {
-    const gridRow = grid.rowList.toArray()[row];
-    const gridCell = gridRow.cells.toArray()[cell];
-    return gridCell;
-}
-
-function getValueFromCellElement(cell) {
-    return cell.nativeElement.textContent.trim();
-}
