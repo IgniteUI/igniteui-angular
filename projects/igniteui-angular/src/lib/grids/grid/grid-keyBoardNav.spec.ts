@@ -55,10 +55,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             // Focus and select first cell
             GridFunctions.focusFirstCell(fix);
-            fix.detectChanges();
-
-            expect(selectedCell.value).toEqual(1);
-            expect(selectedCell.column.field).toMatch('ID');
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             fix.detectChanges();
@@ -92,7 +88,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             });
 
             GridFunctions.focusFirstCell(fix);
-            fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, false, true);
             fix.detectChanges();
@@ -371,7 +366,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridSelectionFunctions.verifyGridCellSelected(fix, cell);
 
             cell = grid.getCellByColumn(998, 'other');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -537,9 +532,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
+
             const target = grid.getCellByColumn(15, '1');
             expect(target).toBeDefined();
-            expect(target.active).toBeTruthy();
+            expect(target.selected).toBeTruthy();
         });
 
         it('Custom KB navigation: should be able to scroll horizontally and vertically to a cell in the grid', async () => {
@@ -727,7 +723,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             row = grid.getRowByIndex(1);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-            expect(row.focused).toBe(true);
+            GridFunctions.verifyGroupRowIsFocused(row);
 
             row = grid.getRowByIndex(2);
             expect(row.cells.toArray()[0].selected).toBe(true);
@@ -795,7 +791,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             expect(cell.selected).toBe(true);
-            expect(cell.focused).toBe(true);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', cell.nativeElement, true);
             await wait();
             fix.detectChanges();
@@ -809,7 +804,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
-            expect(cell.focused).toBe(true);
+            expect(cell.active).toBe(true);
             expect(cell.selected).toBe(true);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', cell.nativeElement, true);
             await wait();
@@ -856,14 +851,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            grid.navigateTo(9, -1, (args) => { args.target.nativeElement.focus(); });
+            grid.navigateTo(9, -1, (args) => { args.target.activate(); });
             await wait(100);
             fix.detectChanges();
 
             const target = grid.rowList.find(r => r.index === 9);
             expect(target).toBeDefined();
-            expect(target.focused).toBe(true);
-        });
+            expect(target.selected).toBeTruthy();
+         });
 
         it('Custom KB navigation: onGridKeydown should be emitted for ', async () => {
             fix.componentInstance.width = '600px';
@@ -871,10 +866,11 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.columnWidth = '200px';
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            const rowEl = grid.rowList.find(r => r.index === 0);
+            UIInteractions.simulateClickAndSelectCellEvent(rowEl);
+            fix.detectChanges();
 
             const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
-
-            const rowEl = grid.rowList.find(r => r.index === 0);
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

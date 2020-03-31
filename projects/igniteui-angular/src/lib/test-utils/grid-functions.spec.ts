@@ -143,7 +143,7 @@ export class GridFunctions {
     }
 
     /**
-     * Focus the first cell in the grid
+     * Focus the cell in the grid
     */
     public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
@@ -270,7 +270,7 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
     }
 
-    public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
+    public static verifyGroupRowIsFocused(groupRow, focused = true) {
          expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
 

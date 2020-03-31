@@ -339,7 +339,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // The next editable cell should be opened in edit mode
             expect(cell.editMode).toBe(false);
-            cell = treeGrid.getCellByColumn(4, 'Name');
+            cell = treeGrid.getCellByColumn(4, 'HireDate');
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.editMode).toBe(true);
         });
@@ -734,6 +734,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
             const scrollLeft = treeGrid.headerContainer.getScroll().scrollLeft;
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
+
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            fix.detectChanges();
 
             for (let i = 0; i < columns.length - 1; i++) {
                 let cell = treeGrid.getCellByColumn(0, columns[i]);
