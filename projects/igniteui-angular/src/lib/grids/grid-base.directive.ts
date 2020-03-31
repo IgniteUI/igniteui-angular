@@ -6230,7 +6230,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
-    */
+     */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
             const tmplId = args.context.templateID;
