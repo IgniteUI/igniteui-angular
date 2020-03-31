@@ -29,7 +29,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBaseDirective impleme
      * public columnHiding: IgxColumnHidingComponent;
      * let isHideAlldisabled =  this.columnHiding.disableHideAll;
      * ```
-     *@memberof IgxColumnHidingComponent
+     * @memberof IgxColumnHidingComponent
      */
     @Input()
     get disableHideAll(): boolean {
@@ -113,7 +113,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBaseDirective impleme
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public get hidableColumns() {
         return this.columnItems.filter((col) => !col.disabled);
@@ -121,7 +121,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBaseDirective impleme
 
     private destroy$ = new Subject<boolean>();
     /**
-     *@hidden
+     * @hidden
      */
     protected createColumnItem(container: any, column: any) {
         if (column.grid.hasColumnLayouts && !column.columnLayout) {
@@ -171,7 +171,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBaseDirective impleme
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public ngOnDestroy(): void {
         this.destroy$.next(true);

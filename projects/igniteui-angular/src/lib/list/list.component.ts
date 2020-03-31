@@ -401,7 +401,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```html
      * <igx-list (onPanStateChange)="onPanStateChange($event)"></igx-list>
      * ```
-    */
+     */
     @Output()
     public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
 
