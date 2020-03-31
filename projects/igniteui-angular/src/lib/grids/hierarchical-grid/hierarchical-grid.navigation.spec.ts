@@ -630,6 +630,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
+        let baseHGridContent;
         beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -645,6 +646,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
+            baseHGridContent = GridFunctions.getGridContent(fixture);
         }));
 
         // complex tests
@@ -656,32 +658,31 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const nestedChild = child.hgridAPI.getChildGrids(false)[0];
             const nestedChildCell = nestedChild.dataRowList.toArray()[1].cells.toArray()[0];
-            nestedChildCell.nativeElement.focus();
+            GridFunctions.focusCell(fixture, nestedChildCell);
             let oldScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
             await wait(100);
             fixture.detectChanges();
             // navigate up
-            const keyboardEvent = new KeyboardEvent('keydown', {
-                code: 'ArrowUp',
-                key: 'ArrowUp'
-            });
-            nestedChildCell.dispatchEvent(keyboardEvent);
+            const nestedChildGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', nestedChildGridContent, false, false, false);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
 
             let nextCell =  nestedChild.dataRowList.toArray()[0].cells.toArray()[0];
             let currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
-            const elemHeight = nestedChildCell.row.nativeElement.offsetHeight;
+            const elemHeight = nestedChildCell.row.nativeElement.clientHeight;
             // check if parent of parent has been scroll up so that the focused cell is in view
             expect(oldScrTop - currScrTop).toEqual(elemHeight);
             oldScrTop = currScrTop;
 
             expect(nextCell.selected).toBe(true);
-            expect(nextCell.focused).toBe(true);
+            expect(nextCell.active).toBe(true);
             expect(nextCell.rowIndex).toBe(0);
 
             // navigate up into parent
-            nextCell.dispatchEvent(keyboardEvent);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', nestedChildGridContent, false, false, false);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
 
@@ -690,7 +691,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             expect(oldScrTop - currScrTop).toBeGreaterThanOrEqual(100);
 
             expect(nextCell.selected).toBe(true);
-            expect(nextCell.focused).toBe(true);
+            expect(nextCell.active).toBe(true);
             expect(nextCell.rowIndex).toBe(0);
 
         }));
@@ -700,23 +701,20 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             const nestedChild = child.hgridAPI.getChildGrids(false)[0];
             const nestedChildCell = nestedChild.dataRowList.toArray()[1].cells.toArray()[0];
              // navigate down in nested child
-            nestedChildCell.nativeElement.focus();
+             GridFunctions.focusCell(fixture, nestedChildCell);
             await wait(100);
             fixture.detectChanges();
-
-            const keyboardEvent = new KeyboardEvent('keydown', {
-                code: 'ArrowDown',
-                key: 'ArrowDown'
-            });
-            nestedChildCell.dispatchEvent(keyboardEvent);
+            const nestedChildGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', nestedChildGridContent, false, false, false);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
             // check if parent has scrolled down to show focused cell.
-            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.row.nativeElement.offsetHeight);
+            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.row.nativeElement.clientHeight);
             const nextCell = nestedChild.dataRowList.toArray()[2].cells.toArray()[0];
 
             expect(nextCell.selected).toBe(true);
-            expect(nextCell.focused).toBe(true);
+            expect(nextCell.active).toBe(true);
             expect(nextCell.rowIndex).toBe(2);
         }));
 
@@ -734,58 +732,30 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             fixture.detectChanges();
 
             const parentCell = hierarchicalGrid.getCellByColumn(2, 'ID');
-            parentCell.nativeElement.focus();
+            GridFunctions.focusCell(fixture, parentCell);
             await wait(100);
             fixture.detectChanges();
 
-            const keyboardEvent = new KeyboardEvent('keydown', {
-                code: 'ArrowUp',
-                key: 'ArrowUp'
-            });
-            parentCell.nativeElement.dispatchEvent(keyboardEvent);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent , false, false, false);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
 
             const nestedChild = child.hgridAPI.getChildGrids(false)[5];
             const lastCell = nestedChild.getCellByColumn(4, 'ID');
             expect(lastCell.selected).toBe(true);
-            expect(lastCell.focused).toBe(true);
+            expect(lastCell.active).toBe(true);
             expect(lastCell.rowIndex).toBe(4);
 
         }));
 
-        it('should navigate to the first cell of next row using Tab from last cell in the row above', (async () => {
-            hierarchicalGrid.expandChildren = false;
-            hierarchicalGrid.height = '600px';
-            hierarchicalGrid.width = '1000px';
-            fixture.componentInstance.rowIsland.height = '350px';
-            fixture.detectChanges();
-            await wait(100);
-
-            const row = hierarchicalGrid.getRowByIndex(0);
-            (row as IgxHierarchicalRowComponent).toggle();
-            await wait(100);
-            fixture.detectChanges();
-
-            const cell = hierarchicalGrid.getCellByColumn(2, 'childData2');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(100);
-            fixture.detectChanges();
-
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
-            await wait(100);
-            fixture.detectChanges();
-
-            const currentCell = hierarchicalGrid.getCellByColumn(3, 'ID');
-            expect(currentCell.focused).toBe(true);
-            expect(currentCell.rowIndex).toBe(3);
-        }));
 });
 
-describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
+describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
+    let baseHGridContent;
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -801,6 +771,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
+        baseHGridContent = GridFunctions.getGridContent(fixture);
     }));
 
     it('should allow navigating up between sibling child grids.', (async () => {
@@ -808,19 +779,19 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
+        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: 'ArrowUp',
-            key: 'ArrowUp'
-        });
-        child2Cell.dispatchEvent(keyboardEvent);
+        GridFunctions.focusCell(fixture, child2Cell);
+
+        const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
+        UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
-        const lastCellPrevRI = child1.dataRowList.toArray()[1].cells.toArray()[0];
+        const lastCellPrevRI = child1.dataRowList.last.cells.toArray()[0];
 
+        expect(lastCellPrevRI.active).toBe(true);
         expect(lastCellPrevRI.selected).toBe(true);
         expect(lastCellPrevRI.rowIndex).toBe(9);
     }));
@@ -829,117 +800,82 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
+        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
         child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
-
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: 'ArrowDown',
-            key: 'ArrowDown'
-        });
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-        const lastCellPrevRI = child1.dataRowList.toArray()[1].cells.toArray()[0];
-        lastCellPrevRI.dispatchEvent(keyboardEvent);
+        const lastCellPrevRI = child1.dataRowList.last.cells.toArray()[0];
+        GridFunctions.focusCell(fixture, lastCellPrevRI);
+
+        const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
+        UIInteractions.triggerEventHandlerKeyDown('arrowdown', childGridContent, false, false, false);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         expect(child2Cell.selected).toBe(true);
+        expect(child2Cell.active).toBe(true);
     }));
 
-    it('should allow navigating with Tab between sibling child grids.', (async () => {
-        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
-
-        child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
-        await wait(100);
-        fixture.detectChanges();
-        const rowVirt = child1.dataRowList.toArray()[0].virtDirRow;
-        rowVirt.scrollTo(rowVirt.igxForOf.length - 1);
-        await wait(100);
-        fixture.detectChanges();
-        const child1Cell = child1.getCellByColumn(9, 'childData');
-        const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-         // Tab from last cell in 1st child
-         child1Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab'}));
-         await wait(100);
-         fixture.detectChanges();
-         expect(child2Cell.selected).toBe(true);
-    }));
-    it('should allow navigating with Shift+Tab between sibling child grids.', (async () => {
-        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
-
-        const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-        // Shift + Tab from 2nd child
-        child2Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(240);
-        fixture.detectChanges();
-
-        const child1Cell = child1.getCellByColumn(9, 'childData');
-
-        expect(child1Cell.selected).toBe(true);
-        expect(child1Cell.rowIndex).toBe(9);
-        expect(child1Cell.columnIndex).toBe(6);
-    }));
     it('should navigate up from parent row to the correct child sibling.', (async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
-        parentCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, parentCell);
         await wait(100);
         fixture.detectChanges();
 
         // Arrow Up into prev child grid
-        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+        UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent, false, false, false);
         await wait(100);
         fixture.detectChanges();
 
-        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
+        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
-        const child2Cell = child2.dataRowList.toArray()[1].cells.toArray()[0];
+        const child2Cell = child2.dataRowList.last.cells.toArray()[0];
         expect(child2Cell.selected).toBe(true);
-        expect(child2Cell.focused).toBe(true);
+        expect(child2Cell.active).toBe(true);
         expect(child2Cell.rowIndex).toBe(9);
     }));
     it('should navigate down from parent row to the correct child sibling.', (async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
-        parentCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, parentCell);
         await wait(100);
         fixture.detectChanges();
 
         // Arrow down into next child grid
-        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown'}));
+        UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, false, false, false);
         await wait(100);
         fixture.detectChanges();
 
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const child1Cell = child1.dataRowList.toArray()[0].cells.toArray()[0];
         expect(child1Cell.selected).toBe(true);
-        expect(child1Cell.focused).toBe(true);
+        expect(child1Cell.active).toBe(true);
         expect(child1Cell.rowIndex).toBe(0);
     }));
 
     it('should navigate to last cell in previous child using Arrow Up from last cell of sibling with more columns', (async () => {
-        const childGrid2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
+        const childGrid2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
         childGrid2.dataRowList.toArray()[0].virtDirRow.scrollTo(7);
         await wait(100);
         fixture.detectChanges();
 
         const child2LastCell = childGrid2.getCellByColumn(0, 'childData2');
-        child2LastCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, child2LastCell);
         await wait(100);
         fixture.detectChanges();
 
-        // Shift + Tab inside 2nd child
-        child2LastCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
+
+        UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
         await wait(100);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childLastCell = childGrid.getCellByColumn(9, 'childData');
         expect(childLastCell.selected).toBeTruthy();
-        expect(childLastCell.focused).toBeTruthy();
+        expect(childLastCell.active).toBeTruthy();
     }));
 });
 
@@ -1119,13 +1055,13 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'"
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'500px'" [width]="'500px'"
     [expandChildren]='true' #hierarchicalGrid>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="'100px'">
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="'150px'">
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
             </igx-row-island>
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
+        <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'150px'">
         </igx-row-island>
     </igx-hierarchical-grid>`
 })

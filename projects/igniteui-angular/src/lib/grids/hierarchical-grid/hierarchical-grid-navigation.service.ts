@@ -77,6 +77,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this._handleScrollInChild(rowIndex, isNext);
                 cb(args);
             };
+            if (!this.activeNode) {
+                this.activeNode = { row: null, column: null };
+            }
             super.navigateInBody(rowIndex, visibleColIndex, cbHandler);
             return;
         }
@@ -199,7 +202,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             childGrid.navigation.activeNode = { row: targetIndex, column: this.activeNode.column};
             childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
                 const targetLayoutIndex = isNext ? 0 : childGrid.childLayoutList.toArray().length - 1;
-                childGrid.navigation._moveToChild(targetIndex, visibleColIndex, isNext, targetLayoutIndex);
+                childGrid.navigation._moveToChild(targetIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
             });
             return;
         }
