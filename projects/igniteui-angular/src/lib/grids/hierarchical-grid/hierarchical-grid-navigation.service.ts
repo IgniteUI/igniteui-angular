@@ -176,7 +176,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * Moves navigation to child grid.
      * @param parentRowIndex The parent row index, at which the child grid is rendered.
      * @param childLayoutIndex Optional. The index of the child row island to which the child grid belongs to. Uses first if not set.
-    */
+     */
     protected _moveToChild(parentRowIndex: number, visibleColIndex: number, isNext: boolean, childLayoutIndex?: number, cb?: Function) {
         const ri = typeof childLayoutIndex !== 'number' ?
          this.grid.childLayoutList.first : this.grid.childLayoutList.toArray()[childLayoutIndex];
@@ -324,7 +324,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     /**
      * Gets the min bottom view in the current grid hierarchy.
      * @param grid
-    */
+     */
     private _getMinBottom(grid) {
         let currGrid = grid;
         let bottom = currGrid.tbody.nativeElement.getBoundingClientRect().bottom;
