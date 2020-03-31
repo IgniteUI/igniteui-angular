@@ -111,7 +111,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public collapsedChange = new EventEmitter<boolean>();

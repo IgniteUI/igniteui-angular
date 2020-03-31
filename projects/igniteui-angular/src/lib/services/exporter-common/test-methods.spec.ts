@@ -50,4 +50,21 @@ export class TestMethods {
         return { fixture: fix, grid: myGrid };
     }
 
+
+        /* Creates an instance of GridDeclarationComponent and pins the rows with the specified indices. */
+        public static async createGridAndPinRow(...rowIndices: any[]) {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait(16);
+
+            const myGrid = fix.componentInstance.grid;
+
+            // Pin columns
+            rowIndices.forEach((i) => {
+                myGrid.getRowByIndex(i).pin();
+            });
+
+            return { fixture: fix, grid: myGrid };
+        }
+
 }
