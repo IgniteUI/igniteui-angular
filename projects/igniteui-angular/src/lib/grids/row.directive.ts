@@ -60,14 +60,14 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public index: number;
 
     /**
-     * Sets whether this specific row can be editable.
+     * Sets whether this specific row has disabled functionality for editing and row selection.
      * Default value is `false`.
      * ```typescript
      * this.grid.selectedRows[0].pinned = true;
      * ```
      */
     @Input()
-    public editable: boolean;
+    public disabled = false;
 
     /**
      * Gets whether the row is pinned.
@@ -320,7 +320,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
+        if (this.grid.rowSelection === 'none' || this.deleted || this.disabled) { return; }
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
@@ -332,6 +332,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     public onRowSelectorClick(event) {
+        if (this.disabled) { return; }
         event.stopPropagation();
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);

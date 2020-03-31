@@ -13,7 +13,7 @@
                 <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
                 <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
             </div>
-        <igx-grid [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
+        <igx-grid [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
             <igx-column width='70px' [filterable]='false'>
                 <ng-template igxCell let-cell="cell" let-val>
                     <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
@@ -32,7 +32,11 @@
         </igx-grid>
         </div>
         <div class="sample-column">
-            <igx-hierarchical-grid [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' [columnHiding]='true' [width]="'800px'" [height]="'500px'" [rowSelectable]="true" #hGrid>
+            <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [rowEditable]="true" [allowFiltering]='true'
+                [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [showToolbar]='true' [columnPinning]='true' [columnHiding]='true'  [rowSelectable]="true" >
+                <ng-template igxToolbarCustomContent>
+                    <app-grid-search-box [grid]="hGrid" [style.width]="'400px'"></app-grid-search-box>
+                </ng-template>
                 <igx-column width='70px' [filterable]='false'>
                     <ng-template igxCell let-cell="cell" let-val>
                         <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
@@ -40,7 +44,12 @@
                         </igx-icon>
                     </ng-template>
                 </igx-column>
-                <igx-column *ngFor="let c of hColumns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [editable]="true">
+                <igx-column width='100px' [filterable]='false'>
+                    <ng-template igxCell let-cell="cell" let-val>
+                        <button (click)="hGrid.deleteRow(cell.cellID.rowID)">Delete</button>
+                    </ng-template>
+                </igx-column>
+                <igx-column *ngFor="let c of hColumns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' >
                 </igx-column>
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='true'  [allowFiltering]='true'  >
                     <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='true' [allowFiltering]='true'></igx-row-island>

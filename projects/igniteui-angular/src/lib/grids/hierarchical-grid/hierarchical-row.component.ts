@@ -31,12 +31,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     * @hidden
     */
     @Input()
-        /**
-     * @hidden
-     */
     @HostBinding('class.igx-grid__tr--ghost-copy')
     public set ghostRow(value: boolean) {
-        this.editable = !value;
+        this.disabled = value;
         this._ghostRow = value;
     }
 
@@ -193,22 +190,4 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
             g.endEdit();
         }});
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) {
-        if (this.ghostRow) { return; }
-        super.onClick(event);
-     }
-
-    /**
-     * @hidden
-     */
-    public onRowSelectorClick(event) {
-        if (this.ghostRow) { return; }
-        super.onRowSelectorClick(event);
-     }
 }

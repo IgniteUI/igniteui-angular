@@ -37,8 +37,8 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 
         data.forEach((v: any) => {
             result.push(v);
-            if (v.ghostRec !== undefined) {
-                v = v.recordData;
+            if (v.ghostRecord !== undefined) {
+                v = v.recordRef;
             }
 
             const childGridsData = {};
@@ -101,7 +101,7 @@ export class IgxGridHierarchicalRowPinning implements PipeTransform {
         }
 
         const result = collection.map((value) => {
-            return grid.isRecordPinned(value) ? { recordData: value, ghostRec: true} : value;
+            return grid.isRecordPinned(value) ? { recordRef: value, ghostRecord: true} : value;
         });
         return result;
     }
