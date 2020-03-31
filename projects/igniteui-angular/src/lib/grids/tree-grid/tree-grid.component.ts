@@ -138,7 +138,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     set filteredData(value) {
         this._filteredData = value;
     }
-    
 
     /**
      * Get transactions service for the grid.
@@ -629,8 +628,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         if (pinned && !this.isRowPinningToTop) {
             rowIndex = rowIndex + this.dataView.length;

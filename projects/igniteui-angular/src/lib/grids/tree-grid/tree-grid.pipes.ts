@@ -202,7 +202,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         id: string,
-        pipeTrigger: number, 
+        pipeTrigger: number,
         pinned?: boolean): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
 
