@@ -29,7 +29,7 @@ export class IgxIconService {
 
     /**
      *  Returns the default font set.
-     *```typescript
+     * ```typescript
      *   const defaultFontSet = this.iconService.defaultFontSet;
      * ```
      */
@@ -39,7 +39,7 @@ export class IgxIconService {
 
     /**
      *  Sets the default font set.
-     *```typescript
+     * ```typescript
      *   this.iconService.defaultFontSet = 'svg-flags';
      * ```
      */
@@ -49,7 +49,7 @@ export class IgxIconService {
 
     /**
      *  Registers a custom class to be applied to IgxIconComponent for a given fontSet.
-     *```typescript
+     * ```typescript
      *   this.iconService.registerFontSetAlias('material', 'material-icons');
      * ```
      */
@@ -60,7 +60,7 @@ export class IgxIconService {
 
     /**
      *  Returns the custom class, if any, associated to a given fontSet.
-     *```typescript
+     * ```typescript
      *   const fontSetClass = this.iconService.fontSetClassName('material');
      * ```
      */
@@ -70,7 +70,7 @@ export class IgxIconService {
 
     /**
      *  Adds an SVG image to the cache. SVG source is an url.
-     *```typescript
+     * ```typescript
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
      */
@@ -94,7 +94,7 @@ export class IgxIconService {
 
     /**
      *  Adds an SVG image to the cache. SVG source is its text.
-     *```typescript
+     * ```typescript
      *   this.iconService.addSvgIcon('simple', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
@@ -109,7 +109,7 @@ export class IgxIconService {
 
     /**
      *  Returns whether a given SVG image is present in the cache.
-     *```typescript
+     * ```typescript
      *   const isSvgCached = this.iconService.isSvgIconCached('aruba', 'svg-flags');
      * ```
      */
@@ -120,7 +120,7 @@ export class IgxIconService {
 
     /**
      *  Returns the key of a cached SVG image.
-     *```typescript
+     * ```typescript
      *   const svgIconKey = this.iconService.getSvgIconKey('aruba', 'svg-flags');
      * ```
      */

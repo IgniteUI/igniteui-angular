@@ -32,13 +32,13 @@ export interface IRowExportingEventArgs extends IBaseEventArgs {
 }
 
 /**
-    * onColumnExport event arguments
-    * ```typescript
-    * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
-    * // set args properties here
-    * });
-    * ```
-    */
+ * onColumnExport event arguments
+ * ```typescript
+ * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+ * // set args properties here
+ * });
+ * ```
+ */
 export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting column header
@@ -72,6 +72,7 @@ export abstract class IgxBaseExporter {
 
     protected _isTreeGrid = false;
     protected _indexOfLastPinnedColumn = -1;
+    protected _indexOfLastPinnedRow = -1;
     protected _sort = null;
 
     /**
@@ -289,6 +290,14 @@ export abstract class IgxBaseExporter {
             }
         }
 
+        if (grid.hasPinnedRecords) {
+
+            const pinnedRecs = data.filter(x => grid.isRecordPinned(x));
+            const unpinnedRecs = data.filter(x => !grid.isRecordPinned(x));
+            data = [ ...pinnedRecs, ... unpinnedRecs];
+            this._indexOfLastPinnedRow = pinnedRecs.length - 1;
+        }
+
         return data;
     }
 
@@ -307,6 +316,7 @@ export abstract class IgxBaseExporter {
     private resetDefaults() {
         this._columnList = [];
         this._indexOfLastPinnedColumn = -1;
+        this._indexOfLastPinnedRow = -1;
         this._sort = null;
         this.flatRecords = [];
     }

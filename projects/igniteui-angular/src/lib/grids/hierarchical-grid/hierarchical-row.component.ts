@@ -70,20 +70,20 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
    protected defaultExpandedTemplate: TemplateRef<any>;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
    @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
    protected defaultEmptyTemplate: TemplateRef<any>;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
    protected defaultCollapsedTemplate: TemplateRef<any>;
 
@@ -123,7 +123,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         return this.grid && this.grid.highlightedRowID === this.rowID;
     }
 
-    /**
+   /**
     * @hidden
     */
    public expanderClick(event) {
@@ -164,9 +164,9 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     }
 
     /**
-    * @hidden
-    */
-    public getIconTemplate() {
+     * @hidden
+     */
+    public get iconTemplate() {
         let expandable = true;
         if (this.grid.hasChildrenKey) {
             expandable = this.rowData[this.grid.hasChildrenKey];

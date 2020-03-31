@@ -42,7 +42,7 @@ export enum IgxBadgeType {
 })
 export class IgxBadgeComponent {
 
-    /**
+   /**
     * Sets/gets the `id` of the badge.
     *
     * @remarks
@@ -57,7 +57,7 @@ export class IgxBadgeComponent {
     @Input()
     public id = `igx-badge-${NEXT_ID++}`;
 
-    /**
+   /**
     * Sets/gets the type of the badge.
     *
     * @remarks
@@ -72,7 +72,7 @@ export class IgxBadgeComponent {
     @Input()
     public type: string | IgxBadgeType = IgxBadgeType.PRIMARY;
 
-    /**
+   /**
     * Sets/gets the value to be displayed inside the badge.
     *
     * @remarks

@@ -11,7 +11,7 @@ export class WorksheetData {
     private _isSpecialData: boolean;
 
     constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn,
-                public sort: any, public isTreeGridData = false) {
+        public indexOfLastPinnedRow, public sort: any, public isTreeGridData = false) {
         this.initializeData();
     }
 

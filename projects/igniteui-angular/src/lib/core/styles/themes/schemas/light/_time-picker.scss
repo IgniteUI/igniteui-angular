@@ -99,7 +99,7 @@ $_fluent-time-picker: extend(
 /// @requires {function} extend
 /// @requires $_light-time-picker
 $_bootstrap-time-picker: extend(
-    $_light-time-picker,§
+    $_light-time-picker,
     $_bootstrap-shape-time-picker,
     (
         variant: 'bootstrap',
