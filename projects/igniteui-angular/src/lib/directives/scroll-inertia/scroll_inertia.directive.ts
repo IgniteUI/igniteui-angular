@@ -86,7 +86,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         });
     }
 
-     /**
+    /**
      * @hidden
      * Function that is called when scrolling with the mouse wheel or using touchpad
      */
@@ -116,7 +116,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             scrollDeltaX = this.calcAxisCoords(evt.deltaX, -1, 1);
         }
 
-        /** Get delta for the Y axis*/
+        /** Get delta for the Y axis */
         if (evt.wheelDeltaY) {
             /* Option supported on Chrome, Safari, Opera.
             /* 120 is default for mousewheel on these browsers. Other values are for trackpads */
