@@ -98,7 +98,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             let fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
-            fCell.nativeElement.focus();
+            GridFunctions.focusCell(fixture, fCell);
             await wait(100);
             fixture.detectChanges();
 
@@ -109,7 +109,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const fChildCell =  firstChildRow.cells.toArray()[0];
 
             // select child cell
-            fChildCell.nativeElement.focus();
+            GridFunctions.focusCell(fixture, fChildCell);
             await wait(100);
             fixture.detectChanges();
 
@@ -119,7 +119,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // select parent cell
             firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
-            fCell.nativeElement.focus();
+            GridFunctions.focusCell(fixture, fCell);
             await wait(100);
             fixture.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
@@ -177,7 +177,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
         }));
 
-        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
+        it('should not allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -185,16 +185,17 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
             const lastRowCells = rows[rows.length - 1].queryAll(By.directive(IgxHierarchicalGridCellComponent));
 
-            lastRowCells[1].nativeElement.click();
+            GridFunctions.focusCell(fixture, lastRowCells[1].context);
             fixture.detectChanges();
 
-            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+            const baseHGridContent = GridFunctions.getGridContent(fixture);
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', baseHGridContent, true, false, false);
             fixture.detectChanges();
 
             let childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
             expect(childRows.length).toEqual(0);
 
-            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, true, false, false);
             fixture.detectChanges();
 
             childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
@@ -203,7 +204,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             fixture.detectChanges();
 
-            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, true, false, false);
             fixture.detectChanges();
 
             childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
@@ -384,7 +385,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
             let fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
-            fChildCell.nativeElement.focus({preventScroll: true});
+            GridFunctions.focusCell(fixture, fChildCell);
             fixture.detectChanges();
             expect(fChildCell.selected).toBe(true);
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
