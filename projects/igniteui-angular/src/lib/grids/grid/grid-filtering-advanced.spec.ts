@@ -2722,9 +2722,9 @@ function selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
 }
 
 /**
-* Verifies the type of the operator line ('and' or 'or').
-* (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
-*/
+ * Verifies the type of the operator line ('and' or 'or').
+ * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
+ */
 function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
     expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
 
@@ -2772,8 +2772,8 @@ function verifyExpressionChipSelectionByChip(chip: HTMLElement, shouldBeSelected
 }
 
 /**
-* Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
-*/
+ * Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
+ */
 function verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
     const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
     const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`));
@@ -2848,10 +2848,10 @@ function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
 }
 
 /**
-* Verifies the type of the context menu (menu for specific group or menu for combining expressions).
-* If contextual group is expected, the context menu should contain buttons for operator change, ungroup and delete.
-* If contextual group is not expected, the context menu should contain buttons for creating new group by combining expressions.
-*/
+ * Verifies the type of the context menu (menu for specific group or menu for combining expressions).
+ * If contextual group is expected, the context menu should contain buttons for operator change, ungroup and delete.
+ * If contextual group is not expected, the context menu should contain buttons for creating new group by combining expressions.
+ */
 function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
     const contextMenuButtons =  GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
     expect(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix) !== null).toBe(shouldBeContextualGroup);

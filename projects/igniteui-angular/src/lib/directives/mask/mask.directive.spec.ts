@@ -572,7 +572,7 @@ class EventFiringComponent {
                                    [value]="value"
                                    [igxMask]="myMask"
                                    [includeLiterals]="true"
-                                   [promptChar]="'*@#'"/>
+                                   [promptChar]="'* @#'"/>
                         </igx-input-group>` })
 class OneWayBindComponent {
     myMask = 'AAAAAAAA';

@@ -40,14 +40,14 @@ export class IgxGridGroupByRowComponent {
     protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
     protected defaultGroupByExpandedTemplate: TemplateRef<any>;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
 
@@ -173,15 +173,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     public toggle() {
-        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
-        if (isVirtualized) {
-            const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
-            if (groupRow) {
-                groupRow.focus();
-            }
-        }
     }
 
     public get iconTemplate() {

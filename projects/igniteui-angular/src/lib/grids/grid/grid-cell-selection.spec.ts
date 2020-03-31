@@ -1,20 +1,23 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { SelectionWithScrollsComponent,
-        SelectionWithTransactionsComponent,
-        CellSelectionNoneComponent,
-        CellSelectionSingleComponent} from '../../test-utils/grid-samples.spec';
+import {
+    SelectionWithScrollsComponent,
+    SelectionWithTransactionsComponent,
+    CellSelectionNoneComponent,
+    CellSelectionSingleComponent
+} from '../../test-utils/grid-samples.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DebugElement } from '@angular/core';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
@@ -33,7 +36,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
     describe('Base', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
         let detect;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -45,21 +48,20 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should be able to select a range with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(2, 'ParentID');
-            const endCell =  grid.getCellByColumn(3, 'ID');
+            const startCell = grid.getCellByColumn(2, 'ParentID');
+            const endCell = grid.getCellByColumn(3, 'ID');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
 
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
             detect();
 
-            expect(startCell.focused).toBe(true);
+            expect(startCell.active).toBe(true);
 
             for (let i = 3; i < 5; i++) {
-              const cell = grid.getCellByColumn(i, grid.columns[i - 1].field);
-              UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
-              detect();
-              GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
+                const cell = grid.getCellByColumn(i, grid.columns[i - 1].field);
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                detect();
+                GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
             }
 
             for (let i = 3; i >= 0; i--) {
@@ -86,7 +88,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
             detect();
 
-            expect(startCell.focused).toBe(true);
+            expect(startCell.active).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 0);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 1);
 
@@ -147,9 +149,9 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should select correct cells with Ctrl key and mouse drag', () => {
             const range = { rowStart: 3, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
-            const firstCell =  grid.getCellByColumn(1, 'ParentID');
-            const secondCell =  grid.getCellByColumn(1, 'ID');
-            const thirdCell =  grid.getCellByColumn(2, 'ParentID');
+            const firstCell = grid.getCellByColumn(1, 'ParentID');
+            const secondCell = grid.getCellByColumn(1, 'ID');
+            const thirdCell = grid.getCellByColumn(2, 'ParentID');
             const expectedData = [
                 { ParentID: 147, Name: 'Monica Reyes' },
                 { ParentID: 847, Name: 'Laurence Johnson' },
@@ -162,10 +164,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
             UIInteractions.simulatePointerOverCellEvent('pointerdown', firstCell.nativeElement, false, true);
-            firstCell.nativeElement.dispatchEvent(new Event('focus'));
             detect();
 
-            expect(firstCell.focused).toBe(true);
+            expect(firstCell.active).toBe(true);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
             UIInteractions.simulatePointerOverCellEvent('pointerenter', secondCell.nativeElement, false, true);
@@ -392,8 +393,8 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should not be possible to select a range when change cellSelection to none', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(0, 'Name');
-            const endCell =  grid.getCellByColumn(2, 'ParentID');
+            const startCell = grid.getCellByColumn(0, 'Name');
+            const endCell = grid.getCellByColumn(2, 'ParentID');
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
@@ -422,8 +423,8 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(0, 'ID');
-            const endCell =  grid.getCellByColumn(1, 'ParentID');
+            const startCell = grid.getCellByColumn(0, 'ID');
+            const endCell = grid.getCellByColumn(1, 'ParentID');
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
@@ -442,12 +443,18 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedRanges()).toEqual([]);
 
             // Try to select a range
-            GridSelectionFunctions.selectCellsRangeNoWait(fix, endCell, startCell);
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement);
+            endCell.nativeElement.dispatchEvent(new MouseEvent('click'));
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', startCell.nativeElement);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', startCell.nativeElement);
+            fix.detectChanges();
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 0, 0, 1, false);
             expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
+            expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }]);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1);
         });
     });
@@ -840,37 +847,39 @@ describe('IgxGrid - Cell selection #grid', () => {
                 selectedData = grid.getSelectedData();
             });
 
-            const cell =  grid.getCellByColumn(2, 'Name');
+            const cell = grid.getCellByColumn(2, 'Name');
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
 
-            const idCell =  grid.getCellByColumn(1, 'ID');
+            const idCell = grid.getCellByColumn(1, 'ID');
             UIInteractions.simulateClickAndSelectCellEvent(idCell, false, true);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(2);
-            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
-            expect(selectedData[1]).toEqual({'ID':  957});
+            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
+            expect(selectedData[1]).toEqual({ 'ID': 957 });
         });
     });
 
     describe('Keyboard navigation', () => {
-        let fix;
+        let fix: ComponentFixture<any>;
         let grid;
         let detect;
+        let gridContent: DebugElement;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            gridContent = GridFunctions.getGridContent(fix);
             setupGridScrollDetection(fix, grid);
             detect = () => grid.cdr.detectChanges();
         }));
 
-        it('Should be able to select a with arrow keys and holding Shift', () => {
+        it('Should be able to select a range with arrow keys and holding Shift', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
             UIInteractions.simulateClickAndSelectCellEvent(cell);
@@ -878,7 +887,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
 
             fix.detectChanges();
 
@@ -886,20 +895,20 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
 
             cell = grid.getCellByColumn(2, 'ParentID');
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
             cell = grid.getCellByColumn(2, 'Name');
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 1, 2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 2, 1, 3, false);
             cell = grid.getCellByColumn(1, 'Name');
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
@@ -907,32 +916,32 @@ describe('IgxGrid - Cell selection #grid', () => {
             cell = grid.getCellByColumn(1, 'ParentID');
             GridSelectionFunctions.verifyCellSelected(cell);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 0, 1);
-            expect(grid.getSelectedData()).toEqual([{ID: 957, ParentID: 147}]);
+            expect(grid.getSelectedData()).toEqual([{ ID: 957, ParentID: 147 }]);
         });
 
         it(`Should not clear selection from keyboard shift-state on non-primary click`, () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
+
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
-
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
 
             cell = grid.getCellByColumn(2, 'ParentID');
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
@@ -954,9 +963,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -980,7 +989,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             for (let i = 3; i < 6; i++) {
                 cell = grid.getCellByColumn(1, grid.columns[i - 1].field);
-                UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -989,7 +998,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 2, 5);
             for (let i = 1; i < 6; i++) {
                 cell = grid.getCellByColumn(i, 'OnPTO');
-                UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -998,7 +1007,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 6, 2, 5);
             for (let i = 7; i > 0; i--) {
                 cell = grid.getCellByColumn(i, 'OnPTO');
-                UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -1007,7 +1016,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 1, 2, 5);
             for (let i = 5; i > 0; i--) {
                 cell = grid.getCellByColumn(0, grid.columns[i - 1].field);
-                UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowleft', gridContent, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -1024,7 +1033,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1032,7 +1041,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 0, 0, 0);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1055,14 +1064,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 7, 7, 5, 5);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 7, 7, 5, 5);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1076,14 +1085,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             const secondCell = grid.getCellByColumn(3, 'ParentID');
             const expectedData = [
                 { Name: 'Thomas Hardy' },
-                {  Name: 'Monica Reyes' },
+                { Name: 'Monica Reyes' },
                 { ParentID: 847 }
             ];
             UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', firstCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1112,7 +1121,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1141,14 +1150,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 1, 2);
             expect(firstCell.focused);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
             await wait(100);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyCellSelected(thirdCell);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 1, 1);
-            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
+            expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }]);
         }));
 
         it('Should be able to navigate with the keyboard when a range is selected by click ad holding ShiftKey', (async () => {
@@ -1163,7 +1172,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 2, 0, 2);
             expect(secondCell.focused);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1196,7 +1205,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(secondCell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1217,7 +1226,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1226,7 +1235,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 7, 2, 2);
 
             const lastCell = grid.getCellByColumn(7, 'Name');
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', lastCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', lastCell.nativeElement, true);
             await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
@@ -1243,7 +1252,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1263,7 +1272,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, false, true, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1282,7 +1291,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1302,7 +1311,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('home', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('home', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1311,7 +1320,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 0, 3);
 
             const lastCell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.triggerKeyDownWithBlur('arrowup', lastCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', lastCell.nativeElement, true);
             await wait(100);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(lastCell);
@@ -1328,7 +1337,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('end', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1355,7 +1364,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1368,7 +1377,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', row.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1377,7 +1386,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1386,7 +1395,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(4);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1395,7 +1404,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', row.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', row.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1421,7 +1430,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1429,7 +1438,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const row = grid.getRowByIndex(3);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', row.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1462,14 +1471,14 @@ describe('IgxGrid - Cell selection #grid', () => {
                 if (!obj) {
                     obj = grid.getRowByIndex(i);
                 }
-                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             cell = grid.getCellByColumn(10, 'Name');
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1504,10 +1513,10 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.getRowByIndex(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
+                            .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
                     }
                 }
-                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1517,7 +1526,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(5);
 
             cell = grid.getCellByColumn(10, 'ParentID');
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1531,10 +1540,10 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.getRowByIndex(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
+                            .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
                     }
                 }
-                UIInteractions.triggerKeyDownWithBlur('arrowup', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowup', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1544,8 +1553,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(4);
 
             const summaryCell = grid.summariesRowList.find(row => row.index === 3)
-            .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', summaryCell.nativeElement, true);
+                .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', summaryCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1580,10 +1589,10 @@ describe('IgxGrid - Cell selection #grid', () => {
                     obj = grid.getRowByIndex(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 0);
+                            .summaryCells.find(sCell => sCell.visibleColumnIndex === 0);
                     }
                 }
-                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1592,8 +1601,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 6, 7, 0, 0);
             for (let i = 0; i < 5; i++) {
                 const summaryCell = grid.summariesRowList.find(row => row.index === 8)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
-                UIInteractions.triggerKeyDownWithBlur('arrowright', summaryCell.nativeElement, true);
+                    .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
+                UIInteractions.triggerKeyDownEvtUponElem('arrowright', summaryCell.nativeElement, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1602,7 +1611,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 0);
             const sumCell = grid.summariesRowList.find(row => row.index === 8)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 5);
-            UIInteractions.triggerKeyDownWithBlur('arrowup', sumCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', sumCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1635,20 +1644,20 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 1, 3);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 1, 3);
             const selectedData = [
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
                 { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.sort({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             const filteredSelectedData = [
-                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
                 { ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') }
             ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 1, 3);
@@ -1674,11 +1683,11 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const selectedData = [
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false },
                 { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
-                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false},
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false}
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false },
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -1686,11 +1695,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const sortedData = [
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016'), Age: 27, OnPTO: false },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'), Age: 43, OnPTO: false},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'), Age: 43, OnPTO: false },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false },
                 { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 7, 0, 5);
@@ -1712,10 +1721,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.selectCellsRangeNoWait(fix, firstCell, secondCell);
             detect();
 
-            const selectedData = [ { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+            const selectedData = [{ ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+            { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+            { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 3, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
@@ -1723,10 +1732,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
-            const filteredSelectedData = [ { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+            const filteredSelectedData = [{ ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+            { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+            { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 3, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
@@ -1747,11 +1756,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.selectRange(range);
             fix.detectChanges();
             const selectedData = [
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011')},
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011') },
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 3);
@@ -1760,10 +1769,10 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
-            const filteredSelectedData = [ { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+            const filteredSelectedData = [{ ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+            { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+            { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 3);
@@ -1781,11 +1790,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             const range = { rowStart: 0, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
             const selectedData = [
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'),  Age: 43, OnPTO: false},
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true},
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 03 2011'), Age: 43, OnPTO: false },
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true },
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false}
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 5);
@@ -1816,8 +1825,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 0, 3);
             expect(grid.getSelectedData()).toEqual(selData);
@@ -1826,14 +1835,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             tick(16);
 
             const fData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 2, 0, 3);
             expect(grid.getSelectedData()).toEqual(fData);
         }));
 
-        it('Paging: selected range should be cleared on paging',  fakeAsync(() => {
+        it('Paging: selected range should be cleared on paging', fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
@@ -1843,10 +1852,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.selectRange(range);
             fix.detectChanges();
 
-            const selectedData = [{ ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            const selectedData = [{ ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+            { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+            { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
@@ -1861,7 +1870,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual([]);
         }));
 
-        it('Paging: selected range should be cleared when perPage items are changed',  fakeAsync(() => {
+        it('Paging: selected range should be cleared when perPage items are changed', fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
@@ -1873,8 +1882,8 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const selectedData = [
                 { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false}
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 5);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
@@ -1894,12 +1903,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.selectRange(range);
             fix.detectChanges();
 
-            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+            const selectedData = [{ ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+            { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+            { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 4, 0, 3);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 4, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const columnName = grid.getColumnByName('Name');
@@ -1922,8 +1931,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             expect(columnName.width).not.toEqual(initialWidth);
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 4, 0, 3);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 4, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData().length).toBe(selectedData.length);
             expect(grid.getSelectedData()).toEqual(selectedData);
         }));
@@ -1934,31 +1943,31 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const columnName = grid.getColumnByName('Name');
             columnName.hidden = true;
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014'), Age: 31},
+                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014'), Age: 31 },
                 { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014'), Age: 44 }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
             columnName.hidden = false;
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Hiding: when hide last column which is in selected range, selection range is changed', (async() => {
+        it('Hiding: when hide last column which is in selected range, selection range is changed', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
@@ -1968,11 +1977,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.selectRange(range);
             fix.detectChanges();
 
-            const selectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
+            const selectedData = [{ HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
             { HireDate: new Date('May 4, 2014'), Age: 44, OnPTO: true }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 3, 5);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 3, 3, 5);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 3, 5);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 3, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const columnName = grid.getColumnByName('OnPTO');
             columnName.hidden = true;
@@ -1980,11 +1989,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { HireDate: new Date('Sep 18, 2014'), Age: 31},
-                { HireDate: new Date('May 4, 2014'), Age: 44}
+                { HireDate: new Date('Sep 18, 2014'), Age: 31 },
+                { HireDate: new Date('May 4, 2014'), Age: 44 }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 3, 5);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 3, 3, 4);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 3, 5);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 3, 4);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
             columnName.hidden = false;
             fix.detectChanges();
@@ -1994,8 +2003,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 3, 5);
-            GridSelectionFunctions.verifyCellsRegionSelected(grid,  2, 3, 3, 5);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 3, 5);
+            GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 3, 5);
             expect(grid.getSelectedData()).toEqual(selectedData);
         }));
 
@@ -2005,26 +2014,26 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
             ];
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
 
             grid.columnList.forEach(col => col.hidden = true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual([]);
 
             grid.columnList.forEach(col => col.hidden = false);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(grid,  2, 3, 0, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Pinning: should be able to select cells from unpinned cols to pinned', (async() => {
+        it('Pinning: should be able to select cells from unpinned cols to pinned', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.dataRowList.first.virtDirRow.scrollTo(5);
             await wait(100);
@@ -2044,9 +2053,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { OnPTO: false, ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { OnPTO: true, ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { OnPTO: false, ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { OnPTO: false, ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { OnPTO: true, ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { OnPTO: false, ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 4);
@@ -2055,16 +2064,16 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31 },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014'), Age: 44 },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25 }
             ];
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 4);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
-        it('Pinning: should be able to select cells from unpinned cols to pinned', (async() => {
+        it('Pinning: should be able to select cells from unpinned cols to pinned', (async () => {
             const columnName = grid.getColumnByName('Age');
             const secondCol = grid.getColumnByName('OnPTO');
             secondCol.pinned = true;
@@ -2075,13 +2084,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            await GridSelectionFunctions.selectCellsRange(fix, grid.getCellByColumn(2, 'Age'),  grid.getCellByColumn(4, 'Name'));
+            await GridSelectionFunctions.selectCellsRange(fix, grid.getCellByColumn(2, 'Age'), grid.getCellByColumn(4, 'Name'));
             detect();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', Age: 31},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', Age: 44},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', Age: 25}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', Age: 31 },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', Age: 44 },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', Age: 25 }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 4);
@@ -2095,9 +2104,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2106,9 +2115,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, ParentID: 147, HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2116,7 +2125,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Pinning: selection should remains the same when unpin column from selected area', () => {
             const firstCol = grid.getColumnByName('ParentID');
-            const secondCol =  grid.getColumnByName('HireDate');
+            const secondCol = grid.getColumnByName('HireDate');
             firstCol.pinned = true;
             secondCol.pinned = true;
             fix.detectChanges();
@@ -2127,9 +2136,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ParentID: 147, HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, HireDate: new Date('May 4, 2014')},
-                { ParentID: 847,  HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 1);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2137,9 +2146,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelData = [
-                { HireDate: new Date('Sep 18, 2014'), ID: 317},
-                { HireDate: new Date('May 4, 2014'), ID: 225},
-                { HireDate: new Date('Dec 9, 2017'), ID: 663}
+                { HireDate: new Date('Sep 18, 2014'), ID: 317 },
+                { HireDate: new Date('May 4, 2014'), ID: 225 },
+                { HireDate: new Date('Dec 9, 2017'), ID: 663 }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 1);
             expect(grid.getSelectedData()).toEqual(newSelData);
@@ -2155,8 +2164,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2164,9 +2173,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2179,9 +2188,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2191,8 +2200,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2208,8 +2217,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2217,9 +2226,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')}
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2235,8 +2244,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2261,9 +2270,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
@@ -2281,9 +2290,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'));
             fix.detectChanges();
             const newSelectedData = [
-                { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2307,9 +2316,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2317,10 +2326,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2343,9 +2352,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2353,8 +2362,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.summaryPosition = 'top';
             fix.detectChanges();
             const newSelData = [
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelData);
@@ -2362,10 +2371,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.getColumnByName('Name').hasSummary = false;
             fix.detectChanges();
             const newSelectedData = [
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+                { ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 5, 1, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
@@ -2378,9 +2387,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2390,9 +2399,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2407,9 +2416,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelection = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007') }
             ];
 
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
@@ -2422,11 +2431,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let data = [
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false},
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
-                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false}
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false },
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009'), Age: 29, OnPTO: true },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false },
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 4, 1, 3);
@@ -2435,10 +2444,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             data = [
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false},
-                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false}
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011'), Age: 43, OnPTO: false },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014'), Age: 31, OnPTO: false },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017'), Age: 25, OnPTO: false },
+                { ID: 12, ParentID: 17, Name: 'Pedro Afonso', HireDate: new Date('Dec 18, 2007'), Age: 50, OnPTO: false }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 0, 4, 0, 5);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 1, 3);
@@ -2451,16 +2460,16 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
 
-            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
@@ -2470,22 +2479,22 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             selectedData = [
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')},
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')}
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') },
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false});
+            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false });
             fix.detectChanges();
 
             selectedData = [
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
-                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017')},
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
+                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017') },
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
@@ -2498,24 +2507,24 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
 
             const row = grid.getRowByIndex(2);
-            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
             selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
@@ -2535,10 +2544,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
@@ -2552,10 +2561,10 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 987, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Peter Lincoln', HireDate: new Date('Dec 9, 2017')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 987, ParentID: 847, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Paola Alicante', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Peter Lincoln', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
@@ -2580,7 +2589,6 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             expect(cell.editMode).toEqual(false);
             expect(cell.value).toMatch('No name');
-            expect(target.focused).toEqual(true);
             expect(target.selected).toEqual(false);
             expect(cell.selected).toEqual(true);
         });
@@ -2591,9 +2599,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
@@ -2623,9 +2631,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
@@ -2642,19 +2650,24 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Row Selection: selected range should be preserved when select row with space', () => {
             grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(2, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
-            const cell = grid.getCellByColumn(2, 'ID');
+
 
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
@@ -2673,9 +2686,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             detect();
 
             const selectedData = [
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ID: 663, ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
@@ -2708,9 +2721,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2734,9 +2747,9 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')},
-                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') },
+                { ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2749,21 +2762,21 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
             const row = grid.getRowByIndex(3);
-            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            row.update({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
             const newSelectedData = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2777,12 +2790,12 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.primaryKey = 'ID';
             fix.detectChanges();
 
-            grid.updateRow({ ID: 112, ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017')}, 225);
+            grid.updateRow({ ID: 112, ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017') }, 225);
             fix.detectChanges();
             const data = [
-                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017')},
-                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017')}
+                { ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ParentID: 147, Name: 'Ricardo Lalonso', HireDate: new Date('Dec 27, 2017') },
+                { ParentID: 847, Name: 'Elizabeth Richards', HireDate: new Date('Dec 9, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 1, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 1, 3);
@@ -2807,13 +2820,13 @@ describe('IgxGrid - Cell selection #grid', () => {
             const range = { rowStart: 1, rowEnd: 3, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
-            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false});
+            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
             let selectedData = [
-                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
-                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
-                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')}
+                { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009') },
+                { ID: 317, ParentID: 147, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },
+                { ID: 225, ParentID: 847, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 3, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
@@ -2822,20 +2835,20 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
-                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011')}
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
+                { ID: 475, ParentID: 147, Name: 'Michael Langdon', HireDate: new Date('Jul 3, 2011') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 3, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
-            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false});
+            grid.addRow({ ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017'), Age: 33, OnPTO: false });
             fix.detectChanges();
 
             selectedData = [
-                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016')},
-                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014')},
-                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017')}
+                { ID: 101, ParentID: 17, Name: 'Casey Harper', HireDate: new Date('Mar 19, 2016') },
+                { ID: 15, ParentID: 19, Name: 'Antonio Moreno', HireDate: new Date('May 4, 2014') },
+                { ID: 258, ParentID: 21, Name: 'Mario Lopez', HireDate: new Date('May 27, 2017') }
             ];
             GridSelectionFunctions.verifySelectedRange(grid, 1, 3, 0, 3);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
@@ -2880,7 +2893,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
-            expect(firstCell.focused).toBeTruthy();
+            expect(firstCell.active).toBeTruthy();
             expect(grid.selectedCells.length).toBe(0);
 
             UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
@@ -2909,33 +2922,33 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(rangeChangeSpy).toHaveBeenCalledTimes(0);
 
             cell = grid.getCellByColumn(2, 'ParentID');
-            expect(cell.focused).toBeTruthy();
+            expect(cell.active).toBeTruthy();
             GridSelectionFunctions.verifyCellSelected(cell, false);
             expect(grid.selectedCells.length).toBe(0);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 2, false);
             cell = grid.getCellByColumn(2, 'Name');
-            expect(cell.focused).toBeTruthy();
+            expect(cell.active).toBeTruthy();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(1, 'Name');
-            expect(cell.focused).toBeTruthy();
+            expect(cell.active).toBeTruthy();
             GridSelectionFunctions.verifyCellSelected(cell, false);
             expect(grid.selectedCells.length).toBe(0);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -2949,13 +2962,12 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should not select select a range with mouse dragging', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(0, 'ID');
-            const endCell =  grid.getCellByColumn(3, 'ID');
+            const startCell = grid.getCellByColumn(0, 'ID');
+            const endCell = grid.getCellByColumn(3, 'ID');
 
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
             detect();
 
-            expect(startCell.focused).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 3, 0, 0, false);
             GridSelectionFunctions.verifyCellSelected(startCell, false);
             GridSelectionFunctions.verifyCellSelected(endCell, false);
@@ -2988,16 +3000,16 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
-            expect(grid.getSelectedData()).toEqual([{Name: 'Thomas Hardy'}]);
+            expect(grid.getSelectedData()).toEqual([{ Name: 'Thomas Hardy' }]);
             expect(grid.selectedCells.length).toBe(1);
         });
 
         it('When change cell selection to multi it should be possible to select cells with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(0, 'ParentID');
-            const endCell =  grid.getCellByColumn(1, 'ParentID');
+            const startCell = grid.getCellByColumn(0, 'ParentID');
+            const endCell = grid.getCellByColumn(1, 'ParentID');
             const expectedData = [
-                { ParentID: 147},
+                { ParentID: 147 },
                 { ParentID: 147 }
             ];
 
@@ -3008,7 +3020,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
             detect();
 
-            expect(startCell.focused).toBe(true);
+            expect(startCell.active).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 1, 1, 1);
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -3062,7 +3074,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(1);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             expect(rangeChangeSpy).toHaveBeenCalledTimes(0);
-            expect(grid.getSelectedData()).toEqual([{ID: 475}]);
+            expect(grid.getSelectedData()).toEqual([{ ID: 475 }]);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
         });
 
@@ -3072,25 +3084,24 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             cell = grid.getCellByColumn(2, 'Name');
-            expect(cell.focused).toBeTruthy();
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{Name: 'Monica Reyes'}]);
+            expect(grid.getSelectedData()).toEqual([{ Name: 'Monica Reyes' }]);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 2, 2);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             cell = grid.getCellByColumn(2, 'ParentID');
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
+            expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }]);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 1, 1);
         });
 
@@ -3101,17 +3112,17 @@ describe('IgxGrid - Cell selection #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             cell = grid.getCellByColumn(2, 'ParentID');
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
+            expect(grid.getSelectedData()).toEqual([{ ParentID: 147 }]);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 1, 1);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
@@ -3119,26 +3130,28 @@ describe('IgxGrid - Cell selection #grid', () => {
             cell = grid.getCellByColumn(2, 'Name');
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{Name: 'Monica Reyes'}]);
+            expect(grid.getSelectedData()).toEqual([{ Name: 'Monica Reyes' }]);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 2, 2, 2);
         });
 
         it('Should not select select a range with mouse dragging', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(0, 'ID');
-            const endCell =  grid.getCellByColumn(1, 'ParentID');
+            const startCell = grid.getCellByColumn(0, 'ID');
+            const endCell = grid.getCellByColumn(1, 'ParentID');
+
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            fix.detectChanges();
 
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
             detect();
 
-            expect(startCell.focused).toBe(true);
             GridSelectionFunctions.verifyCellSelected(startCell);
             GridSelectionFunctions.verifyCellSelected(endCell, false);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 0, 1, false);
 
             expect(rangeChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{ID: 475}]);
+            expect(grid.getSelectedData()).toEqual([{ ID: 475 }]);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
         });
 
@@ -3159,11 +3172,11 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('When change cell selection to multi it should be possible to select cells with mouse dragging', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  grid.getCellByColumn(3, 'ParentID');
-            const endCell =  grid.getCellByColumn(2, 'Name');
+            const startCell = grid.getCellByColumn(3, 'ParentID');
+            const endCell = grid.getCellByColumn(2, 'Name');
             const expectedData = [
                 { ParentID: 147, Name: 'Monica Reyes' },
-                { ParentID: 847, Name: 'Laurence Johnson'}
+                { ParentID: 847, Name: 'Laurence Johnson' }
             ];
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.single);
@@ -3189,7 +3202,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('When change cell selection to none selected cells should be cleared', () => {
-            const cell =  grid.getCellByColumn(2, 'Name');
+            const cell = grid.getCellByColumn(2, 'Name');
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.single);
 
@@ -3213,17 +3226,17 @@ describe('IgxGrid - Cell selection #grid', () => {
                 selectedData = grid.getSelectedData();
             });
 
-            const cell =  grid.getCellByColumn(2, 'Name');
+            const cell = grid.getCellByColumn(2, 'Name');
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+            expect(selectedData[0]).toEqual({ 'Name': 'Monica Reyes' });
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(1);
-            expect(selectedData[0]).toEqual({'Name': 'Laurence Johnson'});
+            expect(selectedData[0]).toEqual({ 'Name': 'Laurence Johnson' });
         });
     });
 

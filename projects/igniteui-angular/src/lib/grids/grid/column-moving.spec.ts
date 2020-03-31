@@ -431,8 +431,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from 'ID' column
-            let cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            const cell = grid.getCellByColumn(0, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
             // step 2 - move that column
@@ -452,8 +452,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
 
             // step 3 - navigate right and verify cell selection is updated
-            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+            const gridContent = GridFunctions.getGridContent(fixture);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -464,8 +464,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from 'ID' column
-            let cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
             // step 2 - move that column
@@ -486,8 +486,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ID');
 
             // step 3 - navigate and verify cell selection is updated
-            cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+            const gridContent = GridFunctions.getGridContent(fixture);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -634,7 +634,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a cell from the 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            cell.activate(null);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 

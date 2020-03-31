@@ -13,7 +13,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent, IgxColumnComponent } from '../grids/grid';
-import { ControlsFunction } from './controls-functions.spec';
+import { ControlsFunction, BUTTON_DISABLED_CLASS } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -59,11 +59,15 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
+export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
 
@@ -78,8 +82,20 @@ export class GridFunctions {
         return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
     public static getGridDisplayContainer(fix): DebugElement {
-        const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
+        const gridBody = this.getGridBody(fix);
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
@@ -117,6 +133,26 @@ export class GridFunctions {
         return expectedLength;
     }
 
+    /**
+     * Focus the first cell in the grid
+     */
+    public static focusFirstCell(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
+    /**
+     * Focus the first cell in the grid
+     */
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        cell.activate(null);
+        fix.detectChanges();
+    }
+
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
         const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
@@ -152,7 +188,7 @@ export class GridFunctions {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -182,6 +218,10 @@ export class GridFunctions {
         return null;
     }
 
+    public static verifyMasterDetailRowFocused(row: HTMLElement, focused = true) {
+        expect(row.classList.contains(FOCUSED_DETAILS_ROW_CLASS)).toEqual(focused);
+    }
+
     public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
         const allExpanded = new Map<any, boolean>();
         data.forEach(item => {
@@ -204,19 +244,6 @@ export class GridFunctions {
 
         resolve();
     })
-
-    public static simulateDetailKeydown(grid: IgxGridComponent, masterRow: IgxGridRowComponent, keyName: string,
-                                        altKey = false, shiftKey = false, ctrlKey = false) {
-        const detailRow = GridFunctions.getMasterRowDetail(masterRow);
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
-        grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
-    }
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
         const rowDE = fix.debugElement.queryAll(By.directive(IgxGridRowComponent)).find(el => el.componentInstance === row);
@@ -245,8 +272,7 @@ export class GridFunctions {
     }
 
     public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
-        expect(groupRow.focused).toBe(focused);
-        expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
@@ -707,7 +733,7 @@ export class GridFunctions {
 
     /**
      * Gets the ESF icon when no filter is applied
-    */
+     */
     public static getExcelFilterIcon(fix: ComponentFixture<any>, columnField: string) {
         const columnHeader = GridFunctions.getColumnHeader(columnField, fix).nativeElement;
         return columnHeader.querySelector(ESF_FILTER_ICON);
@@ -715,7 +741,7 @@ export class GridFunctions {
 
     /**
      * Gets the ESF icon when filter is applied
-    */
+     */
     public static getExcelFilterIconFiltered(fix: ComponentFixture<any>, columnField: string) {
         const columnHeader = GridFunctions.getColumnHeader(columnField, fix).nativeElement;
         return columnHeader.querySelector(ESF_FILTER_ICON_FILTERED);
@@ -823,7 +849,7 @@ export class GridFunctions {
     /**
      * Click the pin/unpin icon in the ESF by specifying whether the icon is in the header
      * or at its default position (depending on the display density).
-    */
+     */
     public static clickPinIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader: boolean = true) {
         let pinUnpinIcon: any;
         if (isIconInHeader) {
@@ -842,7 +868,7 @@ export class GridFunctions {
     /**
      * Click the hide icon in the ESF by specifying whether the icon is in the header
      * or at its default position (depending on the display density).
-    */
+     */
     public static clickHideIconInExcelStyleFiltering(fix: ComponentFixture<any>, isIconInHeader: boolean = true) {
         let hideIcon: any;
         if (isIconInHeader) {
@@ -860,8 +886,8 @@ export class GridFunctions {
     }
 
     /**
-    * Click the sort ascending button in the ESF.
-    */
+     * Click the sort ascending button in the ESF.
+     */
     public static clickSortAscInExcelStyleFiltering(fix: ComponentFixture<any>) {
         const sortAscIcon: any = this.getIconFromButton('arrow_upwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortAscIcon.click();
@@ -877,7 +903,7 @@ export class GridFunctions {
 
     /**
      * Click the sort descending button in the ESF.
-    */
+     */
     public static clickSortDescInExcelStyleFiltering(fix: ComponentFixture<any>) {
         const sortDescIcon: any = this.getIconFromButton('arrow_downwards', GridFunctions.getExcelFilteringSortComponent(fix));
         sortDescIcon.click();
@@ -885,7 +911,7 @@ export class GridFunctions {
 
     /**
      * Click the move left button in the ESF.
-    */
+     */
     public static clickMoveLeftInExcelStyleFiltering(fix: ComponentFixture<any>) {
         const moveLeftIcon: any = this.getIconFromButton('arrow_back', GridFunctions.getExcelFilteringMoveComponent(fix));
         moveLeftIcon.click();
@@ -917,8 +943,8 @@ export class GridFunctions {
     }
 
     /**
-        * Gets the clear filter button in the ESF.
-       */
+     * Gets the clear filter button in the ESF.
+     */
     public static getClearFilterInExcelStyleFiltering(fix: ComponentFixture<any>, menu = null): HTMLElement {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
         const clearFilterContainer = excelMenu.querySelector('.igx-excel-filter__actions-clear');
@@ -929,7 +955,7 @@ export class GridFunctions {
 
     /**
      * Click the clear filter button in the ESF.
-    */
+     */
     public static clickClearFilterInExcelStyleFiltering(fix: ComponentFixture<any>, menu = null) {
         const clearIcon = GridFunctions.getClearFilterInExcelStyleFiltering(fix, menu);
         clearIcon.click();
@@ -937,14 +963,14 @@ export class GridFunctions {
 
     /**
      * returns the filter row debug element.
-    */
-   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+     */
+    public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
         return fix.debugElement.query(By.css(FILTER_UI_ROW));
-   }
+    }
 
     /**
      * Open filtering row for a column.
-    */
+     */
     public static clickFilterCellChip(fix, columnField: string) {
         const grid = fix.componentInstance.grid;
         grid.getColumnByName(columnField).filterCell.onChipClicked();
@@ -953,7 +979,7 @@ export class GridFunctions {
 
     /**
      * Click the filter chip for the provided column in order to open the filter row for it.
-    */
+     */
     public static clickFilterCellChipUI(fix, columnField: string) {
         const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         const headerGroup = headerGroups.find((hg) => hg.componentInstance.column.field === columnField);
@@ -965,7 +991,7 @@ export class GridFunctions {
     }
     /**
      * Presuming filter row is opened, click the filter condition chip based on ascending index (left to right).
-    */
+     */
     public static clickFilterConditionChip(fix: ComponentFixture<any>, index: number) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const conditionChips = GridFunctions.sortNativeElementsHorizontally(
@@ -975,7 +1001,7 @@ export class GridFunctions {
 
     /**
      * Presuming filter row is opened, click the inter-chip operator based on its index.
-    */
+     */
     public static clickChipOperator(fix: ComponentFixture<any>, index: number) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const allIcons = filterUIRow.queryAll(By.css('igx-icon')).map((icon) => icon.nativeElement);
@@ -987,7 +1013,7 @@ export class GridFunctions {
 
     /**
      * Presuming chip operator dropdown is opened, set the inter-chip operator value. (should be 'And' or 'Or')
-    */
+     */
     public static clickChipOperatorValue(fix: ComponentFixture<any>, operatorValue: string) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const operators = GridFunctions.sortNativeElementsVertically(
@@ -1006,7 +1032,7 @@ export class GridFunctions {
         return excelMenu;
     }
     public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const searchComp =  GridFunctions.getExcelStyleSearchComponent(fix, menu);
+        const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
@@ -1059,16 +1085,16 @@ export class GridFunctions {
     }
 
     public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
-       const header = this.getColumnHeader(columnField, fix);
-       header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
-       fix.detectChanges();
+        const header = this.getColumnHeader(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        fix.detectChanges();
     }
 
     public static clickColumnGroupHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
         const header = this.getColumnGroupHeaderCell(columnField, fix);
-        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
         fix.detectChanges();
-     }
+    }
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
@@ -1242,8 +1268,8 @@ export class GridFunctions {
     }
 
     /**
-    * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
-    */
+     * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
+     */
     public static clickAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick: boolean = false) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
         if (dblClick) {
@@ -1254,40 +1280,40 @@ export class GridFunctions {
     }
 
     /**
-    * Click the remove icon of the expression that is located on the provided 'path'.
-    */
+     * Click the remove icon of the expression that is located on the provided 'path'.
+     */
     public static clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
         const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
         ControlsFunction.clickChipRemoveButton(chip);
     }
 
     /**
-    * Click the edit icon of the expression that is located on the provided 'path'.
-    */
+     * Click the edit icon of the expression that is located on the provided 'path'.
+     */
     public static clickAdvancedFilteringTreeExpressionChipEditIcon(fix: ComponentFixture<any>, path: number[]) {
         const chipEditIcon = GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, path);
         chipEditIcon.click();
     }
 
     /**
-    * Click the add icon of the expression that is located on the provided 'path'.
-    */
+     * Click the add icon of the expression that is located on the provided 'path'.
+     */
     public static clickAdvancedFilteringTreeExpressionChipAddIcon(fix: ComponentFixture<any>, path: number[]) {
         const chipAddIcon = GridFunctions.getAdvancedFilteringTreeExpressionAddIcon(fix, path);
         chipAddIcon.click();
     }
 
     /**
-    * Click the operator line of the group that is located on the provided 'path'.
-    */
+     * Click the operator line of the group that is located on the provided 'path'.
+     */
     public static clickAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
         const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, path);
         operatorLine.click();
     }
 
     /**
-    * Click the column select for the expression that is currently in edit mode.
-    */
+     * Click the column select for the expression that is currently in edit mode.
+     */
     public static clickAdvancedFilteringColumnSelect(fix: ComponentFixture<any>) {
         const columnSelect = GridFunctions.getAdvancedFilteringColumnSelect(fix);
         const inputGroup = columnSelect.querySelector('igx-input-group');
@@ -1295,8 +1321,8 @@ export class GridFunctions {
     }
 
     /**
-    * Click the operator select for the expression that is currently in edit mode.
-    */
+     * Click the operator select for the expression that is currently in edit mode.
+     */
     public static clickAdvancedFilteringOperatorSelect(fix: ComponentFixture<any>) {
         const operatorSelect = GridFunctions.getAdvancedFilteringOperatorSelect(fix);
         const inputGroup = operatorSelect.querySelector('igx-input-group');
@@ -1304,9 +1330,9 @@ export class GridFunctions {
     }
 
     /**
-    * Click the value input for the expression that is currently in edit mode.
-    * (NOTE: The value input could be either an input group or a date picker.)
-    */
+     * Click the value input for the expression that is currently in edit mode.
+     * (NOTE: The value input could be either an input group or a date picker.)
+     */
     public static clickAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
         // Could be either an input group or a date picker.
         const valueInput = GridFunctions.getAdvancedFilteringValueInput(fix, dateType);
@@ -1314,9 +1340,9 @@ export class GridFunctions {
     }
 
     /**
-    * Click the the select dropdown's element that is positioned at the specified 'index'.
-    * (NOTE: This method presumes that the select dropdown is already opened.)
-    */
+     * Click the the select dropdown's element that is positioned at the specified 'index'.
+     * (NOTE: This method presumes that the select dropdown is already opened.)
+     */
     public static clickAdvancedFilteringSelectDropdownItem(fix: ComponentFixture<any>, index: number) {
         const selectDropdownItems = GridFunctions.sortNativeElementsVertically(
             Array.from(GridFunctions.getAdvancedFilteringSelectDropdownItems(fix)));
@@ -1325,16 +1351,16 @@ export class GridFunctions {
     }
 
     /**
-    * Click the commit button of the expression that is currently in edit mode.
-    */
+     * Click the commit button of the expression that is currently in edit mode.
+     */
     public static clickAdvancedFilteringExpressionCommitButton(fix: ComponentFixture<any>) {
         const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
         commitButton.click();
     }
 
     /**
-    * Click the close button of the expression that is currently in edit mode.
-    */
+     * Click the close button of the expression that is currently in edit mode.
+     */
     public static clickAdvancedFilteringExpressionCloseButton(fix: ComponentFixture<any>) {
         const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
         closeButton.click();
@@ -1392,8 +1418,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the expressions container that contains all groups and expressions.
-    */
+     * Get the expressions container that contains all groups and expressions.
+     */
     public static getAdvancedFilteringExpressionsContainer(fix: ComponentFixture<any>) {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
         const exprContainer = advFilterDialog.querySelector('.igx-advanced-filter__main');
@@ -1401,8 +1427,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the root group.
-    */
+     * Get the root group.
+     */
     public static getAdvancedFilteringTreeRootGroup(fix: ComponentFixture<any>) {
         const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
         const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
@@ -1410,9 +1436,9 @@ export class GridFunctions {
     }
 
     /**
-    * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
-    * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
-    */
+     * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
+     * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
+     */
     public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly: boolean = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
@@ -1421,9 +1447,9 @@ export class GridFunctions {
     }
 
     /**
-    * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
-    * or all of its child expressions in the hierarchy.
-    */
+     * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
+     * or all of its child expressions in the hierarchy.
+     */
     public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly: boolean = true) {
         const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
@@ -1432,9 +1458,9 @@ export class GridFunctions {
     }
 
     /**
-    * Get all child groups and expressions of the given 'group' by specifying whether to include its
-    * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
-    */
+     * Get all child groups and expressions of the given 'group' by specifying whether to include its
+     * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
+     */
     public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly: boolean = true) {
         const childGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(group, directChildrenOnly));
         const childExpressions = Array.from(GridFunctions.getAdvancedFilteringTreeChildExpressions(group, directChildrenOnly));
@@ -1442,13 +1468,13 @@ export class GridFunctions {
     }
 
     /**
-    * Get a specific item from the tree (could be a group or an expression)
-    * by specifying its hierarchical path (not including the root group).
-    * (Example: [2 ,1] will first get the third item of the root group,
-    *  and then it will get the second item of the root group's third item.)
-    * (NOTE: Only the items that are groups have children.)
-    * The returned element is the one that has been gotten last.
-    */
+     * Get a specific item from the tree (could be a group or an expression)
+     * by specifying its hierarchical path (not including the root group).
+     * (Example: [2 ,1] will first get the third item of the root group,
+     *  and then it will get the second item of the root group's third item.)
+     * (NOTE: Only the items that are groups have children.)
+     * The returned element is the one that has been gotten last.
+     */
     public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
         path: number[]) {
         let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
@@ -1461,8 +1487,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the operator line of the root group.
-    */
+     * Get the operator line of the root group.
+     */
     public static getAdvancedFilteringTreeRootGroupOperatorLine(fix: ComponentFixture<any>) {
         const rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
         const directOperatorLine = rootGroup.querySelector(':scope > .igx-filter-tree__line');
@@ -1470,8 +1496,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the operator line of the group that is located on the provided 'path'.
-    */
+     * Get the operator line of the group that is located on the provided 'path'.
+     */
     public static getAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
         const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
         const directOperatorLine = group.querySelector(':scope > .igx-filter-tree__line');
@@ -1479,8 +1505,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the underlying chip of the expression that is located on the provided 'path'.
-    */
+     * Get the underlying chip of the expression that is located on the provided 'path'.
+     */
     public static getAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[]) {
         const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
         const chip = treeItem.querySelector('igx-chip');
@@ -1488,8 +1514,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the action icons ('edit' and 'add') of the expression that is located on the provided 'path'.
-    */
+     * Get the action icons ('edit' and 'add') of the expression that is located on the provided 'path'.
+     */
     public static getAdvancedFilteringTreeExpressionActionsContainer(fix: ComponentFixture<any>, path: number[]) {
         const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
         const actionsContainer = treeItem.querySelector('.igx-filter-tree__expression-actions');
@@ -1497,8 +1523,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the edit icon of the expression that is located on the provided 'path'.
-    */
+     * Get the edit icon of the expression that is located on the provided 'path'.
+     */
     public static getAdvancedFilteringTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
         const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
         const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
@@ -1507,8 +1533,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the add icon of the expression that is located on the provided 'path'.
-    */
+     * Get the add icon of the expression that is located on the provided 'path'.
+     */
     public static getAdvancedFilteringTreeExpressionAddIcon(fix: ComponentFixture<any>, path: number[]) {
         const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
         const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
@@ -1517,10 +1543,10 @@ export class GridFunctions {
     }
 
     /**
-    * Get the adding buttons and the cancel button of a group by specifying the
-    * path of the group and the index position of the buttons container.
-    * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
-    */
+     * Get the adding buttons and the cancel button of a group by specifying the
+     * path of the group and the index position of the buttons container.
+     * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
+     */
     public static getAdvancedFilteringTreeGroupButtons(fix: ComponentFixture<any>, path: number[], buttonsIndex: number) {
         const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
@@ -1532,10 +1558,10 @@ export class GridFunctions {
     }
 
     /**
-    * Get the adding buttons and the cancel button of the root group by specifying the
-    * index position of the buttons container.
-    * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
-    */
+     * Get the adding buttons and the cancel button of the root group by specifying the
+     * index position of the buttons container.
+     * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
+     */
     public static getAdvancedFilteringTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
         const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
         const childrenContainer = group.querySelector('.igx-filter-tree__expression');
@@ -1547,8 +1573,8 @@ export class GridFunctions {
     }
 
     /**
-    * Get the initial group adding buttons when the dialog does not contain any filters.
-    */
+     * Get the initial group adding buttons when the dialog does not contain any filters.
+     */
     public static getAdvancedFilteringInitialAddGroupButtons(fix: ComponentFixture<any>) {
         const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
         const initialButtons = GridFunctions.sortNativeElementsHorizontally(
@@ -1780,6 +1806,23 @@ export class GridFunctions {
         return headerTitle.parent;
     }
 
+    public static getGridPaginator(grid: IgxGridComponent) {
+        return grid.nativeElement.querySelector(PAGER_CLASS);
+    }
+
+    public static getGridPageSelectElement(fix) {
+        return fix.debugElement.query(By.css('igx-select')).nativeElement;
+    }
+
+    public static clickOnPaginatorButton(btn: DebugElement) {
+        btn.triggerEventHandler('click', new Event('click'));
+    }
+
+    public static clickOnPageSelectElement(fix) {
+        const select = GridFunctions.getGridPageSelectElement(fix);
+        UIInteractions.simulateClickEvent(select);
+    }
+
     public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
         indicatorText = ['expand_more', 'chevron_right']) {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
@@ -1800,36 +1843,14 @@ export class GridFunctions {
         expandInd.dispatchEvent(new Event('click', {}));
     }
 
-    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string,
         altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        cellComp.dispatchEvent(keyboardEvent);
-        if (!altKey) {
-            cellComp.onBlur();
-        }
-    }
-
-    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        rowComp.onKeydown(keyboardEvent);
-        if (!altKey) {
-            rowComp.onBlur();
-        }
+        const gridContent = GridFunctions.getGridContent(fix);
+        UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
-        return  header.query(By.css(SORT_ICON_CLASS));
+        return header.query(By.css(SORT_ICON_CLASS));
     }
 
     public static clickHeaderSortIcon(header: DebugElement) {
@@ -1844,7 +1865,8 @@ export class GridSummaryFunctions {
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summaryRow = rowIndex ? GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex)
+            : GridSummaryFunctions.getRootSummaryRow(fix);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
@@ -1913,36 +1935,25 @@ export class GridSummaryFunctions {
     }
 
     public static verifySummaryCellActive(fix, row, cellIndex, active: boolean = true) {
-        const summaryRow =  typeof row === 'number' ?
+        const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
         const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
-    public static moveSummaryCell =
-        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow =  typeof row === 'number' ?
+    public static focusSummaryCell(fix, row, cellIndex) {
+        const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            resolve();
-        })
-
-    public static focusSummaryCell(fix, rowIndex, cellIndex) {
-            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.triggerEventHandler('focus', {});
-            fix.detectChanges();
-        }
+        const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+        UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+        fix.detectChanges();
+    }
 }
 export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
@@ -1956,7 +1967,6 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-        startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
         UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
@@ -2140,7 +2150,7 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnsSelected(columns: IgxColumnComponent[], selected = true) {
-        columns.forEach(c => this.verifyColumnSelected(c, selected ));
+        columns.forEach(c => this.verifyColumnSelected(c, selected));
     }
 
     public static verifyColumnGroupSelected(fixture: ComponentFixture<any>, column: IgxColumnGroupComponent, selected = true) {
@@ -2150,12 +2160,12 @@ export class GridSelectionFunctions {
     }
 
     public static verifyColumnHeaderHasSelectableClass(header: DebugElement, hovered = true) {
-         expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
+        expect(header.nativeElement.classList.contains(HOVERED_COLUMN_CLASS)).toEqual(hovered);
     }
 
     public static verifyColumnsHeadersHasSelectableClass(headers: DebugElement[], hovered = true) {
         headers.forEach(header => this.verifyColumnHeaderHasSelectableClass(header, hovered));
-   }
+    }
 
     public static verifyColumnAndCellsSelected(column: IgxColumnComponent, selected = true) {
         this.verifyColumnSelected(column, selected);
@@ -2164,7 +2174,7 @@ export class GridSelectionFunctions {
         });
     }
 
-    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey= false) {
+    public static clickOnColumnToSelect(column: IgxColumnComponent, ctrlKey = false, shiftKey = false) {
         const event = {
             shiftKey: shiftKey,
             ctrlKey: ctrlKey,
@@ -2174,3 +2184,4 @@ export class GridSelectionFunctions {
         column.headerCell.onClick(event);
     }
 }
+

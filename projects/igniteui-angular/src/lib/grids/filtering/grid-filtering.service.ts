@@ -18,7 +18,7 @@ import { IgxDatePipeComponent } from '../common/pipes';
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
 /**
- *@hidden
+ * @hidden
  */
 export class ExpressionUI {
     public expression: IFilteringExpression;
@@ -29,7 +29,7 @@ export class ExpressionUI {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {

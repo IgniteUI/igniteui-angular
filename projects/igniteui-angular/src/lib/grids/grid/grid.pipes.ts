@@ -15,7 +15,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridSort',
@@ -29,7 +29,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
-                     id: string, pipeTrigger: number): any[] {
+                     id: string, pipeTrigger: number, pinned?): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
@@ -38,14 +38,14 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions, sorting);
         }
-        grid.filteredSortedData = result;
+        grid.setFilteredSortedData(result, pinned);
 
         return result;
     }
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridGroupBy',
@@ -88,7 +88,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridPaging',
@@ -103,10 +103,10 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!this.gridAPI.grid.paging) {
             return collection;
         }
-
+        const _perPage = perPage - this.gridAPI.grid.pinnedRecordsCount;
         const state = {
             index: page,
-            recordsPerPage: perPage
+            recordsPerPage: _perPage
         };
         DataUtil.correctPagingState(state, collection.data.length);
 
@@ -123,7 +123,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridFiltering',
@@ -135,7 +135,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number) {
+        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number, pinned?) {
         const grid = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
@@ -148,13 +148,13 @@ export class IgxGridFilteringPipe implements PipeTransform {
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        grid.filteredData = result;
+        grid.setFilterData(result, pinned);
         return result;
     }
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'rowPinning',
@@ -164,16 +164,20 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
 
-    public transform(collection: any[] , id: string, pipeTrigger: number) {
+    public transform(collection: any[] , id: string, isPinned = false, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        const pinnedRows = grid.pinnedRecords;
-        if (pinnedRows.length === 0) {
-            return collection;
+
+        if (!grid.hasPinnedRecords) {
+            return isPinned ? [] : collection;
         }
 
         const result = collection.filter((value, index) => {
-            return pinnedRows.indexOf(value) === -1;
+            return  isPinned ? grid.isRecordPinned(value) : !grid.isRecordPinned(value);
         });
+        if (isPinned) {
+            // pinned records should be ordered as they were pinned.
+            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
+        }
         return result;
     }
 }

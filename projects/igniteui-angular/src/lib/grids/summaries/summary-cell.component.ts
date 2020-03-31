@@ -54,7 +54,7 @@ export class IgxSummaryCellComponent {
         return `${this.grid.id}_${this.rowIndex}_${ this.visibleColumnIndex}`;
     }
 
-    @HostListener('click')
+    @HostListener('pointerdown')
     public activate() {
         this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex};
         this.grid.cdr.detectChanges();
@@ -85,8 +85,8 @@ export class IgxSummaryCellComponent {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public get grid() {
         return (this.column.grid as any);
     }
