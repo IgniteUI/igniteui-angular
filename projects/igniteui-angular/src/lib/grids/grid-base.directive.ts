@@ -4638,7 +4638,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get outerWidth() {
-        return this.hasVerticalSroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
+        return this.hasVerticalScroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
     }
 
     /**
@@ -4731,7 +4731,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             width = this.getColumnWidthSum();
         }
 
-        if (this.hasVerticalSroll() && this.width !== null) {
+        if (this.hasVerticalScroll() && this.width !== null) {
             width -= this.scrollWidth;
         }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
@@ -4762,7 +4762,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public hasVerticalSroll() {
+    public hasVerticalScroll() {
         if (this._init) { return false; }
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
         return !!(this.calcWidth && this.dataView &&
@@ -4853,7 +4853,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         */
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
-        const hasScroll = this.hasVerticalSroll();
+        const hasScroll = this.hasVerticalScroll();
         this.calculateGridWidth();
         this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
@@ -4869,7 +4869,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.cdr.detectChanges();
         // in case scrollbar has appeared recalc to size correctly.
-        if (hasScroll !== this.hasVerticalSroll()) {
+        if (hasScroll !== this.hasVerticalScroll()) {
             this.calculateGridWidth();
             this.cdr.detectChanges();
         }
@@ -4892,7 +4892,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let width = this._width;
         if (width === null) {
             let currentWidth = this.calcWidth;
-            if (this.hasVerticalSroll()) {
+            if (this.hasVerticalScroll()) {
                 currentWidth += this.scrollWidth;
             }
             width = currentWidth + 'px';
@@ -4934,7 +4934,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let width = this.isPercentWidth ?
             this.calcWidth :
             parseInt(this.width, 10) || parseInt(this.hostWidth, 10) || this.calcWidth;
-        if (this.hasVerticalSroll() && !this.isPercentWidth) {
+        if (this.hasVerticalScroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
         if (this.pinning.columns === ColumnPinningPosition.End) {
