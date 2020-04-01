@@ -24,7 +24,7 @@ function getCurrentCellFromGrid(grid, rowIndex, cellIndex) {
     return gridCell;
 }
 
-fdescribe('IgxGrid - Grid Sorting #grid', () => {
+describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite();
     let fixture;
