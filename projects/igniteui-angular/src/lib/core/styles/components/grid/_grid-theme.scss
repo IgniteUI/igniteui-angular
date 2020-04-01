@@ -1078,7 +1078,7 @@
         border-bottom: none;
     }
 
-    %igx-grid__tr--pinned {       
+    %igx-grid__tr--pinned {
         position: relative;
         background: inherit;
         z-index: 10000;
@@ -2209,6 +2209,11 @@
                 margin: 0 rem(8px);
             }
         }
+    }
+
+    %igx-grid__filtering-cell--selected {
+        color: --var($theme, 'row-selected-text-color');
+        background: --var($theme, 'row-selected-cell-background');
     }
 
     %igx-grid__filtering-cell-indicator {
