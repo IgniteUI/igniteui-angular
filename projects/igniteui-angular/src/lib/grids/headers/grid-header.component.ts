@@ -122,7 +122,10 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get selectable() {
-        return  this.column.applySelectableClass && !this.column.selected && !this.grid.filteringService.isFilterRowVisible;
+        return this.grid.columnSelection !== 'none' &&
+            this.column.applySelectableClass &&
+            !this.column.selected &&
+            !this.grid.filteringService.isFilterRowVisible;
     }
 
     get selected() {
@@ -185,15 +188,19 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
-            } else if (this.column.selectable) {
-                if (!this.column.selected || ( this.grid.selectionService.getSelectedColumns().length > 1 && !event.ctrlKey)) {
-                    this.grid.selectionService.selectColumn(this.column.field, !event.ctrlKey, event);
+            } else if (this.grid.columnSelection !== 'none' && this.column.selectable) {
+                const clearSelection = this.grid.columnSelection === 'single' || !event.ctrlKey;
+                const rangeSelection = this.grid.columnSelection === 'multiple' && event.shiftKey;
+
+                if (!this.column.selected || (this.grid.selectionService.getSelectedColumns().length > 1 && clearSelection)) {
+                    this.grid.selectionService.selectColumn(this.column.field, clearSelection, rangeSelection, event);
                 } else {
                     this.grid.selectionService.deselectColumn(this.column.field, event);
                 }
             }
         }
     }
+
 
     public onFilteringIconClick(event) {
         event.stopPropagation();

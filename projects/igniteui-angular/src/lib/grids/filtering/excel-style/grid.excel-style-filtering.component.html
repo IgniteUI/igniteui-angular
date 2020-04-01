@@ -68,7 +68,7 @@
     <header class="igx-excel-filter__menu-header">
         <h4>{{ column.header || column.field }}</h4>
         <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
-            <button *ngIf="column.selectable" igxButton="icon"
+            <button *ngIf="grid.columnSelection !== 'none' && column.selectable" igxButton="icon"
             [displayDensity]="grid.displayDensity" (click)="onSelect()"
             tabindex="0" [ngClass]='selectedClass()'>
              <igx-icon fontSet="material">done</igx-icon>
@@ -108,7 +108,7 @@
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
         </div>
 
-        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
+        <div *ngIf="grid.columnSelection !== 'none' && column.selectable && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
         </div>
 

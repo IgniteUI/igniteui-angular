@@ -436,7 +436,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     public onSelect() {
         if (!this.column.selected) {
-            this.grid.selectionService.selectColumn(this.column.field);
+            this.grid.selectionService.selectColumn(this.column.field, this.grid.columnSelection === 'single');
         } else {
             this.grid.selectionService.deselectColumn(this.column.field);
         }

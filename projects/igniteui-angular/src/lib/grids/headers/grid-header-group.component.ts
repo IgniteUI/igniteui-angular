@@ -217,7 +217,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get selectable() {
         const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
-        return this.column.applySelectableClass
+        return this.grid.columnSelection !== 'none' &&
+            this.column.applySelectableClass
             && !this.selected && selectableChildren.length > 0
             && !this.grid.filteringService.isFilterRowVisible;
     }
@@ -226,7 +227,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get selected() {
-       return this.column.selected;
+        return this.column.selected;
     }
 
     /**
@@ -248,16 +249,18 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public groupClicked(event): void {
         const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
-        if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+        if (this.grid.columnSelection !== 'none' && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+            const clearSelection = this.grid.columnSelection === 'single' || !event.ctrlKey;
+            const rangeSelection = this.grid.columnSelection === 'multiple' && event.shiftKey;
             if (!this.selected) {
-                this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
             } else {
                 const selectedFields = this.grid.selectionService.getSelectedColumns();
                 if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
-                    || event.ctrlKey) {
+                    || !clearSelection) {
                     this.grid.selectionService.deselectColumns(columnsToSelect, event);
                 } else {
-                    this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                    this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
                 }
             }
         }
