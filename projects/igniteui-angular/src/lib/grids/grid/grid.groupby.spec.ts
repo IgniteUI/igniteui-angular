@@ -859,18 +859,18 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // collapse last group row
         let groupRow = grid.getRowByIndex(11);
-        groupRow.nativeElement.focus();
+        UIInteractions.simulateClickAndSelectCellEvent(groupRow);
         fix.detectChanges();
-        expect(groupRow.focused).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
+        GridFunctions.verifyGroupRowIsFocused(groupRow);
+        GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', true);
         fix.detectChanges();
         groupRow = grid.getRowByIndex(11);
-        expect(groupRow.focused).toBe(true);
+        GridFunctions.verifyGroupRowIsFocused(groupRow);
         // expand last group row
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+        GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown', true);
         fix.detectChanges();
         groupRow = grid.getRowByIndex(11);
-        expect(groupRow.focused).toBe(true);
+        GridFunctions.verifyGroupRowIsFocused(groupRow);
     });
 
     it('should allow scrolling to bottom after collapsing a few groups.', async () => {
@@ -1211,12 +1211,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         fix.detectChanges();
 
-        const rv = grid.getRowByKey(5).element.nativeElement.querySelectorAll(CELL_CSS_CLASS)[2];
         const cell = grid.getCellByKey(5, 'ProductName');
-
         cell.column.editable = true;
-        rv.dispatchEvent(new Event('focus'));
-        rv.dispatchEvent(new Event('dblclick'));
+        fix.detectChanges();
+
+        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
         await wait();
         fix.detectChanges();
 
@@ -1227,8 +1226,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         sendInput(input, 'NetAdvantage', fix);
         await wait();
-
-        UIInteractions.triggerKeyDownEvtUponElem('enter', editCellDom.nativeElement, true);
+        GridFunctions.simulateGridContentKeydown(fix, 'Enter');
         await wait(30);
         fix.detectChanges();
 

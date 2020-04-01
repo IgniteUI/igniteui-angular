@@ -766,13 +766,13 @@ describe('IgxGrid - Summaries #grid', () => {
         }));
 
         it('should be able to select summaries with arrow keys', async () => {
-            const gridContent = GridFunctions.getGridContent(fix);
+            const gridFooter = GridFunctions.getGridFooter(fix);
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.focusSummaryCell(fix, summaryRow, 0);
 
             for (let i = 0; i < 5; i++) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
-                UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
@@ -784,7 +784,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             for (let i = 5; i > 0; i--) {
                 GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, i);
-                UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
+                UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
@@ -796,10 +796,10 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
-            const gridContent = GridFunctions.getGridContent(fix);
+            const gridFooter = GridFunctions.getGridFooter(fix);
             GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
 
-            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -809,7 +809,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
 
-            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridFooter, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -821,15 +821,15 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('should not change active summary cell when press Arrow Down and Up', () => {
+            const gridFooter = GridFunctions.getGridFooter(fix);
             GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridFooter);
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
 
-            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', summaryCell);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridFooter);
             fix.detectChanges();
             GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
         });
@@ -956,7 +956,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             let summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', summaryCell);
+            GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0, false);
@@ -974,14 +974,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
-
-            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', summaryCell);
+            GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
             summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
-            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', summaryCell);
+            GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
             fix.detectChanges();
             cell = grid.getCellByColumn(2, 'ParentID');
             expect(cell.selected).toBe(true);
