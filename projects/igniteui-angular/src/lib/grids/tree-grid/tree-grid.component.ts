@@ -381,7 +381,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                flatData.push(record.data);
+                (this.isGhostRecord(record)) ? flatData.push(record.data.recordData) : flatData.push(record.data);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
@@ -640,6 +640,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             index: rowIndex,
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
+    }
+
+    /**
+     * Informs whether the record is a ghost, i.e. a pinned body instance.
+     * @param record
+     * @hidden @internal
+     */
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRec !== undefined;
     }
 
     /**

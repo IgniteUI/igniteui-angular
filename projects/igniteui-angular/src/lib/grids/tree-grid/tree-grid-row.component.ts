@@ -40,7 +40,9 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public set treeRow(value: ITreeGridRecord) {
         if (this._treeRow !== value) {
             this._treeRow = value;
-            this.rowData = this._treeRow.data;
+            this.rowData = this.grid.isGhostRecord(this._treeRow.data) ?
+                            this._treeRow.data.recordData :
+                            this._treeRow.data;
         }
     }
 

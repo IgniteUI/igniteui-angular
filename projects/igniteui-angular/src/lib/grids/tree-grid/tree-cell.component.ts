@@ -50,7 +50,6 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     @Input()
     showIndicator = false;
 
-
     /**
      * @hidden
      */
