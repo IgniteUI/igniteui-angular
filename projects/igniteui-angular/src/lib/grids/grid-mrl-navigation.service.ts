@@ -161,9 +161,11 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         if (!this.hasNextHorizontalPosition(previous, parent)) {
             return { row: this.activeNode.row, column: this.activeNode.column };
         }
-        let column = parent.children.filter(c => c.rowStart <= this.activeNode.layout.rowStart).find((col) => previous ?
-                col.visibleIndex < this.activeNode.column && this.rowEnd(col) > this.activeNode.layout.rowStart :
-                col.visibleIndex > this.activeNode.column && col.colStart > this.activeNode.layout.colStart);
+        const columns = parent.children.filter(c => c.rowStart <= this.activeNode.layout.rowStart);
+        let column = previous ?
+            columns.reverse().find(col => col.visibleIndex < this.activeNode.column && this.rowEnd(col) > this.activeNode.layout.rowStart) :
+            columns.find(col => col.visibleIndex > this.activeNode.column && col.colStart > this.activeNode.layout.colStart);
+
         if (!column || (previous && this.activeNode.layout.colStart === 1)) {
             const index = previous ? parent.visibleIndex - 1 : parent.visibleIndex + 1;
             const children = this.grid.columnList.find(cols => cols.columnLayout && cols.visibleIndex === index).children;
