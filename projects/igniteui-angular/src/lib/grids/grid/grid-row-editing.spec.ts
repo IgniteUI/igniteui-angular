@@ -1136,7 +1136,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             tick(16);
 
             const cell = grid.getCellByColumn(0, 'ProductName');
-            const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
+            const select = GridFunctions.getGridPageSelectElement(fix);
 
             cell.setEditMode(true);
             // cell.update('IG');
@@ -1168,7 +1168,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
                 const gridElement: HTMLElement = grid.nativeElement;
                 let cell = grid.getCellByColumn(3, 'ProductName');
-                const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
+                const select =  GridFunctions.getGridPageSelectElement(fix);
 
                 cell.setEditMode(true);
                 tick(16);

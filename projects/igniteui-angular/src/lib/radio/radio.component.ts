@@ -243,31 +243,31 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     @HostBinding('class.igx-radio--focused')
     public focused = false;
     /**
-     *@hidden
+     * @hidden
      */
     public inputId = `${this.id}-input`;
     /**
-     *@hidden
+     * @hidden
      */
     protected _value: any = null;
 
     constructor() { }
     /**
-     *@hidden
+     * @hidden
      */
     private _onTouchedCallback: () => void = noop;
     /**
-     *@hidden
+     * @hidden
      */
     private _onChangeCallback: (_: any) => void = noop;
     /**
-     *@hidden
+     * @hidden
      */
     public _onRadioChange(event) {
         event.stopPropagation();
     }
     /**
-     *@hidden
+     * @hidden
      */
     public _onRadioClick(event) {
         event.stopPropagation();
@@ -278,7 +278,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     public _onLabelClick() {
         this.select();
@@ -316,7 +316,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         return this.nativeRadio.nativeElement;
     }
     /**
-     *@hidden
+     * @hidden
      */
     public get labelClass(): string {
         switch (this.labelPosition) {
@@ -328,24 +328,24 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         }
     }
     /**
-     *@hidden
+     * @hidden
      */
     public onFocus() {
         this.focused = true;
     }
     /**
-     *@hidden
+     * @hidden
      */
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
     /**
-     *@hidden
+     * @hidden
      */
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
     /**
-     *@hidden
+     * @hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
