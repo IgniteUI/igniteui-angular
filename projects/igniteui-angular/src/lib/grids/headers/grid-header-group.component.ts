@@ -207,6 +207,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') || this.column.header;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
