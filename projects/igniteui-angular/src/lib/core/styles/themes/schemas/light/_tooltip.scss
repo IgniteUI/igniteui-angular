@@ -46,7 +46,10 @@ $_fluent-tooltip: extend(
     $_fluent-shape-tooltip,
     (
         background: (
-            igx-color: 'surface'
+            igx-color: ('grays', 900)
+        ),
+        text-color: (
+            igx-contrast-color: ('grays', 900)
         )
     )
 );
