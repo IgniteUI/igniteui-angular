@@ -1813,6 +1813,19 @@ export class GridFunctions {
             rowComp.onBlur();
         }
     }
+
+    public static getHeaderCellByIndex(fix: ComponentFixture<any>, index: number) {
+        return fix.debugElement.queryAll(By.css('igx-grid-header'))[index];
+    }
+
+    public static getHeaderSortIcon(header: DebugElement): DebugElement {
+        return  header.query(By.css(SORT_ICON_CLASS));
+    }
+
+    public static clickHeaderSortIcon(header: DebugElement) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        sortIcon.triggerEventHandler('click', new Event('click'));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {

@@ -11,6 +11,8 @@ import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -27,9 +29,11 @@ function getValueFromCellElement(cell) {
 }
 
 fdescribe('IgxGrid - Grid Sorting #grid', () => {
+
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
+
     beforeAll(async(() => {
 
         TestBed.configureTestingModule({
@@ -38,8 +42,7 @@ fdescribe('IgxGrid - Grid Sorting #grid', () => {
                 SortByParityComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        })
-        .compileComponents();
+        }).compileComponents();
     }));
 
     beforeEach(async(() => {
@@ -49,367 +52,368 @@ fdescribe('IgxGrid - Grid Sorting #grid', () => {
         grid.width = '800px';
     }));
 
-    it('Should sort grid ascending by column name', () => {
-        const currentColumn = 'Name';
-        const lastNameColumn = 'LastName';
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false});
-
-        fixture.detectChanges();
-
-        let expectedResult = 'ALex';
-        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
-        expectedResult = 'Smith';
-        expect(grid.getCellByColumn(0, lastNameColumn).value).toEqual(expectedResult);
-        expectedResult = 'Rick';
-        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
-        expectedResult = 'BRown';
-        expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual(expectedResult);
-
-        // Ignore case on sorting set to true
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true});
-        fixture.detectChanges();
-
-        expectedResult = 'ALex';
-        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
-    });
-
-    it('Should sort grid descending by column name', () => {
-        const currentColumn = 'Name';
-        // Ignore case on sorting set to false
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false});
-        fixture.detectChanges();
-
-        let expectedResult = 'Rick';
-
-        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
-        expectedResult = 'ALex';
-        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
-
-        // Ignore case on sorting set to true
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true});
-        fixture.detectChanges();
-
-        expectedResult = 'Rick';
-        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
-        expectedResult = 'ALex';
-        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).not.toEqual(expectedResult);
-
-    });
-
-    it('Should not sort grid when trying to sort by invalid column', () => {
-        const gridData = fixture.componentInstance.data;
-        const invalidColumn = 'Age';
-        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc, ignoreCase: false});
-
-        let expectedResult = 'Jane';
-        expect(grid.getCellByColumn(0, 'Name').value).toEqual(expectedResult);
-        expectedResult = 'Connor';
-        expect(grid.getCellByColumn(grid.data.length - 1, 'Name').value).toEqual(expectedResult);
-
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
-    });
-
-    it('Should sort grid by current column by expression (Ascending)', () => {
-        const currentColumn = 'ID';
-        grid.sortingExpressions = [{ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance() }];
-
-        fixture.detectChanges();
-
-        expect(grid.getCellByColumn(0, currentColumn).value).toEqual(1);
-    });
-
-    it('Should sort grid by current column by expression (Descending with ignoreCase)', () => {
-        const currentColumn = 'Name';
-
-        grid.sortingExpressions = [{fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance() }];
-
-        fixture.detectChanges();
-
-        const expectedResult = 'Alex';
-        expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
-    });
-
-    it('Should sort grid by multiple expressions and clear sorting through API', () => {
-        const firstColumn = 'ID';
-        const secondColumn = 'Name';
-        const thirdColumn = 'LastName';
-
-        grid.sortingExpressions = [
-            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true},
-            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
-        ];
-
-        fixture.detectChanges();
-
-        let expectedResult = 'ALex';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Rick';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(6);
-        expectedResult = 'Jones';
-        expect(grid.getCellByColumn(grid.data.length - 1 , thirdColumn).value).toEqual(expectedResult);
-
-        // Clear sorting on a column
-        grid.clearSort(firstColumn);
-        fixture.detectChanges();
-
-        expect(grid.sortingExpressions.length).toEqual(1);
-        expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
-
-        grid.sortingExpressions = [
-            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true},
-            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
-        ];
-        fixture.detectChanges();
-
-        expect(grid.sortingExpressions.length).toEqual(2);
-
-        // Clear sorting on all columns
-        grid.clearSort();
-        fixture.detectChanges();
-
-        expect(grid.sortingExpressions.length).toEqual(0);
-    });
-
-    it('Should sort grid by multiple expressions through API using ignoreCase for the second expression', () => {
-        const firstColumn = 'ID';
-        const secondColumn = 'Name';
-        const thirdColumn = 'LastName';
-        const exprs = [
-            { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
-            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true }
-        ];
-
-        grid.sortingExpressions = exprs;
-
-        fixture.detectChanges();
-        let expectedResult = 'ALex';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Smith';
-        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
-        expectedResult = 'Rick';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'BRown';
-        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
-
-        grid.clearSort();
-        fixture.detectChanges();
-
-        expect(grid.sortingExpressions.length).toEqual(0);
-
-        grid.sort(exprs);
-        fixture.detectChanges();
-
-        expectedResult = 'ALex';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Smith';
-        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
-        expectedResult = 'Rick';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'BRown';
-        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
-    });
-
-    // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
-    it(`Should sort grid by mixed valid and invalid expressions should update the
-            data only by valid ones (through API)`, () => {
-        const firstColumn = 'ID';
-        const secondColumn = 'Name';
-        const thirdColumn = 'LastName';
-        const invalidAndValidExp = [
-            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false },
-            {fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true }
-        ];
-
-        grid.sort(invalidAndValidExp);
-
-        fixture.detectChanges();
-
-        let expectedResult = 'Rick';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Jones';
-        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(0, firstColumn).value).toEqual(6);
-        expectedResult = 'ALex';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Smith';
-        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-        expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
-    });
-
-    // UI Tests
-    it('Should sort grid ascending by clicking once on first header cell UI', () => {
-        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
-
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-
-        const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
-        const firstRowSecondCell =  getCurrentCellFromGrid(grid, 0, 1);
-        let expectedResult = 'Brad';
-        expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
-        expectedResult = '1';
-        expect(getValueFromCellElement(firstRowFirstCell)).toEqual(expectedResult);
-
-        const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
-        const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
-        expectedResult = (fixture.componentInstance.data.length).toString();
-        expect(getValueFromCellElement(lastRowFirstCell)).toEqual(expectedResult);
-        expectedResult = 'Rick';
-        expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
-    });
-
-    it('Should sort grid descending by clicking twice on header cell UI', () => {
-        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
-
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-
-        const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
-        const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
-        let expectedResult = '7';
-        expect(getValueFromCellElement(firstRowFirstCell)).toEqual(expectedResult);
-        expectedResult = 'Rick';
-        expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
-
-        const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
-        const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
-        expectedResult = '1';
-        expect(getValueFromCellElement(lastRowFirstCell)).toEqual(expectedResult);
-        expectedResult = 'Brad';
-        expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
-    });
-
-    it('Should sort grid none when we click three time on header cell UI', () => {
-        const gridData = fixture.componentInstance.data;
-        const firstHeaderCell = fixture.debugElement.query(By.css('igx-grid-header'));
-
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-
-        const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
-        let expectedResult = 'Jane';
-        expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
-
-        const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
-        expectedResult = 'Connor';
-        expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
-
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
-    });
-
-    it('Should have a valid sorting icon when sorting using the API.', () => {
-        const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
-        fixture.detectChanges();
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true});
-        fixture.detectChanges();
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
-
-        grid.clearSort();
-        fixture.detectChanges();
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-    });
-
-    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
-        grid.allowFiltering = true;
-        fixture.detectChanges();
-
-        const initialChips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
-
-        initialChips[0].nativeElement.click();
-        fixture.detectChanges();
-
-        const filteringRow = fixture.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-        expect(filteringRow).toBeDefined();
-
-        const headers = fixture.debugElement.queryAll(By.css('igx-grid-header'));
-        headers[0].nativeElement.click();
-
-        expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
-
-        const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
-
-        sortingIcon.nativeElement.click();
-        sortingIcon.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
-
-        headers[1].nativeElement.click();
-        fixture.detectChanges();
-
-        expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
-    }));
-
-    it('Should disable sorting feature when using NoopSortingStrategy.', () => {
-        grid.sortStrategy = NoopSortingStrategy.instance();
-        fixture.detectChanges();
-
-        const gridData = fixture.componentInstance.data;
-        const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
-
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-
-        // Verify that the grid is NOT sorted.
-        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
-
-        clickCurrentRow(firstHeaderCell);
-        fixture.detectChanges();
-
-        // Verify that the grid is NOT sorted.
-        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
-    });
-
-    it(`Should allow sorting using a custom Sorting Strategy.`, () => {
-        fixture = TestBed.createComponent(SortByParityComponent);
-        grid = fixture.componentInstance.grid;
-        fixture.componentInstance.data.push(
-            { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
-            { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
-            { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
-        );
-        fixture.detectChanges();
-        grid.sort({
-            fieldName: 'ID',
-            dir: SortingDirection.Desc,
-            ignoreCase: false,
-            strategy: new SortByParityComponent()
+    describe('API tests', () => {
+
+        it('Should sort grid ascending by column name', () => {
+            const currentColumn = 'Name';
+            const lastNameColumn = 'LastName';
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+
+            fixture.detectChanges();
+
+            let expectedResult = 'ALex';
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+            expectedResult = 'Smith';
+            expect(grid.getCellByColumn(0, lastNameColumn).value).toEqual(expectedResult);
+            expectedResult = 'Rick';
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+            expectedResult = 'BRown';
+            expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual(expectedResult);
+
+            // Ignore case on sorting set to true
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expectedResult = 'ALex';
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
         });
-        fixture.detectChanges();
-        const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
-        const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
-        const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
-        const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
-        expect(isFirstHalfOdd).toEqual(true);
-        expect(isSecondHalfEven).toEqual(true);
+
+        it('Should sort grid descending by column name', () => {
+            const currentColumn = 'Name';
+            // Ignore case on sorting set to false
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+
+            let expectedResult = 'Rick';
+
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+            expectedResult = 'ALex';
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+
+            // Ignore case on sorting set to true
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+
+            expectedResult = 'Rick';
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(expectedResult);
+            expectedResult = 'ALex';
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).not.toEqual(expectedResult);
+
+        });
+
+        it('Should not sort grid when trying to sort by invalid column', () => {
+            const invalidColumn = 'Age';
+            grid.sort({ fieldName: invalidColumn, dir: SortingDirection.Desc, ignoreCase: false });
+
+            let expectedResult = 'Jane';
+            expect(grid.getCellByColumn(0, 'Name').value).toEqual(expectedResult);
+            expectedResult = 'Connor';
+            expect(grid.getCellByColumn(grid.data.length - 1, 'Name').value).toEqual(expectedResult);
+        });
+
+        it('Should sort grid by current column by expression (Ascending)', () => {
+            const currentColumn = 'ID';
+            grid.sortingExpressions = [{
+                fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            }];
+
+            fixture.detectChanges();
+
+            expect(grid.getCellByColumn(0, currentColumn).value).toEqual(1);
+        });
+
+        it('Should sort grid by current column by expression (Descending with ignoreCase)', () => {
+            const currentColumn = 'Name';
+
+            grid.sortingExpressions = [{
+                fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            }];
+
+            fixture.detectChanges();
+
+            const expectedResult = 'Alex';
+            expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
+        });
+
+        it('Should sort grid by multiple expressions and clear sorting through API', () => {
+            const firstColumn = 'ID';
+            const secondColumn = 'Name';
+            const thirdColumn = 'LastName';
+
+            grid.sortingExpressions = [
+                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
+            ];
+
+            fixture.detectChanges();
+
+            let expectedResult = 'ALex';
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'Rick';
+            expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(6);
+            expectedResult = 'Jones';
+            expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
+
+            // Clear sorting on a column
+            grid.clearSort(firstColumn);
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toEqual(1);
+            expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
+
+            grid.sortingExpressions = [
+                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
+            ];
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toEqual(2);
+
+            // Clear sorting on all columns
+            grid.clearSort();
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toEqual(0);
+        });
+
+        it('Should sort grid by multiple expressions through API using ignoreCase for the second expression', () => {
+            const firstColumn = 'ID';
+            const secondColumn = 'Name';
+            const thirdColumn = 'LastName';
+            const exprs = [
+                { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true }
+            ];
+
+            grid.sortingExpressions = exprs;
+
+            fixture.detectChanges();
+            let expectedResult = 'ALex';
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'Smith';
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expectedResult = 'Rick';
+            expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'BRown';
+            expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
+
+            grid.clearSort();
+            fixture.detectChanges();
+
+            expect(grid.sortingExpressions.length).toEqual(0);
+
+            grid.sort(exprs);
+            fixture.detectChanges();
+
+            expectedResult = 'ALex';
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'Smith';
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(5);
+            expectedResult = 'Rick';
+            expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'BRown';
+            expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
+        });
+
+        // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
+        it(`Should sort grid by mixed valid and invalid expressions should update the
+                data only by valid ones`, () => {
+            const firstColumn = 'ID';
+            const secondColumn = 'Name';
+            const thirdColumn = 'LastName';
+            const invalidAndValidExp = [
+                { fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false },
+                { fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+
+            grid.sort(invalidAndValidExp);
+
+            fixture.detectChanges();
+
+            let expectedResult = 'Rick';
+            expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'Jones';
+            expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(0, firstColumn).value).toEqual(6);
+            expectedResult = 'ALex';
+            expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
+            expectedResult = 'Smith';
+            expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
+            expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(5);
+        });
+
+        it(`Should allow sorting using a custom Sorting Strategy.`, () => {
+            fixture = TestBed.createComponent(SortByParityComponent);
+            grid = fixture.componentInstance.grid;
+            fixture.componentInstance.data.push(
+                { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
+                { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
+                { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
+            );
+            fixture.detectChanges();
+            grid.sort({
+                fieldName: 'ID',
+                dir: SortingDirection.Desc,
+                ignoreCase: false,
+                strategy: new SortByParityComponent()
+            });
+            fixture.detectChanges();
+            const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
+            const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
+            const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
+            const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
+            expect(isFirstHalfOdd).toEqual(true);
+            expect(isSecondHalfEven).toEqual(true);
+        });
+    });
+
+    describe('UI tests', () => {
+
+        it('Should sort grid ascending by clicking once on first header cell UI', () => {
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
+            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            let expectedResult = 'Brad';
+            expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
+            expectedResult = '1';
+            expect(getValueFromCellElement(firstRowFirstCell)).toEqual(expectedResult);
+
+            const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
+            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            expectedResult = (fixture.componentInstance.data.length).toString();
+            expect(getValueFromCellElement(lastRowFirstCell)).toEqual(expectedResult);
+            expectedResult = 'Rick';
+            expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
+        });
+
+        it('Should sort grid descending by clicking twice on sort icon UI', () => {
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
+            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            let expectedResult = '7';
+            expect(getValueFromCellElement(firstRowFirstCell)).toEqual(expectedResult);
+            expectedResult = 'Rick';
+            expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
+
+            const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
+            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            expectedResult = '1';
+            expect(getValueFromCellElement(lastRowFirstCell)).toEqual(expectedResult);
+            expectedResult = 'Brad';
+            expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
+        });
+
+        it('Should sort grid none when we click three time on header sort icon UI', () => {
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            let expectedResult = 'Jane';
+            expect(getValueFromCellElement(firstRowSecondCell)).toEqual(expectedResult);
+
+            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            expectedResult = 'Connor';
+            expect(getValueFromCellElement(lastRowSecondCell)).toEqual(expectedResult);
+
+        });
+
+        it('Should have a valid sorting icon when sorting using the API.', () => {
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+            const sortingIcon = GridFunctions.getHeaderSortIcon(firstHeaderCell);
+
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true });
+            fixture.detectChanges();
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true });
+            fixture.detectChanges();
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+
+            grid.clearSort();
+            fixture.detectChanges();
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+        });
+
+        it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
+            grid.allowFiltering = true;
+            fixture.detectChanges();
+
+            const fistChip = ControlsFunction.getAllChipsFromAnElement(fixture.debugElement)[0];
+
+            UIInteractions.clickElement(fistChip);
+            fixture.detectChanges();
+
+            const filteringRow = fixture.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            expect(filteringRow).toBeDefined();
+
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+            UIInteractions.clickElement(firstHeaderCell);
+
+            expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
+
+            const sortingIcon = GridFunctions.getHeaderSortIcon(firstHeaderCell);
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
+
+            const secondHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 1);
+            UIInteractions.clickElement(secondHeaderCell);
+            fixture.detectChanges();
+
+            expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
+        }));
+
+        it('Should disable sorting feature when using NoopSortingStrategy.', () => {
+            grid.sortStrategy = NoopSortingStrategy.instance();
+            fixture.detectChanges();
+
+            const gridData = fixture.componentInstance.data;
+            const firstHeaderCell = GridFunctions.getHeaderCellByIndex(fixture, 0);
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            // Verify that the grid is NOT sorted.
+            expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+            expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+
+            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            fixture.detectChanges();
+
+            // Verify that the grid is NOT sorted.
+            expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+            expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+        });
     });
 });
 
