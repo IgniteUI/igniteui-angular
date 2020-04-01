@@ -2,23 +2,17 @@
     height: 300px;
 }
 
-.preview.bottom {
-    background: url('/assets/images/rsrcs/toast-bg-bottom.svg') no-repeat;
-}
-
-
-.preview.middle {
-    background: url('/assets/images/rsrcs/toast-bg-middle.svg') no-repeat;
-}
-
-
-.preview.top {
-    background: url('/assets/images/rsrcs/toast-bg-top.svg') no-repeat;
-}
-
 .btn-group {
     display: flex;
     width: 300px;
     margin-top: 16px;
     justify-content: space-between;
+}
+
+.igx-toast--bottom {
+    margin-bottom: 16px;
+}
+
+.igx-toast--top {
+    margin-top: 16px;
 }
