@@ -152,6 +152,18 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * This method performs the collapsing of the pane
+     * @param pane
+     */
+    public onCollapsing(pane: IgxSplitterPaneComponent) {
+        if (!pane) {
+            return;
+        }
+        this.pane = pane;
+        this.pane.hidden = !this.pane.hidden;
+    }
+
+    /**
      * This method takes care for assigning an `order` property on each `IgxSplitterPaneComponent`.
      * @private
      * @return {void}@memberof SplitterComponent

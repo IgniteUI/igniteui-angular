@@ -5,6 +5,7 @@
                     [pane]="pane"
                     [siblings]='getSiblings(pane)'
                     (moveStart)="onMoveStart($event)"
-                    (moving)="onMoving($event)">
+                    (moving)="onMoving($event)"
+                    (collapse)="onCollapsing($event)">
     </igx-splitter-bar>
 </ng-container>

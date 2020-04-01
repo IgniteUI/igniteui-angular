@@ -50,6 +50,12 @@ export class IgxSplitBarComponent {
     public moving = new EventEmitter<number>();
 
     /**
+     * An event that is emitted when collapsing the pane
+     */
+    @Output()
+    public collapse = new EventEmitter<IgxSplitterPaneComponent>();
+
+    /**
      * Gets the cursor associated with the current `SplitBarComponent`.
      * @readonly
      * @type string
@@ -92,6 +98,15 @@ export class IgxSplitBarComponent {
      */
     private startPoint!: number;
 
+    get prevButtonHidden() {
+        const isPaneHidden = this.pane.hidden;
+        return isPaneHidden ? true : false;
+    }
+
+    get nextButtonHidden() {
+        const isSiblingHidden = this.siblings[0].hidden;
+        return isSiblingHidden ? true : false;
+    }
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
@@ -122,4 +137,24 @@ export class IgxSplitBarComponent {
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
+    public onCollapsing(event: any) {
+        const arrowElement = event.srcElement;
+        const direction = arrowElement.innerText === 'arrow_left' || arrowElement.innerText === 'arrow_drop_up' ? 0 : 1;
+        let _pane = null;
+        const sibling = this.siblings[0];
+        if (!direction) {
+            if (!this.pane.hidden || !sibling.hidden) {
+                if (sibling.hidden) {
+                    _pane = sibling;
+                } else {
+                    if (!this.pane.hidden) {
+                       _pane = this.pane;
+                    }
+                }
+            }
+        } else {
+            _pane = !this.pane.hidden ? sibling : this.pane;
+        }
+        this.collapse.emit(_pane);
+    }
 }

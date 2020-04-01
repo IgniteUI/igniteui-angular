@@ -75,7 +75,7 @@ export class IgxSplitterPaneComponent {
     public minHeight = 0;
 
     /**
-     * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `SplitPaneComponent`.
+     * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.max-height')
     @HostBinding('style.max-width')
@@ -91,6 +91,27 @@ export class IgxSplitterPaneComponent {
         const shrink = this.size !== 'auto' ? 0 : 1;
 
         return `${grow} ${shrink} ${this.size}`;
+    }
+
+    /**
+     * Sets/gets the 'display' property of the current `IgxSplitterPaneComponent`
+     */
+    @HostBinding('style.display')
+    public display = 'flex';
+
+    private _hidden = false;
+
+    /**
+     * Sets/gets whether current `IgxSplitterPanecomponent` is hidden
+     */
+    @Input()
+    public set hidden(value) {
+        this._hidden = value;
+        this.display = this._hidden ? 'none' : 'flex' ;
+    }
+
+    public get hidden() {
+        return this._hidden;
     }
 
     constructor(private el: ElementRef) { }
