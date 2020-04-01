@@ -1,17 +1,13 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
-import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
-import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -246,9 +242,8 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     describe('UI tests', () => {
 
         it('Should sort grid ascending by clicking once on first header cell UI', () => {
-            const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
             const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
@@ -263,11 +258,10 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         });
 
         it('Should sort grid descending by clicking twice on sort icon UI', () => {
-            const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
             const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
@@ -282,13 +276,12 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         });
 
         it('Should sort grid none when we click three time on header sort icon UI', () => {
-            const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
-            GridFunctions.clickHeaderSortIcon(firstHeaderCell);
+            GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
             const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);

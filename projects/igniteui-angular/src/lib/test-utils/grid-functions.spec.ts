@@ -939,6 +939,13 @@ export class GridFunctions {
     }
 
     /**
+     * returns the filter row debug element.
+     */
+   public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(FILTER_UI_ROW));
+    }
+
+    /**
      * Click the filter chip for the provided column in order to open the filter row for it.
     */
     public static clickFilterCellChipUI(fix, columnField: string) {
@@ -1051,6 +1058,12 @@ export class GridFunctions {
         const sortedNativeHeaders = GridFunctions.sortNativeElementsHorizontally(nativeHeaders);
         return sortedNativeHeaders[index].querySelector('.igx-grid__th-title');
     }
+
+    public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+        const header = this.getColumnHeader(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey}));
+        fix.detectChanges();
+     }
 
     public static getFilterChipsForColumn(columnField: string, fix: ComponentFixture<any>) {
         const columnHeader = this.getColumnHeader(columnField, fix);
