@@ -641,7 +641,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Moving', () => {
-        fit('should not be possible to drag move a column from another grid.', (async () => {
+        it('should not be possible to drag move a column from another grid.', (async () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
