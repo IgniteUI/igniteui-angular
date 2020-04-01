@@ -17,6 +17,10 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
  *
  * @igxModule IgxDateTimeEditorModule
  *
+ * @igxParent IgxInputGroup
+ *
+ * @igxTheme igx-input-theme
+ *
  * @igxKeywords date, time, editor
  *
  * @igxGroup Scheduling
