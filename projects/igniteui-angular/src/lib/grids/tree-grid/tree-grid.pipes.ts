@@ -54,13 +54,12 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         const result: ITreeGridRecord[] = [];
         const missingParentRecords: ITreeGridRecord[] = [];
         collection.forEach(row => {
-            const ghostRow = row.ghostRec !== undefined;
             const record: ITreeGridRecord = {
-                rowID: ghostRow ? this.getRowID(primaryKey, row.recordData) : this.getRowID(primaryKey, row),
+                rowID: this.getRowID(primaryKey, row),
                 data: row,
                 children: []
             };
-            const parent = ghostRow ? map.get(row.recordData[foreignKey]) : map.get(row[foreignKey]);
+            const parent = map.get(row[foreignKey]);
             if (parent) {
                 record.parent = parent;
                 parent.children.push(record);
@@ -68,8 +67,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 missingParentRecords.push(record);
             }
 
-            ghostRow ? map.set(row.recordData[primaryKey], record) :
-                map.set(row[primaryKey], record);
+            map.set(row[primaryKey], record);
         });
 
         missingParentRecords.forEach(record => {
@@ -92,7 +90,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             const record = collection[i];
             record.level = indentationLevel;
             record.expanded = this.gridAPI.get_row_expansion_state(record);
-            this.gridAPI.grid.isGhostRecord(record.data) ? flatData.push(record.data.recordData) : flatData.push(record.data);
+            flatData.push(record.data);
 
             if (record.children && record.children.length > 0) {
                 this.setIndentationLevels(id, record.children, indentationLevel + 1, flatData);
@@ -364,16 +362,18 @@ export class IgxTreeGridShadowRowsPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        this.designateDisabledRows(collection);
+        return collection;
+    }
 
-        const result = [];
-
-        collection.forEach(value => {
-            if (this.gridAPI.grid.isRecordPinned(value)) {
-                value = { recordData: value, ghostRec: true };
+    private designateDisabledRows(collection: ITreeGridRecord[]) {
+        collection.forEach(record => {
+            if (this.gridAPI.grid.isRecordPinned(record.data)) {
+                record.data = { recordData: record.data, ghostRec: true };
             }
-            result.push(value);
+            if (record.children && record.children.length > 0) {
+                this.designateDisabledRows(record.children);
+            }
         });
-
-        return result;
     }
 }
