@@ -19,10 +19,6 @@ export class ControlsFunction {
        return chip.querySelector(CHIP_REMOVE_BUTTON);
     }
 
-    public static getAllChipsFromAnElement(element: DebugElement): DebugElement[] {
-      return element.queryAll(By.directive(IgxChipComponent));
-   }
-
     public static clickChipRemoveButton(chip: HTMLElement) {
         const removeButton = ControlsFunction.getChipRemoveButton(chip);
         removeButton.click();
