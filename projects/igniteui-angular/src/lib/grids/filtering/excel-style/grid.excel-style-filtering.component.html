@@ -104,12 +104,12 @@
 
     <section class="igx-excel-filter__actions">
 
-        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
-            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
-        </div>
-
         <div *ngIf="column.movable">
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
+        </div>
+
+        <div *ngIf="column.selectable && grid.displayDensity==='comfortable'">
+            <ng-container *ngTemplateOutlet="selectingTemplate"></ng-container>
         </div>
 
         <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
