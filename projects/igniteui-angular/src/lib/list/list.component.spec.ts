@@ -701,10 +701,13 @@ describe('List', () => {
     it('should allow setting the index of list items', (async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
-        await wait(200);
+        await wait();
         fixture.componentInstance.igxFor.scrollTo(8);
-        fixture.detectChanges();
         await wait(200);
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const len = items.length;
         expect(items[0].nativeElement.textContent).toContain('3');
