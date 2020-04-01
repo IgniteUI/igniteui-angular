@@ -71,9 +71,10 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
             return collection;
         }
 
+        const _perPage = Math.max(0, perPage - this.gridAPI.grid.pinnedRecordsCount);
         const state = {
             index: page,
-            recordsPerPage: perPage
+            recordsPerPage: _perPage
         };
 
         const result: any[] = DataUtil.page(cloneArray(collection), state);
@@ -100,9 +101,11 @@ export class IgxGridHierarchicalRowPinning implements PipeTransform {
             return collection.filter(rec => grid.isRecordPinned(rec));
         }
 
-        const result = collection.map((value) => {
-            return grid.isRecordPinned(value) ? { recordRef: value, ghostRecord: true} : value;
-        });
-        return result;
+        if (grid.childLayoutKeys.length) {
+            return collection.map((rec) => {
+                return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
+            });
+        }
+        return collection.filter(rec => !grid.isRecordPinned(rec));
     }
 }

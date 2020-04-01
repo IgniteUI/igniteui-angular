@@ -45,7 +45,7 @@
 /// @prop {Map} edit-mode-color [igx-color: ('secondary', 500)] - The text color in edit mode.
 /// @prop {Map} edited-row-indicator [igx-color: ('grays', 400)] - The indicator's color of edited row.
 /// @prop {Map} cell-edited-value-color [igx-color: ('grays', 600)] - The color of cell edited value.
-/// @prop {Map} cell-ghost-copy-color [igx-color: ('grays', 600)] - The color of cell ghost text.
+/// @prop {Map} cell-disabled-color [igx-color: ('grays', 600)] - The color of cell ghost text.
 /// @prop {Map} resize-line-color [igx-color: ('secondary', 500)] - The table header resize line color.
 /// @prop {Map} drop-indicator-color [igx-color: ('secondary', 500)] - The color of the drop indicator.
 /// @prop {Map} grouparea-background [igx-color: ('grays', 100), hexrgba: #fff] - The grid group area background color.
@@ -222,7 +222,7 @@ $_light-grid: extend(
             igx-color: ('grays', 600)
         ),
 
-        cell-ghost-copy-color: (
+        cell-disabled-color: (
             igx-color: ('grays', 400)
         ),
 

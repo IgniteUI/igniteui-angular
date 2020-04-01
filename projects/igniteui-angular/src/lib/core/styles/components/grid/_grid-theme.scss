@@ -48,7 +48,7 @@
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
 /// @param {Color} $cell-editing-background [null] - The background color of the cell being edited.
 /// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
-/// @param {Color} $cell-ghost-copy-color [null] - The text color of a cell that is ghost of another row.
+/// @param {Color} $cell-disabled-color [null] - The text color of a cell that is ghost of another row.
 ///
 /// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
 /// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
@@ -156,7 +156,7 @@
     $cell-selected-text-color: null,
     $cell-editing-background: null,
     $cell-edited-value-color: null,
-    $cell-ghost-copy-color: null,
+    $cell-disabled-color: null,
 
     $edit-mode-color: null,
     $edited-row-indicator: null,
@@ -481,7 +481,7 @@
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
 
-        cell-ghost-copy-color: $cell-ghost-copy-color,
+        cell-disabled-color: $cell-disabled-color,
 
         resize-line-color: $resize-line-color,
 
@@ -1320,9 +1320,9 @@
         }
     }
 
-    %igx-grid__tr--ghost-copy {
+    %igx-grid__tr--disabled {
         %grid-cell-text {
-            color: --var($theme, 'cell-ghost-copy-color');
+            color: --var($theme, 'cell-disabled-color');
         }
     }
 

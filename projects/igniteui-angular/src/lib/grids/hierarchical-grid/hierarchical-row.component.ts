@@ -24,30 +24,15 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
 
-    protected _ghostRow = false;
     protected expanderClass = 'igx-grid__hierarchical-expander';
-
-    /**
-    * @hidden
-    */
-    @Input()
-    @HostBinding('class.igx-grid__tr--ghost-copy')
-    public set ghostRow(value: boolean) {
-        this.disabled = value;
-        this._ghostRow = value;
-    }
-
-    public get ghostRow() {
-        return this._ghostRow;
-    }
 
     /**
     * @hidden
     */
     public get expanderClassResolved() {
         return {
-            [this.expanderClass]: !this.pinned || this.ghostRow,
-            [`${this.expanderClass}--empty`]: this.pinned && !this.ghostRow
+            [this.expanderClass]: !this.pinned || this.disabled,
+            [`${this.expanderClass}--empty`]: this.pinned && !this.disabled
         };
     }
 
@@ -171,7 +156,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         if (this.grid.hasChildrenKey) {
             expandable = this.rowData[this.grid.hasChildrenKey];
         }
-        if (!expandable || (this.pinned && !this.ghostRow)) {
+        if (!expandable || (this.pinned && !this.disabled)) {
             return this.defaultEmptyTemplate;
         }
         if (this.expanded) {

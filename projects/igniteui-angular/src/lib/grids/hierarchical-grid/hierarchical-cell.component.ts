@@ -6,7 +6,6 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
-import { HierarchicalRowType } from './hierarchical-row.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,14 +20,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      */
     public get displayPinnedChip() {
-        return this.hierarchicalRow.pinned && this.hierarchicalRow.ghostRow && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
-    }
-
-    /**
-     * @hidden
-     */
-    public get hierarchicalRow(): HierarchicalRowType {
-        return this.row as HierarchicalRowType;
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
     }
 
     // protected hSelection;

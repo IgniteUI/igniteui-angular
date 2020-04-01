@@ -112,8 +112,8 @@
         <ng-template igxGridFor let-rowData let-rowIndex="index" [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridHierarchicalRowPinning:false:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
+        | gridHierarchicalRowPinning:false:pipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger"
@@ -128,8 +128,8 @@
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
-        <ng-template #hierarchical_record_template let-rowIndex="index" let-ghost="ghostRow" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [ghostRow]="ghost" [rowData]="rowData" #row>
+        <ng-template #hierarchical_record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>

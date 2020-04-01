@@ -358,8 +358,8 @@
         @extend %igx-grid__td--editing !optional;
     }
 
-    @include e(tr, $m: ghost-copy) {
-        @extend %igx-grid__tr--ghost-copy !optional;
+    @include e(tr, $m: disabled) {
+        @extend %igx-grid__tr--disabled !optional;
     }
 
     @include e(td, $m: number) {
