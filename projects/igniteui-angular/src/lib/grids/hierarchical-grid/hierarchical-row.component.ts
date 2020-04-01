@@ -27,8 +27,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     protected expanderClass = 'igx-grid__hierarchical-expander';
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public get expanderClassResolved() {
         return {
             [this.expanderClass]: !this.pinned || this.disabled,

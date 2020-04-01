@@ -84,7 +84,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridHierarchicalRowPinning',
