@@ -130,6 +130,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
     }
 
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') ||
+            this.column.header || this.column.field;
+    }
+
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 
