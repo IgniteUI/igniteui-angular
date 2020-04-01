@@ -12,8 +12,8 @@ import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
-import { ControlsFunction } from './controls-functions.spec';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent, IgxColumnComponent } from '../grids/grid';
+import { ControlsFunction, BUTTON_DISABLED_CLASS } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -60,6 +60,11 @@ const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const DISPLAY_CONTAINER = 'igx-display-container';
+const SORT_ICON_CLASS = '.sort-icon';
+const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
+const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
+const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
 
@@ -1744,6 +1749,23 @@ export class GridFunctions {
         return headerTitle.parent;
     }
 
+    public static getGridPaginator(grid: IgxGridComponent) {
+        return grid.nativeElement.querySelector(PAGER_CLASS);
+    }
+
+    public static getGridPageSelectElement(fix) {
+        return fix.debugElement.query(By.css('igx-select')).nativeElement;
+    }
+
+    public static clickOnPaginatorButton(btn: DebugElement) {
+        btn.triggerEventHandler('click', new Event('click'));
+    }
+
+    public static clickOnPageSelectElement(fix) {
+        const select = GridFunctions.getGridPageSelectElement(fix);
+        UIInteractions.simulateClickEvent(select);
+    }
+
     public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
         indicatorText = ['expand_more', 'chevron_right']) {
         const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
@@ -2088,3 +2110,4 @@ export class GridSelectionFunctions {
         (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
     }
 }
+

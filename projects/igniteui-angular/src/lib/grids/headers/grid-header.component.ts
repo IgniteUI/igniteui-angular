@@ -112,6 +112,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         return this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
     }
 
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') ||
+            this.column.header || this.column.field;
+    }
+
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 

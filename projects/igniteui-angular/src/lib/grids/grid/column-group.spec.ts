@@ -1569,6 +1569,23 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         expect(grid.columnList.length).toEqual(10);
     });
+
+    it('should set title attribute on column group header spans', () => {
+        const fixture = TestBed.createComponent(ColumnGroupTestComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const generalGroup = grid.columnList.find(c => c.header === 'General Information');
+        generalGroup.elementRef.nativeElement.title = 'General Information Title';
+        fixture.detectChanges();
+
+        const headers = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
+        const generalHeader = headers.find(h => h.nativeElement.textContent === 'General Information');
+        const addressHeader = headers.find(h => h.nativeElement.textContent === 'Address Information');
+
+        expect(generalHeader.nativeElement.firstElementChild.title).toBe('General Information Title');
+        expect(addressHeader.nativeElement.firstElementChild.title).toBe('Address Information');
+    });
 });
 
 @Component({
