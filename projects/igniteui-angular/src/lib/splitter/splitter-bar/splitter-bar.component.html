@@ -1,15 +1,11 @@
-<div class="igx-splitter__bar" [style.flex-direction]="direction" igxDrag [ghost]="false"
-(dragStart)='onDragStart($event)'
-(dragMove)="onDragMove($event)">
-    <div class="igx-splitter-bar-expander">
-        <igx-icon fontSet="material">{{collapsePrevIcon}}</igx-icon>
-    </div>    
-    <div class="igx-splitter__bar-handle" [style.cursor]='cursor'
-    [class.igx-splitter__handle-vertical]='type === 0'
-    [class.igx-splitter__handle-horizontal]='type === 1'
-    igxDragHandle
-    ></div>
-    <div class="igx-splitter-bar-expander">
-        <igx-icon fontSet="material">{{collapseNextIcon}}</igx-icon>
-    </div>
+<div class="igx-splitter-bar"
+    [class.igx-splitter-bar--vertical]='type === 0'
+    igxDrag
+    [ghost]="false"
+    (dragStart)='onDragStart($event)'
+    (dragMove)="onDragMove($event)"
+>
+    <div class="igx-splitter-bar__expander--start"></div>
+    <div class="igx-splitter-bar__handle" igxDragHandle></div>
+    <div class="igx-splitter-bar__expander--end"></div>
 </div>

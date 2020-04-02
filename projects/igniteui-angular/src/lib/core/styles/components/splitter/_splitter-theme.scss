@@ -4,7 +4,6 @@
     $palette: $default-palette,
     $schema: $light-schema,
     $elevations: $elevations,
-
     $border-radius: null,
     $button-shadow: null,
 ) {
@@ -26,12 +25,11 @@
 @mixin igx-splitter($theme) {
     @include igx-root-css-vars($theme);
 
-    
     $splitter-color: rgba(189, 189, 189, .8);
     $splitter-border-width: 1px;
     $splitter-border-style: solid;
     $splitter-border-color: ($splitter-color);
-    $splitter-indicator-size: .125rem;
+    $splitter-indicator-size: rem(16px);
 
     %igx-splitter-bar {
         display: flex;
@@ -42,26 +40,65 @@
         border-width: $splitter-border-width;
         border-style: $splitter-border-style;
         border-color: $splitter-border-color;
-    
-        .igx-icon {
+
+        igx-icon {
             color: white;
         }
     }
 
-    %igx-splitter-bar-handle {
-        margin: $splitter-indicator-size;
-        background: white;
+    %igx-splitter-bar--vertical {
+        flex-direction: column;
+        height: 100%;
     }
 
-    %igx-splitter-handle-vertical {
-        height: 25%;
-        width: 100%;
-        margin: $splitter-indicator-size;
+    %igx-splitter-handle {
         background: white;
+        border-radius: 2px;
     }
-    
-    %igx-splitter-handle-horizontal {
-        height: 100%;
+
+    %igx-splitter-handle--horizontal {
+        cursor: row-resize;
         width: 25%;
+        height: 4px;
+        margin: 0 48px;
+    }
+
+    %igx-splitter-handle--vertical {
+        cursor: col-resize;
+        width: 4px;
+        height: 25%;
+        margin: 48px 0;
+    }
+
+    %igx-splitter-expander {
+        position: relative;
+        width: 0;
+        height: 0;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        cursor: pointer;
+    }
+
+    %igx-splitter-expander--start {
+        border-bottom: 4px solid white;
+    }
+
+    %igx-splitter-expander--end {
+        border-bottom: unset;
+        border-top: 4px solid white;
+    }
+
+    %igx-splitter-expander--start-vertical {
+        border-top: 4px solid transparent;
+        border-right: 4px solid white;
+        border-bottom: 4px solid transparent;
+        border-left: unset;
+    }
+
+    %igx-splitter-expander--end-vertical {
+        border-top: 4px solid transparent;
+        border-right: unset;
+        border-bottom: 4px solid transparent;
+        border-left: 4px solid white;
     }
 }

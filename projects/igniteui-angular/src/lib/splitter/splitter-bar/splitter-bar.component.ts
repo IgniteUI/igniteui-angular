@@ -50,42 +50,6 @@ export class IgxSplitBarComponent {
     public moving = new EventEmitter<number>();
 
     /**
-     * Gets the cursor associated with the current `SplitBarComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitBarComponent
-     */
-    public get cursor(): string {
-        return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
-    }
-
-    /**
-     * Sets/gets the `display` property of the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
-     */
-    @HostBinding('style.display')
-    public display = 'flex';
-
-    /**
-     * Gets the `flex-direction` property of the current `SplitBarComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitBarComponent
-     */
-    public get direction(): string {
-        return this.type === SplitterType.Horizontal ? 'column' : 'row';
-    }
-
-    get collapseNextIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_right' : 'arrow_drop_down';
-    }
-
-    get collapsePrevIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_left' : 'arrow_drop_up';
-    }
-
-
-    /**
      * A temporary holder for the pointer coordinates.
      * @private
      * @memberof SplitBarComponent
@@ -121,5 +85,4 @@ export class IgxSplitBarComponent {
         const relatedTabs = [this.pane, ... this.siblings];
         return !!relatedTabs.find(x => x.resizable === false);
     }
-
 }
