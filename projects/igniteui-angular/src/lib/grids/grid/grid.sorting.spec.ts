@@ -344,6 +344,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+            // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
@@ -351,6 +352,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             // Verify that the grid is NOT sorted.
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+                        // tslint:disable-next-line: max-line-length
             expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
         });
     });
