@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 
 /**
  * Provides reference to `SplitPaneComponent` component.
@@ -113,6 +113,12 @@ export class IgxSplitterPaneComponent {
     public get hidden() {
         return this._hidden;
     }
+
+    /**
+     * Event fired when collapsing and changing the hidden state of the current pane
+     */
+    @Output()
+    public onPaneToggle = new EventEmitter<IgxSplitterPaneComponent>();
 
     constructor(private el: ElementRef) { }
 }

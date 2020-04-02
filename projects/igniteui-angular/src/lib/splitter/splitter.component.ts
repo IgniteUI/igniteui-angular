@@ -159,8 +159,8 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (!pane) {
             return;
         }
-        this.pane = pane;
-        this.pane.hidden = !this.pane.hidden;
+        pane.hidden = !pane.hidden;
+        pane.onPaneToggle.emit(pane);
     }
 
     /**
