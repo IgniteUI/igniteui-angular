@@ -50,48 +50,6 @@ export class IgxSplitBarComponent {
     public moving = new EventEmitter<number>();
 
     /**
-     * An event that is emitted when collapsing the pane
-     */
-    @Output()
-    public collapse = new EventEmitter<IgxSplitterPaneComponent>();
-
-    /**
-     * Gets the cursor associated with the current `SplitBarComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitBarComponent
-     */
-    public get cursor(): string {
-        return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
-    }
-
-    /**
-     * Sets/gets the `display` property of the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
-     */
-    @HostBinding('style.display')
-    public display = 'flex';
-
-    /**
-     * Gets the `flex-direction` property of the current `SplitBarComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitBarComponent
-     */
-    public get direction(): string {
-        return this.type === SplitterType.Horizontal ? 'column' : 'row';
-    }
-
-    get collapseNextIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_right' : 'arrow_drop_down';
-    }
-
-    get collapsePrevIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_left' : 'arrow_drop_up';
-    }
-
-
-    /**
      * A temporary holder for the pointer coordinates.
      * @private
      * @memberof SplitBarComponent
@@ -135,26 +93,5 @@ export class IgxSplitBarComponent {
     protected get resizeDisallowed() {
         const relatedTabs = [this.pane, ... this.siblings];
         return !!relatedTabs.find(x => x.resizable === false);
-    }
-
-    public onCollapsing(event: any) {
-        const arrowElement = event.srcElement;
-        const direction = arrowElement.innerText === 'arrow_left' || arrowElement.innerText === 'arrow_drop_up' ? 0 : 1;
-        let _pane = null;
-        const sibling = this.siblings[0];
-        if (!direction) {
-            if (!this.pane.hidden || !sibling.hidden) {
-                if (sibling.hidden) {
-                    _pane = sibling;
-                } else {
-                    if (!this.pane.hidden) {
-                       _pane = this.pane;
-                    }
-                }
-            }
-        } else {
-            _pane = !this.pane.hidden ? sibling : this.pane;
-        }
-        this.collapse.emit(_pane);
     }
 }
