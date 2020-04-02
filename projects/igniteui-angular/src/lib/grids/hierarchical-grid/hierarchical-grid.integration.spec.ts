@@ -236,9 +236,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             const childHeaders = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'));
-            childHeaders[0].nativeElement.click();
+            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
             fixture.detectChanges();
-            childHeaders[0].nativeElement.click();
+            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
             fixture.detectChanges();
 
             expect(childGrid.dataRowList.first.cells.first.value).toBe('09');
