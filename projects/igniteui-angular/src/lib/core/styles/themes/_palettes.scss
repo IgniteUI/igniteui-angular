@@ -51,11 +51,11 @@ $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 /// Default dark palette
 /// @type {Map}
 /// @group palettes
-$default-dark-palette: extend(
-    $default-palette,
-    (
-        surface: (500: #222)
-    )
+$default-dark-palette: igx-palette(
+    $primary: igx-color($default-palette, 'primary'),
+    $secondary: igx-color($default-palette, 'secondary'),
+    $surface: #222,
+    $grays: #fff
 ) !default;
 
 /// Global Overlay Color
