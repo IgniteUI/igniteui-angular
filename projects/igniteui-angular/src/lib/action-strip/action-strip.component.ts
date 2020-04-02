@@ -4,6 +4,7 @@ import { IgxGridActionsComponent } from './grid-actions/grid-actions.component';
 import { IgxDropDownModule } from '../drop-down';
 import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 
 let NEXT_ID = 0;
 
@@ -70,20 +71,28 @@ export class IgxActionStripComponent {
     public context;
 
     @ContentChild(IgxGridActionsComponent, { static: true }) public gridEditingActions: IgxGridActionsComponent;
+    @ContentChild(IgxGridPinningActionsComponent, { static: true }) public gridPinningActions: IgxGridPinningActionsComponent;
 
     show(context) {
         this.context = context;
         this.hidden = false;
         this.context = context;
         this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
-        if (this.gridEditingActions) {
-            this.gridEditingActions.context = this.context;
-        }
+        this.sendContext();
     }
 
     hide() {
         this.hidden = true;
         this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
+    }
+
+    private sendContext() {
+        if (this.gridEditingActions) {
+            this.gridEditingActions.context = this.context;
+        }
+        if (this.gridPinningActions) {
+            this.gridPinningActions.context = this.context;
+        }
     }
 }
 
@@ -91,8 +100,8 @@ export class IgxActionStripComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxActionStripComponent, IgxGridActionsComponent],
-    exports: [IgxActionStripComponent, IgxGridActionsComponent],
+    declarations: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent],
+    exports: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent],
     imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
 })
 export class IgxActionStripModule { }

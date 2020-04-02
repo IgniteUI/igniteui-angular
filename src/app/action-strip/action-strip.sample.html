@@ -23,6 +23,46 @@
         <article>
             <div class="sample-column">
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                    [rowEditable]="true" [primaryKey]="'ID'" (mouseleave)="actionstrip1.hide()">
+                    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        <ng-template igxCell let-cell="cell" let-val>
+                            <div (mouseover)="actionstrip1.show(cell.row)">
+                                <span>{{val}}</span>
+                            </div>
+                        </ng-template>
+                    </igx-column>
+
+                    <igx-action-strip #actionstrip1>
+                        <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
+                    </igx-action-strip>
+                </igx-grid>
+            </div>
+        </article>
+
+        <article>
+            <div class="sample-column">
+                <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                    (mouseleave)="actionstrip2.hide()">
+                    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        <ng-template igxCell let-cell="cell" let-val>
+                            <div (mouseover)="actionstrip2.show(cell)">
+                                <span>{{val}}</span>
+                            </div>
+                        </ng-template>
+                    </igx-column>
+
+                    <igx-action-strip #actionstrip2>
+                        <igx-grid-pinning-actions [grid]="grid2"></igx-grid-pinning-actions>
+                    </igx-action-strip>
+                </igx-grid>
+            </div>
+        </article>
+
+        <article>
+            <div class="sample-column">
+                <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'" (mouseleave)="actionstripdd.hide()">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
@@ -34,7 +74,7 @@
                     </igx-column>
 
                     <igx-action-strip #actionstripdd>
-                        <igx-grid-actions [grid]="grid1"></igx-grid-actions>
+                        <igx-grid-actions [grid]="grid3"></igx-grid-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>

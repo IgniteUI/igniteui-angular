@@ -8,10 +8,9 @@ import { IgxDropDownComponent } from '../../drop-down';
 
 export class IgxGridActionsComponent {
     /**
-     * An @Input property that set the visibility of the Action Strip.
-     * Could be used to set if the Action Strip will be visible initially.
+     * An @Input property that set an instance of the grid for which to display the actions.
      * ```html
-     *  <igx-action-strip [hidden]="false">
+     *  <igx-grid-actions [grid]="grid1"></igx-grid-actions>
      * ```
      */
     @Input() grid;
