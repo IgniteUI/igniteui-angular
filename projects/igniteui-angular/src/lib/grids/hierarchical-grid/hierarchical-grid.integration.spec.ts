@@ -324,6 +324,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(() => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const expander = childGrid.dataRowList.first.expander;
@@ -359,6 +361,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            fixture.detectChanges();
 
             const rootExpander = (hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
             const rootCheckbox = hierarchicalGrid.headerSelectorContainer;
@@ -387,6 +391,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
 
