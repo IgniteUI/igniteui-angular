@@ -160,6 +160,7 @@ export class IgxSplitterComponent implements AfterContentInit {
             return;
         }
         pane.hidden = !pane.hidden;
+        pane.resizable = !pane.hidden;
         pane.onPaneToggle.emit(pane);
     }
 
