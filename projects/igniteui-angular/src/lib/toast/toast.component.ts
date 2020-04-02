@@ -13,6 +13,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -187,6 +188,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public isVisibleChange = new EventEmitter<boolean>();
 
     /**
+     * @deprecated Place your message in the toast content instead.
      * Sets/gets the message that will be shown by the toast.
      * ```html
      * <igx-toast [message] = "Notification"></igx-toast>
@@ -196,8 +198,9 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * ```
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'message' @Input property is deprecated. Place your message in the toast content instead.`)
     @Input()
-    public message: string;
+    public message = '';
 
     /**
      * Sets/gets the position of the toast.
