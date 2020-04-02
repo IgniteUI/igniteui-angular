@@ -164,13 +164,12 @@ export class IgxSplitterComponent implements AfterContentInit {
         });
     }
 
-    public getSiblings(pane: IgxSplitterPaneComponent): Array<IgxSplitterPaneComponent> {
+    /** @hidden @internal */
+    public getPaneSiblingsByOrder(order: number, barIndex: number): Array<IgxSplitterPaneComponent> {
         const panes = this.panes.toArray();
-        const index = panes.indexOf(pane);
-        const siblings = [panes[index + 1]];
-        if (index > 0) {
-            siblings.push(panes[index - 1]);
-        }
+        const prevPane = panes[order - barIndex - 1];
+        const nextPane = panes[order - barIndex];
+        const siblings = [prevPane, nextPane];
         return siblings;
     }
 }
