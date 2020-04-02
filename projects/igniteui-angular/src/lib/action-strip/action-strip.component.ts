@@ -1,8 +1,8 @@
 import { Component, NgModule, Input, ViewContainerRef, Renderer2, HostBinding, ViewChild, ContentChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxGridActionsComponent } from './grid-actions/grid-actions.component';
-import { IgxDropDownModule } from '../drop-down';
-import { IgxIconModule } from '../icon';
+import { IgxDropDownModule } from '../drop-down/index';
+import { IgxIconModule } from '../icon/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
