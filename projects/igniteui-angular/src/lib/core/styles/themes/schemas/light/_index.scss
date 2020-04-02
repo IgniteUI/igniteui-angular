@@ -39,6 +39,7 @@
 @import './scrollbar';
 @import './slider';
 @import './snackbar';
+@import './splitter';
 @import './switch';
 @import './tabs';
 @import './time-picker';
@@ -83,6 +84,7 @@
 /// @property {Map} igx-scrollbar [$_light-scrollbar]
 /// @property {Map} igx-slider [$_light-slider]
 /// @property {Map} igx-snackbar [$_light-snackbar]
+/// @property {Map} igx-splitter [$_light-splitter]
 /// @property {Map} igx-switch [$_light-switch]
 /// @property {Map} igx-tabs [$_light-tabs]
 /// @property {Map} igx-time-picker [$_light-time-picker]
@@ -125,6 +127,7 @@ $light-schema: (
     igx-scrollbar: $_light-scrollbar,
     igx-slider: $_light-slider,
     igx-snackbar: $_light-snackbar,
+    igx-splitter: $_light-splitter,
     igx-switch: $_light-switch,
     igx-tabs: $_light-tabs,
     igx-time-picker: $_light-time-picker,
@@ -169,6 +172,7 @@ $light-fluent-schema: (
     igx-scrollbar: $_fluent-scrollbar,
     igx-slider: $_fluent-slider,
     igx-snackbar: $_fluent-snackbar,
+    igx-splitter: $_fluent-splitter,
     igx-switch: $_fluent-switch,
     igx-tabs: $_fluent-tabs,
     igx-time-picker: $_fluent-time-picker,
@@ -213,6 +217,7 @@ $light-bootstrap-schema: (
     igx-scrollbar: $_bootstrap-scrollbar,
     igx-slider: $_bootstrap-slider,
     igx-snackbar: $_bootstrap-snackbar,
+    igx-splitter: $_bootstrap-splitter,
     igx-switch: $_bootstrap-switch,
     igx-tabs: $_bootstrap-tabs,
     igx-time-picker: $_bootstrap-time-picker,

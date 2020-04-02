@@ -204,7 +204,6 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $button-shadow: if($elevation == false, none, null),
         ));
     }
 
