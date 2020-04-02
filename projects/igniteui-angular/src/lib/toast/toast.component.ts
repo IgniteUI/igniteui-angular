@@ -306,16 +306,25 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         this.isVisible ? this.close() : this.open();
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-toast--top')
     public get cssClassTop() {
        return this.position === IgxToastPosition.Top;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-toast--middle')
     public get cssClassMiddle() {
        return this.position === IgxToastPosition.Middle;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-toast--bottom')
     public get cssClassBottom() {
        return this.position === IgxToastPosition.Bottom;
