@@ -152,6 +152,19 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * This method performs the toggling of the pane visibility
+     * @param pane
+     */
+    public onToggling(pane: IgxSplitterPaneComponent) {
+        if (!pane) {
+            return;
+        }
+        pane.hidden = !pane.hidden;
+        pane.resizable = !pane.hidden;
+        pane.onPaneToggle.emit(pane);
+    }
+
+    /**
      * This method takes care for assigning an `order` property on each `IgxSplitterPaneComponent`.
      * @private
      * @return {void}@memberof SplitterComponent
