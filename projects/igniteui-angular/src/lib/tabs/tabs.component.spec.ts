@@ -355,6 +355,26 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
         }));
+
+        it('should set the correct attributes on the html elements', fakeAsync(() => {
+            fixture.detectChanges();
+
+            const tabHeaders = document.querySelectorAll('igx-tab-item');
+            const tabContents = document.querySelectorAll('igx-tabs-group');
+            expect(tabHeaders.length).toBe(3);
+            expect(tabContents.length).toBe(3);
+
+            for (let index = 0; index < 3; index++) {
+                const headerId = `igx-tab-item-0-${index}`;
+                const contentId = `igx-tabs-group-0-${index}`;
+
+                expect(tabHeaders[index].id).toEqual(headerId);
+                expect(tabHeaders[index].getAttribute('aria-controls')).toEqual(contentId);
+
+                expect(tabContents[index].id).toEqual(contentId);
+                expect(tabContents[index].getAttribute('aria-labelledby')).toEqual(headerId);
+            }
+        }));
     });
 
     describe('IgxTabs Component with Custom Template', () => {

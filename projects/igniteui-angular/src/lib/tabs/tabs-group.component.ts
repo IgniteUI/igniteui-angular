@@ -20,7 +20,6 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 })
 
 export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
-
     /**
      * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
      * ```html
@@ -153,8 +152,8 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * @hidden
      */
     public ngAfterViewChecked() {
-        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
-        this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
+        this._element.nativeElement.setAttribute('aria-labelledby', this.relatedTab.id);
+        this._element.nativeElement.setAttribute('id', this.relatedTab.ariaControls);
     }
 
     /**
@@ -180,5 +179,4 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     public setSelectedInternal(newValue: boolean) {
         this._isSelected = newValue;
     }
-
 }

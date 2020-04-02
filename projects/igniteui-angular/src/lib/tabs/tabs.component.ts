@@ -32,6 +32,8 @@ export enum IgxTabsType {
     CONTENTFIT = 'contentfit'
 }
 
+let NEXT_TABS_ID = 0;
+
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
@@ -39,6 +41,9 @@ export enum IgxTabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
+    private _currentTabItemId = -1;
+    private _currentTabsId = 0;
+
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
      * ```typescript
@@ -300,6 +305,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) {
+        this._currentTabsId = NEXT_TABS_ID++;
     }
 
     /**
@@ -488,6 +494,15 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     */
+    public getTabItemId(shouldIncreaseId = false): string {
+        if (shouldIncreaseId) {
+            this._currentTabItemId++;
+        }
+        return `${this._currentTabsId}-${this._currentTabItemId}`;
+    }
 }
 
 /**
