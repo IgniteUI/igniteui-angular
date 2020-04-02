@@ -307,17 +307,17 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     }
 
     @HostBinding('class.igx-toast--top')
-    public get cssClassTop(): boolean {
+    public get cssClassTop() {
        return this.position === IgxToastPosition.Top;
     }
 
     @HostBinding('class.igx-toast--middle')
-    public get cssClassMiddle(): boolean {
+    public get cssClassMiddle() {
        return this.position === IgxToastPosition.Middle;
     }
 
     @HostBinding('class.igx-toast--bottom')
-    public get cssClassBottom(): boolean {
+    public get cssClassBottom() {
        return this.position === IgxToastPosition.Bottom;
     }
 
