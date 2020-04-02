@@ -245,6 +245,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') || this.column.header;
+    }
+
+    /**
+     * @hidden
+     */
     public groupClicked(event): void {
         const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
         if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
