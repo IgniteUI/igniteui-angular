@@ -1,5 +1,9 @@
-import { Component, NgModule, Input, ViewContainerRef, Renderer2, HostBinding } from '@angular/core';
+import { Component, NgModule, Input, ViewContainerRef, Renderer2, HostBinding, ViewChild, ContentChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IgxGridActionsComponent } from './grid-actions/grid-actions.component';
+import { IgxDropDownModule } from '../drop-down';
+import { IgxIconModule } from '../icon';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 
 let NEXT_ID = 0;
 
@@ -65,11 +69,16 @@ export class IgxActionStripComponent {
 
     public context;
 
+    @ContentChild(IgxGridActionsComponent, { static: true }) public gridEditingActions: IgxGridActionsComponent;
+
     show(context) {
         this.context = context;
         this.hidden = false;
         this.context = context;
         this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
+        if (this.gridEditingActions) {
+            this.gridEditingActions.context = this.context;
+        }
     }
 
     hide() {
@@ -82,8 +91,8 @@ export class IgxActionStripComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxActionStripComponent],
-    exports: [IgxActionStripComponent],
-    imports: [CommonModule]
+    declarations: [IgxActionStripComponent, IgxGridActionsComponent],
+    exports: [IgxActionStripComponent, IgxGridActionsComponent],
+    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
 })
 export class IgxActionStripModule { }

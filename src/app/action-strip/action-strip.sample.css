@@ -9,3 +9,8 @@
     background-color: azure;
     opacity: .2;
 }
+
+.igx-action-strip {
+    right: 0;
+    top: 25%;
+}

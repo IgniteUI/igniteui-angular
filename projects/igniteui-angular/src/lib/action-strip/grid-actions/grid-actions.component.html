@@ -1,0 +1,8 @@
+<igx-icon [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">more_vert</igx-icon>
+<igx-drop-down #dropdown (onSelection)="onSelection($event)" (onOpening)="onOpen()">
+    <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+        <div class="igx-drop-down__item-template">
+            {{ item.field }}
+        </div>
+    </igx-drop-down-item>
+</igx-drop-down>

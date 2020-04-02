@@ -21,7 +21,7 @@ import { IgxProgressBarModule } from '../../progressbar/progressbar.component';
 import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/index';
 import { IgxGridStateModule } from '../state.directive';
-import { IgxActionStripComponent, IgxActionStripModule } from '../../action-strip/action-strip.component';
+import { IgxActionStripModule } from '../../action-strip/action-strip.component';
 
 
 @NgModule({
