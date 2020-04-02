@@ -1,4 +1,4 @@
-import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Component, Input, HostBinding, EventEmitter, Output, HostListener } from '@angular/core';
 import { SplitterType } from '../splitter.component';
 import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
 import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-drop/drag-drop.directive';
@@ -84,13 +84,73 @@ export class IgxSplitBarComponent {
         return this.type === SplitterType.Horizontal ? 'arrow_left' : 'arrow_drop_up';
     }
 
-
     /**
      * A temporary holder for the pointer coordinates.
      * @private
      * @memberof SplitBarComponent
      */
     private startPoint!: number;
+
+        /**
+     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
+     * @private
+     * @memberof SplitterComponent
+     */
+    private initialPaneSize!: number;
+
+    /**
+     * A field that holds the initial size of the sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
+     * @private
+     * @memberof SplitterComponent
+     */
+    private initialSiblingSize!: number;
+
+    /**
+     * The sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
+     * @private
+     * @memberof SplitterComponent
+     */
+    private sibling!: IgxSplitterPaneComponent;
+
+    /**
+    * @hidden
+    * @internal
+    */
+    @HostListener('keydown', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        const key = event.code.toLowerCase();
+        event.stopPropagation();
+        if (this.pane.resizable && this.siblings[0].resizable) {
+            switch (key) {
+                case 'arrowup':
+                    if (this.type === 1) {
+                        event.preventDefault();
+                        this.moveUpOrLeft();
+                    }
+                    break;
+                case 'arrowdown':
+                    if (this.type === 1) {
+                        event.preventDefault();
+                        this.moveDownOrRight();
+                    }
+                    break;
+                case 'arrowleft':
+                    if (this.type === 0) {
+                        event.preventDefault();
+                        this.moveUpOrLeft();
+                    }
+                    break;
+                case 'arrowright':
+                    if (this.type === 0) {
+                        event.preventDefault();
+                        this.moveDownOrRight();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
@@ -122,4 +182,55 @@ export class IgxSplitBarComponent {
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
+    private moveUpOrLeft() {
+        this.panesInitialization();
+
+        const min = parseInt(this.pane.minSize, 10) || 0;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+
+        const paneSize = this.initialPaneSize - 10;
+        const siblingSize = this.initialSiblingSize + 10;
+        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
+            return;
+        }
+
+        this.pane.size = paneSize + 'px';
+        this.sibling.size = siblingSize + 'px';
+    }
+
+    private moveDownOrRight() {
+        this.panesInitialization();
+
+        const min = parseInt(this.pane.minSize, 10) || 0;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
+        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
+
+        const paneSize = this.initialPaneSize + 10;
+        const siblingSize = this.initialSiblingSize - 10;
+        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
+            return;
+        }
+
+        this.pane.size = paneSize + 'px';
+        this.sibling.size = siblingSize + 'px';
+    }
+
+    private panesInitialization() {
+        this.sibling = this.siblings[0];
+
+        const paneRect = this.pane.element.getBoundingClientRect();
+        this.initialPaneSize = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
+        if (this.pane.size === 'auto') {
+            this.pane.size = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
+        }
+
+        const siblingRect = this.sibling.element.getBoundingClientRect();
+        this.initialSiblingSize = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
+        if (this.sibling.size === 'auto') {
+            this.sibling.size = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
+        }
+    }
 }
