@@ -40,6 +40,7 @@ import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
+import { GridSelectionMode } from '../../common/enums';
 
 /**
  * @hidden
@@ -436,11 +437,18 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      */
     public onSelect() {
         if (!this.column.selected) {
-            this.grid.selectionService.selectColumn(this.column.field, this.grid.columnSelection === 'single');
+            this.grid.selectionService.selectColumn(this.column.field, this.grid.columnSelection === GridSelectionMode.single);
         } else {
             this.grid.selectionService.deselectColumn(this.column.field);
         }
         this.grid.notifyChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public columnSelectable() {
+        return this.grid.columnSelection !== GridSelectionMode.none && this.column.selectable;
     }
 
     /**

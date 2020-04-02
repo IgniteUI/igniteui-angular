@@ -21,6 +21,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { isIE } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
+import { GridSelectionMode } from '../common/enums';
 
 const Z_INDEX = 9999;
 
@@ -250,8 +251,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public groupClicked(event): void {
         const columnsToSelect = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
         if (this.grid.columnSelection !== 'none' && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
-            const clearSelection = this.grid.columnSelection === 'single' || !event.ctrlKey;
-            const rangeSelection = this.grid.columnSelection === 'multiple' && event.shiftKey;
+            const clearSelection = this.grid.columnSelection === GridSelectionMode.single || !event.ctrlKey;
+            const rangeSelection = this.grid.columnSelection === GridSelectionMode.multiple && event.shiftKey;
             if (!this.selected) {
                 this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
             } else {

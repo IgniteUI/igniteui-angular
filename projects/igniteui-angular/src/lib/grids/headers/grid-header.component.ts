@@ -30,6 +30,7 @@ import { fadeIn, fadeOut } from '../../animations/main';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { GridType } from '../common/grid.interface';
 import { ExcelStylePositionStrategy } from '../filtering/excel-style/excel-style-position-strategy';
+import { GridSelectionMode } from '../common/enums';
 
 /**
  * @hidden
@@ -189,8 +190,8 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
             } else if (this.grid.columnSelection !== 'none' && this.column.selectable) {
-                const clearSelection = this.grid.columnSelection === 'single' || !event.ctrlKey;
-                const rangeSelection = this.grid.columnSelection === 'multiple' && event.shiftKey;
+                const clearSelection = this.grid.columnSelection === GridSelectionMode.single || !event.ctrlKey;
+                const rangeSelection = this.grid.columnSelection === GridSelectionMode.multiple && event.shiftKey;
 
                 if (!this.column.selected || (this.grid.selectionService.getSelectedColumns().length > 1 && clearSelection)) {
                     this.grid.selectionService.selectColumn(this.column.field, clearSelection, rangeSelection, event);
