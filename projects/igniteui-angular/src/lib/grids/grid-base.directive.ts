@@ -1895,7 +1895,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get firstEditableColumnIndex(): number {
-        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort();
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a - b);
         return index.length ? index[0] : null;
     }
 
@@ -1903,7 +1904,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get lastEditableColumnIndex(): number {
-        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort().reverse();
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a > b ? -1 : 1);
         return index.length ? index[0] : null;
     }
 
