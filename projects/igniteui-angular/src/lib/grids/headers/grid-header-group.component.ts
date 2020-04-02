@@ -218,7 +218,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get selectable() {
         const selectableChildren = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup);
-        return this.grid.columnSelection !== 'none' &&
+        return this.grid.columnSelection !== GridSelectionMode.none &&
             this.column.applySelectableClass
             && !this.selected && selectableChildren.length > 0
             && !this.grid.filteringService.isFilterRowVisible;
@@ -250,7 +250,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public groupClicked(event): void {
         const columnsToSelect = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
-        if (this.grid.columnSelection !== 'none' && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+        if (this.grid.columnSelection !== GridSelectionMode.none
+            && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
             const clearSelection = this.grid.columnSelection === GridSelectionMode.single || !event.ctrlKey;
             const rangeSelection = this.grid.columnSelection === GridSelectionMode.multiple && event.shiftKey;
             if (!this.selected) {

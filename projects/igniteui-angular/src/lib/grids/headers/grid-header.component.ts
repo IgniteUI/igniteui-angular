@@ -123,7 +123,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     get selectable() {
-        return this.grid.columnSelection !== 'none' &&
+        return this.grid.columnSelection !== GridSelectionMode.none &&
             this.column.applySelectableClass &&
             !this.column.selected &&
             !this.grid.filteringService.isFilterRowVisible;
@@ -189,7 +189,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
-            } else if (this.grid.columnSelection !== 'none' && this.column.selectable) {
+            } else if (this.grid.columnSelection !== GridSelectionMode.none && this.column.selectable) {
                 const clearSelection = this.grid.columnSelection === GridSelectionMode.single || !event.ctrlKey;
                 const rangeSelection = this.grid.columnSelection === GridSelectionMode.multiple && event.shiftKey;
 
