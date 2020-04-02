@@ -20,7 +20,19 @@
         $splitter-schema: $schema;
     }
 
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($splitter-schema, 'border-radius')), 0, 2px
+    );
+
     $theme: apply-palette($splitter-schema, $palette);
+
+    @if not($handle-color) and $bar-color {
+        $handle-color: text-contrast($bar-color);
+    }
+
+    @if not($expander-color) and $bar-color {
+        $expander-color: text-contrast($bar-color);
+    }
 
     @return extend($theme, (
         name: $name,
@@ -57,7 +69,7 @@
 
     %igx-splitter-handle {
         background: --var($theme, 'handle-color');
-        border-radius: 2px;
+        border-radius: --var($theme, 'border-radius');
     }
 
     %igx-splitter-handle--horizontal {
