@@ -62,7 +62,7 @@ export class IgxSplitBarComponent {
      * An event that is emitted when collapsing the pane
      */
     @Output()
-    public collapse = new EventEmitter<IgxSplitterPaneComponent>();
+    public togglePane = new EventEmitter<IgxSplitterPaneComponent>();
     /**
      * A temporary holder for the pointer coordinates.
      * @private
@@ -74,14 +74,14 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get prevButtonHidden() {
-        return this.pane.hidden;
+        return this.siblings[0].hidden;
     }
 
     /**
      * @hidden @internal
      */
     public get nextButtonHidden() {
-        return this.siblings[0].hidden;
+        return this.siblings[1].hidden;
     }
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
@@ -113,8 +113,17 @@ export class IgxSplitBarComponent {
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
-    public onCollapsing(direction: boolean) {
-        const sibling = this.siblings[0];
-        this.collapse.emit(sibling.hidden && !direction || !this.pane.hidden && direction ? sibling : this.pane);
+    public onCollapsing(next: boolean) {
+        const prevSibling = this.siblings[0];
+        const nextSibling = this.siblings[1];
+        let target;
+        if (next) {
+            // if next is clicked when prev pane is hidden, show prev pane, else hide next pane.
+            target = prevSibling.hidden ? prevSibling : nextSibling;
+        } else {
+            // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
+            target = nextSibling.hidden ? nextSibling : prevSibling;
+        }
+        this.togglePane.emit(target);
     }
 }

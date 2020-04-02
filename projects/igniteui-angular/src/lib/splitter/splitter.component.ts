@@ -152,10 +152,10 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
-     * This method performs the collapsing of the pane
+     * This method performs the toggling of the pane visibility
      * @param pane
      */
-    public onCollapsing(pane: IgxSplitterPaneComponent) {
+    public onToggling(pane: IgxSplitterPaneComponent) {
         if (!pane) {
             return;
         }
