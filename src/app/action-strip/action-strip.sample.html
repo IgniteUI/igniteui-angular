@@ -81,5 +81,44 @@
                 </igx-grid>
             </div>
         </article>
+
+        <article>
+            <div class="sample-column">
+                <igx-grid #grid4 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                    [rowEditable]="true" [primaryKey]="'ID'" (mouseleave)="actionstripdd2.hide()">
+                    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        <ng-template igxCell let-cell="cell" let-val>
+                            <div (mouseover)="actionstripdd2.show(cell)">
+                                <span>{{val}}</span>
+                            </div>
+                        </ng-template>
+                    </igx-column>
+
+                    <igx-action-strip #actionstripdd2>
+                        <igx-grid-actions [grid]="grid4"></igx-grid-actions>
+                    </igx-action-strip>
+                </igx-grid>
+            </div>
+        </article>
+
+        <article>
+            <div class="sample-column">
+                <igx-grid #grid5 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                    [rowEditable]="true" [primaryKey]="'ID'">
+                    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        <ng-template igxCell let-cell="cell" let-val>
+                            <div>
+                                <span>{{val}}</span>
+                            </div>
+                            <igx-action-strip>
+                                <igx-grid-actions [grid]="grid5" [context]="cell"></igx-grid-actions>
+                            </igx-action-strip>
+                        </ng-template>
+                    </igx-column>
+                </igx-grid>
+            </div>
+        </article>
     </section>
 </div>

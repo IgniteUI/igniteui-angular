@@ -43,25 +43,38 @@ export class IgxGridActionsComponent {
         { field: 'Unpin' }
     ];
 
+    private _clipboard;
+
     public onSelection(event) {
         // TODO if the context is row
         // TODO use values(or indexes), as innerText wont work with translations
         const option = event.newSelection.element.nativeElement.innerText;
+        const row = this.context.row ? this.context.row : this.context;
         switch (option) {
             case 'Edit' :
-                const firstEditable = this.context.cells.filter(cell => cell.editable)[0];
+                const firstEditable = this.context.cells ?
+                this.context.cells.filter(cell => cell.editable)[0] : this.context;
                 this.grid.crudService.begin(firstEditable);
                 firstEditable.focused = true;
                 this.grid.notifyChanges();
                 break;
             case 'Delete' :
-                this.grid.deleteRow(this.context.rowID);
+                this.grid.deleteRow(row.rowID);
                 break;
-            case 'Pin':
-                this.grid.pinRow(this.context.rowID);
+            case 'Pin' :
+                this.grid.pinRow(row.rowID);
                 break;
-            case 'Unpin':
-                this.grid.unpinRow(this.context.rowID);
+            case 'Unpin' :
+                this.grid.unpinRow(row.rowID);
+                break;
+            case 'Copy' :
+                this._clipboard = this.context.value;
+                break;
+            case 'Paste' :
+                if (this._clipboard) {
+                    this.context.value = this._clipboard;
+                    this.grid.reflow();
+                }
                 break;
             }
     }
