@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {Component, ViewChild } from '@angular/core';
 import {async, TestBed, fakeAsync, tick, ComponentFixture} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -84,13 +84,13 @@ describe('IgxToast', () => {
         toast.show();
 
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
         expect(toast.autoHide).toBeTruthy();
 
         tick(1000);
 
         expect(toast.isVisible).toBeFalsy();
-        expect(toast._animationState).toBe('invisible');
+        expect(toast.animationState).toBe('invisible');
     }));
 
     it('should not auto hide after it\'s open', fakeAsync(() => {
@@ -100,13 +100,13 @@ describe('IgxToast', () => {
         toast.show();
 
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
         expect(toast.autoHide).toBeFalsy();
 
         tick(1000);
 
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
     }));
 
     it('visibility is updated by the toggle() method', () => {
@@ -117,7 +117,7 @@ describe('IgxToast', () => {
 
         toast.show();
         expect(toast.isVisible).toBe(true);
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
 
         expect(toast.onShowing.emit).toHaveBeenCalledTimes(1);
         expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
@@ -126,12 +126,13 @@ describe('IgxToast', () => {
 
         toast.toggle();
         expect(toast.isVisible).toBe(false);
-        expect(toast._animationState).toBe('invisible');
+        expect(toast.animationState).toBe('invisible');
 
         expect(toast.onShowing.emit).toHaveBeenCalledTimes(1);
         expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
+
     });
 });
 

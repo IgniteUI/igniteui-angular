@@ -51,9 +51,13 @@ let NEXT_ID = 0;
     `]
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
-    @HostBinding('@animate')
-    private _animationState = 'invisible';
     private _isVisible = false;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('@animate')
+    public animationState = 'invisible';
 
     /**
      * Sets/gets the `id` of the toast.
@@ -230,7 +234,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     /**
      * @hidden
      */
-    private timeoutId;
+    private timeoutId: number;
 
     constructor(
         private elementRef: ElementRef,
@@ -248,10 +252,10 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         clearInterval(this.timeoutId);
         this.onShowing.emit(this);
         this.isVisible = true;
-        this._animationState = 'visible';
+        this.animationState = 'visible';
 
         if (this.autoHide) {
-            this.timeoutId = setTimeout(() => {
+            this.timeoutId = window.setTimeout(() => {
                 this.hide();
             }, this.displayTime);
         }
@@ -270,7 +274,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         this.onHiding.emit(this);
         this.isVisible = false;
         this.onHidden.emit(this);
-        this._animationState = 'invisible';
+        this.animationState = 'invisible';
 
         clearInterval(this.timeoutId);
     }
