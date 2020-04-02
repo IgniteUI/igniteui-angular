@@ -81,18 +81,18 @@
             | treeGridRowPinning:id:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | treeGridSorting:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
-            <div #pinContainer *ngIf='pinnedData.length > 0' 
-                [ngClass]="{
-                    'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
-                    'igx-grid__tr--pinned-top': isRowPinningToTop
-                }"
-                class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
-                <ng-container *ngFor="let rowData of pinnedData;let rowIndex = index;">
-                    <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
+                <div #pinContainer *ngIf='pinnedData.length > 0' 
+                    [ngClass]="{
+                        'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
+                        'igx-grid__tr--pinned-top': isRowPinningToTop
+                    }"
+                    class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                    <ng-container *ngFor="let rowData of pinnedData;let rowIndex = index;">
+                        <ng-container *ngTemplateOutlet="record_template; context: getContext(rowData, rowIndex, true)">
+                        </ng-container>
                     </ng-container>
-                </ng-container>
-            </div>
-        </ng-container>
+                </div>
+            </ng-container>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
