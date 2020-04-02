@@ -6,12 +6,16 @@ import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HO
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType } from './common/enums';
-
+export interface ColumnGroupsCache {
+    level: number;
+    visibleIndex: number;
+}
 export interface IActiveNode {
     gridID?: string;
     row: number;
     column?: number;
     level?: number;
+    mchCache?: ColumnGroupsCache;
     layout?: IMultiRowLayoutNode;
 }
 
@@ -125,14 +129,40 @@ export class IgxGridNavigationService {
         }
         const ctrl = event.ctrlKey;
         if (this.grid.hasColumnGroups) {
+            event.preventDefault();
+            const activeCol = this.currentActiveColumn;
             if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-                // const col = this.grid.visibleColumns.filter
-                this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
+                const col = ctrl || key === 'home' ? this.getNextColumnMCH(0) :
+                    this.getNextColumnMCH(this.activeNode.column - 1);
+                this.activeNode.column = col.visibleIndex;
+                this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+                this.activeNode.level = col.level;
             }
             if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
-                this.activeNode.column = ctrl || key === 'end' ? this.lastColumnIndex : this.activeNode.column + 1;
+                const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
+                activeCol.visibleIndex + 1;
+                const col = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
+                this.activeNode.column =  col.visibleIndex;
+                this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+                this.activeNode.level = col.level;
             }
-            this.activeNode.level = this.grid.getColumnByVisibleIndex(this.activeNode.column).level;
+            if (key.includes('up') && this.activeNode.level > 0) {
+                this.activeNode.column = activeCol.parent.visibleIndex;
+                this.activeNode.level = activeCol.parent.level;
+                this.activeNode.mchCache.level = activeCol.parent.level;
+            }
+            if (key.includes('down') && activeCol.children) {
+                const cur = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
+                activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
+                .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
+                this.activeNode.column = cur.visibleIndex;
+                this.activeNode.level = cur.level;
+                this.activeNode.mchCache.level = cur.level;
+            }
+            if (HORIZONTAL_NAV_KEYS.has(key)) {
+            }
+            this.performHorizontalScrollToCell(this.activeNode.column);
+            return;
         }
         this.horizontalNav(event, key, -1);
     }
@@ -340,6 +370,20 @@ export class IgxGridNavigationService {
         }
         if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) { return false; }
         return true;
+    }
+
+    private getNextColumnMCH(visibleIndex) {
+        let col = this.grid.getColumnByVisibleIndex(visibleIndex);
+        let parent = col.parent;
+        while (parent && col.level > this.activeNode.mchCache.level) {
+            col = col.parent;
+            parent = col.parent;
+        }
+        return col;
+    }
+
+    private get currentActiveColumn() {
+        return this.grid.visibleColumns.find(c => c.visibleIndex === this.activeNode.column && c.level === this.activeNode.level);
     }
 
     private isActiveNode(rIndex: number, cIndex: number): boolean {
