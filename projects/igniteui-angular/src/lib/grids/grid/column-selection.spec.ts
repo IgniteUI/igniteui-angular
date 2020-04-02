@@ -919,12 +919,19 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails);
             GridSelectionFunctions.verifyColumnsSelected([companyName, contactTitle, contactName]);
 
-            // Click on a column in the group
-            GridFunctions.clickColumnHeaderUI('CompanyName', fix);
+            // Click on a column group in the group
+            GridFunctions.clickColumnGroupHeaderUI('Person Details', fix);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, genInfHeader, false);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, true);
+            GridSelectionFunctions.verifyColumnsSelected([contactTitle, contactName]);
+            GridSelectionFunctions.verifyColumnSelected(companyName, false);
+
+            // Click on a column in the group
+            GridFunctions.clickColumnHeaderUI('ContactName', fix);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, false);
-            GridSelectionFunctions.verifyColumnsSelected([contactTitle, contactName], false);
-            GridSelectionFunctions.verifyColumnSelected(companyName);
+            GridSelectionFunctions.verifyColumnSelected(contactTitle, false);
+            GridSelectionFunctions.verifyColumnSelected(contactName);
+
         });
     });
 
