@@ -1864,6 +1864,7 @@ export class GridFunctions {
         }
     }
 
+
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return header.query(By.css(SORT_ICON_CLASS));
     }
