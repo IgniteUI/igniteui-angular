@@ -20,7 +20,7 @@
         $splitter-schema: $schema;
     }
 
-    $border-radius: round-borders(
+    $border-radius-handle: round-borders(
         if($border-radius, $border-radius, map-get($splitter-schema, 'border-radius')), 0, 2px
     );
 
@@ -40,7 +40,7 @@
         bar-color: $bar-color,
         handle-color: $handle-color,
         expander-color: $expander-color,
-        border-radius: $border-radius,
+        border-radius: $border-radius-handle,
         size: $size
     ));
 }
