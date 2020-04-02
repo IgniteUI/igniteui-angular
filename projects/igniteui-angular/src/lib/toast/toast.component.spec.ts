@@ -85,13 +85,13 @@ describe('IgxToast', () => {
         toast.show();
 
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
         expect(toast.autoHide).toBeTruthy();
 
         tick(1000);
         fixture.detectChanges();
         expect(toast.isVisible).toBeFalsy();
-        expect(toast._animationState).toBe('invisible');
+        expect(toast.animationState).toBe('invisible');
     }));
 
     it('should not auto hide seconds after is open', fakeAsync(() => {
@@ -101,13 +101,13 @@ describe('IgxToast', () => {
         toast.show();
 
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
         expect(toast.autoHide).toBeFalsy();
 
         tick(1000);
         fixture.detectChanges();
         expect(toast.isVisible).toBeTruthy();
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
     }));
 
     it('visibility is properly toggled by its toggle() method.', (async() => {
@@ -117,13 +117,12 @@ describe('IgxToast', () => {
         spyOn(toast.onHidden, 'emit');
 
         expect(toast.isVisible).toBe(true);
-        // expect(toast._animationState).toBe('visible');
         toast.toggle();
         await wait();
         fixture.detectChanges();
 
         expect(toast.isVisible).toBe(false);
-        expect(toast._animationState).toBe('invisible');
+        expect(toast.animationState).toBe('invisible');
         expect(toast.onShowing.emit).toHaveBeenCalledTimes(0);
         expect(toast.onShown.emit).toHaveBeenCalledTimes(0);
         expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
@@ -134,7 +133,7 @@ describe('IgxToast', () => {
         fixture.detectChanges();
 
         expect(toast.isVisible).toBe(true);
-        expect(toast._animationState).toBe('visible');
+        expect(toast.animationState).toBe('visible');
         expect(toast.onShowing.emit).toHaveBeenCalledTimes(1);
         expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
@@ -144,7 +143,7 @@ describe('IgxToast', () => {
         await wait();
         fixture.detectChanges();
         expect(toast.isVisible).toBe(false);
-        expect(toast._animationState).toBe('invisible');
+        expect(toast.animationState).toBe('invisible');
     }));
 });
 @Component({
