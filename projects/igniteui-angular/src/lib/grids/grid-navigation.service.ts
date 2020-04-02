@@ -252,13 +252,24 @@ export class IgxGridNavigationService {
             return;
         }
         event.preventDefault();
-        if (this.grid.rowInEditMode && this.grid.rowEditTabs.length &&
-            this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
+        if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
+            (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             this.grid.gridAPI.submit_value();
             shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
             return;
         }
+
+        if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
+            if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
+                next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
+            } else if ( !shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
+                next.visibleColumnIndex = this.grid.firstEditableColumnIndex;
+            } else {
+                next.rowIndex = this.activeNode.row;
+            }
+        }
+
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
             obj.target.activate();
             obj.target.setEditMode(true);
