@@ -381,7 +381,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private flattenTreeGridRecords(records: any[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                (this.isGhostRecord(record)) ? flatData.push(record.recordData) : flatData.push(record);
+                (this.isGhostRecord(record)) ? flatData.push(record.data.recordData) : flatData.push(record.data);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
