@@ -1,10 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
-import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {Component, ViewChild, ElementRef} from '@angular/core';
+import {async, TestBed, fakeAsync, tick, ComponentFixture} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IgxToastComponent, IgxToastModule, IgxToastPosition} from './toast.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxToast', () => {
     configureTestSuite();
@@ -19,23 +18,25 @@ describe('IgxToast', () => {
             ]
         }).compileComponents();
     }));
-    const baseClass = 'igx-toast';
 
+    const baseClass = 'igx-toast';
     const classes = {
         top: `${baseClass}--top`,
         middle: `${baseClass}--middle`,
         bottom: `${baseClass}--bottom`,
     };
-    let fixture, toast, element;
+
+    let fixture: ComponentFixture<ToastInitializeTestComponent>;
+    let toast: IgxToastComponent;
+
     beforeEach(() => {
         fixture = TestBed.createComponent(ToastInitializeTestComponent);
         toast = fixture.componentInstance.toast;
         toast.isVisible = true;
         fixture.detectChanges();
-        element = fixture.debugElement.query(By.css('.igx-toast--bottom'));
     });
 
-    it('should properly initialize properties', () => {
+    it('should properly initialize', () => {
         const domToast = fixture.debugElement.query(By.css(baseClass)).nativeElement;
         expect(toast.id).toContain('igx-toast-');
         expect(domToast.id).toContain('igx-toast-');
@@ -56,7 +57,6 @@ describe('IgxToast', () => {
         fixture.detectChanges();
         const domToast = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        element = fixture.debugElement.query(By.css('.igx-toast--middle'));
         expect(domToast.classList).toContain(classes.middle);
     });
 
@@ -65,11 +65,10 @@ describe('IgxToast', () => {
         fixture.detectChanges();
         const domToast = fixture.debugElement.query(By.css(baseClass)).nativeElement;
 
-        element = fixture.debugElement.query(By.css('.igx-toast--top'));
         expect(domToast.classList).toContain(classes.top);
     });
 
-    it('should change toast position to bottom, the rest should be undefined', () => {
+    it('should change toast position to bottom', () => {
         toast.position = IgxToastPosition.Bottom;
         fixture.detectChanges();
         const domToast = fixture.debugElement.query(By.css(baseClass)).nativeElement;
@@ -79,7 +78,7 @@ describe('IgxToast', () => {
         expect(domToast.classList).toContain(classes.bottom);
     });
 
-    it('should auto hide 1 second after is open', fakeAsync(() => {
+    it('should auto hide 1 second after it\'s open', fakeAsync(() => {
         toast.displayTime = 1000;
 
         toast.show();
@@ -89,12 +88,12 @@ describe('IgxToast', () => {
         expect(toast.autoHide).toBeTruthy();
 
         tick(1000);
-        fixture.detectChanges();
+
         expect(toast.isVisible).toBeFalsy();
         expect(toast._animationState).toBe('invisible');
     }));
 
-    it('should not auto hide seconds after is open', fakeAsync(() => {
+    it('should not auto hide after it\'s open', fakeAsync(() => {
         toast.displayTime = 1000;
         toast.autoHide = false;
 
@@ -105,52 +104,41 @@ describe('IgxToast', () => {
         expect(toast.autoHide).toBeFalsy();
 
         tick(1000);
-        fixture.detectChanges();
+
         expect(toast.isVisible).toBeTruthy();
         expect(toast._animationState).toBe('visible');
     }));
 
-    it('visibility is properly toggled by its toggle() method.', (async() => {
+    it('visibility is updated by the toggle() method', () => {
         spyOn(toast.onShowing, 'emit');
         spyOn(toast.onShown, 'emit');
         spyOn(toast.onHiding, 'emit');
         spyOn(toast.onHidden, 'emit');
 
-        expect(toast.isVisible).toBe(true);
-        // expect(toast._animationState).toBe('visible');
-        toast.toggle();
-        await wait();
-        fixture.detectChanges();
-
-        expect(toast.isVisible).toBe(false);
-        expect(toast._animationState).toBe('invisible');
-        expect(toast.onShowing.emit).toHaveBeenCalledTimes(0);
-        expect(toast.onShown.emit).toHaveBeenCalledTimes(0);
-        expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
-        expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
-
-        toast.toggle();
-        await wait();
-        fixture.detectChanges();
-
+        toast.show();
         expect(toast.isVisible).toBe(true);
         expect(toast._animationState).toBe('visible');
+
+        expect(toast.onShowing.emit).toHaveBeenCalledTimes(1);
+        expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
+        expect(toast.onHiding.emit).toHaveBeenCalledTimes(0);
+        expect(toast.onHidden.emit).toHaveBeenCalledTimes(0);
+
+        toast.toggle();
+        expect(toast.isVisible).toBe(false);
+        expect(toast._animationState).toBe('invisible');
+
         expect(toast.onShowing.emit).toHaveBeenCalledTimes(1);
         expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
-
-        toast.toggle();
-        await wait();
-        fixture.detectChanges();
-        expect(toast.isVisible).toBe(false);
-        expect(toast._animationState).toBe('invisible');
-    }));
+    });
 });
+
 @Component({
-    template: `<igx-toast #toast>
-               </igx-toast>`
+    template: `<igx-toast #toast></igx-toast>`
 })
 class ToastInitializeTestComponent {
-    @ViewChild(IgxToastComponent, { static: true }) public toast: IgxToastComponent;
+    @ViewChild(IgxToastComponent, { static: true })
+    public toast: IgxToastComponent;
 }
