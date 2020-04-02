@@ -13,13 +13,6 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
-
-function getCurrentCellFromGrid(grid, rowIndex, cellIndex) {
-    const gridRow = grid.rowList.toArray()[rowIndex];
-    const gridCell = gridRow.cells.toArray()[cellIndex];
-    return gridCell;
-}
-
 describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite();
@@ -246,13 +239,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
-            const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
-            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            const firstRowFirstCell = GridFunctions.getCurrentCellFromGrid(grid, 0, 0);
+            const firstRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, 0, 1);
             expect(GridFunctions.getValueFromCellElement(firstRowSecondCell)).toEqual('Brad');
             expect(GridFunctions.getValueFromCellElement(firstRowFirstCell)).toEqual('1');
 
-            const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
-            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            const lastRowFirstCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
+            const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowFirstCell)).toEqual('7');
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Rick');
         });
@@ -264,13 +257,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
-            const firstRowFirstCell = getCurrentCellFromGrid(grid, 0, 0);
-            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            const firstRowFirstCell = GridFunctions.getCurrentCellFromGrid(grid, 0, 0);
+            const firstRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, 0, 1);
             expect(GridFunctions.getValueFromCellElement(firstRowFirstCell)).toEqual('7');
             expect(GridFunctions.getValueFromCellElement(firstRowSecondCell)).toEqual('Rick');
 
-            const lastRowFirstCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
-            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            const lastRowFirstCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 0);
+            const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowFirstCell)).toEqual('1');
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Brad');
         });
@@ -284,10 +277,10 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             GridFunctions.clickColumnHeaderUI('ID', fixture);
             fixture.detectChanges();
 
-            const firstRowSecondCell = getCurrentCellFromGrid(grid, 0, 1);
+            const firstRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, 0, 1);
             expect(GridFunctions.getValueFromCellElement(firstRowSecondCell)).toEqual('Jane');
 
-            const lastRowSecondCell = getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
+            const lastRowSecondCell = GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1);
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Connor');
 
         });
@@ -350,15 +343,15 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             fixture.detectChanges();
 
             // Verify that the grid is NOT sorted.
-            expect(GridFunctions.getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-            expect(GridFunctions.getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+            expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+            expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
             // Verify that the grid is NOT sorted.
-            expect(GridFunctions.getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
-            expect(GridFunctions.getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+            expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+            expect(GridFunctions.getValueFromCellElement(GridFunctions.getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
         });
     });
 });
