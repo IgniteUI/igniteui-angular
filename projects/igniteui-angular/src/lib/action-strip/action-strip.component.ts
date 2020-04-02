@@ -5,6 +5,7 @@ import { IgxDropDownModule } from '../drop-down';
 import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
+import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 
 let NEXT_ID = 0;
 
@@ -70,8 +71,9 @@ export class IgxActionStripComponent {
 
     public context;
 
-    @ContentChild(IgxGridActionsComponent, { static: true }) public gridEditingActions: IgxGridActionsComponent;
+    @ContentChild(IgxGridActionsComponent, { static: true }) public gridActions: IgxGridActionsComponent;
     @ContentChild(IgxGridPinningActionsComponent, { static: true }) public gridPinningActions: IgxGridPinningActionsComponent;
+    @ContentChild(IgxGridEditingActionsComponent, { static: true }) public gridEditingActions: IgxGridEditingActionsComponent;
 
     show(context) {
         this.context = context;
@@ -93,6 +95,9 @@ export class IgxActionStripComponent {
         if (this.gridPinningActions) {
             this.gridPinningActions.context = this.context;
         }
+        if (this.gridActions) {
+            this.gridActions.context = this.context;
+        }
     }
 }
 
@@ -100,8 +105,8 @@ export class IgxActionStripComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent],
-    exports: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent],
+    declarations: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent],
+    exports: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent],
     imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
 })
 export class IgxActionStripModule { }

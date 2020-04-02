@@ -35,6 +35,7 @@
 
                     <igx-action-strip #actionstrip1>
                         <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
@@ -45,7 +46,7 @@
                 <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     (mouseleave)="actionstrip2.hide()">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden' [editable]="true">
                         <ng-template igxCell let-cell="cell" let-val>
                             <div (mouseover)="actionstrip2.show(cell)">
                                 <span>{{val}}</span>
@@ -55,6 +56,7 @@
 
                     <igx-action-strip #actionstrip2>
                         <igx-grid-pinning-actions [grid]="grid2"></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions [grid]="grid2"></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
