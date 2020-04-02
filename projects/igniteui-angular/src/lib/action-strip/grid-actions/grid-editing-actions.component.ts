@@ -22,4 +22,9 @@ export class IgxGridEditingActionsComponent {
             this.grid.crudService.begin(firstEditable);
         firstEditable.focused = true;
     }
+
+    deleteRow() {
+        const row = this.context.row ? this.context.row : this.context;
+        this.grid.deleteRow(row.rowID);
+    }
 }
