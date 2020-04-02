@@ -113,8 +113,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.focusFirstCell(fix);
             fix.detectChanges();
 
-            expect(selectedCell.value).toEqual('Casey Houston');
-            expect(selectedCell.column.field).toMatch('Name');
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             fix.detectChanges();
 
@@ -851,13 +849,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            grid.navigateTo(9, -1, (args) => { args.target.activate(); });
+            grid.navigateTo(9, -1 , (args) => { args.target.nativeElement.click(); });
+            await wait(100);
+            fix.detectChanges();
             await wait(100);
             fix.detectChanges();
 
             const target = grid.rowList.find(r => r.index === 9);
             expect(target).toBeDefined();
-            expect(target.selected).toBeTruthy();
+            GridFunctions.verifyGroupRowIsFocused(target);
          });
 
         it('Custom KB navigation: onGridKeydown should be emitted for ', async () => {

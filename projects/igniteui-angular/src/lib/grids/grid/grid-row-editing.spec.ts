@@ -2081,7 +2081,6 @@ fix.detectChanges();
             tick(100);
             fix.detectChanges();
             expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
-            expect(targetCell.focused).toBeTruthy();
             expect(targetCell.selected).toBeTruthy();
             expect(firstCell.selected).toBeFalsy();
         }));
