@@ -70,4 +70,11 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     public onLoadingDblClick(event: Event) {
         event.stopPropagation();
     }
+
+    /**
+     * @hidden
+     */
+    public get displayPinnedChip() {
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
+    }
 }

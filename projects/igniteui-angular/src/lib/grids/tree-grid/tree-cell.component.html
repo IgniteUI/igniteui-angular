@@ -1,7 +1,7 @@
 <ng-template #defaultCell>
     <div igxTextHighlight style="pointer-events: none" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
         [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
-        [row]="row.treeRow.data" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"
+        [row]="rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"
         class="igx-grid__td-text">{{ formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal:
         grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value }}</div>
 </ng-template>
@@ -36,13 +36,7 @@
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
          <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
         </ng-container>
-        <!-- <igx-chip [hidden]="!row.pinnedBodyInstance"
-                    draggable="false"
-                    disabled="true"
-                    displayDensity="cosy"
-                    #pinnedIndicator>
-            Pinned
-        </igx-chip> -->
+        <igx-chip *ngIf="displayPinnedChip" class="igx-grid__td--pinned-chip" [disabled]="true" [displayDensity]="'compact'">Pinned</igx-chip>
     </div>
     <div *ngIf="isLoading"
          (dblclick)="onLoadingDblClick($event)"

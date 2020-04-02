@@ -5784,7 +5784,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
-                this.scrollTo(matchInfo.row, matchInfo.column);
+                matchInfo.row.ghostRec !== undefined ? this.scrollTo(matchInfo.row.recordData, matchInfo.column) :
+                            this.scrollTo(matchInfo.row, matchInfo.column);
             }
 
             IgxTextHighlightDirective.setActiveHighlight(this.id, {
@@ -5931,7 +5932,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
             const ghostRec = dataRow.ghostRec !== undefined;
-            const data = { ...dataRow };
+            const dataRowRec = { ...dataRow };
             dataRow = ghostRec ? dataRow.recordData : dataRow;
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
@@ -5944,7 +5945,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             this.lastSearchInfo.matchInfoCache.push({
-                                row: data,
+                                row: dataRowRec,
                                 column: c.field,
                                 index: 0,
                             });

@@ -378,10 +378,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden @internal
      */
-    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
+    private flattenTreeGridRecords(records: any[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                (this.isGhostRecord(record)) ? flatData.push(record.data.recordData) : flatData.push(record.data);
+                (this.isGhostRecord(record)) ? flatData.push(record.recordData) : flatData.push(record);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
@@ -638,7 +638,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return {
             $implicit: rowData,
             index: rowIndex,
-            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            disabled: this.isGhostRecord(rowData.data)
         };
     }
 

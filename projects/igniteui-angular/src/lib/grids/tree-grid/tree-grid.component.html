@@ -115,8 +115,8 @@
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
-        <ng-template #record_template let-rowIndex="index" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
+        <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData>
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
