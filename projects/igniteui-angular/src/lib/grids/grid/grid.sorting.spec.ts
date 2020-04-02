@@ -1,17 +1,13 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
-import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
-import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
