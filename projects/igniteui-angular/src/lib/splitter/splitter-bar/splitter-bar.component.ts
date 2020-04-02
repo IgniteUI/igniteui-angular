@@ -74,14 +74,14 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get prevButtonHidden() {
-        return this.siblings[0].hidden;
+        return this.siblings[0].hidden && !this.siblings[1].hidden;
     }
 
     /**
      * @hidden @internal
      */
     public get nextButtonHidden() {
-        return this.siblings[1].hidden;
+        return this.siblings[1].hidden && !this.siblings[0].hidden;
     }
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
