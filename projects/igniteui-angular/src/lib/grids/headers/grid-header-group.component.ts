@@ -207,14 +207,14 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
-    */
+     */
     get hasFirstPinnedChildColumn(): boolean {
         return this.column.allChildren.some(child => child.isFirstPinned);
     }
 
     /**
      * @hidden
-    */
+     */
     get selectable() {
         const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
         return this.column.applySelectableClass
@@ -224,7 +224,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
-    */
+     */
     get selected() {
        return this.column.selected;
     }
@@ -234,6 +234,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     get height() {
         return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') || this.column.header;
     }
 
     /**
@@ -271,8 +278,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public toggleExpandState(event): void {
         event.stopPropagation();
         this.column.expanded = !this.column.expanded;
@@ -299,7 +306,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     /**
      * @hidden
-    */
+     */
     public onPointerLeave() {
         this.column.applySelectableClass = false;
     }
