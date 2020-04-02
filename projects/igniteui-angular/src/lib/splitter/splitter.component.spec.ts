@@ -7,6 +7,8 @@ import { By } from '@angular/platform-browser';
 
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
+const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
+const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 
 describe('IgxSplitter', () => {
     configureTestSuite();
@@ -44,16 +46,14 @@ describe('IgxSplitter', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
 
-        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
-        expect(splitterBar.context.direction).toBe('row');
-        expect(splitterBar.context.collapseNextIcon).toBe('arrow_drop_down');
-        expect(splitterBar.context.collapsePrevIcon).toBe('arrow_drop_up');
+        const splitterBarDIV = fixture.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS));
+        const hasVerticalClass = splitterBarDIV.nativeElement.classList.contains(SPLITTER_BAR_VERTICAL_CLASS);
+        expect(hasVerticalClass).toBeFalsy();
     });
     it('should render horizontal splitter.', () => {
-        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
-        expect(splitterBar.context.direction).toBe('column');
-        expect(splitterBar.context.collapseNextIcon).toBe('arrow_right');
-        expect(splitterBar.context.collapsePrevIcon).toBe('arrow_left');
+        const splitterBarDIV = fixture.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS));
+        const hasVerticalClass = splitterBarDIV.nativeElement.classList.contains(SPLITTER_BAR_VERTICAL_CLASS);
+        expect(hasVerticalClass).toBeTruthy();
     });
     it('should allow resizing vertical splitter', () => {
         fixture.componentInstance.type = SplitterType.Vertical;

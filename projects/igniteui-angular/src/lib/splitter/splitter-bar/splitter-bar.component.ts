@@ -23,6 +23,15 @@ export class IgxSplitBarComponent {
     public type: SplitterType = SplitterType.Vertical;
 
     /**
+     * Sets/gets `IgxSplitBarComponent` element order.
+     * @type SplitterType
+     */
+    @HostBinding('style.order')
+    @Input()
+    public order!: number;
+
+
+    /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
      * @memberof SplitBarComponent
      */
@@ -100,7 +109,7 @@ export class IgxSplitBarComponent {
     }
 
     protected get resizeDisallowed() {
-        const relatedTabs = [this.pane, ... this.siblings];
+        const relatedTabs = this.siblings;
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
