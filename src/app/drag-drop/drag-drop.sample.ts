@@ -36,7 +36,11 @@ export class DragDropSampleComponent {
         { text: 'The Avengers', dragged: false }
     ];
     public listObserver = null;
-    public draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+    public draggableElems = [
+        { value: 'Suspect 1' },
+        { value: 'Suspect 2' },
+        { value: 'Suspect 3' },
+        { value: 'Suspect 4' }];
 
     public toggleStartPageX;
     public toggleStartPageY;

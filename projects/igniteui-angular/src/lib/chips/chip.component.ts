@@ -635,7 +635,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     public onChipGhostCreate() {
-        this.hideBaseElement = true;
+        this.hideBaseElement = this.hideBaseOnDrag;
     }
 
     /**

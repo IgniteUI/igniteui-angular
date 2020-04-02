@@ -154,10 +154,13 @@
                     <h4>Drag a suspect inside or outside the cage:</h4>
                     <div igxDrop class="initialArea" [dropChannel]="['Pedestrian', 'Suspect']" [dropStrategy]="dropStrategy"
                         (enter)="enterCustomOutside($event)" (leave)="leaveCustom($event)">
-                        <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true"
+                        <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" 
+                            (ghostCreate)="elem.hide = true"
+                            (ghostDestroy)="elem.hide = false"
+                            [style.visibility]='elem.hide ? "hidden" : "visible"'
                             [dragChannel]="['Joe', 'Suspect']"
                             (dragStart)="onDragStart()" (dragEnd)="onDragEnd($event)">
-                            <span [style.margin]="'auto'">{{elem}}</span>
+                            <span [style.margin]="'auto'">{{elem.value}}</span>
                         </div>
                     </div>
 
