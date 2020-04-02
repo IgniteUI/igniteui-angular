@@ -531,7 +531,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             hierarchicalGrid.rowDraggable = true;
             hierarchicalGrid.paging = true;
-            tick(30);
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             let headers = GridFunctions.getColumnHeaders(fixture);
@@ -539,18 +539,20 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             let paging = GridFunctions.getGridPaginator(fixture);
             let rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             let dragIndicators = GridFunctions.getDragIndicators(fixture);
-            let expanders = HierarchicalGridFunctions.getExpanders(fixture);
+            let expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');
 
             expect(headers.length).toBeGreaterThan(0);
             expect(gridRows.length).toBeGreaterThan(0);
             expect(paging).not.toBeNull();
             expect(rowSelectors.length).toBeGreaterThan(0);
             expect(dragIndicators.length).toBeGreaterThan(0);
-            expect(Object.keys(expanders[0].attributes)).not.toContain('hidden');
+            // this check executes correctly on Ivy only
+            // expect(Object.keys(expanders[0].attributes)).not.toContain('hidden');
+            expect(expander).toBeNull();
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
 
             hierarchicalGrid.columnList.forEach((col) => col.hidden = true);
-            tick(30);
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             headers = GridFunctions.getColumnHeaders(fixture);
@@ -558,14 +560,16 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             paging = GridFunctions.getGridPaginator(fixture);
             rowSelectors = GridSelectionFunctions.getCheckboxes(fixture);
             dragIndicators = GridFunctions.getDragIndicators(fixture);
-            expanders = HierarchicalGridFunctions.getExpanders(fixture);
+            expander = HierarchicalGridFunctions.getExpander(fixture, '[hidden]');
 
             expect(headers.length).toBe(0);
             expect(gridRows.length).toBe(0);
             expect(paging).toBeNull();
             expect(rowSelectors.length).toBe(0);
             expect(dragIndicators.length).toBe(0);
-            expect(Object.keys(expanders[0].attributes)).toContain('hidden');
+            // this check executes correctly on Ivy only
+            // expect(Object.keys(expanders[0].attributes)).toContain('hidden');
+            expect(expander).not.toBeNull();
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
         }));
     });
