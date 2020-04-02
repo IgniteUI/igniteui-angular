@@ -5,9 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxDateTimeEditorModule, IgxButtonModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateRangeModule
+    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
+    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateTimeEditorModule, IgxButtonModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';

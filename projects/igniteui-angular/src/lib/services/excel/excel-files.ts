@@ -116,12 +116,23 @@ export class WorksheetFile implements IExcelFile {
 
             cols.push('</cols>');
 
-            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
-                !worksheetData.options.ignorePinning &&
-                !worksheetData.options.ignoreColumnsOrder) {
-                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
-                const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
-                freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+            const hasFrozenElements = !worksheetData.options.ignorePinning &&
+             (worksheetData.indexOfLastPinnedColumn !== -1 || worksheetData.indexOfLastPinnedRow !== -1);
+
+            if (hasFrozenElements) {
+                const hasFrozenCols = !worksheetData.options.ignoreColumnsOrder && worksheetData.indexOfLastPinnedColumn !== -1;
+                const hasFrozenRows = worksheetData.indexOfLastPinnedRow !== -1;
+
+                const frozenColumnCount = hasFrozenCols ? worksheetData.indexOfLastPinnedColumn + 1 : null;
+                const frozenRowCount = hasFrozenRows ? worksheetData.indexOfLastPinnedRow + 2 : null;
+
+                const frozenColumn = !hasFrozenCols ? 'A' : ExcelStrings.getExcelColumn(frozenColumnCount);
+                const firstCell = frozenColumn + (frozenRowCount + 1);
+
+                const xSplit = hasFrozenCols ? `xSplit="${frozenColumnCount}" ` : '';
+                const ySplit = hasFrozenRows ? `ySplit="${frozenRowCount}" ` : '';
+                const xySplit = (xSplit + ySplit).trim();
+                freezePane = `<pane ${xySplit} topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
             }
         }
         const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;

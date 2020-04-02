@@ -280,10 +280,10 @@ export abstract class DatePickerUtil {
     public static calculateAmPmOnSpin(newDate: Date, currentDate: Date, amPmFromMask: string) {
         switch (amPmFromMask) {
             case 'AM':
-                newDate = new Date(newDate.setHours(newDate.getHours() + 12 * 1));
+                newDate = new Date(newDate.setHours(newDate.getHours() + 12));
                 break;
             case 'PM':
-                newDate = new Date(newDate.setHours(newDate.getHours() + 12 * -1));
+                newDate = new Date(newDate.setHours(newDate.getHours() - 12));
                 break;
         }
         if (newDate.getDate() !== currentDate.getDate()) {
