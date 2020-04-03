@@ -131,9 +131,78 @@ describe('IgxSplitter', () => {
         splitterBarComponent.onDragStart(args);
         expect(args.cancel).toBeTruthy();
     });
-
 });
 
+describe('IgxSplitter pane toggle', () => {
+    configureTestSuite();
+    beforeAll(async(() => {
+
+        return TestBed.configureTestingModule({
+            declarations: [ SplitterTogglePaneComponent ],
+            imports: [
+                IgxSplitterModule
+            ]
+        }).compileComponents();
+    }));
+
+    let fixture, splitter;
+    beforeEach(async(() => {
+        fixture = TestBed.createComponent(SplitterTogglePaneComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+    }));
+
+    it('should collapse/expand panes', () => {
+        const pane1 = splitter.panes.toArray()[0];
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+
+        // collapse left sibling pane
+        splitterBarComponent.onCollapsing(0);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeTruthy();
+
+        // expand left sibling pane
+        splitterBarComponent.onCollapsing(1);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeFalsy();
+    });
+
+    it('should be able to expand both siblings when they are collapsed', () => {
+        const panes = splitter.panes.toArray();
+        const pane1 = panes[0];
+        const pane2 = panes[1];
+        const splitterBarComponents = fixture.debugElement.queryAll(By.css(SPLITTERBAR_CLASS));
+        const splitterBar1 = splitterBarComponents[0].context;
+        const splitterBar2 = splitterBarComponents[1].context;
+
+        splitterBar1.onCollapsing(0);
+        splitterBar2.onCollapsing(0);
+        fixture.detectChanges();
+
+        expect(pane1.hidden).toBeTruthy();
+        expect(pane2.hidden).toBeTruthy();
+
+        splitterBar1.onCollapsing(1);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeFalsy();
+    });
+
+    it('should not be able to resize a pane when it is hidden', () => {
+        const pane1 = splitter.panes.toArray()[0];
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+
+        // collapse left sibling pane
+        splitterBarComponent.onCollapsing(0);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.resizable).toBeFalsy();
+
+        splitterBarComponent.onCollapsing(1);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.resizable).toBeTruthy();
+    });
+});
 @Component({
     template: `
     <igx-splitter [type]="type">
@@ -154,4 +223,29 @@ export class SplitterTestComponent {
     type = SplitterType.Horizontal;
     @ViewChild(IgxSplitterComponent, { static: true })
     public splitter: IgxSplitterComponent;
+}
+
+@Component({
+    template: `
+    <igx-splitter [type]="type">
+    <igx-splitter-pane>
+        <div style='height:200px;'>
+           Pane 1
+        </div>
+    </igx-splitter-pane>
+    <igx-splitter-pane>
+        <div style='height:200px;'>
+            Pane 2
+         </div>
+    </igx-splitter-pane>
+    <igx-splitter-pane>
+        <div style='height:200px;'>
+            Pane 3
+         </div>
+    </igx-splitter-pane>
+</igx-splitter>
+    `,
+})
+
+export class SplitterTogglePaneComponent extends SplitterTestComponent {
 }
