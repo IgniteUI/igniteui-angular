@@ -118,7 +118,7 @@ export class IgxSplitBarComponent {
     */
     @HostListener('keydown', ['$event'])
     keyEvent(event: KeyboardEvent) {
-        const key = event.code.toLowerCase();
+        const key = event.key.toLowerCase();
         event.stopPropagation();
         if (this.pane.resizable && this.siblings[0].resizable) {
             switch (key) {

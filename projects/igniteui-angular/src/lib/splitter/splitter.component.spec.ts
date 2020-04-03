@@ -1,9 +1,10 @@
 import { IgxSplitterModule } from './splitter.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { SplitterType, IgxSplitterComponent } from './splitter.component';
 import { By } from '@angular/platform-browser';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
@@ -130,6 +131,64 @@ describe('IgxSplitter', () => {
         const args = {cancel: false};
         splitterBarComponent.onDragStart(args);
         expect(args.cancel).toBeTruthy();
+    });
+
+    it('should allow resizing with up/down arrow keys', () => {
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+        const pane1_originalSize = pane1.element.offsetHeight;
+        const pane2_originalSize = pane2.element.offsetHeight;
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        splitterBarComponent.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent);
+        fixture.detectChanges();
+        expect(pane1.size).toBe(pane1_originalSize - 10 + 'px');
+        expect(pane2.size).toBe(pane2_originalSize + 10 + 'px');
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        fixture.detectChanges();
+        expect(pane1.size).toBe(pane1_originalSize + 10 + 'px');
+        expect(pane2.size).toBe(pane2_originalSize - 10 + 'px');
+
+        pane2.resizable = false;
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        fixture.detectChanges();
+        expect(pane1.size).toBe(pane1_originalSize + 10 + 'px');
+        expect(pane2.size).toBe(pane2_originalSize - 10 + 'px');
+    });
+
+    it('should allow resizing with left/right arrow keys', () => {
+        fixture.componentInstance.type = SplitterType.Horizontal;
+        fixture.detectChanges();
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        splitterBarComponent.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent);
+        fixture.detectChanges();
+        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize - 10, 0);
+        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize + 10, 0);
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        fixture.detectChanges();
+        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize + 10, 0);
+        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
+
+        pane1.resizable = false;
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        fixture.detectChanges();
+        expect(parseFloat(pane1.size)).toBeCloseTo(pane1_originalSize + 10, 0);
+        expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
     });
 
 });
