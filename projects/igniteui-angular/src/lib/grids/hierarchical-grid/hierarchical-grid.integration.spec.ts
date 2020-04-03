@@ -227,7 +227,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(firstChildCell.value).toBe('00');
         }));
 
-        fit('should allow sorting via headers in child grids', fakeAsync(() => {
+        it('should allow sorting via headers in child grids', fakeAsync(() => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // enable sorting
