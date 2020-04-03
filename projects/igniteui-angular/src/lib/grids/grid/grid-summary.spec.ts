@@ -797,13 +797,13 @@ describe('IgxGrid - Summaries #grid', () => {
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
             const gridFooter = GridFunctions.getGridFooter(fix);
-            GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
+            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.focusSummaryCell(fix, summaryRow, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
@@ -822,16 +822,16 @@ describe('IgxGrid - Summaries #grid', () => {
 
         it('should not change active summary cell when press Arrow Down and Up', () => {
             const gridFooter = GridFunctions.getGridFooter(fix);
-            GridSummaryFunctions.focusSummaryCell(fix, 0, 1);
-
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridFooter);
-            fix.detectChanges();
-            GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
+            GridSummaryFunctions.focusSummaryCell(fix, summaryRow, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridFooter);
             fix.detectChanges();
-            GridSummaryFunctions.verifySummaryCellActive(fix, 0, 1);
+            GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 1);
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridFooter);
+            fix.detectChanges();
+            GridSummaryFunctions.verifySummaryCellActive(fix, summaryRow, 1);
         });
 
         it('Grouping: should be able to select summaries with arrow keys', async () => {

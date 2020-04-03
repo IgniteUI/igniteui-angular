@@ -1498,10 +1498,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let targetCell = grid.getCellByColumn(0, 'CompanyName');
-                targetCell.nativeElement.focus();
-                fix.detectChanges();
-
-                targetCell.setEditMode(true);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
                 fix.detectChanges();
 
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;

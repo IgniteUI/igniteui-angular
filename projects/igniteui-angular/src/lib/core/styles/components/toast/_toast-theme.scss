@@ -121,6 +121,7 @@
 
     %igx-toast--top {
         top: 0;
+        margin-top: 16px;
     }
 
     %igx-toast--middle {
@@ -130,6 +131,7 @@
 
     %igx-toast--bottom {
         bottom: 0;
+        margin-bottom: 16px;
     }
 }
 
@@ -143,7 +145,7 @@
 @mixin igx-toast-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map-get($categories, 'text');
 
-    %igx-toast-display {
+    %igx-toast-display > *{
         @include igx-type-style($type-scale, $text) {
             margin: 0;
         }

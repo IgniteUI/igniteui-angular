@@ -31,6 +31,7 @@ import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
 import { IgxIconModule } from '../icon/index';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../test-utils/grid-functions.spec';
 
 declare var Simulator: any;
 
@@ -702,10 +703,11 @@ describe('List', () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
         await wait();
+
         fixture.componentInstance.igxFor.scrollTo(8);
         await wait(200);
         fixture.detectChanges();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
 
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
@@ -719,10 +721,15 @@ describe('List', () => {
     it('should return items as they appear in the list with virtualization', (async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
+        await wait(50);
+
         fixture.componentInstance.igxFor.scrollTo(6);
         await wait(50);
         fixture.detectChanges();
-        const dItems = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        await wait(50);
+        fixture.detectChanges();
+
+        const dItems = GridFunctions.sortDebugElementsVertically(fixture.debugElement.queryAll(By.css('igx-list-item')));
         const pItems = fixture.componentInstance.forOfList.items;
         const len = dItems.length;
         for (let i = 0; i < len; i++) {
