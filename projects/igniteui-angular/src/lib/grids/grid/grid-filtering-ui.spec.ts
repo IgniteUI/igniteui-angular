@@ -3446,80 +3446,85 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should commit the input and new chip after focus out and should edit chip without creating new one.', fakeAsync(() => {
             // Click date filter chip to show filter row.
-            const filterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent));
-            const dateFilterCell = filterCells.find((fc) => fc.componentInstance.column.field === 'ReleaseDate');
-            const dateFilterCellChip = dateFilterCell.query(By.directive(IgxChipComponent));
+            const dateFilterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
             dateFilterCellChip.nativeElement.click();
             tick(100);
             fix.detectChanges();
 
             // Click input to open calendar.
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-            const input = filteringRow.query(By.directive(IgxInputDirective));
-            input.nativeElement.click();
+            const inputDebugElement = filteringRow.query(By.directive(IgxInputDirective));
+            const input = inputDebugElement.nativeElement;
+            input.click();
             tick(100);
             fix.detectChanges();
 
             // Click the today date.
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
-            (<HTMLElement>todayDayItem).click();
+            const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
+            todayDayItem.click();
             tick(100);
             fix.detectChanges();
 
+            // Select our newly added chip
+            const chip = GridFunctions.getFilterConditionChip(fix, 0);
+            const chipDiv = chip.querySelector('.igx-chip__item');
+
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('initial chip is committed');
+
             // Focus out
-            clickElemAndBlur(dateFilterCellChip, input);
+            clickElemAndBlur(dateFilterCellChip, inputDebugElement);
             tick(200);
             fix.detectChanges();
-            expect(dateFilterCellChip.componentInstance.selected).toBeFalsy('initial chip is not committed');
-            expect((<IgxInputDirective>input.componentInstance).value).toBeNull('initial input value is present and not committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeFalsy('initial chip is not committed');
+            expect(input.value).toBeFalsy('initial input value is present and not committed');
 
-            // Select our newly added chip to edit it
-            const chip = GridFunctions.getFilterConditionChip(fix, 0);
             chip.click();
             tick(200);
             fix.detectChanges();
 
             // Open calendar
-            input.nativeElement.click();
+            input.click();
             tick(100);
             fix.detectChanges();
 
             calendar = outlet.getElementsByClassName('igx-calendar')[0];
 
             // View years
-            const yearView = calendar.querySelectorAll('.igx-calendar-picker__date')[1];
-            (<HTMLElement>yearView).click();
+            const yearView: HTMLElement = calendar.querySelectorAll('.igx-calendar-picker__date')[1] as HTMLElement;
+            yearView.click();
             tick(100);
             fix.detectChanges();
 
             // Select the first year
-            const firstYear = calendar.querySelectorAll('.igx-calendar__year')[0];
-            (<HTMLElement>firstYear).click();
+            const firstYear: HTMLElement = calendar.querySelectorAll('.igx-calendar__year')[0] as HTMLElement;
+            firstYear.click();
             tick(100);
             fix.detectChanges();
 
             // Select the first day
-            const firstDayItem = calendar.querySelector('.igx-calendar__date');
-            (<HTMLElement>firstDayItem).click();
+            const firstDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date');
+            firstDayItem.click();
             tick(100);
             fix.detectChanges();
 
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('chip is committed');
+
             // Focus out
-            clickElemAndBlur(dateFilterCellChip, input);
+            clickElemAndBlur(dateFilterCellChip, inputDebugElement);
             tick(200);
             fix.detectChanges();
-            expect(dateFilterCellChip.componentInstance.selected).toBeFalsy();
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
 
             // Check if we still have only one committed chip
             const activeFiltersArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
-            const activeFilterChip = activeFiltersArea.query(By.directive(IgxChipComponent));
+            const activeFilterChip: IgxChipComponent = activeFiltersArea.query(By.directive(IgxChipComponent)).componentInstance;
             const chipsLength = GridFunctions.getAllFilterConditionChips(fix).length;
 
             expect(chipsLength).toBe(1, 'there is more than one chip');
-            expect((<IgxChipComponent>activeFilterChip.componentInstance).selected).toBe(false, 'chip is not committed');
-            expect((<IgxInputDirective>input.componentInstance).value).toBeNull('input value is present and not committed');
+            expect(activeFilterChip.selected).toBe(false, 'chip is not committed');
+            expect(input.value).toBeFalsy('input value is present and not committed');
         }));
     });
     describe(null, () => {
