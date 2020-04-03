@@ -162,31 +162,31 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _formatterMonth: any;
 
     /**
-     *@hidden
+     * @hidden
      */
     private _locale = 'en';
 
     /**
-     *@hidden
+     * @hidden
      */
     private _monthFormat = 'short';
 
     /**
-     *@hidden
+     * @hidden
      */
     private _calendarModel: Calendar;
 
     /**
-     *@hidden
+     * @hidden
      */
     private _onTouchedCallback: () => void = () => { };
     /**
-     *@hidden
+     * @hidden
      */
     private _onChangeCallback: (_: Date) => void = () => { };
 
@@ -208,7 +208,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public selectMonth(event) {
         this.onSelection.emit(event);
@@ -248,7 +248,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private initMonthFormatter() {
         this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this.monthFormat });

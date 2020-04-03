@@ -261,7 +261,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public focusActiveDate() {
         let date = this.dates.find((d) => d.selected);
