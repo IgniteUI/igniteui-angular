@@ -2336,6 +2336,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets/Sets column selection mode
+     * @remarks
+     * By default the row selection mode is none
+     * @param selectionMode: GridSelectionMode
+     */
+    @WatchChanges()
+    @Input()
+    get columnSelection() {
+        return this._columnSelectionMode;
+    }
+
+    set columnSelection(selectionMode: GridSelectionMode) {
+        this._columnSelectionMode = selectionMode;
+        if (this.gridAPI.grid) {
+            this.selectionService.clearAllSelectedColumns();
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
      * @hidden @internal
      */
     public rowEditMessage;
@@ -2542,6 +2562,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
     private _cellSelectionMode = GridSelectionMode.multiple;
     private _rowSelectionMode = GridSelectionMode.none;
+    private _columnSelectionMode = GridSelectionMode.none;
 
     private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
