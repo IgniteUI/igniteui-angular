@@ -202,6 +202,35 @@ describe('IgxForOf directive -', () => {
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
+        it('should reset scroll position if component is destroyed and recreated.', async () => {
+            let scrollComponent = fix.debugElement.query(By.css(VERTICAL_SCROLLER)).componentInstance;
+            expect(scrollComponent.scrollAmount).toBe(0);
+            expect(scrollComponent.destroyed).toBeFalsy();
+
+            fix.componentInstance.scrollTop(500);
+            fix.detectChanges();
+            await wait();
+            expect(scrollComponent.scrollAmount).toBe(500);
+
+            fix.componentInstance.exists = false;
+            fix.detectChanges();
+            await wait();
+
+            expect(scrollComponent.destroyed).toBeTruthy();
+
+            fix.componentInstance.exists = true;
+            fix.detectChanges();
+            await wait();
+
+            scrollComponent = fix.debugElement.query(By.css(VERTICAL_SCROLLER)).componentInstance;
+            expect(scrollComponent.scrollAmount).toBe(0);
+            expect(scrollComponent.destroyed).toBeFalsy();
+
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            const firstInnerDisplayContainer = displayContainer.children[0];
+            expect(firstInnerDisplayContainer.children[0].textContent).toBe('0');
+        });
+
         it('should initialize directive with vertical virtualization', async () => {
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
@@ -1413,10 +1442,10 @@ export class VirtualComponent {
     public cols = [];
     public data = [];
 
-    @ViewChild('container', { read: ViewContainerRef, static: true })
+    @ViewChild('container', { read: ViewContainerRef, static: false })
     public container: ViewContainerRef;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: false })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
