@@ -177,18 +177,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
   /** @hidden */
   public onBlur(event): void {
     this._isFocused = false;
-    this.updateValue(this.value);
-    this.updateMask();
-    this.onTouchCallback();
-    super.onBlur(event);
-  }
 
-  /** @hidden */
-  public onInputChanged(): void {
-    // the mask must be updated before any date operations
-    super.onInputChanged();
     if (this.inputValue === this.emptyMask) {
       this.updateValue(null);
+      this.inputValue = '';
       return;
     }
 
@@ -199,6 +191,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
       this.validationFailed.emit({ oldValue: this.value, newValue: parsedDate.value });
       this.updateValue(null);
     }
+
+    this.updateMask();
+    this.onTouchCallback();
+    super.onBlur(event);
   }
 
   /** @hidden */
@@ -299,7 +295,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
     } else {
       this.onChangeCallback(this.value);
     }
-    if (this.inputIsComplete()) {
+    if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
       this.valueChanged.emit({ oldValue: this._oldValue, newValue: this.value });
     }
   }
