@@ -38,8 +38,8 @@ export class IgxSplitterComponent implements AfterContentInit {
         this._type = value;
         if (this.panes) {
             // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size='auto');
-        }        
+            this.panes.forEach(x => x.size = 'auto');
+        }
     }
 
     @Output()
