@@ -36,6 +36,17 @@ You can show hide toast by using `toast.hide()` method.
 
 You can modify the position of the toast by setting `postion="IgxToastPosition.Top"`.
 
+## Toast with different content
+
+```html
+<igx-toast #toast [position]="toastPosition">
+    <igx-icon>notifications</igx-icon>
+    This message will self-destruct in 4 seconds.
+</igx-toast>
+```
+
+You can display various content by placing it between the igx-toast tags. If so, the message property will be overwritten.
+
 ## Toast with events
 
 ```html
