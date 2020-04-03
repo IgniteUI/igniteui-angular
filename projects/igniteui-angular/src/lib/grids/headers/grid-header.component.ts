@@ -130,6 +130,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             && (!this.grid.filteringService.isFilterRowVisible || this.grid.filteringService.filteredColumn !== this.column);
     }
 
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') ||
+            this.column.header || this.column.field;
+    }
+
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 
@@ -284,16 +289,16 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @HostListener('pointerenter')
     public onPinterEnter() {
         this.column.applySelectableClass = true;
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @HostListener('pointerleave')
     public onPointerLeave() {
         this.column.applySelectableClass = false;

@@ -38,6 +38,7 @@
 @import './scrollbar';
 @import './slider';
 @import './snackbar';
+@import './splitter';
 @import './switch';
 @import './tabs';
 @import './time-picker';
@@ -82,6 +83,7 @@
 /// @property {Map} igx-scrollbar [$_dark-scrollbar]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
+/// @property {Map} igx-splitter [$_dark-splitter]
 /// @property {Map} igx-switch [$_dark-switch]
 /// @property {Map} igx-tabs [$_dark-tabs]
 /// @property {Map} igx-time-picker [$_dark-time-picker]
@@ -124,6 +126,7 @@ $dark-schema: (
     igx-scrollbar: $_dark-scrollbar,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
+    igx-splitter: $_dark-splitter,
     igx-switch: $_dark-switch,
     igx-tabs: $_dark-tabs,
     igx-time-picker: $_dark-time-picker,
@@ -169,6 +172,7 @@ $dark-schema: (
 /// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
+/// @property {map} igx-splitter [$_dark-fluent-splitter],
 /// @property {map} igx-switch [$_dark-fluent-switch],
 /// @property {map} igx-tabs [$_dark-fluent-tabs],
 /// @property {map} igx-time-picker [$_dark-fluent-time-picker],
@@ -211,6 +215,7 @@ $dark-fluent-schema: (
     igx-scrollbar: $_dark-fluent-scrollbar,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
+    igx-splitter: $_dark-fluent-splitter,
     igx-switch: $_dark-fluent-switch,
     igx-tabs: $_dark-fluent-tabs,
     igx-time-picker: $_dark-fluent-time-picker,
@@ -256,6 +261,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
+/// @property {map} igx-splitter [$_dark-bootstrap-splitter],
 /// @property {map} igx-switch [$_dark-bootstrap-switch],
 /// @property {map} igx-tabs [$_dark-bootstrap-tabs],
 /// @property {map} igx-time-picker [$_dark-bootstrap-time-picker],
@@ -298,6 +304,7 @@ $dark-bootstrap-schema: (
     igx-scrollbar: $_dark-bootstrap-scrollbar,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
+    igx-splitter: $_dark-bootstrap-splitter,
     igx-switch: $_dark-bootstrap-switch,
     igx-tabs: $_dark-bootstrap-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,

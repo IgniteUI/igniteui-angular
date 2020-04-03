@@ -23,6 +23,15 @@ export class IgxSplitBarComponent {
     public type: SplitterType = SplitterType.Vertical;
 
     /**
+     * Sets/gets `IgxSplitBarComponent` element order.
+     * @type SplitterType
+     */
+    @HostBinding('style.order')
+    @Input()
+    public order!: number;
+
+
+    /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
      * @memberof SplitBarComponent
      */
@@ -50,30 +59,22 @@ export class IgxSplitBarComponent {
     public moving = new EventEmitter<number>();
 
     /**
-     * Gets the cursor associated with the current `SplitBarComponent`.
-     * @readonly
-     * @type string
+     * An event that is emitted when collapsing the pane
+     */
+    @Output()
+    public togglePane = new EventEmitter<IgxSplitterPaneComponent>();
+    /**
+     * A temporary holder for the pointer coordinates.
+     * @private
      * @memberof SplitBarComponent
      */
-    public get cursor(): string {
-        return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
-    }
+    private startPoint!: number;
 
     /**
-     * Sets/gets the `display` property of the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
+     * @hidden @internal
      */
-    @HostBinding('style.display')
-    public display = 'flex';
-
-    /**
-     * Gets the `flex-direction` property of the current `SplitBarComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitBarComponent
-     */
-    public get direction(): string {
-        return this.type === SplitterType.Horizontal ? 'column' : 'row';
+    public get prevButtonHidden() {
+        return this.siblings[0].hidden && !this.siblings[1].hidden;
     }
 
     get collapseNextIcon() {
@@ -85,13 +86,6 @@ export class IgxSplitBarComponent {
     }
 
     /**
-     * A temporary holder for the pointer coordinates.
-     * @private
-     * @memberof SplitBarComponent
-     */
-    private startPoint!: number;
-
-        /**
      * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
      * @memberof SplitterComponent
@@ -152,6 +146,9 @@ export class IgxSplitBarComponent {
         }
     }
 
+    public get nextButtonHidden() {
+        return this.siblings[1].hidden && !this.siblings[0].hidden;
+    }
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
@@ -178,7 +175,7 @@ export class IgxSplitBarComponent {
     }
 
     protected get resizeDisallowed() {
-        const relatedTabs = [this.pane, ... this.siblings];
+        const relatedTabs = this.siblings;
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
@@ -232,5 +229,19 @@ export class IgxSplitBarComponent {
         if (this.sibling.size === 'auto') {
             this.sibling.size = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
         }
+    }
+    
+    public onCollapsing(next: boolean) {
+        const prevSibling = this.siblings[0];
+        const nextSibling = this.siblings[1];
+        let target;
+        if (next) {
+            // if next is clicked when prev pane is hidden, show prev pane, else hide next pane.
+            target = prevSibling.hidden ? prevSibling : nextSibling;
+        } else {
+            // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
+            target = nextSibling.hidden ? nextSibling : prevSibling;
+        }
+        this.togglePane.emit(target);
     }
 }

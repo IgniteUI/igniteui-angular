@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, ElementRef } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 
 /**
  * Provides reference to `SplitPaneComponent` component.
@@ -75,7 +75,7 @@ export class IgxSplitterPaneComponent {
     public minHeight = 0;
 
     /**
-     * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `SplitPaneComponent`.
+     * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.max-height')
     @HostBinding('style.max-width')
@@ -92,6 +92,33 @@ export class IgxSplitterPaneComponent {
 
         return `${grow} ${shrink} ${this.size}`;
     }
+
+    /**
+     * Sets/gets the 'display' property of the current `IgxSplitterPaneComponent`
+     */
+    @HostBinding('style.display')
+    public display = 'flex';
+
+    private _hidden = false;
+
+    /**
+     * Sets/gets whether current `IgxSplitterPanecomponent` is hidden
+     */
+    @Input()
+    public set hidden(value) {
+        this._hidden = value;
+        this.display = this._hidden ? 'none' : 'flex' ;
+    }
+
+    public get hidden() {
+        return this._hidden;
+    }
+
+    /**
+     * Event fired when collapsing and changing the hidden state of the current pane
+     */
+    @Output()
+    public onPaneToggle = new EventEmitter<IgxSplitterPaneComponent>();
 
     constructor(private el: ElementRef) { }
 }

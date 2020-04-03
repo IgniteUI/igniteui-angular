@@ -282,8 +282,8 @@ export class IgxGridSelectionService {
     }
 
     /**
-    * Resets the columns state
-    */
+     * Resets the columns state
+     */
     initColumnsState(): void {
         this.columnsState.field = null;
         this.columnsState.range = [];
@@ -622,7 +622,7 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
-    /** Select range from last selected row to the current specified row.*/
+    /** Select range from last selected row to the current specified row. */
     selectMultipleRows(rowID, rowData, event?): void {
         this.allRowsSelected = undefined;
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
@@ -689,7 +689,7 @@ export class IgxGridSelectionService {
         this.allRowsSelected = undefined;
     }
 
-    /**Clear rowSelection and update checkbox state*/
+    /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
         this.clearHeaderCBState();
@@ -762,7 +762,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    /** Select range from last clicked column to the current specified column.*/
+    /** Select range from last clicked column to the current specified column. */
     selectColumnsRange(field: string, event): void {
         const currIndex = this.grid.getColumnByName(this.columnsState.field).visibleIndex;
         const newIndex = this.grid.columnToVisibleIndex(field);
@@ -825,7 +825,7 @@ export class IgxGridSelectionService {
         this.selectColumnsWithNoEvent(args.newSelection, true);
     }
 
-    /**Clear columnSelection*/
+    /** Clear columnSelection */
     public clearAllSelectedColumns(): void {
         this.columnSelection.clear();
     }

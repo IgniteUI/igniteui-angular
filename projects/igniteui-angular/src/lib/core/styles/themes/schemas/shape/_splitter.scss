@@ -1,0 +1,23 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-splitter: (
+    border-radius: 1,
+);
+
+/// @type Map
+$_round-shape-splitter: (
+    border-radius: 1,
+);
+
+/// @type Map
+$_square-shape-splitter: (
+    border-radius: 0,
+);
+
+/// @type Map
+$_bootstrap-shape-splitter: (
+    border-radius: 1,
+);

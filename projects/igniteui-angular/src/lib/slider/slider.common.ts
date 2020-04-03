@@ -4,7 +4,7 @@ import { IBaseEventArgs } from '../core/utils';
 /**
  * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
  *
- *```html
+ * ```html
  * <igx-slider>
  *  <ng-template igxSliderThumbFrom let-value let-labels>{{value}}</ng-template>
  * </igx-slider>

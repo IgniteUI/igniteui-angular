@@ -138,8 +138,8 @@ export class IgxExpansionPanelHeaderComponent {
      public cssClass = 'igx-expansion-panel__header';
 
      /**
-     * @hidden
-     */
+      * @hidden
+      */
      @HostBinding('class.igx-expansion-panel__header--expanded')
      public get isExpanded () {
             return !this.panel.collapsed;
@@ -172,8 +172,8 @@ export class IgxExpansionPanelHeaderComponent {
      }
 
      /**
-     * @hidden
-     */
+      * @hidden
+      */
      @HostListener('keydown.Enter', ['$event'])
      @HostListener('keydown.Space', ['$event'])
      @HostListener('keydown.Spacebar', ['$event'])
@@ -207,8 +207,8 @@ export class IgxExpansionPanelHeaderComponent {
      }
 
      /**
-     * @hidden
-     */
+      * @hidden
+      */
      public get iconPositionClass(): string {
         switch (this.iconPosition) {
             case (ICON_POSITION.LEFT):
