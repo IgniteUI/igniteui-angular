@@ -208,7 +208,7 @@ export class GridFunctions {
             }
         })
 
-    public static getMasterRowDetail(row: IgxGridRowComponent) {
+    public static getMasterRowDetail(row) {
         const nextSibling = row.element.nativeElement.nextElementSibling;
         if (nextSibling &&
             nextSibling.tagName.toLowerCase() === 'div' &&

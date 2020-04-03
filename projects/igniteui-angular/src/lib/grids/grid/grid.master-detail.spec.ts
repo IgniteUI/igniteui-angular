@@ -651,7 +651,8 @@ describe('IgxGrid Master Detail #grid', () => {
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
                 and focus is on the detail row container.`, async() => {
             // Focus first cell
-            let detailRow = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            let row = grid.getRowByIndex(0);
+            let detailRow = GridFunctions.getMasterRowDetail(row);
             UIInteractions.simulateClickAndSelectHTMLElement(detailRow);
             fix.detectChanges();
 
@@ -660,31 +661,19 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
 
-            let row = grid.getRowByIndex(52) as IgxGridRowComponent;
-            expect(row).not.toBeUndefined();
-            expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
-            expect(row.cells.first.active).toBeTruthy();
-
-            // Got to details row
-            UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-
+            row = grid.getRowByIndex(0);
             detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
+
+            // Got to details row
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
 
-            row = grid.getRowByIndex(0) as IgxGridRowComponent;
-            expect(row).not.toBeUndefined();
-            expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
-            expect(row.cells.first.active).toBeTruthy();
+            row = grid.getRowByIndex(0);
+            detailRow = GridFunctions.getMasterRowDetail(row);
+            GridFunctions.verifyMasterDetailRowFocused(detailRow);
         });
 
         it('Should not navigate if keydown is done on an element inside the details template.', () => {
