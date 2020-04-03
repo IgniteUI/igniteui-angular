@@ -33,7 +33,10 @@ export class IgxGridNavigationService {
 
         const type = this.isDataRow(this.activeNode.row) ? GridKeydownTargetType.dataCell :
             this.isDataRow(this.activeNode.row, true) ? GridKeydownTargetType.summaryCell : GridKeydownTargetType.groupRow;
-        this.emitKeyDown(type, this.activeNode.row, event);
+        const cancel = this.emitKeyDown(type, this.activeNode.row, event);
+        if (cancel) {
+            return;
+        }
         if (event.altKey) {
             this.handleAlt(key, event);
             return;
@@ -173,7 +176,12 @@ export class IgxGridNavigationService {
 
         event.preventDefault();
         this.activeNode.row = rowIndex;
-        if (rowIndex > 0) { this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event); }
+        if (rowIndex > 0) {
+            const cancel = this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event);
+            if (cancel) {
+                return;
+            }
+        }
 
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
@@ -272,7 +280,6 @@ export class IgxGridNavigationService {
 
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
             obj.target.activate();
-            obj.target.setEditMode(true);
             this.grid.cdr.detectChanges();
         });
     }
@@ -344,7 +351,7 @@ export class IgxGridNavigationService {
         if (keydownArgs.cancel && type === GridKeydownTargetType.dataCell) {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;
-            return;
+            return keydownArgs.cancel;
         }
     }
 
