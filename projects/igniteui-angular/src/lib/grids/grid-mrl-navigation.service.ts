@@ -31,7 +31,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 break;
             case 'home':
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row;
-                colIndex = 0;
+                colIndex = ctrl ? 0 : this.firstIndexPerRow;
                 break;
             case 'arrowleft':
             case 'left':
@@ -225,7 +225,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         event.preventDefault();
         this.activeNode.row = rowIndex;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            this.activeNode.column = ctrl || key === 'home' ? 0 : this.getNextHorizontalCellPositon(true).column;
+            this.activeNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPositon(true).column;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column !== this.lastIndexPerRow) {
             this.activeNode.column = ctrl || key === 'end' ? this.lastIndexPerRow : this.getNextHorizontalCellPositon().column;
@@ -237,6 +237,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private get lastIndexPerRow(): number {
         const children = this.grid.getColumnByVisibleIndex(this.lastLayoutIndex).parent.children.toArray().reverse();
+        const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
+        children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
+        return column.visibleIndex;
+    }
+
+    private get firstIndexPerRow(): number {
+        const children = this.grid.getColumnByVisibleIndex(0).parent.children;
         const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
         children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
         return column.visibleIndex;
