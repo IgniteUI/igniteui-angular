@@ -67,8 +67,9 @@
                        [value]="value | igxdate: filteringService.grid.locale"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
-                <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
-                    <igx-icon>clear</igx-icon>
+                <igx-suffix *ngIf="value" >
+                    <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
+                    <igx-icon (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="1">clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
             </ng-template>
