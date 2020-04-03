@@ -227,7 +227,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(firstChildCell.value).toBe('00');
         }));
 
-        it('should allow sorting via headers in child grids', fakeAsync(() => {
+        fit('should allow sorting via headers in child grids', fakeAsync(() => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // enable sorting
@@ -235,14 +235,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             childGrid.columnList.first.sortable = true;
             fixture.detectChanges();
 
-            const childHeaders = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'));
-            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
+            const childHeader = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'))[0];
+            UIInteractions.simulateClickEvent(childHeader.nativeElement);
             fixture.detectChanges();
-            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
+            UIInteractions.simulateClickEvent(childHeader.nativeElement);
             fixture.detectChanges();
 
             expect(childGrid.dataRowList.first.cells.first.value).toBe('09');
-            const icon = GridFunctions.getHeaderSortIcon(childHeaders[0]);
+            const icon = GridFunctions.getHeaderSortIcon(childHeader);
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_downward');
         }));

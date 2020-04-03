@@ -1836,11 +1836,6 @@ export class GridFunctions {
         return header.query(By.css(SORT_ICON_CLASS));
     }
 
-    public static clickHeaderSortIcon(header: DebugElement) {
-        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
-        sortIcon.triggerEventHandler('click', new Event('click'));
-    }
-
     public static getDragIndicators(fix: ComponentFixture<any>): HTMLElement[] {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
     }
