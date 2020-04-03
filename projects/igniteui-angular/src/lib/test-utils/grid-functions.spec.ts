@@ -946,6 +946,13 @@ export class GridFunctions {
     }
 
     /**
+     * returns the filter row debug element.
+     */
+    public static getFilterRow(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(FILTER_UI_ROW));
+    }
+
+    /**
      * Click the filter chip for the provided column in order to open the filter row for it.
      */
     public static clickFilterCellChipUI(fix, columnField: string, forGrid?: IgxGridBaseDirective) {
@@ -1068,6 +1075,12 @@ export class GridFunctions {
             .map((header) => header.nativeElement);
         const sortedNativeHeaders = GridFunctions.sortNativeElementsHorizontally(nativeHeaders);
         return sortedNativeHeaders[index].querySelector('.igx-grid__th-title');
+    }
+
+    public static clickColumnHeaderUI(columnField: string, fix: ComponentFixture<any>, ctrlKey = false, shiftKey = false) {
+        const header = this.getColumnHeader(columnField, fix);
+        header.triggerEventHandler('click', new MouseEvent('click', { shiftKey: shiftKey, ctrlKey: ctrlKey }));
+        fix.detectChanges();
     }
 
     public static getFilterChipsForColumn(columnField: string, fix: ComponentFixture<any>) {
@@ -1834,6 +1847,11 @@ export class GridFunctions {
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return header.query(By.css(SORT_ICON_CLASS));
+    }
+
+    public static clickHeaderSortIcon(header: DebugElement) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        sortIcon.triggerEventHandler('click', new Event('click'));
     }
 
     public static getDragIndicators(fix: ComponentFixture<any>): HTMLElement[] {
