@@ -10,7 +10,6 @@ import { Component,
     QueryList,
     Directive } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IgxGridActionsComponent } from './grid-actions/grid-actions.component';
 import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -102,7 +101,6 @@ export class IgxActionStripComponent {
 
     public context;
 
-    @ContentChild(IgxGridActionsComponent, { static: false }) public gridActions: IgxGridActionsComponent;
     @ContentChild(IgxGridPinningActionsComponent, { static: false }) public gridPinningActions: IgxGridPinningActionsComponent;
     @ContentChild(IgxGridEditingActionsComponent, { static: false }) public gridEditingActions: IgxGridEditingActionsComponent;
     @ContentChildren(IgxActionStripMenuItemDirective) public menuItems: QueryList<IgxActionStripMenuItemDirective>;
@@ -126,9 +124,6 @@ export class IgxActionStripComponent {
         }
         if (this.gridPinningActions) {
             this.gridPinningActions.context = this.context;
-        }
-        if (this.gridActions) {
-            this.gridActions.context = this.context;
         }
     }
 }
