@@ -21,7 +21,7 @@ import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 
 /**
- *@hidden
+ * @hidden
  */
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -32,7 +32,7 @@ class ExpressionItem {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 class ExpressionGroupItem extends ExpressionItem {
     constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
@@ -45,7 +45,7 @@ class ExpressionGroupItem extends ExpressionItem {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 class ExpressionOperandItem extends ExpressionItem {
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {

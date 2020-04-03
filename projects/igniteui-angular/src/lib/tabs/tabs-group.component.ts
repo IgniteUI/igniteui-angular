@@ -22,30 +22,30 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
 
     /**
-    * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
-    *```html
-    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
-    *```
-    */
+     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
+     * ```html
+     * <igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
+     * ```
+     */
     @Input()
     public disabled = false;
 
     /**
-    * An @Input property that sets the value of the `icon`.
-    * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
-    *```html
-    *<igx-tabs-group label="Tab 1" icon="home">
-    *```
-    */
+     * An @Input property that sets the value of the `icon`.
+     * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
+     * ```html
+     * <igx-tabs-group label="Tab 1" icon="home">
+     * ```
+     */
     @Input()
     public icon: string;
 
     /**
-    * An @Input property that sets the value of the `label`.
-    *```html
-    *<igx-tabs-group label="Tab 1" icon="folder">
-    *```
-    */
+     * An @Input property that sets the value of the `label`.
+     * ```html
+     * <igx-tabs-group label="Tab 1" icon="folder">
+     * ```
+     */
     @Input()
     public label: string;
 
@@ -134,7 +134,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
@@ -160,13 +160,13 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * A method that sets the focus on a tab.
      * @memberof {@link IgxTabsGroupComponent}
-     *```typescript
-     *@ViewChild("MyChild")
-     *public tab : IgxTabsGroupComponent;
-     *ngAfterViewInit(){
-     *    this.tab.select();
-     *}
-     *```
+     * ```typescript
+     *  @ViewChild("MyChild")
+     * public tab : IgxTabsGroupComponent;
+     * ngAfterViewInit(){
+     *     this.tab.select();
+     * }
+     * ```
      */
     public select(): void {
         if (!this.disabled && !this.isSelected) {

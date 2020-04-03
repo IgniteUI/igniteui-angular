@@ -1,3 +1,5 @@
-<div [ngClass]="mapPositionToClassName()" *ngIf="this.isVisible" [@animate]="'show'">
-    {{ message }}
+<div #content>
+    <ng-content></ng-content>
 </div>
+<span *ngIf="content.childNodes.length == 0">{{ message }}</span>
+
