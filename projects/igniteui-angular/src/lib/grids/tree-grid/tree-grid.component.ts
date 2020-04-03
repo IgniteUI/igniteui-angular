@@ -365,28 +365,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    /**
-     * @hidden @internal
-     */
-    public setFilteredSortedData(data, pinned: boolean) {
-        super.setFilteredSortedData(data, pinned);
-        const flatFilteredSortedData = [];
-        this.flattenTreeGridRecords(this.filteredSortedData, flatFilteredSortedData);
-        this.filteredSortedData = flatFilteredSortedData;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    private flattenTreeGridRecords(records: any[], flatData: any[]) {
-        if (records && records.length) {
-            for (const record of records) {
-                (this.isGhostRecord(record)) ? flatData.push(record.data.recordData) : flatData.push(record.data);
-                this.flattenTreeGridRecords(record.children, flatData);
-            }
-        }
-    }
-
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
         if (this.loadChildrenOnDemand) {
             const parentID = args.rowID;

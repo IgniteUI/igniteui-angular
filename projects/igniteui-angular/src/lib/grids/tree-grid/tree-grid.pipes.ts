@@ -212,9 +212,21 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting);
         }
-        grid.setFilteredSortedData(result, pinned);
+
+        const filteredSortedData = [];
+        this.flattenTreeGridRecords(result, filteredSortedData);
+        grid.setFilteredSortedData(filteredSortedData, pinned);
 
         return result;
+    }
+
+    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
+        if (records && records.length) {
+            for (const record of records) {
+                this.gridAPI.grid.isGhostRecord(record) ? flatData.push(record.data.recordData) : flatData.push(record.data);
+                this.flattenTreeGridRecords(record.children, flatData);
+            }
+        }
     }
 }
 

@@ -5956,7 +5956,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             this.lastSearchInfo.matchInfoCache.push({
-                                row: data,
+                                row: dataRowRec,
                                 column: c.field,
                                 index: occurenceIndex++,
                             });
