@@ -161,6 +161,38 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /**
      * @hidden
      */
+    @HostBinding('class.igx-input-group--filled')
+    get isFilled() {
+        return this._filled || (this.input && this.input.value);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--cosy')
+    get isDisplayDensityCosy() {
+        return this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--comfortable')
+    get isDisplayDensityComfortable() {
+        return this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--compact')
+    get isDisplayDensityCompact() {
+        return this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
     @ContentChildren(IgxHintDirective, { read: IgxHintDirective })
     protected hints: QueryList<IgxHintDirective>;
 
@@ -237,38 +269,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     public set supressInputAutofocus(value: boolean) {
         this._supressInputAutofocus = value;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-input-group--filled')
-    get isFilled() {
-        return this._filled || (this.input && this.input.value);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-input-group--cosy')
-    get isDisplayDensityCosy() {
-        return this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-input-group--comfortable')
-    get isDisplayDensityComfortable() {
-        return this.displayDensity === DisplayDensity.comfortable;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-input-group--compact')
-    get isDisplayDensityCompact() {
-        return this.displayDensity === DisplayDensity.compact;
     }
 
     /**
