@@ -1849,6 +1849,17 @@ export class GridFunctions {
         UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
     }
 
+    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        cellComp.nativeElement.dispatchEvent(keyboardEvent);
+    }
+
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return header.query(By.css(SORT_ICON_CLASS));
     }
