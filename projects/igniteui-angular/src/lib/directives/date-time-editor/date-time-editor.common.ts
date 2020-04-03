@@ -3,6 +3,9 @@ export interface IgxDateTimeEditorEventArgs {
     newValue: Date | string;
 }
 
+/**
+* An @Enum that allows you to specify a particular date, time or AmPm part.
+*/
 export enum DatePart {
     Date = 'date',
     Month = 'month',
