@@ -390,7 +390,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
-            if (this.scrollComponent) {
+            if (this.scrollComponent && !this.scrollComponent.destroyed) {
                 this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
                     this.igxForOf.length - this.state.chunkSize);
             }
