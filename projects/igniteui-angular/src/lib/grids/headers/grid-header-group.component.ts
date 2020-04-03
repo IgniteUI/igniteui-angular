@@ -21,6 +21,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { isIE } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
+import { GridSelectionMode } from '../common/enums';
 
 const Z_INDEX = 9999;
 
@@ -216,8 +217,9 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get selectable() {
-        const selectableChildren = this.getSelectableChildren(this.column.children.toArray());
-        return this.column.applySelectableClass
+        const selectableChildren = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup);
+        return this.grid.columnSelection !== GridSelectionMode.none &&
+            this.column.applySelectableClass
             && !this.selected && selectableChildren.length > 0
             && !this.grid.filteringService.isFilterRowVisible;
     }
@@ -226,7 +228,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     get selected() {
-       return this.column.selected;
+        return this.column.selected;
     }
 
     /**
@@ -247,34 +249,23 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * @hidden
      */
     public groupClicked(event): void {
-        const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
-        if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+        const columnsToSelect = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
+        if (this.grid.columnSelection !== GridSelectionMode.none
+            && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
+            const clearSelection = this.grid.columnSelection === GridSelectionMode.single || !event.ctrlKey;
+            const rangeSelection = this.grid.columnSelection === GridSelectionMode.multiple && event.shiftKey;
             if (!this.selected) {
-                this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
             } else {
                 const selectedFields = this.grid.selectionService.getSelectedColumns();
                 if ((selectedFields.length === columnsToSelect.length) && selectedFields.every(el => columnsToSelect.includes(el))
-                    || event.ctrlKey) {
+                    || !clearSelection) {
                     this.grid.selectionService.deselectColumns(columnsToSelect, event);
                 } else {
-                    this.grid.selectionService.selectColumns(columnsToSelect, !event.ctrlKey, event);
+                    this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, rangeSelection, event);
                 }
             }
         }
-    }
-
-    private getSelectableChildren(children: IgxColumnComponent[]): IgxColumnComponent[] {
-        let result: IgxColumnComponent[] = [];
-        children.forEach(el => {
-            if (el.selectable && !el.hidden) {
-                if (el.children && el.columnGroup) {
-                    result = result.concat(this.getSelectableChildren(el.children.toArray()));
-                } else {
-                    result.push(el);
-                }
-            }
-        });
-        return result;
     }
 
     /**
