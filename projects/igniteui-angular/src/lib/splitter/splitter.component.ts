@@ -24,14 +24,23 @@ export enum SplitterType {
     templateUrl: './splitter.component.html'
 })
 export class IgxSplitterComponent implements AfterContentInit {
-
+    private _type: SplitterType = SplitterType.Vertical;
     /**
      * Sets/gets `SplitterComponent` orientation.
      * @type SplitterType
      * @memberof SplitterComponent
      */
     @Input()
-    public type: SplitterType = SplitterType.Vertical;
+    get type() {
+        return this._type;
+    }
+    set type(value) {
+        this._type = value;
+        if (this.panes) {
+            // if type is changed runtime, should reset sizes.
+            this.panes.forEach(x => x.size='auto');
+        }        
+    }
 
     @Output()
     public panesChange = new EventEmitter<IgxSplitterPaneComponent[]>();
