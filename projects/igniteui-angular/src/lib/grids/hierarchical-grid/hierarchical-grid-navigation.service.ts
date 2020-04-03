@@ -63,7 +63,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             // reached end of child grid
             const nextSiblingIndex = this.nextSiblingIndex(isLast);
             if (nextSiblingIndex !== null) {
-                this.clearActivation();
                 this.grid.parent.navigation._moveToChild(this.grid.childRow.index, visibleColIndex, isLast, nextSiblingIndex, cb);
             } else {
                 this._moveToParent(isLast, visibleColIndex, cb);
