@@ -3,6 +3,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { HORIZONTAL_NAV_KEYS } from '../core/utils';
 
 /** @hidden */
 @Injectable()
@@ -30,11 +31,11 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 break;
             case 'home':
                 rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row;
-                colIndex = 0;
+                colIndex = ctrl ? 0 : this.firstIndexPerRow;
                 break;
             case 'arrowleft':
             case 'left':
-                colIndex = ctrl ? 0 : this.getNextHorizontalCellPositon(true).column;
+                colIndex = ctrl ? this.firstIndexPerRow : this.getNextHorizontalCellPositon(true).column;
                 break;
             case 'arrowright':
             case 'right':
@@ -203,8 +204,46 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             columns.find(co => co.colStart <= this.activeNode.layout.colStart);
     }
 
+    headerNavigation(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        if (key.includes('down') || key.includes('up')) {
+            event.preventDefault();
+            const children = this.grid.getColumnByVisibleIndex(this.activeNode.column).parent.children;
+            const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
+            if (!col) { return; }
+            this.activeNode.column = col.visibleIndex;
+            const newLayout = this.layout(this.activeNode.column);
+            Object.assign(this.activeNode.layout, {rowStart: newLayout.rowStart, rowEnd: newLayout.rowEnd});
+            return;
+        }
+        this.horizontalNav(event, key, -1);
+    }
+
+    protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
+        const ctrl = event.ctrlKey;
+        if (!HORIZONTAL_NAV_KEYS.has(key)) { return; }
+        event.preventDefault();
+        this.activeNode.row = rowIndex;
+        if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
+            this.activeNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPositon(true).column;
+        }
+        if ((key.includes('right') || key === 'end') && this.activeNode.column !== this.lastIndexPerRow) {
+            this.activeNode.column = ctrl || key === 'end' ? this.lastIndexPerRow : this.getNextHorizontalCellPositon().column;
+        }
+        const newLayout = this.layout(this.activeNode.column);
+        Object.assign(this.activeNode.layout, {colStart: newLayout.colStart, rowEnd: newLayout.rowEnd});
+        this.performHorizontalScrollToCell(this.activeNode.column);
+    }
+
     private get lastIndexPerRow(): number {
         const children = this.grid.getColumnByVisibleIndex(this.lastLayoutIndex).parent.children.toArray().reverse();
+        const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
+        children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
+        return column.visibleIndex;
+    }
+
+    private get firstIndexPerRow(): number {
+        const children = this.grid.getColumnByVisibleIndex(0).parent.children;
         const column = children.find(co => co.rowStart === this.activeNode.layout.rowStart) ||
         children.find(co => co.rowStart <= this.activeNode.layout.rowStart);
         return column.visibleIndex;

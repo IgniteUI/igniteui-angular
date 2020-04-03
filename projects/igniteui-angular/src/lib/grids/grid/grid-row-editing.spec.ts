@@ -1336,7 +1336,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             tick(16);
             // Cell will always be first
-            cell.update(new Date('01/01/1901'));
+            const editTemplate = fix.debugElement.query(By.css('input'));
+            UIInteractions.sendInput(editTemplate, '01/01/1901');
             tick(16);
             fix.detectChanges();
 
@@ -2080,7 +2081,6 @@ fix.detectChanges();
             tick(100);
             fix.detectChanges();
             expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
-            expect(targetCell.focused).toBeTruthy();
             expect(targetCell.selected).toBeTruthy();
             expect(firstCell.selected).toBeFalsy();
         }));
@@ -2265,19 +2265,19 @@ fix.detectChanges();
             const initialState = grid.transactions.getAggregatedChanges(false);
 
             // Enter edit mode
-            cellDate.setEditMode(true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cellDate);
             tick(16);
             fix.detectChanges();
             // Exit edit mode without change
-            cellDate.setEditMode(true);
+            GridFunctions.simulateGridContentKeydown(fix, 'Esc');
             tick(16);
             fix.detectChanges();
             cellDate = grid.getCellByColumn(0, 'UnitsInStock');
-            cellDate.setEditMode(true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cellDate);
             tick(16);
             fix.detectChanges();
             expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
-            cellDate.setEditMode(true);
+            GridFunctions.simulateGridContentKeydown(fix, 'Esc');
 
             cellDate = grid.getCellByColumn(0, 'OrderDate');
             const newValue = new Date('01/01/2000');

@@ -84,8 +84,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('class.igx-grid__th--active')
     public get active() {
-        const activeNode = this.grid.navigation.activeNode;
-        return  activeNode ? activeNode.row === -1 && activeNode.column === this.column.visibleIndex : false; // !this.column.parent &&
+        const node = this.grid.navigation.activeNode;
+        return  node ? node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
     }
 
     /**
@@ -245,6 +245,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
+    get columnTitle() {
+        return this.column.elementRef.nativeElement.getAttribute('title') || this.column.header;
+    }
+
+    /**
+     * @hidden
+     */
     public groupClicked(event): void {
         const columnsToSelect = this.getSelectableChildren(this.column.children.toArray()).map(c => c.field);
         if (columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
@@ -299,7 +306,16 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     @HostListener('click', ['$event'])
     public click(event): void {
-       this.grid.navigation.activeNode = {row: -1, column: this.column.visibleIndex};
+        event.stopPropagation();
+        console.log(this.column.field , this.column.visibleIndex, this.column.level);
+        this.grid.navigation.activeNode = {row: -1, column: this.column.visibleIndex, level: this.column.level,
+            mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
+            layout: this.column.columnLayoutChild ? {
+            rowStart: this.column.rowStart,
+            colStart: this.column.colStart,
+            rowEnd: this.column.rowEnd,
+            colEnd: this.column.colEnd,
+            columnVisibleIndex: this.column.visibleIndex} : null };
     }
 
     public ngDoCheck() {

@@ -10,6 +10,7 @@ import {
     TemplateRef,
     Output,
     EventEmitter,
+    ElementRef,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
@@ -44,7 +45,6 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
-import { IgxGridSelectionService } from '../selection/selection.service';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1319,7 +1319,7 @@ export class IgxColumnComponent implements AfterContentInit {
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
-        public rowIslandAPI: IgxRowIslandAPIService) { }
+        public rowIslandAPI: IgxRowIslandAPIService, public elementRef: ElementRef) { }
 
     /**
      * @hidden

@@ -144,7 +144,7 @@ export class GridFunctions {
     }
 
     /**
-     * Focus the first cell in the grid
+     * Focus the cell in the grid
      */
     public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
         this.getGridContent(fix).triggerEventHandler('focus', null);
@@ -271,8 +271,8 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
     }
 
-    public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
-         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+    public static verifyGroupRowIsFocused(groupRow, focused = true) {
+        expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
     }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
@@ -1847,6 +1847,17 @@ export class GridFunctions {
         altKey = false, shiftKey = false, ctrlKey = false) {
         const gridContent = GridFunctions.getGridContent(fix);
         UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
+    }
+
+    public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            key: keyName,
+            shiftKey: shiftKey,
+            ctrlKey: ctrlKey,
+            altKey: altKey
+        });
+        cellComp.nativeElement.dispatchEvent(keyboardEvent);
     }
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
