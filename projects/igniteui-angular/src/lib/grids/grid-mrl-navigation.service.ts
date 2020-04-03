@@ -35,7 +35,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 break;
             case 'arrowleft':
             case 'left':
-                colIndex = ctrl ? 0 : this.getNextHorizontalCellPositon(true).column;
+                colIndex = ctrl ? this.firstIndexPerRow : this.getNextHorizontalCellPositon(true).column;
                 break;
             case 'arrowright':
             case 'right':
