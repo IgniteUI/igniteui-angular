@@ -11,6 +11,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridCellComponent, IGridCellEventArgs } from '../grid';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
@@ -941,8 +942,8 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         fixture.detectChanges();
 
         // last cell in child should be focused
-        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-        const childGrid = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const childGrids =  fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+        const childGrid = childGrids[1].query(By.directive(IgxHierarchicalGridComponent)).componentInstance;
         const childLastCell =  childGrid.getCellByColumn(9, 'ProductName');
 
         expect(childLastCell.selected).toBe(true);
@@ -950,9 +951,9 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     }));
 
     it('should navigate to last cell in next child using Arrow Down from last cell of previous child with more columns', (async () => {
-        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-        const firstChildGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        const secondChildGrid = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const childGrids =  fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+        const firstChildGrid = childGrids[0].query(By.directive(IgxHierarchicalGridComponent)).componentInstance;
+        const secondChildGrid = childGrids[1].query(By.directive(IgxHierarchicalGridComponent)).componentInstance;
 
         firstChildGrid.verticalScrollContainer.scrollTo(9);
         await wait(DEBOUNCE_TIME);
