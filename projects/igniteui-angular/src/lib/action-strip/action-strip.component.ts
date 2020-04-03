@@ -1,4 +1,14 @@
-import { Component, NgModule, Input, ViewContainerRef, Renderer2, HostBinding, ViewChild, ContentChild } from '@angular/core';
+import { Component,
+    NgModule,
+    Input,
+    ViewContainerRef,
+    Renderer2,
+    HostBinding,
+    ContentChild,
+    ContentChildren,
+    TemplateRef,
+    QueryList,
+    Directive } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxGridActionsComponent } from './grid-actions/grid-actions.component';
 import { IgxDropDownModule } from '../drop-down/index';
@@ -8,6 +18,15 @@ import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-acti
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 
 let NEXT_ID = 0;
+
+@Directive({
+    selector: '[igxActionStripMenuItem]'
+})
+export class IgxActionStripMenuItemDirective {
+    constructor(
+        public templateRef: TemplateRef<any>
+    ) { }
+}
 
 /**
  * Action Strip provides templatable area for one or more actions.
@@ -38,7 +57,7 @@ let NEXT_ID = 0;
 export class IgxActionStripComponent {
     constructor(
         private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2) {}
+        private renderer: Renderer2) { }
 
     /**
      * An @Input property that set the visibility of the Action Strip.
@@ -69,11 +88,24 @@ export class IgxActionStripComponent {
     @HostBinding('class.igx-action-strip')
     public cssClass = 'igx-action-strip';
 
+    /**
+     * Specifies if the items into the Action Strip to be shown as menu.
+     *
+     * @example
+     * ```html
+     * <igx-action-strip #actionstrip1 [isMenu]="true">
+     *      <igx-grid-pinning-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-pinning-actions>
+     *      <igx-grid-editing-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-editing-actions>
+     *  </igx-action-strip>
+     */
+    @Input() isMenu = false;
+
     public context;
 
-    @ContentChild(IgxGridActionsComponent, { static: true }) public gridActions: IgxGridActionsComponent;
-    @ContentChild(IgxGridPinningActionsComponent, { static: true }) public gridPinningActions: IgxGridPinningActionsComponent;
-    @ContentChild(IgxGridEditingActionsComponent, { static: true }) public gridEditingActions: IgxGridEditingActionsComponent;
+    @ContentChild(IgxGridActionsComponent, { static: false }) public gridActions: IgxGridActionsComponent;
+    @ContentChild(IgxGridPinningActionsComponent, { static: false }) public gridPinningActions: IgxGridPinningActionsComponent;
+    @ContentChild(IgxGridEditingActionsComponent, { static: false }) public gridEditingActions: IgxGridEditingActionsComponent;
+    @ContentChildren(IgxActionStripMenuItemDirective) public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
     show(context) {
         this.context = context;
@@ -105,8 +137,18 @@ export class IgxActionStripComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent],
-    exports: [IgxActionStripComponent, IgxGridActionsComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent],
+    declarations: [
+        IgxActionStripComponent,
+        IgxActionStripMenuItemDirective,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent
+    ],
+    exports: [
+        IgxActionStripComponent,
+        IgxActionStripMenuItemDirective,
+        IgxGridPinningActionsComponent,
+        IgxGridEditingActionsComponent
+    ],
     imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
 })
 export class IgxActionStripModule { }

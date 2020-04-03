@@ -23,7 +23,7 @@
         <article>
             <div class="sample-column">
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'" (mouseleave)="actionstrip1.hide()">
+                    [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
@@ -33,9 +33,9 @@
                         </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip1>
-                        <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
-                        <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
+                    <igx-action-strip #actionstrip1 [isMenu]="true">
+                        <igx-grid-pinning-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
