@@ -319,7 +319,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    fdescribe('Summaries', () => {
+    describe('Summaries', () => {
         const SUMMARIES_MARGIN_CLASS = '.igx-grid__summaries-patch';
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(() => {
             // expand first row
