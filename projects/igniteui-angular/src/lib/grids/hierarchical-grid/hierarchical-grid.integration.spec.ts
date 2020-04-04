@@ -319,12 +319,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Summaries', () => {
+    fdescribe('Summaries', () => {
         const SUMMARIES_MARGIN_CLASS = '.igx-grid__summaries-patch';
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(() => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -362,6 +363,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const rootExpander = (hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent).expander;
@@ -392,6 +394,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             // summaries seem to require this additional change detection call with Ivy disabled to display for the child grid
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
