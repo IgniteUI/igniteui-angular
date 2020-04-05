@@ -5932,20 +5932,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
             const ghostRec = dataRow.ghostRec !== undefined;
-            const dataRowRec = { ...dataRow };
-            dataRow = ghostRec ? dataRow.recordData : dataRow;
+            let dataRowRec = { ...dataRow };
+            dataRowRec = ghostRec ? dataRowRec.recordData : dataRowRec;
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRow[c.field]) :
-                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
-                            : dataRow[c.field];
+                const value = c.formatter ? c.formatter(dataRowRec[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRowRec[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRowRec[c.field], this.locale)
+                            : dataRowRec[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             this.lastSearchInfo.matchInfoCache.push({
-                                row: dataRowRec,
+                                row: dataRow,
                                 column: c.field,
                                 index: 0,
                             });
@@ -5956,7 +5956,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             this.lastSearchInfo.matchInfoCache.push({
-                                row: dataRowRec,
+                                row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
                             });
