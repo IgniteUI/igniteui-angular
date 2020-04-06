@@ -214,6 +214,10 @@ export class IgxGridNavigationService {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(columnIndex);
+        const width = this.forOfDir().getColumnScrollLeft(index + 1) - this.forOfDir().getColumnScrollLeft(index);
+        if (this.displayContainerWidth < width && this.displayContainerScrollLeft === this.forOfDir().getColumnScrollLeft(index)) {
+            return true;
+        }
         return this.displayContainerWidth >= this.forOfDir().getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft &&
             this.displayContainerScrollLeft <= this.forOfDir().getColumnScrollLeft(index);
     }
