@@ -13,6 +13,21 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `igxSplitter` component added.
+    - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
+        Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
+
+     ```html
+   <igx-splitter [type]="type">
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+    </igx-splitter>
+    ```
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added ability to pin rows to top or bottom depending on the new `pinning` input.
     And new API methods `pinRow` and `unpinRow`.
