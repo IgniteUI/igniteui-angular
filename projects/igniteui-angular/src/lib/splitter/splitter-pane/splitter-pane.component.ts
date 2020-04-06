@@ -24,7 +24,14 @@ export class IgxSplitterPaneComponent {
     set size(value) {
         this._size = value;
         this.el.nativeElement.style.flex = this.flex;
+        this.sizeChange.emit(value);
     }
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public sizeChange = new EventEmitter<string>();
 
     /**
      * Sets/gets the minimum allowable size of the current `IgxSplitterPaneComponent`.

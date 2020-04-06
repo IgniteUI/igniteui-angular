@@ -1,39 +1,52 @@
-<div>Vertical</div>
 <div class="sample-wrapper">
-    <igx-splitter [type]="0">
-        <igx-splitter-pane [minSize]='100'>
-            <div style='height:500px;'>
+    <igx-switch (change)='changeType()' style="padding-left: 10px">Toggle Splitter Direction</igx-switch>
+    <div>Simple sample</div>
+    <igx-splitter [type]="type" style='height: 30vh;'>
+        <igx-splitter-pane>
+            <div style='width:100%;'>
                Pane 1
             </div>
         </igx-splitter-pane>
         <igx-splitter-pane>
-            <div style='height:500px;'>
+            <div style='width:100%;'>
                 Pane 2
              </div>
         </igx-splitter-pane>
         <igx-splitter-pane>
-            <div style='height:500px;'>
+            <div style='width:100%;'>
                 Pane 3
              </div>
+        </igx-splitter-pane>
+    </igx-splitter>
+    <div>Sample with Grids</div>
+    <igx-splitter [type]="type" style='height: 60vh;'>
+        <igx-splitter-pane [minSize]='100' (sizeChange)='grid1.notifyChanges(true)'>
+            <igx-grid #grid1 class="grid" displayDensity="cosy" [rowSelection]="'single'" (onRowSelectionChange)="onCustomerSelection($event)" 
+            [data]="data1" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false">
+                <igx-column field="CustomerID" [hidden]='true'></igx-column>
+                <igx-column field="CompanyName"></igx-column>
+                <igx-column field="ContactName"></igx-column>
+                <igx-column field="ContactTitle"></igx-column>
+                <igx-column field="Country"></igx-column>
+            </igx-grid>
+        </igx-splitter-pane>
+        <igx-splitter-pane (sizeChange)='grid2.notifyChanges(true)'>
+            <igx-grid #grid2 class="grid" [rowSelection]="'single'" (onRowSelectionChange)="onOrderSelection($event)"  displayDensity="cosy" [data]="data2" [isLoading]="true" [primaryKey]="'OrderID'" [autoGenerate]="false">
+                <igx-column field="OrderID" [hidden]='true'></igx-column>
+                <igx-column field="OrderDate"></igx-column>
+                <igx-column field="ShipCountry"></igx-column>
+                <igx-column field="ShipCity"></igx-column>
+                <igx-column field="ShipAddress"></igx-column>
+            </igx-grid>
+        </igx-splitter-pane>
+        <igx-splitter-pane (sizeChange)='grid3.notifyChanges(true)'>
+            <igx-grid #grid3 class="grid" displayDensity="cosy" [data]="data3" [isLoading]="true" [primaryKey]="'ProductID'" [autoGenerate]="false">
+                <igx-column field="ProductID" [hidden]='true'></igx-column>
+                <igx-column field="UnitPrice"></igx-column>
+                <igx-column field="Quantity"></igx-column>
+                <igx-column field="Discount"></igx-column>
+            </igx-grid>
         </igx-splitter-pane>
     </igx-splitter>
 
-<div>Horizontal</div>
-    <igx-splitter [type]="1">
-        <igx-splitter-pane>
-            <div style='width:200px; height:100px;'>
-               Pane 1
-            </div>
-        </igx-splitter-pane>
-        <igx-splitter-pane>
-            <div style='width:200px;height:100px;'>
-                Pane 2
-             </div>
-        </igx-splitter-pane>
-        <igx-splitter-pane>
-            <div style='width:200px;height:100px;'>
-                Pane 3
-             </div>
-        </igx-splitter-pane>
-    </igx-splitter>
 </div>

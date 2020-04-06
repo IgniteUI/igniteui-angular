@@ -13,6 +13,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -32,13 +33,13 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    animations: [
+        animations: [
         trigger('animate', [
-            state('show', style({
+            state('visible', style({
                 opacity: 1
             })),
-            transition('* => show', animate('.20s ease')),
-            transition('show => *', animate('.40s ease-out'))
+            transition('invisible => visible', animate('.20s ease')),
+            transition('visible => invisible', animate('.40s ease-out'))
         ])
     ],
     selector: 'igx-toast',
@@ -51,18 +52,12 @@ let NEXT_ID = 0;
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     private _isVisible = false;
+
     /**
-     * Returns a list of available CSS classes.
-     * ```typescript
-     * let toastClasses =  this.toast.CSS_CLASSES;
-     * ```
-     * @memberof IgxToastComponent
+     * @hidden
      */
-    public readonly CSS_CLASSES = {
-        IGX_TOAST_BOTTOM: 'igx-toast--bottom',
-        IGX_TOAST_MIDDLE: 'igx-toast--middle',
-        IGX_TOAST_TOP: 'igx-toast--top'
-    };
+    @HostBinding('@animate')
+    public animationState = 'invisible';
 
     /**
      * Sets/gets the `id` of the toast.
@@ -121,6 +116,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      */
     @Output()
     public onHidden = new EventEmitter<IgxToastComponent>();
+
     /**
      * Sets/gets the `role` attribute.
      * If not set, `role` will have value `"alert"`.
@@ -134,6 +130,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      */
     @Input()
     public role = 'alert';
+
     /**
      * Sets/gets whether the toast will be hidden after the `displayTime` is over.
      * Default value is `true`.
@@ -186,7 +183,6 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public set isVisible(value) {
         this._isVisible = value;
         this.isVisibleChange.emit(this._isVisible);
-
     }
 
     /**
@@ -196,6 +192,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public isVisibleChange = new EventEmitter<boolean>();
 
     /**
+     * @deprecated Place your message in the toast content instead.
      * Sets/gets the message that will be shown by the toast.
      * ```html
      * <igx-toast [message] = "Notification"></igx-toast>
@@ -205,8 +202,9 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * ```
      * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'message' @Input property is deprecated. Place your message in the toast content instead.`)
     @Input()
-    public message: string;
+    public message = '';
 
     /**
      * Sets/gets the position of the toast.
@@ -232,10 +230,11 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public get element() {
         return this.elementRef.nativeElement;
     }
+
     /**
      * @hidden
      */
-    private timeoutId;
+    private timeoutId: number;
 
     constructor(
         private elementRef: ElementRef,
@@ -253,9 +252,10 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         clearInterval(this.timeoutId);
         this.onShowing.emit(this);
         this.isVisible = true;
+        this.animationState = 'visible';
 
         if (this.autoHide) {
-            this.timeoutId = setTimeout(() => {
+            this.timeoutId = window.setTimeout(() => {
                 this.hide();
             }, this.displayTime);
         }
@@ -274,6 +274,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         this.onHiding.emit(this);
         this.isVisible = false;
         this.onHidden.emit(this);
+        this.animationState = 'invisible';
 
         clearInterval(this.timeoutId);
     }
@@ -304,26 +305,31 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public toggle() {
         this.isVisible ? this.close() : this.open();
     }
+
     /**
-     * Sets/gets the class name of the toast based on the `position` value.
-     * ```typescript
-     * let className =  this.toast.mapPositionToClassName();
-     * ```
-     * @memberof IgxToastComponent
+     * @hidden
      */
-    public mapPositionToClassName(): any {
-        if (this.position === IgxToastPosition.Top) {
-            return this.CSS_CLASSES.IGX_TOAST_TOP;
-        }
-
-        if (this.position === IgxToastPosition.Middle) {
-            return this.CSS_CLASSES.IGX_TOAST_MIDDLE;
-        }
-
-        if (this.position === IgxToastPosition.Bottom) {
-            return this.CSS_CLASSES.IGX_TOAST_BOTTOM;
-        }
+    @HostBinding('class.igx-toast--top')
+    public get cssClassTop() {
+       return this.position === IgxToastPosition.Top;
     }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-toast--middle')
+    public get cssClassMiddle() {
+       return this.position === IgxToastPosition.Middle;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-toast--bottom')
+    public get cssClassBottom() {
+       return this.position === IgxToastPosition.Bottom;
+    }
+
     /**
      * @hidden
      */
@@ -332,6 +338,7 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
             this.navService.add(this.id, this);
         }
     }
+
     /**
      * @hidden
      */
