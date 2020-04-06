@@ -13,7 +13,7 @@
     <ng-content #content></ng-content>
 </ng-template>
 
-<div class="igx-action-strip__overlay"
+<div class="igx-action-strip__container"
     *ngIf="!hidden">
     <ng-container *ngTemplateOutlet="isMenu ? menuTemplate : contentTemplate;">
     </ng-container>

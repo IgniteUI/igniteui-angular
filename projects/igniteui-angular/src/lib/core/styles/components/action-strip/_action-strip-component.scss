@@ -12,7 +12,7 @@
 
     @extend %igx-action-strip-display !optional;
 
-    @include e(overlay) {
-        @extend %igx-action-strip--overlay !optional;
+    @include e(container) {
+        @extend %igx-action-strip--container !optional;
     }
 }

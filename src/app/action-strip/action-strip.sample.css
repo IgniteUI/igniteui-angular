@@ -11,6 +11,6 @@
 }
 
 .igx-action-strip {
-    right: 0;
-    top: 25%;
+    justify-content: flex-end;
+    background-color: #ffffff80;
 }

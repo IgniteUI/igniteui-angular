@@ -43,11 +43,18 @@
     @include igx-root-css-vars($theme);
     
     %igx-action-strip-display {
+        display: flex;
         position: absolute;
-    }
-
-    %igx-action-strip--overlay {
         width: 100%;
         height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+    }
+
+    %igx-action-strip--container {
+        display: flex;
+        align-items: center;
+        pointer-events: all;
     }
 }

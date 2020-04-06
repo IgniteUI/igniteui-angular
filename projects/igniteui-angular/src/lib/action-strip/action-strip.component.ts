@@ -60,7 +60,7 @@ export class IgxActionStripComponent {
 
     /**
      * An @Input property that set the visibility of the Action Strip.
-     * Could be used to set if the Action Strip will be visible initially.
+     * Could be used to set if the Action Strip will be initially hidden.
      * ```html
      *  <igx-action-strip [hidden]="false">
      * ```
