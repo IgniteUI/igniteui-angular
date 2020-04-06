@@ -215,6 +215,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('pointerdown', ['$event'])
     public onPointerDown(event: PointerEvent) {
+        // if group is focused or if the click is not on the input but in input group,
+        // e.g. on prefix or suffix, prevent default and this way prevent blur
+        if (this.isFocused || event.target !== this.input.nativeElement) {
+            event.preventDefault();
+        }
     }
 
     /**
