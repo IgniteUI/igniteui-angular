@@ -33,6 +33,7 @@ All notable changes for each version of this project will be documented in this 
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
     - Added functionality for column selection.
+     - `columnSelection` property has been added. It accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple.
     - `selected` property has been added to the IgxColumnComponent; Allows you to set whether the column is selected.
     - `selectable` property has been added to the IgxColumnComponent; Allows you to set whether the column is selectable.
     - `onColumnSelectionChange` event is added for the `IgxGrid`. It is emitted when the column selection is changed.
@@ -45,6 +46,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
+
+- `IgxToast`:
+    - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.

@@ -19,6 +19,7 @@ import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { ISortingStrategy } from '../data-operations/sorting-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1739,7 +1740,7 @@ export class CollapsibleColumnGroupTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
+    <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true" [columnSelection]="'multiple'">
         <igx-column-group header="General Information" >
             <igx-column  field="CompanyName" ></igx-column>
             <igx-column-group header="Person Details">
@@ -1940,4 +1941,29 @@ export class ColumnEditablePropertyTestComponent extends BasicGridComponent {
 })
 export class NoColumnWidthGridComponent extends BasicGridComponent {
     data = SampleTestData.generateNumberData(1000);
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            '',
+            '',
+            ColumnDefinitions.idFirstLastNameSortable)
+})
+export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+     public sort(data: any[], fieldName: string, dir: SortingDirection) {
+        const key = fieldName;
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1, obj2) => {
+            return this.compareObjects(obj1, obj2, key, reverse);
+        };
+        return data.sort(cmpFunc);
+    }
+     protected sortByParity(a: any, b: any) {
+        return a % 2 === 0 ? -1 : b % 2 === 0 ? 1 : 0;
+    }
+     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number) {
+        const a = obj1[key];
+        const b = obj2[key];
+        return reverse * this.sortByParity(a, b);
+    }
 }

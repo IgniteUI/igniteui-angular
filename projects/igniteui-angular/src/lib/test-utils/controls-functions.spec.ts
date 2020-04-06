@@ -2,6 +2,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { UIInteractions } from './ui-interactions.spec';
+import { IgxChipComponent } from '../chips/chip.component';
 
 const CHIP_REMOVE_BUTTON = '.igx-chip__remove';
 const DROP_DOWN_SELECTED_ITEM_CLASS = '.igx-drop-down__item--selected';
