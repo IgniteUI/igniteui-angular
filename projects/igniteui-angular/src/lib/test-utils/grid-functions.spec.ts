@@ -1988,21 +1988,11 @@ export class GridSummaryFunctions {
         expect(hasClass === active).toBeTruthy();
     }
 
-    public static moveSummaryCell =
-        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = typeof row === 'number' ?
-                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            resolve();
-        })
-
-    public static focusSummaryCell(fix, rowIndex, cellIndex) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static focusSummaryCell(fix, row, cellIndex) {
+        const summaryRow = typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        summaryCell.triggerEventHandler('focus', {});
+        UIInteractions.simulateClickAndSelectEvent(summaryCell);
         fix.detectChanges();
     }
 }
@@ -2032,11 +2022,11 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+            UIInteractions.simulateClickAndSelectEvent(endCell, true);
             await wait();
             fix.detectChanges();
             resolve();
@@ -2044,10 +2034,10 @@ export class GridSelectionFunctions {
         })
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
-        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        UIInteractions.simulateClickAndSelectEvent(startCell);
         fix.detectChanges();
 
-        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        UIInteractions.simulateClickAndSelectEvent(endCell, true);
         fix.detectChanges();
     }
 

@@ -284,7 +284,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const button = fixture.debugElement.query(By.css('.btnTest'));
 
             cell.column.editable = true;
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
@@ -567,7 +567,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             // press enter on a cell
             cell = grid.getCellByColumn(0, 'age');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);

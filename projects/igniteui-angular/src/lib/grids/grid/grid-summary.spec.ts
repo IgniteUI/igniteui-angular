@@ -941,7 +941,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(2, 'ID');
