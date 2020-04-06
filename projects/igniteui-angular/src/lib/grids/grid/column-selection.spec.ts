@@ -8,7 +8,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { IgxColumnComponent } from '../columns/column.component';
 import { IColumnSelectionEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { ɵɵsetComponentScope } from '@angular/core';
+import { GridSelectionMode } from '../common/enums';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -53,6 +53,8 @@ describe('IgxGrid - Column Selection #grid', () => {
             colProductName = grid.getColumnByName('ProductName');
             colProductID = grid.getColumnByName('ProductID');
             colInStock = grid.getColumnByName('InStock');
+            grid.columnSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
         }));
 
         it('setting selected and selectable properties ', () => {
@@ -125,151 +127,6 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: [],
                 added: [],
                 removed: ['InStock'],
-                event: jasmine.anything(),
-                cancel: false
-            });
-        });
-
-        it('selecting a column with ctrl + mouse click', () => {
-            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
-            colProductName.selectable = false;
-            fix.detectChanges();
-
-            GridSelectionFunctions.clickOnColumnToSelect(colProductID, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colProductID);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: [],
-                newSelection: ['ProductID'],
-                added: ['ProductID'],
-                removed: [],
-                event: jasmine.anything(),
-                cancel: false
-            });
-
-            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colProductID);
-            GridSelectionFunctions.verifyColumnSelected(colInStock);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['ProductID'],
-                newSelection: ['ProductID', 'InStock'],
-                added: ['InStock'],
-                removed: [],
-                event: jasmine.anything(),
-                cancel: false
-            });
-
-            GridSelectionFunctions.clickOnColumnToSelect(colProductName, true);
-            grid.cdr.detectChanges();
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
-
-            const colOrderDate = grid.getColumnByName('OrderDate');
-            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colProductID);
-            GridSelectionFunctions.verifyColumnSelected(colInStock);
-            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['ProductID', 'InStock'],
-                newSelection: ['ProductID', 'InStock', 'OrderDate'],
-                added: ['OrderDate'],
-                removed: [],
-                event: jasmine.anything(),
-                cancel: false
-            });
-
-            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colProductID);
-            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
-            GridSelectionFunctions.verifyColumnSelected(colInStock, false);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(4);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['ProductID', 'InStock', 'OrderDate'],
-                newSelection: ['ProductID', 'OrderDate'],
-                added: [],
-                removed: ['InStock'],
-                event: jasmine.anything(),
-                cancel: false
-            });
-            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colProductID, false);
-            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
-            GridSelectionFunctions.verifyColumnSelected(colInStock, false);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(5);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['ProductID', 'OrderDate'],
-                newSelection: ['OrderDate'],
-                added: [],
-                removed: ['ProductID'],
-                event: jasmine.anything(),
-                cancel: false
-            });
-        });
-
-        it('selecting a column with shift + mouse click', () => {
-            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
-            const colUnits = grid.getColumnByName('UnitsInStock');
-            const colOrderDate = grid.getColumnByName('OrderDate');
-            colUnits.selected = true;
-            colProductName.selectable = false;
-            fix.detectChanges();
-
-            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colUnits);
-            GridSelectionFunctions.verifyColumnSelected(colInStock);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['UnitsInStock'],
-                newSelection: ['UnitsInStock', 'InStock'],
-                added: ['InStock'],
-                removed: [],
-                event: jasmine.anything(),
-                cancel: false
-            });
-
-            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, false, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
-            GridSelectionFunctions.verifyColumnSelected(colInStock);
-            GridSelectionFunctions.verifyColumnSelected(colUnits);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['UnitsInStock', 'InStock'],
-                newSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
-                added: ['OrderDate'],
-                removed: [],
-                event: jasmine.anything(),
-                cancel: false
-            });
-
-            GridSelectionFunctions.clickOnColumnToSelect(colProductID, false, true);
-            grid.cdr.detectChanges();
-
-            GridSelectionFunctions.verifyColumnSelected(colOrderDate, false);
-            GridSelectionFunctions.verifyColumnSelected(colProductName, false);
-            GridSelectionFunctions.verifyColumnSelected(colProductID);
-            GridSelectionFunctions.verifyColumnSelected(colInStock);
-            GridSelectionFunctions.verifyColumnSelected(colUnits);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
-                oldSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
-                newSelection: ['UnitsInStock', 'InStock', 'ProductID'],
-                added: ['ProductID'],
-                removed: ['OrderDate'],
                 event: jasmine.anything(),
                 cancel: false
             });
@@ -461,6 +318,299 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             expect(grid.getSelectedColumnsData()).toEqual(selectedData());
         });
+
+        it('verify when columnSelection is none columns cannot be selected', () => {
+            grid.columnSelection = GridSelectionMode.none;
+            fix.detectChanges();
+
+            // Click on a column
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+
+            // verify column is not selected
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+
+            // Hover a column
+            const productNameHeader = GridFunctions.getColumnHeader('ProductName', fix);
+            productNameHeader.triggerEventHandler('pointerenter', null);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
+
+            productNameHeader.triggerEventHandler('pointerleave', null);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
+        });
+    });
+
+    describe('Multi selection tests: ', () => {
+        let colProductName: IgxColumnComponent;
+        let colProductID: IgxColumnComponent;
+        let colInStock: IgxColumnComponent;
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(ProductsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            colProductName = grid.getColumnByName('ProductName');
+            colProductID = grid.getColumnByName('ProductID');
+            colInStock = grid.getColumnByName('InStock');
+            grid.columnSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('selecting a column with ctrl + mouse click', () => {
+            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
+            colProductName.selectable = false;
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickOnColumnToSelect(colProductID, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colProductID);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: [],
+                newSelection: ['ProductID'],
+                added: ['ProductID'],
+                removed: [],
+                event: jasmine.anything(),
+                cancel: false
+            });
+
+            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colProductID);
+            GridSelectionFunctions.verifyColumnSelected(colInStock);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['ProductID'],
+                newSelection: ['ProductID', 'InStock'],
+                added: ['InStock'],
+                removed: [],
+                event: jasmine.anything(),
+                cancel: false
+            });
+
+            GridSelectionFunctions.clickOnColumnToSelect(colProductName, true);
+            grid.cdr.detectChanges();
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+
+            const colOrderDate = grid.getColumnByName('OrderDate');
+            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colProductID);
+            GridSelectionFunctions.verifyColumnSelected(colInStock);
+            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['ProductID', 'InStock'],
+                newSelection: ['ProductID', 'InStock', 'OrderDate'],
+                added: ['OrderDate'],
+                removed: [],
+                event: jasmine.anything(),
+                cancel: false
+            });
+
+            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colProductID);
+            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
+            GridSelectionFunctions.verifyColumnSelected(colInStock, false);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(4);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['ProductID', 'InStock', 'OrderDate'],
+                newSelection: ['ProductID', 'OrderDate'],
+                added: [],
+                removed: ['InStock'],
+                event: jasmine.anything(),
+                cancel: false
+            });
+            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
+            GridSelectionFunctions.verifyColumnSelected(colInStock, false);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(5);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['ProductID', 'OrderDate'],
+                newSelection: ['OrderDate'],
+                added: [],
+                removed: ['ProductID'],
+                event: jasmine.anything(),
+                cancel: false
+            });
+        });
+
+        it('selecting a column with shift + mouse click', () => {
+            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
+            const colUnits = grid.getColumnByName('UnitsInStock');
+            const colOrderDate = grid.getColumnByName('OrderDate');
+            colUnits.selected = true;
+            colProductName.selectable = false;
+            fix.detectChanges();
+
+            GridSelectionFunctions.clickOnColumnToSelect(colInStock, true, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colUnits);
+            GridSelectionFunctions.verifyColumnSelected(colInStock);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['UnitsInStock'],
+                newSelection: ['UnitsInStock', 'InStock'],
+                added: ['InStock'],
+                removed: [],
+                event: jasmine.anything(),
+                cancel: false
+            });
+
+            GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, false, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colOrderDate);
+            GridSelectionFunctions.verifyColumnSelected(colInStock);
+            GridSelectionFunctions.verifyColumnSelected(colUnits);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['UnitsInStock', 'InStock'],
+                newSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
+                added: ['OrderDate'],
+                removed: [],
+                event: jasmine.anything(),
+                cancel: false
+            });
+
+            GridSelectionFunctions.clickOnColumnToSelect(colProductID, false, true);
+            grid.cdr.detectChanges();
+
+            GridSelectionFunctions.verifyColumnSelected(colOrderDate, false);
+            GridSelectionFunctions.verifyColumnSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnSelected(colProductID);
+            GridSelectionFunctions.verifyColumnSelected(colInStock);
+            GridSelectionFunctions.verifyColumnSelected(colUnits);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
+                newSelection: ['UnitsInStock', 'InStock', 'ProductID'],
+                added: ['ProductID'],
+                removed: ['OrderDate'],
+                event: jasmine.anything(),
+                cancel: false
+            });
+        });
+
+        it('Verify changing selection to none', () => {
+            expect(grid.columnSelection).toEqual('multiple');
+            grid.selectColumns(['ProductID', 'ProductName']);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
+
+            grid.columnSelection = GridSelectionMode.none;
+            fix.detectChanges();
+
+            expect(grid.columnSelection).toEqual('none');
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
+
+            // Click on column header to select
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+            // verify column is not selected
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+        });
+    });
+
+    describe('Single selection tests: ', () => {
+        let colProductName: IgxColumnComponent;
+        let colProductID: IgxColumnComponent;
+        let colInStock: IgxColumnComponent;
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(ProductsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            colProductName = grid.getColumnByName('ProductName');
+            colProductID = grid.getColumnByName('ProductID');
+            colInStock = grid.getColumnByName('InStock');
+            grid.columnSelection = GridSelectionMode.single;
+            fix.detectChanges();
+        }));
+
+        it('selecting a column', () => {
+            // Click on column to select it.
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+
+            // Click on another column
+            GridFunctions.clickColumnHeaderUI('ProductName', fix);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
+
+            // Click on another column holding Ctrl
+            GridFunctions.clickColumnHeaderUI('InStock', fix, true);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
+
+            // Click on another column holding Shift
+            GridFunctions.clickColumnHeaderUI('ProductID', fix, false, true);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
+
+            // Click on same column
+            GridFunctions.clickColumnHeaderUI('ProductID', fix);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
+        });
+
+        it('selecting a columns with API', () => {
+            // Verify setting selected property
+            colProductID.selected = true;
+            colProductName.selected = true;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
+
+            // Click on column holding Ctrl
+            GridFunctions.clickColumnHeaderUI('InStock', fix, true);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
+
+            // select multiple columns with method
+            grid.selectAllColumns();
+            fix.detectChanges();
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName);
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
+        });
+
+        it('Verify changing selection to multiple', () => {
+            expect(grid.columnSelection).toEqual('single');
+
+            GridFunctions.clickColumnHeaderUI('InStock', fix);
+
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
+
+            grid.columnSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+            expect(grid.columnSelection).toEqual('multiple');
+            GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
+            expect(grid.selectedColumns()).toEqual([]);
+        });
     });
 
     describe('Multi column headers tests: ', () => {
@@ -603,8 +753,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 contactNameHeader, contactTitleHeader, genInfHeader, companyNameHeader], false);
         });
 
-
-        it('When click on a col goup all it\'s visible and selectable child should be selected', () => {
+        it('When click on a col group all it\'s visible and selectable child should be selected', () => {
             const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
             const genInfHeader = GridFunctions.getColGroup(grid, 'General Information');
             const companyName = grid.getColumnByName('CompanyName');
@@ -753,6 +902,37 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyColumnsSelected([postalCode, contactTitle, contactName, region]);
         });
+
+        it('When column selection is single and click on a group its children should be selected', () => {
+            const personDetails = GridFunctions.getColGroup(grid, 'Person Details');
+            const genInfHeader = GridFunctions.getColGroup(grid, 'General Information');
+            const companyName = grid.getColumnByName('CompanyName');
+            const contactName = grid.getColumnByName('ContactName');
+            const contactTitle = grid.getColumnByName('ContactTitle');
+
+            grid.columnSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            GridFunctions.clickColumnGroupHeaderUI('General Information', fix);
+
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, genInfHeader);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails);
+            GridSelectionFunctions.verifyColumnsSelected([companyName, contactTitle, contactName]);
+
+            // Click on a column group in the group
+            GridFunctions.clickColumnGroupHeaderUI('Person Details', fix);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, genInfHeader, false);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, true);
+            GridSelectionFunctions.verifyColumnsSelected([contactTitle, contactName]);
+            GridSelectionFunctions.verifyColumnSelected(companyName, false);
+
+            // Click on a column in the group
+            GridFunctions.clickColumnHeaderUI('ContactName', fix);
+            GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, false);
+            GridSelectionFunctions.verifyColumnSelected(contactTitle, false);
+            GridSelectionFunctions.verifyColumnSelected(contactName);
+
+        });
     });
 
     describe('Integration tests: ', () => {
@@ -762,6 +942,8 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
+            grid.columnSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
             colProductID = grid.getColumnByName('ProductID');
             colProductName = grid.getColumnByName('ProductName');
         }));
@@ -769,7 +951,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         it('Filtering: Verify column selection when filter row is opened ', fakeAsync(() => {
             grid.allowFiltering = true;
             fix.detectChanges();
-            const filterCell = GridFunctions.getFilterCell(fix , 'ProductID');
+            const filterCell = GridFunctions.getFilterCell(fix, 'ProductID');
             expect(filterCell.nativeElement.classList.contains(SELECTED_FILTER_CELL_CLASS)).toBeFalsy();
             const colInStock = grid.getColumnByName('InStock');
             colProductID.selected = true;

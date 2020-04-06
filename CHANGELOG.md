@@ -33,6 +33,7 @@ All notable changes for each version of this project will be documented in this 
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
     - Added functionality for column selection.
+     - `columnSelection` property has been added. It accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple.
     - `selected` property has been added to the IgxColumnComponent; Allows you to set whether the column is selected.
     - `selectable` property has been added to the IgxColumnComponent; Allows you to set whether the column is selectable.
     - `onColumnSelectionChange` event is added for the `IgxGrid`. It is emitted when the column selection is changed.
