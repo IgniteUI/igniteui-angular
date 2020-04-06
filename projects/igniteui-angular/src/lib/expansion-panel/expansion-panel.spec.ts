@@ -1006,6 +1006,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_GRID);
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
+            expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
             expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
             expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
             expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
