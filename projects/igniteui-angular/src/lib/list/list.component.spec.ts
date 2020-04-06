@@ -700,6 +700,7 @@ describe('List', () => {
     });
 
     it('should allow setting the index of list items', (async () => {
+        pending('Related to the bug #7054');
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
         await wait();
