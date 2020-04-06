@@ -1933,12 +1933,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;
 
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('attr.aria-activedescendant')
     get activeDescendant() {
         const activeElem = this.navigation.activeNode;
