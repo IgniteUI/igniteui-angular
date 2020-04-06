@@ -544,10 +544,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public onChipClick(args, item: ExpressionUI) {
         if (this._cancelChipClick) {
+            this._cancelChipClick = false;
             return;
         }
-
-        this._cancelChipClick = false;
 
         this.expressionsList.forEach(ex => ex.isSelected = false);
 

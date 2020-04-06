@@ -3462,8 +3462,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click the today date.
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
-            todayDayItem.click();
+            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
+            clickHtmlElemAndBlur(todayDayItem, inputDebugElement);
             tick(100);
             fix.detectChanges();
 
@@ -3474,9 +3474,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('initial chip is committed');
 
             // Focus out
-            clickElemAndBlur(dateFilterCellChip, inputDebugElement);
+            clickHtmlElemAndBlur(chip, inputDebugElement);
             tick(200);
             fix.detectChanges();
+
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeFalsy('initial chip is not committed');
             expect(input.value).toBeFalsy('initial input value is present and not committed');
 
@@ -3505,21 +3506,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Select the first day
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date');
-            firstDayItem.click();
+            clickHtmlElemAndBlur(firstDayItem, inputDebugElement);
             tick(100);
             fix.detectChanges();
 
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('chip is committed');
 
             // Focus out
-            clickElemAndBlur(dateFilterCellChip, inputDebugElement);
+            clickHtmlElemAndBlur(chip, inputDebugElement);
             tick(200);
             fix.detectChanges();
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
 
             // Check if we still have only one committed chip
-            const activeFiltersArea = filteringRow.query(By.css('.igx-grid__filtering-row-main'));
-            const activeFilterChip: IgxChipComponent = activeFiltersArea.query(By.directive(IgxChipComponent)).componentInstance;
+            const activeFilterChip: IgxChipComponent = filteringRow.query(By.directive(IgxChipComponent)).componentInstance;
             const chipsLength = GridFunctions.getAllFilterConditionChips(fix).length;
 
             expect(chipsLength).toBe(1, 'there is more than one chip');
@@ -6551,4 +6551,14 @@ function clickElemAndBlur(clickElem, blurElem) {
     blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
     UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
+}
+
+function clickHtmlElemAndBlur(clickElem, blurElem) {
+    const elementRect = clickElem.getBoundingClientRect();
+    UIInteractions.simulatePointerEvent('pointerdown', clickElem, elementRect.left, elementRect.top);
+    blurElem.nativeElement.blur();
+    clickElem.focus();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+    UIInteractions.simulatePointerEvent('pointerup', clickElem, elementRect.left, elementRect.top);
+    UIInteractions.simulateMouseEvent('click', clickElem, 10, 10);
 }
