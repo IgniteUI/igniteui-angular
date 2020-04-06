@@ -18,7 +18,6 @@ export abstract class IgxTabsBase {
     performSelectionChange(newTab: IgxTabItemBase) {}
     transformContentAnimation(tab: IgxTabItemBase, duration: number) {}
     transformIndicatorAnimation(element: HTMLElement, duration?: number) {}
-    getTabItemId(shouldIncreaseId = false) {}
 }
 
 /** @hidden */

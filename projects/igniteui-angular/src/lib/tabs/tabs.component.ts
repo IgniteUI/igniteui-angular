@@ -41,7 +41,6 @@ let NEXT_TABS_ID = 0;
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-    private _currentTabItemId = -1;
     private _currentTabsId = 0;
 
     /**
@@ -110,6 +109,22 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @Input('type')
     public type: string | IgxTabsType = 'contentfit';
+
+    /**
+     * Sets/gets the `id` of the tabs.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-tabs-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-tabs id="my-first-tabs"></igx-tabs>
+     * ```
+     * @memberof IgxTabsComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-tabs-${NEXT_TABS_ID}`;
 
     /**
      * @hidden
@@ -345,7 +360,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             });
         }
 
+        this.setGroupsAttributes();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
+            this.setGroupsAttributes();
             this.resetSelectionOnCollectionChanged();
         });
     }
@@ -361,6 +378,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this._ngZone.runOutsideAngular(() => {
                 this._resizeObserver.disconnect();
             });
+        }
+    }
+
+    private setGroupsAttributes() {
+        for (let index = 0; index < this.groups.length; index++) {
+            const tabsGroup = Array.from(this.groups)[index] as IgxTabsGroupComponent;
+            tabsGroup.element.setAttribute('id', this._getTabsGroupId(index));
+            tabsGroup.element.setAttribute('aria-labelledby', this._getTabItemId(index));
         }
     }
 
@@ -466,6 +491,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
+    private _getTabItemId(index: number): string {
+        return `igx-tab-item-${this._currentTabsId}-${index}`;
+    }
+
+    private _getTabsGroupId(index: number): string {
+        return `igx-tabs-group-${this._currentTabsId}-${index}`;
+    }
+
     /**
      * @hidden
      */
@@ -494,15 +527,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * @hidden
-     */
-    public getTabItemId(shouldIncreaseId = false): string {
-        if (shouldIncreaseId) {
-            this._currentTabItemId++;
-        }
-        return `${this._currentTabsId}-${this._currentTabItemId}`;
-    }
 }
 
 /**

@@ -1,13 +1,11 @@
 import {
     AfterContentInit,
-    AfterViewChecked,
     Component,
     ContentChild,
     ElementRef,
     HostBinding,
     Input,
     TemplateRef,
-    HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
@@ -19,7 +17,7 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
+export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit {
     /**
      * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
      * ```html
@@ -68,6 +66,16 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
+     * Returns the native element of the tabs-group component
+     * ```typescript
+     *  const mytabsGroupElement: HTMLElement = tabsGroup.element;
+     * ```
+     */
+    public get element() {
+        return this._element.nativeElement;
+    }
+
+    /**
      * @hidden
      */
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
@@ -85,6 +93,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      */
     @HostBinding('attr.role')
     public role = 'tabpanel';
+
 
     /**
      * @hidden
@@ -146,14 +155,6 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
         if (this.tabTemplate) {
             this._tabTemplate = this.tabTemplate.template;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewChecked() {
-        this._element.nativeElement.setAttribute('aria-labelledby', this.relatedTab.id);
-        this._element.nativeElement.setAttribute('id', this.relatedTab.ariaControls);
     }
 
     /**
