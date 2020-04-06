@@ -947,5 +947,29 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const selectedData = hierarchicalGrid.getSelectedData();
             expect(selectedData).toEqual([{ID: '1', ChildLevels: 3}, {ID: '0', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
         });
+
+        it('should return correct filterData collection after filtering.', () => {
+            hierarchicalGrid.pinRow('1');
+            hierarchicalGrid.pinRow('11');
+            fixture.detectChanges();
+
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fixture.detectChanges();
+
+            let gridFilterData = hierarchicalGrid.filteredData;
+            expect(gridFilterData.length).toBe(15);
+            expect(gridFilterData[0].ID).toBe('1');
+            expect(gridFilterData[1].ID).toBe('11');
+            expect(gridFilterData[2].ID).toBe('1');
+
+            fixture.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fixture.detectChanges();
+
+            gridFilterData = hierarchicalGrid.filteredData;
+            expect(gridFilterData.length).toBe(15);
+            expect(gridFilterData[0].ID).toBe('1');
+            expect(gridFilterData[1].ID).toBe('11');
+            expect(gridFilterData[2].ID).toBe('1');
+        });
     });
 });

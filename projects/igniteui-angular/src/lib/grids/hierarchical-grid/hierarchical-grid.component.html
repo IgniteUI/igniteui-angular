@@ -96,7 +96,7 @@
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
             | gridHierarchicalRowPinning:true:pipeTrigger
-            | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
+            | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"

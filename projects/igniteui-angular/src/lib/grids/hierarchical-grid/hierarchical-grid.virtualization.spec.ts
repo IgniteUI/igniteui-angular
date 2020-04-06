@@ -388,7 +388,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         const hierarchicalGrid = fixture.componentInstance.hgrid;
 
         const initialBodyWidth = hierarchicalGrid.tbody.nativeElement.offsetWidth;
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.parentElement.hidden).toBeTruthy();
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
@@ -396,13 +396,13 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         fixture.detectChanges();
         await wait(200);
 
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.parentElement.hidden).toBeTruthy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
         await wait(200);
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeFalsy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.parentElement.hidden).toBeFalsy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);
     });
 });
