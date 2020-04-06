@@ -95,7 +95,7 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
+    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollWidth"></div>
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
@@ -197,7 +197,7 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
+    <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth">
         <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
         <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
             <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
@@ -213,7 +213,7 @@
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
-    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight'
+    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
         [style.width.px]="scrollWidth"></div>
 </div>
 

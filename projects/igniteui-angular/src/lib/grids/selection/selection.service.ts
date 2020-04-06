@@ -756,9 +756,9 @@ export class IgxGridSelectionService {
     }
 
     /** Select the specified column and emit event. */
-    selectColumn(field: string, clearPrevSelection?, event?): void {
+    selectColumn(field: string, clearPrevSelection?, selectColumnsRange?, event?): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !event.shiftKey  ) {
+        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange  ) {
             this.columnsState.field = field;
             this.columnsState.range = [];
 
@@ -767,16 +767,16 @@ export class IgxGridSelectionService {
             const removed = clearPrevSelection ? this.getSelectedColumns().filter(colField => colField !== field) : [];
             const added = this.isColumnSelected(field) ? [] : [field];
             this.emitColumnSelectionEvent(newSelection, added, removed, event);
-        } else if (event && event.shiftKey) {
+        } else if (selectColumnsRange) {
             this.selectColumnsRange(field, event);
         }
     }
 
     /** Select specified columns. And emit event. */
-    selectColumns(fields: string[], clearPrevSelection?, event?): void {
+    selectColumns(fields: string[], clearPrevSelection?, selectColumnsRange?, event?): void {
         const columns = fields.map(f => this.grid.getColumnByName(f)).sort((a, b) => a.visibleIndex - b.visibleIndex);
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !event.shiftKey) {
+        if (!stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
             this.columnsState.field = columns[0] ? columns[0].field : null;
             this.columnsState.range = [];
 
