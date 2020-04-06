@@ -191,7 +191,7 @@ describe('IgxSplitter', () => {
         expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
     });
 
-    fit('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
+    it('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
         const pane1 =  splitter.panes.toArray()[0];
@@ -214,7 +214,7 @@ describe('IgxSplitter', () => {
         expect(pane2.hidden).toBeFalsy();
     });
 
-    fit('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
+    it('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Horizontal;
         fixture.detectChanges();
         const pane1 =  splitter.panes.toArray()[0];
