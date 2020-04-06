@@ -112,6 +112,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     * @memberof IgxHierarchicalGridComponent
+     */
+    get pinnedRows() {
+        return this.rowList.filter(x => x.pinned && !x.disabled);
+    }
+
+    /**
      * @hidden
      * @deprecated
      * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.

@@ -15,6 +15,7 @@ import { IgxGridTransaction } from '../tree-grid';
 import { IgxTransactionService } from '../../services';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
@@ -401,19 +402,32 @@ describe('Row Pinning #grid', () => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
-            let row = grid.getRowByIndex(1);
-            row.pin();
+            let paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent));
+            expect(paginator.componentInstance.totalPages).toEqual(6);
+
+            grid.getRowByIndex(1).pin();
             fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(1);
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
-
             expect(grid.dataView.length).toBe(4);
+            expect(paginator.componentInstance.totalPages).toEqual(7);
+
+            grid.getRowByIndex(3).pin();
+            fix.detectChanges();
+
+            expect(grid.pinnedRows.length).toBe(2);
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(grid.dataView.length).toBe(3);
+            expect(paginator.componentInstance.totalPages).toEqual(9);
 
             // unpin
-            row = grid.getRowByIndex(0);
-            row.unpin();
+            grid.getRowByIndex(0).unpin();
+            fix.detectChanges();
+
+            grid.getRowByIndex(0).unpin();
             fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(0);
@@ -421,6 +435,7 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer.length).toBe(0);
 
             expect(grid.dataView.length).toBe(5);
+            expect(paginator.componentInstance.totalPages).toEqual(6);
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {

@@ -524,7 +524,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * Returns whether the cell is editable.
      */
     get editable(): boolean {
-        return (this.column.editable && !this.row.disabled) || !this.row.disabled;
+        return this.column.editable && !this.row.disabled;
     }
 
     /**
