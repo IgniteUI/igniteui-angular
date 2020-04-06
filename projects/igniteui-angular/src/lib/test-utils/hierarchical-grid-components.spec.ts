@@ -175,3 +175,24 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
         rowContext.selected ? rowContext.deselect() : rowContext.select();
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 1 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 2 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <ng-template igxToolbarCustomContent>
+            <button igxButton="raised">Parent Button</button>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }
