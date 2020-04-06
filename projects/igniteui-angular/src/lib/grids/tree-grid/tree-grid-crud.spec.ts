@@ -739,7 +739,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -770,7 +770,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cellDOM = allCells[1];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -799,7 +799,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -822,7 +822,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -847,7 +847,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cellComponent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -884,7 +884,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cellDOM = allCells[0];
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -914,7 +914,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cellDOM = allCells[2];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
                 expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
@@ -943,7 +943,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -964,7 +964,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const cell = treeGrid.getCellByColumn(0, 'Name');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
                 fix.detectChanges();
 
                 expect(cell.editMode).toBe(true);
@@ -989,7 +989,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectCellEvent(cellComponent);
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);

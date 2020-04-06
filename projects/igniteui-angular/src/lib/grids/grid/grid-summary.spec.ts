@@ -1421,7 +1421,7 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             flush();
             fix.detectChanges();
 

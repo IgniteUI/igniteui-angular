@@ -638,7 +638,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             fix.detectChanges();
 
             const firstCell = treeGrid.getCellByColumn(5, treeColumns[2]);
-            UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
