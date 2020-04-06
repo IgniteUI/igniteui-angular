@@ -52,7 +52,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
-            UIInteractions.simulateClickAndSelectEvent(cellElem);
+            UIInteractions.simulateClickAndSelectCellEvent(cellElem);
             const args = {
                 cell: firstCell,
                 event: jasmine.anything()
@@ -70,7 +70,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectEvent(cellElem);
+            UIInteractions.simulateClickAndSelectCellEvent(cellElem);
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
@@ -247,7 +247,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
         it('Should not clear selected cell when scrolling with mouse wheel', (async () => {
             let cell = grid.getCellByColumn(3, 'value');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;

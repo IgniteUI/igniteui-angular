@@ -168,7 +168,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         it('Should be able to select a range with holding Shift key', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = treeGrid.getCellByColumn(6, 'Age');
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(firstCell);
@@ -182,7 +182,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const secondCell = treeGrid.getCellByColumn(16, 'HireDate');
-            UIInteractions.simulateClickAndSelectEvent(secondCell, true);
+            UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
             fix.detectChanges();
 
             let range = { rowStart: 6, rowEnd: 16, columnStart: 2, columnEnd: 4 };
@@ -200,7 +200,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const thirdCell = treeGrid.getCellByColumn(4, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
             fix.detectChanges();
 
             range = { rowStart: 4, rowEnd: 6, columnStart: 0, columnEnd: 2 };
@@ -214,7 +214,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(9, 'Age');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -372,7 +372,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const cell = treeGrid.getCellByColumn(8, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -417,7 +417,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const cell = treeGrid.getCellByColumn(8, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);

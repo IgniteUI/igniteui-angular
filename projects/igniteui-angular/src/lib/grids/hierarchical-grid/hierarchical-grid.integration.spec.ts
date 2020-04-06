@@ -273,7 +273,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
             let firstChildCell = childGrid.dataRowList.first.cells.first;
-            UIInteractions.simulateClickAndSelectEvent(firstChildCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstChildCell);
             expect(firstChildCell.selected).toBe(true);
 
             // apply some filter

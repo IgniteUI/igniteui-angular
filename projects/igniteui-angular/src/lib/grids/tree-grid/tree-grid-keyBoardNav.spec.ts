@@ -41,7 +41,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(0, 'ID');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -75,7 +75,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down keys', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(5, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -109,7 +109,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(0, 'HireDate');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -143,7 +143,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(4, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -180,7 +180,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -228,7 +228,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -276,7 +276,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -306,7 +306,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             fix.detectChanges();
 
             let cell = treeGrid.getCellByColumn(3, 'Age');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -353,7 +353,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             let cell = treeGrid.getCellByColumn(3, 'Name');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -410,7 +410,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         it('should navigate with arrow Up and Down keys', async () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             const firstCell: IgxGridCellComponent = treeGrid.getCellByColumn(5, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
@@ -442,7 +442,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             const firstCell = treeGrid.getCellByColumn(3, treeColumns[0]);
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
@@ -491,7 +491,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(1, 'Name');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -518,7 +518,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(4, treeColumns[1]);
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -552,7 +552,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(2, treeColumns[2]);
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -581,7 +581,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             fix.detectChanges();
 
             const cell = treeGrid.getCellByColumn(3, 'OnPTO');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
@@ -606,7 +606,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         it('should allow pageup/pagedown navigation when the treeGrid is focused', async () => {
             let currScrollTop;
             const cell = treeGrid.getCellByColumn(1, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -692,7 +692,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
 
             const firstCell = treeGrid.getCellByColumn(3, 'HireDate');
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent);
@@ -723,7 +723,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
 
             const firstCell = treeGrid.getCellByColumn(0, 'HireDate');
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent);
@@ -735,7 +735,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             const scrollLeft = treeGrid.headerContainer.getScroll().scrollLeft;
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
-            UIInteractions.simulateClickAndSelectEvent(firstCell);
+            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
             for (let i = 0; i < columns.length - 1; i++) {
@@ -761,7 +761,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             // Select first cell and expand collapse
             let rows;
             let cell = treeGrid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
