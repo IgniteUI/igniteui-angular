@@ -576,7 +576,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const cell = hierarchicalGrid.getCellByColumn(0, 'childData2');
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
@@ -610,7 +610,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();

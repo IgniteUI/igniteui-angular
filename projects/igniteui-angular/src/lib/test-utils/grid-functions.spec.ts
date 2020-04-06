@@ -1992,7 +1992,7 @@ export class GridSummaryFunctions {
         const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        UIInteractions.simulateClickAndSelectEvent(summaryCell);
+        UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
         fix.detectChanges();
     }
 }
@@ -2022,11 +2022,11 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulateClickAndSelectEvent(startCell);
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectEvent(endCell, true);
+            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
             await wait();
             fix.detectChanges();
             resolve();
@@ -2034,10 +2034,10 @@ export class GridSelectionFunctions {
         })
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
-        UIInteractions.simulateClickAndSelectEvent(startCell);
+        UIInteractions.simulateClickAndSelectCellEvent(startCell);
         fix.detectChanges();
 
-        UIInteractions.simulateClickAndSelectEvent(endCell, true);
+        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
         fix.detectChanges();
     }
 

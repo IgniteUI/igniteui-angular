@@ -343,7 +343,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             let cell = grid.getCellByColumn(0, 'ProductName');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -779,7 +779,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             let cell = grid.getCellByColumn(0, 'ProductName');
 
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
