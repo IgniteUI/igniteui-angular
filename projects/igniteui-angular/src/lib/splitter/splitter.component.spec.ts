@@ -191,6 +191,52 @@ describe('IgxSplitter', () => {
         expect(parseFloat(pane2.size)).toBeCloseTo(pane2_originalSize - 10, 0);
     });
 
+    fit('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        splitterBarComponent.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeTruthy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeFalsy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane2.hidden).toBeTruthy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane2.hidden).toBeFalsy();
+    });
+
+    fit('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
+        fixture.componentInstance.type = SplitterType.Horizontal;
+        fixture.detectChanges();
+        const pane1 =  splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        splitterBarComponent.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeTruthy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane1.hidden).toBeFalsy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane2.hidden).toBeTruthy();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane2.hidden).toBeFalsy();
+    });
+
 });
 
 @Component({

@@ -107,43 +107,66 @@ export class IgxSplitBarComponent {
     private sibling!: IgxSplitterPaneComponent;
 
     /**
-    * @hidden
-    * @internal
-    */
+     * @hidden
+     * @internal
+     */
     @HostListener('keydown', ['$event'])
     keyEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey;
         event.stopPropagation();
-        if (this.pane.resizable && this.siblings[0].resizable) {
             switch (key) {
                 case 'arrowup':
                     if (this.type === 1) {
-                        event.preventDefault();
-                        this.moveUpOrLeft();
+                        if (ctrl) {
+                            this.pane.hidden ? this.onCollapsing(true) : this.onCollapsing(false);
+                            break;
+                        }
+                        if (this.pane.resizable && this.siblings[1].resizable) {
+                            event.preventDefault();
+                            this.moveUpOrLeft();
+                        }
                     }
                     break;
                 case 'arrowdown':
                     if (this.type === 1) {
-                        event.preventDefault();
-                        this.moveDownOrRight();
+                        if (ctrl) {
+                            this.siblings[1].hidden ? this.onCollapsing(false) : this.onCollapsing(true);
+                            break;
+                        }
+                        if (this.pane.resizable && this.siblings[1].resizable) {
+                            event.preventDefault();
+                            this.moveDownOrRight();
+                        }
                     }
                     break;
                 case 'arrowleft':
                     if (this.type === 0) {
-                        event.preventDefault();
-                        this.moveUpOrLeft();
+                        if (ctrl) {
+                            this.pane.hidden ? this.onCollapsing(true) : this.onCollapsing(false);
+                            break;
+                        }
+                        if (this.pane.resizable && this.siblings[1].resizable) {
+                            event.preventDefault();
+                            this.moveUpOrLeft();
+                        }
                     }
                     break;
                 case 'arrowright':
                     if (this.type === 0) {
-                        event.preventDefault();
-                        this.moveDownOrRight();
+                        if (ctrl) {
+                            this.siblings[1].hidden ? this.onCollapsing(false) : this.onCollapsing(true);
+                            break;
+                        }
+                        if (this.pane.resizable && this.siblings[1].resizable) {
+                            event.preventDefault();
+                            this.moveDownOrRight();
+                        }
                     }
                     break;
                 default:
                     break;
             }
-        }
     }
 
     public get nextButtonHidden() {
@@ -216,7 +239,7 @@ export class IgxSplitBarComponent {
     }
 
     private panesInitialization() {
-        this.sibling = this.siblings[0];
+        this.sibling = this.siblings[1];
 
         const paneRect = this.pane.element.getBoundingClientRect();
         this.initialPaneSize = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
@@ -230,7 +253,7 @@ export class IgxSplitBarComponent {
             this.sibling.size = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
         }
     }
-    
+
     public onCollapsing(next: boolean) {
         const prevSibling = this.siblings[0];
         const nextSibling = this.siblings[1];
