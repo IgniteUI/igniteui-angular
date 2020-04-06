@@ -879,7 +879,7 @@ describe('List', () => {
     /**
      * Verifies the display density of the IgxList by providing the IgxListComponent,
      * the list DebugElement and the expected DisplayDensity enumeration value.
-    */
+     */
     function verifyDisplayDensity(listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) {
         let expectedListDensityClass;
 

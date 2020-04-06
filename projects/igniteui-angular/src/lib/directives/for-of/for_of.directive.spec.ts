@@ -548,8 +548,10 @@ describe('IgxForOf directive -', () => {
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             expect(rowsRendered.length).toBe(0);
 
-            /** Step 3. Set the amount of rows back and vertical scrollbar should be rendered back then.
-             *  It should reset the scroll position. */
+            /**
+             * Step 3. Set the amount of rows back and vertical scrollbar should be rendered back then.
+             *  It should reset the scroll position.
+             */
             dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
 

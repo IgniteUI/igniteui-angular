@@ -11,7 +11,7 @@ export class IgxColumnResizingService {
     private pinnedMaxWidth: string;
 
     /**
-     *@hidden
+     * @hidden
      */
     public startResizePos: number;
     /**
@@ -19,11 +19,11 @@ export class IgxColumnResizingService {
      */
     public isColumnResizing: boolean;
     /**
-     *@hidden
+     * @hidden
      */
     public resizeCursor: string = null;
     /**
-     *@hidden
+     * @hidden
      */
     public showResizer = false;
     /**
@@ -34,7 +34,7 @@ export class IgxColumnResizingService {
     constructor(private zone: NgZone) { }
 
     /**
-     *@hidden
+     * @hidden
      */
     get resizerHeight(): number {
         let height = this.column.grid.getVisibleContentHeight();

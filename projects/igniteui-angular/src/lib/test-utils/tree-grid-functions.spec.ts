@@ -124,7 +124,7 @@ export class TreeGridFunctions {
 
     /**
      * Verifies that the first cell of every row is its tree cell.
-    */
+     */
     public static verifyCellsPosition(rowsDOM, expectedColumnsCount) {
         rowsDOM.forEach((row) => {
             // Verify each row's cell count
@@ -143,7 +143,7 @@ export class TreeGridFunctions {
 
     /**
      * Verifies both the RowComponent and the respective DOM Row are with the expected indentation level.
-    */
+     */
     public static verifyRowIndentationLevel(rowComponent, rowDOM, expectedIndentationLevel) {
         const treeCell = TreeGridFunctions.getTreeCell(rowDOM);
         const divChildren = treeCell.queryAll(By.css('div'));
@@ -170,7 +170,7 @@ export class TreeGridFunctions {
     /**
      * Verifies both the RowComponent and the respective DOM Row are with the expected indentation level.
      * The rowIndex is the index of the row in ascending order (if rowIndex is 0, then the top-most row in view will be verified).
-    */
+     */
     public static verifyRowIndentationLevelByIndex(fix, rowIndex, expectedIndentationLevel) {
         const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
         const rowComponent = treeGrid.getRowByIndex(rowIndex);
@@ -180,7 +180,7 @@ export class TreeGridFunctions {
 
     /**
      * Verifies that the specified column is the tree column, that contains the tree cells.
-    */
+     */
     public static verifyTreeColumn(fix, expectedTreeColumnKey, expectedColumnsCount) {
         const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey).parent;
 
@@ -202,7 +202,7 @@ export class TreeGridFunctions {
 
     /**
      * Verifies that the specified column is the tree column, that contains the tree cells, when there are multi column headers.
-    */
+     */
     public static verifyTreeColumnInMultiColHeaders(fix, expectedTreeColumnKey, expectedColumnsCount) {
         const headersDOM = TreeGridFunctions.sortElementsHorizontally(fix.debugElement.queryAll(By.css('igx-grid-header')));
         const leftMostHeaders = headersDOM.filter(x =>
@@ -290,7 +290,7 @@ export class TreeGridFunctions {
 
     /**
      * Verifies the selection of both the RowComponent and the respective DOM Row.
-    */
+     */
     public static verifyTreeRowSelection(treeGridComponent, rowComponent, rowDOM, expectedSelection: boolean) {
         // Verfiy selection of checkbox
         const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
@@ -310,7 +310,7 @@ export class TreeGridFunctions {
     /**
      * Verifies the selection of both the RowComponent and the respective DOM Row.
      * The rowIndex is the index of the row in ascending order (if rowIndex is 0, then the top-most row in view will be verified).
-    */
+     */
     public static verifyTreeRowSelectionByIndex(fix, rowIndex, expectedSelection: boolean) {
         const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
         const rowComponent = treeGrid.getRowByIndex(rowIndex);
@@ -322,7 +322,7 @@ export class TreeGridFunctions {
      * Verifies the selection of the treeGrid rows.
      * Every index of the provided array is the index of the respective row in ascending order
      * (if rowIndex is 0, then the top-most row in view will be verified).
-    */
+     */
     public static verifyDataRowsSelection(fix, expectedSelectedRowIndices: any[], expectedSelection: boolean) {
         if (expectedSelection) {
             const treeGrid = fix.debugElement.query(By.css('igx-tree-grid')).componentInstance as IgxTreeGridComponent;
@@ -337,7 +337,7 @@ export class TreeGridFunctions {
     /**
      * Verifies the selection of the header checkbox.
      * The expected value can be true, false or null (indeterminate).
-    */
+     */
     public static verifyHeaderCheckboxSelection(fix, expectedSelection: boolean | null) {
         const headerRow = TreeGridFunctions.getHeaderRow(fix);
         const checkboxDiv = headerRow.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));

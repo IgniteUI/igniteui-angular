@@ -205,7 +205,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
-    */
+     */
     @Output()
     public onContentSizeChange = new EventEmitter<any>();
 
@@ -910,7 +910,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * @hidden
-    */
+     */
     protected getContextIndex(input) {
         return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input) : this.igxForOf.indexOf(input);
     }
