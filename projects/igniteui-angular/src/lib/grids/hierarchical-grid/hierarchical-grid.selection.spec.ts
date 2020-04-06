@@ -12,7 +12,7 @@ import {
     IgxHierarchicalGridRowSelectionComponent,
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
-} from '../../test-utils/hierarhical-grid-components.spec';
+} from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
