@@ -51,7 +51,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
     public rowIsland2: IgxRowIslandComponent;
-    
+
     public data;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 

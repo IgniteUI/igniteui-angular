@@ -769,7 +769,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should pin rows to top ', (() => {
             hierarchicalGrid.pinRow('0');
             fixture.detectChanges();
-            
+
             expect(hierarchicalGrid.pinnedRows.length).toBe(1);
             let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
@@ -794,7 +794,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(4).rowID).toBe('2');
 
             expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(hierarchicalGrid.height, 10) - hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(hierarchicalGrid.height, 10) -
+                hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
             expect(hierarchicalGrid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         }));
 
@@ -811,7 +812,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_TOP)).toBeFalsy();
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_BOTTOM)).toBeTruthy();
-    
+
             expect(pinRowContainer[0].children.length).toBe(1);
             expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
             expect(pinRowContainer[0].children[0].context.index).toBe(fixture.componentInstance.data.length);
@@ -840,7 +841,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // 2 records pinned + 2px border
             expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(hierarchicalGrid.height, 10) - hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
+            const expectedHeight = parseInt(hierarchicalGrid.height, 10) -
+                hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
             expect(hierarchicalGrid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         }));
 
@@ -943,7 +945,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.selectRange(range);
 
             const selectedData = hierarchicalGrid.getSelectedData();
-            expect(selectedData).toEqual([{ID: "1", ChildLevels: 3}, {ID: "0", ChildLevels: 3}, {ID: "1", ChildLevels: 3}]);
+            expect(selectedData).toEqual([{ID: '1', ChildLevels: 3}, {ID: '0', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
         });
     });
 });

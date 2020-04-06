@@ -402,7 +402,7 @@ describe('Row Pinning #grid', () => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
-            let paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent));
+            const paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent));
             expect(paginator.componentInstance.totalPages).toEqual(6);
 
             grid.getRowByIndex(1).pin();
