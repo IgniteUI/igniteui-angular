@@ -25,6 +25,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
     public searchSelectedColumn = '';
     public data: Array<any>;
     public columns: Array<any>;
+    selectionModes = ['none', 'single', 'multiple'];
     // public data = [];
     public filterModes = [
         {
@@ -101,6 +102,12 @@ export class GridColumnSelectionSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public onSelection(event) {
+        const selection = event.newSelection.element.nativeElement.textContent.trim();
+        this.grid.columnSelection = selection;
+        this.grid1.columnSelection = selection;
     }
 
     getGridSelectedColunsData() {
