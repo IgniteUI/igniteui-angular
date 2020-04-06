@@ -93,7 +93,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Selection', () => {
-        it('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.', (async() => {
             let firstRow = hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent;
             hierarchicalGrid.expandRow(firstRow.rowID);
             expect(firstRow.expanded).toBeTruthy();
@@ -105,13 +105,17 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             await wait(100);
             fixture.detectChanges();
 
+            expect(fCell.selected).toBeTruthy();
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const fChildCell = childGrid.dataRowList.first.cells.first;
+
             // select child cell
             GridFunctions.focusCell(fixture, fChildCell);
             await wait(100);
             fixture.detectChanges();
 
-            expect(firstChildCell.selected).toBeTruthy();
-            expect(firstCell.selected).toBeFalsy();
+            expect(fChildCell.selected).toBeTruthy();
+            expect(fCell.selected).toBeFalsy();
 
             // select parent cell
             firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
@@ -282,8 +286,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            firstChildCell = childGrid.dataRowList.first.cells.first;
-            expect(firstChildCell.selected).toBe(true);
+            fChildCell = childGrid.dataRowList.first.cells.first;
+            expect(fChildCell.selected).toBe(true);
         }));
 
         it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
