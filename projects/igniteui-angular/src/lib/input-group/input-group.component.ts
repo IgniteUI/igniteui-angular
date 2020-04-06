@@ -212,6 +212,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         }
     }
 
+    /** @hidden */
+    @HostListener('pointerdown', ['$event'])
+    public onPointerDown(event: PointerEvent) {
+    }
+
     /**
      * An @Input property that sets how the input will be styled.
      * The allowed values are `line`, `box`, `border`, `fluent`, `search` and `fluentSearch`. The default is `line`.
