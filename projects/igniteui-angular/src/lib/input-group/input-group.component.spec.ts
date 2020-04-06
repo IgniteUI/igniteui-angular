@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
@@ -7,6 +7,7 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../icon';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxPrefixDirective, IgxSuffixDirective } from '../chips';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -89,7 +90,7 @@ describe('IgxInputGroup', () => {
         testInputGroupType('search', igxInputGroup, inputGroupElement);
     });
 
-    it('Should be able to change input group type programatically.', () => {
+    it('Should be able to change input group type programmatically.', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
@@ -189,15 +190,45 @@ describe('IgxInputGroup', () => {
 
         expect(document.activeElement).not.toEqual(fixture.componentInstance.igxInput.nativeElement);
     });
+
+    it('should not fire focus and blur on prefix or suffix click', fakeAsync(() => {
+        const fixture = TestBed.createComponent(InputGroupComponent);
+        fixture.detectChanges();
+
+        const inputGroup = fixture.componentInstance.igxInputGroup;
+        const prefix = fixture.componentInstance.prefix;
+        const input = fixture.componentInstance.igxInput;
+
+        const pointOnPrefix = UIInteractions.getPointFromElement(prefix.nativeElement);
+        const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
+        const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
+
+        Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement });
+        inputGroup.onPointerDown(pointerEvent);
+
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+
+        Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
+        inputGroup.onPointerDown(pointerEvent);
+
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+    }));
 });
 
 @Component({
     template: `<igx-input-group #igxInputGroup>
-                    <input igxInput />
+                    <igx-prefix>PREFIX</igx-prefix>
+                    <igx-suffix>SUFFIX</igx-suffix>
+                    <input #igxInput igxInput />
                 </igx-input-group>`
 })
 class InputGroupComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
+    @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
+    @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
 }
 
 @Component({
