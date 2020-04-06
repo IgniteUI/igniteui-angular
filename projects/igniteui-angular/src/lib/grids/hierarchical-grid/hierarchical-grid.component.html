@@ -93,6 +93,7 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template #pinnedRecordsTemplate>
             <ng-container *ngIf="data
+            | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
             | gridHierarchicalRowPinning:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger

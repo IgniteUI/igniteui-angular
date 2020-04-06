@@ -529,6 +529,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     /**
      * @hidden
+     */
+    public get displayPinnedChip() {
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
+    }
+
+    /**
+     * @hidden
      * @internal
      */
     @HostBinding('class.igx-grid__td--active')

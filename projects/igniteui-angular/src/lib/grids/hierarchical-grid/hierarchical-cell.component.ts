@@ -11,18 +11,10 @@ import { PlatformUtil } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-cell',
-    templateUrl: './hierarchical-cell.component.html',
+    templateUrl: '../cell.component.html',
     providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
-
-    /**
-     * @hidden
-     */
-    public get displayPinnedChip() {
-        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
-    }
-
     // protected hSelection;
     protected _rootGrid;
 
