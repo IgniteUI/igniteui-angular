@@ -1498,7 +1498,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let targetCell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
                 fix.detectChanges();
 
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
@@ -2621,7 +2621,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let cell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];

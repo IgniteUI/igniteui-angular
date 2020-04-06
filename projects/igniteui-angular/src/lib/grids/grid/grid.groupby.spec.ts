@@ -1215,7 +1215,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         await wait();
         fix.detectChanges();
 
