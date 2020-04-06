@@ -50,6 +50,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxToast`:
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
+- `IgxInputGroup`:
+    - clicking on the `prefix` or `suffix` of input group will not trigger `blur` and `focus` event. Also if the input group is focused clicking on it will not trigger `blur` and `focus` events.
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 
