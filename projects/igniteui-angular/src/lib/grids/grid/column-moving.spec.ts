@@ -432,7 +432,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a cell from 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             // step 2 - move that column
@@ -465,7 +465,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a cell from 'ID' column
             const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             // step 2 - move that column
@@ -681,7 +681,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a visible cell from the 'ID' column
             const cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 
@@ -720,7 +720,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             const cell = grid.getCellByColumn(25, 'Phone');
             const selectedData = [{ Phone: '40.32.21.21'}];
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             expect(cell.selected).toBeTruthy();
@@ -1292,7 +1292,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 2, 2);

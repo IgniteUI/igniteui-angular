@@ -859,7 +859,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // collapse last group row
         let groupRow = grid.getRowByIndex(11);
-        UIInteractions.simulateClickAndSelectCellEvent(groupRow);
+        UIInteractions.simulateClickAndSelectEvent(groupRow);
         fix.detectChanges();
         GridFunctions.verifyGroupRowIsFocused(groupRow);
         GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', true);
@@ -1215,7 +1215,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         await wait();
         fix.detectChanges();
 

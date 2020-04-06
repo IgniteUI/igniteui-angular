@@ -941,7 +941,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(2, 'ID');
@@ -1421,7 +1421,7 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
-            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             flush();
             fix.detectChanges();
 

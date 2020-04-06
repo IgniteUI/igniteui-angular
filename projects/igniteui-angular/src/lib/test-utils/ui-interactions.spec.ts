@@ -239,7 +239,7 @@ export class UIInteractions {
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
-    public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
+    public static simulateClickAndSelectEvent(element, shift = false, ctrl = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
         element.nativeElement.dispatchEvent(new MouseEvent('click'));
@@ -251,7 +251,7 @@ export class UIInteractions {
         element.dispatchEvent(new MouseEvent('click'));
     }
 
-    public static simulateDoubleClickAndSelectCellEvent(element) {
+    public static simulateDoubleClickAndSelectEvent(element) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
         element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
