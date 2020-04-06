@@ -5154,6 +5154,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get pinnedDataView(): any[] {
+        return this.pinnedRows.map(row => row.rowData);
+    }
+
+    /**
      * Get current selection state.
      * @example
      * Returns an array with selected rows' IDs (primaryKey or rowData)
@@ -5358,8 +5369,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray.forEach((col) => {
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
-                        record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
-                            : source[row][col.field];
+                        const value = source[row].ghostRecord ? source[row].recordRef[col.field] : source[row][col.field];
+                        record[key] = formatters && col.formatter ? col.formatter(value) : value;
                     }
                 });
             }
@@ -5394,7 +5405,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.pinnedDataView.concat(this.dataView);
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

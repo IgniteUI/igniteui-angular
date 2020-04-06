@@ -934,5 +934,16 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // Expect 9 since it is a string.
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
         });
+
+        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', () => {
+            hierarchicalGrid.pinRow('1');
+            fixture.detectChanges();
+
+            const range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'ChildLevels' };
+            hierarchicalGrid.selectRange(range);
+
+            const selectedData = hierarchicalGrid.getSelectedData();
+            expect(selectedData).toEqual([{ID: "1", ChildLevels: 3}, {ID: "0", ChildLevels: 3}, {ID: "1", ChildLevels: 3}]);
+        });
     });
 });
