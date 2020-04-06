@@ -126,6 +126,24 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     @HostBinding('attr.tabindex')
     public tabindex = -1;
 
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-label')
+    public ariaLabel = this.label;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-disabled')
+    public ariaDisabled = this.disabled;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-selected')
+    public ariaSelected = this.isSelected;
+
     ngAfterViewInit(): void {
         this._ngZone.runOutsideAngular(() => {
             this._resizeObserver = new ResizeObserver(() => {

@@ -41,7 +41,7 @@ let NEXT_TABS_ID = 0;
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-    private _currentTabsId = 0;
+    private _currentTabsId = NEXT_TABS_ID++;
 
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
@@ -124,7 +124,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-tabs-${NEXT_TABS_ID}`;
+    public id = `igx-tabs-${this._currentTabsId}`;
 
     /**
      * @hidden
@@ -319,9 +319,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) {
-        this._currentTabsId = NEXT_TABS_ID++;
-    }
+    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) { }
 
     /**
      * @hidden
@@ -382,10 +380,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     private setGroupsAttributes() {
+        const groupsArray = Array.from(this.groups);
         for (let index = 0; index < this.groups.length; index++) {
-            const tabsGroup = Array.from(this.groups)[index] as IgxTabsGroupComponent;
-            tabsGroup.element.setAttribute('id', this._getTabsGroupId(index));
-            tabsGroup.element.setAttribute('aria-labelledby', this._getTabItemId(index));
+            const tabsGroup = groupsArray[index] as IgxTabsGroupComponent;
+            tabsGroup.nativeElement.setAttribute('id', this._getTabsGroupId(index));
+            tabsGroup.nativeElement.setAttribute('aria-labelledby', this._getTabItemId(index));
         }
     }
 

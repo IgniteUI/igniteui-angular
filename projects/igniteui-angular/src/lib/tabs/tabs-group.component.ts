@@ -68,10 +68,10 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * Returns the native element of the tabs-group component
      * ```typescript
-     *  const mytabsGroupElement: HTMLElement = tabsGroup.element;
+     *  const mytabsGroupElement: HTMLElement = tabsGroup.nativeElement;
      * ```
      */
-    public get element() {
+    public get nativeElement() {
         return this._element.nativeElement;
     }
 

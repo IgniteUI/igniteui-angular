@@ -70,7 +70,8 @@ describe('IgxTabs', () => {
             const igxTabs = document.querySelectorAll('igx-tabs');
             expect(igxTabs.length).toBe(2);
 
-            for (let tabIndex = 0; tabIndex < 2; tabIndex++) {
+            const startTabsIndex = parseInt(igxTabs[0].id.replace('igx-tabs-', ''), 10);
+            for (let tabIndex = startTabsIndex; tabIndex < startTabsIndex + 2; tabIndex++) {
                 const tab = igxTabs[tabIndex];
                 expect(tab.id).toEqual(`igx-tabs-${tabIndex}`);
 
