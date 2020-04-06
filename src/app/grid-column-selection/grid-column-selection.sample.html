@@ -5,20 +5,34 @@
 
     <div class="sample-content">
         <div class="sample-column">
+            <div class="sample-buttons">
+                <button igxButton="raised" [igxToggleAction]="dropDownComfortable"
+                    [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">
+                    Column Selection: {{grid1.columnSelection}}</button>
+                <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)" displayDensity="comfortable">
+                    <igx-drop-down-item *ngFor="let item of selectionModes">
+                        {{ item }}
+                    </igx-drop-down-item>
+                </igx-drop-down>
+            </div>
             <div class="density-chooser">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
-            <igx-grid #grid1 [data]="data" [displayDensity]="density" [showToolbar]="true" [columnHiding]="true"
-                [columnPinning]='true' [allowFiltering]="true" [rowSelection] ="'multiple'" [filterMode]="'excelStyleFilter'"
-                [paging]="false" [width]="'900px'" [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
+
+
+            <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'"
+                [showToolbar]="true" [columnHiding]="true" [columnPinning]='true' [allowFiltering]="true"
+                [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [paging]="false" [width]="'900px'"
+                [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
                     [groupable]="c.groupable" [resizable]="c.resizable" [width]="c.width" [sortable]="c.sortable"
-                    [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true" [selectable]="c.selectable"
-                    [dataType]="c.type">
+                    [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="true"
+                    [selectable]="c.selectable" [dataType]="c.type">
                 </igx-column>
 
                 <ng-template igxToolbarCustomContent let-sampleGrid="grid">
-                    <button igxButton="outlined" #columnSelectionButton igxRipple (click)="toggleColumnSelection()" [displayDensity]="sampleGrid.displayDensity" >
+                    <button igxButton="outlined" #columnSelectionButton igxRipple (click)="toggleColumnSelection()"
+                        [displayDensity]="sampleGrid.displayDensity">
                         <div class="igx-grid-toolbar__button-space">
                             <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
                             </igx-checkbox>
@@ -50,30 +64,32 @@
             </igx-grid>
 
             <h1>TEST EXAMPLE</h1>
-            <igx-grid #grid [data]="data" height="500px" width="1000px" columnWidth="100px" [columnHiding]="true">
-                <igx-column-group header="General Information" >
-                    <igx-column  field="CompanyName" ></igx-column>
+            <igx-grid #grid [data]="data" height="500px" width="1000px" [columnSelection]="'multiple'"
+                columnWidth="100px" [columnHiding]="true">
+                <igx-column-group header="General Information">
+                    <igx-column field="CompanyName"></igx-column>
                     <igx-column-group header="Person Details">
-                        <igx-column  field="ContactName" [hidden]="true"></igx-column>
-                        <igx-column  field="ContactTitle" [selectable]="false"></igx-column>
+                        <igx-column field="ContactName" [hidden]="true"></igx-column>
+                        <igx-column field="ContactTitle" [selectable]="false"></igx-column>
                     </igx-column-group>
                 </igx-column-group>
                 <igx-column field="ID"></igx-column>
                 <igx-column-group header="Country Information">
 
                     <igx-column-group header="Region Information">
-                        <igx-column  field="Country" [selectable]="false"></igx-column>
-                        <igx-column field="Region" ></igx-column>
-                        <igx-column field="PostalCode" ></igx-column>
+                        <igx-column field="Country" [selectable]="false"></igx-column>
+                        <igx-column field="Region"></igx-column>
+                        <igx-column field="PostalCode"></igx-column>
                     </igx-column-group>
-                    <igx-column-group header="City Information" >
-                        <igx-column field="City" [selectable]="false" ></igx-column>
-                        <igx-column field="Address" [selectable]="false"></igx-column>
+                    <igx-column-group header="City Information">
+                        <igx-column field="City"></igx-column>
+                        <igx-column field="Address"></igx-column>
                     </igx-column-group>
                 </igx-column-group>
             </igx-grid>
             <div class="sample-buttons">
-                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)">
+                </igx-buttongroup>
             </div>
             <div class="sample-buttons">
                 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>

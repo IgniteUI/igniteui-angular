@@ -1079,7 +1079,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         const rows = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('igx-grid-row'));
         expect(rows.length).toEqual(4);
-        expect(grid.hasVerticalSroll()).toBeTruthy();
+        expect(grid.hasVerticalScroll()).toBeTruthy();
 
         const verticalVirt = grid.verticalScrollContainer;
 
