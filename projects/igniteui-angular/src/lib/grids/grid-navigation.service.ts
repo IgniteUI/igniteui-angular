@@ -53,7 +53,7 @@ export class IgxGridNavigationService {
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(); });
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event); });
         }
         this.grid.cdr.detectChanges();
     }
@@ -192,10 +192,10 @@ export class IgxGridNavigationService {
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
-    focusTbody() {
+    focusTbody(event) {
         this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
         if (!this.activeNode || !(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateInBody(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
+        this.navigateInBody(0, 0, (obj) => { obj.target.activate(event); });
     }
 
     focusFirstCell(header = true) {
