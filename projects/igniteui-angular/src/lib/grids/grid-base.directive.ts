@@ -5701,7 +5701,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNextDataRowIndex(currentRowIndex, previous = false): number {
-        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || currentRowIndex >= this.dataView.length - 1) {
+        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
             return currentRowIndex;
         }
         const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :
