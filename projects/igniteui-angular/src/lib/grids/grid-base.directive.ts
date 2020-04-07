@@ -2975,6 +2975,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
+        data = data.map(rec => rec.ghostRec !== undefined ? rec.recordData : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
@@ -5805,8 +5806,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
             if (scroll !== false) {
-                matchInfo.row.ghostRec !== undefined ? this.scrollTo(matchInfo.row.recordData, matchInfo.column) :
-                            this.scrollTo(matchInfo.row, matchInfo.column);
+                this.scrollTo(matchInfo.row, matchInfo.column);
             }
 
             IgxTextHighlightDirective.setActiveHighlight(this.id, {
@@ -5952,14 +5952,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
         data.forEach((dataRow) => {
-            const ghostRec = dataRow.ghostRec !== undefined;
-            let dataRowRec = { ...dataRow };
-            dataRowRec = ghostRec ? dataRowRec.recordData : dataRowRec;
             columnItems.forEach((c) => {
-                const value = c.formatter ? c.formatter(dataRowRec[c.field]) :
-                    c.dataType === 'number' ? numberPipe.transform(dataRowRec[c.field], this.locale) :
-                        c.dataType === 'date' ? datePipe.transform(dataRowRec[c.field], this.locale)
-                            : dataRowRec[c.field];
+                const value = c.formatter ? c.formatter(dataRow[c.field]) :
+                    c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
+                        c.dataType === 'date' ? datePipe.transform(dataRow[c.field], this.locale)
+                            : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
                     let searchValue = caseSensitive ? String(value) : String(value).toLowerCase();
 

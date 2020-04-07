@@ -381,7 +381,9 @@ export class IgxTreeGridShadowRowsPipe implements PipeTransform {
     private designateDisabledRows(collection: ITreeGridRecord[]) {
         collection.forEach(record => {
             if (this.gridAPI.grid.isRecordPinned(record.data)) {
-                record.data = { recordData: record.data, ghostRec: true };
+                const recordData = {};
+                Object.assign(recordData, record.data);
+                record.data = { recordData: recordData, ghostRec: true };
             }
             if (record.children && record.children.length > 0) {
                 this.designateDisabledRows(record.children);
