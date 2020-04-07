@@ -1355,31 +1355,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset);
         }));
 
-        it('Should commit the input and new chip after picking date from calendar for filtering.', fakeAsync(() => {
-            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
-
-            // Click input to open calendar.
-            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
-            const input = filteringRow.query(By.directive(IgxInputDirective));
-            input.triggerEventHandler('click', null);
-            tick(100);
-            fix.detectChanges();
-
-            // Click the today date.
-            const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
-            const calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
-            (<HTMLElement>todayDayItem).click();
-            tick(200);
-            fix.detectChanges();
-
-            // Verify the chip and input are committed.
-            const filterChip = filteringRow.query(By.directive(IgxChipComponent));
-            expect(filterChip).toBeTruthy();
-            expect(filterChip.componentInstance.selected).toBeFalsy();
-            expect(input.nativeElement.value).toEqual('');
-        }));
-
         it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
