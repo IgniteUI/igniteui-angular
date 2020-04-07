@@ -1983,6 +1983,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
             todayDayItem.focus();
             todayDayItem.click();
+            grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
 
@@ -2028,6 +2029,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const firstDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date');
             firstDayItem.focus();
             firstDayItem.click();
+            grid.filteringRow.onInputGroupFocusout();
             tick(100);
             fix.detectChanges();
 
