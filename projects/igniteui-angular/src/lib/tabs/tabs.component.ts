@@ -380,7 +380,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     private setGroupsAttributes() {
-        const groupsArray = Array.from(this.groups);
+        const groupsArray = this.groups.toArray();
         for (let index = 0; index < this.groups.length; index++) {
             const tabsGroup = groupsArray[index] as IgxTabsGroupComponent;
             tabsGroup.nativeElement.setAttribute('id', this.getTabsGroupId(index));
