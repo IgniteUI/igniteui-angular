@@ -912,9 +912,8 @@ export class GridFunctions {
     }
 
     public static getFilterConditionChip(fix, index) {
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const conditionChips = GridFunctions.sortNativeElementsHorizontally(
-            filterUIRow.queryAll(By.directive(IgxChipComponent)).map((ch) => ch.nativeElement));
+        const conditionChips = this.getAllFilterConditionChips(fix);
+
         return conditionChips[index];
     }
 

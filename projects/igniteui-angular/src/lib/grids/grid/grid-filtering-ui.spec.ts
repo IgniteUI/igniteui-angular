@@ -3462,24 +3462,24 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click the today date.
             const outlet = document.getElementsByClassName('igx-grid__outlet')[0];
             let calendar = outlet.getElementsByClassName('igx-calendar')[0];
-            const todayDayItem = calendar.querySelector('.igx-calendar__date--current');
+            const todayDayItem: HTMLElement = calendar.querySelector('.igx-calendar__date--current');
             clickHtmlElemAndBlur(todayDayItem, inputDebugElement);
             tick(100);
             fix.detectChanges();
 
-            // Select our newly added chip
+            // Verify the newly added chip is selected.
             const chip = GridFunctions.getFilterConditionChip(fix, 0);
             const chipDiv = chip.querySelector('.igx-chip__item');
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('initial chip is committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'initial chip is committed');
 
             // Focus out
             clickHtmlElemAndBlur(chip, inputDebugElement);
             tick(200);
             fix.detectChanges();
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeFalsy('initial chip is not committed');
-            expect(input.value).toBeFalsy('initial input value is present and not committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'initial chip is not committed');
+            expect(input.value).toBe('', 'initial input value is present and not committed');
 
             chip.click();
             tick(200);
@@ -3510,7 +3510,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBeTruthy('chip is committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is committed');
 
             // Focus out
             clickHtmlElemAndBlur(chip, inputDebugElement);
@@ -3519,12 +3519,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
 
             // Check if we still have only one committed chip
-            const activeFilterChip: IgxChipComponent = filteringRow.query(By.directive(IgxChipComponent)).componentInstance;
             const chipsLength = GridFunctions.getAllFilterConditionChips(fix).length;
 
             expect(chipsLength).toBe(1, 'there is more than one chip');
-            expect(activeFilterChip.selected).toBe(false, 'chip is not committed');
-            expect(input.value).toBeFalsy('input value is present and not committed');
+            expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is not committed');
+            expect(input.value).toBe('', 'input value is present and not committed');
         }));
     });
     describe(null, () => {
@@ -6543,17 +6542,13 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
 }
 
-function clickElemAndBlur(clickElem, blurElem) {
-    const elementRect = clickElem.nativeElement.getBoundingClientRect();
-    UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
-    blurElem.nativeElement.blur();
-    (clickElem as DebugElement).nativeElement.focus();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
-    UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
-    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
+function clickElemAndBlur(clickElem: DebugElement, blurElem: DebugElement) {
+    const clickHtmlElem = clickElem.nativeElement;
+
+    this.clickHtmlElemAndBlur(clickHtmlElem, blurElem);
 }
 
-function clickHtmlElemAndBlur(clickElem, blurElem) {
+function clickHtmlElemAndBlur(clickElem: HTMLElement, blurElem: DebugElement) {
     const elementRect = clickElem.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
