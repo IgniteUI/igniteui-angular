@@ -93,34 +93,38 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Selection', () => {
-        it('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.', (async() => {
             let firstRow = hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent;
             hierarchicalGrid.expandRow(firstRow.rowID);
             expect(firstRow.expanded).toBeTruthy();
 
-            let firstCell = firstRow.cells.first;
-            firstCell.nativeElement.focus();
-            tick();
-
-            expect(firstCell.selected).toBeTruthy();
-            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            const firstChildCell = childGrid.dataRowList.first.cells.first;
-
-            // select child cell
-            firstChildCell.nativeElement.focus();
-            tick();
-
-            expect(firstChildCell.selected).toBeTruthy();
-            expect(firstCell.selected).toBeFalsy();
+            let fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
-            firstRow = hierarchicalGrid.dataRowList.first as IgxHierarchicalRowComponent;
-            firstCell = firstRow.cells.first;
-            firstCell.nativeElement.focus();
-            tick();
+            GridFunctions.focusCell(fixture, fCell);
+            await wait(100);
+            fixture.detectChanges();
 
-            expect(firstChildCell.selected).toBeFalsy();
-            expect(firstCell.selected).toBeTruthy();
+            expect(fCell.selected).toBeTruthy();
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const fChildCell = childGrid.dataRowList.first.cells.first;
+
+            // select child cell
+            GridFunctions.focusCell(fixture, fChildCell);
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(fChildCell.selected).toBeTruthy();
+            expect(fCell.selected).toBeFalsy();
+
+            // select parent cell
+            firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+            fCell = firstRow.cells.toArray()[0];
+            GridFunctions.focusCell(fixture, fCell);
+            await wait(100);
+            fixture.detectChanges();
+            expect(fChildCell.selected).toBeFalsy();
+            expect(fCell.selected).toBeTruthy();
         }));
     });
 
@@ -272,19 +276,18 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            let firstChildCell = childGrid.dataRowList.first.cells.first;
-            UIInteractions.simulateClickAndSelectCellEvent(firstChildCell);
-            expect(firstChildCell.selected).toBe(true);
-
-            // apply some filter
+            let fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+            GridFunctions.focusCell(fixture, fChildCell);
+            fixture.detectChanges();
+            expect(fChildCell.selected).toBe(true);
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
 
             expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
             expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            firstChildCell = childGrid.dataRowList.first.cells.first;
-            expect(firstChildCell.selected).toBe(true);
+            fChildCell = childGrid.dataRowList.first.cells.first;
+            expect(fChildCell.selected).toBe(true);
         }));
 
         it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
