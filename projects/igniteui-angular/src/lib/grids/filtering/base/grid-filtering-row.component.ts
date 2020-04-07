@@ -501,6 +501,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Opens the conditions dropdown.
      */
     public toggleConditionsDropDown(target: any) {
+        target.focus();
         this._conditionsOverlaySettings.positionStrategy.settings.target = target;
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
