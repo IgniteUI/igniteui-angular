@@ -39,6 +39,7 @@ export class UIInteractions {
 
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
+            target: elem.nativeElement,
             key: keyPressed,
             altKey: altKey,
             shiftKey: shift,
@@ -80,6 +81,58 @@ export class UIInteractions {
     public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
         inputElement.nativeElement.value = inputValue;
         inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
+    }
+
+    public static triggerInputKeyInteraction(inputValue: string, target: DebugElement) {
+        const startPos = target.nativeElement.selectionStart;
+        const endPos = target.nativeElement.selectionEnd;
+        target.nativeElement.value =
+            target.nativeElement.value.substring(0, startPos) +
+            inputValue +
+            target.nativeElement.value.substring(endPos);
+        // move the caret
+        if (startPos !== endPos) {
+            // replaced selection, cursor goes to end
+            target.nativeElement.selectionStart = target.nativeElement.selectionEnd = startPos + inputValue.length;
+        } else {
+            // typing move the cursor after the typed value
+            target.nativeElement.selectionStart = target.nativeElement.selectionEnd = endPos + inputValue.length;
+        }
+        target.triggerEventHandler('input', { target: target.nativeElement });
+    }
+
+    public static simulateTyping(characters: string, target: DebugElement, selectionStart = 0, selectionEnd = 0) {
+        if (characters) {
+            if (selectionStart > selectionEnd) {
+                return Error('Selection start should be less than selection end position');
+            }
+            //target.triggerEventHandler('focus', {});
+            const inputEl = target.nativeElement as HTMLInputElement;
+            inputEl.setSelectionRange(selectionStart, selectionEnd);
+            for (let i = 0; i < characters.length; i++) {
+                const char = characters[i];
+                this.triggerEventHandlerKeyDown(char, target);
+                this.triggerInputKeyInteraction(char, target);
+                this.triggerEventHandlerKeyUp(char, target);
+            }
+        }
+    }
+
+    public static simulatePaste(pasteText: string, target: DebugElement, selectionStart = 0, selectionEnd = 0) {
+        if (selectionStart > selectionEnd) {
+            return Error('Selection start should be less than selection end position');
+        }
+        const inputEl = target.nativeElement as HTMLInputElement;
+        inputEl.setSelectionRange(selectionStart, selectionEnd);
+        UIInteractions.triggerPasteEvent(target, pasteText);
+        UIInteractions.triggerInputKeyInteraction(pasteText, target);
+    }
+
+    public static triggerPasteEvent(inputElement: DebugElement, inputValue: string) {
+        const pasteData = new DataTransfer();
+        pasteData.setData('text/plain', inputValue);
+        const event = new ClipboardEvent('paste', { clipboardData: pasteData });
+        inputElement.triggerEventHandler('paste', event);
     }
 
     public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
