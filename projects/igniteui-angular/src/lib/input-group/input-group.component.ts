@@ -19,6 +19,7 @@ import { IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -206,8 +207,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * @hidden
      */
     @HostListener('click', ['$event'])
-    public onClick(event) {
-        if (!this._supressInputAutofocus) {
+    public onClick(event: MouseEvent) {
+        // if the click target is not the input, e.g. click on prefix, focus the input.
+        if (event.target !== this.input.nativeElement || !this._supressInputAutofocus) {
             this.input.focus();
         }
     }
@@ -215,9 +217,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('pointerdown', ['$event'])
     public onPointerDown(event: PointerEvent) {
-        // if group is focused or if the click is not on the input but in input group,
-        // e.g. on prefix or suffix, prevent default and this way prevent blur
-        if (this.isFocused || event.target !== this.input.nativeElement) {
+        // if the pointer is not on the input, e.g. pointer is on the prefix, call preventDefault.
+        // This will prevent blur of the input and focusing of the element under the pointer.
+        if (event.target !== this.input.nativeElement || this._supressInputAutofocus) {
             event.preventDefault();
         }
     }
@@ -261,12 +263,14 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /**
+     * @deprecated 'supressInputAutofocus' @Input property is deprecated.
      * Returns whether the input element of the input group will be automatically focused on click.
      * ```typescript
      * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
      * ```
      */
     @Input()
+    @DeprecateProperty(`'supressInputAutofocus' @Input property is deprecated.`)
     public get supressInputAutofocus(): boolean {
         return this._supressInputAutofocus;
     }
