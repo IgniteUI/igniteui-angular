@@ -179,7 +179,7 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
     });
 
-    it('suppress focus on input when clicked', async () => {
+    xit('suppress focus on input when clicked', async () => {
         const fixture = TestBed.createComponent(InputGroupSupressInputFocusComponent);
         fixture.detectChanges();
 
