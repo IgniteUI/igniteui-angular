@@ -72,7 +72,7 @@ describe('IgxTabs', () => {
 
             const startTabsIndex = parseInt(igxTabs[0].id.replace('igx-tabs-', ''), 10);
             for (let tabIndex = startTabsIndex; tabIndex < startTabsIndex + 2; tabIndex++) {
-                const tab = igxTabs[tabIndex];
+                const tab = igxTabs[tabIndex - startTabsIndex];
                 expect(tab.id).toEqual(`igx-tabs-${tabIndex}`);
 
                 const tabHeaders = tab.querySelectorAll('igx-tab-item');
