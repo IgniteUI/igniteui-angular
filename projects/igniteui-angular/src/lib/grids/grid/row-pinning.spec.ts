@@ -412,7 +412,7 @@ describe('Row Pinning #grid', () => {
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(grid.dataView.length).toBe(4);
-            expect(paginator.componentInstance.totalPages).toEqual(7);
+            expect(paginator.componentInstance.totalPages).toEqual(6);
 
             grid.getRowByIndex(3).pin();
             fix.detectChanges();
@@ -421,7 +421,7 @@ describe('Row Pinning #grid', () => {
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(grid.dataView.length).toBe(3);
-            expect(paginator.componentInstance.totalPages).toEqual(9);
+            expect(paginator.componentInstance.totalPages).toEqual(5);
 
             // unpin
             grid.getRowByIndex(0).unpin();
