@@ -975,6 +975,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
+    public onInputGroupClick(event: MouseEvent, target?: HTMLElement) {
+        // TODO: should we call stopPropagation here?
+        this.openDialog(target);
+    }
+
     /**
      * Opens the date picker drop down or dialog.
      * @param target HTMLElement - the target element to use for positioning the drop down container according to
@@ -987,6 +992,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (!this.collapsed) {
             return;
         }
+
         switch (this.mode) {
             case InteractionMode.Dialog: {
                 this.hasHeader = true;
@@ -1005,14 +1011,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                 this._overlayService.show(this._componentID);
                 break;
             }
-        }
-    }
-
-    public mouseDown(e) {
-        // if the click is not on the input but in input group
-        // e.g. on prefix or sufix, prevent default and this way prevent blur
-        if (e.target !== this.getEditElement()) {
-            e.preventDefault();
         }
     }
 
