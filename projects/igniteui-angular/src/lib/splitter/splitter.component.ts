@@ -168,6 +168,8 @@ export class IgxSplitterComponent implements AfterContentInit {
         if (!pane) {
             return;
         }
+        // reset sibling sizes when pane is collapsed.
+        this._getSiblings(pane).forEach(sibling => sibling.size = 'auto');
         pane.hidden = !pane.hidden;
         pane.resizable = !pane.hidden;
         pane.onPaneToggle.emit(pane);
@@ -192,6 +194,21 @@ export class IgxSplitterComponent implements AfterContentInit {
         const prevPane = panes[order - barIndex - 1];
         const nextPane = panes[order - barIndex];
         const siblings = [prevPane, nextPane];
+        return siblings;
+    }
+
+
+    /** @hidden @internal */
+    private _getSiblings(pane: IgxSplitterPaneComponent) {
+        const panes = this.panes.toArray();
+        const index = panes.indexOf(pane);
+        const siblings = [];
+        if (index !== 0) {
+            siblings.push(panes[index - 1]);
+        }
+        if (index !== panes.length - 1) {
+            siblings.push(panes[index + 1]);
+        }
         return siblings;
     }
 }
