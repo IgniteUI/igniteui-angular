@@ -49,7 +49,7 @@ const PAGER_BUTTONS = '.igx-paginator__pager > button';
 const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
-const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
+const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
@@ -71,6 +71,8 @@ const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
+const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
+const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -1071,9 +1073,10 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
     }
 
-    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>): DebugElement {
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>, forGrid?: IgxGridBaseDirective): DebugElement {
         return this.getColumnHeaders(fix).find((header) => {
-            return header.componentInstance.column.field === columnField;
+            const col = header.componentInstance.column;
+            return col.field === columnField && (forGrid ? forGrid === col.grid : true);
         });
     }
 
@@ -1883,6 +1886,14 @@ export class GridFunctions {
     public static getDragIndicators(fix: ComponentFixture<any>): HTMLElement[] {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
     }
+
+    public static isCellPinned(cell: IgxGridCellComponent): boolean {
+        return cell.nativeElement.classList.contains(CELL_PINNED_CLASS);
+    }
+
+    public static isHeaderPinned(header: DebugElement): boolean {
+        return header.nativeElement.classList.contains(HEADER_PINNED_CLASS);
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -2145,7 +2156,16 @@ export class GridSelectionFunctions {
     }
 
     public static getRowCheckboxDiv(rowDOM): HTMLElement {
-        return rowDOM.querySelector(ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+        return rowDOM.querySelector(`.${ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS}`);
+    }
+
+    /**
+     * Returns if the specified element looks like a selection checkbox based on specific class affix
+     * @param element The element to check
+     * @param modifier The modifier to the base class
+     */
+    public static isCheckbox(element: HTMLElement, modifier?: string): boolean {
+        return element.classList.contains(`${ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS}${modifier || ''}`);
     }
 
     public static getRowCheckboxInput(rowDOM): HTMLInputElement {
