@@ -10,6 +10,7 @@ export class ActionStripSampleComponent {
     @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
     @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
     public result: string;
+    public isVisible = false;
     private counter = 0;
 
     doSomeAction() {
@@ -17,11 +18,11 @@ export class ActionStripSampleComponent {
     }
 
     showActions() {
-        this.actionStrip.hidden = false;
+        this.isVisible = true;
     }
 
     hideActions() {
-        this.actionStrip.hidden = true;
+        this.isVisible = false;
     }
 
     data: any[];

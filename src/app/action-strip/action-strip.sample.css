@@ -14,3 +14,11 @@
     justify-content: flex-end;
     background-color: #ffffff80;
 }
+
+.my-action-strip {
+    justify-content: center;
+}
+
+.no-bg {
+    background-color: #ffffff00;
+}

@@ -34,17 +34,17 @@ export class IgxActionStripMenuItemDirective {
  *
  * @igxTheme igx-action-strip-theme
  *
- * @igxKeywords action, strip, actionstrip, pinning, editing
+ * @igxKeywords action, strip, actionStrip, pinning, editing
  *
  * @igxGroup Data Entry & Display
  *
  * @remarks
- * The Ignite UI Action Stip is a container, overlaying its parent container,
+ * The Ignite UI Action Strip is a container, overlaying its parent container,
  * and displaying action buttons with action applicable to the parent component the strip is instantiated or shown for.
  *
  * @example
  * ```html
- * <igx-action-strip #actionstrip>
+ * <igx-action-strip #actionStrip>
  *     <igx-icon (click)="doSomeAction()"></igx-icon>
  * </igx-action-strip>
  */
@@ -70,7 +70,7 @@ export class IgxActionStripComponent {
     /**
      * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
      * ```html
-     *  <igx-buttongroup [id]="'igx-action-strip-56'">
+     *  <igx-action-strip [id]="'igx-action-strip-56'">
      * ```
      */
     @HostBinding('attr.id')
@@ -92,10 +92,11 @@ export class IgxActionStripComponent {
      *
      * @example
      * ```html
-     * <igx-action-strip #actionstrip1 [isMenu]="true">
+     * <igx-action-strip #actionStrip1 [isMenu]="true">
      *      <igx-grid-pinning-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-pinning-actions>
      *      <igx-grid-editing-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-editing-actions>
      *  </igx-action-strip>
+     * ```
      */
     @Input() isMenu = false;
 
@@ -105,7 +106,7 @@ export class IgxActionStripComponent {
     @ContentChild(IgxGridEditingActionsComponent, { static: false }) public gridEditingActions: IgxGridEditingActionsComponent;
     @ContentChildren(IgxActionStripMenuItemDirective) public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
-    show(context) {
+    show(context): void {
         this.context = context;
         this.hidden = false;
         this.context = context;
@@ -113,7 +114,7 @@ export class IgxActionStripComponent {
         this.sendContext();
     }
 
-    hide() {
+    hide(): void {
         this.hidden = true;
         this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
     }
