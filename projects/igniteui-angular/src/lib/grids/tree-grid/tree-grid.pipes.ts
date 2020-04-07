@@ -248,16 +248,12 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
             return collection;
         }
 
-        const pinnedRecordsLength = this.gridAPI.grid.pinnedRecordsCount;
-        let perPageAfterPinnedRecs = perPage - pinnedRecordsLength;
-        perPageAfterPinnedRecs = (perPageAfterPinnedRecs < 0) ? 0 : perPageAfterPinnedRecs;
-
-        const len = collection.length - pinnedRecordsLength;
+        const len = collection.length;
         const totalPages = Math.ceil(len / perPage);
 
         const state = {
             index: (totalPages > 0 && page >= totalPages) ? totalPages - 1 : page,
-            recordsPerPage: perPageAfterPinnedRecs
+            recordsPerPage: perPage
         };
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state);
