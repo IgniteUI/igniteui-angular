@@ -893,7 +893,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.height = '700px';
             fixture.detectChanges();
 
-            let rows =HierarchicalGridFunctions.getHierarchicalRows(fixture);
+            let rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent));
             expect(rows.length).toEqual(5);
             expect(paginator.componentInstance.perPage).toEqual(5);
