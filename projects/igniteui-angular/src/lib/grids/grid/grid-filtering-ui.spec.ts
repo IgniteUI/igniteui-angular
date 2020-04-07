@@ -6545,7 +6545,7 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 function clickElemAndBlur(clickElem: DebugElement, blurElem: DebugElement) {
     const clickHtmlElem = clickElem.nativeElement;
 
-    this.clickHtmlElemAndBlur(clickHtmlElem, blurElem);
+    clickHtmlElemAndBlur(clickHtmlElem, blurElem);
 }
 
 function clickHtmlElemAndBlur(clickElem: HTMLElement, blurElem: DebugElement) {
