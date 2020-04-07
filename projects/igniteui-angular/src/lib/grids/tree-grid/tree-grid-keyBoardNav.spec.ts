@@ -612,7 +612,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             // testing the pagedown key
-            UIInteractions.triggerKeyDownEvtUponElem('PageDown', treeGrid.nativeElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('PageDown', gridContent);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -620,7 +620,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(currScrollTop).toBeGreaterThan(100);
 
             // testing the pageup key
-            UIInteractions.triggerKeyDownEvtUponElem('PageUp', treeGrid.nativeElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('PageUp', gridContent);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 

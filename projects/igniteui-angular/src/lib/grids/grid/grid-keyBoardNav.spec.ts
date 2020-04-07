@@ -496,12 +496,12 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
 
-            grid.nativeElement.dispatchEvent(new Event('focus'));
+            GridFunctions.focusFirstCell(fix);
             await wait();
             fix.detectChanges();
 
             // testing the pagedown key
-            UIInteractions.triggerKeyDownEvtUponElem('PageDown', grid.nativeElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('PageDown', gridContent);
             grid.cdr.detectChanges();
             await wait();
 
@@ -509,7 +509,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
 
             // testing the pageup key
-            UIInteractions.triggerKeyDownEvtUponElem('PageUp', grid.nativeElement, true);
+            UIInteractions.triggerEventHandlerKeyDown('PageUp', gridContent);
             grid.cdr.detectChanges();
             await wait();
             currScrollTop = grid.headerContainer.getScroll().scrollTop;
