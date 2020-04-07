@@ -444,9 +444,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
-            if (focusedElement.className === 'igx-chip__remove') {
+
+            if (focusedElement.className === 'igx-chip__remove' || focusedElement.tagName === 'IGX-DAY-ITEM') {
                 return;
             }
+
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
@@ -494,7 +496,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
-        this.commitInput();
     }
 
     /**
@@ -543,10 +544,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public onChipClick(args, item: ExpressionUI) {
         if (this._cancelChipClick) {
+            this._cancelChipClick = false;
             return;
         }
-
-        this._cancelChipClick = false;
 
         this.expressionsList.forEach(ex => ex.isSelected = false);
 
