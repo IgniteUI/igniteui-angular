@@ -83,7 +83,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody()"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
      (keydown)="navigation.dispatchEvent($event)" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
