@@ -23,8 +23,11 @@
         </div>	
         <div style="width: 100%; margin-bottom: 15px; text-align:center;">	
             <div class="colsWrapper">	
-                <div *ngFor="let col of columnsList" class="columnOut"	
-                    [igxDrag]="{ key: col.key }" [hideBaseOnDrag]="true" >	
+                <div *ngFor="let col of columnsList" class="columnOut"
+                    (ghostCreate)="col.hide = true"
+                    (ghostDestroy)="col.hide = false"
+                    [style.visibility]='col.hide ? "hidden" : "visible"'
+                    [igxDrag]="{ key: col.key }">	
                     <div style="margin: 6px;">	
                             {{col.key}}	
                     </div>	

@@ -2,8 +2,7 @@ import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IfStmt } from '@angular/compiler';
-
+import { isEdge } from '../../core/utils';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -227,6 +226,7 @@ export class IgxGridCRUDService {
                 return;
             }
             this.grid.endEdit(false);
+            if (isEdge()) { this.grid.cdr.detectChanges(); }
             this.grid.tbody.nativeElement.focus();
         }
     }

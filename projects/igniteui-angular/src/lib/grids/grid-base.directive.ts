@@ -2720,15 +2720,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
-    private keydownHandler = (event) => {
-        const key = event.key.toLowerCase();
-        if (key === 'pagedown' || key === 'pageup') {
-            event.preventDefault();
-            key === 'pagedown' ? this.verticalScrollContainer.scrollNextPage() : this.verticalScrollContainer.scrollPrevPage();
-            this.nativeElement.focus();
-        }
-    }
-
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
@@ -3007,7 +2998,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.addEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
@@ -3102,7 +3092,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;

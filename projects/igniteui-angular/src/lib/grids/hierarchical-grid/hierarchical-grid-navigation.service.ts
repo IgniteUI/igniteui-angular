@@ -1,631 +1,346 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
-import { ISelectionNode } from '../selection/selection.service';
-import { isIE } from '../../core/utils';
-import { FilterMode } from '../common/enums';
-import { IgxColumnComponent } from '../columns/column.component';
+import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxRowDirective, IgxGridBaseDirective } from '../grid';
+import { GridType } from '../common/grid.interface';
+import { IPathSegment } from './hierarchical-grid-base.directive';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
- /*    protected getCellSelector(visibleIndex?: number, isSummary = false) {
-        return isSummary ? 'igx-grid-summary-cell' : 'igx-hierarchical-grid-cell';
-    }
+    protected _pendingNavigation = false;
 
-    protected getRowSelector() {
-        return 'igx-hierarchical-grid-row';
-    }
 
-    protected getRowByIndex(index) {
-        const row = super.getRowByIndex(index) as any;
-        return row;
-    }
+    dispatchEvent(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
 
-    private getChildContainer(grid?) {
-        const currGrid = grid || this.grid;
-        return currGrid.nativeElement.parentNode.parentNode.parentNode;
-    }
-
-    private getChildGridRowContainer(grid?) {
-        const currGrid = grid || this.grid;
-        return currGrid.nativeElement.parentNode.parentNode;
-    }
-
-    private getChildGrid(childGridID, grid) {
-        const cgrid = grid.hgridAPI.getChildGrids(true).filter((g) => g.id === childGridID)[0];
-        return cgrid;
-    }
-
-    private _isScrolledToBottom(grid) {
-        const scrollTop = grid.verticalScrollContainer.scrollPosition;
-        const scrollHeight = grid.verticalScrollContainer.getScroll().scrollHeight;
-        return scrollHeight === 0 || Math.round(scrollTop + grid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
-    }
-    private getIsChildAtIndex(index) {
-        return this.grid.isChildGridRecord(this.grid.dataView[index]);
-    }
-
-    public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary = false) {
-        const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-        if (isSummary) {
-            const summaryRow = this.grid.summariesRowList.toArray()[0].nativeElement;
-            return summaryRow.querySelector(
-                `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-        }
-        const row = this.getRowByIndex(rowIndex);
-        return row.querySelector(
-            `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
-    }
-
-    public navigateUp(rowElement, selectedNode: ISelectionNode) {
-        if (selectedNode.isSummaryRow) { return; }
-        const prevElem = rowElement.previousElementSibling;
-        const visibleColumnIndex = selectedNode.column;
-        const currentRowIndex = selectedNode.row;
-        if (prevElem) {
-            const nodeName = prevElem.children[0].nodeName.toLowerCase();
-            const isElemChildGrid = nodeName.toLowerCase() === 'igx-child-grid-row';
-            if (isElemChildGrid) {
-                this.focusPrevChild(prevElem, visibleColumnIndex, this.grid);
-            } else {
-                if (this.grid.parent !== null) {
-                    // currently navigating in child grid
-                    this._navigateUpInChild(rowElement, currentRowIndex, visibleColumnIndex);
-                } else {
-                    super.navigateUp(rowElement, selectedNode);
-                }
-            }
-        } else if (currentRowIndex !== 0) {
-            // handle scenario when prev item is child grid but is not yet in view
-            const isPrevChildGrid = this.getIsChildAtIndex(currentRowIndex - 1);
-            if (!isPrevChildGrid) {
-                super.navigateUp(rowElement, selectedNode);
-            } else {
-                this.scrollGrid(this.grid, -rowElement.offsetHeight,
-                    () => {
-                        rowElement = this.getRowByIndex(currentRowIndex);
-                        this.navigateUp(rowElement, selectedNode);
-                    });
-            }
-        } else if (this.grid.parent !== null &&
-            currentRowIndex === 0) {
-            // move to prev row in sibling layout or parent
-            this.focusPrev(visibleColumnIndex);
-        }
-    }
-    public navigateDown(rowElement, selectedNode: ISelectionNode) {
-        if (selectedNode.isSummaryRow) { return; }
-        const nextElem = rowElement.nextElementSibling;
-        const visibleColumnIndex = selectedNode.column;
-        const currentRowIndex = selectedNode.row;
-        if (nextElem) {
-            // next elem is in DOM
-            const nodeName = nextElem.children[0].nodeName.toLowerCase();
-            const isNextElemChildGrid = nodeName.toLowerCase() === 'igx-child-grid-row';
-            if (isNextElemChildGrid) {
-                this.focusNextChild(nextElem, visibleColumnIndex, this.grid);
-            } else {
-                if (this.grid.parent !== null) {
-                    // currently navigating in child grid
-                    this._navigateDownInChild(rowElement, currentRowIndex, visibleColumnIndex);
-                } else {
-                    super.navigateDown(rowElement, selectedNode);
-                }
-            }
-        } else if (currentRowIndex !== this.grid.dataView.length - 1) {
-            // scroll next in view
-            super.navigateDown(rowElement, selectedNode);
-        } else if (this.grid.parent !== null &&
-            currentRowIndex === this.grid.dataView.length - 1) {
-            // move to next row in sibling layout or in parent
-            this.focusNext(visibleColumnIndex);
-        }
-    }
-
-    public navigateTop(visibleColumnIndex) {
-        if (this.grid.parent !== null) {
-            // navigating in child
-            const childContainer = this.grid.nativeElement.parentNode.parentNode;
-            const diff =
-            childContainer.getBoundingClientRect().top - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
-            const topIsVisible = diff >= 0;
-            const scrollable = this.getNextScrollable(this.grid);
-            if (!topIsVisible) {
-                this.scrollGrid(scrollable.grid, diff,
-                    () => super.navigateTop(visibleColumnIndex));
-            } else {
-                super.navigateTop(visibleColumnIndex);
-            }
-        } else {
-            super.navigateTop(visibleColumnIndex);
-        }
-    }
-
-    public navigateBottom(visibleColumnIndex) {
-        // handle scenario where last index is child grid
-        // in that case focus cell in last data row
-        const lastIndex = this.grid.dataView.length - 1;
-        if (this.getIsChildAtIndex(lastIndex)) {
-            const targetIndex = lastIndex - 1;
-            const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
-            const verticalScrollTop = this.grid.verticalScrollContainer.scrollPosition;
-            const cellSelector = this.getCellSelector(visibleColumnIndex);
-            if (verticalScrollTop === scrTopPosition) {
-                const cells = this.getRowByIndex(targetIndex).querySelectorAll(
-                    `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                cells[cells.length - 1].focus();
-            } else {
-                this.scrollGrid(this.grid, scrTopPosition - verticalScrollTop,
-                    () => {
-                        const cells = this.getRowByIndex(targetIndex).querySelectorAll(
-                            `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                        if (cells.length > 0) { cells[cells.length - 1].focus(); }
-                    });
-            }
-        } else  if (this.grid.parent !== null) {
-            const childContainer = this.grid.nativeElement.parentNode.parentNode;
-            const diff =
-            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-            const endIsVisible = diff < 0;
-            const scrollable = this.getNextScrollableDown(this.grid);
-            if (!endIsVisible) {
-                this.scrollGrid(scrollable.grid, diff,
-                    () => super.navigateBottom(visibleColumnIndex));
-            } else {
-                super.navigateBottom(visibleColumnIndex);
-            }
-        } else {
-            super.navigateBottom(visibleColumnIndex);
-        }
-    }
-    public goToLastCell() {
-        // handle scenario where last index is child grid
-        // in that case focus last cell in last data row
-        const lastIndex = this.grid.dataView.length - 1;
-        if (this.getIsChildAtIndex(lastIndex)) {
-            const targetIndex = lastIndex - 1;
-            const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
-            const verticalScrollTop = this.grid.verticalScrollContainer.scrollPosition;
-            if (verticalScrollTop === scrTopPosition) {
-                this.onKeydownEnd(targetIndex);
-            } else {
-                this.scrollGrid(this.grid, scrTopPosition - verticalScrollTop,
-                    () => {
-                        this.onKeydownEnd(targetIndex);
-                    });
-            }
-        } else {
-            super.goToLastCell();
-        }
-    }
-
-    public onKeydownEnd(rowIndex, isSummary = false) {
-        if (this.grid.parent && !isSummary) {
-            // handle scenario where last child row might not be in view
-            // parent should scroll to child grid end
-            const childContainer = this.grid.nativeElement.parentNode.parentNode;
-            const diffBottom =
-                childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
-            const row = this.grid.getRowByIndex(rowIndex).element.nativeElement;
-            const rowBottom = row.getBoundingClientRect().bottom;
-            const rowIsVisible = rowBottom <= this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-            const gridTop = this._getMaxTop(this.grid);
-            const diffTop = row.getBoundingClientRect().bottom -
-                row.offsetHeight - gridTop;
-            const endIsVisible = diffBottom <= 0;
-            const topVisible = diffTop >= 0;
-            if (!endIsVisible && !rowIsVisible) {
-                this.scrollGrid(this.grid.parent, diffBottom, () => super.onKeydownEnd(rowIndex));
-            } else if (!topVisible) {
-                const scrGrid = this.grid.verticalScrollContainer.scrollPosition !== 0 ? this.grid :
-                    this.getNextScrollable(this.grid).grid;
-                const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
-                    this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : this.grid.rootGrid;
-                this.scrollGrid(topGrid, diffTop, () => super.onKeydownEnd(rowIndex));
-            } else {
-                super.onKeydownEnd(rowIndex, isSummary);
-            }
-        } else {
-            super.onKeydownEnd(rowIndex, isSummary);
-        }
-
-    }
-
-    public goToFirstCell() {
-        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
-        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getScroll();
-        if (verticalScroll.scrollTop === 0 && this.grid.parent) {
-            // scroll parent so that current child is in view
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                this.navigateTop(0);
-            } else {
-                this.horizontalScroll(this.grid.dataRowList.first.index).scrollTo(0);
-                this.grid.parentVirtDir.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        this.navigateTop(0);
-                    });
-            }
-        } else {
-            super.goToFirstCell();
-        }
-    }
-
-    public performTab(currentRowEl, selectedNode: ISelectionNode) {
-        if (this.grid.rowInEditMode) {
-            super.performTab(currentRowEl, selectedNode);
+        const targetGrid = this.getClosestElemByTag(event.target, 'igx-hierarchical-grid');
+        if (targetGrid !== this.grid.nativeElement) {
             return;
         }
-        const rowIndex = selectedNode.row;
-        const visibleColumnIndex = selectedNode.column;
-        const isSummaryRow = selectedNode.isSummaryRow;
-        const summaryRows = this.grid.summariesRowList.toArray();
-        const hasSummaries = summaryRows.length > 0;
-        const isLastDataRow = rowIndex === this.grid.dataView.length - 1;
-        const nextIsDataRow = this.grid.dataRowList.find(row => row.index === rowIndex + 1);
-        const isLastColumn = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
-        const isLastSummaryRow = hasSummaries && isSummaryRow;
-        const nextIndex = rowIndex + 1;
-        const virt = this.grid.verticalScrollContainer;
-        const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
-            this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
-        if (!nextIsDataRow && !(isLastDataRow && hasSummaries) && isLastColumn && !isSummaryRow) {
-            // navigating in child, next is not summary
-            const childContainer = this.getChildGridRowContainer();
-            const nextIsSiblingChild = this.grid.parent ? !!childContainer.nextElementSibling : false;
-            if (nextIsSiblingChild) {
-                this.focusNextChildDOMElem(childContainer, this.grid.parent);
-            } else if (isNextChild) {
-                const isInView = virt.state.startIndex + virt.state.chunkSize > nextIndex;
-                if (!isInView) {
-                    this.scrollGrid(this.grid, 'next', () => {
-                        this.focusNextChildDOMElem(currentRowEl, this.grid);
-                    });
-                } else {
-                    this.focusNextChildDOMElem(currentRowEl, this.grid);
-                }
-            } else if (this.grid.parent && this.grid.parent.summariesRowList.length > 0) {
-               this._navigateToNextParentRow(currentRowEl);
-            } else {
-                this.navigateDown(currentRowEl, { row: rowIndex, column: 0 });
-            }
-        } else if (isLastSummaryRow && isLastColumn && this.grid.parent) {
-            this._navigateToNextParentRow(currentRowEl);
-        } else  if (isLastDataRow && hasSummaries && isLastColumn && this.grid.parent) {
-            // navigating in child rows, next is child grid's summary row
-           this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid.parent, true);
-        } else {
-            super.performTab(currentRowEl, selectedNode);
-        }
-    }
 
-    private _navigateToNextParentRow(currentRowEl: any): void {
-         // next is parent summary or next parent row
-         const parent = this.grid.parent;
-         const parentHasSummary = parent.summariesRowList.length > 0;
-         const parentRowIndex = parseInt(
-            this.getClosestElemByTag(currentRowEl, 'igx-child-grid-row').parentNode.getAttribute('data-rowindex'), 10);
-         const isLastRowInParent = parent.dataView.length - 1 === parentRowIndex;
-         // check if next is sibling
-         const childRowContainer = this.getChildGridRowContainer(this.grid);
-         const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
-         if (isLastRowInParent && parentHasSummary && !nextIsSiblingChild) {
-             // next is parent summary
-             const parentSummary = parent.summariesRowList.first.nativeElement;
-             parent.navigation.focusNextRow(parentSummary, 0, parent, true);
-         } else {
-             // next is sibling or parent
-             this.focusNext(0);
-         }
-    }
-
-    private focusNextChildDOMElem(currentRowEl, grid) {
-        const gridElem = currentRowEl.nextElementSibling.querySelector('igx-hierarchical-grid');
-        const childGridID = gridElem.getAttribute('id');
-        const childGrid = this.getChildGrid(childGridID, grid);
-        if (childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
-            childGrid.navigation.moveFocusToFilterCell(true);
+        if (this._pendingNavigation && NAVIGATION_KEYS.has(key)) {
+            // In case focus needs to be moved from one grid to another, however there is a pending scroll operation
+            // which is an async operation, any additional navigation keys should be ignored
+            // untill operation complete.
+            event.preventDefault();
             return;
         }
-        this.focusNextChild(currentRowEl.nextElementSibling, 0, grid);
+        super.dispatchEvent(event);
     }
 
-    public navigatePrevFilterCell(column: IgxColumnComponent, eventArgs) {
-        if (column.visibleIndex === 0 && this.grid.parent) {
-            eventArgs.preventDefault();
-            let targetGrid = this.grid.parent;
-            const prevSiblingChild = this.getChildGridRowContainer().previousElementSibling;
-            if (prevSiblingChild) {
-                const gridElem = prevSiblingChild.querySelectorAll('igx-hierarchical-grid')[0];
-                targetGrid = this.getChildGrid(gridElem.getAttribute('id'), this.grid.parent);
-            }
-            this.focusPrev(targetGrid.unpinnedColumns[targetGrid.unpinnedColumns.length - 1].visibleIndex);
-        } else {
-            super.navigatePrevFilterCell(column, eventArgs);
-        }
-    }
-
-    public navigateNextFilterCell(column: IgxColumnComponent, eventArgs) {
-        const cols = this.grid.filteringService.unpinnedFilterableColumns;
-        const nextFilterableIndex = cols.indexOf(column) + 1;
-        if (nextFilterableIndex >= this.grid.filteringService.unpinnedFilterableColumns.length) {
-            // next is not filter cell
-            const dataRows = this.grid.rowList.toArray();
-            const hasRows = dataRows.length !== 0;
-            const summaryRows = this.grid.summariesRowList.toArray();
-            const hasSummaries = summaryRows.length > 0 && summaryRows[0].summaryCells.length > 0;
-            if (hasRows) {
-                this.focusNextRow(dataRows[0].nativeElement, 0, this.grid, false);
-            } else if (hasSummaries) {
-                this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid, true);
+    public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
+        const rec = this.grid.dataView[rowIndex];
+        if (rec && this.grid.isChildGridRecord(rec)) {
+             // target is child grid
+            const virtState = this.grid.verticalScrollContainer.state;
+             const inView = rowIndex >= virtState.startIndex && rowIndex < virtState.startIndex + virtState.chunkSize;
+             const isNext =  this.activeNode.row < rowIndex;
+             const targetLayoutIndex = isNext ? null : this.grid.childLayoutKeys.length - 1;
+             if (inView) {
+                this._moveToChild(rowIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
             } else {
-                this.focusNext(0);
+                let scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(rowIndex, !isNext);
+                scrollAmount += isNext ? 1 : -1;
+                this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
+                this._pendingNavigation = true;
+                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                    this._moveToChild(rowIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
+                    this._pendingNavigation = false;
+                });
             }
-            eventArgs.preventDefault();
-        } else {
-            super.navigateNextFilterCell(column, eventArgs);
-        }
-    }
-
-    public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
-        if (this.grid.rowInEditMode) {
-            super.performShiftTabKey(currentRowEl, selectedNode);
             return;
         }
-        const rowIndex = selectedNode.row;
-        const visibleColumnIndex = selectedNode.column;
-        const isSummary = selectedNode.isSummaryRow;
-        if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent && !isSummary) {
-            if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
-                this.moveFocusToFilterCell();
+
+        const isLast = rowIndex === this.grid.dataView.length;
+        if ((rowIndex === -1 || isLast) &&
+            this.grid.parent !== null) {
+            // reached end of child grid
+            const nextSiblingIndex = this.nextSiblingIndex(isLast);
+            if (nextSiblingIndex !== null) {
+                this.grid.parent.navigation._moveToChild(this.grid.childRow.index, visibleColIndex, isLast, nextSiblingIndex, cb);
             } else {
-                const prevSiblingChild = this.getChildGridRowContainer().previousElementSibling;
-                if (prevSiblingChild) {
-                    const gridElem = prevSiblingChild.querySelectorAll('igx-hierarchical-grid')[0];
-                    this.performShiftTabIntoChild(gridElem, currentRowEl, rowIndex);
-                } else {
-                    const selNode = {
-                        row: rowIndex,
-                        column: this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex
-                    };
-                    this.navigateUp(currentRowEl, selNode);
-                }
+                this._moveToParent(isLast, visibleColIndex, cb);
             }
-        } else if (visibleColumnIndex === 0 && currentRowEl.previousElementSibling &&
-            currentRowEl.previousElementSibling.children[0].tagName.toLowerCase() === 'igx-child-grid-row') {
-            const gridElem = this.getLastGridElem(currentRowEl.previousElementSibling);
-            this.performShiftTabIntoChild(gridElem, currentRowEl, rowIndex);
-        } else if (visibleColumnIndex === 0 && isSummary) {
-            const lastRowIndex = this.grid.dataView.length - 1;
-            if (lastRowIndex === -1) {
-                // no child data
-                if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
-                    this.moveFocusToFilterCell();
-                } else {
-                    const selNode = {
-                        row: rowIndex,
-                        column: this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex
-                    };
-                    this.navigateUp(currentRowEl, selNode);
-                }
-            } else if (!this.getIsChildAtIndex(lastRowIndex)) {
-                super.goToLastCell();
-            } else {
-                const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(lastRowIndex, true);
-                const verticalScrollTop = this.grid.verticalScrollContainer.scrollPosition;
-                if (verticalScrollTop === scrTopPosition || isNaN(scrTopPosition)) {
-                    const closestChild = this.getLastGridElem(this.grid.getRowByIndex(lastRowIndex).nativeElement.parentElement);
-                    this.performShiftTabIntoChild(closestChild, currentRowEl, rowIndex);
-                } else {
-                    this.scrollGrid(this.grid, scrTopPosition - verticalScrollTop,
-                        () => {
-                            const closestChild = this.getLastGridElem(this.grid.getRowByIndex(lastRowIndex).nativeElement.parentElement);
-                            this.performShiftTabIntoChild(closestChild, currentRowEl, rowIndex);
-                        });
-                }
+            return;
+        }
+
+        if (this.grid.parent) {
+            const isNext = this.activeNode && typeof this.activeNode.row === 'number' ? rowIndex > this.activeNode.row : false;
+            const cbHandler = (args) => {
+                this._handleScrollInChild(rowIndex, isNext);
+                cb(args);
+            };
+            if (!this.activeNode) {
+                this.activeNode = { row: null, column: null };
             }
+            super.navigateInBody(rowIndex, visibleColIndex, cbHandler);
+            return;
+        }
+
+        if (!this.activeNode) {
+            this.activeNode = { row: null, column: null };
+        }
+        super.navigateInBody(rowIndex, visibleColIndex, cb);
+    }
+
+    public shouldPerformVerticalScroll(index, isNext?) {
+        const targetRec = this.grid.dataView[index];
+        if (this.grid.isChildGridRecord(targetRec)) {
+            const scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(index, !isNext);
+            const currScroll = this.grid.verticalScrollContainer.getScroll().scrollTop;
+            const shouldScroll = !isNext ? scrollAmount > currScroll : currScroll < scrollAmount;
+            return shouldScroll;
         } else {
-            super.performShiftTabKey(currentRowEl, selectedNode);
+            return super.shouldPerformVerticalScroll(index);
         }
     }
 
-    public getFocusableGrid() {
-        return (isIE() && this.grid.rootGrid) ? this.grid.rootGrid : this.grid;
+    focusTbody() {
+        if (!this.activeNode) {
+            this.activeNode = {
+                row: null,
+                column: null
+            };
+        }
+
+        super.focusTbody();
     }
 
-    private getLastGridElem(trContainer) {
-        const children = trContainer.children;
-        const closestChild = children[children.length - 1].children[0].children[0];
-        return closestChild;
+    protected nextSiblingIndex(isNext) {
+        const layoutKey = this.grid.childRow.layout.key;
+        const layoutIndex = this.grid.parent.childLayoutKeys.indexOf(layoutKey);
+        const nextIndex = isNext ? layoutIndex + 1 : layoutIndex - 1;
+        if (nextIndex <= this.grid.parent.childLayoutKeys.length - 1 && nextIndex > -1) {
+            return nextIndex;
+        } else {
+            return null;
+        }
     }
 
-    private performShiftTabIntoChild(gridElem, currentRowEl, rowIndex) {
-        const childGridID = gridElem.getAttribute('id');
-            const childGrid = this.getChildGrid(childGridID, this.grid) || this.getChildGrid(childGridID, this.grid.parent);
-            const lastIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
-            const summaryRows = childGrid.summariesRowList.toArray();
-            if (summaryRows.length > 0 && summaryRows[0].summaryCells.length > 0) {
-                // move focus to last summary row cell
-                const summaryRow = summaryRows[0].nativeElement;
-                this.focusPrevRow(summaryRow, lastIndex, childGrid, true, true);
-            } else if (childGrid.rowList.length === 0 &&
-             childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
-                 // move to filter cell
-                childGrid.navigation.moveFocusToFilterCell();
-            } else if (childGrid.rowList.length === 0) {
-                // move to prev child or parent row
-                const prevChild = this.getSibling(childGrid);
-                if (prevChild) {
-                    this.performShiftTabIntoChild(prevChild, currentRowEl, rowIndex);
-                } else {
-                    const selNode = {
-                        row:  rowIndex,
-                        column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex
-                    };
-                    this.navigateUp(currentRowEl, selNode);
-                }
-            } else {
-                // move to prev cell
-                childGrid.navigation.goToLastCell();
+    /**
+     * Handles scrolling in child grid and ensures target child row is in main grid view port.
+     * @param rowIndex The row index which should be in view.
+     * @param isNext  Optional. Whether we are navigating to next. Used to determine scroll direction.
+     * @param cb  Optional.Callback function called when operation is complete.
+     */
+    protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: Function) {
+        const shouldScroll = this.shouldPerformVerticalScroll(rowIndex, isNext);
+        if (shouldScroll) {
+            this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
+                this.positionInParent(rowIndex, isNext, cb);
+            });
+        } else {
+            this.positionInParent(rowIndex, isNext, cb);
+        }
+    }
+
+    /**
+     *
+     * @param rowIndex Row index that should come in view.
+     * @param isNext  Whether we are navigating to next. Used to determine scroll direction.
+     * @param cb  Optional.Callback function called when operation is complete.
+     */
+    protected positionInParent(rowIndex, isNext, cb?: Function) {
+        const rowObj = this.grid.getRowByIndex(rowIndex);
+        if (!rowObj) {
+            if (cb) {
+                cb();
             }
+            return;
+        }
+        const positionInfo = this.getPositionInfo(rowObj, isNext);
+        if (!positionInfo.inView) {
+            // stop event from triggering multiple times before scrolling is complete.
+            this._pendingNavigation = true;
+            const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
+            scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
+            scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
+            scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this._pendingNavigation = false;
+                if (cb) {
+                    cb();
+                }
+            });
+        } else {
+            if (cb) {
+                cb();
+            }
+        }
     }
 
-    private getSibling(childGrid) {
-        const prevChildRow = childGrid.childRow.nativeElement.previousElementSibling;
-        if (prevChildRow) {
-            return prevChildRow.children[0].children[0];
+    /**
+     * Moves navigation to child grid.
+     * @param parentRowIndex The parent row index, at which the child grid is rendered.
+     * @param childLayoutIndex Optional. The index of the child row island to which the child grid belongs to. Uses first if not set.
+     */
+    protected _moveToChild(parentRowIndex: number, visibleColIndex: number, isNext: boolean, childLayoutIndex?: number, cb?: Function) {
+        const ri = typeof childLayoutIndex !== 'number' ?
+         this.grid.childLayoutList.first : this.grid.childLayoutList.toArray()[childLayoutIndex];
+        const rowId = this.grid.dataView[parentRowIndex].rowID;
+        const pathSegment: IPathSegment = {
+            rowID: rowId,
+            rowIslandKey: ri.key
+        };
+        const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
+        const targetIndex = isNext ? 0 : childGrid.dataView.length - 1;
+        const targetRec =  childGrid.dataView[targetIndex];
+        if (!targetRec) {
+            // if no target rec, then move on in next sibling or parent
+            childGrid.navigation.navigateInBody(targetIndex, visibleColIndex, cb);
+            return;
+        }
+        if (childGrid.isChildGridRecord(targetRec)) {
+            // if target is a child grid record should move into it.
+            this.grid.navigation.activeNode.row = null;
+            childGrid.navigation.activeNode = { row: targetIndex, column: this.activeNode.column};
+            childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
+                const targetLayoutIndex = isNext ? 0 : childGrid.childLayoutList.toArray().length - 1;
+                childGrid.navigation._moveToChild(targetIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
+            });
+            return;
+        }
+
+        const childGridNav =  childGrid.navigation;
+        this.clearActivation();
+        const visibleColsLength = childGrid.visibleColumns.length - 1;
+        const columnIndex = visibleColIndex <= visibleColsLength ? visibleColIndex : visibleColsLength;
+        childGridNav.activeNode = { row: targetIndex, column: columnIndex};
+        childGrid.tbody.nativeElement.focus({preventScroll: true});
+        this._pendingNavigation = false;
+        childGrid.navigation._handleScrollInChild(targetIndex, isNext, () => {
+            childGrid.navigateTo(targetIndex, columnIndex, cb);
+        });
+    }
+
+    /**
+     * Moves navigation back to parent grid.
+     * @param rowIndex
+     */
+    protected _moveToParent(isNext: boolean, columnIndex, cb?) {
+        const indexInParent = this.grid.childRow.index;
+        const hasNextTarget = this.hasNextTarget(this.grid.parent, indexInParent, isNext);
+        if (!hasNextTarget) {
+            return;
+        }
+        this.clearActivation();
+        const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
+        const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
+        const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
+        this._pendingNavigation = true;
+        const cbFunc = (args) => {
+            args.target.grid.tbody.nativeElement.focus();
+            this._pendingNavigation = false;
+            cb(args);
+        };
+        this.grid.parent.navigation.navigateInBody(targetRowIndex, nextColumnIndex, cbFunc);
+    }
+
+    /**
+     * Gets information on the row position relative to the root grid view port.
+     * Returns whether the row is in view and its offset.
+     * @param rowObj
+     * @param isNext
+     */
+    protected getPositionInfo(rowObj: IgxRowDirective<IgxGridBaseDirective & GridType>, isNext: boolean) {
+        let rowElem = rowObj.nativeElement;
+        if (rowObj instanceof IgxChildGridRowComponent) {
+            const childLayoutKeys = this.grid.childLayoutKeys;
+            const riKey = isNext ? childLayoutKeys[0] : childLayoutKeys[childLayoutKeys.length - 1];
+            const pathSegment: IPathSegment = {
+                rowID: rowObj.rowData.rowID,
+                rowIslandKey: riKey
+            };
+            const childGrid =  this.grid.hgridAPI.getChildGrid([pathSegment]);
+            rowElem = childGrid.tfoot.nativeElement;
+        }
+        const gridBottom = this._getMinBottom(this.grid);
+        const diffBottom =
+        rowElem.getBoundingClientRect().bottom - gridBottom;
+        const gridTop = this._getMaxTop(this.grid);
+        const diffTop = rowElem.getBoundingClientRect().bottom -
+        rowElem.offsetHeight - gridTop;
+        const isInView = isNext ? diffBottom <= 0 : diffTop >= 0;
+        const calcOffset =  isNext ? diffBottom : diffTop;
+
+        return { inView: isInView, offset: calcOffset };
+    }
+
+    private clearActivation() {
+        // clear if previous activation exists.
+        if (this.activeNode) {
+            this.activeNode.row = null;
+        }
+    }
+
+    private hasNextTarget(grid, index: number, isNext: boolean) {
+        const targetRowIndex =  isNext ? index + 1 : index - 1;
+        const hasTargetRecord = !!grid.dataView[targetRowIndex];
+        if (hasTargetRecord) {
+            return true;
+        } else {
+            let hasTargetRecordInParent = false;
+            if (grid.parent) {
+                const indexInParent = grid.childRow.index;
+                hasTargetRecordInParent = this.hasNextTarget(grid.parent, indexInParent, isNext);
+            }
+            return hasTargetRecordInParent;
+        }
+    }
+
+    /**
+     * Gets closest element by its tag name.
+     * @param sourceElem The element from which to start the search.
+     * @param targetTag The target element tag name, for which to search.
+     */
+    protected getClosestElemByTag(sourceElem, targetTag) {
+        let result = sourceElem;
+        while (result !== null && result.nodeType === 1) {
+            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
+                return result;
+            }
+            result = result.parentNode;
         }
         return null;
     }
 
-    private focusNextChild(elem, visibleColumnIndex, grid) {
-        const gridElem = elem.querySelector('igx-hierarchical-grid');
-        const childGridID = gridElem.getAttribute('id');
-        const childGrid = this.getChildGrid(childGridID, grid);
-
-        if (childGrid.rowList.length === 0) {
-            this.focusNext(visibleColumnIndex, childGrid);
-            return;
-        }
-
-        // Update column index since the next child can have in general less columns than visibleColumnIndex value.
-        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-
-        if (childGrid.verticalScrollContainer.state.startIndex !== 0) {
-            // scroll to top
-            this.scrollGrid(childGrid, 'top', () => this.focusNextRow(elem, visibleColumnIndex, childGrid));
-        } else {
-            this.focusNextRow(elem, visibleColumnIndex, childGrid);
-        }
-    }
-    private focusPrevChild(elem, visibleColumnIndex, grid) {
-        const grids = [];
-        const gridElems = Array.from(elem.querySelectorAll('igx-hierarchical-grid'));
-        const childLevel = grid.childLayoutList.first.level;
-        gridElems.forEach((hg) => {
-            const parentRow = this.getClosestElemByTag(hg, 'igx-child-grid-row');
-            if (parentRow && parseInt(parentRow.getAttribute('data-level'), 10) === childLevel) {
-                grids.push(hg);
-            }
-        });
-        const gridElem = grids[grids.length - 1];
-        const childGridID = gridElem.getAttribute('id');
-        const childGrid = this.getChildGrid(childGridID, grid);
-
-        if (childGrid.rowList.length === 0) {
-            this.focusPrev(visibleColumnIndex, childGrid);
-            return;
-        }
-
-        // Update column index since the previous child can have in general less columns than visibleColumnIndex value.
-        const lastCellIndex = childGrid.unpinnedColumns[childGrid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-
-        const isScrolledToBottom = this._isScrolledToBottom(childGrid);
-        const lastIndex = childGrid.dataView.length - 1;
-        if (!isScrolledToBottom) {
-            // scroll to end
-            this.scrollGrid(childGrid, 'bottom', () => this.focusPrevChild(elem, visibleColumnIndex, grid));
-        } else {
-            const lastRowInChild = childGrid.getRowByIndex(lastIndex);
-            const isChildGrid = lastRowInChild.nativeElement.nodeName.toLowerCase() === 'igx-child-grid-row';
-            if (isChildGrid) {
-                this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, childGrid);
-            } else {
-                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
-            }
-        }
-    }
-    private focusPrev(visibleColumnIndex, grid?) {
-        const currGrid = grid || this.grid;
-        let parentContainer = this.getChildContainer(currGrid);
-        let childRowContainer = this.getChildGridRowContainer(currGrid);
-        const prevIsSiblingChild = !!childRowContainer.previousElementSibling;
-        let prev = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
-        if (prev) {
-            if (prevIsSiblingChild) {
-                this.focusPrevChild(prev, visibleColumnIndex, currGrid.parent);
-            } else {
-                this.focusPrevRow(prev, visibleColumnIndex, currGrid.parent);
-            }
-        } else {
-            this.scrollGrid(currGrid.parent, 'prev',
-                () => {
-                    parentContainer = this.getChildContainer(grid);
-                    childRowContainer = this.getChildGridRowContainer(grid);
-                    prev = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
-                    if (prevIsSiblingChild) {
-                        this.focusPrevChild(prev, visibleColumnIndex, currGrid.parent);
-                    } else {
-                        this.focusPrevRow(prev, visibleColumnIndex, currGrid.parent);
-                    }
-                });
-        }
-    }
-
-    private getNextParentInfo(grid) {
-        // find next parent that is not at bottom
-        let currGrid = grid.parent;
-        let nextElem = this.getChildContainer(grid).nextElementSibling;
-        while (!nextElem && currGrid.parent !== null) {
-            nextElem = this.getChildContainer(currGrid).nextElementSibling;
+    /**
+     * Gets the max top view in the current grid hierarchy.
+     * @param grid
+     */
+    private _getMaxTop(grid) {
+        let currGrid = grid;
+        let top = currGrid.tbody.nativeElement.getBoundingClientRect().top;
+        while (currGrid.parent) {
             currGrid = currGrid.parent;
+            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top);
         }
-
-        return { grid: currGrid, nextElement: nextElem };
+        return top;
     }
-    private getNextScrollable(grid) {
-        let currGrid = grid.parent;
-        if (!currGrid) {
-            return { grid: grid, prev: null };
-        }
-        let nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
-        let prev = grid;
-        while (nonScrollable && currGrid.parent !== null) {
-            prev = currGrid;
+
+    /**
+     * Gets the min bottom view in the current grid hierarchy.
+     * @param grid
+     */
+    private _getMinBottom(grid) {
+        let currGrid = grid;
+        let bottom = currGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+        while (currGrid.parent) {
             currGrid = currGrid.parent;
-            nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
+            bottom = Math.min(bottom, currGrid.tbody.nativeElement.getBoundingClientRect().bottom);
         }
-        return { grid: currGrid, prev: prev };
+        return bottom;
     }
 
-    private focusNext(visibleColumnIndex, grid?) {
-        const currGrid = grid || this.grid;
-        const parentInfo = this.getNextParentInfo(currGrid);
-        const nextParentGrid = parentInfo.grid;
-        let nextParentElem = parentInfo.nextElement;
-        let childRowContainer = this.getChildGridRowContainer(currGrid);
-        const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
-        let next = childRowContainer.nextElementSibling || nextParentElem;
-        const verticalScroll = nextParentGrid.verticalScrollContainer.getScroll();
-        const parentState = nextParentGrid.verticalScrollContainer.state;
-        const atLastChunk = parentState.startIndex + parentState.chunkSize ===
-         nextParentGrid.dataView.length;
-        if (next) {
-            if (nextIsSiblingChild) {
-                this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
-            } else {
-                this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
-            }
-        } else if (verticalScroll.scrollTop !==
-            verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize && !atLastChunk) {
-            this.scrollGrid(nextParentGrid, 'next',
-                () => {
-                    nextParentElem = parentInfo.nextElement;
-                    childRowContainer = this.getChildGridRowContainer();
-                    next = childRowContainer.nextElementSibling || nextParentElem;
-                    if (next && nextIsSiblingChild) {
-                        this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
-                    } else if (next) {
-                        this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
-                    }
-                });
-        }
-    }
+    /**
+     * Finds the next grid that allows scrolling down.
+     * @param grid The grid from which to begin the search.
+     */
     private getNextScrollableDown(grid) {
         let currGrid = grid.parent;
         if (!currGrid) {
@@ -647,159 +362,22 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return { grid: currGrid, prev: prev };
     }
 
-    private _getMinBottom(grid) {
-        let currGrid = grid;
-        let bottom = currGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-        while (currGrid.parent) {
+    /**
+     * Finds the next grid that allows scrolling up.
+     * @param grid The grid from which to begin the search.
+     */
+    private getNextScrollableUp(grid) {
+        let currGrid = grid.parent;
+        if (!currGrid) {
+            return { grid: grid, prev: null };
+        }
+        let nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
+        let prev = grid;
+        while (nonScrollable && currGrid.parent !== null) {
+            prev = currGrid;
             currGrid = currGrid.parent;
-            bottom = Math.min(bottom, currGrid.tbody.nativeElement.getBoundingClientRect().bottom);
+            nonScrollable = currGrid.verticalScrollContainer.scrollPosition === 0;
         }
-        return bottom;
+        return { grid: currGrid, prev: prev };
     }
-
-    private _getMaxTop(grid) {
-        let currGrid = grid;
-        let top = currGrid.tbody.nativeElement.getBoundingClientRect().top;
-        while (currGrid.parent) {
-            currGrid = currGrid.parent;
-            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top);
-        }
-        return top;
-    }
-
-    private focusNextRow(elem, visibleColumnIndex, grid, isSummary?) {
-        const lastCellIndex = grid.unpinnedColumns[grid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-        const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) || grid.rowList.length === 0) {
-            const cell =
-                elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            const closestScrollableGrid = this.getNextScrollableDown(grid).grid;
-            // const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
-            const gridBottom = this._getMinBottom(grid);
-            const diff = cell.getBoundingClientRect().bottom - gridBottom;
-            const inView = diff <= 0;
-            const scrollTop = closestScrollableGrid.verticalScrollContainer.scrollPosition;
-            const scrollHeight = closestScrollableGrid.verticalScrollContainer.getScroll().scrollHeight;
-            const canScroll = !(scrollHeight === 0 ||
-                Math.round(scrollTop + closestScrollableGrid.verticalScrollContainer.igxForContainerSize) === scrollHeight);
-            if (!inView && canScroll) {
-                this.scrollGrid(closestScrollableGrid, diff, () => cell.focus({ preventScroll: true }));
-            } else {
-                cell.focus({ preventScroll: true });
-            }
-        } else {
-            this.horizontalScrollGridToIndex(grid, visibleColumnIndex, () => {
-                this.focusNextRow(elem, visibleColumnIndex, grid, isSummary);
-            });
-        }
-    }
-    public getColumnUnpinnedIndex(visibleColumnIndex: number, grid?: IgxHierarchicalGridComponent) {
-        const currGrid = grid || this.grid;
-        const column = currGrid.unpinnedColumns.find((col) => !col.columnGroup && col.visibleIndex === visibleColumnIndex);
-        return currGrid.pinnedColumns.length ? currGrid.unpinnedColumns.filter((c) => !c.columnGroup).indexOf(column) :
-            visibleColumnIndex;
-    }
-
-    private focusPrevRow(elem, visibleColumnIndex, grid, inChild?, isSummary?) {
-        const lastCellIndex = grid.unpinnedColumns[grid.unpinnedColumns.length - 1].visibleIndex;
-        visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
-        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex)) {
-            const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-            const cells = elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            let cell = cells[cells.length - 1];
-            const rIndex = parseInt(elem.getAttribute('data-rowindex'), 10);
-            const scrGrid = grid.verticalScrollContainer.scrollPosition !== 0 ? grid :
-                this.getNextScrollable(grid).grid;
-            const topGrid = scrGrid.tbody.nativeElement.getBoundingClientRect().top >
-                grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top ? scrGrid : grid.rootGrid;
-            const gridTop = this._getMaxTop(grid);
-            const scrTop = scrGrid.verticalScrollContainer.scrollPosition;
-            const diff = cell.getBoundingClientRect().bottom -
-                cell.offsetHeight - gridTop;
-            if (scrTop !== 0 && diff < 0 && !inChild) {
-                this.scrollGrid(scrGrid, diff, () => {
-                    const el = !isSummary ? grid.navigation.getRowByIndex(rIndex) : elem;
-                    cell = el.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`)[0];
-                    cell.focus({ preventScroll: true });
-                });
-            } else if (diff < 0 && inChild) {
-                this.scrollGrid(topGrid, diff, () => {
-                    cell.focus({ preventScroll: true });
-                });
-            } else {
-                cell.focus({ preventScroll: true });
-            }
-        } else {
-            this.horizontalScrollGridToIndex(grid, visibleColumnIndex, () => {
-                this.focusPrevRow(elem, visibleColumnIndex, grid, inChild, isSummary);
-            });
-        }
-    }
-
-    private horizontalScrollGridToIndex(grid, visibleColumnIndex, callBackFunc) {
-        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex, grid);
-        grid.parentVirtDir.onChunkLoad
-            .pipe(first())
-            .subscribe(callBackFunc);
-        if (grid.dataRowList.length > 0) {
-            grid.dataRowList.first.virtDirRow.scrollTo(unpinnedIndex);
-        } else {
-            grid.headerContainer.scrollTo(unpinnedIndex);
-        }
-
-    }
-    private scrollGrid(grid, target, callBackFunc) {
-        this.getFocusableGrid().nativeElement.focus({preventScroll: true});
-        requestAnimationFrame(() => {
-            if (typeof target === 'number') {
-                grid.verticalScrollContainer.addScrollTop(target);
-            } else {
-                switch (target) {
-                    case 'top': grid.verticalScrollContainer.scrollTo(0); break;
-                    case 'bottom': grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1); break;
-                    case 'next': grid.verticalScrollContainer.scrollNext(); break;
-                    case 'prev': grid.verticalScrollContainer.scrollPrev(); break;
-                }
-            }
-            grid.verticalScrollContainer.onChunkLoad
-                .pipe(first())
-                .subscribe(callBackFunc);
-        });
-    }
-
-    private _navigateUpInChild(rowElement, currentRowIndex, visibleColumnIndex) {
-        const prevElem = rowElement.previousElementSibling;
-        const scrollable = this.getNextScrollable(this.grid);
-        const grid = scrollable.grid;
-        const scrTop = grid.verticalScrollContainer.scrollPosition;
-        const containerTop = scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode;
-        const top = parseInt(containerTop.style.top, 10);
-        if (scrTop !== 0 && top < 0) {
-            this.scrollGrid(grid, -prevElem.offsetHeight,
-                () => super.navigateUp(rowElement, { row: currentRowIndex, column: visibleColumnIndex }));
-        } else {
-            super.navigateUp(rowElement, { row: currentRowIndex, column: visibleColumnIndex });
-        }
-    }
-
-    private _navigateDownInChild(rowElement, currentRowIndex, visibleColumnIndex) {
-        const nextElem = rowElement.nextElementSibling;
-        const childContainer = this.grid.nativeElement.parentNode.parentNode;
-        const diff =
-            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
-        const endIsVisible = diff < 0;
-        const scrollable = this.getNextScrollableDown(this.grid);
-        const grid = scrollable.grid;
-        if (!endIsVisible) {
-            this.scrollGrid(grid, nextElem.offsetHeight,
-                () => super.navigateDown(rowElement, { row: currentRowIndex, column: visibleColumnIndex }));
-        } else {
-            super.navigateDown(rowElement, { row: currentRowIndex, column: visibleColumnIndex });
-        }
-    }
-
-    protected getNextRowByIndex(nextIndex) {
-        return this.grid.dataRowList.find(element => element.index === nextIndex).element.nativeElement;
-   } */
 }

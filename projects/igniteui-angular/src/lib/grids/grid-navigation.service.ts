@@ -63,6 +63,12 @@ export class IgxGridNavigationService {
             return { rowIndex, colIndex };
         }
         switch (key) {
+            case 'pagedown':
+            case 'pageup':
+                event.preventDefault();
+                key === 'pagedown' ? this.grid.verticalScrollContainer.scrollNextPage() :
+                    this.grid.verticalScrollContainer.scrollPrevPage();
+                break;
             case 'tab':
                 this.handleEditing(shift, event);
                 break;
