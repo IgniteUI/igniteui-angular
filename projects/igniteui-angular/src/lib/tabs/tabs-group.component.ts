@@ -1,13 +1,11 @@
 import {
     AfterContentInit,
-    AfterViewChecked,
     Component,
     ContentChild,
     ElementRef,
     HostBinding,
     Input,
     TemplateRef,
-    HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
@@ -19,8 +17,7 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
-
+export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit {
     /**
     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
     *```html
@@ -69,6 +66,16 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
+     * Returns the native element of the tabs-group component
+     * ```typescript
+     *  const mytabsGroupElement: HTMLElement = tabsGroup.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this._element.nativeElement;
+    }
+
+    /**
      * @hidden
      */
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: false })
@@ -86,6 +93,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      */
     @HostBinding('attr.role')
     public role = 'tabpanel';
+
 
     /**
      * @hidden
@@ -150,14 +158,6 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
-     * @hidden
-     */
-    public ngAfterViewChecked() {
-        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
-        this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
-    }
-
-    /**
      * A method that sets the focus on a tab.
      * @memberof {@link IgxTabsGroupComponent}
      *```typescript
@@ -180,5 +180,4 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     public setSelectedInternal(newValue: boolean) {
         this._isSelected = newValue;
     }
-
 }
