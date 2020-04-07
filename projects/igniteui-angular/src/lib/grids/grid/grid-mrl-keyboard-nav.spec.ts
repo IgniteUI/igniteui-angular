@@ -1794,7 +1794,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end');
-                await wait();
+                await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
+                fix.detectChanges();
+
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1802,7 +1806,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home');
-                await wait();
+                await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
+                fix.detectChanges();
+
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
