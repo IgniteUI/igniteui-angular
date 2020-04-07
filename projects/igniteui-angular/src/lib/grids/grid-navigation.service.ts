@@ -205,8 +205,8 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        const c = !this.activeNode || (this.activeNode.row !== (header ? -1 : this.grid.dataView.length)) ? 0 : this.activeNode.column;
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: c };
+        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0 };
         this.performHorizontalScrollToCell(0);
     }
 
@@ -343,7 +343,7 @@ export class IgxGridNavigationService {
     }
 
     public isDataRow(rowIndex: number, includeSummary = false) {
-        if (rowIndex < 0 || rowIndex > this.grid.dataView.length) { return true; }
+        if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) { return true; }
         const curRow = this.grid.dataView[rowIndex];
         return curRow && !this.grid.isGroupByRecord(curRow) && !this.grid.isDetailRecord(curRow)
             && !curRow.childGridsData && (includeSummary || !curRow.summaries);

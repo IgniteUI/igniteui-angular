@@ -1353,6 +1353,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
+    @DeprecateProperty('onGridKeydown event is deprecated. Now you can directly bind to keydown on the IgxGrid component.')
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
@@ -1941,11 +1942,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
-    @HostBinding('attr.aria-activedescendant')
     get activeDescendant() {
         const activeElem = this.navigation.activeNode;
         if (activeElem) {
-            return !this.navigation.isDataRow(activeElem.row) ? this.id + '_' + activeElem.row :
+            return !this.navigation.isDataRow(activeElem.row, true) ? this.id + '_' + activeElem.row :
                 this.id + '_' + activeElem.row + '_' + activeElem.column;
         }
         return null;

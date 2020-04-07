@@ -1,4 +1,3 @@
-import { ElasticPositionStrategy } from './../../services/overlay/position/elastic-position-strategy';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,

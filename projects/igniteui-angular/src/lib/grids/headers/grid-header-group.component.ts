@@ -295,10 +295,9 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    @HostListener('click', ['$event'])
-    public click(event): void {
+    @HostListener('pointerdown', ['$event'])
+    public pointerdown(event): void {
         event.stopPropagation();
-        console.log(this.column.field , this.column.visibleIndex, this.column.level);
         this.grid.navigation.activeNode = {row: -1, column: this.column.visibleIndex, level: this.column.level,
             mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
             layout: this.column.columnLayoutChild ? {

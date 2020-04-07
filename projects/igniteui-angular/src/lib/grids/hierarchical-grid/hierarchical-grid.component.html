@@ -3,7 +3,7 @@
 </igx-grid-toolbar>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper"  tabindex="0" (focus)="navigation.focusFirstCell()"
+    <div class="igx-grid__thead-wrapper"  tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
      (keydown)="navigation.headerNavigation($event)" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -83,7 +83,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant"
      (keydown)="navigation.dispatchEvent($event)" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
@@ -138,7 +138,7 @@
 </div>
 
 
-<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)"
+<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
  (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
