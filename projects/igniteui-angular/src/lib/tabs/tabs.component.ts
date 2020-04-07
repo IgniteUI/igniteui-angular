@@ -493,14 +493,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    public _getTabItemId(index: number): string {
+    public getTabItemId(index: number): string {
         return `igx-tab-item-${this._currentTabsId}-${index}`;
     }
 
     /**
      * @hidden
      */
-    public _getTabsGroupId(index: number): string {
+    public getTabsGroupId(index: number): string {
         return `igx-tabs-group-${this._currentTabsId}-${index}`;
     }
 
