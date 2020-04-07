@@ -101,7 +101,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    focusTbody() {
+    focusTbody(event) {
         if (!this.activeNode) {
             this.activeNode = {
                 row: null,
@@ -109,7 +109,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             };
         }
 
-        super.focusTbody();
+        super.focusTbody(event);
     }
 
     protected nextSiblingIndex(isNext) {

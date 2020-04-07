@@ -1895,7 +1895,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get firstEditableColumnIndex(): number {
-        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort();
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a - b);
         return index.length ? index[0] : null;
     }
 
@@ -1903,7 +1904,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get lastEditableColumnIndex(): number {
-        const index = this.visibleColumns.filter(col => col.editable).map(c => c.visibleIndex).sort().reverse();
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a > b ? -1 : 1);
         return index.length ? index[0] : null;
     }
 
@@ -5688,7 +5690,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     private getNextDataRowIndex(currentRowIndex, previous = false): number {
-        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || currentRowIndex >= this.dataView.length - 1) {
+        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
             return currentRowIndex;
         }
         const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :

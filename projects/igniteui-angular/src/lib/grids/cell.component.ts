@@ -834,7 +834,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @hidden
      * @internal
      */
-    public activate(event: FocusEvent) {
+    public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 

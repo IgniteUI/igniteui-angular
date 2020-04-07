@@ -99,7 +99,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" tabindex="0" (keydown)="navigation.dispatchEvent($event)" (focus)="navigation.focusTbody()"
+    <div class="igx-grid__tbody-content" tabindex="0" (keydown)="navigation.dispatchEvent($event)" (focus)="navigation.focusTbody($event)"
         role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody>
@@ -119,7 +119,7 @@
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true
         | gridDetails:hasDetails:expansionStates:pipeTrigger as pinnedData'>
-            <div #pinContainer *ngIf='pinnedData.length > 0' 
+            <div #pinContainer *ngIf='pinnedData.length > 0'
                 [ngClass]="{
                     'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
                     'igx-grid__tr--pinned-top': isRowPinningToTop
@@ -202,7 +202,7 @@
         <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
             <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
         </div>
-        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>        
+        <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
 </div>
 

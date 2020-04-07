@@ -33,7 +33,10 @@ export class IgxGridNavigationService {
 
         const type = this.isDataRow(this.activeNode.row) ? GridKeydownTargetType.dataCell :
             this.isDataRow(this.activeNode.row, true) ? GridKeydownTargetType.summaryCell : GridKeydownTargetType.groupRow;
-        this.emitKeyDown(type, this.activeNode.row, event);
+        const cancel = this.emitKeyDown(type, this.activeNode.row, event);
+        if (cancel) {
+            return;
+        }
         if (event.altKey) {
             this.handleAlt(key, event);
             return;
@@ -50,7 +53,7 @@ export class IgxGridNavigationService {
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(); });
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => { obj.target.activate(event); });
         }
         this.grid.cdr.detectChanges();
     }
@@ -179,7 +182,12 @@ export class IgxGridNavigationService {
 
         event.preventDefault();
         this.activeNode.row = rowIndex;
-        if (rowIndex > 0) { this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event); }
+        if (rowIndex > 0) {
+            const cancel = this.emitKeyDown(GridKeydownTargetType.summaryCell, this.activeNode.row, event);
+            if (cancel) {
+                return;
+            }
+        }
 
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
@@ -190,10 +198,10 @@ export class IgxGridNavigationService {
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
-    focusTbody() {
+    focusTbody(event) {
         this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
         if (!this.activeNode || !(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateInBody(this.activeNode.row = 0, this.activeNode.column = 0, (obj) => { obj.target.activate(); });
+        this.navigateInBody(0, 0, (obj) => { obj.target.activate(event); });
     }
 
     focusFirstCell(header = true) {
@@ -262,16 +270,26 @@ export class IgxGridNavigationService {
             return;
         }
         event.preventDefault();
-        if (this.grid.rowInEditMode && this.grid.rowEditTabs.length &&
-            this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
+        if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
+            (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             this.grid.gridAPI.submit_value();
             shift ? this.grid.rowEditTabs.last.element.nativeElement.focus() :
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
             return;
         }
+
+        if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
+            if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
+                next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
+            } else if ( !shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
+                next.visibleColumnIndex = this.grid.firstEditableColumnIndex;
+            } else {
+                next.rowIndex = this.activeNode.row;
+            }
+        }
+
         this.navigateInBody(next.rowIndex, next.visibleColumnIndex, (obj) => {
             obj.target.activate();
-            obj.target.setEditMode(true);
             this.grid.cdr.detectChanges();
         });
     }
@@ -343,7 +361,7 @@ export class IgxGridNavigationService {
         if (keydownArgs.cancel && type === GridKeydownTargetType.dataCell) {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;
-            return;
+            return keydownArgs.cancel;
         }
     }
 
