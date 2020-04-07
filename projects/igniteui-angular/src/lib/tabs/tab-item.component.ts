@@ -129,12 +129,6 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     /**
      * @hidden @internal
      */
-    @HostBinding('attr.id')
-    public id = 'igx-tab-item-' + this.index;
-
-    /**
-     * @hidden @internal
-     */
     @HostBinding('attr.aria-label')
     public ariaLabel = this.label;
 
@@ -149,12 +143,6 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
      */
     @HostBinding('attr.aria-selected')
     public ariaSelected = this.isSelected;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('attr.aria-controls')
-    public ariaControls = 'igx-tab-item-group-' + this.index;
 
     ngAfterViewInit(): void {
         this._ngZone.runOutsideAngular(() => {
@@ -356,5 +344,4 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     public get context(): any {
         return this.relatedGroup ? this.relatedGroup : this;
     }
-
 }
