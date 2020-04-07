@@ -166,7 +166,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
             fixture.detectChanges();
-            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const lastRow = rows[rows.length - 1];
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
@@ -880,7 +880,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.filter('ID', '5', IgxStringFilteringOperand.instance().condition('contains'), false);
             fixture.detectChanges();
 
-            const allRows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const allRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer[0].children.length).toBe(1);
             expect(pinRowContainer[0].children[0].context.rowID).toBe('5');
@@ -893,7 +893,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.height = '700px';
             fixture.detectChanges();
 
-            let rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            let rows =HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent));
             expect(rows.length).toEqual(5);
             expect(paginator.componentInstance.perPage).toEqual(5);
@@ -902,7 +902,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.pinRow('1');
             fixture.detectChanges();
 
-            rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             expect(rows.length).toEqual(6);
             expect(paginator.componentInstance.perPage).toEqual(5);
             expect(paginator.componentInstance.totalPages).toEqual(8);
@@ -910,7 +910,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.pinRow('3');
             fixture.detectChanges();
 
-            rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             expect(rows.length).toEqual(7);
             expect(paginator.componentInstance.perPage).toEqual(5);
             expect(paginator.componentInstance.totalPages).toEqual(8);
