@@ -71,10 +71,9 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
             return collection;
         }
 
-        const _perPage = Math.max(0, perPage - this.gridAPI.grid.pinnedRecordsCount);
         const state = {
             index: page,
-            recordsPerPage: _perPage
+            recordsPerPage: perPage
         };
 
         const result: any[] = DataUtil.page(cloneArray(collection), state);

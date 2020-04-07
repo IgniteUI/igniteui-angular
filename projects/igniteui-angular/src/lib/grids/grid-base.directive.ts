@@ -3602,12 +3602,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     get totalRecords(): number {
         if (this.pagingState) {
-            const countRecords = this.pagingState.metadata.countRecords;
-            if (this.hasPinnedRecords) {
-                // When there are pinned records they fill space on the page and that's why we need to add the pinned rows for each page.
-                return countRecords + this.pinnedRecordsCount * (countRecords / this.pagingState.recordsPerPage);
-            }
-            return countRecords;
+            return this.pagingState.metadata.countRecords;
         }
     }
 
@@ -5405,7 +5400,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.pinnedDataView.concat(this.dataView);
+        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

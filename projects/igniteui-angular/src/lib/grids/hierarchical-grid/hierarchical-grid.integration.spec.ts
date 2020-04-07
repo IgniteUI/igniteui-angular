@@ -891,6 +891,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should render paging with correct data and rows be correctly paged.', () => {
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 5;
+            hierarchicalGrid.height = '700px';
             fixture.detectChanges();
 
             let rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
@@ -903,17 +904,17 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
-            expect(rows.length).toEqual(5);
+            expect(rows.length).toEqual(6);
             expect(paginator.componentInstance.perPage).toEqual(5);
-            expect(paginator.componentInstance.totalPages).toEqual(10);
+            expect(paginator.componentInstance.totalPages).toEqual(8);
 
             hierarchicalGrid.pinRow('3');
             fixture.detectChanges();
 
             rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
-            expect(rows.length).toEqual(5);
+            expect(rows.length).toEqual(7);
             expect(paginator.componentInstance.perPage).toEqual(5);
-            expect(paginator.componentInstance.totalPages).toEqual(14);
+            expect(paginator.componentInstance.totalPages).toEqual(8);
         });
 
         it('should apply sorting to both pinned and unpinned rows.', () => {
@@ -937,15 +938,30 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
         });
 
-        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', () => {
+        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async() => {
             hierarchicalGrid.pinRow('1');
             fixture.detectChanges();
 
-            const range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'ChildLevels' };
+            let range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'ChildLevels' };
             hierarchicalGrid.selectRange(range);
+            fixture.detectChanges();
 
-            const selectedData = hierarchicalGrid.getSelectedData();
+            let selectedData = hierarchicalGrid.getSelectedData();
             expect(selectedData).toEqual([{ID: '1', ChildLevels: 3}, {ID: '0', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
+
+            fixture.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fixture.detectChanges();
+
+            hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
+            await wait();
+
+            range = { rowStart: 38, rowEnd: 40, columnStart: 'ID', columnEnd: 'ChildLevels' };
+            hierarchicalGrid.clearCellSelection();
+            hierarchicalGrid.selectRange(range);
+            fixture.detectChanges();
+
+            selectedData = hierarchicalGrid.getSelectedData();
+            expect(selectedData).toEqual([{ID: '38', ChildLevels: 3}, {ID: '39', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
         });
 
         it('should return correct filterData collection after filtering.', () => {
