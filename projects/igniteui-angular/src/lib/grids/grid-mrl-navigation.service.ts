@@ -211,6 +211,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (!this.activeNode.layout) {
+            this.activeNode.layout = this.layout(this.activeNode.column || 0);
+        }
         if (key.includes('down') || key.includes('up')) {
             event.preventDefault();
             const children = this.parentByChildIndex(this.activeNode.column).children;
