@@ -5150,6 +5150,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.verticalScrollContainer.igxForOf;
     }
 
+     /**
+     * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get pinnedDataView(): any[] {
+        return this.pinnedRows.map(row => row.rowData);
+    }
+
     /**
      * Get current selection state.
      * @example
@@ -5391,7 +5402,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
