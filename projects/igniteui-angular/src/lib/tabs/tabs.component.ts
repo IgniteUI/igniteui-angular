@@ -32,6 +32,8 @@ export enum IgxTabsType {
     CONTENTFIT = 'contentfit'
 }
 
+let NEXT_TABS_ID = 0;
+
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
@@ -39,6 +41,8 @@ export enum IgxTabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
+    private _currentTabsId = NEXT_TABS_ID++;
+
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
      * ```typescript
@@ -105,6 +109,22 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @Input('type')
     public type: string | IgxTabsType = 'contentfit';
+
+    /**
+     * Sets/gets the `id` of the tabs.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-tabs-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-tabs id="my-first-tabs"></igx-tabs>
+     * ```
+     * @memberof IgxTabsComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-tabs-${this._currentTabsId}`;
 
     /**
      * @hidden
@@ -299,8 +319,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) {
-    }
+    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) { }
 
     /**
      * @hidden
@@ -339,7 +358,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             });
         }
 
+        this.setGroupsAttributes();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
+            this.setGroupsAttributes();
             this.resetSelectionOnCollectionChanged();
         });
     }
@@ -355,6 +376,15 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this._ngZone.runOutsideAngular(() => {
                 this._resizeObserver.disconnect();
             });
+        }
+    }
+
+    private setGroupsAttributes() {
+        const groupsArray = Array.from(this.groups);
+        for (let index = 0; index < this.groups.length; index++) {
+            const tabsGroup = groupsArray[index] as IgxTabsGroupComponent;
+            tabsGroup.nativeElement.setAttribute('id', this.getTabsGroupId(index));
+            tabsGroup.nativeElement.setAttribute('aria-labelledby', this.getTabItemId(index));
         }
     }
 
@@ -458,6 +488,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (delta > 1) {
             this.scrollElement(tabNativeElement, true);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabItemId(index: number): string {
+        return `igx-tab-item-${this._currentTabsId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabsGroupId(index: number): string {
+        return `igx-tabs-group-${this._currentTabsId}-${index}`;
     }
 
     /**
