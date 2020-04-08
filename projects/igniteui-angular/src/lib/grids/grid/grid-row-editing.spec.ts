@@ -715,8 +715,6 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
             let targetCell = grid.getCellByColumn(0, 'Downloads');
-            targetCell.nativeElement.focus();
-            fix.detectChanges();
             UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -728,13 +726,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Focus done button
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.focus();
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(document.activeElement).toEqual(doneButtonElement);
             doneButtonElement.click();
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
 
             targetCell = grid.getCellByColumn(0, 'Downloads');
             expect(targetCell.active).toBeTruthy();

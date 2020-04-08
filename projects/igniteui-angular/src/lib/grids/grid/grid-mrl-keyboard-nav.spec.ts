@@ -501,18 +501,21 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
@@ -1819,17 +1822,18 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
                 UIInteractions.simulateClickAndSelectCellEvent(lastCell);
+                await wait();
                 fix.detectChanges();
 
-                GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
-                await wait(100);
+                GridFunctions.simulateGridContentKeydown(fix, 'End', false, false, true);
+                await wait(200);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
                     .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
-                GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
+                GridFunctions.simulateGridContentKeydown(fix, 'Home', false, false, true);
                 await wait(100);
                 fix.detectChanges();
 
