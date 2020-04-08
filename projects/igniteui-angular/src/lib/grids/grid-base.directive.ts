@@ -6075,7 +6075,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
-        console.log('end row transaction');
         row.newData = this.transactions.getAggregatedValue(row.id, true);
 
         let args = row.createEditEventArgs();
