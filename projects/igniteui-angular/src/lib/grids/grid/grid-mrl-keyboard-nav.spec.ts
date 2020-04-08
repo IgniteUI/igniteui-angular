@@ -1585,8 +1585,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown', false, false, true);
-                zone.simulateOnStable();
+                fix.detectChanges();
                 await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1594,8 +1595,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', false, false, true);
-                zone.simulateOnStable();
+                fix.detectChanges();
                 await wait(DEBOUNCETIME);
+                zone.simulateOnStable();
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -1718,17 +1720,19 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     ]
                 }];
                 fix.detectChanges();
+
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 UIInteractions.simulateClickAndSelectCellEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
-                await wait(DEBOUNCETIME * 2);
+                await wait(DEBOUNCETIME);
                 zone.simulateOnStable();
                 fix.detectChanges();
 
@@ -1737,12 +1741,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
-                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -1875,12 +1880,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
-                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1888,12 +1894,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
-                await wait(DEBOUNCETIME * 2);
+                fix.detectChanges();
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
-                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
