@@ -444,6 +444,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -453,6 +454,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate right and verify cell selection is updated
             const gridContent = GridFunctions.getGridContent(fixture);
+            GridFunctions.focusFirstCell(fixture);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
@@ -487,6 +489,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate and verify cell selection is updated
             const gridContent = GridFunctions.getGridContent(fixture);
+            GridFunctions.focusFirstCell(fixture);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', gridContent.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
@@ -1314,6 +1317,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 3 - navigate right and verify cell selection is updated
             const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
+            UIInteractions.simulateClickAndSelectCellEvent(cellEl);
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
