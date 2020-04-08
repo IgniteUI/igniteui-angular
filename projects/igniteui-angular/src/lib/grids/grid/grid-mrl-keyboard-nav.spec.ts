@@ -1724,12 +1724,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1737,12 +1737,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -1875,12 +1875,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1888,12 +1888,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
+                await wait(DEBOUNCETIME * 2);
                 zone.simulateOnStable();
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
