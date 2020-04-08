@@ -201,12 +201,15 @@ export class IgxGridNavigationService {
     focusTbody(event) {
         this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
         if (!this.activeNode || !(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateInBody(0, 0, (obj) => { obj.target.activate(event); });
+        this.navigateInBody(0, 0, (obj) => {
+            this.grid.clearCellSelection();
+            obj.target.activate(event);
+        });
     }
 
     focusFirstCell(header = true) {
         if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0 };
+        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0 };
         this.performHorizontalScrollToCell(0);
     }
 
