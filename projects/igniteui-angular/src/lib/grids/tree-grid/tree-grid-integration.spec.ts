@@ -1378,12 +1378,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     });
 
     describe('Row Pinning', () => {
-        it('should pin/unpin a row', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+        }));
 
+        it('should pin/unpin a row', () => {
             treeGrid.pinRow(711);
             fix.detectChanges();
 
@@ -1405,10 +1407,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should pin/unpin a row at the bottom', () => {
-            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
-            fix.detectChanges();
-
-            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             /* Pin rows to bottom */
             treeGrid.pinning.rows = 1;
 
@@ -1420,11 +1418,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should calculate row indices correctly after row pinning', async () => {
-            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
-            fix.detectChanges();
-
-            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-
             const firstRow = treeGrid.getRowByIndex(0);
             const secondRow = treeGrid.getRowByIndex(1);
 
@@ -1445,7 +1438,99 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.getRowByIndex(0).rowID).toBe(firstRow.rowID);
             expect(treeGrid.getRowByIndex(1).rowID).toBe(secondRow.rowID);
         });
-        it('should disable pinned row instance in the body', () => {});
-        it('should add pinned badge in the pinned row instance in the body', () => {});
+
+        it('should disable pinned row instance in the body', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
+            expect(treeGrid.getRowByIndex(1).disabled).toBe(true);
+
+            treeGrid.unpinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
+            expect(treeGrid.getRowByIndex(1).disabled).toBe(false);
+
+        });
+
+        it('should add pinned badge in the pinned row instance in the body', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            const firstColumnField = treeGrid.columns[0].field;
+            const pinnedChipPosition = treeGrid.getCellByColumn(1, firstColumnField);
+            const pinnedRowCell = treeGrid.getCellByColumn(0, firstColumnField);
+            const wrongChipPosition = treeGrid.getCellByColumn(2, firstColumnField);
+
+            expect(pinnedChipPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
+            expect(pinnedRowCell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+            expect(wrongChipPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+        });
+
+        it('pinned chip should always be in the first column', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            const thirdColumnField = treeGrid.columns[2].field;
+
+            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0]);
+            fix.detectChanges();
+
+            const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, thirdColumnField);
+            expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
+        });
+
+        it('should expand/collapse a pinned row with children', () => {
+            let rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(10);
+            const rowToPin = treeGrid.getRowByIndex(0);
+
+            rowToPin.pin();
+            fix.detectChanges();
+
+            // collapse pinned row
+            treeGrid.toggleRow(rowToPin.rowID);
+            fix.detectChanges();
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(5);
+
+            // expand the pinned row
+            treeGrid.toggleRow(rowToPin.rowID);
+            fix.detectChanges();
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(11);
+        });
+
+        it('should search in both pinned and unpinned rows', () => {
+            let searchResultsCount = treeGrid.findNext('John');
+            expect(searchResultsCount).toBe(1);
+
+            const rowToPin = treeGrid.getRowByIndex(0);
+            rowToPin.pin();
+            fix.detectChanges();
+
+            searchResultsCount = treeGrid.findNext('John');
+            expect(searchResultsCount).toBe(2);
+        });
+
+        it('should apply filtering to both pinned and unpinned rows', () => {});
+
+        it('should apply sorting to both pinned and unpinned rows', () => {});
+
+        it('should not take into account pinned rows when changing items per page', () => {});
+
+        it('should make a correct selection', () => {});
     });
 });
