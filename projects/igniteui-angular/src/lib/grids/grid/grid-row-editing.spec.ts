@@ -2068,7 +2068,7 @@ fix.detectChanges();
             grid.deleteRow(1);
             tick(16);
             fix.detectChanges();
-            spyOn(grid, 'endRowTransaction');
+            spyOn(grid, 'endRowTransaction').and.callThrough();
 
             const firstCell = grid.getCellByColumn(2, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectCellEvent(firstCell);
