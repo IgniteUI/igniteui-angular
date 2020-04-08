@@ -42,6 +42,9 @@ export class IgxSplitterComponent implements AfterContentInit {
         }
     }
 
+    /**
+     * Event emitted when panes collection is changed.
+     */
     @Output()
     public panesChange = new EventEmitter<IgxSplitterPaneComponent[]>();
 
@@ -105,6 +108,7 @@ export class IgxSplitterComponent implements AfterContentInit {
      */
     private sibling!: IgxSplitterPaneComponent;
 
+    /** @hidden @internal */
     public ngAfterContentInit(): void {
         this.assignFlexOrder();
         this.panes.changes.subscribe(() => {
@@ -116,10 +120,10 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * @hidden @internal
      * This method performs some initialization logic when the user starts dragging the gripper between each couple of panes.
      * @param  {IgxSplitterPaneComponent} pane
      * The main `IgxSplitterPaneComponent` associated with the currently dragged `SplitBarComponent`.
-     * @return {void}@memberof SplitterComponent
      */
     public onMoveStart(pane: IgxSplitterPaneComponent) {
         const panes = this.panes.toArray();
@@ -140,9 +144,9 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * @hidden @internal
      * This method performs some calculations concerning the sizes each couple of panes while the gripper between them is being dragged.
      * @param  {number} delta The differnce along the X (or Y) axis between the initial and the current point while dragging the gripper.
-     * @return {void}@memberof SplitterComponent
      */
     public onMoving(delta: number) {
         const min = parseInt(this.pane.minSize, 10) || 0;
@@ -161,10 +165,10 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
-     * This method performs the toggling of the pane visibility
-     * @param pane
+     * Toggles pane visibility.
+     * @param pane - The pane to be hidden/shown.
      */
-    public onToggling(pane: IgxSplitterPaneComponent) {
+    public togglePane(pane: IgxSplitterPaneComponent) {
         if (!pane) {
             return;
         }
@@ -176,9 +180,8 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
+     * @hidden @internal
      * This method takes care for assigning an `order` property on each `IgxSplitterPaneComponent`.
-     * @private
-     * @return {void}@memberof SplitterComponent
      */
     private assignFlexOrder() {
         let k = 0;
