@@ -33,8 +33,7 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
                 InputGroupCompactDisplayDensityComponent,
-                InputGroupInputDisplayDensityComponent,
-                InputGroupSupressInputFocusComponent
+                InputGroupInputDisplayDensityComponent
             ],
             imports: [
                 IgxInputGroupModule, IgxIconModule
@@ -177,18 +176,6 @@ describe('IgxInputGroup', () => {
         const inputGroupElement = inputGroup.element.nativeElement;
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
-    });
-
-    xit('suppress focus on input when clicked', async () => {
-        const fixture = TestBed.createComponent(InputGroupSupressInputFocusComponent);
-        fixture.detectChanges();
-
-        const inputGroup = fixture.componentInstance.igxInputGroup;
-        UIInteractions.clickElement(inputGroup.element);
-        await wait();
-        fixture.detectChanges();
-
-        expect(document.activeElement).not.toEqual(fixture.componentInstance.igxInput.nativeElement);
     });
 
     it('should not fire focus and blur on prefix or suffix click', fakeAsync(() => {
@@ -364,15 +351,4 @@ class InputGroupCompactDisplayDensityComponent {
 })
 class InputGroupInputDisplayDensityComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-}
-
-@Component({
-    template: `<igx-input-group #igxInputGroup [supressInputAutofocus]="true">
-                    <igx-icon>phone</igx-icon>
-                    <input igxInput #igxInput/>
-                </igx-input-group>`
-})
-class InputGroupSupressInputFocusComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
 }
