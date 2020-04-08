@@ -2975,7 +2975,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
-        data = data.map(rec => rec.ghostRec !== undefined ? rec.recordData : rec);
+        data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :

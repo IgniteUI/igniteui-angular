@@ -223,7 +223,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                this.gridAPI.grid.isGhostRecord(record) ? flatData.push(record.data.recordData) : flatData.push(record.data);
+                this.gridAPI.grid.isGhostRecord(record) ? flatData.push(record.data.recordRef) : flatData.push(record.data);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
@@ -379,7 +379,7 @@ export class IgxTreeGridShadowRowsPipe implements PipeTransform {
             if (this.gridAPI.grid.isRecordPinned(record.data)) {
                 const recordData = {};
                 Object.assign(recordData, record.data);
-                record.data = { recordData: recordData, ghostRec: true };
+                record.data = { recordRef: recordData, ghostRecord: true };
             }
             if (record.children && record.children.length > 0) {
                 this.designateDisabledRows(record.children);
