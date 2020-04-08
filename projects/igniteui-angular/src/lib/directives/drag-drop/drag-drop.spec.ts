@@ -572,7 +572,7 @@ describe('General igxDrag/igxDrop', () => {
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
         const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
         firstDrag.ghost = false;
-        firstDrag.dragDirection = DragDirection.HORIZONTAL;
+        firstDrag.dragDirection = DragDirection.VERTICAL;
         fix.detectChanges();
 
         // Step 1.
