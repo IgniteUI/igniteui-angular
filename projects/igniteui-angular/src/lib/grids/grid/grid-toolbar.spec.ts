@@ -402,8 +402,10 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
 
         const button = getColumnPinningButton(fixture);
         expect(button).toBeDefined();
+        const icon = button.nativeElement.querySelector('igx-icon')
+        const iconName = icon.getAttribute("name");
         const btnText = button.nativeElement.innerText.toLowerCase();
-        expect(btnText.includes('0') && btnText.includes('lock_open')).toBe(true);
+        expect(btnText.includes('0') && iconName === 'unpin').toBe(true);
     });
 
     it('toggleColumnPinningUI() method opens and closes the ColumnPinning dropdown.', () => {
