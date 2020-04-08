@@ -29,6 +29,7 @@ import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
+import { IgxWatermarkModule } from '../watermark/watermark.component';
 /**
  * @hidden
  */
@@ -71,7 +72,8 @@ import { IgxRowDirective } from './row.directive';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxGridSharedModules
+        IgxGridSharedModules,
+        IgxWatermarkModule
     ],
     imports: [
         IgxGridColumnModule,
@@ -88,7 +90,8 @@ import { IgxRowDirective } from './row.directive';
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridSharedModules
+        IgxGridSharedModules,
+        IgxWatermarkModule
     ],
     providers: [
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
