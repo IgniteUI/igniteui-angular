@@ -45,14 +45,54 @@ describe('IgxTabs', () => {
         ];
 
         TestBed.configureTestingModule({
-            declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsRoutingDisabledTestComponent,
-                TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
-                TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent, TabsRoutingGuardTestComponent],
+            declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
+                TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
+                TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
+                TabsRoutingGuardTestComponent],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [TabRoutingTestGuard]
         }).compileComponents();
     }));
+
+    describe('IgxTabs Html Attributes', () => {
+        let fixture;
+        let tabs;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(TabsTestHtmlAttributesComponent);
+            tabs = fixture.componentInstance.tabs;
+        }));
+
+        it('should set the correct attributes on the html elements', fakeAsync(() => {
+            fixture.detectChanges();
+
+            const igxTabs = document.querySelectorAll('igx-tabs');
+            expect(igxTabs.length).toBe(2);
+
+            const startTabsIndex = parseInt(igxTabs[0].id.replace('igx-tabs-', ''), 10);
+            for (let tabIndex = startTabsIndex; tabIndex < startTabsIndex + 2; tabIndex++) {
+                const tab = igxTabs[tabIndex - startTabsIndex];
+                expect(tab.id).toEqual(`igx-tabs-${tabIndex}`);
+
+                const tabHeaders = tab.querySelectorAll('igx-tab-item');
+                const tabContents = tab.querySelectorAll('igx-tabs-group');
+                expect(tabHeaders.length).toBe(3);
+                expect(tabContents.length).toBe(3);
+
+                for (let itemIndex = 0; itemIndex < 3; itemIndex++) {
+                    const headerId = `igx-tab-item-${tabIndex}-${itemIndex}`;
+                    const contentId = `igx-tabs-group-${tabIndex}-${itemIndex}`;
+
+                    expect(tabHeaders[itemIndex].id).toEqual(headerId);
+                    expect(tabHeaders[itemIndex].getAttribute('aria-controls')).toEqual(contentId);
+
+                    expect(tabContents[itemIndex].id).toEqual(contentId);
+                    expect(tabContents[itemIndex].getAttribute('aria-labelledby')).toEqual(headerId);
+                }
+            }
+        }));
+    });
 
     describe('IgxTabs Component with static Panels Definitions', () => {
         let fixture;
@@ -1100,5 +1140,38 @@ class TabsTabsOnlyModeTest2Component {
     `
 })
 class TabsDisabledTestComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv1>
+            <igx-tabs [selectedIndex]="0">
+                <igx-tabs-group label="Tab 1">
+                    <div>Content 1</div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 2">
+                    <div>Content 2</div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 3">
+                    <div>Content 3</div>
+                </igx-tabs-group>
+            </igx-tabs>
+        </div>
+        <div #wrapperDiv2>
+            <igx-tabs [selectedIndex]="0">
+                <igx-tabs-group label="Tab 4">
+                    <div>Content 4</div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 5">
+                    <div>Content 5</div>
+                </igx-tabs-group>
+                <igx-tabs-group label="Tab 6">
+                    <div>Content 6</div>
+                </igx-tabs-group>
+            </igx-tabs>
+        </div>`
+})
+class TabsTestHtmlAttributesComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
 }
