@@ -2807,7 +2807,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
@@ -6075,6 +6075,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     endRowTransaction(commit: boolean, row: IgxRow) {
+        console.log('end row transaction');
         row.newData = this.transactions.getAggregatedValue(row.id, true);
 
         let args = row.createEditEventArgs();
