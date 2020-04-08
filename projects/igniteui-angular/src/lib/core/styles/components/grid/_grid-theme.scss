@@ -270,6 +270,10 @@
         $header-text-color: text-contrast($header-background);
     }
 
+    @if not($header-selected-text-color) and $header-selected-background {
+        $header-selected-text-color: text-contrast($header-selected-background);
+    }
+
     @if not($header-border-color) and $header-background {
         @if type-of($header-background) == 'color' {
             $header-border-color: rgba(text-contrast($header-background), .24);
