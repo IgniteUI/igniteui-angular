@@ -30,6 +30,12 @@ export class IgxSplitBarComponent {
     @Input()
     public order!: number;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
 
     /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
@@ -77,14 +83,6 @@ export class IgxSplitBarComponent {
         return this.siblings[0].hidden && !this.siblings[1].hidden;
     }
 
-    get collapseNextIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_right' : 'arrow_drop_down';
-    }
-
-    get collapsePrevIcon() {
-        return this.type === SplitterType.Horizontal ? 'arrow_left' : 'arrow_drop_up';
-    }
-
     /**
      * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
      * @private
@@ -117,50 +115,54 @@ export class IgxSplitBarComponent {
         event.stopPropagation();
             switch (key) {
                 case 'arrowup':
-                    if (this.type === 1) {
+                    if (this.type === SplitterType.Vertical) {
                         if (ctrl) {
-                            this.pane.hidden ? this.onCollapsing(true) : this.onCollapsing(false);
+                            this.onCollapsing(false);
                             break;
                         }
-                        if (this.pane.resizable && this.siblings[1].resizable) {
+                        if (!this.resizeDisallowed) {
                             event.preventDefault();
-                            this.moveUpOrLeft();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(10);
                         }
                     }
                     break;
                 case 'arrowdown':
-                    if (this.type === 1) {
+                    if (this.type === SplitterType.Vertical) {
                         if (ctrl) {
-                            this.siblings[1].hidden ? this.onCollapsing(false) : this.onCollapsing(true);
+                            this.onCollapsing(true);
                             break;
                         }
-                        if (this.pane.resizable && this.siblings[1].resizable) {
+                        if (!this.resizeDisallowed) {
                             event.preventDefault();
-                            this.moveDownOrRight();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(-10);
                         }
                     }
                     break;
                 case 'arrowleft':
-                    if (this.type === 0) {
+                    if (this.type === SplitterType.Horizontal) {
                         if (ctrl) {
-                            this.pane.hidden ? this.onCollapsing(true) : this.onCollapsing(false);
+                            this.onCollapsing(false);
                             break;
                         }
-                        if (this.pane.resizable && this.siblings[1].resizable) {
+                        if (!this.resizeDisallowed) {
                             event.preventDefault();
-                            this.moveUpOrLeft();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(10);
                         }
                     }
                     break;
                 case 'arrowright':
-                    if (this.type === 0) {
+                    if (this.type === SplitterType.Horizontal) {
                         if (ctrl) {
-                            this.siblings[1].hidden ? this.onCollapsing(false) : this.onCollapsing(true);
+                            this.onCollapsing(true);
                             break;
                         }
-                        if (this.pane.resizable && this.siblings[1].resizable) {
+                        if (!this.resizeDisallowed) {
                             event.preventDefault();
-                            this.moveDownOrRight();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(-10);
                         }
                     }
                     break;
@@ -200,58 +202,6 @@ export class IgxSplitBarComponent {
     protected get resizeDisallowed() {
         const relatedTabs = this.siblings;
         return !!relatedTabs.find(x => x.resizable === false);
-    }
-
-    private moveUpOrLeft() {
-        this.panesInitialization();
-
-        const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-
-        const paneSize = this.initialPaneSize - 10;
-        const siblingSize = this.initialSiblingSize + 10;
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
-
-        this.pane.size = paneSize + 'px';
-        this.sibling.size = siblingSize + 'px';
-    }
-
-    private moveDownOrRight() {
-        this.panesInitialization();
-
-        const min = parseInt(this.pane.minSize, 10) || 0;
-        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-        const minSibling = parseInt(this.sibling.minSize, 10) || 0;
-        const maxSibling = parseInt(this.sibling.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
-
-        const paneSize = this.initialPaneSize + 10;
-        const siblingSize = this.initialSiblingSize - 10;
-        if (paneSize < min || paneSize > max || siblingSize < minSibling || siblingSize > maxSibling) {
-            return;
-        }
-
-        this.pane.size = paneSize + 'px';
-        this.sibling.size = siblingSize + 'px';
-    }
-
-    private panesInitialization() {
-        this.sibling = this.siblings[1];
-
-        const paneRect = this.pane.element.getBoundingClientRect();
-        this.initialPaneSize = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
-        if (this.pane.size === 'auto') {
-            this.pane.size = this.type === SplitterType.Horizontal ? paneRect.width : paneRect.height;
-        }
-
-        const siblingRect = this.sibling.element.getBoundingClientRect();
-        this.initialSiblingSize = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        if (this.sibling.size === 'auto') {
-            this.sibling.size = this.type === SplitterType.Horizontal ? siblingRect.width : siblingRect.height;
-        }
     }
 
     public onCollapsing(next: boolean) {
