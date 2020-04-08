@@ -5151,12 +5151,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
      /**
-     * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
-     * @example
-     * ```typescript
-     *      const pinnedDataView = this.grid.pinnedDataView;
-     * ```
-     */
+      * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+      * @example
+      * ```typescript
+      *      const pinnedDataView = this.grid.pinnedDataView;
+      * ```
+      */
     get pinnedDataView(): any[] {
         return this.pinnedRows.map(row => row.rowData);
     }
