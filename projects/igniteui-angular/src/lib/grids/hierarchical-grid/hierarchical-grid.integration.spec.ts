@@ -58,11 +58,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(hierarchicalGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
-            expect(document.querySelectorAll('igx-grid-header').length).toEqual(3);
+            expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(3);
 
             const firstRow = hierarchicalGrid.dataRowList.first;
             // the first row's cell should contain an expand indicator
-            expect(firstRow.nativeElement.children[0].classList.contains('igx-grid__hierarchical-expander')).toBeTruthy();
+            expect(HierarchicalGridFunctions.hasExpander(firstRow)).toBeTruthy();
             hierarchicalGrid.expandRow(firstRow.rowID);
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -70,7 +70,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(childGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
-            expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
+            expect(GridFunctions.getColumnHeaders(fixture).length).toEqual(6);
         }));
 
         it('should apply height correctly with and without filtering', fakeAsync(() => {
@@ -235,14 +235,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             childGrid.columnList.first.sortable = true;
             fixture.detectChanges();
 
-            const childHeaders = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'));
-            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
+            const childHeader = GridFunctions.getColumnHeader('ID', fixture, childGrid);
+            GridFunctions.clickHeaderSortIcon(childHeader);
             fixture.detectChanges();
-            GridFunctions.clickHeaderSortIcon(childHeaders[0]);
+            GridFunctions.clickHeaderSortIcon(childHeader);
             fixture.detectChanges();
 
             expect(childGrid.dataRowList.first.cells.first.value).toBe('09');
-            const icon = GridFunctions.getHeaderSortIcon(childHeaders[0]);
+            const icon = GridFunctions.getHeaderSortIcon(childHeader);
             expect(icon).not.toBeNull();
             expect(icon.nativeElement.textContent.toLowerCase().trim()).toBe('arrow_downward');
         }));
@@ -270,8 +270,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should not lose child grid states after filtering in parent grid.', fakeAsync(() => {
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
-            const childGrids = fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-            let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             let firstChildCell = childGrid.dataRowList.first.cells.first;
             UIInteractions.simulateClickAndSelectCellEvent(firstChildCell);
             expect(firstChildCell.selected).toBe(true);
@@ -282,7 +281,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
             expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
-            childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             firstChildCell = childGrid.dataRowList.first.cells.first;
             expect(firstChildCell.selected).toBe(true);
         }));
@@ -305,17 +304,17 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should apply classes to the header when filter row is visible', fakeAsync(() => {
             hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
-            const headerExpander: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__cbx-selection');
+            const headerExpander: HTMLElement = HierarchicalGridFunctions.getExpander(fixture);
+            const headerCheckbox: HTMLElement = GridSelectionFunctions.getRowCheckboxDiv(fixture.nativeElement);
 
-            expect(headerExpander.classList.contains('igx-grid__hierarchical-expander--push')).toBeFalsy();
-            expect(headerCheckbox.classList.contains('igx-grid__cbx-selection--push')).toBeFalsy();
+            expect(HierarchicalGridFunctions.isExpander(headerExpander, '--push')).toBeFalsy();
+            expect(GridSelectionFunctions.isCheckbox(headerCheckbox, '--push')).toBeFalsy();
 
             // open filter row
             GridFunctions.clickFilterCellChipUI(fixture, 'ID');
 
-            expect(headerExpander.classList.contains('igx-grid__hierarchical-expander--push')).toBeTruthy();
-            expect(headerCheckbox.classList.contains('igx-grid__cbx-selection--push')).toBeTruthy();
+            expect(HierarchicalGridFunctions.isExpander(headerExpander, '--push')).toBeTruthy();
+            expect(GridSelectionFunctions.isCheckbox(headerCheckbox, '--push')).toBeTruthy();
         }));
     });
 
@@ -701,7 +700,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             let childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
             const firstHeaderIcon = childHeader.query(By.css('.igx-icon'));
 
-            expect(childHeader.nativeElement.classList).not.toContain('igx-grid__th--pinned');
+            expect(GridFunctions.isHeaderPinned(childHeader)).toBeFalsy();
             expect(childGrid.columnList.first.pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
@@ -711,7 +710,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             childHeader = GridFunctions.getColumnGroupHeaders(fixture)[4];
             expect(childGrid.columnList.first.pinned).toBeTruthy();
-            expect(childHeader.nativeElement.classList).toContain('igx-grid__th--pinned');
+            expect(GridFunctions.isHeaderPinned(childHeader)).toBeTruthy();
         }));
 
         it('should be applied correctly for child grid with multi-column header.', (() => {
@@ -728,13 +727,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.getRowByIndex(0).cells.length).toBe(3);
             let cell = childGrid.getCellByColumn(0, 'ChildLevels');
             expect(cell.visibleColumnIndex).toEqual(0);
-            expect(cell.nativeElement.classList).toContain('igx-grid__td--pinned');
+            expect(GridFunctions.isCellPinned(cell)).toBeTruthy();
             cell = childGrid.getCellByColumn(0, 'ProductName');
             expect(cell.visibleColumnIndex).toEqual(1);
-            expect(cell.nativeElement.classList).toContain('igx-grid__td--pinned');
+            expect(GridFunctions.isCellPinned(cell)).toBeTruthy();
             cell = childGrid.getCellByColumn(0, 'ID');
             expect(cell.visibleColumnIndex).toEqual(2);
-            expect(cell.nativeElement.classList).not.toContain('igx-grid__td--pinned');
+            expect(GridFunctions.isCellPinned(cell)).toBeFalsy();
         }));
 
         it('should be applied correctly even on the right side', (() => {
