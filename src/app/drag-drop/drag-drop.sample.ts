@@ -7,7 +7,8 @@ import {
     IgxDragDirective,
     IgxInsertDropStrategy,
     IDragBaseEventArgs,
-    IgxDragLocation
+    IgxDragLocation,
+    DragDirection
 } from 'igniteui-angular';
 
 @Component({
@@ -17,6 +18,7 @@ import {
 })
 export class DragDropSampleComponent {
 
+    public dragDir = DragDirection.BOTH;
     public dropStrategy = IgxInsertDropStrategy;
     public draggedElem = false;
     public customDragged = false;
