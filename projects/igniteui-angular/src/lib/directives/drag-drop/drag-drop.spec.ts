@@ -1,11 +1,19 @@
 ﻿import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, Renderer2 } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { IgxDragDropModule, IgxDragDirective, IgxDropDirective, IgxDragLocation, IDropDroppedEventArgs } from './drag-drop.directive';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import { first } from 'rxjs/operators';
+import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
+import {
+    IgxDragDropModule,
+    IgxDragDirective,
+    IgxDropDirective,
+    IgxDragLocation,
+    IDropDroppedEventArgs,
+    DragDirection
+} from './drag-drop.directive';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -37,10 +45,14 @@ describe('General igxDrag/igxDrop', () => {
     });
 
     it('should correctly initialize drag and drop directives.', () => {
+        const ignoredElem = fix.debugElement.query(By.css('.ignoredElem')).nativeElement;
+
         expect(fix.componentInstance.dragElems.length).toEqual(3);
         expect(fix.componentInstance.dragElems.last.data).toEqual({ key: 3 });
         expect(fix.componentInstance.dropArea).toBeTruthy();
         expect(fix.componentInstance.dropArea.data).toEqual({ key: 333 });
+        expect(fix.componentInstance.dragElems.last.dragIgnoredElems.length).toEqual(1);
+        expect(fix.componentInstance.dragElems.last.dragIgnoredElems.first.element.nativeElement).toEqual(ignoredElem);
     });
 
     it('should create drag ghost element and trigger ghostCreate/ghostDestroy.', (async() => {
@@ -257,6 +269,70 @@ describe('General igxDrag/igxDrop', () => {
         await wait();
     }));
 
+    it('should move ghost only horizontally when drag direction is set to horizontal.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.dragDirection = DragDirection.HORIZONTAL;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    }));
+
+    it('should move ghost only vertically when drag direction is set to vertical.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.dragDirection = DragDirection.VERTICAL;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    }));
+
     it('should position ghost relative to the mouse using offsetX and offsetY correctly.', (async() => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
@@ -447,6 +523,88 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
         expect(firstDrag.dragMove.emit).toHaveBeenCalled();
         expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
+    }));
+
+    it('should move igxDrag element only horizontally when ghost is disabled and direction is set to horizontal.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghost = false;
+        firstDrag.dragDirection = DragDirection.HORIZONTAL;
+        fix.detectChanges();
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).not.toBeDefined();
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).not.toBeDefined();
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+    }));
+
+    it('should move igxDrag element only vertically when ghost is disabled and direction is set to vertical.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghost = false;
+        firstDrag.dragDirection = DragDirection.HORIZONTAL;
+        fix.detectChanges();
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).not.toBeDefined();
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 10);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).not.toBeDefined();
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
     }));
 
     it('should prevent dragging if it does not exceed dragTolerance and ghost is disabled.', (async() => {
@@ -1732,6 +1890,7 @@ const generalStyles = [`
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }">
                 Drag 3
                 <div igxDragHandle class="dragHandle"></div>
+                <div igxDragIgnore class="ignoredElem"></div>
             </div>
             <ng-template #ghostTemplate>
                 <div class="ghostElement">Drag Template</div>
