@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridRowComponent } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -29,7 +29,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
             this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
         } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
+            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows };
         }
     }
 
@@ -104,8 +104,17 @@ export class GridColumnPinningSampleComponent implements OnInit {
     togglePinRow(index) {
         const rec = this.data[index];
         !this.grid1.isRecordPinned(rec) ?
-         this.grid1.pinRow(rec) :
-         this.grid1.unpinRow(rec)
+            this.grid1.pinRow(rec) :
+            this.grid1.unpinRow(rec)
+    }
+
+    togglePining(row: IgxGridRowComponent, event) {
+        event.preventDefault();
+        if (row.pinned) {
+            row.unpin();
+        } else {
+            row.pin();
+        }
     }
 
 }
