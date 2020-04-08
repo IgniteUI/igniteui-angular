@@ -231,6 +231,12 @@
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
     $row-selected-cell-background: darken-color(map-get($theme, 'row-selected-background'), 8%);
+    $cross-selected-cell-background: mix(
+        map-get($theme, 'header-selected-background'),
+        $row-selected-cell-background,
+        50%
+    );
+    $cross-selected-cell-text-color: text-contrast($cross-selected-cell-background);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         @if type-of($ghost-header-background) == 'color' {
@@ -451,6 +457,9 @@
         ghost-header-text-color: $ghost-header-text-color,
         ghost-header-icon-color: $ghost-header-icon-color,
         ghost-header-background: $ghost-header-background,
+
+        cross-selected-cell-background: $cross-selected-cell-background,
+        cross-selected-cell-text-color: $cross-selected-cell-text-color,
 
         content-background: $content-background,
         content-text-color: $content-text-color,
@@ -1287,17 +1296,18 @@
     }
 
     %grid-cell--column-selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-background');
+        color: --var($theme, 'column-selected-text-color');
+        background: --var($theme, 'column-selected-background');
 
         &:hover {
-            background: --var($theme, 'row-selected-hover-background');
-            color: --var($theme, 'row-selected-text-color');
+            color: --var($theme, 'column-selected-hover-text-color');
+            background: --var($theme, 'column-selected-hover-background');
         }
     }
 
     %grid-cell--cross-selected {
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'cross-selected-cell-text-color');
+        background: --var($theme, 'cross-selected-cell-background');
     }
 
     %igx-grid__td--edited {
@@ -1472,14 +1482,14 @@
     }
 
     %igx-grid__th--selectable {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
         opacity: .7;
     }
 
     %igx-grid__th--selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
     }
 
     %igx-grid__th--sortable {
@@ -2208,8 +2218,8 @@
     }
 
     %igx-grid__filtering-cell--selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
     }
 
     %igx-grid__filtering-cell-indicator {
