@@ -382,7 +382,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
-        return !this.column.editable;
+        return !this.editable;
     }
 
     get gridRowSpan(): number {
@@ -1051,7 +1051,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.isInCompositionMode) {
             return;
         }
-        if (this.column.editable && !this.row.deleted) {
+        if (this.editable && !this.row.deleted) {
             if (this.editMode) {
                 this.grid.endEdit(true);
                 this.nativeElement.focus();
