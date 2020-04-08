@@ -85,7 +85,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public isColumnFullyVisible(visibleColIndex: number): boolean {
         const targetCol = this.grid.getColumnByVisibleIndex(visibleColIndex);
-        if (this.isParentColumnFullyVisible(targetCol.parent) || super.isColumnPinned(visibleColIndex, this.forOfDir())) { return true; }
+        if (this.isParentColumnFullyVisible(targetCol?.parent) || super.isColumnPinned(visibleColIndex, this.forOfDir())) { return true; }
 
         const scrollPos = this.getChildColumnScrollPositions(visibleColIndex);
         const colWidth = scrollPos.rightScroll - scrollPos.leftScroll;
@@ -95,7 +95,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private isParentColumnFullyVisible(parent: IgxColumnComponent): boolean {
-        if (!this.forOfDir().getScroll().clientWidth || parent.pinned) { return true; }
+        if (!this.forOfDir().getScroll().clientWidth || parent?.pinned) { return true; }
 
         const index = this.forOfDir().igxForOf.indexOf(parent);
         return this.displayContainerWidth >= this.forOfDir().getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft &&
