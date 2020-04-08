@@ -1446,9 +1446,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filteringRow.queryAll(By.css('igx-chip')).length).toEqual(2);
         }));
 
-        it('Verify filter cell chip is scrolled into view on click.', fakeAsync(() => {
+        it('Verify filter cell chip is scrolled into view on click.', async () => {
             grid.width = '470px';
-            tick(100);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is not fully visible.
@@ -1458,10 +1458,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipRect.right > gridRect.right).toBe(true,
                 'chip should not be fully visible and thus not within grid');
 
-            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
-            GridFunctions.closeFilterRow(fix);
-            tick(100);
+            grid.filteringRow.close();
+            await wait();
+            fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is fully visible.
             chip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0].nativeElement;
@@ -1469,7 +1472,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             gridRect = grid.nativeElement.getBoundingClientRect();
             expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right).toBe(true,
                 'chip should be fully visible and within grid');
-        }));
+        });
 
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
