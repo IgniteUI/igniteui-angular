@@ -298,14 +298,15 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostListener('pointerdown', ['$event'])
     public pointerdown(event): void {
         event.stopPropagation();
-        this.grid.navigation.activeNode = {row: -1, column: this.column.visibleIndex, level: this.column.level,
-            mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
-            layout: this.column.columnLayoutChild ? {
-            rowStart: this.column.rowStart,
-            colStart: this.column.colStart,
-            rowEnd: this.column.rowEnd,
-            colEnd: this.column.colEnd,
-            columnVisibleIndex: this.column.visibleIndex} : null };
+        this.activate();
+    }
+
+    /*
+     * This method is necessary due to some specifics related with implementation of column moving
+     * @hidden
+     */
+    public activate() {
+        this.grid.navigation.activeNode = this.activeNode;
     }
 
     public ngDoCheck() {
@@ -323,6 +324,17 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public onPointerLeave() {
         this.column.applySelectableClass = false;
+    }
+
+    private get activeNode() {
+        return {row: -1, column: this.column.visibleIndex, level: this.column.level,
+            mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
+            layout: this.column.columnLayoutChild ? {
+            rowStart: this.column.rowStart,
+            colStart: this.column.colStart,
+            rowEnd: this.column.rowEnd,
+            colEnd: this.column.colEnd,
+            columnVisibleIndex: this.column.visibleIndex} : null };
     }
 
     constructor(private cdr: ChangeDetectorRef,
