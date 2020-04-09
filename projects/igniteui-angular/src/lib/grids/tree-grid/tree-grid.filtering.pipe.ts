@@ -34,7 +34,12 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
                 rec.children = filteredChildren.length > 0 ? filteredChildren : null;
             }
 
-            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, advancedExpressionsTree)) {
+            const plainGhostRecord: any = {...rec};
+            if (rec.data.ghostRecord !== undefined) {
+                plainGhostRecord.data = plainGhostRecord.data.recordRef;
+            }
+
+            if (this.matchRecord(plainGhostRecord, expressionsTree) && this.matchRecord(plainGhostRecord, advancedExpressionsTree)) {
                 res.push(rec);
             } else if (rec.children && rec.children.length > 0) {
                 rec.isFilteredOutParent = true;
@@ -102,7 +107,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     private expandAllRecursive(grid: IgxTreeGridComponent, data: ITreeGridRecord[],
         expandedStates: Map<any, boolean>, filteredData: any[]) {
         for (let i = 0; i < data.length; i++) {
-            const rec = data[i];
+            const rec: any = data[i];
             filteredData.push(rec.data);
             this.updateNonProcessedRecord(grid, rec);
 
