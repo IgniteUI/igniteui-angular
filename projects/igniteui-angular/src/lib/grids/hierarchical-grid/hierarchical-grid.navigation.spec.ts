@@ -158,19 +158,17 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
         horizontalScrDir.scrollTo(6);
-        fixture.detectChanges();
-        await wait(DEBOUNCE_TIME);
+        await wait(100);
         fixture.detectChanges();
         const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
-        GridFunctions.focusCell(fixture, childLastCell);
+        UIInteractions.simulateClickAndSelectCellEvent(childLastCell);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('home', childGridContent, false, false, true);
+        await wait(200);
         fixture.detectChanges();
-        await wait(DEBOUNCE_TIME);
-        fixture.detectChanges();
-        await wait(DEBOUNCE_TIME);
 
         const selectedCell = fixture.componentInstance.selectedCell;
         expect(selectedCell.value).toEqual(0);
@@ -275,13 +273,14 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
+
         const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[0];
         GridFunctions.focusCell(fixture, childLastRowCell);
         fixture.detectChanges();
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, true);
         fixture.detectChanges();
-        await wait(DEBOUNCE_TIME);
+        await wait(200);
         fixture.detectChanges();
         const childFirstRowCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
         const selectedCell = fixture.componentInstance.selectedCell;
