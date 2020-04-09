@@ -17,6 +17,8 @@
 /// @param {String} $header-border-width [null] - The border width used for header borders.
 /// @param {String} $header-border-style [null] - The border style used for header borders.
 /// @param {Color} $header-border-color [null] - The color used for header borders.
+/// @param {Color} $header-selected-background [null] - The table header background color when selected (ex. column selection).
+/// @param {Color} $header-selected-text-color [null] - The table header text color when selected (ex. column selection).
 ///
 /// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
 /// @param {color} $sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
@@ -126,6 +128,9 @@
     $header-border-style: null,
     $header-border-color: null,
 
+    $header-selected-background: null,
+    $header-selected-text-color: null,
+
     $sorted-header-icon-color: null,
 
     $content-background: null,
@@ -230,7 +235,22 @@
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
-    $row-selected-cell-background: darken-color(map-get($theme, 'row-selected-background'), 8%);
+
+    $rs-bg: if(
+        $row-selected-background,
+        $row-selected-background,
+        map-get($theme, 'row-selected-background')
+    );
+
+    $row-selected-cell-background: null;
+
+    @if type-of($rs-bg) == 'color' {
+        @if luminance($rs-bg) < .5 {
+            $row-selected-cell-background: lighten-color($rs-bg, 8%);
+        } @else {
+            $row-selected-cell-background: darken-color($rs-bg, 8%);
+        }
+    }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         @if type-of($ghost-header-background) == 'color' {
@@ -248,6 +268,10 @@
 
     @if not($header-text-color) and $header-background {
         $header-text-color: text-contrast($header-background);
+    }
+
+    @if not($header-selected-text-color) and $header-selected-background {
+        $header-selected-text-color: text-contrast($header-selected-background);
     }
 
     @if not($header-border-color) and $header-background {
@@ -442,6 +466,8 @@
 
         header-background: $header-background,
         header-text-color: $header-text-color,
+        header-selected-background:  $header-selected-background,
+        header-selected-text-color:  $header-selected-text-color,
         header-border-width: $header-border-width,
         header-border-style: $header-border-style,
         header-border-color: $header-border-color,
@@ -979,6 +1005,15 @@
         &:hover {
             background: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
+
+            %grid-cell--column-selected {
+                background: --var($theme, 'row-selected-hover-background');
+            }
+
+            %grid-cell--cross-selected {
+                color: --var($theme, 'row-selected-text-color');
+                background: --var($theme, 'row-selected-cell-background');
+            }
         }
 
         &%igx-grid__tr--ghost {
@@ -1059,6 +1094,11 @@
         &:hover {
             background: --var($theme, 'row-selected-hover-background');
             color: --var($theme, 'row-selected-text-color');
+
+            %grid-cell--column-selected {
+                color: --var($theme, 'row-selected-text-color');
+                background: --var($theme, 'row-selected-hover-background');
+            }
         }
 
         %igx-grid__tree-grouping-indicator {
@@ -1289,14 +1329,10 @@
     %grid-cell--column-selected {
         color: --var($theme, 'row-selected-text-color');
         background: --var($theme, 'row-selected-background');
-
-        &:hover {
-            background: --var($theme, 'row-selected-hover-background');
-            color: --var($theme, 'row-selected-text-color');
-        }
     }
 
     %grid-cell--cross-selected {
+        color: --var($theme, 'row-selected-text-color');
         background: --var($theme, 'row-selected-cell-background');
     }
 
@@ -1472,14 +1508,14 @@
     }
 
     %igx-grid__th--selectable {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
         opacity: .7;
     }
 
     %igx-grid__th--selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
     }
 
     %igx-grid__th--sortable {
@@ -2208,8 +2244,8 @@
     }
 
     %igx-grid__filtering-cell--selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'header-selected-text-color');
+        background: --var($theme, 'header-selected-background');
     }
 
     %igx-grid__filtering-cell-indicator {
