@@ -65,6 +65,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxToast`:
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
+- `IgxDrag`
+    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - New `dragDirection` input that can specify only one direction of dragging or both.
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 

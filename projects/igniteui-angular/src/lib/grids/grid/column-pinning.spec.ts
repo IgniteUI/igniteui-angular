@@ -249,6 +249,20 @@ describe('Column Pinning UI #grid', () => {
             });
         }));
 
+        it('toolbar should contain only pinnable columns', () => {
+            grid.showToolbar = true;
+            grid.columnPinning = true;
+            fix.detectChanges();
+
+            let toolbar = grid.toolbar.columnPinningUI;
+            expect(toolbar.pinnableColumns.length).toBe(5);
+
+            grid.columns[0].disablePinning = true;
+            fix.detectChanges();
+
+            toolbar = grid.toolbar.columnPinningUI;
+            expect(toolbar.pinnableColumns.length).toBe(4);
+        });
     });
 
     describe('', () => {
