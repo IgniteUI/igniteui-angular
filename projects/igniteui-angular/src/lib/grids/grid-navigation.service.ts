@@ -313,13 +313,13 @@ export class IgxGridNavigationService {
         return row.expression || row.detailsData ? false : !this.isColumnFullyVisible(visibleColIndex);
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex: number): boolean {
+    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         const targetRow = this.getRowElementByIndex(targetRowIndex);
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
-            || containerHeight && containerHeight < endTopOffset;
+        || containerHeight && containerHeight < endTopOffset;
     }
 
     public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
@@ -327,7 +327,7 @@ export class IgxGridNavigationService {
         this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
     }
 
-    public performVerticalScrollToCell(rowIndex: number, cb?: () => void) {
+    public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
         this.grid.verticalScrollContainer.scrollTo(rowIndex);
         this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {

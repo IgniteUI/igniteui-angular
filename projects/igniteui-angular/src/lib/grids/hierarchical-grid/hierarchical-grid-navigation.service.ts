@@ -89,7 +89,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         super.navigateInBody(rowIndex, visibleColIndex, cb);
     }
 
-    public shouldPerformVerticalScroll(index, isNext?) {
+    public shouldPerformVerticalScroll(index, visibleColumnIndex = -1, isNext?) {
         const targetRec = this.grid.dataView[index];
         if (this.grid.isChildGridRecord(targetRec)) {
             const scrollAmount = this.grid.verticalScrollContainer.getScrollForIndex(index, !isNext);
@@ -97,7 +97,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const shouldScroll = !isNext ? scrollAmount > currScroll : currScroll < scrollAmount;
             return shouldScroll;
         } else {
-            return super.shouldPerformVerticalScroll(index);
+            return super.shouldPerformVerticalScroll(index, visibleColumnIndex);
         }
     }
 
@@ -130,9 +130,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected _handleScrollInChild(rowIndex: number, isNext?: boolean, cb?: Function) {
-        const shouldScroll = this.shouldPerformVerticalScroll(rowIndex, isNext);
+        const shouldScroll = this.shouldPerformVerticalScroll(rowIndex, -1, isNext);
         if (shouldScroll) {
-            this.grid.navigation.performVerticalScrollToCell(rowIndex, () => {
+            this.grid.navigation.performVerticalScrollToCell(rowIndex, -1, () => {
                 this.positionInParent(rowIndex, isNext, cb);
             });
         } else {

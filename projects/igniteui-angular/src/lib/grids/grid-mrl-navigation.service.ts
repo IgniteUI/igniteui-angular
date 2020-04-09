@@ -73,12 +73,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         return true;
     }
 
-    public shouldPerformVerticalScroll(targetRowIndex: number): boolean {
-        if (!super.shouldPerformVerticalScroll(targetRowIndex)) { return false; }
+    public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
+        if (!super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex)) { return false; }
 
         const targetRow = super.getRowElementByIndex(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const scrollPos = this.getVerticalScrollPositions(targetRowIndex, this.activeNode.column);
+        const scrollPos = this.getVerticalScrollPositions(targetRowIndex, visibleColIndex);
         return (!targetRow || targetRow.offsetTop + scrollPos.topOffset < Math.abs(this.containerTopOffset)
             || containerHeight && containerHeight < scrollPos.rowBottom -  Math.ceil(this.scrollTop));
     }
@@ -140,12 +140,12 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             });
     }
 
-    public performVerticalScrollToCell(rowIndex: number, cb?: () => void) {
-        const children = this.parentByChildIndex(this.activeNode.column || 0).children;
-        if (!super.isDataRow(rowIndex) || children.length < 2) { return super.performVerticalScrollToCell(rowIndex, cb); }
+    public performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
+        const children = this.parentByChildIndex(visibleColIndex || 0).children;
+        if (!super.isDataRow(rowIndex) || children.length < 2) { return super.performVerticalScrollToCell(rowIndex, visibleColIndex, cb); }
 
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const pos = this.getVerticalScrollPositions(rowIndex, this.activeNode.column);
+        const pos = this.getVerticalScrollPositions(rowIndex, visibleColIndex);
         const row = super.getRowElementByIndex(rowIndex);
         if ((this.scrollTop > pos.rowTop) && (!row || row.offsetTop + pos.topOffset < Math.abs(this.containerTopOffset))) {
             pos.topOffset === 0 ? this.grid.verticalScrollContainer.scrollTo(rowIndex) :
