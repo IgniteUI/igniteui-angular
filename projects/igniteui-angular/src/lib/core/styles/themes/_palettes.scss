@@ -47,37 +47,14 @@
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
-
 /// Default dark palette
 /// @type {Map}
 /// @group palettes
 $default-dark-palette: igx-palette(
     $primary: igx-color($default-palette, 'primary'),
     $secondary: igx-color($default-palette, 'secondary'),
-    $surface: #222,
-    $grays: #fff
-) !default;
-
-/// Global Overlay Color
-/// @group palettes
-/// @type Color
-/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
-/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
-/// @requires igx-color
-$overlay-color: igx-color($default-palette, 'grays') !default;
-
-/// Default elevations. Work in progress.
-/// Subject to change.
-/// @group elevations
-/// @type Map
-/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
-/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
-/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
-/// @requires igx-elevations
-$elevations: igx-elevations(
-    rgba(0, 0, 0, .26),
-    rgba(0, 0, 0, .12),
-    rgba(0, 0, 0, .08)
+    $grays: #fff,
+    $surface: #222
 ) !default;
 
 /// Green palette
@@ -189,5 +166,27 @@ $bootstrap-dark-palette: igx-palette(
     $error: igx-color($bootstrap-palette, 'error'),
     $surface: #333,
     $grays: #fff
+) !default;
+
+/// Global Overlay Color
+/// @group palettes
+/// @type Color
+/// @prop {Map} $palette [$default-palette] - The palette used to extract the color from.
+/// @prop {String} $color [grays] - The name of the sub-palette to take the color from.
+/// @requires igx-color
+$overlay-color: igx-color($default-palette, 'grays') !default;
+
+/// Default elevations. Work in progress.
+/// Subject to change.
+/// @group elevations
+/// @type Map
+/// @prop {Color} $color-1 [rgba(0, 0, 0, .26)] - The color used for the umbra shadow.
+/// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
+/// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
+/// @requires igx-elevations
+$elevations: igx-elevations(
+    rgba(0, 0, 0, .26),
+    rgba(0, 0, 0, .12),
+    rgba(0, 0, 0, .08)
 ) !default;
 
