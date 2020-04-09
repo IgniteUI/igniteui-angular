@@ -39,5 +39,12 @@ export class IgxColumnPinningComponent extends ColumnChooserBaseDirective {
         }
         columnItem.value = !columnItem.value;
     }
+
+    /**
+     * @hidden @internal
+     */
+    public get pinnableColumns() {
+        return this.columnItems.filter((col) => !col.pinningDisabled);
+    }
 }
 
