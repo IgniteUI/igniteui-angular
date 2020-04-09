@@ -256,10 +256,10 @@ export class IgxGridNavigationService {
         if (!this.isToggleKey(key) || !row) { return; }
 
         if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
-            !row.rowID ? row.toggle() :
+            row.rowID === undefined ? row.toggle() :
                 this.grid.gridAPI.set_row_expansion_state(row.rowID, true, event);
         } else if (row.expanded && ROW_COLLAPSE_KEYS.has(key)) {
-            !row.rowID ? row.toggle() :
+            row.rowID === undefined ? row.toggle() :
                 this.grid.gridAPI.set_row_expansion_state(row.rowID, false, event);
         }
         this.grid.notifyChanges();
