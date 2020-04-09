@@ -1,7 +1,7 @@
 import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
 import { SplitterType } from '../splitter.component';
 import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
-import { IDragMoveEventArgs, IDragStartEventArgs } from '../../directives/drag-drop/drag-drop.directive';
+import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../directives/drag-drop/drag-drop.directive';
 
 /**
  * Provides reference to `SplitBarComponent` component.
@@ -80,6 +80,13 @@ export class IgxSplitBarComponent {
     /**
      * @hidden @internal
      */
+    public get dragDir() {
+        return this.type === SplitterType.Horizontal ? DragDirection.VERTICAL : DragDirection.HORIZONTAL;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get nextButtonHidden() {
         return this.siblings[1].hidden && !this.siblings[0].hidden;
     }
@@ -95,13 +102,8 @@ export class IgxSplitBarComponent {
     public onDragMove(event: IDragMoveEventArgs) {
         const isHorizontal = this.type === SplitterType.Horizontal;
         const curr =  isHorizontal ? event.pageX : event.pageY;
-        if (isHorizontal) {
-            event.nextPageY = event.pageY;
-        } else {
-            event.nextPageX = event.pageX;
-        }
         const delta = this.startPoint - curr;
-        if (delta !== 0 ) {
+        if (delta !== 0) {
             this.moving.emit(delta);
             event.cancel = true;
             event.owner.element.nativeElement.style.transform = '';
