@@ -1,4 +1,3 @@
-import { ElasticPositionStrategy } from './../../services/overlay/position/elastic-position-strategy';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -142,9 +141,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @HostBinding('attr.role')
     public hostRole = 'columnheader';
 
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('attr.id')
     get headerID() {
         return `${this.gridID}_${this.column.field}`;
@@ -183,7 +179,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
-            event.stopPropagation();
             if (this.grid.filteringService.isFilterRowVisible) {
                 if (this.column.filterable && !this.column.columnGroup &&
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
@@ -200,12 +195,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
                 }
             }
         }
+        this.grid.theadRow.nativeElement.focus();
     }
 
 
     public onFilteringIconClick(event) {
-        event.stopPropagation();
-
         this.toggleFilterDropdown();
     }
 

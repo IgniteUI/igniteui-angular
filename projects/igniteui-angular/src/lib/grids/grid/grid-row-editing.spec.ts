@@ -292,15 +292,18 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should properly exit pending state when committing row edit w/o changes', () => {
             const initialDataLength = grid.data.length;
-            const productNameCell = fix.debugElement.queryAll(By.css(CELL_CLASS))[2];
-            UIInteractions.triggerEventHandlerKeyDown('enter', productNameCell);
-
+            const cell = grid.getCellByKey(1, 'ProductName');
+            const gridContent = GridFunctions.getGridContent(fix);
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
-            expect(grid.getCellByKey(1, 'ProductName').editMode).toBeTruthy();
-            UIInteractions.triggerEventHandlerKeyDown('enter', productNameCell);
-
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            tick(16);
             fix.detectChanges();
-            expect(grid.getCellByKey(1, 'ProductName').editMode).toBeFalsy();
+            expect(cell.editMode).toBeTruthy();
+            UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
+            tick(16);
+            fix.detectChanges();
+            expect(cell.editMode).toBeFalsy();
             grid.deleteRow(2);
 
             fix.detectChanges();
@@ -491,15 +494,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(cellDownloads.editMode).toBeTruthy();
-            const navSpyR = spyOn((<any>grid).navigation, 'moveNextEditable').and.callThrough();
-            const navSpyL = spyOn((<any>grid).navigation, 'movePreviousEditable').and.callThrough();
             // Move forwards
             UIInteractions.triggerEventHandlerKeyDown('tab', cellDownloadsDebug);
             fix.detectChanges();
             tick(16);
             fix.detectChanges();
 
-            expect(navSpyR).toHaveBeenCalledTimes(1);
             expect(cellDownloads.editMode).toBeFalsy();
             expect(cellID.editMode).toBeFalsy();
             expect(cellReleaseDate.editMode).toBeTruthy();
@@ -508,8 +508,6 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             tick(16);
             fix.detectChanges();
-            expect(navSpyL).toHaveBeenCalledTimes(1);
-            expect(navSpyR).toHaveBeenCalledTimes(1);
             expect(cellDownloads.editMode).toBeTruthy();
             expect(cellID.editMode).toBeFalsy();
             expect(cellReleaseDate.editMode).toBeFalsy();
@@ -746,6 +744,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             const targetCell = grid.getCellByColumn(0, 'Downloads');
             fix.detectChanges();
 
+            UIInteractions.simulateClickAndSelectCellEvent(targetCell);
+            fix.detectChanges();
+
             UIInteractions.triggerKeyDownEvtUponElem('Enter', targetCell.nativeElement, true);
             fix.detectChanges();
 
@@ -761,7 +762,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // go to last editable cell
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fix);
-            UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cancelButtonElement, true, false, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -782,10 +783,8 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
-            const targetCell = grid.getCellByColumn(0, 'Downloads');
-            targetCell.nativeElement.focus();
-            fix.detectChanges();
-            targetCell.onKeydownEnterEditMode();
+            let targetCell = grid.getCellByColumn(0, 'Downloads');
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -796,15 +795,16 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Focus done button
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.focus();
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(document.activeElement).toEqual(doneButtonElement);
             doneButtonElement.click();
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
 
-            expect(document.activeElement).toEqual(targetCell.nativeElement);
+            targetCell = grid.getCellByColumn(0, 'Downloads');
+            expect(targetCell.active).toBeTruthy();
         }));
     });
 
@@ -1033,7 +1033,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
 
             const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
-            otherEditableCell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(otherEditableCell);
             fix.detectChanges();
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
@@ -1376,10 +1376,11 @@ describe('IgxGrid - Row Editing #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
 
             let cell = grid.getCellByColumn(0, 'OrderDate');
-            cell.setEditMode(true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             tick(16);
             // Cell will always be first
-            cell.update(new Date('01/01/1901'));
+            const editTemplate = fix.debugElement.query(By.css('input'));
+            UIInteractions.sendInput(editTemplate, '01/01/1901');
             tick(16);
             fix.detectChanges();
 
@@ -1748,6 +1749,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
+UIInteractions.simulateClickAndSelectCellEvent(targetCell);
+fix.detectChanges();
+
             UIInteractions.triggerKeyDownEvtUponElem('enter', targetCell.nativeElement, true);
 
             fix.detectChanges();
@@ -1770,6 +1774,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCell);
+            fix.detectChanges();
+
             targetCell.nativeElement.dispatchEvent(new Event('dblclick'));
 
             fix.detectChanges();
@@ -1792,8 +1799,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
-            targetCell.setEditMode(true);
-
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
+            tick(16);
             fix.detectChanges();
 
             targetCell.editValue = 'New Name';
@@ -1959,16 +1966,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
-            const cell = rows[0].querySelectorAll('igx-grid-cell')[0];
-            cell.dispatchEvent(new Event('focus'));
-            UIInteractions.triggerKeyDownEvtUponElem('F2', cell, true);
-
+            const cell = grid.getCellByColumn(0, '2');
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             expect(grid.crudService.cell.column.header).toBe('2');
-            UIInteractions.triggerKeyDownEvtUponElem('tab', cell, true);
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
 
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -1986,8 +1990,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const grid = fix.componentInstance.grid;
             let cell = grid.getCellByColumn(0, 'ProductName');
             spyOn(grid, 'endEdit').and.callThrough();
-            cell.setEditMode(true);
-
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+            tick(16);
             fix.detectChanges();
 
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(0);
@@ -2011,7 +2015,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const grid = fix.componentInstance.grid;
             let cell = grid.getCellByColumn(0, 'ProductName');
-            UIInteractions.triggerKeyDownEvtUponElem('f2', cell.nativeElement, true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
 
             fix.detectChanges();
 
@@ -2097,19 +2101,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.deleteRow(1);
 
             fix.detectChanges();
-            spyOn(grid, 'endRowTransaction');
+            spyOn(grid, 'endRowTransaction').and.callThrough();
 
             const firstCell = grid.getCellByColumn(2, 'ProductName');
-            firstCell.setEditMode(true);
-
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
             expect(grid.endRowTransaction).toHaveBeenCalledTimes(0);
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
-            targetCell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(targetCell);
             fix.detectChanges();
             expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
-            expect(targetCell.focused).toBeTruthy();
             expect(targetCell.selected).toBeTruthy();
             expect(firstCell.selected).toBeFalsy();
         });
@@ -2294,19 +2296,19 @@ describe('IgxGrid - Row Editing #grid', () => {
             const initialState = grid.transactions.getAggregatedChanges(false);
 
             // Enter edit mode
-            cellDate.onKeydownEnterEditMode();
-
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cellDate);
+            tick(16);
             fix.detectChanges();
             // Exit edit mode without change
-            cellDate.onKeydownExitEditMode();
-
+            GridFunctions.simulateGridContentKeydown(fix, 'Esc');
+            tick(16);
             fix.detectChanges();
             cellDate = grid.getCellByColumn(0, 'UnitsInStock');
-            cellDate.onKeydownEnterEditMode();
-
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cellDate);
+            tick(16);
             fix.detectChanges();
             expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
-            cellDate.onKeydownExitEditMode();
+            GridFunctions.simulateGridContentKeydown(fix, 'Esc');
 
             cellDate = grid.getCellByColumn(0, 'OrderDate');
             const newValue = new Date('01/01/2000');

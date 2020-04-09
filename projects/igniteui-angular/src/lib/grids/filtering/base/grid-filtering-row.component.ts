@@ -159,22 +159,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    @HostListener('keydown.shift.tab', ['$event'])
-    @HostListener('keydown.tab', ['$event'])
-    public onTabKeydown(event) {
-        event.stopPropagation();
-        if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
-        }
-    }
-
-    @HostListener('keydown.esc', ['$event'])
-    public onEscKeydown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.close();
-    }
-
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -229,10 +213,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === KEYS.TAB) {
-            if (event.shiftKey) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (!this.dropDownConditions.collapsed) {
+            if (!this.dropDownConditions.collapsed) {
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             }
         }
@@ -444,9 +425,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
-            if (focusedElement.className === 'igx-chip__remove') {
+
+            if (focusedElement.className === 'igx-chip__remove' || focusedElement.tagName === 'IGX-DAY-ITEM') {
                 return;
             }
+
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
@@ -494,7 +477,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
-        this.commitInput();
     }
 
     /**
@@ -543,10 +525,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public onChipClick(args, item: ExpressionUI) {
         if (this._cancelChipClick) {
+            this._cancelChipClick = false;
             return;
         }
-
-        this._cancelChipClick = false;
 
         this.expressionsList.forEach(ex => ex.isSelected = false);
 

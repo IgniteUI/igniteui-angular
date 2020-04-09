@@ -1487,7 +1487,7 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     }
 
     public moveNext(shiftKey: boolean): void {
-        this.getCurrentEditCell().dispatchEvent(new KeyboardEvent('keydown', {
+        this.grid.navigation.dispatchEvent(new KeyboardEvent('keydown', {
             key: 'tab',
             code: 'tab',
             shiftKey
