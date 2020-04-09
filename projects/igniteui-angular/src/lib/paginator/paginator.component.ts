@@ -169,6 +169,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
 
+   /**
+    * An @Input property, sets a preposition between the current page and total pages.
+    * The default is 'of' localized string.
+    * @memberof IgxPaginatorComponent
+    */
+   @Input()
+   public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
+
     /**
      * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
      */
