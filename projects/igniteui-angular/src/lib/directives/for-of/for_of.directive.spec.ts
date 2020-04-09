@@ -197,6 +197,7 @@ describe('IgxForOf directive -', () => {
             horizontalScroller = fix.nativeElement.querySelector('igx-horizontal-virtual-helper');
         });
 
+
         it('should initialize directive with vertical virtualization', async () => {
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
@@ -1088,6 +1089,57 @@ describe('IgxForOf directive -', () => {
             }
         });
     });
+
+    describe('on destroy', () => {
+        let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
+
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    VerticalVirtualDestroyComponent
+                ],
+                imports: [IgxForOfModule],
+                providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(VerticalVirtualDestroyComponent);
+            fix.componentInstance.data = dg.generateVerticalData(fix.componentInstance.cols);
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+        });
+        it('should reset scroll position if component is destroyed and recreated.', async () => {
+            let scrollComponent = fix.debugElement.query(By.css(VERTICAL_SCROLLER)).componentInstance;
+            expect(scrollComponent.scrollAmount).toBe(0);
+            expect(scrollComponent.destroyed).toBeFalsy();
+
+            scrollComponent.nativeElement.scrollTop = 500;
+            fix.detectChanges();
+            await wait();
+            expect(scrollComponent.scrollAmount).toBe(500);
+
+            fix.componentInstance.exists = false;
+            fix.detectChanges();
+            await wait();
+
+            expect(scrollComponent.destroyed).toBeTruthy();
+
+            fix.componentInstance.exists = true;
+            fix.detectChanges();
+            await wait();
+
+            scrollComponent = fix.debugElement.query(By.css(VERTICAL_SCROLLER)).componentInstance;
+            expect(scrollComponent.scrollAmount).toBe(0);
+            expect(scrollComponent.destroyed).toBeFalsy();
+
+            displayContainer = fix.nativeElement.querySelector(DISPLAY_CONTAINER);
+            const firstInnerDisplayContainer = displayContainer.children[0];
+            expect(firstInnerDisplayContainer.children[0].textContent).toBe('0');
+        });
+    });
 });
 
 class DataGenerator {
@@ -1327,6 +1379,28 @@ export class VerticalVirtualComponent extends VirtualComponent {
     ];
     public data = [];
     public itemSize = '50px';
+}
+
+@Component({
+    template: `
+        <div *ngIf='exists' #container [style.width]='width' [style.height]='height'>
+            <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='height'
+                [igxForItemSize]='itemSize'>
+                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
+                    <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
+                    <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
+                    <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
+                    <div [style.min-width]=cols[3].width>{{rowData['4']}}</div>
+                    <div [style.min-width]=cols[4].width>{{rowData['5']}}</div>
+                </div>
+            </ng-template>
+        </div>
+    `
+})
+export class VerticalVirtualDestroyComponent extends VerticalVirtualComponent {
+    public exists = true;
 }
 
 /** Only horizontally virtualized component */
