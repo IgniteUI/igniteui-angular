@@ -17,7 +17,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../grid';
@@ -1525,9 +1525,36 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(searchResultsCount).toBe(2);
         });
 
-        it('should apply filtering to both pinned and unpinned rows', () => {});
+        it('should apply filtering to both pinned and unpinned rows', () => {
+            treeGrid.pinRow(147);
+            treeGrid.pinRow(711);
+            fix.detectChanges();
 
-        it('should apply sorting to both pinned and unpinned rows', () => {});
+            treeGrid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            const gridFilterData = treeGrid.filteredData;
+            expect(gridFilterData.length).toBe(2);
+            expect(gridFilterData[0].ID).toBe(147);
+            expect(gridFilterData[1].recordRef.ID).toBe(147);
+        });
+
+        it('should apply sorting to both pinned and unpinned rows', () => {
+            treeGrid.pinRow(147);
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(147);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(147);
+
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(147);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(847);
+        });
 
         it('should not take into account pinned rows when changing items per page', () => {});
 
