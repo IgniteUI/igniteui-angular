@@ -1,7 +1,10 @@
-import { Component, Input, HostBinding, EventEmitter, Output } from '@angular/core';
+import { Component, Input, HostBinding, EventEmitter, Output, HostListener } from '@angular/core';
 import { SplitterType } from '../splitter.component';
 import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
 import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../directives/drag-drop/drag-drop.directive';
+
+
+export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
 
 /**
  * Provides reference to `SplitBarComponent` component.
@@ -30,6 +33,12 @@ export class IgxSplitBarComponent {
     @Input()
     public order!: number;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
 
     /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
@@ -80,6 +89,79 @@ export class IgxSplitBarComponent {
     /**
      * @hidden @internal
      */
+    @HostListener('keydown', ['$event'])
+    keyEvent(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        const ctrl = event.ctrlKey;
+        event.stopPropagation();
+        if (SPLITTER_INTERACTION_KEYS.has(key)) {
+            event.preventDefault();
+        }
+            switch (key) {
+                case 'arrowup':
+                case 'up':
+                    if (this.type === SplitterType.Vertical) {
+                        if (ctrl) {
+                            this.onCollapsing(false);
+                            break;
+                        }
+                        if (!this.resizeDisallowed) {
+                            event.preventDefault();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(10);
+                        }
+                    }
+                    break;
+                case 'arrowdown':
+                case 'down':
+                    if (this.type === SplitterType.Vertical) {
+                        if (ctrl) {
+                            this.onCollapsing(true);
+                            break;
+                        }
+                        if (!this.resizeDisallowed) {
+                            event.preventDefault();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(-10);
+                        }
+                    }
+                    break;
+                case 'arrowleft':
+                case 'left':
+                    if (this.type === SplitterType.Horizontal) {
+                        if (ctrl) {
+                            this.onCollapsing(false);
+                            break;
+                        }
+                        if (!this.resizeDisallowed) {
+                            event.preventDefault();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(10);
+                        }
+                    }
+                    break;
+                case 'arrowright':
+                case 'right':
+                    if (this.type === SplitterType.Horizontal) {
+                        if (ctrl) {
+                            this.onCollapsing(true);
+                            break;
+                        }
+                        if (!this.resizeDisallowed) {
+                            event.preventDefault();
+                            this.moveStart.emit(this.pane);
+                            this.moving.emit(-10);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get dragDir() {
         return this.type === SplitterType.Horizontal ? DragDirection.VERTICAL : DragDirection.HORIZONTAL;
     }
@@ -90,6 +172,7 @@ export class IgxSplitBarComponent {
     public get nextButtonHidden() {
         return this.siblings[1].hidden && !this.siblings[0].hidden;
     }
+
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
