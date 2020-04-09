@@ -3,6 +3,9 @@ import { SplitterType } from '../splitter.component';
 import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
 import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../directives/drag-drop/drag-drop.directive';
 
+
+export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
+
 /**
  * Provides reference to `SplitBarComponent` component.
  * Represents the draggable gripper that visually separates panes and allows for changing their sizes.
@@ -91,8 +94,12 @@ export class IgxSplitBarComponent {
         const key = event.key.toLowerCase();
         const ctrl = event.ctrlKey;
         event.stopPropagation();
+        if (SPLITTER_INTERACTION_KEYS.has(key)) {
+            event.preventDefault();
+        }
             switch (key) {
                 case 'arrowup':
+                case 'up':
                     if (this.type === SplitterType.Vertical) {
                         if (ctrl) {
                             this.onCollapsing(false);
@@ -106,6 +113,7 @@ export class IgxSplitBarComponent {
                     }
                     break;
                 case 'arrowdown':
+                case 'down':
                     if (this.type === SplitterType.Vertical) {
                         if (ctrl) {
                             this.onCollapsing(true);
@@ -119,6 +127,7 @@ export class IgxSplitBarComponent {
                     }
                     break;
                 case 'arrowleft':
+                case 'left':
                     if (this.type === SplitterType.Horizontal) {
                         if (ctrl) {
                             this.onCollapsing(false);
@@ -132,6 +141,7 @@ export class IgxSplitBarComponent {
                     }
                     break;
                 case 'arrowright':
+                case 'right':
                     if (this.type === SplitterType.Horizontal) {
                         if (ctrl) {
                             this.onCollapsing(true);
