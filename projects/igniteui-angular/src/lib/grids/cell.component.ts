@@ -658,6 +658,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
             }
             crud.end();
+            this.grid.tbody.nativeElement.focus();
             this.grid.notifyChanges();
             crud.begin(this);
             return;
