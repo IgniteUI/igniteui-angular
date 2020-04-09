@@ -5584,10 +5584,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex);
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else {
