@@ -22,4 +22,10 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBaseDirectiv
     get pinnable() {
         return this.column.pinnable;
     }
+    /**
+     * Returns whether a column have pinning enabled
+     */
+    public get pinningDisabled() {
+        return this.column.disablePinning;
+    }
 }
