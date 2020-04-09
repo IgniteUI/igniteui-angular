@@ -52,19 +52,68 @@
 @mixin igx-splitter($theme) {
     @include igx-root-css-vars($theme);
     $splitter-color: --var($theme, 'bar-color');
+    $hitbox-size: 4px;
+    $debug-hitbox: false;
+    $hitbox-debug-color: rgba(coral, .24);
+
+    %handle-area {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: $hitbox-size;
+        background: if($debug-hitbox, $hitbox-debug-color, transparent);
+    }
+
+    %handle-area--vertical {
+        width: $hitbox-size;
+        height: 100%;
+    }
 
     %igx-splitter-bar {
+        position: relative;
         display: flex;
         flex-grow: 1;
         justify-content: center;
         align-items: center;
         background: $splitter-color;
         border: 1px solid $splitter-color;
+        cursor: row-resize;
+        z-index: 99;
+        opacity: .68;
+        transition: opacity .15s $ease-out-quad !important;
+
+        &::before {
+            @extend %handle-area;
+            top: 100%;
+        }
+
+        &::after {
+            @extend %handle-area;
+            bottom: 100%;
+        }
+
+        &:hover {
+            transition: all .25s ease-out;
+            opacity: 1;
+        }
     }
 
     %igx-splitter-bar--vertical {
         flex-direction: column;
         height: 100%;
+        cursor: col-resize;
+
+        &::before {
+            @extend %handle-area--vertical;
+            top: 0;
+            right: 100%;
+        }
+
+        &::after {
+            @extend %handle-area--vertical;
+            top: 0;
+            left: 100%;
+        }
     }
 
     %igx-splitter-handle {
@@ -73,17 +122,21 @@
     }
 
     %igx-splitter-handle--horizontal {
-        cursor: row-resize;
         width: 25%;
         height: --var($theme, 'size');
         margin: 0 rem(48px);
     }
 
     %igx-splitter-handle--vertical {
-        cursor: col-resize;
         width: --var($theme, 'size');
         height: 25%;
         margin: rem(48px) 0;
+    }
+
+    %igx-splitter-hitbox {
+        position: absolute;
+        content: '';
+        background: if($debug-hitbox, $hitbox-debug-color, transparent);
     }
 
     %igx-splitter-expander {
@@ -93,15 +146,32 @@
         border-right: --var($theme, 'size') solid transparent;
         border-left: --var($theme, 'size') solid transparent;
         cursor: pointer;
+        z-index: 1;
     }
 
     %igx-splitter-expander--start {
         border-bottom: --var($theme, 'size') solid --var($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - #{map-get($theme, 'size')});
+            left: calc(100% - #{map-get($theme, 'size') * 2});
+            width: #{map-get($theme, 'size') * 4};
+            height: #{map-get($theme, 'size') * 3};
+        }
     }
 
     %igx-splitter-expander--end {
         border-bottom: unset;
         border-top: --var($theme, 'size') solid --var($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - #{map-get($theme, 'size') * 2});
+            left: calc(100% - #{map-get($theme, 'size') * 2});
+            width: #{map-get($theme, 'size') * 4};
+            height: #{map-get($theme, 'size') * 3};
+        }
     }
 
     %igx-splitter-expander--start-vertical {
@@ -109,6 +179,14 @@
         border-right: --var($theme, 'size') solid --var($theme, 'expander-color');
         border-bottom: --var($theme, 'size') solid transparent;
         border-left: unset;
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            top: calc(100% - #{map-get($theme, 'size') * 2});
+            left: calc(100% - #{map-get($theme, 'size')});
+            width: #{map-get($theme, 'size') * 3};
+            height: #{map-get($theme, 'size') * 4};
+        }
     }
 
     %igx-splitter-expander--end-vertical {
@@ -116,5 +194,13 @@
         border-right: unset;
         border-bottom: --var($theme, 'size') solid transparent;
         border-left: --var($theme, 'size') solid --var($theme, 'expander-color');
+
+        &::before {
+            @extend %igx-splitter-hitbox;
+            left: calc(100% - #{map-get($theme, 'size') * 2});
+            top: calc(100% - #{map-get($theme, 'size') * 2});
+            height: #{map-get($theme, 'size') * 4};
+            width: #{map-get($theme, 'size') * 3};
+        }
     }
 }
