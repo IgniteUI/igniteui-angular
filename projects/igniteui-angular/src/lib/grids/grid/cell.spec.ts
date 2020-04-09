@@ -52,31 +52,33 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
-            const event = new Event('focus');
-            cellElem.nativeElement.dispatchEvent(event);
-            const args: IGridCellEventArgs = {
+            UIInteractions.simulateClickAndSelectCellEvent(cellElem);
+            const args = {
                 cell: firstCell,
-                event
+                event: jasmine.anything()
             };
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
-            expect(firstCell.focused).toBe(true);
             expect(firstCell.selected).toBe(true);
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('true');
         });
 
         it('Should not emit selection event for already selected cell', () => {
+            grid.getColumnByName('ID').editable = true;
+            fix.detectChanges();
+
             spyOn(grid.onSelection, 'emit').and.callThrough();
 
-            cellElem.triggerEventHandler('focus', null);
+            UIInteractions.simulateClickAndSelectCellEvent(cellElem);
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerEventHandlerKeyDown('Enter', cellElem);
+            const gridContent = GridFunctions.getGridContent(fix);
+            UIInteractions.triggerEventHandlerKeyDown('Enter', gridContent);
             fix.detectChanges();
-            UIInteractions.triggerEventHandlerKeyDown('Escape', cellElem);
+            UIInteractions.triggerEventHandlerKeyDown('Escape', gridContent);
             fix.detectChanges();
 
             expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
@@ -243,17 +245,23 @@ describe('IgxGrid - Cell component #grid', () => {
             });
         });
 
-        it('Should blur selected cell when scrolling with mouse wheel', (async () => {
-            const cell = grid.getCellByColumn(3, 'value');
-            cell.nativeElement.focus();
-            cell.nativeElement.click();
+        it('Should not clear selected cell when scrolling with mouse wheel', (async () => {
+            let cell = grid.getCellByColumn(3, 'value');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
-            expect(document.activeElement).toEqual(cell.nativeElement);
+
             const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             await UIInteractions.simulateWheelEvent(displayContainer, 0, 200);
             fix.detectChanges();
             await wait(16);
-            expect(document.activeElement).toEqual(document.body);
+
+            const gridContent = GridFunctions.getGridContent(fix);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
+            fix.detectChanges();
+            await wait(30);
+
+            cell = grid.getCellByColumn(2, 'value');
+            expect(cell.selected).toBeTruthy();
         }));
     });
 
