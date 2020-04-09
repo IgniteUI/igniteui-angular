@@ -668,6 +668,25 @@ describe('IgxGrid - Filtering actions #grid', () => {
         tick(100);
         fix.detectChanges();
 
+        sendInput(input, '254..', fix);
+        tick();
+        fix.detectChanges();
+
+
+        expect(grid.rowList.length).toEqual(6);
+        expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+
+        // open dropdown
+        filterIcon.nativeElement.click();
+        tick();
+        fix.detectChanges();
+        // less than or equal to
+        ddItems[5].click();
+        tick(100);
+        fix.detectChanges();
+
         expect(grid.rowList.length).toEqual(6);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
