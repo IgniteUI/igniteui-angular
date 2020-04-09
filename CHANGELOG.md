@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.0.10
+- `IgxInputGroup`
+    - **Deprecated** `supressInputAutofocus` and renamed it to `suppressInputAutofocus`
+
 ## 9.0.9
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - The `title` attribute of the columns and the column groups is now used as `title` for the header text.

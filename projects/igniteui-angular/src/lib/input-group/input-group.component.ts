@@ -19,6 +19,7 @@ import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.
 import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -40,7 +41,7 @@ enum IgxInputGroupType {
 export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
-    private _supressInputAutofocus = false;
+    private _suppressInputAutofocus = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -175,7 +176,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostListener('click', ['$event'])
     public onClick(event) {
-        if (!this._supressInputAutofocus) {
+        if (!this._suppressInputAutofocus) {
             this.input.focus();
         }
     }
@@ -219,24 +220,46 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /**
-     * Returns whether the input element of the input group will be automatically focused on click.
+     * @deprecated Returns whether the input element of the input group will be automatically focused on click.
      * ```typescript
      * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
      * ```
      */
+    @DeprecateProperty(`'supressInputAutofocus' @Input property is deprecated. Use 'suppressInputAutofocus' instead.`)
     @Input()
     public get supressInputAutofocus(): boolean {
-        return this._supressInputAutofocus;
+        return this.suppressInputAutofocus;
     }
 
     /**
-     * Sets whether the input element of the input group will be automatically focused on click.
+     * @deprecated Sets whether the input element of the input group will be automatically focused on click.
      * ```html
      * <igx-input-group [supressInputAutofocus]="true"></igx-input-group>
      * ```
      */
     public set supressInputAutofocus(value: boolean) {
-        this._supressInputAutofocus = value;
+        this.suppressInputAutofocus = value;
+    }
+
+    /**
+     * Returns whether the input element of the input group will be automatically focused on click.
+     * ```typescript
+     * let suppressInputAutofocus = this.inputGroup.suppressInputAutofocus;
+     * ```
+     */
+    @Input()
+    public get suppressInputAutofocus(): boolean {
+        return this._suppressInputAutofocus;
+    }
+
+    /**
+     * Sets whether the input element of the input group will be automatically focused on click.
+     * ```html
+     * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
+     * ```
+     */
+    public set suppressInputAutofocus(value: boolean) {
+        this._suppressInputAutofocus = value;
     }
 
     /**
