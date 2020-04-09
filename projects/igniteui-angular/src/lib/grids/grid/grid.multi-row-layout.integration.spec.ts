@@ -11,6 +11,7 @@ import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     configureTestSuite();
@@ -605,7 +606,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const lastCell = grid.rowList.first.cells.toArray()[5];
+            const lastCell = grid.rowList.first.cells.toArray()[6];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
             expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) -
