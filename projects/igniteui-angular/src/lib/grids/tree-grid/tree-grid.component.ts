@@ -22,7 +22,6 @@ import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
@@ -62,7 +61,7 @@ let NEXT_ID = 0;
         IgxGridSelectionService,
         IgxGridCRUDService,
         IgxGridSummaryService,
-        { provide: IgxGridNavigationService, useClass: IgxTreeGridNavigationService },
+        IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
