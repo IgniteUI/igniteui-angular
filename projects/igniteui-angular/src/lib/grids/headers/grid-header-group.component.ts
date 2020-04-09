@@ -83,6 +83,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @Input()
     public gridID: string;
 
+    @HostBinding('class.igx-grid__th--active')
+    public get active() {
+        const node = this.grid.navigation.activeNode;
+        return  node ? node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
+    }
+
     /**
      * @hidden
      */
@@ -283,6 +289,24 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
         event.preventDefault();
+        this.grid.theadRow.nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('pointerdown', ['$event'])
+    public pointerdown(event): void {
+        event.stopPropagation();
+        this.activate();
+    }
+
+    /*
+     * This method is necessary due to some specifics related with implementation of column moving
+     * @hidden
+     */
+    public activate() {
+        this.grid.navigation.activeNode = this.activeNode;
     }
 
     public ngDoCheck() {
@@ -300,6 +324,17 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public onPointerLeave() {
         this.column.applySelectableClass = false;
+    }
+
+    private get activeNode() {
+        return {row: -1, column: this.column.visibleIndex, level: this.column.level,
+            mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
+            layout: this.column.columnLayoutChild ? {
+            rowStart: this.column.rowStart,
+            colStart: this.column.colStart,
+            rowEnd: this.column.rowEnd,
+            colEnd: this.column.colEnd,
+            columnVisibleIndex: this.column.visibleIndex} : null };
     }
 
     constructor(private cdr: ChangeDetectorRef,
