@@ -256,9 +256,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(contactInfHeader.attributes['role']).toEqual('columnheader');
             expect(addressInfHeader.attributes['role']).toEqual('columnheader');
 
-            expect(contactInfHeader.attributes['tabindex']).toEqual('0');
-            expect(addressInfHeader.attributes['tabindex']).toEqual('0');
-
             expect(contactInfHeader.attributes['aria-label']).toEqual(contactInf.header);
             expect(addressInfHeader.attributes['aria-label']).toEqual(addressInf.header);
             expect(addressInfHeader.attributes['aria-expanded']).toEqual('true');
