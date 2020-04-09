@@ -2520,7 +2520,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // tab through cols and check order is correct - ContactName should be skipped.
                 for (let i = 1; i < order.length; i++) {
                     GridFunctions.simulateGridContentKeydown(fix, 'Tab');
-                    await wait();
+                    await wait(DEBOUNCETIME);
                     fix.detectChanges();
 
                     cell = grid.getCellByColumn(0, order[i]);
@@ -2530,7 +2530,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // shift+tab through  cols and check order is correct - ContactName should be skipped.
                 for (let j = order.length - 2; j >= 0; j--) {
                     GridFunctions.simulateGridContentKeydown(fix, 'Tab', false, true);
-                    await wait();
+                    await wait(DEBOUNCETIME);
                     fix.detectChanges();
 
                     cell = grid.getCellByColumn(0, order[j]);
