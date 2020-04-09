@@ -151,6 +151,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     it('should allow navigating to start in child grid when child grid target row moves outside the parent view port.', (async () => {
+        pending('related to the bug #7091');
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
@@ -158,17 +159,20 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const horizontalScrDir = childGrid.dataRowList.toArray()[0].virtDirRow;
         horizontalScrDir.scrollTo(6);
-        await wait(100);
+        fixture.detectChanges();
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
-        UIInteractions.simulateClickAndSelectCellEvent(childLastCell);
+        GridFunctions.focusCell(fixture, childLastCell);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         UIInteractions.triggerEventHandlerKeyDown('home', childGridContent, false, false, true);
-        await wait(200);
         fixture.detectChanges();
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+        await wait(DEBOUNCE_TIME);
 
         const selectedCell = fixture.componentInstance.selectedCell;
         expect(selectedCell.value).toEqual(0);
@@ -269,6 +273,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(7);
+        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
