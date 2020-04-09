@@ -169,8 +169,8 @@ export class GridCellEditingComponent {
         const type = args.targetType;
         if (type === 'dataCell'  && target.editMode && args.event.key.toLowerCase() === 'tab') {
             args.event.preventDefault();
-            args.cancel = true;
             if (target.column.dataType === 'number' && target.editValue < 10) {
+                args.cancel = true;
                 alert('The value should be bigger than 10');
                 return;
             }

@@ -11,7 +11,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxTreeGridModule } from './tree-grid.module';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { GridSelectionFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
@@ -34,7 +34,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         let treeGrid;
         let detect;
 
-        beforeEach( fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -56,8 +56,8 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should not be possible to select a range when change cellSelection to none', () => {
             const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  treeGrid.getCellByColumn(0, 'ID');
-            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+            const startCell = treeGrid.getCellByColumn(0, 'ID');
+            const endCell = treeGrid.getCellByColumn(2, 'ID');
 
             expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
@@ -86,9 +86,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
             const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
-            const startCell =  treeGrid.getCellByColumn(0, 'ID');
-            const middleCell =  treeGrid.getCellByColumn(1, 'ID');
-            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+            const startCell = treeGrid.getCellByColumn(0, 'ID');
+            const middleCell = treeGrid.getCellByColumn(1, 'ID');
+            const endCell = treeGrid.getCellByColumn(2, 'ID');
 
             expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
@@ -107,7 +107,14 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedRanges()).toEqual([]);
 
             // Try to select a range
-            GridSelectionFunctions.selectCellsRangeNoWait(fix, endCell, startCell);
+            // Try to select a range
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement);
+            endCell.nativeElement.dispatchEvent(new MouseEvent('click'));
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', startCell.nativeElement);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', startCell.nativeElement);
+            fix.detectChanges();
             detect();
             GridSelectionFunctions.verifyCellSelected(startCell, false);
             GridSelectionFunctions.verifyCellSelected(middleCell, false);
@@ -135,7 +142,6 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const endCell = treeGrid.getCellByColumn(11, 'ID');
             await GridSelectionFunctions.selectCellsRange(fix, startCell, endCell);
 
-            expect(startCell.focused).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
@@ -144,7 +150,6 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             await wait(30);
             fix.detectChanges();
 
-            expect(startCell.focused).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData2);
@@ -155,7 +160,6 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             startCell = treeGrid.getCellByColumn(10, 'ID');
-            expect(startCell.focused).toBe(true);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
             GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
@@ -284,10 +288,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            startCell.nativeElement.dispatchEvent(new MouseEvent('click'));
             detect();
 
-            expect(startCell.focused).toBe(true);
+            expect(startCell.active).toBe(true);
 
             for (let i = 1; i < 11; i++) {
                 let cell = treeGrid.getCellByColumn(i, 'ID');
@@ -389,7 +393,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             for (let i = 1; i < 3; i++) {
                 const cellObject = treeGrid.summariesRowList.find(row => row.index === 16)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
+                    .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellObject.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -398,12 +402,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
+                .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', summaryCell.nativeElement, true, false, true);
             await wait(30);
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  8, 15, 1, 3);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 15, 1, 3);
         }));
 
         it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
@@ -417,14 +421,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
-
+            const gridContent = GridFunctions.getGridContent(fix);
             for (let i = 8; i < 16; i++) {
-                let cellObj = treeGrid.getCellByColumn(i, 'Name');
-                if (!cellObj) {
-                    cellObj = treeGrid.summariesRowList.find(row => row.index === i)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cellObj.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
                 await wait(30);
                 fix.detectChanges();
             }
@@ -432,13 +431,11 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
-            const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', summaryCell.nativeElement, true, false);
+            UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             await wait(30);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  17, 17, 1, 1);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 17, 17, 1, 1);
         }));
 
         it('Filtering: selection should not change when perform filtering', () => {
@@ -447,24 +444,24 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.filter('Name', 'la', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
             const filterData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(filterData);
         });
 
@@ -474,12 +471,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
@@ -487,12 +484,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -502,25 +499,25 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
-            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false});
+            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false });
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 258, Name: 'Michael Cooper', Age: 33},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 258, Name: 'Michael Cooper', Age: 33 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -530,24 +527,24 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 847, Name: 'Ana Sanders', Age: 42}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 847, Name: 'Ana Sanders', Age: 42 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
-            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false}, 317);
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 13, Name: 'Michael Cooper', Age: 33}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 13, Name: 'Michael Cooper', Age: 33 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
@@ -584,24 +581,24 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.filter('Name', 'la', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
             const filterData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(filterData);
         });
 
@@ -611,25 +608,25 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
-            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false});
+            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false });
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 258, Name: 'Michael Cooper', Age: 33},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 258, Name: 'Michael Cooper', Age: 33 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -640,24 +637,24 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 847, Name: 'Ana Sanders', Age: 42}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 847, Name: 'Ana Sanders', Age: 42 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
-            treeGrid.addRow({ ID: 13, ParentID: 317, Name: 'Michael Cooper', Age: 33, OnPTO: false}, 317);
+            treeGrid.addRow({ ID: 13, ParentID: 317, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 13, Name: 'Michael Cooper', Age: 33}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 13, Name: 'Michael Cooper', Age: 33 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
@@ -681,23 +678,23 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
             row.delete();
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.undo();
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -706,12 +703,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const nesSelData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(nesSelData);
         });
 
@@ -721,30 +718,30 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
-            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false,  Employees: []});
+            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false, Employees: [] });
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 258, Name: 'Michael Cooper', Age: 33},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 258, Name: 'Michael Cooper', Age: 33 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -752,7 +749,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -762,29 +759,29 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 847, Name: 'Ana Sanders', Age: 42}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 847, Name: 'Ana Sanders', Age: 42 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
-            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: [] }, 147);
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 13, Name: 'Michael Cooper', Age: 33}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 13, Name: 'Michael Cooper', Age: 33 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
             treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -809,22 +806,22 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
             const row = treeGrid.getRowByIndex(2);
             row.delete();
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.undo();
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -833,12 +830,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const nesSelData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(nesSelData);
         });
 
@@ -848,29 +845,29 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 957, Name: 'Thomas Hardy', Age: 29},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 957, Name: 'Thomas Hardy', Age: 29 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
             const row = treeGrid.getRowByIndex(2);
-            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false,  Employees: []});
+            row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false, Employees: [] });
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 147, Name: 'John Winchester', Age: 55},
-                { ID: 475, Name: 'Michael Langdon', Age: 43},
-                { ID: 258, Name: 'Michael Cooper', Age: 33},
-                { ID: 317, Name: 'Monica Reyes', Age: 31}
+                { ID: 147, Name: 'John Winchester', Age: 55 },
+                { ID: 475, Name: 'Michael Langdon', Age: 43 },
+                { ID: 258, Name: 'Michael Cooper', Age: 33 },
+                { ID: 317, Name: 'Monica Reyes', Age: 31 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -878,7 +875,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -888,28 +885,28 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const selectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 847, Name: 'Ana Sanders', Age: 42}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 847, Name: 'Ana Sanders', Age: 42 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
-            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: [] }, 147);
             fix.detectChanges();
 
             const newSelectedData = [
-                { ID: 317, Name: 'Monica Reyes', Age: 31},
-                { ID: 711, Name: 'Roland Mendel', Age: 35},
-                { ID: 998, Name: 'Sven Ottlieb', Age: 44},
-                { ID: 13, Name: 'Michael Cooper', Age: 33}
+                { ID: 317, Name: 'Monica Reyes', Age: 31 },
+                { ID: 711, Name: 'Roland Mendel', Age: 35 },
+                { ID: 998, Name: 'Sven Ottlieb', Age: 44 },
+                { ID: 13, Name: 'Michael Cooper', Age: 33 }
             ];
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -917,7 +914,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
@@ -1058,7 +1055,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         startCell.nativeElement.dispatchEvent(new Event('focus'));
         detect();
 
-        expect(startCell.focused).toBe(true);
+        expect(startCell.active).toBe(true);
 
         for (let i = 5; i < 7; i++) {
             const cell = treeGrid.getCellByColumn(i, treeGrid.columns[i - 3].field);
@@ -1098,7 +1095,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
         detect();
 
-        expect(startCell.focused).toBe(true);
+        expect(startCell.active).toBe(true);
         GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 7, 1, 2);
         GridSelectionFunctions.verifySelectedRange(treeGrid, 4, 7, 1, 2);
 
