@@ -1702,7 +1702,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
-                await wait(100);
+                await wait(200);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1710,7 +1710,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
-                await wait(100);
+                await wait(200);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
