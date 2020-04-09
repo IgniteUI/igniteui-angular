@@ -11,6 +11,14 @@ declare var Touch: {
 export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
+    public static doubleClickEvent = new MouseEvent('dblclick');
+    public static focusEvent = new FocusEvent('focus');
+
+    public static simulateDoubleClickAndSelectCellEvent(element) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+    }
 
     public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = {
@@ -48,19 +56,6 @@ export class UIInteractions {
             preventDefault: () => { }
         };
         elem.triggerEventHandler('keydown', event);
-    }
-
-    public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
-        const event = {
-            key: keyPressed,
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
-            stopPropagation: () => { },
-            stopImmediatePropagation: () => { },
-            preventDefault: () => { }
-        };
-        elem.triggerEventHandler('keyup', event);
     }
 
     public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
