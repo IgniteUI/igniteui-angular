@@ -7,7 +7,8 @@ import {
     IgxDragDirective,
     IgxInsertDropStrategy,
     IDragBaseEventArgs,
-    IgxDragLocation
+    IgxDragLocation,
+    DragDirection
 } from 'igniteui-angular';
 
 @Component({
@@ -17,6 +18,7 @@ import {
 })
 export class DragDropSampleComponent {
 
+    public dragDir = DragDirection.BOTH;
     public dropStrategy = IgxInsertDropStrategy;
     public draggedElem = false;
     public customDragged = false;
@@ -36,7 +38,11 @@ export class DragDropSampleComponent {
         { text: 'The Avengers', dragged: false }
     ];
     public listObserver = null;
-    public draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+    public draggableElems = [
+        { value: 'Suspect 1' },
+        { value: 'Suspect 2' },
+        { value: 'Suspect 3' },
+        { value: 'Suspect 4' }];
 
     public toggleStartPageX;
     public toggleStartPageY;

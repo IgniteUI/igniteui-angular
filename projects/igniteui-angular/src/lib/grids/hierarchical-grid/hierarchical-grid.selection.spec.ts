@@ -12,9 +12,9 @@ import {
     IgxHierarchicalGridRowSelectionComponent,
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
-} from '../../test-utils/hierarhical-grid-components.spec';
+} from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxGridSelectionModule } from '../selection/selection.module';
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
@@ -63,7 +63,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             let fCell = firstRow.cells.toArray()[0];
 
             // select parent cell
-            fCell.nativeElement.focus();
+            GridFunctions.focusCell(fix, fCell);
             fix.detectChanges();
 
             expect(fCell.selected).toBeTruthy();
@@ -73,7 +73,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const fChildCell = firstChildRow.cells.toArray()[0];
 
             // select child cell
-            fChildCell.nativeElement.focus();
+            GridFunctions.focusCell(fix, fChildCell);
             fix.detectChanges();
 
             expect(fChildCell.selected).toBeTruthy();
@@ -82,7 +82,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             // select parent cell
             firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
-            fCell.nativeElement.focus();
+            GridFunctions.focusCell(fix, fCell);
             fix.detectChanges();
             expect(fChildCell.selected).toBeFalsy();
             expect(fCell.selected).toBeTruthy();

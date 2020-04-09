@@ -2,23 +2,25 @@
 
 # Current Milestone
 
-## Milestone 11 (Due by April, 2020)
+## Milestone 11 (Due by April 30th, 2020)
 
 1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
 2. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
-3. RTL Support across Ignite UI for Angular components [#5958](https://github.com/IgniteUI/igniteui-angular/issues/5958)
+3. Keyboard Navigation Enhancement [#6755](https://github.com/IgniteUI/igniteui-angular/issues/6755)
 4. Column freezing/Pinning on the right (igx-grid) [#5879](https://github.com/IgniteUI/igniteui-angular/issues/5879)
 5. Column Selection for IgxGrid [#6578](https://github.com/IgniteUI/igniteui-angular/issues/6578)
-6. Splitter IgxGrid [#6639](https://github.com/IgniteUI/igniteui-angular/issues/6639)
+6. Splitter [#6639](https://github.com/IgniteUI/igniteui-angular/issues/6639)
 7. Row Pinning IgxGrid [#6640](https://github.com/IgniteUI/igniteui-angular/issues/6640)
 8. Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
+9. Slider does not support RTL [#5212](https://github.com/igniteui/igniteui-angular/issues/5212)
+10. Circular Progress Indicator does not support RTL [#5903](https://github.com/igniteui/igniteui-angular/issues/5903)
 
 
 ## Going down the road
 
 1. Tile Manager
 2. Visual Cell merging
-
+3. RTL Support across Ignite UI for Angular components
 # Previous Milestones 
 
 ## Milestone 10 (Released February 10th, 2020)

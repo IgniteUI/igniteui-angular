@@ -256,9 +256,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(contactInfHeader.attributes['role']).toEqual('columnheader');
             expect(addressInfHeader.attributes['role']).toEqual('columnheader');
 
-            expect(contactInfHeader.attributes['tabindex']).toEqual('0');
-            expect(addressInfHeader.attributes['tabindex']).toEqual('0');
-
             expect(contactInfHeader.attributes['aria-label']).toEqual(contactInf.header);
             expect(addressInfHeader.attributes['aria-label']).toEqual(addressInf.header);
             expect(addressInfHeader.attributes['aria-expanded']).toEqual('true');
@@ -523,7 +520,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             contactNameCol.editable = true;
             fixture.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -544,9 +541,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             const cell = grid.getCellByColumn(0, 'Country');
-            fixture.detectChanges();
-
-            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
+            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);

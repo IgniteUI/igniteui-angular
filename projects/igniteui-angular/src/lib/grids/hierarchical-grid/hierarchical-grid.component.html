@@ -3,7 +3,8 @@
 </igx-grid-toolbar>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+    <div class="igx-grid__thead-wrapper"  tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
+     (keydown)="navigation.headerNavigation($event)" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -59,9 +60,9 @@
             </ng-template>
             <ng-container *ngIf="pinnedColumns.length > 0 && !isPinningToStart">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group 
-                        [column]="col" 
-                        [gridID]="id" 
+                    <igx-grid-header-group
+                        [column]="col"
+                        [gridID]="id"
                         [style.min-width]="getHeaderGroupWidth(col)"
                         [style.flex-basis]="getHeaderGroupWidth(col)"
                         [style.left]="col.rightPinnedOffset">
@@ -78,11 +79,12 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
+    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollWidth"></div>
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" (onDragStop)="selectionService.dragMode = $event"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant"
+     (keydown)="navigation.dispatchEvent($event)" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -119,8 +121,7 @@
             <ng-template
             [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
             [igxTemplateOutletContext]='getContext(rowData)' (onViewCreated)='viewCreatedHandler($event)'
-            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'
-            (onBeforeViewDetach)='viewDetachHandler($event)'></ng-template>
+            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -130,20 +131,21 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
+    <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
         [style.height.px]='calcHeight'>
         <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
     </div>
 </div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
+ (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
-        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0"
+        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
-    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight'
+    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
         [style.width.px]="scrollWidth"></div>
 </div>
 
@@ -231,6 +233,7 @@
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
+            [tabindex]="-1"
             [readonly]="true"
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
             disableRipple="true"
