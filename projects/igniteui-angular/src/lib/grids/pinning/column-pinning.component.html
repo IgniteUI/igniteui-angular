@@ -14,7 +14,7 @@
 <div class="igx-column-hiding__columns"
     [style.max-height]="columnsAreaMaxHeight">
     <igx-checkbox igxColumnPinningItem
-        *ngFor="let columnItem of columnItems"
+        *ngFor="let columnItem of pinnableColumns"
         class="igx-column-hiding__columns-item"
         (change)="checkboxValueChange($event, columnItem)"
         [checked]="columnItem.value">
