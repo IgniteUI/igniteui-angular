@@ -84,27 +84,6 @@ export class IgxSplitBarComponent {
     }
 
     /**
-     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
-     */
-    private initialPaneSize!: number;
-
-    /**
-     * A field that holds the initial size of the sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
-     */
-    private initialSiblingSize!: number;
-
-    /**
-     * The sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
-     */
-    private sibling!: IgxSplitterPaneComponent;
-
-    /**
      * @hidden
      * @internal
      */
