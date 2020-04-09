@@ -360,7 +360,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -796,7 +796,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
 
-            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
