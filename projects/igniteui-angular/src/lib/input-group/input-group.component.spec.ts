@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
@@ -178,7 +178,7 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
     });
 
-    it('should not fire focus and blur on prefix or suffix click', fakeAsync(() => {
+    it('should not fire focus and blur on prefix or suffix click', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
@@ -199,9 +199,15 @@ describe('IgxInputGroup', () => {
         Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
         inputGroup.onPointerDown(pointerEvent);
 
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+
+        inputGroup.isFocused = true;
+        inputGroup.onPointerDown(pointerEvent);
+
         expect(preventDefaultSpy).toHaveBeenCalled();
         expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-    }));
+    });
 });
 
 @Component({
