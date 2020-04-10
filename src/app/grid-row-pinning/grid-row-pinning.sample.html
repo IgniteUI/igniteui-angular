@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <app-page-header title="Grid Column Pinning">
+    <app-page-header title="Grid Row Pinning">
         Allows rows to be pinned to the beginning/end of the grid.
     </app-page-header>
     <button (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
@@ -23,8 +23,8 @@
                 [height]="'500px'" [rowSelectable]="false">
                 <igx-column width='70px' [filterable]='false'>
                     <ng-template igxCell let-cell="cell" let-val>
-                        <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
-                            {{cell.row.pinned ? 'lock' : 'lock_open'}}
+                        <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)"
+                        fontSet="filtering-icons" name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
                         </igx-icon>
                     </ng-template>
                 </igx-column>

@@ -7,7 +7,6 @@ import {
     HostBinding,
     AfterViewInit,
     ElementRef,
-    HostListener,
     OnInit,
     ChangeDetectionStrategy,
     DoCheck
@@ -16,7 +15,6 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
-import { KEYS } from '../../../core/utils';
 
 /**
  * @hidden
@@ -85,23 +83,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.updateFilterCellArea();
     }
 
-    @HostListener('keydown.tab', ['$event'])
-    public onTabKeyDown(eventArgs) {
-
-        if (this.isLastElementFocused()) {
-            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs);
-        }
-        eventArgs.stopPropagation();
-    }
-
-    @HostListener('keydown.shift.tab', ['$event'])
-    public onShiftTabKeyDown(eventArgs) {
-        if (this.isFirstElementFocused()) {
-            this.filteringService.grid.navigation.navigatePrevFilterCell(this.column, eventArgs);
-        }
-        eventArgs.stopPropagation();
-    }
-
     /**
      * Returns whether a chip with a given index is visible or not.
      */
@@ -168,14 +149,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             });
             this.expressionsList[0].isSelected = true;
         }
-
-        const index = this.filteringService.unpinnedFilterableColumns.indexOf(this.column);
-        if (index >= 0 && !this.isColumnRightVisible(index)) {
-            this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[index], true);
-        } else if (index >= 0 && !this.isColumnLeftVisible(index)) {
-            this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[index], false);
-        }
-
+        this.filteringService.grid.navigation.performHorizontalScrollToCell(this.column.visibleIndex);
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
         this.filteringService.selectedExpression = expression;
@@ -202,10 +176,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
      * Chip keydown event handler.
      */
     public onChipKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
-        if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
             this.onChipClicked(expression);
-        }
     }
 
     /**
@@ -294,24 +266,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             this.cdr.detectChanges();
         }
     }
-
-    private isFirstElementFocused(): boolean {
-        return !(this.chipsArea && this.chipsArea.chipsList.length > 0 &&
-            this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`) !== document.activeElement);
-    }
-
-    private isLastElementFocused(): boolean {
-        if (this.chipsArea) {
-            if (this.isMoreIconHidden() && this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`) !==
-                document.activeElement) {
-                return false;
-            } else if (!this.isMoreIconHidden() && this.moreIcon.nativeElement !== document.activeElement) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private focusFirstElement(): void {
         if (this.chipsArea.chipsList.length > 0) {
             this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
@@ -334,34 +288,5 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
                 this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`).focus();
             }
         }
-    }
-
-    private isColumnRightVisible(columnIndex: number): boolean {
-        if (this.filteringService.areAllColumnsInView) {
-            return true;
-        }
-        let currentColumnRight = 0;
-        for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
-            currentColumnRight += parseInt(this.filteringService.unpinnedColumns[index].width, 10);
-            if (this.filteringService.unpinnedColumns[index] === this.filteringService.unpinnedFilterableColumns[columnIndex]) {
-                break;
-            }
-        }
-        const width = this.filteringService.displayContainerWidth + this.filteringService.displayContainerScrollLeft;
-        return currentColumnRight <= width;
-    }
-
-    private isColumnLeftVisible(columnIndex: number): boolean {
-        if (this.filteringService.areAllColumnsInView) {
-            return true;
-        }
-        let currentColumnLeft = 0;
-        for (let index = 0; index < this.filteringService.unpinnedColumns.length; index++) {
-            if (this.filteringService.unpinnedColumns[index] === this.filteringService.unpinnedFilterableColumns[columnIndex]) {
-                break;
-            }
-            currentColumnLeft += parseInt(this.filteringService.unpinnedColumns[index].width, 10);
-        }
-        return currentColumnLeft >= this.filteringService.displayContainerScrollLeft;
     }
 }

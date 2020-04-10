@@ -98,7 +98,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childCell =  childGrid.getCellByColumn(0, 'ID');
-        childCell.nativeElement.focus();
+        GridFunctions.focusCell(fixture, childCell);
         fixture.detectChanges();
 
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
