@@ -665,6 +665,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
+    @ContentChild(IgxInputGroupComponent)
+    protected inputGroupUserTemplate: IgxInputGroupComponent;
+
     @ViewChild(IgxInputDirective, { read: ElementRef })
     private _inputElementRef: ElementRef;
 
@@ -799,7 +802,13 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * @hidden @internal
      */
     public getInputGroupElement() {
-        return this.inputGroup ? this.inputGroup.element.nativeElement : null;
+        if (this.inputGroup) {
+            return this.inputGroup.element.nativeElement;
+        }
+        if (this.inputGroupUserTemplate) {
+            return this.inputGroupUserTemplate.element.nativeElement;
+        }
+        return null;
     }
 
     /**

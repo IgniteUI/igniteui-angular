@@ -66,7 +66,7 @@ All notable changes for each version of this project will be documented in this 
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
 - `IgxInputGroup`:
-    - clicking on the `prefix` or `suffix` of input group will not trigger `blur` and `focus` event. Also if the input group is focused clicking on it will not trigger `blur` and `focus` events.
+    - Clicking on prefix, suffix or label elements in the Input Group will no longer blur and re-focus the input.
 - `IgxDrag`
     - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
     - New `dragDirection` input that can specify only one direction of dragging or both.
