@@ -3439,7 +3439,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned);
+        return this.rowList.filter(x => x.pinned && !x.disabled);
     }
 
     /**
@@ -5164,7 +5164,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf;
+        return this.verticalScrollContainer.igxForOf.map(rec => this.isGhostRecord(rec) ? rec.recordRef : rec) ;
     }
 
     /**
