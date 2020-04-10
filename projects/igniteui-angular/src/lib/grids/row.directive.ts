@@ -67,6 +67,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     @Input()
+    @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-grid__tr--disabled')
     public disabled = false;
 
