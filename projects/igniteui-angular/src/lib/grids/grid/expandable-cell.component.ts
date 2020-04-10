@@ -98,4 +98,12 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
             return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
+
+    /**
+     * @hidden
+     */
+    public get showIndicator() {
+        const isGhost = this.row.pinned && this.row.disabled;
+        return !this.editMode && (!this.row.pinned || isGhost);
+    }
 }

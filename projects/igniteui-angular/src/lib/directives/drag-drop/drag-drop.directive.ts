@@ -20,14 +20,13 @@
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
-import { IgxDragHandleDirective } from './drag-handle.directive';
 import { IBaseEventArgs } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
-export enum RestrictDrag {
-    VERTICALLY,
-    HORIZONTALLY,
-    NONE
+export enum DragDirection {
+    VERTICAL,
+    HORIZONTAL,
+    BOTH
 }
 
 export interface IgxDragCustomEventDetails {
@@ -145,6 +144,28 @@ export class IgxDragLocation {
 }
 
 @Directive({
+    selector: '[igxDragHandle]'
+})
+export class IgxDragHandleDirective {
+
+    @HostBinding('class.igx-drag__handle')
+    public baseClass = true;
+
+    constructor(public element: ElementRef<any>) {}
+}
+
+@Directive({
+    selector: '[igxDragIgnore]'
+})
+export class IgxDragIgnoreDirective {
+
+    @HostBinding('class.igx-drag__ignore')
+    public baseClass = true;
+
+    constructor(public element: ElementRef<any>) {}
+}
+
+@Directive({
     exportAs: 'drag',
     selector: '[igxDrag]'
 })
@@ -174,6 +195,22 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public dragTolerance = 5;
+
+    /**
+     * An @Input property that indicates the directions that the element can be dragged.
+     * By default it is set to both horizontal and vertical directions.
+     * ```html
+     * <div igxDrag [dragDirection]="dragDir">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * public dragDir = DragDirection.HORIZONTAL;
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public dragDirection = DragDirection.BOTH;
 
     /**
      * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
@@ -415,6 +452,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @ContentChildren(IgxDragHandleDirective)
     public dragHandles: QueryList<IgxDragHandleDirective>;
 
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxDragIgnoreDirective)
+    public dragIgnoredElems: QueryList<IgxDragIgnoreDirective>;
 
     /**
      * @hidden
@@ -777,6 +819,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param event PointerDown event captured
      */
     public onPointerDown(event) {
+        const ignoredElement = this.dragIgnoredElems.find(elem => elem.element.nativeElement === event.target);
+        if (ignoredElement) {
+            return;
+        }
+
         this._clicked = true;
         this._pointerDownId = event.pointerId;
 
@@ -882,16 +929,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
             const setPageX = moveArgs.nextPageX;
             const setPageY = moveArgs.nextPageY;
-            const updatedMovedX = setPageX - this._startX;
-            const updatedMovedY = setPageY - this._startY;
-
             if (!moveArgs.cancel) {
                 if (this.ghost) {
-                    this.ghostLeft = this._ghostStartX + updatedMovedX;
-                    this.ghostTop = this._ghostStartY + updatedMovedY;
+                    const updatedTotalMovedX = this.dragDirection === DragDirection.VERTICAL ? 0 : setPageX - this._startX;
+                    const updatedTotalMovedY = this.dragDirection === DragDirection.HORIZONTAL ? 0 : setPageY - this._startY;
+                    this.ghostLeft = this._ghostStartX + updatedTotalMovedX;
+                    this.ghostTop = this._ghostStartY + updatedTotalMovedY;
                 } else {
-                    const lastMovedX = setPageX - this._lastX;
-                    const lastMovedY = setPageY - this._lastY;
+                    const lastMovedX = this.dragDirection === DragDirection.VERTICAL ? 0 : setPageX - this._lastX;
+                    const lastMovedY = this.dragDirection === DragDirection.HORIZONTAL ? 0 : setPageY - this._lastY;
                     const translateX = this.getTransformX(this.element.nativeElement) + lastMovedX;
                     const translateY = this.getTransformY(this.element.nativeElement) + lastMovedY;
                     this.setTransformXY(translateX, translateY);
@@ -1641,7 +1687,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective],
-    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective]
+    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective],
+    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 export class IgxDragDropModule { }

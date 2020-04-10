@@ -107,6 +107,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     public cellTemplate: TemplateRef<any>;
 
+    @Input()
+    public pinnedIndicator: TemplateRef<any>;
+
     /**
      * Sets/gets the cell value.
      * ```typescript
@@ -186,6 +189,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return this.cellTemplate;
         }
         return this.defaultCellTemplate;
+    }
+
+    /**
+     * Gets the cell template.
+     * ```typescript
+     * let template = this.cell.template;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    get pinnedIndicatorTemplate() {
+        if (this.pinnedIndicator) {
+            return this.pinnedIndicator;
+        }
+        return this.defaultPinnedIndicator;
     }
 
     /**
@@ -382,7 +399,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
-        return !this.column.editable;
+        return !this.editable;
     }
 
     get gridRowSpan(): number {
@@ -524,7 +541,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * Returns whether the cell is editable.
      */
     get editable(): boolean {
-        return this.column.editable;
+        return this.column.editable && !this.row.disabled;
+    }
+
+    /**
+     * @hidden
+     */
+    public get displayPinnedChip() {
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0;
     }
 
     /**
@@ -536,6 +560,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultPinnedIndicator', { read: TemplateRef, static: true })
+    protected defaultPinnedIndicator: TemplateRef<any>;
 
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
@@ -1044,7 +1071,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.isInCompositionMode) {
             return;
         }
-        if (this.column.editable && !this.row.deleted) {
+        if (this.editable && !this.row.deleted) {
             if (this.editMode) {
                 this.grid.endEdit(true);
                 this.nativeElement.focus();

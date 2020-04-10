@@ -1,4 +1,4 @@
-<div (click)="expanderClick($event)" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+<div (click)="expanderClick($event)" [ngClass]="expanderClassResolved" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
 </div>
@@ -71,7 +71,7 @@
             [readonly]="true"
             [checked]="selected"
             disableRipple="true"
-            [disabled]="deleted"
+            [disabled]="disabled || deleted"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">
         </igx-checkbox>

@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
@@ -13,7 +13,6 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
 import { IgxIconModule } from '../../icon';
-import { GridSelectionMode } from '../common/enums';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridTestCustomToolbarComponent
@@ -21,11 +20,13 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridToolbarComponent } from '../toolbar/grid-toolbar.component';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
+import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     configureTestSuite();
-    let fixture;
+    let fixture: ComponentFixture<any>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
     const DEBOUNCE_TIME = 30;
@@ -165,7 +166,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
             fixture.detectChanges();
-            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
             const lastRow = rows[rows.length - 1];
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
@@ -752,5 +753,238 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // Expects that the whole pinned column is visible
             expect(leftMostRightPinnedCellsPart + Number.parseInt(pinnedCellWidth, 10)).toBeLessThan(rightMostGridPart);
         }));
+    });
+
+    describe('Row Pinning', () => {
+        const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned';
+        const FIXED_ROW_CONTAINER_TOP = 'igx-grid__tr--pinned-top';
+        const FIXED_ROW_CONTAINER_BOTTOM = 'igx-grid__tr--pinned-bottom';
+        beforeEach(() => {
+            hierarchicalGrid.width = '800px';
+            hierarchicalGrid.height = '500px';
+            fixture.detectChanges();
+        });
+
+        it('should pin rows to top ', (() => {
+            hierarchicalGrid.pinRow('0');
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_TOP)).toBeTruthy();
+            expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_BOTTOM)).toBeFalsy();
+
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('2');
+
+            hierarchicalGrid.pinRow('2');
+            fixture.detectChanges();
+
+            pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
+            expect(pinRowContainer[0].children[1].context.rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(4).rowID).toBe('2');
+
+            expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
+            const expectedHeight = parseInt(hierarchicalGrid.height, 10) -
+                hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
+            expect(hierarchicalGrid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+        }));
+
+        it('should pin rows to bottom', (() => {
+            fixture.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fixture.detectChanges();
+
+            // Pin 2nd row
+            hierarchicalGrid.pinRow('1');
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer.length).toBe(1);
+            expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_TOP)).toBeFalsy();
+            expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_BOTTOM)).toBeTruthy();
+
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
+            expect(pinRowContainer[0].children[0].context.index).toBe(fixture.componentInstance.data.length);
+            expect(pinRowContainer[0].children[0].nativeElement)
+                .toBe(hierarchicalGrid.getRowByIndex(fixture.componentInstance.data.length).nativeElement);
+
+            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+
+            // Pin 1st row
+            hierarchicalGrid.pinRow('0');
+            fixture.detectChanges();
+
+            pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
+            expect(pinRowContainer[0].children[1].context.rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+
+            // Check last pinned is fully in view
+            const last = pinRowContainer[0].children[1].context.nativeElement;
+            expect(last.getBoundingClientRect().bottom - hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);
+
+            // 2 records pinned + 2px border
+            expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
+            const expectedHeight = parseInt(hierarchicalGrid.height, 10) -
+                hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
+            expect(hierarchicalGrid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+        }));
+
+        xit('should search in both pinned and unpinned rows.', () => {
+            let findCount = hierarchicalGrid.findNext('Product: A0');
+            fixture.detectChanges();
+
+            let spans = fixture.debugElement.queryAll(By.css('.igx-highlight'));
+            expect(spans.length).toBe(1);
+            expect(findCount).toEqual(1);
+
+            // Pin 3rd row
+            hierarchicalGrid.pinRow('2');
+            fixture.detectChanges();
+            expect(hierarchicalGrid.pinnedRows.length).toBe(2);
+
+            findCount = hierarchicalGrid.findNext('Product: A0');
+            fixture.detectChanges();
+
+            spans = fixture.debugElement.queryAll(By.css('.igx-highlight'));
+            expect(spans.length).toBe(2);
+            expect(findCount).toEqual(2);
+        });
+
+        it('should apply filtering to both pinned and unpinned rows.', () => {
+            hierarchicalGrid.pinRow('1');
+            fixture.detectChanges();
+            hierarchicalGrid.pinRow('5');
+            fixture.detectChanges();
+
+            let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(2);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
+            expect(pinRowContainer[0].children[1].context.rowID).toBe('5');
+
+            hierarchicalGrid.filter('ID', '5', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fixture.detectChanges();
+
+            const allRows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
+            pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children.length).toBe(1);
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('5');
+            expect(allRows[1].componentInstance.rowID).toEqual('5');
+        });
+
+        it('should render paging with correct data and rows be correctly paged.', () => {
+            hierarchicalGrid.paging = true;
+            hierarchicalGrid.perPage = 5;
+            hierarchicalGrid.height = '700px';
+            fixture.detectChanges();
+
+            let rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
+            const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent));
+            expect(rows.length).toEqual(5);
+            expect(paginator.componentInstance.perPage).toEqual(5);
+            expect(paginator.componentInstance.totalPages).toEqual(8);
+
+            hierarchicalGrid.pinRow('1');
+            fixture.detectChanges();
+
+            rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
+            expect(rows.length).toEqual(6);
+            expect(paginator.componentInstance.perPage).toEqual(5);
+            expect(paginator.componentInstance.totalPages).toEqual(8);
+
+            hierarchicalGrid.pinRow('3');
+            fixture.detectChanges();
+
+            rows = HierarchicalGridFunctions.getHierarchicalRows(fixture);
+            expect(rows.length).toEqual(7);
+            expect(paginator.componentInstance.perPage).toEqual(5);
+            expect(paginator.componentInstance.totalPages).toEqual(8);
+        });
+
+        it('should apply sorting to both pinned and unpinned rows.', () => {
+            hierarchicalGrid.pinRow('1');
+            hierarchicalGrid.pinRow('3');
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('3');
+
+            hierarchicalGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fixture.detectChanges();
+
+            // check pinned rows data is sorted
+            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('3');
+            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
+
+            // check unpinned rows data is sorted
+            const lastIndex = fixture.componentInstance.data.length - 1;
+            // Expect 9 since it is a string.
+            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
+        });
+
+        it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async() => {
+            hierarchicalGrid.pinRow('1');
+            fixture.detectChanges();
+
+            let range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'ChildLevels' };
+            hierarchicalGrid.selectRange(range);
+            fixture.detectChanges();
+
+            let selectedData = hierarchicalGrid.getSelectedData();
+            expect(selectedData).toEqual([{ID: '1', ChildLevels: 3}, {ID: '0', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
+
+            fixture.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fixture.detectChanges();
+
+            hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
+            await wait();
+
+            range = { rowStart: 38, rowEnd: 40, columnStart: 'ID', columnEnd: 'ChildLevels' };
+            hierarchicalGrid.clearCellSelection();
+            hierarchicalGrid.selectRange(range);
+            fixture.detectChanges();
+
+            selectedData = hierarchicalGrid.getSelectedData();
+            expect(selectedData).toEqual([{ID: '38', ChildLevels: 3}, {ID: '39', ChildLevels: 3}, {ID: '1', ChildLevels: 3}]);
+        });
+
+        it('should return correct filterData collection after filtering.', () => {
+            hierarchicalGrid.pinRow('1');
+            hierarchicalGrid.pinRow('11');
+            fixture.detectChanges();
+
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fixture.detectChanges();
+
+            let gridFilterData = hierarchicalGrid.filteredData;
+            expect(gridFilterData.length).toBe(15);
+            expect(gridFilterData[0].ID).toBe('1');
+            expect(gridFilterData[1].ID).toBe('11');
+            expect(gridFilterData[2].ID).toBe('1');
+
+            fixture.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fixture.detectChanges();
+
+            gridFilterData = hierarchicalGrid.filteredData;
+            expect(gridFilterData.length).toBe(15);
+            expect(gridFilterData[0].ID).toBe('1');
+            expect(gridFilterData[1].ID).toBe('11');
+            expect(gridFilterData[2].ID).toBe('1');
+        });
     });
 });

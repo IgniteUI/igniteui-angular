@@ -2640,6 +2640,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden @internal
+     */
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRecord !== undefined;
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
+    }
+
+    /**
      * @hidden
      * @internal
      */
@@ -3420,7 +3439,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned);
+        return this.rowList.filter(x => x.pinned && !x.disabled);
     }
 
     /**
@@ -5145,7 +5164,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf;
+        return this.verticalScrollContainer.igxForOf.map(rec => this.isGhostRecord(rec) ? rec.recordRef : rec) ;
+    }
+
+    /**
+     * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get pinnedDataView(): any[] {
+        return this.pinnedRows.map(row => row.rowData);
     }
 
     /**
@@ -5353,8 +5383,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray.forEach((col) => {
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
-                        record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
-                            : source[row][col.field];
+                        const value = source[row].ghostRecord ? source[row].recordRef[col.field] : source[row][col.field];
+                        record[key] = formatters && col.formatter ? col.formatter(value) : value;
                     }
                 });
             }
@@ -5389,7 +5419,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

@@ -1,7 +1,7 @@
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
-     OnInit, HostListener, NgZone } from '@angular/core';
+     OnInit, HostListener, NgZone, HostBinding } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
@@ -11,11 +11,10 @@ import { PlatformUtil } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-cell',
-    templateUrl: './../cell.component.html',
+    templateUrl: '../cell.component.html',
     providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
-
     // protected hSelection;
     protected _rootGrid;
 
