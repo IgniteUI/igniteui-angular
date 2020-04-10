@@ -480,11 +480,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /** @hidden @internal */
-    public inputGroupPrefixClick(event: MouseEvent, target: any) {
-        event.stopPropagation();
-        // TODO: try to get the target from the event
-        target.focus();
-        this.toggleConditionsDropDown(target);
+    public inputGroupPrefixClick(event: MouseEvent) {
+        event.preventDefault();
+        (event.currentTarget as any).focus();
+        this.toggleConditionsDropDown(event.currentTarget);
     }
 
     /**

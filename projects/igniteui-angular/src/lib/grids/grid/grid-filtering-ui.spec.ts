@@ -1255,7 +1255,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const prefix = GridFunctions.getFilterRowPrefix(fix);
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', { stopPropagation: () => {} });
+            prefix.triggerEventHandler('click', { preventDefault: () => {} });
             tick(100);
             fix.detectChanges();
 
@@ -1263,7 +1263,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             // Click prefix again to close conditions dropdown
-            prefix.triggerEventHandler('click', { stopPropagation: () => {} });
+            prefix.triggerEventHandler('click', { preventDefault: () => {} });
             tick(100);
             fix.detectChanges();
 
@@ -1277,7 +1277,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const prefix = GridFunctions.getFilterRowPrefix(fix);
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', { stopPropagation: () => {} });
+            prefix.triggerEventHandler('click', { preventDefault: () => {} });
             tick(100);
             fix.detectChanges();
 
