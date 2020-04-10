@@ -13,16 +13,8 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponent> implements DoCheck {
     private _treeRow: ITreeGridRecord;
 
-    /**
-     * The rendered cells in the row component.
-     *
-     * ```typescript
-     * const row = this.grid.getRowByKey(1);
-     * const cells = row.cells;
-     * ```
-     */
     @ViewChildren('treeCell')
-    public cells: QueryList<any>;
+    protected _cells: QueryList<any>;
 
     /**
      * The `ITreeGridRecord` passed to the row component.

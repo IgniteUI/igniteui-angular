@@ -1,0 +1,57 @@
+@import '../shape/splitter';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light splitter schema.
+/// @type {Map}
+/// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for splitters of type icon.
+/// @property {Map} icon-color [igx-color: ('grays', 800)] - The icon color used for splitters of type icon.
+/// @property {Map} initials-background [igx-color: ('grays', 400)] - The background color used for splitters of type initials.
+/// @property {Map} initials-color [igx-color: ('grays', 800)] - The text color used for splitters of type initials.
+/// @property {Color} image-background [transparent] - The background color used for splitters of type image.
+/// @see $default-palette
+$_light-splitter: extend(
+    $_default-shape-splitter,
+    (
+        bar-color: (
+            igx-color: 'surface',
+            darken: 5%
+        ),
+
+        handle-color: (
+            igx-color: 'surface',
+            darken: 20%
+        ),
+
+        expander-color: (
+            igx-color: 'surface',
+            darken: 20%
+        ),
+
+        size: 4px
+    )
+);
+
+/// Generates a fluent splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-splitter
+$_fluent-splitter: extend($_light-splitter);
+
+/// Generates a bootstrap splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-splitter
+/// @requires $_bootstrap-shape-splitter
+$_bootstrap-splitter: extend(
+    $_light-splitter,
+    $_bootstrap-shape-splitter,
+    (
+        variant: 'bootstrap',
+    )
+);
+

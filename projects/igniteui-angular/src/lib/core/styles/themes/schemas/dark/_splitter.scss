@@ -1,0 +1,39 @@
+@import '../light/splitter';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-splitter
+$_dark-splitter: extend(
+    $_light-splitter,
+    (
+        handle-color: (
+            igx-color: 'surface',
+            lighten: 20%
+        ),
+
+        expander-color: (
+            igx-color: 'surface',
+            lighten: 20%
+        ),
+    )
+);
+
+/// Generates a fluent splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-splitter
+$_dark-fluent-splitter: extend($_fluent-splitter);
+
+/// Generates a bootstrap splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-splitter
+$_dark-bootstrap-splitter: extend($_bootstrap-splitter);
+
