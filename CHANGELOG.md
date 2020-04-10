@@ -13,6 +13,21 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `igxSplitter` component added.
+    - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
+        Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
+
+     ```html
+   <igx-splitter [type]="type">
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+    </igx-splitter>
+    ```
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added ability to pin rows to top or bottom depending on the new `pinning` input.
     And new API methods `pinRow` and `unpinRow`.
@@ -52,6 +67,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxInputGroup`:
     - clicking on the `prefix` or `suffix` of input group will not trigger `blur` and `focus` event. Also if the input group is focused clicking on it will not trigger `blur` and `focus` events.
+- `IgxDrag`
+    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - New `dragDirection` input that can specify only one direction of dragging or both.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.

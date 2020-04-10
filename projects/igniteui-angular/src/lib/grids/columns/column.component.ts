@@ -45,7 +45,6 @@ import {
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
-import { IgxGridSelectionService } from '../selection/selection.service';
 
 /**
  * **Ignite UI for Angular Column** -
