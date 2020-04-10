@@ -14,7 +14,7 @@ $igx-foreground-color: text-contrast($igx-background-color);
 
 body {
     background: $igx-background-color;
-    color: #222;
+    color: rgba($igx-foreground-color, .87);
 }
 
 @include igx-core($direction: ltr);
