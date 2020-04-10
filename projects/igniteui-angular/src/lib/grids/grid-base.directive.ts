@@ -3438,8 +3438,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const pinnedRow = this.grid.pinnedRows;
      * ```
      */
-    get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned);
+    get pinnedRows() {
+        return this.rowList.filter(x => x.pinned && !x.disabled);
     }
 
     /**
