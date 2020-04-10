@@ -19,7 +19,6 @@ import { IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 

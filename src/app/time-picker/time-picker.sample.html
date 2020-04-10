@@ -67,7 +67,7 @@
                     <ng-template igxTimePickerTemplate
                                  let-openDialog="openDialog"
                                  let-value="value">
-                        <igx-input-group>
+                        <igx-input-group [supressInputAutofocus]="true">
                             <label igxLabel>Required</label>
                             <igx-prefix (click)="openDialog()">
                                 <igx-icon>access_time</igx-icon>
