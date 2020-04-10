@@ -462,8 +462,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             cancelButtonElement.focus();
             await wait(DEBOUNCETIME);
             // UIInteractions.triggerKeyDownEvtUponElem('tab', cancelButtonElement, true);
-            //grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab'));
-            //await wait();
+            // grid.rowEditTabs.first.handleTab(UIInteractions.getKeyboardEvent('keydown', 'tab'));
+            // await wait();
             fix.detectChanges();
 
             // move to FIRST editable cell
