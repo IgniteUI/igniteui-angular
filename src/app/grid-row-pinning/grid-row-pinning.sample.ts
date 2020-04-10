@@ -10,6 +10,10 @@ import {
     IgxExcelExporterOptions
 } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
+import { IgxIconService } from 'projects/igniteui-angular/src/lib/icon/icon.service';
+import icons from 'projects/igniteui-angular/src/lib/grids/filtering/svgIcons';
+
+const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
 @Component({
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
@@ -39,7 +43,7 @@ export class GridRowPinningSampleComponent implements OnInit {
 
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
 
-    constructor(private excelExportService: IgxExcelExporterService) {
+    constructor(private excelExportService: IgxExcelExporterService, private iconService: IgxIconService) {
     }
 
     onRowChange() {
@@ -106,6 +110,15 @@ export class GridRowPinningSampleComponent implements OnInit {
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
         // tslint:enable:max-line-length
+    }
+
+    ngAfterViewInit() {
+        const pinnedIcons = icons.filter(icon => icon.name === 'pin' || icon.name === 'unpin');
+        for (const icon of pinnedIcons) {
+            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
+                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+            }
+        }
     }
 
     togglePinRow(index) {
