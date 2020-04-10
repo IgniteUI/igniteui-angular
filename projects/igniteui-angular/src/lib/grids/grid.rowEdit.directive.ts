@@ -32,7 +32,7 @@ export class IgxRowEditTabStopDirective {
 
     constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
 
-    get grid(): GridType {
+    get grid() {
         return this.api.grid;
     }
 
@@ -50,14 +50,7 @@ export class IgxRowEditTabStopDirective {
     @HostListener('keydown.Escape', [`$event`])
     public handleEscape(event: KeyboardEvent): void {
         this.grid.endEdit(false, event);
-        const activeNode = this.grid.selectionService.activeElement;
-        //  on right click activeNode is deleted, so we may have no one
-        if (activeNode) {
-            const cell = this.grid.navigation.getCellElementByVisibleIndex(
-                activeNode.row,
-                activeNode.layout ? activeNode.layout.columnVisibleIndex : activeNode.column);
-            cell.focus();
-        }
+        this.grid.nativeElement.focus();
     }
 
     /**
@@ -68,22 +61,11 @@ export class IgxRowEditTabStopDirective {
     private move(event: KeyboardEvent) {
         event.preventDefault();
         this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        if (!this.grid.navigation.isColumnFullyVisible(this.currentCellIndex)) {
-            this.grid.navigation.performHorizontalScrollToCell(
-                this.grid.rowInEditMode.index, this.currentCellIndex, false, this.activateCell);
-        } else {
-            this.activateCell();
-        }
-    }
-
-    /**
-     * Sets the cell in edit mode and focus its native element
-     * @param cellIndex index of the cell to activate
-     */
-    private activateCell = (): void => {
-        const cell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === this.currentCellIndex);
-        cell.nativeElement.focus();
-        cell.setEditMode(true);
-        this.currentCellIndex = -1;
+        this.grid.navigation.activeNode.row = this.grid.rowInEditMode.index;
+        this.grid.navigation.activeNode.column = this.currentCellIndex;
+        this.grid.navigateTo(this.grid.rowInEditMode.index, this.currentCellIndex, (obj) => {
+            obj.target.setEditMode(true);
+            this.grid.cdr.detectChanges();
+        });
     }
 }

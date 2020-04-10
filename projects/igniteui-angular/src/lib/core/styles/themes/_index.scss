@@ -39,6 +39,7 @@
 @import '../components/switch/switch-theme';
 @import '../components/snackbar/snackbar-theme';
 @import '../components/slider/slider-theme';
+@import '../components/splitter/splitter-theme';
 @import '../components/ripple/ripple-theme';
 @import '../components/radio/radio-theme';
 @import '../components/progress/progress-theme';
@@ -200,6 +201,14 @@
             $schema,
             $border-radius: $roundness,
             $button-shadow: if($elevation == false, none, null),
+        ));
+    }
+
+    @if not(index($exclude, 'igx-splitter')) {
+        @include igx-splitter(igx-splitter-theme(
+            $palette,
+            $schema,
+            $border-radius: $roundness,
         ));
     }
 
