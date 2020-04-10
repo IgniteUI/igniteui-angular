@@ -706,6 +706,10 @@
                 @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
             }
         }
+
+        @include e(td, $m: pinned-chip) {
+            @extend %grid-cell--pinned-chip--cosy !optional;
+        }
     }
 
     @include m(compact) {
@@ -810,6 +814,10 @@
             @include e(tree-cell, $m: padding-level-#{$i}) {
                 @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
             }
+        }
+
+        @include e(td, $m: pinned-chip) {
+            @extend %grid-cell--pinned-chip--compact !optional;
         }
     }
 
