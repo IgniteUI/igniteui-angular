@@ -520,10 +520,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return record.childGridsData !== undefined;
     }
 
-    public isGhostRecord(record: any): boolean {
-        return record.ghostRecord !== undefined;
-    }
-
     /**
      * @hidden
      */
@@ -567,18 +563,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 disabled: this.isGhostRecord(rowData)
             };
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public getRowIndex(rowIndex, pinned) {
-        if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
-        } else if (!pinned && this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.pinnedRecordsCount;
-        }
-        return rowIndex;
     }
 
     /**

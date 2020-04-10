@@ -93,10 +93,14 @@ export class IgxGridHierarchicalRowPinning implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
 
-    public transform(collection: any[], pinnedArea: boolean, pipeTrigger: number): any[] {
+    public transform(collection: any[], isPinned: boolean, pipeTrigger: number): any[] {
         const grid = this.gridAPI.grid;
 
-        if (grid.hasPinnedRecords && pinnedArea) {
+        if (!grid.hasPinnedRecords) {
+            return isPinned ? [] : collection;
+        }
+
+        if (grid.hasPinnedRecords && isPinned) {
             return collection.filter(rec => grid.isRecordPinned(rec));
         }
 

@@ -602,9 +602,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-   public isDetailRecord(record) {
-    return record.detailsData !== undefined;
-   }
+    public isDetailRecord(record) {
+        return record.detailsData !== undefined;
+    }
+
     /**
      * @hidden @internal
      */
@@ -854,9 +855,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         return {
-            $implicit: rowData,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: rowIndex,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            disabled: this.isGhostRecord(rowData)
         };
     }
 

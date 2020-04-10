@@ -2640,6 +2640,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden @internal
+     */
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRecord !== undefined;
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
+    }
+
+    /**
      * @hidden
      * @internal
      */
