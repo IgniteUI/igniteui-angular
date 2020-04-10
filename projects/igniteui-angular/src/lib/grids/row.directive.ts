@@ -67,6 +67,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     @Input()
+    @HostBinding('attr.aria-disabled')
     @HostBinding('class.igx-grid__tr--disabled')
     public disabled = false;
 
@@ -79,6 +80,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
     }
+
     /**
      * Sets whether the row is pinned.
      * Default value is `false`.
