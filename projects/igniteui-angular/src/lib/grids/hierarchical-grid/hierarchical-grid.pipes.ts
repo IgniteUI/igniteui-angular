@@ -35,12 +35,8 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
     public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[]): T[] {
         const result = [];
 
-        data.forEach((v: any) => {
+        data.forEach((v) => {
             result.push(v);
-            if (v.ghostRecord !== undefined) {
-                v = v.recordRef;
-            }
-
             const childGridsData = {};
             childKeys.forEach((childKey) => {
                 const childData = v[childKey] ? v[childKey] : null;

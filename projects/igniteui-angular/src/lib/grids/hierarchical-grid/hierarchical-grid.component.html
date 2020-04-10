@@ -116,10 +116,10 @@
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
-        | gridHierarchicalRowPinning:false:pipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger"
+        | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
+        | gridHierarchicalRowPinning:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
