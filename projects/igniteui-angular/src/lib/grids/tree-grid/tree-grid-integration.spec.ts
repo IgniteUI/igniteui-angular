@@ -1556,8 +1556,36 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.getRowByIndex(2).rowID).toBe(847);
         });
 
-        it('should not take into account pinned rows when changing items per page', () => {});
+        it('should not take into account pinned rows when changing items per page', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
 
-        it('should make a correct selection', () => {});
+            treeGrid.paging = true;
+            treeGrid.perPage = 5;
+            fix.detectChanges();
+
+            expect(treeGrid.dataView.length).toBe(5);
+
+            treeGrid.perPage = 10;
+            fix.detectChanges();
+
+            expect(treeGrid.dataView.length).toBe(10);
+        });
+
+        it('should make a correct selection', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            const range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'Name' };
+            treeGrid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedRange = treeGrid.getSelectedData();
+            expect(selectedRange).toEqual([
+                {ID: 147, Name: 'John Winchester'},
+                {ID: 147, Name: 'John Winchester'},
+                {ID: 475, Name: 'Michael Langdon'},
+            ]);
+        });
     });
 });
