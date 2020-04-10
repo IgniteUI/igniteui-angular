@@ -169,8 +169,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        // there is a single case whe we should focus the input - when it is not focused,
-        // suppressInputAutofocus is false and the target of the event is not the input.
         if (!this.isFocused && event.target !== this.input.nativeElement && !this._supressInputAutofocus) {
             this.input.focus();
         }
@@ -179,19 +177,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('pointerdown', ['$event'])
     public onPointerDown(event: PointerEvent) {
-        // we should take care of whether input is focused, whether pointer is on input and value
-        // of suppressInputAutofocus. There is a two cases when we should call prevent default:
-        //   - input is not focused, suppressInputAutofocus is set to true and pointer is on the
-        //     input. We should prevent default as this is the only way here to stop focusing of
-        //     the input.
-        //   - input is focused, suppressInputAutofocus is set to false and pointer is not on the
-        //     input. We should prevent default otherwise we will reach the click event and we
-        //     should move there focus on the input => a lot of flickering.
-        // All other cases are handled in onClick event
-        if (!this.isFocused && this._supressInputAutofocus && event.target === this.input.nativeElement) {
-            event.preventDefault();
-        }
-        if (this.isFocused && !this._supressInputAutofocus && event.target !== this.input.nativeElement) {
+        if (this.isFocused && event.target !== this.input.nativeElement) {
             event.preventDefault();
         }
     }
