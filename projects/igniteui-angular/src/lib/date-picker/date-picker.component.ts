@@ -414,7 +414,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             mode: this.mode,
             specialDates: this.specialDates,
             value: this.value,
-            openDialog: (target?: HTMLElement) => this.openDialog(target)
+            openDialog: () => this.openDialog()
         };
     }
 
@@ -784,7 +784,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event: KeyboardEvent) {
-        this.openDialog(this.getInputGroupElement());
+        this.openDialog();
         event.preventDefault();
     }
 
@@ -975,11 +975,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    public onInputGroupClick(event: MouseEvent, target?: HTMLElement) {
-        // TODO: should we call stopPropagation here?
-        this.openDialog(target);
-    }
-
     /**
      * Opens the date picker drop down or dialog.
      * @param target HTMLElement - the target element to use for positioning the drop down container according to
@@ -988,7 +983,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * this.datePicker.openDialog(target);
      * ```
      */
-    public openDialog(target?: HTMLElement): void {
+    public openDialog(): void {
         if (!this.collapsed) {
             return;
         }
@@ -1003,6 +998,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             }
             case InteractionMode.DropDown: {
                 this.hasHeader = false;
+                const target = this.getInputGroupElement();
                 if (target) {
                     this.dropDownOverlaySettings.positionStrategy.settings.target = target;
                 }
@@ -1097,7 +1093,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.openDialog(this.getInputGroupElement());
+                    this.openDialog();
                 } else {
                     event.preventDefault();
                     event.stopPropagation();
