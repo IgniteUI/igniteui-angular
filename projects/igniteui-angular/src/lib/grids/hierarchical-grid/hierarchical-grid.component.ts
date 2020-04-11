@@ -520,10 +520,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return record.childGridsData !== undefined;
     }
 
-    public isGhostRecord(record: any): boolean {
-        return record.ghostRecord !== undefined;
-    }
-
     /**
      * @hidden
      */

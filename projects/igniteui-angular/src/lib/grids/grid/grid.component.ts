@@ -853,9 +853,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 };
             }
         }
+        const isGhost = this.isGhostRecord(rowData);
         return {
-            $implicit: rowData,
+            $implicit: isGhost ? rowData.recordRef : rowData,
             index: rowIndex,
+            disabled: isGhost,
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
