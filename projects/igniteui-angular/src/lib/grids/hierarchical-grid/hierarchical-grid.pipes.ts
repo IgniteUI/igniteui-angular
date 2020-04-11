@@ -82,33 +82,3 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
     }
 }
 
-/**
- * @hidden
- */
-@Pipe({
-    name: 'gridHierarchicalRowPinning',
-    pure: true
-})
-export class IgxGridHierarchicalRowPinning implements PipeTransform {
-
-    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
-
-    public transform(collection: any[], isPinned: boolean, pipeTrigger: number): any[] {
-        const grid = this.gridAPI.grid;
-
-        if (!grid.hasPinnedRecords) {
-            return isPinned ? [] : collection;
-        }
-
-        if (grid.hasPinnedRecords && isPinned) {
-            return collection.filter(rec => grid.isRecordPinned(rec));
-        }
-
-        if (grid.childLayoutKeys.length) {
-            return collection.map((rec) => {
-                return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
-            });
-        }
-        return collection.filter(rec => !grid.isRecordPinned(rec));
-    }
-}

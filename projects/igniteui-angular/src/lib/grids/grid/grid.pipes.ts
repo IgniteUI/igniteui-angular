@@ -156,24 +156,40 @@ export class IgxGridFilteringPipe implements PipeTransform {
  * @hidden
  */
 @Pipe({
-    name: 'rowPinning',
+    name: 'gridRowPinning',
     pure: true
 })
 export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
 
-    public transform(collection: any[] , id: string, isPinned = false, pipeTrigger: number) {
+    public transform(collection: any[], pipeTrigger: number) {
         const grid = this.gridAPI.grid;
 
         if (!grid.hasPinnedRecords) {
-            return isPinned ? [] : collection;
+            return [];
         }
 
-        if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-            return result;
+        // pinned records should be ordered as they were pinned.
+        return collection
+            .filter(value => grid.isRecordPinned(value))
+            .sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
+    }
+}
+
+@Pipe({
+    name: 'gridGhostRecords',
+    pure: true
+})
+export class IgxGridGhostRecordsPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
+
+    public transform(collection: any[], pipeTrigger: number) {
+        const grid = this.gridAPI.grid;
+
+        if (!grid.hasPinnedRecords) {
+            return collection;
         }
 
         return collection.map((rec) => {
