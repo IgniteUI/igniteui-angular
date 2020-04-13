@@ -6339,13 +6339,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public isGhostRecord(record: any): boolean {
-        return record.ghostRecord !== undefined;
-    }
-
-    /**
      * Opens the advanced filtering dialog.
      */
     public openAdvancedFilteringDialog() {
