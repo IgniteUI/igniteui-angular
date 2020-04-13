@@ -7,7 +7,9 @@ import {
     ViewChildren,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    Input,
+    HostListener
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowDirective } from '../row.directive';
@@ -21,6 +23,19 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
+
+    protected expanderClass = 'igx-grid__hierarchical-expander';
+
+    /**
+     * @hidden
+     */
+    public get expanderClassResolved() {
+        return {
+            [this.expanderClass]: !this.pinned || this.disabled,
+            [`${this.expanderClass}--empty`]: this.pinned && !this.disabled
+        };
+    }
+
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
     protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
 
@@ -55,9 +70,16 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      * const RowExpanded = this.grid1.rowList.first.expanded;
      * ```
      */
-    @HostBinding('class.igx-grid__tr--expanded')
     public get expanded() {
         return this.gridAPI.get_row_expansion_state(this.rowData);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-grid__tr--expanded')
+    public get expandedClass() {
+        return this.expanded && !this.pinned;
     }
 
     public get hasChildren() {
@@ -120,7 +142,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         if (this.grid.hasChildrenKey) {
             expandable = this.rowData[this.grid.hasChildrenKey];
         }
-        if (!expandable) {
+        if (!expandable || (this.pinned && !this.disabled)) {
             return this.defaultEmptyTemplate;
         }
         if (this.expanded) {
@@ -130,7 +152,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         }
     }
 
-    private endEdit(grid: IgxHierarchicalGridComponent) {
+    protected endEdit(grid: IgxHierarchicalGridComponent) {
         if (grid.crudService.inEditMode) {
             grid.endEdit();
         }

@@ -27,7 +27,8 @@ import { GridType } from './common/grid.interface';
 })
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
-    private _rowData: any;
+    protected _rowData: any;
+
     /**
      *  The data passed to the row component.
      *
