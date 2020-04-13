@@ -6,6 +6,7 @@ import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HO
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType } from './common/enums';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -46,8 +47,7 @@ export class IgxGridNavigationService {
         }
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
             const col = this.grid.getColumnByVisibleIndex(this.activeNode.column);
-            if (col.inlineEditorTemplate) { return; }
-            if (['date', 'boolean'].indexOf(col.dataType) > -1) { return; }
+            if (col.inlineEditorTemplate || ['date', 'boolean'].indexOf(col.dataType) > -1) { return; }
             return;
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
@@ -132,45 +132,43 @@ export class IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        event.preventDefault();
         if (key === 'esc') {
             this.grid.filteringRow.close();
             return;
         }
+        const column = this.grid.getColumnByVisibleIndex(this.activeNode.column);
         const ctrl = event.ctrlKey;
+        const shift = event.shiftKey;
+        const alt = event.altKey;
+        let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
+        if (ctrl && key.includes('up')) {
+            direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
+            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            return;
+        }
+        if (ctrl && key.includes('down')) {
+            direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
+            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            return;
+        }
+        if (shift && alt && (key.includes('right') || key.includes('left')) ) {
+            direction =  key.includes('left') ? SortingDirection.None : direction ? SortingDirection.Desc : SortingDirection.Asc;
+            (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+            return;
+        }
+        if ([' ', 'spacebar', 'space'].indexOf(key) >= 0) {
+            column.selected = !column.selected;
+        }
+        if (alt && key === 'l') {
+            this.grid.openAdvancedFilteringDialog();
+        }
+        if (ctrl && shift && key === 'l') {
+            this.grid.filteringService.filteredColumn = column;
+            this.grid.filteringService.isFilterRowVisible = true;
+        }
         if (this.grid.hasColumnGroups) {
-            event.preventDefault();
-            const activeCol = this.currentActiveColumn;
-            if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-                const col = ctrl || key === 'home' ? this.getNextColumnMCH(0) :
-                    this.getNextColumnMCH(this.activeNode.column - 1);
-                this.activeNode.column = col.visibleIndex;
-                this.activeNode.mchCache.visibleIndex = this.activeNode.column;
-                this.activeNode.level = col.level;
-            }
-            if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
-                const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
-                activeCol.visibleIndex + 1;
-                const col = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
-                this.activeNode.column =  col.visibleIndex;
-                this.activeNode.mchCache.visibleIndex = this.activeNode.column;
-                this.activeNode.level = col.level;
-            }
-            if (key.includes('up') && this.activeNode.level > 0) {
-                this.activeNode.column = activeCol.parent.visibleIndex;
-                this.activeNode.level = activeCol.parent.level;
-                this.activeNode.mchCache.level = activeCol.parent.level;
-            }
-            if (key.includes('down') && activeCol.children) {
-                const cur = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
-                activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
-                .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
-                this.activeNode.column = cur.visibleIndex;
-                this.activeNode.level = cur.level;
-                this.activeNode.mchCache.level = cur.level;
-            }
-            if (HORIZONTAL_NAV_KEYS.has(key)) {
-            }
-            this.performHorizontalScrollToCell(this.activeNode.column);
+            this.handleMCHeaderNav(key, ctrl, alt);
             return;
         }
         this.horizontalNav(event, key, -1);
@@ -188,7 +186,6 @@ export class IgxGridNavigationService {
                 return;
             }
         }
-
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
         }
@@ -200,7 +197,7 @@ export class IgxGridNavigationService {
 
     focusTbody(event) {
         this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
-        if (!this.activeNode || !(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
+        if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
         this.navigateInBody(0, 0, (obj) => {
             this.grid.clearCellSelection();
             obj.target.activate(event);
@@ -208,7 +205,7 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        if (!this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0 };
         this.performHorizontalScrollToCell(0);
     }
@@ -401,6 +398,39 @@ export class IgxGridNavigationService {
         }
         if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) { return false; }
         return true;
+    }
+
+    private handleMCHeaderNav(key: string, ctrl: boolean, alt: boolean) {
+        const activeCol = this.currentActiveColumn;
+        if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
+            const col = ctrl || key === 'home' ? this.getNextColumnMCH(0) :
+                this.getNextColumnMCH(this.activeNode.column - 1);
+            this.activeNode.column = col.visibleIndex;
+            this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+            this.activeNode.level = col.level;
+        }
+        if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
+            const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
+            activeCol.visibleIndex + 1;
+            const col = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
+            this.activeNode.column =  col.visibleIndex;
+            this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+            this.activeNode.level = col.level;
+        }
+        if (key.includes('up') && this.activeNode.level > 0) {
+            this.activeNode.column = activeCol.parent.visibleIndex;
+            this.activeNode.level = activeCol.parent.level;
+            this.activeNode.mchCache.level = activeCol.parent.level;
+        }
+        if (key.includes('down') && activeCol.children) {
+            const cur = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
+            activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
+            .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
+            this.activeNode.column = cur.visibleIndex;
+            this.activeNode.level = cur.level;
+            this.activeNode.mchCache.level = cur.level;
+        }
+        this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
     private getNextColumnMCH(visibleIndex) {
