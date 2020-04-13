@@ -224,7 +224,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     }
 
     private setPanelsAttributes() {
-        const panelsArray = Array.from(this.panels);
+        const panelsArray = this.panels.toArray();
         for (let index = 0; index < this.panels.length; index++) {
             const tabPanels = panelsArray[index] as IgxTabPanelComponent;
             tabPanels.nativeElement.setAttribute('id', this.getTabPanelId(index));
