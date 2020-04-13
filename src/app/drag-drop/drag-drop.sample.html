@@ -4,16 +4,17 @@
             <article class="sample-column">
                 <h4 class="sample-title">No ghost dragging:</h4>
                 <div [style.height.px]="100">
-                    <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']"
+                    <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']" [dragDirection]="dragDir"
                         (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
                         <span *ngIf="!draggedElem">Drag me</span>
                         <span *ngIf="draggedElem">Weeeee</span>
+                        <igx-icon igxDragIgnore fontSet="material" class="dragClickable" (click)="openDialog()">edit</igx-icon>
                     </div>
                 </div>
                 <br>
                 <h4 class="sample-title">Ghost and base templating:</h4>
                 <div #ghostHost [style.height.px]="100">
-                    <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhost"
+                    <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'" [ghostTemplate]="dragGhost"
                         [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                         (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                         <span *ngIf="!customDragged">Drag me</span>

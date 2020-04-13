@@ -118,7 +118,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.cms.icon.innerText = event.target.id === 'right' ? 'arrow_forward' : 'arrow_back';
 
                 interval(100).pipe(takeUntil(this._dragLeave)).subscribe(() => {
-                    this.cms.column.grid.wheelHandler();
                     event.target.id === 'right' ? this.horizontalScroll.scrollPosition += 15 :
                         this.horizontalScroll.scrollPosition -= 15;
                 });
