@@ -41,6 +41,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
+import { IgxDecimalPipeComponent, IgxDatePipeComponent } from '../../common/pipes';
 
 /**
  * @hidden
@@ -712,6 +713,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
+
+        const numberPipe = new IgxDecimalPipeComponent(this.column.grid.locale);
+        const datePipe = new IgxDatePipeComponent(this.column.grid.locale);
+
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
                 const filterListItem = new FilterListItem();
@@ -732,11 +737,27 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 }
                 if (this.column.dataType === DataType.Date) {
                     filterListItem.value = new Date(element);
-                    filterListItem.label = new Date(element);
+
+                    if (this.column.formatter) {
+                        filterListItem.label = this.column.formatter(new Date(element));
+                    } else {
+                        filterListItem.label = datePipe.transform(new Date(element), this.column.grid.locale);
+                    }
+
+                } else if (this.column.dataType === DataType.Number) {
+                    filterListItem.value = element;
+
+                    if (this.column.formatter) {
+                        filterListItem.label = this.column.formatter(new Date(element));
+                    } else {
+                        filterListItem.label = numberPipe.transform(element, this.column.grid.locale);
+                    }
+
                 } else {
                     filterListItem.value = element;
                     filterListItem.label = element;
                 }
+
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             } else {

@@ -4247,6 +4247,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).toBeNull();
         }));
+
+        it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            UIInteractions.sendInputElementValue(inputNativeElement, 'Apr', fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
+
+            UIInteractions.sendInputElementValue(inputNativeElement, 'April', fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+
+            UIInteractions.sendInputElementValue(inputNativeElement, '12', fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+
+            UIInteractions.sendInputElementValue(inputNativeElement, 'Wed', fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+        }));
     });
 
     describe(null, () => {
