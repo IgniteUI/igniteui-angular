@@ -16,11 +16,13 @@ import { IgxTransactionService } from '../../services';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const DISABLED_ROW = '.igx-grid__tr--disabled';
     const CELL_CSS_CLASS = '.igx-grid__td';
+    const DEBOUNCE_TIME = 60;
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
@@ -477,15 +479,19 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
         }));
 
-        it('should be in view when expanded and pinning row to bottom of the grid.', () => {
+        it('should be in view when expanded and pinning row to bottom of the grid.', async() => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             fix.detectChanges();
             // pin 1st row
             const row = grid.getRowByIndex(0);
             row.pinned = true;
             fix.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.pinnedRows[0]);
+            fix.detectChanges();
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
 
