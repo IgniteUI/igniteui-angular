@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
-import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS } from '../core/utils';
+import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType } from './common/enums';
@@ -132,40 +132,41 @@ export class IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (!HEADER_KEYS.has(key)) { return; }
         event.preventDefault();
-        if (key === 'esc') {
-            this.grid.filteringRow.close();
-            return;
-        }
-        const column = this.grid.getColumnByVisibleIndex(this.activeNode.column);
+        let column = this.grid.getColumnByVisibleIndex(this.activeNode.column);
         const ctrl = event.ctrlKey;
         const shift = event.shiftKey;
         const alt = event.altKey;
-        let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
-        if (ctrl && key.includes('up')) {
-            direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
-            return;
-        }
-        if (ctrl && key.includes('down')) {
-            direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
-            return;
-        }
-        if (shift && alt && (key.includes('right') || key.includes('left')) ) {
-            direction =  key.includes('left') ? SortingDirection.None : direction ? SortingDirection.Desc : SortingDirection.Asc;
-            (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
-            return;
-        }
-        if ([' ', 'spacebar', 'space'].indexOf(key) >= 0) {
-            column.selected = !column.selected;
-        }
-        if (alt && key === 'l') {
-            this.grid.openAdvancedFilteringDialog();
-        }
-        if (ctrl && shift && key === 'l') {
-            this.grid.filteringService.filteredColumn = column;
-            this.grid.filteringService.isFilterRowVisible = true;
+        if (column) {
+            let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
+            if (ctrl && key.includes('up')) {
+                direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
+                this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+                return;
+            }
+            if (ctrl && key.includes('down')) {
+                direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
+                this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+                return;
+            }
+            if (shift && alt && (key.includes('right') || key.includes('left')) ) {
+                direction =  key.includes('left') ? SortingDirection.None : direction ? SortingDirection.Desc : SortingDirection.Asc;
+                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+                return;
+            }
+            if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
+                column = this.currentActiveColumn;
+                column.selected = !column.selected;
+            }
+            if (alt && key === 'l') {
+                this.grid.openAdvancedFilteringDialog();
+            }
+            if (ctrl && shift && key === 'l') {
+                this.performHorizontalScrollToCell(column.visibleIndex);
+                this.grid.filteringService.filteredColumn = column;
+                this.grid.filteringService.isFilterRowVisible = true;
+            }
         }
         if (this.grid.hasColumnGroups) {
             this.handleMCHeaderNav(key, ctrl, alt);
