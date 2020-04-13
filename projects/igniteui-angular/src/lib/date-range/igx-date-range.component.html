@@ -1,13 +1,10 @@
-<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()">
+<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>
     <div class="buttonsWrapper">
         <div *ngIf="mode === 'dialog'">
-            <div class="todayButton">
-                <button igxButton type="button" (click)="selectToday()">{{ todayButtonText }}</button>
-            </div>
             <div class="doneButton">
                 <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
             </div>
@@ -15,7 +12,7 @@
     </div>
 </div>
 
-<ng-container *ngTemplateOutlet="this.start || this.end ? startEndTemplate : defTemplate"></ng-container>
+<ng-container *ngTemplateOutlet="this.hasProjectedInputs ? startEndTemplate : defTemplate"></ng-container>
 
 <ng-template #singleTemplate>
     <div (click)="open()" class="content-wrap">
@@ -39,12 +36,14 @@
     <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
-<ng-template #defSuffix>
-    <igx-suffix>
-        <igx-icon>
-            calendar_today
-        </igx-icon>
-    </igx-suffix>
+<ng-template #defPrefix>
+    <ng-container ngProjectAs="igx-prefix">
+        <igx-prefix (click)="open()">
+            <igx-icon>
+                calendar_today
+            </igx-icon>
+        </igx-prefix>
+    </ng-container>
 </ng-template>
 
 <ng-template #defLabel>
@@ -52,29 +51,50 @@
 </ng-template>
 
 <ng-template #startEndTemplate>
-    <div (click)="open()" class="content-wrap" style="display: flex; flex-flow: row;">
+    <div style="display: flex; flex-flow: row; flex-direction: row;">
+        <div (click)="open()" style="cursor: pointer;">
+            <igx-icon>calendar_today</igx-icon>
+        </div>
         <ng-content select="igx-date-start"></ng-content>
+        <div>to</div> <!-- TODO: make templatable -->
         <ng-content select="igx-date-end"></ng-content>
     </div>
 </ng-template>
 
-<ng-template #defTemplate>
-    <div (click)="open()" class="content-wrap">
-        <igx-date-single>
-            <input #singleInput igxInput type="text" readonly>
+<ng-template #defIcon>
+    <igx-icon>
+        calendar_today
+    </igx-icon>
+</ng-template>
 
-            <ng-container ngProjectAs="igx-suffix">
-                <ng-container *ngTemplateOutlet="this.suffix ? suffixTemplate : defSuffix"></ng-container>
-            </ng-container>
-            <ng-container ngProjectAs="igxLabel">
-                <ng-container *ngTemplateOutlet="this.label ? labelTemplate : defLabel"></ng-container>
-            </ng-container>
-            <ng-container ngProjectAs="igx-prefix">
-                <ng-container *ngTemplateOutlet="prefixTemplate"></ng-container>
-            </ng-container>
-            <ng-container ngProjectAs="igx-hint">
-                <ng-container *ngTemplateOutlet="hintTemplate"></ng-container>
-            </ng-container>
-        </igx-date-single>
-    </div>
+<ng-template #defTemplate>
+    <igx-date-single>
+        <!-- display format instead? what about shortDate, etc? -->
+        <input #singleInput igxInput [placeholder]="appliedFormat" type="text" readonly>
+
+        <igx-prefix *ngIf="!this.prefix && !this.suffix" (click)="open()">
+            <ng-container *ngTemplateOutlet="defIcon"></ng-container>
+        </igx-prefix>
+
+        <igx-prefix *ngIf="this.prefix" (click)="open()">
+            <ng-container *ngTemplateOutlet="this.prefix.templateRef"></ng-container>
+        </igx-prefix>
+
+        <ng-container ngProjectAs="igxLabel">
+            <ng-container *ngTemplateOutlet="this.label ? labelTemplate : defLabel"></ng-container>
+        </ng-container>
+        <ng-container ngProjectAs="igx-prefix">
+            <ng-container *ngTemplateOutlet="prefixTemplate"></ng-container>
+        </ng-container>
+        <ng-container ngProjectAs="igx-suffix">
+            <ng-container *ngTemplateOutlet="suffixTemplate"></ng-container>
+        </ng-container>
+        <ng-container ngProjectAs="igx-hint">
+            <ng-container *ngTemplateOutlet="hintTemplate"></ng-container>
+        </ng-container>
+
+        <igx-suffix *ngIf="this.suffix" (click)="open()">
+            <ng-container *ngTemplateOutlet="this.suffix.templateRef"></ng-container>
+        </igx-suffix>
+    </igx-date-single>
 </ng-template>

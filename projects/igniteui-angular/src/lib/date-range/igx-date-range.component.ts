@@ -1,6 +1,6 @@
 import {
     Component, Input, ContentChild, ViewChild,
-    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef, ChangeDetectorRef
+    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef, ContentChildren, QueryList, TemplateRef
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -11,10 +11,15 @@ import { takeUntil } from 'rxjs/operators';
 import { KEYS, isIE, IBaseEventArgs } from '../core/utils';
 import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent, DateRange } from './igx-date-range-inputs.common';
+import {
+    IgxDateStartComponent, IgxDateEndComponent,
+    IgxDateSingleComponent, DateRange, IgxDateRangePrefixDirective, IgxDateRangeSuffixDirective
+} from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IToggleView } from '../core/navigation';
-import { IgxSuffixDirective, IgxLabelDirective } from '../input-group';
+import { IgxLabelDirective, IgxPrefixDirective } from '../input-group';
+import { IgxInputGroupBase } from '../input-group/input-group.common';
+import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
 
 /**
  * ** Ignite UI for Angular Range Date Picker **
@@ -59,7 +64,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public monthsViewNumber = 2;
 
     /**
-     * Property which sets the whether dates that are not part of the current month will be displayed.
+     * Property which sets whether dates that are not part of the current month will be displayed.
      * Default value is `false`.
      */
     @Input()
@@ -88,7 +93,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public locale = 'en';
 
     /**
-     * Property that applies a custom formatter function on the selected or passed date.
+     * Property that applies a custom formatter function on the selected or passed in date.
      *
      * ```typescript
      * private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
@@ -105,17 +110,6 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      */
     @Input()
     public formatter: (val: DateRange) => string;
-
-    /**
-     * Property that changes the default text of the `today` button.
-     * Default value is `Today`.
-     *
-     * ```html
-     * <igx-date-range [todayButtonText]="'Hoy'"></igx-date-range>
-     * ```
-     */
-    @Input()
-    public todayButtonText = 'Today'; // optional
 
     /**
      * Property that changes the default text of the `done` button.
@@ -165,31 +159,8 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public onClosed = new EventEmitter<IBaseEventArgs>();
 
     /** @hidden */
-    @ViewChild(IgxDateStartComponent)
-    public startInput: IgxDateStartComponent;
-
-    /** @hidden */
-    @ViewChild(IgxDateEndComponent)
-    public endInput: IgxDateEndComponent;
-
-    /** @hidden */
     @ViewChild(IgxDateSingleComponent)
-    public singleInput: IgxDateSingleComponent;
-
-    /** @hidden */
-    @ContentChild(IgxDateStartComponent)
-    public start: IgxDateStartComponent;
-
-    /** @hidden */
-    @ContentChild(IgxDateEndComponent)
-    public end: IgxDateEndComponent;
-
-    /** @hidden */
-    @ContentChild(IgxSuffixDirective)
-    public suffix: IgxSuffixDirective;
-
-    @ContentChild(IgxLabelDirective)
-    public label: IgxLabelDirective;
+    public single: IgxDateSingleComponent;
 
     /** @hidden */
     @ViewChild(IgxCalendarComponent)
@@ -199,8 +170,42 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     @ViewChild(IgxToggleDirective)
     public toggleDirective: IgxToggleDirective;
 
+    /** @hidden */
+    @ContentChildren(IgxInputGroupBase)
+    public projectedInputs: QueryList<IgxInputGroupBase>;
+
+    /** @hidden */
+    @ContentChild(IgxDateRangePrefixDirective)
+    public prefix: IgxDateRangePrefixDirective;
+
+    /** @hidden */
+    @ContentChild(IgxDateRangeSuffixDirective)
+    public suffix: IgxDateRangeSuffixDirective;
+
+    @ContentChild(IgxLabelDirective)
+    public label: IgxLabelDirective;
+
+    /** @hidden @internal */
+    public get appliedFormat() {
+        // TODO: apply formatter if present
+        if (!this.hasProjectedInputs) {
+            // TODO: use displayFormat - see how shortDate, longDate can be defined
+            return this.inputFormat
+                ? `${this.inputFormat} - ${this.inputFormat}`
+                : `${this._defaultInputFormat} - ${this._defaultInputFormat}`;
+        } else {
+            return this.inputFormat ? this.inputFormat : this._defaultInputFormat;
+        }
+    }
+
+    /** @hidden @internal */
+    public get hasProjectedInputs(): boolean {
+        return this.projectedInputs.some(i => i instanceof IgxDateStartComponent || i instanceof IgxDateEndComponent);
+    }
+
+    // TODO: use default input format from date-time-editor.common?
+    private _defaultInputFormat = 'dd/MM/yyyy';
     private _value: DateRange;
-    private _oldValue: DateRange;
     private _destroy = new Subject<boolean>();
     private _onChangeCallback: (_: any) => void;
     private _positionSettings: PositionSettings;
@@ -228,21 +233,15 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      * ```
      */
     public open(): void {
+        if (this.value && this.value.start?.getTime() > this.value.end?.getTime()) {
+            this.value = { start: this.value.end, end: this.value.start };
+        }
+        this.updateCalendar();
         if (this.mode === InteractionMode.Dialog) {
             this.activateToggleOpen(this._dialogOverlaySettings);
         }
         if (this.mode === InteractionMode.DropDown) {
             this.activateToggleOpen(this._dropDownOverlaySettings);
-        }
-
-        // TODO: add logic for single input; move to updateCalendar
-        const startDate = this.start?.dateTimeEditor.value || this.startInput?.dateTimeEditor.value;
-        const endDate = this.end?.dateTimeEditor.value || this.endInput?.dateTimeEditor.value;
-        if (startDate && endDate) {
-            this.calendar.selectDate([startDate, endDate]);
-            this._oldValue = { start: startDate, end: endDate };
-        } else {
-            this.calendar.deselectDate([this._oldValue?.start, this._oldValue?.end]);
         }
 
         this.onOpened.emit({ owner: this });
@@ -329,13 +328,14 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
             case InteractionMode.DropDown:
                 this.attachOnKeydown();
                 this.applyFocusOnClose();
+                this.subscribeToDateEditorEvents();
                 break;
             case InteractionMode.Dialog:
                 this.applyFocusOnClose();
                 break;
         }
         this.configPositionStrategy();
-        this.initOverlaySettings();
+        this.configOverlaySettings();
     }
 
     /** @hidden */
@@ -344,8 +344,15 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this._destroy.complete();
     }
 
+    public onClosing() {
+        if (this.value && !this.value.end) {
+            this.value = { start: this.value.start, end: this.value.start };
+        }
+    }
+
     /** @hidden */
     public onKeyDown(event: KeyboardEvent): void {
+        // TODO: make sure IgxDateTimeEditorDirective doesn't spin if ALT is pressed
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
@@ -370,7 +377,6 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public handleSelection(selectionData: Date[]): void {
         this.value = this.extractRange(selectionData);
         this._onChangeCallback(this.value);
-        this.updateInputs();
         this.onSelected.emit(this.value);
     }
 
@@ -395,30 +401,26 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         });
     }
 
-    /** @hidden @internal */
-    public applyFormatting(range: DateRange): string {
-        if (this.formatter) {
-            return this.formatter(range);
+    private updateCalendar() {
+        if (this.value && this.value.start && this.value.end) {
+            this.calendar.selectDate([this.value.start, this.value.end]);
+        } else {
+            if (this.value && this.value.start) {
+                this.calendar.selectDate(this.value.start);
+            } else if (this.value && this.value.end) {
+                this.calendar.selectDate(this.value.end);
+                this.value = { start: this.value.end, end: this.value.end };
+            } else {
+                this.calendar.deselectDate();
+            }
         }
-        return null;
-        // TODO:
-        // return range ? this.applyLocaleToDate(range) : '';
-    }
-
-    private applyLocaleToDate(value: Date): string {
-        if (isIE() && value) {
-            const localeDateStrIE = new Date(value.getFullYear(), value.getMonth(), value.getDate(),
-                value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
-            return localeDateStrIE.toLocaleDateString(this.locale);
-        }
-
-        return value ? value.toLocaleDateString(this.locale) : null;
+        this.calendar.viewDate = this.value.start;
     }
 
     private extractRange(selection: Date[]): DateRange {
         return {
             start: selection[0],
-            end: selection[selection.length - 1]
+            end: selection.length > 1 ? selection[selection.length - 1] : null
         };
     }
 
@@ -429,15 +431,44 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     private attachOnKeydown(): void {
-        fromEvent(this.element.nativeElement, 'keydown').pipe(
-            takeUntil(this._destroy)
-        ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
+        fromEvent(this.element.nativeElement, 'keydown')
+            .pipe(takeUntil(this._destroy))
+            .subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
     }
 
     private applyFocusOnClose() {
-        this.toggleDirective.onClosed.pipe(
-            takeUntil(this._destroy)
-        ).subscribe(() => (this.singleInput || this.start || this.startInput).setFocus());
+        this.toggleDirective.onClosed
+            .pipe(takeUntil(this._destroy))
+            .subscribe(() => (
+                this.single || this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent
+            )?.setFocus());
+    }
+
+    private subscribeToDateEditorEvents() {
+        if (this.hasProjectedInputs) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
+            start.dateTimeEditor.valueChanged
+                .pipe(takeUntil(this._destroy))
+                .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                    this.value = { start: event.newValue as Date, end: this.value?.end };
+                });
+            end.dateTimeEditor.valueChanged
+                .pipe(takeUntil(this._destroy))
+                .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                    this.value = { start: this.value?.start, end: event.newValue as Date };
+                });
+            start.dateTimeEditor.validationFailed
+                .pipe(takeUntil(this._destroy))
+                .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                    this.value = { start: event.newValue as Date, end: this.value?.end };
+                });
+            end.dateTimeEditor.validationFailed
+                .pipe(takeUntil(this._destroy))
+                .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                    this.value = { start: this.value?.start, end: event.newValue as Date };
+                });
+        }
     }
 
     private configPositionStrategy(): void {
@@ -449,7 +480,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this._positionStrategy = new AutoPositionStrategy(this._positionSettings);
     }
 
-    private initOverlaySettings(): void {
+    private configOverlaySettings(): void {
         this._dropDownOverlaySettings = this.overlaySettings ? this.overlaySettings : {
             closeOnOutsideClick: true,
             modal: false,
@@ -463,20 +494,13 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     private updateInputs() {
-        if (this.startInput) {
-            this.startInput.updateInput(this.value?.start);
-        }
-        if (this.endInput) {
-            this.endInput.updateInput(this.value?.end);
-        }
-        if (this.start) {
-            this.start.updateInput(this.value?.start);
-        }
-        if (this.end) {
-            this.end.updateInput(this.value?.end);
-        }
-        if (this.singleInput) {
-            this.singleInput.updateInput(this?.value);
+        const start = this.projectedInputs?.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
+        const end = this.projectedInputs?.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
+        if (start && end && this.value) {
+            start.updateInput(this.value.start);
+            end.updateInput(this.value.end);
+        } else if (this.single && this.value) {
+            this.single.updateInput(this.value, this.inputFormat, this.locale);
         }
     }
 }

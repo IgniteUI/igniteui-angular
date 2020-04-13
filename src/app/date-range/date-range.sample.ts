@@ -17,7 +17,7 @@ export class DateRangeSampleComponent implements OnInit {
     public content: any;
 
     public date: Date;
-    public range: DateRange;
+    public range = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
     public twoInputForm: FormGroup;
     public singleInputForm: FormGroup;
 
