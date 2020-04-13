@@ -1,0 +1,113 @@
+@import '../../../../../igniteui-angular/src/lib/core/styles/themes/index';
+
+@mixin scrollbar($scrollbar-width, $scrollbar-height) {
+    $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
+    $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
+
+    ::-webkit-scrollbar {
+        width: $scrollbar-width;
+        height: $scrollbar-height;
+        background-color: $scrollbar-track;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-thumb;
+    }
+}
+
+.ig-chart-legend-items-list {
+    height: 20%;
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+igx-chart-menu {
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+    background-color: #fff;
+    transition: width .2s ease-in-out, height .3s ease-in-out;
+}
+
+.header {
+    height: 10%;
+    background-color: #e0e0e0;
+    display: flex;
+    font-size: 1.8rem;
+
+    .action-buttons-wrapper {
+        margin-left: auto;
+        margin-right: 10px;
+        align-self: center;
+    }
+
+    .header-text {
+        margin-right: auto;
+        align-self: center;
+        margin-left: 3rem;
+    }
+}
+
+.selection-area {
+    @include scrollbar(6px, 6px);
+    width: 100%;
+    height: 90%;
+    display: inline-flex;
+    flex-flow: row;
+
+    .chart-area {
+        margin-top: 1rem;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    .chart-config-area {
+        &.opened {
+            width: 25%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        &.closed {
+            width: 0;
+            transform: translateX(100%);
+        }
+
+        transition: all;
+        transition-duration: .3s;
+        transition-timing-function: ease-in-out;
+
+        .config-area-header {
+            margin-bottom: 3px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .types-section-btn {
+            width: 40%;
+            margin-right: 5px;
+            cursor: pointer;
+
+            &.selected {
+                opacity: .5;
+            }
+        }
+    }
+
+    .wrapper {
+        padding: 3px;
+
+        .types-section {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .igx-divider {
+            margin: 5px !important;
+            background: black !important;
+        }
+    }
+}

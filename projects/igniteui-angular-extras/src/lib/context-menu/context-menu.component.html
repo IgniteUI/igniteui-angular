@@ -1,0 +1,51 @@
+<span #analyticsBtn class="analytics-btn">
+    <button #btn igxButton="icon" (click)="toggleTabMenu()">
+        <igx-icon #icon class="icon" fontSet="material">insert_chart_outlined</igx-icon>
+    </button>
+</span>
+<div #tabsMenu igxToggle class="toggle-content">
+    <igx-tabs tabsType="fixed" [selectedIndex]="!this.textFormatters.length && chartTypes.length ? 1 : 0" >
+        <igx-tabs-group label="Conditional Formatting" [disabled]="!textFormatters.length">
+            <div class="tabs" >
+                <span class="tab-option">
+                    <span *ngFor="let condition of textFormatters" class="action btn condition" (click)="formatCells(condition)">
+                        <div class="imgSize" [innerHTML]="conditionImages[condition.replace(' ', '')] | svg">
+                        </div>
+                        <span class="name">{{condition.replace('10', '10%')}}</span>
+                    </span>
+                </span>
+                <span class="clear action" [ngClass]="{'disableButton': contextDirective.textFormatter ? !contextDirective.textFormatter.formatter : true }" (click)="clearFormat()">
+                    <div class="imgSize" [innerHTML]="conditionImages['Clear'] | svg">
+                    </div>                
+                    <span class="btn name">Clear All</span>
+                </span>
+            </div>
+        </igx-tabs-group>
+        <igx-tabs-group label="Create Chart" [disabled]="!chartTypes.length">
+            <div class="tabs" >
+                <span class="tab-option">
+                    <span *ngFor="let chart of chartTypes | slice:0:4" class="action btn chart"  [ngClass]="{'selected': chart === currentChartType}"
+                    (mouseenter)="previewChart(chart)" (mouseleave)="hidePreview()" (click)="openDialog(chart)">
+                    <span [innerHTML]="chartImages[chart] | svg" class="imgSize">
+                    </span>
+                    <span class="name">{{chart}}</span>
+                    </span>
+                </span>
+                <span class="more-action chart" [ngClass]="{'disableButton': !chartTypes.length}" (click)="openDialog()">
+                    <button class="more-btn more-icon" igxButton="icon" igxButtonBackground="#EBEBEB" igxButtonColor="black">
+                        <igx-icon class="icon" fontSet="material">more_horiz</igx-icon>
+                    </button>
+                    <span class="name btn">More...</span>
+                </span>
+            </div>
+        </igx-tabs-group>
+    </igx-tabs>
+</div>
+<div igxToggle #chartPreviewDialog class="chart-preview">
+    <div class="chart-preview-title">
+        <h5>Preview Chart</h5>
+    </div>
+    <div class="chart-preview-area">
+        <ng-template #chartPreview></ng-template>
+    </div>
+</div>
