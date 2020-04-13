@@ -10,9 +10,6 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
-const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
-
 describe('IgxGrid - Grid Sorting #grid', () => {
 
     configureTestSuite();
@@ -290,21 +287,20 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
         it('Should have a valid sorting icon when sorting using the API.', () => {
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
-            const sortingIcon = GridFunctions.getHeaderSortIcon(firstHeaderCell);
-
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true });
             fixture.detectChanges();
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, true);
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true });
             fixture.detectChanges();
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, true);
 
             grid.clearSort();
             fixture.detectChanges();
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
         });
 
         it('Should sort grid on sorting icon click when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
@@ -319,14 +315,13 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
 
-            const sortingIcon = GridFunctions.getHeaderSortIcon(firstHeaderCell);
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, false);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
             fixture.detectChanges();
 
-            expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+            GridFunctions.verifyHeaderSortIndicator(firstHeaderCell, false, true);
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
 
             const secondHeaderCell = GridFunctions.getColumnHeader('Name', fixture);
