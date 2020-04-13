@@ -6,6 +6,7 @@
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
+      "@types/jszip",
       "hammerjs",
       "jszip",
       "resize-observer-polyfill"
