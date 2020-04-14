@@ -737,26 +737,27 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     filterListItem.isSelected = true;
                 }
                 if (this.column.dataType === DataType.Date) {
-                    filterListItem.value = new Date(element);
+                    const date = new Date(element);
 
-                    if (this.column.formatter) {
-                        filterListItem.label = this.column.formatter(new Date(element));
-                    } else {
-                        filterListItem.label = datePipe.transform(new Date(element), this.column.grid.locale);
-                    }
+                    filterListItem.value = date;
+
+                    this.column.formatter ?
+                        filterListItem.label = this.column.formatter(date) :
+                        filterListItem.label = datePipe.transform(date, this.column.grid.locale);
 
                 } else if (this.column.dataType === DataType.Number) {
                     filterListItem.value = element;
 
-                    if (this.column.formatter) {
-                        filterListItem.label = this.column.formatter(new Date(element));
-                    } else {
+                    this.column.formatter ?
+                        filterListItem.label = this.column.formatter(element) :
                         filterListItem.label = numberPipe.transform(element, this.column.grid.locale);
-                    }
 
                 } else {
                     filterListItem.value = element;
-                    filterListItem.label = element;
+
+                    this.column.formatter ?
+                        filterListItem.label = this.column.formatter(element) :
+                        filterListItem.label = element;
                 }
 
                 filterListItem.indeterminate = false;

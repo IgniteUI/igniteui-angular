@@ -4271,7 +4271,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
 
-            UIInteractions.sendInputElementValue(inputNativeElement, '12', fix);
+            UIInteractions.sendInputElementValue(inputNativeElement, '29', fix);
             tick(100);
             fix.detectChanges();
 
