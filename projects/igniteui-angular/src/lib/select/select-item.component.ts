@@ -17,7 +17,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
      *  let mySelectedItem = this.dropDown.selectedItem;
      *  let selectedItemText = mySelectedItem.text;
      * ```
-
+     *
      * ```html
      * // set
      * <igx-select-item [text]="'London'"></igx-select-item>

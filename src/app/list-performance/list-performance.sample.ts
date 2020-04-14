@@ -9,6 +9,7 @@ import { IgxFilterOptions } from 'igniteui-angular';
 export class ListPerformanceSampleComponent {
     search1: string;
     options = {};
+    showList = true;
 
     data = [{
         key: 1,

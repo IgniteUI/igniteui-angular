@@ -211,6 +211,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`locale`| string | Determines the locale of the grid. Default value is `en`. |
 | `isLoading` | bool | Sets if the grid is waiting for data - default value false. |
 | `rowDraggable` | bool | Sets if the grid rows can be dragged |
+| `columnSelection` | GridSelectionMode | Sets if the grid columns can be selected |
 
 ### Outputs
 

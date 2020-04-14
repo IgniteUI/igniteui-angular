@@ -2,8 +2,7 @@ import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IfStmt } from '@angular/compiler';
-
+import { isEdge } from '../../core/utils';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -104,6 +103,7 @@ export class IgxGridCRUDService {
     grid;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
+    public isInCompositionMode = false;
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
@@ -199,7 +199,35 @@ export class IgxGridCRUDService {
     end(): void {
         this.cell = null;
     }
+    public enterEditMode(cell) {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (cell && cell.column.editable && !cell.row.deleted) {
+            if (this.inEditMode) {
+                this.grid.endEdit(true);
+                this.grid.tbody.nativeElement.focus();
+            } else {
+                this.begin(cell);
+            }
+        }
+    }
 
+    public exitEditMode() {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (this.inEditMode) {
+            const args = this.cell.createEditEventArgs();
+            this.grid.onCellEditCancel.emit(args);
+            if (args.cancel) {
+                return;
+            }
+            this.grid.endEdit(false);
+            if (isEdge()) { this.grid.cdr.detectChanges(); }
+            this.grid.tbody.nativeElement.focus();
+        }
+    }
 
     isInEditMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
@@ -282,8 +310,8 @@ export class IgxGridSelectionService {
     }
 
     /**
-    * Resets the columns state
-    */
+     * Resets the columns state
+     */
     initColumnsState(): void {
         this.columnsState.field = null;
         this.columnsState.range = [];
@@ -383,12 +411,12 @@ export class IgxGridSelectionService {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
-
+        if (!this.grid.navigation.isDataRow(node.row)) { return; }
         // Kb navigation with shift and no previous node.
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
             this.clear();
-            this.keyboardState.node = node;
+            this.keyboardState.node = Object.assign({}, node);
         }
     }
 
@@ -622,7 +650,7 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
-    /** Select range from last selected row to the current specified row.*/
+    /** Select range from last selected row to the current specified row. */
     selectMultipleRows(rowID, rowData, event?): void {
         this.allRowsSelected = undefined;
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
@@ -689,7 +717,7 @@ export class IgxGridSelectionService {
         this.allRowsSelected = undefined;
     }
 
-    /**Clear rowSelection and update checkbox state*/
+    /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
         this.clearHeaderCBState();
@@ -726,9 +754,9 @@ export class IgxGridSelectionService {
     }
 
     /** Select the specified column and emit event. */
-    selectColumn(field: string, clearPrevSelection?, event?): void {
+    selectColumn(field: string, clearPrevSelection?, selectColumnsRange?, event?): void {
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !event.shiftKey  ) {
+        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange  ) {
             this.columnsState.field = field;
             this.columnsState.range = [];
 
@@ -737,16 +765,16 @@ export class IgxGridSelectionService {
             const removed = clearPrevSelection ? this.getSelectedColumns().filter(colField => colField !== field) : [];
             const added = this.isColumnSelected(field) ? [] : [field];
             this.emitColumnSelectionEvent(newSelection, added, removed, event);
-        } else if (event && event.shiftKey) {
+        } else if (selectColumnsRange) {
             this.selectColumnsRange(field, event);
         }
     }
 
     /** Select specified columns. And emit event. */
-    selectColumns(fields: string[], clearPrevSelection?, event?): void {
+    selectColumns(fields: string[], clearPrevSelection?, selectColumnsRange?, event?): void {
         const columns = fields.map(f => this.grid.getColumnByName(f)).sort((a, b) => a.visibleIndex - b.visibleIndex);
         const stateColumn = this.columnsState.field ? this.grid.getColumnByName(this.columnsState.field) : null;
-        if (!event || !stateColumn || stateColumn.visibleIndex < 0 || !event.shiftKey) {
+        if (!stateColumn || stateColumn.visibleIndex < 0 || !selectColumnsRange) {
             this.columnsState.field = columns[0] ? columns[0].field : null;
             this.columnsState.range = [];
 
@@ -762,7 +790,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    /** Select range from last clicked column to the current specified column.*/
+    /** Select range from last clicked column to the current specified column. */
     selectColumnsRange(field: string, event): void {
         const currIndex = this.grid.getColumnByName(this.columnsState.field).visibleIndex;
         const newIndex = this.grid.columnToVisibleIndex(field);
@@ -825,7 +853,7 @@ export class IgxGridSelectionService {
         this.selectColumnsWithNoEvent(args.newSelection, true);
     }
 
-    /**Clear columnSelection*/
+    /** Clear columnSelection */
     public clearAllSelectedColumns(): void {
         this.columnSelection.clear();
     }

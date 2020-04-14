@@ -8,10 +8,28 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
 
+- `IgxInputGroup`
+  - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
+
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
 
 ### New Features
+
+- `igxSplitter` component added.
+    - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
+        Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
+
+     ```html
+   <igx-splitter [type]="type">
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+    </igx-splitter>
+    ```
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added ability to pin rows to top or bottom depending on the new `pinning` input.
@@ -33,6 +51,7 @@ All notable changes for each version of this project will be documented in this 
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
     - Added functionality for column selection.
+     - `columnSelection` property has been added. It accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple.
     - `selected` property has been added to the IgxColumnComponent; Allows you to set whether the column is selected.
     - `selectable` property has been added to the IgxColumnComponent; Allows you to set whether the column is selectable.
     - `onColumnSelectionChange` event is added for the `IgxGrid`. It is emitted when the column selection is changed.
@@ -45,6 +64,13 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
+
+- `IgxToast`:
+    - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
+
+- `IgxDrag`
+    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - New `dragDirection` input that can specify only one direction of dragging or both.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.

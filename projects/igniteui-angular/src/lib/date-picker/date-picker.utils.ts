@@ -5,7 +5,7 @@ import { max } from 'rxjs/operators';
 /**
  * This enum is used to keep the date validation result.
  *
- *@hidden
+ * @hidden
  */
 export const enum DateState {
     Valid = 'valid',
@@ -13,7 +13,7 @@ export const enum DateState {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 const enum FormatDesc {
     Numeric = 'numeric',
@@ -21,7 +21,7 @@ const enum FormatDesc {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 const enum DateChars {
     YearChar = 'y',
@@ -33,7 +33,7 @@ const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
 const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
 
 /**
- *@hidden
+ * @hidden
  */
 const enum DateParts {
     Day = 'day',

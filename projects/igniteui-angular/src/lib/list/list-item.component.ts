@@ -41,12 +41,12 @@ import { HammerGesturesManager } from '../core/touch';
 export class IgxListItemComponent implements IListChild {
 
     /**
-     *@hidden
+     * @hidden
      */
     private _panState: IgxListPanState = IgxListPanState.NONE;
 
     /**
-     *@hidden
+     * @hidden
      */
     private panOffset = 0;
 
@@ -56,7 +56,7 @@ export class IgxListItemComponent implements IListChild {
     private _index: number = null;
 
     /**
-     *@hidden
+     * @hidden
      */
     private lastPanDir = IgxListPanState.NONE;
 
@@ -182,7 +182,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('click', ['$event'])
     clicked(evt) {
@@ -191,7 +191,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('panstart', ['$event'])
     panStart(ev) {
@@ -204,7 +204,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('panmove', ['$event'])
     panMove(ev) {
@@ -225,7 +225,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('panend', ['$event'])
     panEnd(ev) {
@@ -284,21 +284,21 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private showLeftPanTemplate() {
         this.setLeftAndRightTemplatesVisibility('visible', 'hidden');
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private showRightPanTemplate() {
         this.setLeftAndRightTemplatesVisibility('hidden', 'visible');
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private hideLeftAndRightPanTemplates() {
         setTimeout(() => {
@@ -307,7 +307,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private setLeftAndRightTemplatesVisibility(leftVisibility, rightVisibility) {
         if (this.leftPanningTemplateElement && this.leftPanningTemplateElement.nativeElement) {
@@ -424,7 +424,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private setContentElementLeft(value: number) {
         this.panOffset = value;
@@ -432,7 +432,7 @@ export class IgxListItemComponent implements IListChild {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private isTrue(value: boolean): boolean {
         if (typeof (value) === 'boolean') {

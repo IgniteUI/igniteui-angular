@@ -124,26 +124,26 @@ export class IgxSlideComponent implements OnDestroy {
     @Input() public previous = false;
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output() public activeChange = new EventEmitter<boolean>();
 
     constructor(private elementRef: ElementRef) { }
 
     /**
-    * Returns a reference to the carousel element in the DOM.
-    * ```typescript
-    * let nativeElement =  this.slide.nativeElement;
-    * ```
-    * @memberof IgxSlideComponent
-    */
+     * Returns a reference to the carousel element in the DOM.
+     * ```typescript
+     * let nativeElement =  this.slide.nativeElement;
+     * ```
+     * @memberof IgxSlideComponent
+     */
     public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public get isDestroyed(): Subject<boolean> {
     return this._destroy$;
     }

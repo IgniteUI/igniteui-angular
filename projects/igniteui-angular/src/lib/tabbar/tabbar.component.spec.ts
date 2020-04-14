@@ -9,10 +9,13 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { BottomNavRoutingViewComponentsModule,
     BottomNavRoutingView1Component,
     BottomNavRoutingView2Component,
-    BottomNavRoutingView3Component } from './routing-view-components.spec';
+    BottomNavRoutingView3Component,
+    BottomNavRoutingView4Component,
+    BottomNavRoutingView5Component} from './routing-view-components.spec';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { BottomNavRoutingTestGuard } from './bottom-nav-routing-test-guard.spec';
 
 describe('IgxBottomNav', () => {
     configureTestSuite();
@@ -22,19 +25,61 @@ describe('IgxBottomNav', () => {
 
     beforeAll(async(() => {
         const testRoutes = [
-            { path: 'view1', component: BottomNavRoutingView1Component },
-            { path: 'view2', component: BottomNavRoutingView2Component },
-            { path: 'view3', component: BottomNavRoutingView3Component }
+            { path: 'view1', component: BottomNavRoutingView1Component, canActivate: [BottomNavRoutingTestGuard] },
+            { path: 'view2', component: BottomNavRoutingView2Component, canActivate: [BottomNavRoutingTestGuard] },
+            { path: 'view3', component: BottomNavRoutingView3Component, canActivate: [BottomNavRoutingTestGuard] },
+            { path: 'view4', component: BottomNavRoutingView4Component, canActivate: [BottomNavRoutingTestGuard] },
+            { path: 'view5', component: BottomNavRoutingView5Component, canActivate: [BottomNavRoutingTestGuard] },
         ];
 
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
-                TabBarTabsOnlyModeTestComponent],
-            imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
+                TabBarTabsOnlyModeTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent],
+            imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
+            providers: [BottomNavRoutingTestGuard]
         }).compileComponents();
     }));
 
-    describe('IgxBottomNav Component with Panels Definitions', () => {
+    describe('Html Attributes', () => {
+        let fixture;
+        let tabbar;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(BottomNavTestHtmlAttributesComponent);
+            tabbar = fixture.componentInstance.tabbar;
+        }));
+
+        it('should set the correct attributes on the html elements', () => {
+            fixture.detectChanges();
+
+            const igxBottomNavs = document.querySelectorAll('igx-bottom-nav');
+            expect(igxBottomNavs.length).toBe(2);
+
+            const startIndex = parseInt(igxBottomNavs[0].id.replace('igx-bottom-nav-', ''), 10);
+            for (let tabIndex = startIndex; tabIndex < startIndex + 2; tabIndex++) {
+                const tab = igxBottomNavs[tabIndex - startIndex];
+                expect(tab.id).toEqual(`igx-bottom-nav-${tabIndex}`);
+
+                const headers = tab.querySelectorAll('igx-tab');
+                const contents = tab.querySelectorAll('igx-tab-panel');
+                expect(headers.length).toBe(3);
+                expect(contents.length).toBe(3);
+
+                for (let itemIndex = 0; itemIndex < 3; itemIndex++) {
+                    const headerId = `igx-tab-${tabIndex}-${itemIndex}`;
+                    const contentId = `igx-tab-panel-${tabIndex}-${itemIndex}`;
+
+                    expect(headers[itemIndex].id).toEqual(headerId);
+                    expect(headers[itemIndex].getAttribute('aria-controls')).toEqual(contentId);
+
+                    expect(contents[itemIndex].id).toEqual(contentId);
+                    expect(contents[itemIndex].getAttribute('aria-labelledby')).toEqual(headerId);
+                }
+            }
+        });
+    });
+
+    describe('Component with Panels Definitions', () => {
         let fixture;
         let tabbar;
 
@@ -187,7 +232,7 @@ describe('IgxBottomNav', () => {
 
     });
 
-    describe('BottomNav Component with Custom Template', () => {
+    describe('Component with Custom Template', () => {
         let fixture;
         let tabbar;
 
@@ -271,6 +316,33 @@ describe('IgxBottomNav', () => {
             expect(theTabs[2].isSelected).toBe(false);
         }));
 
+        it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
+            fixture = TestBed.createComponent(BottomNavRoutingGuardTestComponent);
+            bottomNav = fixture.componentInstance.bottomNavComp;
+            fixture.detectChanges();
+            theTabs = bottomNav.contentTabs.toArray();
+
+            fixture.ngZone.run(() => { router.initialNavigation(); });
+            tick();
+            expect(location.path()).toBe('/');
+
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].elementRef()); });
+            tick();
+            expect(location.path()).toBe('/view1');
+            fixture.detectChanges();
+            expect(bottomNav.selectedIndex).toBe(0);
+            expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+
+            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].elementRef()); });
+            tick();
+            expect(location.path()).toBe('/view1');
+            fixture.detectChanges();
+            expect(bottomNav.selectedIndex).toBe(0);
+            expect(theTabs[0].isSelected).toBe(true);
+            expect(theTabs[1].isSelected).toBe(false);
+        }));
+
     });
 
     describe('Tabs-only Mode Tests', () => {
@@ -295,38 +367,7 @@ describe('IgxBottomNav', () => {
             expect(theTabs[2].isSelected).toBe(false);
             expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
         });
-
-        it('should have the correct selection set even when no active link is present on the tabs', () => {
-            expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-            expect(theTabs[1].isSelected).toBe(true);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
-            expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            theTabs[0].elementRef().nativeElement.dispatchEvent(new Event('click'));
-            fixture.detectChanges();
-
-            expect(theTabs[0].isSelected).toBe(true);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
-            expect(theTabs[1].isSelected).toBe(false);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-            expect(theTabs[2].isSelected).toBe(false);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-
-            theTabs[2].elementRef().nativeElement.dispatchEvent(new Event('click'));
-            fixture.detectChanges();
-
-            expect(theTabs[0].isSelected).toBe(false);
-            expect(theTabs[0].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-            expect(theTabs[1].isSelected).toBe(false);
-            expect(theTabs[1].elementRef().nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
-            expect(theTabs[2].isSelected).toBe(true);
-            expect(theTabs[2].elementRef().nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
-        });
-
     });
-
 });
 
 @Component({
@@ -477,4 +518,62 @@ class TabBarRoutingTestComponent {
 class TabBarTabsOnlyModeTestComponent {
     @ViewChild(IgxBottomNavComponent, { static: true })
     public bottomNavComp: IgxBottomNavComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <div>
+                <router-outlet></router-outlet>
+            </div>
+            <igx-bottom-nav>
+                <igx-tab label="Tab 1" icon="library_music"
+                    routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                </igx-tab>
+                <igx-tab label="Tab 5" icon="library_books"
+                    routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [isSelected]="rlaX.isActive">
+                </igx-tab>
+            </igx-bottom-nav>
+        </div>
+    `
+})
+class BottomNavRoutingGuardTestComponent {
+    @ViewChild(IgxBottomNavComponent, { static: true })
+    public bottomNavComp: IgxBottomNavComponent;
+}
+
+@Component({
+    template: `
+        <div>
+            <div>
+                <igx-bottom-nav>
+                    <igx-tab-panel label="Tab 1">
+                        <div>Content 1</div>
+                    </igx-tab-panel>
+                    <igx-tab-panel label="Tab 2">
+                        <div>Content 2</div>
+                    </igx-tab-panel>
+                    <igx-tab-panel label="Tab 3">
+                        <div>Content 3</div>
+                    </igx-tab-panel>
+                </igx-bottom-nav>
+            </div>
+            <div>
+                <igx-bottom-nav>
+                    <igx-tab-panel label="Tab 4">
+                        <div>Content 4</div>
+                    </igx-tab-panel>
+                    <igx-tab-panel label="Tab 5">
+                        <div>Content 5</div>
+                    </igx-tab-panel>
+                    <igx-tab-panel label="Tab 6">
+                        <div>Content 6</div>
+                    </igx-tab-panel>
+                </igx-bottom-nav>
+            </div>
+        </div>
+        `
+})
+class BottomNavTestHtmlAttributesComponent {
+    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
 }

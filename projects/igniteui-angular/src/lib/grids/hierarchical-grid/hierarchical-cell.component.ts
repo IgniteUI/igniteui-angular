@@ -1,7 +1,7 @@
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
-     OnInit, HostListener, NgZone } from '@angular/core';
+     OnInit, HostListener, NgZone, HostBinding } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
@@ -11,11 +11,10 @@ import { PlatformUtil } from '../../core/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-cell',
-    templateUrl: './../cell.component.html',
+    templateUrl: '../cell.component.html',
     providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
-
     // protected hSelection;
     protected _rootGrid;
 
@@ -49,6 +48,9 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
     _clearAllHighlights() {
         [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
             grid.selectionService.clear();
+            if (grid.navigation.activeNode) {
+                grid.navigation.activeNode.row = null;
+            }
             grid.selectionService.activeElement = null;
             grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
             grid.highlightedRowID = null;
@@ -60,11 +62,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      * @internal
      */
-    @HostListener('focus', ['$event'])
-    onFocus(event) {
-        if (this.focused) {
-            return;
-        }
+    public activate(event: FocusEvent) {
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
         let parentGrid = this.grid;
@@ -74,6 +72,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             currentElement.classList.add('igx-grid__tr--highlighted');
         }
 
+        this.grid.navigation.activeNode = this.selectionNode;
         // add highligh to the current grid
         while (this._rootGrid.id !== parentGrid.id) {
             childGrid = parentGrid;
@@ -82,26 +81,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
             parentGrid.highlightedRowID = parentRowID;
         }
-        super.onFocus(event);
-    }
-
-    // TODO: Refactor
-    /**
-     * @hidden
-     * @internal
-     */
-    dispatchEvent(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        if (event.altKey && !this.row.added) {
-            const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
-            const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
-            if (collapse) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, false, event);
-            } else if (expand) {
-                this.gridAPI.set_row_expansion_state(this.row.rowID, true, event);
-            }
-            return;
-        }
-        super.dispatchEvent(event);
+        super.activate(event);
     }
 }
