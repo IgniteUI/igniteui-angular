@@ -4255,30 +4255,20 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'Apr', fix);
+
+            const todayDate = SampleTestData.today.getDate().toString();
+            const sampleFullDate = SampleTestData.excelFilteringData()[0].ReleaseDate;
+            const dayOfWeek = sampleFullDate.toString().substring(0, 3);
+
+            UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
             tick(100);
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
 
-            UIInteractions.sendInputElementValue(inputNativeElement, 'April', fix);
-            tick(100);
-            fix.detectChanges();
-
-            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
-
-            UIInteractions.sendInputElementValue(inputNativeElement, '29', fix);
-            tick(100);
-            fix.detectChanges();
-
-            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
-
-            UIInteractions.sendInputElementValue(inputNativeElement, 'Wed', fix);
+            UIInteractions.sendInputElementValue(inputNativeElement, dayOfWeek, fix);
             tick(100);
             fix.detectChanges();
 
