@@ -265,12 +265,12 @@ describe('IgxSplitter pane toggle', () => {
         // collapse left sibling pane
         splitterBarComponent.onCollapsing(0);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
 
         // expand left sibling pane
         splitterBarComponent.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
     });
 
     it('should be able to expand both siblings when they are collapsed', () => {
@@ -285,27 +285,27 @@ describe('IgxSplitter pane toggle', () => {
         splitterBar2.onCollapsing(0);
         fixture.detectChanges();
 
-        expect(pane1.hidden).toBeTruthy();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
 
         splitterBar1.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
     });
 
-    it('should not be able to resize a pane when it is hidden', () => {
+    it('should not be able to resize a pane when it is collapsed', () => {
         const pane1 = splitter.panes.toArray()[0];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
 
         // collapse left sibling pane
         splitterBarComponent.onCollapsing(0);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         expect(pane1.resizable).toBeFalsy();
 
         splitterBarComponent.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         expect(pane1.resizable).toBeTruthy();
     });
 });
