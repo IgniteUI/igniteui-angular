@@ -8,7 +8,8 @@ import { Component,
     ContentChildren,
     TemplateRef,
     QueryList,
-    Directive } from '@angular/core';
+    Directive,
+    forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
@@ -16,7 +17,6 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
-import { IgxGridBaseDirective } from '../grids';
 
 let NEXT_ID = 0;
 
@@ -104,8 +104,11 @@ export class IgxActionStripComponent {
 
     public context;
 
-    @ContentChildren(IgxGridActionsBaseDirective) public gridActions: QueryList<IgxGridActionsBaseDirective>;
-    @ContentChildren(IgxActionStripMenuItemDirective) public menuItems: QueryList<IgxActionStripMenuItemDirective>;
+    @ContentChildren(forwardRef(() => IgxGridActionsBaseDirective), { descendants: true })
+    public gridActions: QueryList<IgxGridActionsBaseDirective>;
+
+    @ContentChildren(IgxActionStripMenuItemDirective)
+    public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
     show(context): void {
         this.context = context;

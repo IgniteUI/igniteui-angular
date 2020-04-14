@@ -7,6 +7,7 @@ export class IgxGridActionsBaseDirective {
     /**
      * An @Input property that set an instance of the grid for which to display the actions.
      * ```html
+     *  <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
      *  <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
      * ```
      */

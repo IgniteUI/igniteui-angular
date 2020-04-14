@@ -1,9 +1,10 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-pinning-actions',
-    templateUrl: 'grid-pinning-actions.component.html'
+    templateUrl: 'grid-pinning-actions.component.html',
+    providers: [{provide: IgxGridActionsBaseDirective, useExisting: IgxGridPinningActionsComponent}]
 })
 
 export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {

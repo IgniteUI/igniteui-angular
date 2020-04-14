@@ -3,7 +3,8 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-editing-actions',
-    templateUrl: 'grid-editing-actions.component.html'
+    templateUrl: 'grid-editing-actions.component.html',
+    providers: [{provide: IgxGridActionsBaseDirective, useExisting: IgxGridEditingActionsComponent}]
 })
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
