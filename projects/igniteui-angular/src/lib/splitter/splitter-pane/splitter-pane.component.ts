@@ -12,7 +12,10 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
 })
 export class IgxSplitterPaneComponent {
 
-    public _size = 'auto';
+    private _size = 'auto';
+    private _collapsed = false;
+    public owner;
+
     /**
      * Sets/gets the size of the current `IgxSplitterPaneComponent`.
      */
@@ -24,14 +27,7 @@ export class IgxSplitterPaneComponent {
     set size(value) {
         this._size = value;
         this.el.nativeElement.style.flex = this.flex;
-        this.sizeChange.emit(value);
     }
-
-    /**
-     * @hidden @internal
-     */
-    @Output()
-    public sizeChange = new EventEmitter<string>();
 
     /**
      * Sets/gets the minimum allowable size of the current `IgxSplitterPaneComponent`.
@@ -51,11 +47,14 @@ export class IgxSplitterPaneComponent {
     @Input()
     public resizable = true;
 
-
     /**
-     * Sets/gets the `order` property of the current `IgxSplitterPaneComponent`.
+     * Event fired when collapsed state of pane is changed.
      */
-    @Input()
+    @Output()
+    public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
+
+
+    /** @hidden @internal */
     @HostBinding('style.order')
     public order!: number;
 
@@ -90,7 +89,6 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
-     * @readonly
      */
     @HostBinding('style.flex')
     public get flex() {
@@ -106,26 +104,43 @@ export class IgxSplitterPaneComponent {
     @HostBinding('style.display')
     public display = 'flex';
 
-    private _hidden = false;
-
     /**
-     * Sets/gets whether current `IgxSplitterPanecomponent` is hidden
+     * Sets/gets whether current pane is collapsed.
      */
     @Input()
-    public set hidden(value) {
-        this._hidden = value;
-        this.display = this._hidden ? 'none' : 'flex' ;
+    public set collapsed(value) {
+        this._collapsed = value;
+        this.display = this._collapsed ? 'none' : 'flex' ;
     }
 
-    public get hidden() {
-        return this._hidden;
+    public get collapsed() {
+        return this._collapsed;
+    }
+
+    /** @hidden @internal */
+    private _getSiblings() {
+        const panes = this.owner.panes.toArray();
+        const index = panes.indexOf(this);
+        const siblings = [];
+        if (index !== 0) {
+            siblings.push(panes[index - 1]);
+        }
+        if (index !== panes.length - 1) {
+            siblings.push(panes[index + 1]);
+        }
+        return siblings;
     }
 
     /**
-     * Event fired when collapsing and changing the hidden state of the current pane
+     * Toggles the collapsed state of the pane.
      */
-    @Output()
-    public onPaneToggle = new EventEmitter<IgxSplitterPaneComponent>();
+    public toggle() {
+        // reset sibling sizes when pane collapse state changes.
+        this._getSiblings().forEach(sibling => sibling.size = 'auto');
+        this.collapsed = !this.collapsed;
+        this.resizable = !this.collapsed;
+        this.onToggle.emit(this);
+    }
 
     constructor(private el: ElementRef) { }
 }

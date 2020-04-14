@@ -38,7 +38,18 @@ export class IgxSplitBarComponent {
      * @internal
      */
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public get tabindex() {
+        return this.resizeDisallowed ? null : 0;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.aria-orientation')
+    public get orientation() {
+        return this.type === SplitterType.Horizontal ? 'vertical' : 'horizontal';
+    }
 
     /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
@@ -83,7 +94,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get prevButtonHidden() {
-        return this.siblings[0].hidden && !this.siblings[1].hidden;
+        return this.siblings[0].collapsed && !this.siblings[1].collapsed;
     }
 
     /**
@@ -170,7 +181,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get nextButtonHidden() {
-        return this.siblings[1].hidden && !this.siblings[0].hidden;
+        return this.siblings[1].collapsed && !this.siblings[0].collapsed;
     }
 
     public onDragStart(event: IDragStartEventArgs) {
@@ -204,11 +215,11 @@ export class IgxSplitBarComponent {
         let target;
         if (next) {
             // if next is clicked when prev pane is hidden, show prev pane, else hide next pane.
-            target = prevSibling.hidden ? prevSibling : nextSibling;
+            target = prevSibling.collapsed ? prevSibling : nextSibling;
         } else {
             // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
-            target = nextSibling.hidden ? nextSibling : prevSibling;
+            target = nextSibling.collapsed ? nextSibling : prevSibling;
         }
-        this.togglePane.emit(target);
+        target.toggle();
     }
 }
