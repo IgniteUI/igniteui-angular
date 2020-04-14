@@ -12,12 +12,29 @@ export enum SplitterType {
 }
 
 /**
- * Provides reference to `SplitterComponent` component.
- * The splitter consists of resizable panes that can be arranged either vertically or horizontally.
- * There is a gripper between each couple of panes that helps widen or shrink them.
- * @export
- * @class SplitterComponent
- * @implements AfterContentInit
+ * Provides a framework for a simple layout, splitting the view horizontally or vertically
+ * into multiple smaller resizable and collapsible areas.
+ * @igxModule IgxSplitterModule
+ *
+ * @igxParent Layouts
+ *
+ * @igxTheme igx-splitter-theme
+ *
+ * @igxKeywords splitter panes layout
+ *
+ * @igxGroup presentation
+ *
+ * @example
+ * ```html
+ * <igx-splitter>
+ *  <igx-splitter-pane>
+ *      ...
+ *  </igx-splitter-pane>
+ *  <igx-splitter-pane>
+ *      ...
+ *  </igx-splitter-pane>
+ * </igx-splitter>
+ * ```
  */
 @Component({
     selector: 'igx-splitter',
@@ -26,9 +43,11 @@ export enum SplitterType {
 export class IgxSplitterComponent implements AfterContentInit {
     private _type: SplitterType = SplitterType.Vertical;
     /**
-     * Sets/gets `SplitterComponent` orientation.
-     * @type SplitterType
-     * @memberof SplitterComponent
+     * Gets/Sets the splitter orientation.
+     * @example
+     * ```html
+     * <igx-splitter [type]="type">...</igx-splitter>
+     * ```
      */
     @Input()
     get type() {
@@ -43,17 +62,18 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
-     * A list of all `IgxSplitterPaneComponent` items.
-     * @memberof SplitterComponent
+     * Gets the list of splitter panes.
+     * @example
+     * ```typescript
+     * const panes = this.splitter.panes;
+     * ```
      */
     @ContentChildren(IgxSplitterPaneComponent, { read: IgxSplitterPaneComponent })
     public panes!: QueryList<IgxSplitterPaneComponent>;
 
     /**
+     * @hidden @internal
      * Gets the `flex-direction` property of the current `SplitterComponent`.
-     * @readonly
-     * @type string
-     * @memberof SplitterComponent
      */
     @HostBinding('style.flex-direction')
     public get direction(): string {
@@ -61,44 +81,40 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     /**
-     * Sets/gets the `overflow` property of the current `SplitterComponent`.
-     * @memberof SplitterComponent
+     * @hidden @internal
+     * Gets/Sets the `overflow` property of the current splitter.
      */
     @HostBinding('style.overflow')
     public overflow = 'hidden';
 
     /**
-     * Sets/gets the `display` property of the current `SplitterComponent`.
-     * @memberof SplitterComponent
+     * @hidden @internal
+     * Sets/Gets the `display` property of the current splitter.
      */
     @HostBinding('style.display')
     public display = 'flex';
 
     /**
-     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
+     * @hidden @internal
+     * A field that holds the initial size of the main `IgxSplitterPaneComponent` in each pair of panes divided by a splitter bar.
      */
     private initialPaneSize!: number;
 
     /**
-     * A field that holds the initial size of the sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
+     * @hidden @internal
+     * A field that holds the initial size of the sibling pane in each pair of panes divided by a gripper.
      * @memberof SplitterComponent
      */
     private initialSiblingSize!: number;
 
     /**
-     * The main `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
+     * @hidden @internal
+     * The main pane in each pair of panes divided by a gripper.
      */
     private pane!: IgxSplitterPaneComponent;
 
     /**
-     * The sibling `IgxSplitterPaneComponent` in each couple of panes devided by a gripper.
-     * @private
-     * @memberof SplitterComponent
+     * The sibling pane in each pair of panes divided by a splitter bar.
      */
     private sibling!: IgxSplitterPaneComponent;
 
@@ -114,9 +130,8 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
-     * This method performs some initialization logic when the user starts dragging the gripper between each couple of panes.
-     * @param  {IgxSplitterPaneComponent} pane
-     * The main `IgxSplitterPaneComponent` associated with the currently dragged `SplitBarComponent`.
+     * This method performs  initialization logic when the user starts dragging the splitter bar between each pair of panes.
+     * @param pane - the main pane associated with the currently dragged bar.
      */
     public onMoveStart(pane: IgxSplitterPaneComponent) {
         const panes = this.panes.toArray();
@@ -138,8 +153,8 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
-     * This method performs some calculations concerning the sizes each couple of panes while the gripper between them is being dragged.
-     * @param  {number} delta The differnce along the X (or Y) axis between the initial and the current point while dragging the gripper.
+     * This method performs calculations concerning the sizes of each pair of panes when the bar between them is dragged.
+     * @param delta - The difference along the X (or Y) axis between the initial and the current point when dragging the bar.
      */
     public onMoving(delta: number) {
         const min = parseInt(this.pane.minSize, 10) || 0;
@@ -159,7 +174,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /**
      * @hidden @internal
-     * This method takes care for assigning an `order` property on each `IgxSplitterPaneComponent`.
+     * This method assigns the order of each pane.
      */
     private assignFlexOrder() {
         let k = 0;
