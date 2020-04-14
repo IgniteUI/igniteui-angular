@@ -304,7 +304,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
         });
 
-        it('should pin rows when columns are grouped.', () => {
+        it('should pin rows when columns are grouped.', async () => {
             grid.height = '650px';
             fix.detectChanges();
             // pin 1st and 2nd data row
@@ -334,6 +334,9 @@ describe('Row Pinning #grid', () => {
 
             // pin 4th data row with ID:AROUT
             grid.pinRow(fix.componentInstance.data[3]);
+            fix.detectChanges();
+
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(3);
