@@ -202,16 +202,16 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeFalsy();
+        expect(pane2.collapsed).toBeFalsy();
     });
 
     it('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
@@ -225,16 +225,16 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeFalsy();
+        expect(pane2.collapsed).toBeFalsy();
     });
 
 });

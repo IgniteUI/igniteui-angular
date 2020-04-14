@@ -104,6 +104,7 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
+        this.panes.forEach(pane => pane.owner = this);
         this.assignFlexOrder();
         this.panes.changes.subscribe(() => {
             this.panes.forEach(pane => pane.owner = this);
