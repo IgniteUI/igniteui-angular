@@ -7,10 +7,8 @@ import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../di
 export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
 
 /**
- * Provides reference to `SplitBarComponent` component.
- * Represents the draggable gripper that visually separates panes and allows for changing their sizes.
- * @export
- * @class SplitBarComponent
+ * @hidden @internal
+ * Represents the draggable bar that visually separates panes and allows for changing their sizes.
  */
 @Component({
     selector: 'igx-splitter-bar',
@@ -66,27 +64,18 @@ export class IgxSplitBarComponent {
 
     /**
      * An event that is emitted whenever we start dragging the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
      */
     @Output()
     public moveStart = new EventEmitter<IgxSplitterPaneComponent>();
 
     /**
      * An event that is emitted while we are dragging the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
      */
     @Output()
     public moving = new EventEmitter<number>();
 
     /**
-     * An event that is emitted when collapsing the pane
-     */
-    @Output()
-    public togglePane = new EventEmitter<IgxSplitterPaneComponent>();
-    /**
      * A temporary holder for the pointer coordinates.
-     * @private
-     * @memberof SplitBarComponent
      */
     private startPoint!: number;
 
@@ -184,6 +173,9 @@ export class IgxSplitBarComponent {
         return this.siblings[1].collapsed && !this.siblings[0].collapsed;
     }
 
+    /**
+     * @hidden @internal
+     */
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
@@ -193,6 +185,9 @@ export class IgxSplitBarComponent {
         this.moveStart.emit(this.pane);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onDragMove(event: IDragMoveEventArgs) {
         const isHorizontal = this.type === SplitterType.Horizontal;
         const curr =  isHorizontal ? event.pageX : event.pageY;
@@ -209,6 +204,9 @@ export class IgxSplitBarComponent {
         return !!relatedTabs.find(x => x.resizable === false);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onCollapsing(next: boolean) {
         const prevSibling = this.siblings[0];
         const nextSibling = this.siblings[1];
