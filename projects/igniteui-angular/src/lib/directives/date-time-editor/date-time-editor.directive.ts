@@ -27,9 +27,11 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
  *
  * @remarks
  *
- * The Ignite UI Date Time Editor Directive makes it easy for developers to manipulate date/time user input. It requires input in a specified or
- * default input format which is visible in the input element as a placeholder. It allows to input only date(ex: 'dd/MM/yyyy'), only time(ex:'HH:mm tt') or both at once if needed.
- * Supports display format that may differ from the input format. Provides methods to increment and decrement any specific/targeted `DatePart`.
+ * The Ignite UI Date Time Editor Directive makes it easy for developers to manipulate date/time user input.
+ * It requires input in a specified or default input format which is visible in the input element as a placeholder.
+ * It allows to input only date(ex: 'dd/MM/yyyy'), only time(ex:'HH:mm tt') or both at once, if needed.
+ * Supports display format that may differ from the input format.
+ * Provides methods to increment and decrement any specific/targeted `DatePart`.
  *
  * @example
  * ```html
@@ -56,13 +58,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
   @Input()
   public locale = 'en';
 
-/**
-  * An @Input property that allows you to set the minimum possible value the editor will allow.
-  * @example
-  *```html
-  * <input igxDateTimeEditor [minValue]="minDate">
-  *```
-  */
+  /**
+    * An @Input property that allows you to set the minimum possible value the editor will allow.
+    * @example
+    *```html
+    * <input igxDateTimeEditor [minValue]="minDate">
+    *```
+    */
   @Input()
   public minValue: string | Date;
 
@@ -280,18 +282,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
   /** @hidden @internal */
   public onBlur(event): void {
     this._isFocused = false;
-    this.updateValue(this.value);
-    this.updateMask();
-    this.onTouchCallback();
-    super.onBlur(event);
-  }
 
-  /** @hidden @internal */
-  public onInputChanged(): void {
-    // the mask must be updated before any date operations
-    super.onInputChanged();
     if (this.inputValue === this.emptyMask) {
       this.updateValue(null);
+      this.inputValue = '';
       return;
     }
 
@@ -302,6 +296,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
       this.validationFailed.emit({ oldValue: this.value, newValue: parsedDate.value });
       this.updateValue(null);
     }
+
+    this.updateMask();
+    this.onTouchCallback();
+    super.onBlur(event);
   }
 
   /** @hidden @internal */
@@ -402,7 +400,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnIn
     } else {
       this.onChangeCallback(this.value);
     }
-    if (this.inputIsComplete()) {
+    if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
       this.valueChanged.emit({ oldValue: this._oldValue, newValue: this.value });
     }
   }
