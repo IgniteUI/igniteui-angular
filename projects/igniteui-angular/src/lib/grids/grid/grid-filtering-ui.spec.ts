@@ -4257,9 +4257,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
-            const todayDate = SampleTestData.today.getDate().toString();
-            const sampleFullDate = SampleTestData.excelFilteringData()[0].ReleaseDate;
-            const dayOfWeek = sampleFullDate.toString().substring(0, 3);
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
 
             UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
             tick(100);
