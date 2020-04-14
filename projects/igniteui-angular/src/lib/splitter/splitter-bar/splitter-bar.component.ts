@@ -105,7 +105,7 @@ export class IgxSplitBarComponent {
                             this.onCollapsing(false);
                             break;
                         }
-                        if (!this.resizeDisallowed) {
+                        if (!this.resizeDisallowed && !this.panesHidden) {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(10);
@@ -119,7 +119,7 @@ export class IgxSplitBarComponent {
                             this.onCollapsing(true);
                             break;
                         }
-                        if (!this.resizeDisallowed) {
+                        if (!this.resizeDisallowed && !this.panesHidden) {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(-10);
@@ -133,7 +133,7 @@ export class IgxSplitBarComponent {
                             this.onCollapsing(false);
                             break;
                         }
-                        if (!this.resizeDisallowed) {
+                        if (!this.resizeDisallowed && !this.panesHidden) {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(10);
@@ -147,7 +147,7 @@ export class IgxSplitBarComponent {
                             this.onCollapsing(true);
                             break;
                         }
-                        if (!this.resizeDisallowed) {
+                        if (!this.resizeDisallowed && !this.panesHidden) {
                             event.preventDefault();
                             this.moveStart.emit(this.pane);
                             this.moving.emit(-10);
@@ -174,7 +174,7 @@ export class IgxSplitBarComponent {
     }
 
     public onDragStart(event: IDragStartEventArgs) {
-        if (this.resizeDisallowed) {
+        if (this.resizeDisallowed || this.panesHidden) {
             event.cancel = true;
             return;
         }
@@ -196,6 +196,11 @@ export class IgxSplitBarComponent {
     protected get resizeDisallowed() {
         const relatedTabs = this.siblings;
         return !!relatedTabs.find(x => x.resizable === false);
+    }
+
+    protected get panesHidden() {
+        const relatedTabs = this.siblings;
+        return !!relatedTabs.find(x => x.hidden === true);
     }
 
     public onCollapsing(next: boolean) {

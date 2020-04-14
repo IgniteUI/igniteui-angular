@@ -175,7 +175,6 @@ export class IgxSplitterComponent implements AfterContentInit {
         // reset sibling sizes when pane is collapsed.
         this._getSiblings(pane).forEach(sibling => sibling.size = 'auto');
         pane.hidden = !pane.hidden;
-        pane.resizable = !pane.hidden;
         pane.onPaneToggle.emit(pane);
     }
 
