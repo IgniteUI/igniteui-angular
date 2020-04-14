@@ -1418,7 +1418,15 @@
     }
 
     %grid-cell--pinned-chip {
-        margin-right: rem(4px);
+        margin-#{$right}: rem(12px);
+    }
+
+    %grid-cell--pinned-chip--cosy {
+        margin-#{$right}: rem(8px);
+    }
+
+    %grid-cell--pinned-chip--compact {
+        margin-#{$right}: rem(4px);
     }
 
     %grid-cell-header {

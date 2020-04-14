@@ -36,16 +36,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         };
     }
 
-    /**
-     * The rendered cells in the row component.
-     *
-     * ```typescript
-     * // get the cells of the third selected row
-     * let selectedRowCells = this.grid.selectedRows[2].cells;
-     * ```
-     */
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    public cells: QueryList<IgxHierarchicalGridCellComponent>;
+    protected _cells: QueryList<IgxHierarchicalGridCellComponent>;
 
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef<HTMLElement>;
@@ -71,12 +63,6 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
      */
    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
    protected defaultCollapsedTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
 
     /**
      * Returns whether the row is expanded.
