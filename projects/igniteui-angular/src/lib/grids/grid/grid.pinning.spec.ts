@@ -9,13 +9,13 @@ import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.compon
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSummaryFunctions, GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 // tslint:disable-next-line: max-line-length
 import { PinOnInitAndSelectionComponent, PinningComponent, GridPinningMRLComponent, GridFeaturesComponent, MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 // tslint:disable: no-use-before-declare
 
-fdescribe('IgxGrid - Column Pinning #grid', () => {
+describe('IgxGrid - Column Pinning #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
     const FIXED_CELL_CSS = 'igx-grid__td--pinned';
@@ -407,7 +407,7 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.columns[6].pinned).toBe(true);
         }));
 
-        fit('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
+        it('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
             const fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
             fix.componentInstance.grid.width = '100%';
             fix.detectChanges();
@@ -542,15 +542,15 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
             expect(cell.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
         }));
 
-        it('should correctly pin column to right when row selectors are enabled.', fakeAsync(() => {
+        it('should correctly pin column to right when row selectors are enabled.', () => {
             grid.rowSelectable = true;
-            tick();
             fix.detectChanges();
 
             // check row DOM
             const row = grid.getRowByIndex(0).nativeElement;
-            expect(row.children[0].className).toBe('igx-grid__cbx-selection');
-            expect(row.children[1].className).toBe('igx-display-container');
+
+            GridSelectionFunctions.verifyRowHasCheckbox(row);
+            expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeDefined();
             expect(row.children[2].getAttribute('aria-describedby')).toBe(grid.id + '_CompanyName');
             expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
 
@@ -562,9 +562,9 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
             expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
             const pinnedColSum = grid.pinnedColumns.map(x => parseInt(x.calcWidth, 10)).reduce((x, y) => x + y);
             expect(scrBarEndSection.nativeElement.offsetWidth).toEqual(pinnedColSum);
-            const expectedUnpinAreWidth = parseInt(grid.width, 10) - grid.featureColumnsWidth() - pinnedColSum - grid.scrollWidth;
-            expect(scrBarMainSection.nativeElement.offsetWidth).toEqual(expectedUnpinAreWidth);
-        }));
+            const expectedUnpinAreaWidth = parseInt(grid.width, 10) - grid.featureColumnsWidth() - pinnedColSum - grid.scrollWidth;
+            expect(scrBarMainSection.nativeElement.offsetWidth).toEqual(expectedUnpinAreaWidth);
+        });
 
         it('should pin an unpinned column when drag/drop it among pinned columns.', (async() => {
 
