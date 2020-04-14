@@ -358,6 +358,10 @@
         @extend %igx-grid__td--editing !optional;
     }
 
+    @include e(tr, $m: disabled) {
+        @extend %igx-grid__tr--disabled !optional;
+    }
+
     @include e(td, $m: number) {
         @extend %grid-cell-number !optional;
     }
@@ -390,6 +394,10 @@
 
     @include e(td, $mods: (pinned, column-selected)) {
         @extend %grid-cell--pinned--column-selected !optional;
+    }
+
+    @include e(td, $m: pinned-chip) {
+        @extend %grid-cell--pinned-chip !optional;
     }
 
     @include e(td-text) {
@@ -558,6 +566,11 @@
         @extend %igx-grid__hierarchical-expander !optional;
     }
 
+    @include e(hierarchical-expander, $m: empty) {
+        @extend %igx-grid__hierarchical-expander !optional;
+        @extend %igx-grid__hierarchical-expander--empty !optional;
+    }
+
     @include e(hierarchical-expander, $m: header) {
         @extend %igx-grid__hierarchical-expander--header !optional;
     }
@@ -673,6 +686,11 @@
             @extend %igx-grid__hierarchical-expander--cosy !optional;
         }
 
+        @include e(hierarchical-expander, $m: empty) {
+            @extend %igx-grid__hierarchical-expander--cosy !optional;
+            @extend %igx-grid__hierarchical-expander--empty !optional;
+        }
+
         @include e(hierarchical-expander, $m: push) {
             @extend %igx-grid__hierarchical-expander--push--cosy !optional;
         }
@@ -687,6 +705,10 @@
             @include e(tree-cell, $m: padding-level-#{$i}) {
                 @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
             }
+        }
+
+        @include e(td, $m: pinned-chip) {
+            @extend %grid-cell--pinned-chip--cosy !optional;
         }
     }
 
@@ -772,6 +794,11 @@
         @include e(hierarchical-expander) {
             @extend %igx-grid__hierarchical-expander--compact !optional;
         }
+        
+        @include e(hierarchical-expander, $m: empty) {
+            @extend %igx-grid__hierarchical-expander--compact !optional;
+            @extend %igx-grid__hierarchical-expander--empty !optional;
+        }
 
         @include e(hierarchical-expander, $m: push) {
             @extend %igx-grid__hierarchical-expander--push--compact !optional;
@@ -787,6 +814,10 @@
             @include e(tree-cell, $m: padding-level-#{$i}) {
                 @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
             }
+        }
+
+        @include e(td, $m: pinned-chip) {
+            @extend %grid-cell--pinned-chip--compact !optional;
         }
     }
 
