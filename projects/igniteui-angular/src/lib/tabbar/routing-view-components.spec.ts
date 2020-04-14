@@ -18,12 +18,26 @@ export class BottomNavRoutingView2Component {
 export class BottomNavRoutingView3Component {
 }
 
+@Component({
+    template: `This is a content from view component # 4`
+})
+export class BottomNavRoutingView4Component {
+}
+
+@Component({
+    template: `This is a content from view component # 5`
+})
+export class BottomNavRoutingView5Component {
+}
+
 /**
  * @hidden
  */
 @NgModule({
-    declarations: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component],
-    exports: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component],
+    declarations: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component,
+        BottomNavRoutingView4Component, BottomNavRoutingView5Component],
+    exports: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component,
+        BottomNavRoutingView4Component, BottomNavRoutingView5Component]
 })
 export class BottomNavRoutingViewComponentsModule {
 }
