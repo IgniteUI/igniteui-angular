@@ -52,6 +52,7 @@ export class FilterListItem {
     public isSelected: boolean;
     public indeterminate: boolean;
     public isSpecial = false;
+    public isBlanks = false;
 }
 
 @Directive({
@@ -793,6 +794,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         blanks.label = this.grid.resourceStrings.igx_grid_excel_blanks;
         blanks.indeterminate = false;
         blanks.isSpecial = true;
+        blanks.isBlanks = true;
         this.listData.unshift(blanks);
     }
 
