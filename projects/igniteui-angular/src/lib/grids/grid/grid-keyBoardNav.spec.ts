@@ -181,6 +181,34 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
         }));
 
+        it('should focus the first cell when focus the grid body', async () => {
+            const cols = [];
+            for (let i = 0; i < 10; i++) {
+                cols.push({ field: 'col' + i });
+            }
+            fix.componentInstance.columns = cols;
+            fix.componentInstance.data = fix.componentInstance.generateData(100);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            grid.headerContainer.getScroll().scrollLeft = 1000;
+            await wait(100);
+            fix.detectChanges();
+
+            grid.verticalScrollContainer.getScroll().scrollTop = 200;
+            await wait(100);
+            fix.detectChanges();
+
+            gridContent.triggerEventHandler('focus', null);
+            await wait(200);
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(0, 'col0');
+            expect(cell).toBeDefined();
+            expect(cell.active).toBeTruthy();
+            expect(cell.selected).toBeTruthy();
+        });
+
         it('should allow navigating down', async () => {
             GridFunctions.focusFirstCell(fix);
             await wait();
@@ -598,6 +626,31 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
         }));
+
+        it('should focus the first cell when focus the grid body and there is a grouped column', async () => {
+            grid.columnWidth = '200px';
+            await wait();
+            fix.detectChanges();
+
+            grid.headerContainer.getScroll().scrollLeft = 1000;
+            await wait(100);
+            fix.detectChanges();
+
+            grid.verticalScrollContainer.getScroll().scrollTop = 200;
+            await wait(100);
+            fix.detectChanges();
+
+            gridContent.triggerEventHandler('focus', null);
+            await wait(200);
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(1, 'col0');
+            expect(cell).toBeDefined();
+            expect(cell.active).toBeTruthy();
+            expect(cell.selected).toBeTruthy();
+            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
+        });
 
         it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', () => {
             const gRow = grid.groupsRowList.toArray()[0];

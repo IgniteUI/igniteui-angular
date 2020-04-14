@@ -43,6 +43,41 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             gridHeader = GridFunctions.getGridHeader(fix);
         }));
 
+        it('when click on a header it should stay in the view', async () => {
+            grid.headerContainer.getScroll().scrollLeft = 1000;
+            await wait(100);
+            fix.detectChanges();
+
+            let header = GridFunctions.getColumnHeader('OnPTO', fix);
+            UIInteractions.simulateClickAndSelectCellEvent(header);
+            await wait(200);
+            fix.detectChanges();
+
+            header = GridFunctions.getColumnHeader('OnPTO', fix);
+            expect(header).toBeDefined();
+            GridFunctions.verifyHeaderIsFocused(header.parent);
+        });
+
+        it('should focus first header when the grid is scrolled', async () => {
+            grid.headerContainer.getScroll().scrollLeft = 1000;
+            await wait(100);
+            fix.detectChanges();
+
+            grid.verticalScrollContainer.getScroll().scrollTop = 200;
+            await wait(100);
+            fix.detectChanges();
+
+            gridHeader.triggerEventHandler('focus', null);
+            await wait(200);
+            fix.detectChanges();
+
+            const header = GridFunctions.getColumnHeader('ID', fix);
+            expect(header).toBeDefined();
+            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(200);
+        });
+
         it('should allow horizontal navigation', async () => {
             // Focus grid header
             gridHeader.triggerEventHandler('focus', null);
@@ -313,6 +348,37 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             filterRow = GridFunctions.getFilterRow(fix);
             expect(filterRow).not.toBeNull();
             expect(grid.filteringRow.column.field).toEqual('ParentID');
+        });
+
+        it('Excel Style Filtering: Should be able to open ESF with the keyboard', () => {
+            // Allow ESF
+            grid.allowFiltering = true;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            grid.getColumnByName('ID').filterable = false;
+            fix.detectChanges();
+
+             let header = GridFunctions.getColumnHeader('ID', fix);
+            UIInteractions.simulateClickAndSelectCellEvent(header);
+            fix.detectChanges();
+
+            // Try to open filter for not filterable column
+            UIInteractions.triggerEventHandlerKeyDown('L', gridHeader, false, true, true);
+            fix.detectChanges();
+
+            let filterDialog =  GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(filterDialog).toBeNull();
+
+            UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
+            fix.detectChanges();
+            header = GridFunctions.getColumnHeader('ParentID', fix);
+            GridFunctions.verifyHeaderIsFocused(header.parent);
+
+            // Open filter
+            UIInteractions.triggerEventHandlerKeyDown('L', gridHeader, false, true, true);
+            fix.detectChanges();
+
+            filterDialog =  GridFunctions.getExcelStyleFilteringComponent(fix);
+            expect(filterDialog).toBeDefined();
         });
 
         it('Advanced Filtering: Should be able to open Advanced filter', () => {
