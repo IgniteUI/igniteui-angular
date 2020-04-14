@@ -4,7 +4,9 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from '../grids/hierarchical-grid/hierarchical-row.component';
 import { IgxRowDirective } from '../grids/row.directive';
 
+const HIERARCHICAL_GRID_TAG = 'igx-hierarchical-grid';
 const EXPANDER_CLASS = 'igx-grid__hierarchical-expander';
+const SCROLL_TBODY_CLASS = 'igx-grid__tbody-scrollbar';
 
 export class HierarchicalGridFunctions {
 
@@ -48,5 +50,16 @@ export class HierarchicalGridFunctions {
      */
     public static isExpander(element: HTMLElement, modifier?: string): boolean {
         return element.classList.contains(`${EXPANDER_CLASS}${modifier || ''}`);
+    }
+
+    /**
+     * Gets the main wrapper element of the vertical scrollbar.
+     * @param fix the ComponentFixture to search
+     */
+    public static getVerticalScrollWrapper(fix: ComponentFixture<any>, gridID): HTMLElement {
+        const gridDebugEl = fix.debugElement.query(By.css(HIERARCHICAL_GRID_TAG + `[id='${gridID}'`));
+        const scrollWrappers = gridDebugEl.queryAll(By.css('.' + SCROLL_TBODY_CLASS));
+        // Return the last element since the scrollbar for the targeted grid is after all children that also have scrollbars
+        return scrollWrappers[scrollWrappers.length - 1].nativeElement;
     }
 }
