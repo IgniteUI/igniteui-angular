@@ -99,8 +99,8 @@ export class IgxGridNavigationService {
                 break;
             case 'enter':
             case 'f2':
-                if (!this.isDataRow(rowIndex)) { break; }
                 const cell = this.grid.getCellByColumnVisibleIndex(this.activeNode.row, this.activeNode.column);
+                if (!this.isDataRow(rowIndex) || !cell.editable) { break; }
                 this.grid.crudService.enterEditMode(cell);
                 break;
             case 'escape':
@@ -111,8 +111,8 @@ export class IgxGridNavigationService {
             case ' ':
             case 'spacebar':
             case 'space':
-                if (this.grid.isRowSelectable && this.isDataRow(rowIndex)) {
-                    const rowObj = this.grid.getRowByIndex(this.activeNode.row);
+                const rowObj = this.grid.getRowByIndex(this.activeNode.row);
+                if (this.grid.isRowSelectable && this.isDataRow(rowIndex) && !rowObj.disabled) {
                     rowObj && rowObj.selected ? this.grid.selectionService.deselectRow(rowObj.rowID, event) :
                         this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
                 }
