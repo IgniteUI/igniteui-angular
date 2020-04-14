@@ -1,5 +1,19 @@
 ////
 /// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+///
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+///
+/// @param {color} $bar-color [null] - The background color of the bar.
+/// @param {color} $handle-color [null] - The color for the bar drag handle.
+/// @param {color} $expander-color [null] - The color for the arrow expander's.
+/// @param {number} $border-radius [null] - the border radios of the splitter bar drag handle
+/// @param {color} $focus-color [null] - The color used for focused splitter bar.
+/// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
+///
 @function igx-splitter-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -9,6 +23,7 @@
     $handle-color: null,
     $expander-color: null,
     $border-radius: null,
+    $focus-color: null,
     $size: null
 ) {
     $name: 'igx-splitter';
@@ -41,6 +56,7 @@
         handle-color: $handle-color,
         expander-color: $expander-color,
         border-radius: $border-radius-handle,
+        focus-color: $focus-color,
         size: $size
     ));
 }
@@ -96,6 +112,12 @@
             transition: all .25s ease-out;
             opacity: 1;
         }
+    }
+
+    %igx-splitter-bar--focus {
+        // Remove the default browser outline styles
+        outline: transparent solid 1px;
+        box-shadow: inset 0 0 0 1px --var($theme, 'focus-color');
     }
 
     %igx-splitter-bar--vertical {
