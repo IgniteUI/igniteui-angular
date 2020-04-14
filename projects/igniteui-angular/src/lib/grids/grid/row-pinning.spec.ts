@@ -20,7 +20,6 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
-    const DISABLED_ROW = '.igx-grid__tr--disabled';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const DEBOUNCE_TIME = 60;
     configureTestSuite();
@@ -304,7 +303,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(0).rowID).toBe(fix.componentInstance.data[1]);
         });
 
-        it('should pin rows when columns are grouped.', async () => {
+        it('should pin rows when columns are grouped.', () => {
             grid.height = '650px';
             fix.detectChanges();
             // pin 1st and 2nd data row
@@ -328,15 +327,9 @@ describe('Row Pinning #grid', () => {
             expect(dataRows.length).toEqual(9);
             expect(groupRows[0].groupRow.records[0].ID).toEqual('ALFKI');
             expect(groupRows[0].groupRow.records[1].ID).toEqual('AROUT');
-            let disabledRows = fix.debugElement.queryAll(By.css(DISABLED_ROW));
-            // disabled rows in view should only one from the first group
-            expect(disabledRows.length).toBe(1);
 
             // pin 4th data row with ID:AROUT
             grid.pinRow(fix.componentInstance.data[3]);
-            fix.detectChanges();
-
-            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(grid.pinnedRows.length).toBe(3);
@@ -345,9 +338,6 @@ describe('Row Pinning #grid', () => {
             expect(groupRows[0].groupRow.records[0].ID).toEqual('ALFKI');
             expect(groupRows[0].groupRow.records[1].ID).toEqual('AROUT');
             expect(groupRows[0].groupRow.records[2].ID).toEqual('BLAUS');
-            disabledRows = fix.debugElement.queryAll(By.css(DISABLED_ROW));
-            // disabled rows in view should two from the first group
-            expect(disabledRows.length).toBe(2);
         });
 
         it('should apply filtering to both pinned and unpinned rows.', () => {
