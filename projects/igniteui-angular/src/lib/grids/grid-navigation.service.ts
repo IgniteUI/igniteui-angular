@@ -398,13 +398,15 @@ export class IgxGridNavigationService {
 
     private handleMCHeaderNav(key: string, ctrl: boolean, alt: boolean) {
         const activeCol = this.currentActiveColumn;
-        let nextCol;
+        const lastGroupIndex = Math.max(... this.grid.visibleColumns.
+                filter(c => c.level === this.activeNode.level).map(col => col.visibleIndex));
+        let nextCol = activeCol;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1
+            const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             nextCol =  this.getNextColumnMCH(index);
             this.activeNode.mchCache.visibleIndex = this.activeNode.column;
         }
-        if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
+        if ((key.includes('right') || key === 'end') && activeCol.visibleIndex < lastGroupIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
             activeCol.visibleIndex + 1;
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
