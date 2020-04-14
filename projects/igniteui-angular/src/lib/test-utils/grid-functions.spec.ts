@@ -75,6 +75,8 @@ const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
 const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
 const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+const PINNED_SUMMARY = 'igx-grid-summary--pinned';
+const SUMMARY_CELL = 'igx-grid-summary-cell';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -1936,6 +1938,11 @@ export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
         const footer = GridFunctions.getGridFooter(fix);
         return footer.query(By.css(SUMMARY_ROW));
+    }
+
+    public static getRootPinnedSummaryCells(fix): DebugElement[] {
+        const rootSummaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+        return rootSummaryRow.queryAll(By.css(`${SUMMARY_CELL}.${PINNED_SUMMARY}`));
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
