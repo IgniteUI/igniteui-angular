@@ -77,19 +77,6 @@ export class IgxActionStripComponent {
     @HostBinding('class.igx-action-strip')
     public cssClass = 'igx-action-strip';
 
-    /**
-     * Specifies if the items into the Action Strip to be shown as menu.
-     *
-     * @example
-     * ```html
-     * <igx-action-strip #actionStrip1 [isMenu]="true">
-     *      <igx-grid-pinning-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-pinning-actions>
-     *      <igx-grid-editing-actions *IgxActionStripMenuItem [grid]="grid1"></igx-grid-editing-actions>
-     *  </igx-action-strip>
-     * ```
-     */
-    @Input() isMenu = false;
-
     public context;
 
     @ContentChildren(forwardRef(() => IgxGridActionsBaseDirective), { descendants: true })
