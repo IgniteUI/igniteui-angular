@@ -3,8 +3,6 @@ import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.componen
 
 /**
  * An enumeration that defines the `SplitterComponent` panes orientation.
- * @export
- * @enum {number}
  */
 export enum SplitterType {
     Horizontal,
@@ -41,7 +39,7 @@ export enum SplitterType {
     templateUrl: './splitter.component.html'
 })
 export class IgxSplitterComponent implements AfterContentInit {
-    private _type: SplitterType = SplitterType.Vertical;
+    private _type: SplitterType = SplitterType.Horizontal;
     /**
      * Gets/Sets the splitter orientation.
      * @example

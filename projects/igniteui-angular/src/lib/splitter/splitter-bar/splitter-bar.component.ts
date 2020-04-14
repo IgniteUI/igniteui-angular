@@ -17,15 +17,13 @@ export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright 
 export class IgxSplitBarComponent {
 
     /**
-     * Sets/gets `IgxSplitBarComponent` orientation.
-     * @type SplitterType
+     * Gets/Sets the orientation.
      */
     @Input()
-    public type: SplitterType = SplitterType.Vertical;
+    public type: SplitterType = SplitterType.Horizontal;
 
     /**
-     * Sets/gets `IgxSplitBarComponent` element order.
-     * @type SplitterType
+     * Sets/gets the element order.
      */
     @HostBinding('style.order')
     @Input()
@@ -46,7 +44,7 @@ export class IgxSplitBarComponent {
      */
     @HostBinding('attr.aria-orientation')
     public get orientation() {
-        return this.type === SplitterType.Horizontal ? 'vertical' : 'horizontal';
+        return this.type === SplitterType.Horizontal ? 'horizontal' : 'vertical';
     }
 
     /**
