@@ -15,6 +15,8 @@ import { IgxIconModule } from '../icon/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
+import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
+import { IgxGridBaseDirective } from '../grids';
 
 let NEXT_ID = 0;
 
@@ -102,8 +104,7 @@ export class IgxActionStripComponent {
 
     public context;
 
-    @ContentChild(IgxGridPinningActionsComponent, { static: false }) public gridPinningActions: IgxGridPinningActionsComponent;
-    @ContentChild(IgxGridEditingActionsComponent, { static: false }) public gridEditingActions: IgxGridEditingActionsComponent;
+    @ContentChildren(IgxGridActionsBaseDirective) public gridActions: QueryList<IgxGridActionsBaseDirective>;
     @ContentChildren(IgxActionStripMenuItemDirective) public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
     show(context): void {
@@ -120,12 +121,7 @@ export class IgxActionStripComponent {
     }
 
     private sendContext() {
-        if (this.gridEditingActions) {
-            this.gridEditingActions.context = this.context;
-        }
-        if (this.gridPinningActions) {
-            this.gridPinningActions.context = this.context;
-        }
+        this.gridActions.forEach(action => action.context = this.context);
     }
 }
 

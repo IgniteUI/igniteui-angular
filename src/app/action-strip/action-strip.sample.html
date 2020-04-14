@@ -21,6 +21,7 @@
         </article>
 
         <article>
+            <h3>Grid Pinning Action</h3>
             <div class="sample-column">
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'">
@@ -35,7 +36,6 @@
 
                     <igx-action-strip #actionstrip1 (mouseleave)="actionstrip1.hide()">
                         <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
-                        <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
@@ -43,18 +43,19 @@
 
         <article>
             <div class="sample-column">
+                <h3>Grid Pinning and Editing Actions</h3>
                 <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    (mouseleave)="actionstrip2.hide()">
+                    [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden' [editable]="true">
+                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
-                            <div (mouseover)="actionstrip2.show(cell)">
+                            <div (mouseover)="actionstrip2.show(cell.row)">
                                 <span>{{val}}</span>
                             </div>
                         </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip2>
+                    <igx-action-strip #actionstrip2 (mouseleave)="actionstrip2.hide()">
                         <igx-grid-pinning-actions [grid]="grid2"></igx-grid-pinning-actions>
                         <igx-grid-editing-actions [grid]="grid2"></igx-grid-editing-actions>
                     </igx-action-strip>
@@ -64,6 +65,7 @@
 
         <article>
             <div class="sample-column">
+                <h3>Actions in menu</h3>
                 <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -79,28 +81,6 @@
                         <igx-grid-pinning-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-pinning-actions>
                         <igx-grid-editing-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-editing-actions>
                     </igx-action-strip>
-                </igx-grid>
-            </div>
-        </article>
-
-        <article>
-            <div class="sample-column">
-                <igx-grid #grid4 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false">
-                    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
-                        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden' [editable]="true">
-                        <ng-template igxCell let-cell="cell" let-val>
-                            <div>
-                                <span>{{val}}</span>
-                            </div>
-                            <igx-action-strip [isMenu]="true" [context]="cell" class="no-bg">
-                                <div *igxActionStripMenuItem>
-                                    <igx-grid-pinning-actions [context]="cell" [grid]="grid4"></igx-grid-pinning-actions>
-                                    <igx-grid-editing-actions [context]="cell" [grid]="grid4"></igx-grid-editing-actions>
-                                    <igx-icon>star</igx-icon>
-                                </div>
-                            </igx-action-strip>
-                        </ng-template>
-                    </igx-column>
                 </igx-grid>
             </div>
         </article>

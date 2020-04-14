@@ -1,21 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-editing-actions',
     templateUrl: 'grid-editing-actions.component.html'
 })
 
-export class IgxGridEditingActionsComponent {
-    /**
-     * An @Input property that set an instance of the grid for which to display the actions.
-     * ```html
-     *  <igx-grid-editing-actions [grid]="grid1"></igx-grid-editing-actions>
-     * ```
-     */
-    @Input() grid;
-
-    @Input() context;
-
+export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
     startEdit() {
         const firstEditable = this.context.cells ?
             this.context.cells.filter(cell => cell.editable)[0] : this.context;

@@ -1,22 +1,12 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
+import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-pinning-actions',
     templateUrl: 'grid-pinning-actions.component.html'
 })
 
-export class IgxGridPinningActionsComponent implements AfterViewInit {
-
-    /**
-     * An @Input property that set an instance of the grid for which to display the actions.
-     * ```html
-     *  <igx-grid-pinning-actions [grid]="false"></igx-grid-pinning-actions>
-     * ```
-     */
-    @Input() grid;
-
-    @Input() context;
-
+export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {
     get pinned() {
         return this.context &&
             (this.context.pinned || this.context.row && this.context.row.pinned);
