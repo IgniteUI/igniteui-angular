@@ -24,7 +24,7 @@ describe('IgxDateTimeEditor', () => {
         describe('Date portions spinning', () => {
             it('should correctly increment / decrement date portions with passed in DatePart', () => {
                 elementRef = { nativeElement: { value: '12/10/2015' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.inputFormat = 'dd/M/yy';
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date('12/10/2015');
@@ -41,7 +41,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should correctly increment / decrement date portions without passed in DatePart', () => {
                 elementRef = { nativeElement: { value: '12/10/2015' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date('12/10/2015');
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('12/10/2015');
@@ -56,7 +56,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over to next month when incrementing date', () => {
                 elementRef = { nativeElement: { value: '29/02/2020' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 1, 29);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('29/01/2020');
@@ -68,7 +68,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over to next year when incrementing month', () => {
                 elementRef = { nativeElement: { value: '29/12/2020' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 11, 29);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('29/11/2020');
@@ -80,7 +80,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should update date part if next/previous month\'s max date is less than the current one\'s', () => {
                 elementRef = { nativeElement: { value: '31/01/2020' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 0, 31);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('31/01/2020');
@@ -92,7 +92,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should prioritize Date for spinning, if it is set in format', () => {
                 elementRef = { nativeElement: { value: '11/03/2020 00:00:00 AM' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.inputFormat = 'dd/M/yy HH:mm:ss tt';
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 2, 11);
@@ -107,7 +107,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over when isSpinLoop is false', () => {
                 elementRef = { nativeElement: { value: '31/03/2020' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.isSpinLoop = false;
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 2, 31);
@@ -123,7 +123,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should loop over when isSpinLoop is true (default)', () => {
                 elementRef = { nativeElement: { value: '31/03/2019' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2020, 2, 31);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('31/02/2019');
@@ -140,7 +140,7 @@ describe('IgxDateTimeEditor', () => {
         describe('Time portions spinning', () => {
             it('should correctly increment / decrement time portions with passed in DatePart', () => {
                 elementRef = { nativeElement: { value: '10/10/2010 12:10:34' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2010, 11, 10, 12, 10, 34);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('10/11/2010 12:10:59');
@@ -156,7 +156,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should correctly increment / decrement time portions without passed in DatePart', () => {
                 elementRef = { nativeElement: { value: '' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 /*
                  * format must be set because the editor will prioritize Date if Hours is not set
                  * and no DatePart is provided to increment / decrement
@@ -176,7 +176,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over to next minute when incrementing seconds', () => {
                 elementRef = { nativeElement: { value: '20/01/2019 20:05:59' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2019, 1, 20, 20, 5, 59);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('20/01/2019 20:05:59');
@@ -188,7 +188,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over to next hour when incrementing minutes', () => {
                 elementRef = { nativeElement: { value: '20/01/2019 20:59:12' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2019, 1, 20, 20, 59, 12);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('20/1/2019 20:59:12');
@@ -200,7 +200,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over to next day when incrementing hours', () => {
                 elementRef = { nativeElement: { value: '20/01/2019 23:13:12' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 13, 12);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('20/1/2019 23:13:12');
@@ -212,7 +212,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should not loop over when isSpinLoop is false', () => {
                 elementRef = { nativeElement: { value: '20/02/2019 23:00:12' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.isSpinLoop = false;
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 0, 12);
@@ -227,7 +227,7 @@ describe('IgxDateTimeEditor', () => {
 
             it('should loop over when isSpinLoop is true (default)', () => {
                 elementRef = { nativeElement: { value: '20/02/2019 23:15:12' } };
-                dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+                dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
                 dateTimeEditor.ngOnInit();
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 15, 0);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('20/1/2019 23:15:00');
@@ -240,24 +240,24 @@ describe('IgxDateTimeEditor', () => {
             });
         });
 
-        it('should emit valueChanged event on clear()', () => {
+        it('should emit valueChange event on clear()', () => {
             elementRef = { nativeElement: { value: '' } };
-            dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
             dateTimeEditor.ngOnInit();
-            spyOn(dateTimeEditor.valueChanged, 'emit');
+            spyOn(dateTimeEditor.valueChange, 'emit');
             const date = new Date(2000, 5, 6);
             dateTimeEditor.value = date;
             spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue('6/5/2000');
 
             dateTimeEditor.clear();
             expect(dateTimeEditor.value).toBeNull();
-            expect(dateTimeEditor.valueChanged.emit).toHaveBeenCalledTimes(1);
-            expect(dateTimeEditor.valueChanged.emit).toHaveBeenCalledWith({ oldValue: date, newValue: null });
+            expect(dateTimeEditor.valueChange.emit).toHaveBeenCalledTimes(1);
+            expect(dateTimeEditor.valueChange.emit).toHaveBeenCalledWith({ oldValue: date, newValue: null });
         });
 
         it('should update mask according to the input format', () => {
             elementRef = { nativeElement: { value: '' } };
-            dateTimeEditor = new IgxDateTimeEditorDirective(elementRef, maskParsingService, renderer2, DOCUMENT);
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
             dateTimeEditor.inputFormat = 'd/M/yy';
             dateTimeEditor.ngOnInit();
 
@@ -340,19 +340,19 @@ describe('Integration tests', () => {
             UIInteractions.simulateTyping('8', inputElement, 7, 7);
             expect(inputElement.nativeElement.value).toEqual('19/12/08');
         });
-        it('should emit valueChanged event on blur', () => {
+        it('should emit valueChange event on blur', () => {
             const newDate = new Date(2004, 11, 18);
             fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
             fixture.detectChanges();
-            spyOn(dateTimeEditorDirective.valueChanged, 'emit');
+            spyOn(dateTimeEditorDirective.valueChange, 'emit');
             inputElement.triggerEventHandler('focus', {});
             fixture.detectChanges();
             UIInteractions.simulateTyping('18124', inputElement);
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual('18/12/04');
-            expect(dateTimeEditorDirective.valueChanged.emit).toHaveBeenCalledTimes(1);
-            expect(dateTimeEditorDirective.valueChanged.emit).toHaveBeenCalledWith({ oldValue: undefined, newValue: newDate });
+            expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
+            expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith({ oldValue: undefined, newValue: newDate });
         });
         it('should not accept invalid date.', () => {
             fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
@@ -740,12 +740,12 @@ describe('Integration tests', () => {
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual('../../.... ..:..:..');
         });
-        it('should fire validationFailed when input date is outside date range.', () => {
+        it('should fire validationFail when input date is outside date range.', () => {
             fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
             fixture.componentInstance.minDate = new Date(2020, 1, 20);
             fixture.componentInstance.maxDate = new Date(2020, 1, 25);
             fixture.detectChanges();
-            spyOn(dateTimeEditorDirective.validationFailed, 'emit');
+            spyOn(dateTimeEditorDirective.validationFail, 'emit');
 
             // date within the range
             let inputDate = '22-02-2020';
@@ -755,7 +755,7 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
+            expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
 
             // date > maxValue
             let oldDate = new Date(2020, 1, 22);
@@ -768,8 +768,8 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
 
             // date < minValue
             oldDate = newDate;
@@ -782,13 +782,13 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(2);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(2);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
         });
-        it('should fire validationFailed when input date is invalid.', () => {
+        it('should fire validationFail when input date is invalid.', () => {
             fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
             fixture.detectChanges();
-            spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
+            spyOn(dateTimeEditorDirective.validationFail, 'emit').and.callThrough();
 
             // valid date
             let inputDate = '22-02-2020';
@@ -798,7 +798,7 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
+            expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
 
             // invalid date
             const oldDate = new Date(2020, 1, 22);
@@ -811,8 +811,8 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual('__-__-____');
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
-            // expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
+            // expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
         });
     });
 
@@ -840,7 +840,7 @@ describe('Integration tests', () => {
         });
         it('should validate properly when used as form control.', () => {
             const form: FormGroup = fixture.componentInstance.reactiveForm;
-            spyOn(dateTimeEditorDirective.validationFailed, 'emit');
+            spyOn(dateTimeEditorDirective.validationFail, 'emit');
 
             let inputDate = '21-03-2020';
             inputElement.triggerEventHandler('focus', {});
@@ -850,7 +850,7 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
+            expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
             expect(form.valid).toBeTruthy();
 
             const args = { oldValue: new Date(2020, 2, 21), newValue: new Date(2020, 1, 21) };
@@ -862,8 +862,8 @@ describe('Integration tests', () => {
             inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
             fixture.detectChanges();
             expect(inputElement.nativeElement.value).toEqual(inputDate);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
-            expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
+            expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
             expect(form.valid).toBeFalsy();
         });
     });
