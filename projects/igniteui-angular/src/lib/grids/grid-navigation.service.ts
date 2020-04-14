@@ -45,11 +45,8 @@ export class IgxGridNavigationService {
         if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         }
-        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
-            const col = this.grid.getColumnByVisibleIndex(this.activeNode.column);
-            if (col.inlineEditorTemplate || ['date', 'boolean'].indexOf(col.dataType) > -1) { return; }
-            return;
-        }
+        if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) { return; }
+
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column, key, shift, ctrl, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
@@ -177,8 +174,7 @@ export class IgxGridNavigationService {
 
     protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
         const ctrl = event.ctrlKey;
-        if (!HORIZONTAL_NAV_KEYS.has(key)) { return; }
-
+        if (!HORIZONTAL_NAV_KEYS.has(event.key.toLowerCase())) { return; }
         event.preventDefault();
         this.activeNode.row = rowIndex;
         if (rowIndex > 0) {
@@ -320,7 +316,7 @@ export class IgxGridNavigationService {
         || containerHeight && containerHeight < endTopOffset;
     }
 
-    public navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
+    protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
         if (!this.isValidPosition(rowIndex, visibleColIndex) || this.isActiveNode(rowIndex, visibleColIndex)) { return; }
         this.grid.navigateTo(this.activeNode.row = rowIndex, this.activeNode.column = visibleColIndex, cb);
     }
@@ -397,40 +393,35 @@ export class IgxGridNavigationService {
         if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
-        if (this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true)) { return false; }
-        return true;
+        return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
 
     private handleMCHeaderNav(key: string, ctrl: boolean, alt: boolean) {
         const activeCol = this.currentActiveColumn;
+        let nextCol;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
-            const col = ctrl || key === 'home' ? this.getNextColumnMCH(0) :
-                this.getNextColumnMCH(this.activeNode.column - 1);
-            this.activeNode.column = col.visibleIndex;
+            const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1
+            nextCol =  this.getNextColumnMCH(index);
             this.activeNode.mchCache.visibleIndex = this.activeNode.column;
-            this.activeNode.level = col.level;
         }
         if ((key.includes('right') || key === 'end') && this.activeNode.column < this.lastColumnIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
             activeCol.visibleIndex + 1;
-            const col = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
-            this.activeNode.column =  col.visibleIndex;
+            nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
             this.activeNode.mchCache.visibleIndex = this.activeNode.column;
-            this.activeNode.level = col.level;
         }
         if (key.includes('up') && this.activeNode.level > 0) {
-            this.activeNode.column = activeCol.parent.visibleIndex;
-            this.activeNode.level = activeCol.parent.level;
-            this.activeNode.mchCache.level = activeCol.parent.level;
+            nextCol = activeCol.parent;
+            this.activeNode.mchCache.level = nextCol.level;
         }
         if (key.includes('down') && activeCol.children) {
-            const cur = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
+            nextCol = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
             .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
-            this.activeNode.column = cur.visibleIndex;
-            this.activeNode.level = cur.level;
-            this.activeNode.mchCache.level = cur.level;
+            this.activeNode.mchCache.level = nextCol.level;
         }
+        this.activeNode.column = nextCol.visibleIndex;
+        this.activeNode.level = nextCol.level;
         this.performHorizontalScrollToCell(this.activeNode.column);
     }
 
