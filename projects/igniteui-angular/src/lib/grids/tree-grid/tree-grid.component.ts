@@ -645,7 +645,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {
-        const source = [];
+        let source = [];
 
         const process = (record) => {
             if (record.summaries) {
@@ -656,6 +656,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         };
 
         this.dataView.forEach(process);
+        source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
