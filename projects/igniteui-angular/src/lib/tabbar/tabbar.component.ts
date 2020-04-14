@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
-    AfterViewChecked,
     AfterViewInit,
     Component,
     ContentChild,
@@ -18,11 +17,13 @@ import {
     QueryList,
     TemplateRef,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    OnDestroy
 } from '@angular/core';
 import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxIconModule } from '../icon/index';
 import { IBaseEventArgs } from '../core/utils';
+import { Subscription } from 'rxjs';
 
 export interface ISelectTabEventArgs extends IBaseEventArgs {
     tab: IgxTabComponent;
@@ -63,7 +64,9 @@ export class IgxTabTemplateDirective {
         }
     `]
 })
-export class IgxBottomNavComponent implements AfterViewInit {
+export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
+    private _currentBottomNavId = NEXT_ID++;
+    private _panelsChanges$: Subscription;
 
     /**
      * Gets the `IgxTabComponent` elements in the tab bar component created based on the provided panels.
@@ -120,7 +123,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
      */
     @HostBinding('attr.id')
     @Input()
-    public id = `igx-bottom-nav-${NEXT_ID++}`;
+    public id = `igx-bottom-nav-${this._currentBottomNavId}`;
 
     /**
      * Emits an event when a new tab is selected.
@@ -194,6 +197,11 @@ export class IgxBottomNavComponent implements AfterViewInit {
      *@hidden
      */
     public ngAfterViewInit() {
+        this.setPanelsAttributes();
+        this._panelsChanges$ = this.panels.changes.subscribe(() => {
+            this.setPanelsAttributes();
+        });
+
         // initial selection
         setTimeout(() => {
             if (this.selectedIndex === -1) {
@@ -208,6 +216,24 @@ export class IgxBottomNavComponent implements AfterViewInit {
 
     /**
      *@hidden
+     */
+    public ngOnDestroy(): void {
+        if (this._panelsChanges$) {
+            this._panelsChanges$.unsubscribe();
+        }
+    }
+
+    private setPanelsAttributes() {
+        const panelsArray = this.panels.toArray();
+        for (let index = 0; index < this.panels.length; index++) {
+            const tabPanels = panelsArray[index] as IgxTabPanelComponent;
+            tabPanels.nativeElement.setAttribute('id', this.getTabPanelId(index));
+            tabPanels.nativeElement.setAttribute('aria-labelledby', this.getTabId(index));
+        }
+    }
+
+    /**
+     * @hidden
      */
     @HostListener('onTabSelected', ['$event'])
     public _selectedPanelHandler(args) {
@@ -247,6 +273,20 @@ export class IgxBottomNavComponent implements AfterViewInit {
         aTab.isSelected = false;
         this.onTabDeselected.emit({ tab: aTab, panel: null });
     }
+
+    /**
+     * @hidden
+     */
+    public getTabId(index: number): string {
+        return `igx-tab-${this._currentBottomNavId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabPanelId(index: number): string {
+        return `igx-tab-panel-${this._currentBottomNavId}-${index}`;
+    }
 }
 
 // ================================= IgxTabPanelComponent ======================================
@@ -255,7 +295,7 @@ export class IgxBottomNavComponent implements AfterViewInit {
     selector: 'igx-tab-panel',
     templateUrl: 'tab-panel.component.html'
 })
-export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked {
+export class IgxTabPanelComponent implements AfterContentInit {
 
     /**
      *@hidden
@@ -360,6 +400,16 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
     }
 
     /**
+     * Returns the native element of the tab-panel component
+     * ```typescript
+     *  const mytabPanelElement: HTMLElement = tabPanel.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this._element.nativeElement;
+    }
+
+    /**
      * Gets the tab associated with the panel.
      * ```typescript
      * let tab = this.tabPanel.relatedTab;
@@ -439,13 +489,6 @@ export class IgxTabPanelComponent implements AfterContentInit, AfterViewChecked 
         }
     }
 
-    /**
-     *@hidden
-     */
-    public ngAfterViewChecked() {
-        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-${this.index}`);
-        this._element.nativeElement.setAttribute('id', `igx-bottom-nav__panel-${this.index}`);
-    }
 
     /**
      * Selects the current tab and the tab panel.
@@ -484,12 +527,6 @@ export class IgxTabComponent {
     /**
      * @hidden @internal
      */
-    @HostBinding('attr.id')
-    public id = 'igx-tab-' + this.index;
-
-    /**
-     * @hidden @internal
-     */
     @HostBinding('attr.aria-label')
     public ariaLabel = this.label;
 
@@ -505,11 +542,6 @@ export class IgxTabComponent {
     @HostBinding('attr.aria-selected')
     public ariaSelected = this.isSelected;
 
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('attr.aria-controls')
-    public ariaControls = 'igx-tab-panel-' + this.index;
 
     /**
      * Gets the panel associated with the tab.
@@ -632,6 +664,13 @@ export class IgxTabComponent {
         return this.relatedPanel ? this.relatedPanel.isSelected : this._selected;
     }
 
+    /**
+     * @hidden @internal
+     * Set to true when the tab is automatically generated from the IgxBottomNavComponent when tab panels are defined.
+     */
+    @Input()
+    public autoGenerated: boolean;
+
     @HostBinding('class.igx-bottom-nav__menu-item--selected')
     public get cssClassSelected(): boolean {
         return this.isSelected;
@@ -719,7 +758,9 @@ export class IgxTabComponent {
      */
     @HostListener('click')
     public onClick() {
-        this.select();
+        if (this.autoGenerated) {
+            this.select();
+        }
     }
 
     public elementRef(): ElementRef {
