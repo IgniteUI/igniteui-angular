@@ -112,6 +112,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets an array of the pinned `IgxRowComponent`s.
+     * @example
+     * ```typescript
+     * const pinnedRow = this.grid.pinnedRows;
+     * ```
+     * @memberof IgxHierarchicalGridComponent
+     */
+    get pinnedRows() {
+        return this.rowList.filter(x => x.pinned && !x.disabled);
+    }
+
+    /**
      * @hidden
      * @deprecated
      * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
@@ -494,6 +506,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public isHierarchicalRecord(record: any): boolean {
+        if (this.isGhostRecord(record)) {
+            record = record.recordRef;
+        }
         return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
@@ -503,6 +518,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record.childGridsData !== undefined;
+    }
+
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRecord !== undefined;
     }
 
     /**
@@ -519,7 +538,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public getContext(rowData): any {
+    public getContext(rowData, rowIndex, pinned): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this.childGridTemplates.get(rowData.rowID);
             if (cachedData) {
@@ -542,11 +561,24 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
-                index: this.dataView.indexOf(rowData)
+                index: this.getRowIndex(rowIndex, pinned),
+                disabled: this.isGhostRecord(rowData)
             };
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
     }
 
     /**

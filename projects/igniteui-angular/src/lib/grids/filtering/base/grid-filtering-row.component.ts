@@ -24,7 +24,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from '../grid-filtering.service';
-import { KEYS, isEdge } from '../../../core/utils';
+import { KEYS, isEdge, isIE } from '../../../core/utils';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 
 /**
@@ -159,22 +159,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
-    @HostListener('keydown.shift.tab', ['$event'])
-    @HostListener('keydown.tab', ['$event'])
-    public onTabKeydown(event) {
-        event.stopPropagation();
-        if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-            this.filteringService.grid.navigation.navigateFirstCellIfPossible(event);
-        }
-    }
-
-    @HostListener('keydown.esc', ['$event'])
-    public onEscKeydown(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.close();
-    }
-
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -229,10 +213,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === KEYS.TAB) {
-            if (event.shiftKey) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else if (!this.dropDownConditions.collapsed) {
+            if (!this.dropDownConditions.collapsed) {
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             }
         }
@@ -281,8 +262,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
-            this.value = eventArgs.target.value;
+        // There is no need to reset the value on every invalid number input.
+        // The invalid value is converted to empty string input type="number"
+        const target = eventArgs.target;
+        if (isEdge() && target.type !== 'number' || this.isKeyPressed && isIE() || target.value) {
+             this.value = target.value;
         }
     }
 

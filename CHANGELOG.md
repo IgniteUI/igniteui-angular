@@ -8,10 +8,28 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
 
+- `IgxInputGroup`
+  - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
+
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
 
 ### New Features
+
+- `igxSplitter` component added.
+    - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
+        Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
+
+     ```html
+   <igx-splitter [type]="type">
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+        <igx-splitter-pane>
+			...
+        </igx-splitter-pane>
+    </igx-splitter>
+    ```
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added ability to pin rows to top or bottom depending on the new `pinning` input.

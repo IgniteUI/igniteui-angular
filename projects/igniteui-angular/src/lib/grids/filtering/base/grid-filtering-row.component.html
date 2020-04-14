@@ -10,7 +10,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown(inputGroupPrefix)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -50,7 +50,7 @@
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown(inputGroupPrefix)"
