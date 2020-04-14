@@ -271,6 +271,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
+        pending('related to the bug #7118');
         hierarchicalGrid.verticalScrollContainer.scrollTo(7);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);

@@ -77,7 +77,7 @@
             [tabindex]="-1"
             [checked]="selected"
             [readonly]="true"
-            [disabled]="deleted"
+            [disabled]="disabled || deleted"
             disableRipple="true"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">
