@@ -336,7 +336,7 @@ class InputGroupInputDisplayDensityComponent {
 }
 
 @Component({
-    template: `<igx-input-group #igxInputGroup [supressInputAutofocus]="true">
+    template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="true">
                     <igx-icon>phone</igx-icon>
                     <input igxInput #igxInput/>
                 </igx-input-group>`
