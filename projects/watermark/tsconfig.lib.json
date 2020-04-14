@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "es2015",
+    "outDir": "../../out-tsc/lib",
+    "declaration": true,
+    "target": "es2015",
+    "moduleResolution": "node",
+    "paths": {
+      "igniteui-angular": [
+        "dist/igniteui-angular"
+      ],
+    },
+    "lib": [
+      "dom",
+      "es2018"
+    ]
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts"
+  ]
+}

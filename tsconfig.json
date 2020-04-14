@@ -1,48 +1,51 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "baseUrl": "./",
-        "module": "esnext",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "target": "es2015",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "lib": [
-            "es2017",
-            "dom"
-        ],
-        "paths": {
-            "igniteui-angular": [
-                "projects/igniteui-angular/src/public_api.ts"
-            ]
-        },
-        "rootDir": "."
-    },
-    "exclude": [
-        "dist"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "esnext",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
     ],
-    "typedocOptions": {
-        "mode": "file",
-        "out": "dist/igniteui-angular/docs/typescript",
-        "exclude": "**/*.spec.ts",
-        "theme":  "node_modules/igniteui-typedoc-theme/dist",
-        "excludePrivate": true,
-        "excludeProtected": true,
-        "excludeNotExported": true,
-        "name": "Ignite UI for Angular",
-        "target": "es2015",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "preserveConstEnums": true,
-        "stripInternal": true,
-        "readme": "none"
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "paths": {
+      "igniteui-angular": [
+        "projects/igniteui-angular/src/public_api.ts"
+      ],
+      "igx-watermark": [
+        "projects/watermark/src/public_api.ts"
+      ]
     },
-    "angularCompilerOptions": {
-        "generateDeepReexports": true
-    }
+    "rootDir": "."
+  },
+  "exclude": [
+    "dist"
+  ],
+  "typedocOptions": {
+    "mode": "file",
+    "out": "dist/igniteui-angular/docs/typescript",
+    "exclude": "**/*.spec.ts",
+    "theme": "node_modules/igniteui-typedoc-theme/dist",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeNotExported": true,
+    "name": "Ignite UI for Angular",
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "preserveConstEnums": true,
+    "stripInternal": true,
+    "readme": "none"
+  },
+  "angularCompilerOptions": {
+    "generateDeepReexports": true
+  }
 }

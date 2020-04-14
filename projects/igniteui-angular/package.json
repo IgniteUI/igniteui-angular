@@ -69,7 +69,9 @@
         "@types/hammerjs": "^2.0.36",
         "hammerjs": "^2.0.8",
         "jszip": "^3.1.5",
-        "resize-observer-polyfill": "^1.5.1"
+        "resize-observer-polyfill": "^1.5.1",
+        "igx-watermark": "file:../../../../Users/HPopov/igx-watermark-0.0.1.tgz"
+
     },
     "peerDependencies": {
         "@angular/common": "^9.0.0",

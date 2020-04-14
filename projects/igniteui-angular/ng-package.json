@@ -9,6 +9,7 @@
       "@types/hammerjs",
       "hammerjs",
       "jszip",
-      "resize-observer-polyfill"
+      "resize-observer-polyfill",
+      "igx-watermark"
     ]
 }
