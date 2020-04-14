@@ -1,7 +1,7 @@
-import { Component, Input, HostBinding, EventEmitter, Output, HostListener } from '@angular/core';
-import { SplitterType } from '../splitter.component';
-import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
-import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../directives/drag-drop/drag-drop.directive';
+import {Component, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+import {SplitterType} from '../splitter.component';
+import {IgxSplitterPaneComponent} from '../splitter-pane/splitter-pane.component';
+import {DragDirection, IDragMoveEventArgs, IDragStartEventArgs} from '../../directives/drag-drop/drag-drop.directive';
 
 
 export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
@@ -17,6 +17,11 @@ export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright 
     templateUrl: './splitter-bar.component.html'
 })
 export class IgxSplitBarComponent {
+    /**
+     * Set css class to the host element.
+     */
+    @HostBinding('class.igx-splitter-bar-host')
+    public cssClass = 'igx-splitter-bar-host';
 
     /**
      * Sets/gets `IgxSplitBarComponent` orientation.

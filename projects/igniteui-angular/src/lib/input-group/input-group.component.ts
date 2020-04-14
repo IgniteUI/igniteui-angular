@@ -19,6 +19,7 @@ import { IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -40,7 +41,6 @@ enum IgxInputGroupType {
 export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
-    private _supressInputAutofocus = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -117,6 +117,18 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     @Input()
     public disabled = false;
 
+    /**
+     * Prevents automatically focusing the input when clicking on other elements in the input group (e.g. prefix or suffix).
+     * @remarks Automatic focus causes software keyboard to show on mobile devices.
+     *
+     * @example
+     * ```html
+     * <igx-input-group [suppressInputAutofocus]="true"></igx-input-group>
+     * ```
+     */
+    @Input()
+    public suppressInputAutofocus = false;
+
     /** @hidden */
     @HostBinding('class.igx-input-group--valid')
     public get validClass(): boolean {
@@ -168,7 +180,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (!this.isFocused && event.target !== this.input.nativeElement && !this._supressInputAutofocus) {
+        if (!this.isFocused && event.target !== this.input.nativeElement && !this.suppressInputAutofocus) {
             this.input.focus();
         }
     }
@@ -235,25 +247,21 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /**
-     * Returns whether the input element of the input group will be automatically focused on click.
-     * ```typescript
-     * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
-     * ```
+     * @hidden
+     * @deprecated Use 'suppressInputAutofocus' instead.
      */
-
-     @Input()
+    @DeprecateProperty(`Deprecated. Use 'suppressInputAutofocus' instead.`)
+    @Input()
     public get supressInputAutofocus(): boolean {
-        return this._supressInputAutofocus;
+        return this.suppressInputAutofocus;
     }
 
     /**
-     * Sets whether the input element of the input group will be automatically focused on click.
-     * ```html
-     * <igx-input-group [supressInputAutofocus]="true"></igx-input-group>
-     * ```
+     * @hidden
+     * @deprecated Use 'suppressInputAutofocus' instead.
      */
     public set supressInputAutofocus(value: boolean) {
-        this._supressInputAutofocus = value;
+        this.suppressInputAutofocus = value;
     }
 
     constructor(private _element: ElementRef,
@@ -282,7 +290,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
      * ngAfterViewInit(){
-     *    let inputBroder = this.inputGroup.hasBorder;
+     *    let inputBorder = this.inputGroup.hasBorder;
      * }
      * ```
      */
