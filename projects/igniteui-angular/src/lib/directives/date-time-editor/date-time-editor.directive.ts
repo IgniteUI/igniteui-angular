@@ -52,9 +52,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * An @Input property that allows you to set the locale settings used in `displayFormat`.
    * @example
-   *```html
+   * ```html
    * <input igxDateTimeEditor [locale]="'en'">
-   *```
+   * ```
    */
   @Input()
   public locale: string;
@@ -62,9 +62,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * An @Input property that allows you to set the minimum possible value the editor will allow.
    * @example
-   *```html
+   * ```html
    * <input igxDateTimeEditor [minValue]="minDate">
-   *```
+   * ```
    */
   public get minValue(): string | Date {
     return this._minValue;
@@ -79,9 +79,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * An @Input property that allows you to set the maximum possible value the editor will allow.
    * @example
-   *```html
+   * ```html
    * <input igxDateTimeEditor [maxValue]="maxDate">
-   *```
+   * ```
    */
   public get maxValue(): string | Date {
     return this._maxValue;
@@ -96,9 +96,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * An @Input property that allows you to specify if the currently spun date segment should loop over.
    * @example
-   *```html
+   * ```html
    * <input igxDateTimeEditor [isSpinLoop]="false">
-   *```
+   * ```
    */
   @Input()
   public isSpinLoop = true;
@@ -107,9 +107,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * An @Input property that allows you to set both pre-defined format options such as `shortDate` and `longDate`,
    * as well as constructed format string using characters supported by `DatePipe`, e.g. `EE/MM/yyyy`.
    * @example
-   *```html
+   * ```html
    * <input igxDateTimeEditor [displayFormat]="'shortDate'">
-   *```
+   * ```
    */
   @Input()
   public displayFormat: string;
@@ -118,9 +118,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * An @Input property that allows you to get/set the expected user input format(and placeholder).
    *  for the editor.
    * @example
-   *```html
+   * ```html
    * <input [igxDateTimeEditor]="'dd/MM/yyyy'">
-   *```
+   * ```
    */
   @Input(`igxDateTimeEditor`)
   public set inputFormat(value: string) {
@@ -216,7 +216,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['inputFormat'] || changes['locale']) {
       this._inputDateParts = DatePickerUtil.parseDateTimeFormat(this.inputFormat);
-      this.inputFormat = this._inputDateParts.map(p => p.format).join('');;
+      this.inputFormat = this._inputDateParts.map(p => p.format).join('');
       if (!this.nativeElement.placeholder) {
         this.renderer.setAttribute(this.nativeElement, 'placeholder', this.inputFormat);
       }
@@ -233,9 +233,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-  * Increment specified DatePart.
-  * @param datePart The optional DatePart to increment. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
-  */
+   * Increment specified DatePart.
+   * @param datePart The optional DatePart to increment. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   */
   public increment(datePart?: DatePart): void {
     const targetDatePart = this.targetDatePart;
     if (!targetDatePart) { return; }
@@ -247,10 +247,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-  * Decrement specified DatePart.
-  *
-  * @param datePart The optional DatePart to decrement. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
-  */
+   * Decrement specified DatePart.
+   *
+   * @param datePart The optional DatePart to decrement. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   */
   public decrement(datePart?: DatePart): void {
     const targetDatePart = this.targetDatePart;
     if (!targetDatePart) { return; }

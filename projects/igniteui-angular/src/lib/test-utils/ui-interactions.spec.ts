@@ -114,7 +114,7 @@ export class UIInteractions {
             if (selectionStart > selectionEnd) {
                 return Error('Selection start should be less than selection end position');
             }
-            //target.triggerEventHandler('focus', {});
+            // target.triggerEventHandler('focus', {});
             const inputEl = target.nativeElement as HTMLInputElement;
             inputEl.setSelectionRange(selectionStart, selectionEnd);
             for (let i = 0; i < characters.length; i++) {

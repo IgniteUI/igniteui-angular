@@ -400,12 +400,12 @@ export abstract class DatePickerUtil {
         return mask.join('');
     }
     /**
-  * This method parses an input string base on date parts and returns a date and its validation state.
-  * @param dateFormatParts
-  * @param prevDateValue
-  * @param inputValue
-  * @returns object containing a date and its validation state
-  */
+     * This method parses an input string base on date parts and returns a date and its validation state.
+     * @param dateFormatParts
+     * @param prevDateValue
+     * @param inputValue
+     * @returns object containing a date and its validation state
+     */
     public static parseDateArray(dateFormatParts: any[], prevDateValue: Date, inputValue: string): any {
         const dayStr = DatePickerUtil.getDayValueFromInput(dateFormatParts, inputValue);
         const monthStr = DatePickerUtil.getMonthValueFromInput(dateFormatParts, inputValue);
