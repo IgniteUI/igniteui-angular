@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxInputGroup`
   - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
+  - Clicking on prefix, suffix or label elements in the Input Group will no longer blur and re-focus the input.
 
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
@@ -68,8 +69,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxToast`:
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
-- `IgxInputGroup`:
-    - Clicking on prefix, suffix or label elements in the Input Group will no longer blur and re-focus the input.
 - `IgxDrag`
     - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
     - New `dragDirection` input that can specify only one direction of dragging or both.
