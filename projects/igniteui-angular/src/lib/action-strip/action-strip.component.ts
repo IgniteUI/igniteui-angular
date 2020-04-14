@@ -18,8 +18,6 @@ import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-acti
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 
-let NEXT_ID = 0;
-
 @Directive({
     selector: '[igxActionStripMenuItem]'
 })
@@ -68,16 +66,6 @@ export class IgxActionStripComponent {
      * ```
      */
     @Input() hidden = false;
-
-    /**
-     * An @Input property that sets the value of the `id` attribute. If not set it will be automatically generated.
-     * ```html
-     *  <igx-action-strip [id]="'igx-action-strip-56'">
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-action-strip-${NEXT_ID++}`;
 
 
     /**
