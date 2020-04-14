@@ -4,10 +4,12 @@ import { IgxColumnComponent } from '../grids';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
+import { IPinningConfig } from '../grids/common/grid.interface';
+import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true"
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
         <igx-column field="ID" [groupable]='true' [movable]='true'></igx-column>
         <igx-column-group header="Information">
@@ -40,10 +42,18 @@ import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.com
     providers: [ IgxHierarchicalTransactionServiceFactory ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
+
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
+
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     constructor() {
         // 3 level hierarchy

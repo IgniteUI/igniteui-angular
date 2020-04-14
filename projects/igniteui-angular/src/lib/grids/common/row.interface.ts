@@ -5,10 +5,12 @@ export interface RowType {
     checkboxElement: IgxCheckboxComponent;
     rowID: any;
     rowData: any;
+    disabled: boolean;
     rowSelectable: boolean;
     index: number;
     gridID: string;
     added: boolean;
+    pinned: boolean;
     deleted: boolean;
     selected: boolean;
     focused: boolean;
