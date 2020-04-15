@@ -229,6 +229,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
+
+            // greater than or equal to with invalid value should not reset filter
+            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
+            GridFunctions.typeValueInFilterRowInput('254..', fix, input);
+
+            expect(grid.rowList.length).toEqual(3);
+            verifyFilterRowUI(input, close, reset, false);
         }));
 
         // UI tests boolean column
@@ -4174,6 +4181,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify ESF is not visible.
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).toBeNull();
+        }));
+
+        it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+
+            UIInteractions.sendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
     });
 
