@@ -46,6 +46,17 @@ export class IgxSplitBarComponent {
     public tabindex = 0;
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get cursor() {
+        if (this.resizeDisallowed) {
+            return '';
+        }
+        return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
+    }
+
+    /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
      * @memberof SplitBarComponent
      */
