@@ -297,11 +297,19 @@ describe('IgxSplitter pane toggle', () => {
         const pane1 = splitter.panes.toArray()[0];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
 
+        pane1.size = '340';
+        const pane1_originalSize = pane1.size;
+        const splitterBarComponentDebug: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+
         // collapse left sibling pane
         splitterBarComponent.onCollapsing(0);
         fixture.detectChanges();
         expect(pane1.collapsed).toBeTruthy();
-        expect(pane1.resizable).toBeFalsy();
+        expect(pane1.resizable).toBeTruthy();
+        splitterBarComponentDebug.nativeElement.focus();
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponentDebug);
+        fixture.detectChanges();
+        expect(pane1.size).toEqual(pane1_originalSize);
 
         splitterBarComponent.onCollapsing(1);
         fixture.detectChanges();

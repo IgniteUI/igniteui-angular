@@ -204,7 +204,7 @@ export class IgxSplitBarComponent {
 
     protected get resizeDisallowed() {
         const relatedTabs = this.siblings;
-        return !!relatedTabs.find(x => x.resizable === false);
+        return !!relatedTabs.find(x => x.resizable === false || x.collapsed === true);
     }
 
     /**

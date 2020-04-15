@@ -192,7 +192,6 @@ export class IgxSplitterPaneComponent {
         // reset sibling sizes when pane collapse state changes.
         this._getSiblings().forEach(sibling => sibling.size = 'auto');
         this.collapsed = !this.collapsed;
-        this.resizable = !this.collapsed;
         this.onToggle.emit(this);
     }
 
