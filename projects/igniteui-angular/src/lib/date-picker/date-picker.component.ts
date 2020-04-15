@@ -1064,7 +1064,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.onSelection.emit(date);
     }
 
-    public onPrefixClick(event: MouseEvent) {
+    /** @hidden @internal */
+    public onOpenClick(event: MouseEvent) {
         event.stopPropagation();
         this.openDialog();
     }
