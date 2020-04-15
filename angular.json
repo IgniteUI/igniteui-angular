@@ -186,38 +186,38 @@
                 }
             }
         },
-        "igx-watermark": {
+        "igniteui-watermark": {
             "projectType": "library",
-            "root": "projects/watermark",
-            "sourceRoot": "projects/watermark/src",
+            "root": "projects/igniteui-watermark",
+            "sourceRoot": "projects/igniteui-watermark/src",
             "prefix": "lib",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-ng-packagr:build",
                     "options": {
-                        "tsConfig": "projects/watermark/tsconfig.lib.json",
-                        "project": "projects/watermark/ng-package.json"
+                        "tsConfig": "projects/igniteui-watermark/tsconfig.lib.json",
+                        "project": "projects/igniteui-watermark/ng-package.json"
                     },
                     "configurations": {
                         "production": {
-                            "tsConfig": "projects/watermark/tsconfig.lib.prod.json"
+                            "tsConfig": "projects/igniteui-watermark/tsconfig.lib.prod.json"
                         }
                     }
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "projects/watermark/src/test.ts",
-                        "tsConfig": "projects/watermark/tsconfig.spec.json",
-                        "karmaConfig": "projects/watermark/karma.conf.js"
+                        "main": "projects/igniteui-watermark/src/test.ts",
+                        "tsConfig": "projects/igniteui-watermark/tsconfig.spec.json",
+                        "karmaConfig": "projects/igniteui-watermark/karma.conf.js"
                     }
                 },
                 "lint": {
                     "builder": "@angular-devkit/build-angular:tslint",
                     "options": {
                         "tsConfig": [
-                            "projects/watermark/tsconfig.lib.json",
-                            "projects/watermark/tsconfig.spec.json"
+                            "projects/igniteui-watermark/tsconfig.lib.json",
+                            "projects/igniteui-watermark/tsconfig.spec.json"
                         ],
                         "exclude": [
                             "**/node_modules/**"

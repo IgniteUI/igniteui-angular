@@ -1,6 +1,6 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/igx-watermark",
+  "dest": "../../dist/igniteui-watermark",
   "lib": {
     "entryFile": "src/public-api.ts"
   }
