@@ -131,6 +131,7 @@ export class IgxGridNavigationService {
         const key = event.key.toLowerCase();
         if (!HEADER_KEYS.has(key)) { return; }
         event.preventDefault();
+
         let column = this.grid.getColumnByVisibleIndex(this.activeNode.column);
         const ctrl = event.ctrlKey;
         const shift = event.shiftKey;
@@ -202,7 +203,7 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (!this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0 };
         this.performHorizontalScrollToCell(0);
     }
