@@ -372,6 +372,9 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should jump from last editable columns to overlay buttons`, (async () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             GridFunctions.scrollLeft(grid, 800);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -672,6 +675,9 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should update row changes when focus overlay buttons on tabbing`, (async () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             const targetCell = grid.getCellByColumn(0, 'Downloads');
             fix.detectChanges();
 
@@ -998,6 +1004,9 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, fakeAsync(() => {
             const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
             tick(16);
@@ -1006,7 +1015,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('enter', targetCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
 
             expect(gridAPI.submit_value).toHaveBeenCalled();
             expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -1017,6 +1026,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
             tick(16);
             fix.detectChanges();
@@ -1024,7 +1036,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
-            UIInteractions.triggerKeyDownEvtUponElem('escape', targetCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('escape', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             expect(gridAPI.submit_value).not.toHaveBeenCalled();
@@ -1707,11 +1719,14 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
 
-            const targetCell = grid.getCellByColumn(0, 'ProductName');
-UIInteractions.simulateClickAndSelectCellEvent(targetCell);
-fix.detectChanges();
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('enter', targetCell.nativeElement, true);
+            const targetCell = grid.getCellByColumn(0, 'ProductName');
+            UIInteractions.simulateClickAndSelectCellEvent(targetCell);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
             tick(16);
             fix.detectChanges();
 
