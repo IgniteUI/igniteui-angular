@@ -50,7 +50,9 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 })
 export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, Validator, ControlValueAccessor {
   /**
-   * An @Input property that allows you to set the locale settings used in `displayFormat`.
+   * Set the locale settings used in `displayFormat`.
+   *
+   * Uses Angular's `LOCALE_ID` for the default value.
    * @example
    * ```html
    * <input igxDateTimeEditor [locale]="'en'">
@@ -60,7 +62,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public locale: string;
 
   /**
-   * An @Input property that allows you to set the minimum possible value the editor will allow.
+   * Set the minimum possible value the editor will allow.
+   *
+   * If a `string` value is passed in, it must be in the defined input format; if no input format is defined
+   * then the value's format must match the format based on the current locale.
+   *
    * @example
    * ```html
    * <input igxDateTimeEditor [minValue]="minDate">
@@ -77,7 +83,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * An @Input property that allows you to set the maximum possible value the editor will allow.
+   * Set the maximum possible value the editor will allow.
+   *
+   * If a `string` value is passed in, it must be in the defined input format; if no input format is defined
+   * then the value's format must match the format based on the current locale.
    * @example
    * ```html
    * <input igxDateTimeEditor [maxValue]="maxDate">
@@ -94,7 +103,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * An @Input property that allows you to specify if the currently spun date segment should loop over.
+   * Specify if the currently spun date segment should loop over.
    * @example
    * ```html
    * <input igxDateTimeEditor [isSpinLoop]="false">
@@ -104,7 +113,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public isSpinLoop = true;
 
   /**
-   * An @Input property that allows you to set both pre-defined format options such as `shortDate` and `longDate`,
+   * Set both pre-defined format options such as `shortDate` and `longDate`,
    * as well as constructed format string using characters supported by `DatePipe`, e.g. `EE/MM/yyyy`.
    * @example
    * ```html
@@ -115,8 +124,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public displayFormat: string;
 
   /**
-   * An @Input property that allows you to get/set the expected user input format(and placeholder).
-   *  for the editor.
+   * get/set the expected user input format (and placeholder).
    * @example
    * ```html
    * <input [igxDateTimeEditor]="'dd/MM/yyyy'">
@@ -136,7 +144,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * An @Input property that gets/sets the component date value.
+   * get/set the editor's value.
    * @example
    * ```html
    * <input igxDateTimeEditor [value]="date">
@@ -163,7 +171,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public valueChange = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
   /**
-   * Emitted when the editor is not within a specified range.
+   * Emitted when the editor is not within a specified range or when the editor's value is in an invalid state.
    * @example
    * ```html
    * <input igxDateTimeEditor [minValue]="minDate" [maxValue]="maxDate" (validationFailed)="onValidationFailed($event)"/>
@@ -174,7 +182,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private _value: Date;
   private _format: string;
-  private _document: Document;
+  private document: Document;
   private _isFocused: boolean;
   private _minValue: string | Date;
   private _maxValue: string | Date;
@@ -189,7 +197,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   private get targetDatePart(): DatePart {
-    if (this._document.activeElement === this.nativeElement) {
+    if (this.document.activeElement === this.nativeElement) {
       return this._inputDateParts
         .find(p => p.start <= this.selectionStart && this.selectionStart <= p.end && p.type !== DatePart.Literal)?.type;
     } else {
@@ -205,20 +213,21 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected renderer: Renderer2,
     protected elementRef: ElementRef,
     protected maskParser: MaskParsingService,
-    @Inject(DOCUMENT) private document: any,
-    @Inject(LOCALE_ID) private _locale) {
+    @Inject(DOCUMENT) private _document: any,
+    @Inject(LOCALE_ID) private _locale: any) {
     super(elementRef, maskParser, renderer);
-    this._document = this.document as Document;
+    this.document = this._document as Document;
     this.locale = this.locale || this._locale;
   }
 
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['inputFormat'] || changes['locale']) {
+      const defPlaceholder = this.inputFormat || DatePickerUtil.getDefaultInputFormat(this.locale);
       this._inputDateParts = DatePickerUtil.parseDateTimeFormat(this.inputFormat);
       this.inputFormat = this._inputDateParts.map(p => p.format).join('');
       if (!this.nativeElement.placeholder) {
-        this.renderer.setAttribute(this.nativeElement, 'placeholder', this.inputFormat);
+        this.renderer.setAttribute(this.nativeElement, 'placeholder', defPlaceholder);
       }
       this.updateMask();
     }
@@ -536,7 +545,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * @param direction 0 is left, 1 is right. Default is 0.
    */
   private getNewPosition(value: string, direction = 0): number {
-    const literals = this._inputDateParts.filter(l => l.type === DatePart.Literal);
+    const literals = this._inputDateParts.filter(p => p.type === DatePart.Literal);
     let cursorPos = this.selectionStart;
     if (!direction) {
       do {
