@@ -5801,6 +5801,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 expect(pinButton.classList.contains('igx-button--disabled')).toBe(true,
                     'pinButton in header area should be disabled');
             }));
+
+        it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            sendInputNativeElement(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+
+            sendInputNativeElement(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+        }));
     });
 
     describe(null, () => {
