@@ -85,6 +85,30 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent implements OnInit
     }
 }
 
+/**
+ * Defines the start input for a date range picker
+ *
+ * @igxModule IgxDateRangeModule
+ *
+ * @igxTheme igx-input-group-theme, igx-calendar-theme
+ *
+ * @igxKeywords date, range, date range, date picker
+ *
+ * @igxGroup scheduling
+ *
+ * @remarks
+ * When templating, start input has to be template seperately
+ *
+ * @example
+ * ```html
+ * <igx-date-range mode="dropdown">
+ *      <igx-date-start>
+ *          <input igxInput igxDateTimeEditor type="text" required>
+ *      </igx-date-start>
+ *      ...
+ * </igx-date-range>
+ * ```
+ */
 @Component({
     selector: 'igx-date-start',
     templateUrl: '../input-group/input-group.component.html',
@@ -92,6 +116,30 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent implements OnInit
 })
 export class IgxDateStartComponent extends IgxDateRangeBaseComponent { }
 
+/**
+ * Defines the end input for a date range picker
+ *
+ * @igxModule IgxDateRangeModule
+ *
+ * @igxTheme igx-input-group-theme, igx-calendar-theme
+ *
+ * @igxKeywords date, range, date range, date picker
+ *
+ * @igxGroup scheduling
+ *
+ * @remarks
+ * When templating, end input has to be template seperately
+ *
+ * @example
+ * ```html
+ * <igx-date-range mode="dropdown">
+ *      <igx-date-end>
+ *          <input igxInput igxDateTimeEditor type="text" required>
+ *      </igx-date-end>
+ *      ...
+ * </igx-date-range>
+ * ```
+ */
 @Component({
     selector: 'igx-date-end',
     templateUrl: '../input-group/input-group.component.html',
@@ -99,6 +147,7 @@ export class IgxDateStartComponent extends IgxDateRangeBaseComponent { }
 })
 export class IgxDateEndComponent extends IgxDateRangeBaseComponent { }
 
+/** @hidden @internal */
 @Component({
     selector: 'igx-date-single',
     templateUrl: 'igx-date-range-inputs.common.html',
