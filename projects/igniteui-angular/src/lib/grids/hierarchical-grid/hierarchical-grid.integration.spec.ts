@@ -832,8 +832,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer[0].children.length).toBe(2);
-            expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
-            expect(pinRowContainer[0].children[1].context.rowID).toBe('1');
+            expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
+            expect(pinRowContainer[0].children[1].context.rowID).toBe('0');
             expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
             expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
