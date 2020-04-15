@@ -205,16 +205,16 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeFalsy();
+        expect(pane2.collapsed).toBeFalsy();
     });
 
     it('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
@@ -228,16 +228,16 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
         UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
         fixture.detectChanges();
-        expect(pane2.hidden).toBeFalsy();
+        expect(pane2.collapsed).toBeFalsy();
     });
 
 });
@@ -268,12 +268,12 @@ describe('IgxSplitter pane toggle', () => {
         // collapse left sibling pane
         splitterBarComponent.onCollapsing(0);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
 
         // expand left sibling pane
         splitterBarComponent.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
     });
 
     it('should be able to expand both siblings when they are collapsed', () => {
@@ -288,15 +288,15 @@ describe('IgxSplitter pane toggle', () => {
         splitterBar2.onCollapsing(0);
         fixture.detectChanges();
 
-        expect(pane1.hidden).toBeTruthy();
-        expect(pane2.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
+        expect(pane2.collapsed).toBeTruthy();
 
         splitterBar1.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
     });
 
-    it('should not be able to resize a pane when it is hidden', () => {
+    it('should not be able to resize a pane when it is collapsed', () => {
         const pane1 = splitter.panes.toArray()[0];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
 
@@ -307,7 +307,7 @@ describe('IgxSplitter pane toggle', () => {
         // collapse left sibling pane
         splitterBarComponent.onCollapsing(0);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeTruthy();
+        expect(pane1.collapsed).toBeTruthy();
         expect(pane1.resizable).toBeTruthy();
         splitterBarComponentDebug.nativeElement.focus();
         UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponentDebug);
@@ -316,7 +316,7 @@ describe('IgxSplitter pane toggle', () => {
 
         splitterBarComponent.onCollapsing(1);
         fixture.detectChanges();
-        expect(pane1.hidden).toBeFalsy();
+        expect(pane1.collapsed).toBeFalsy();
         expect(pane1.resizable).toBeTruthy();
     });
 });
