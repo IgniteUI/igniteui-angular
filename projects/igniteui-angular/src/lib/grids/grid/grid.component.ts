@@ -515,7 +515,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-   public getRowTemplate(rowData) {
+    public getRowTemplate(rowData) {
         if (this.isGroupByRecord(rowData)) {
             return this.defaultGroupTemplate;
         } else if (this.isSummaryRow(rowData)) {
@@ -525,20 +525,21 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else {
             return this.recordTemplate;
         }
-   }
+    }
 
     /**
      * @hidden @internal
      */
-   public isDetailRecord(record) {
-    return record.detailsData !== undefined;
-   }
-   /**
-    * @hidden @internal
-    */
-   public isDetailActive(rowIndex) {
-       return this.navigation.activeNode ? this.navigation.activeNode.row === rowIndex : false;
-   }
+    public isDetailRecord(record) {
+        return record.detailsData !== undefined;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isDetailActive(rowIndex) {
+        return this.navigation.activeNode ? this.navigation.activeNode.row === rowIndex : false;
+    }
     /**
      * @hidden @internal
      */
@@ -795,9 +796,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         return {
-            $implicit: rowData,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: rowIndex,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            disabled: this.isGhostRecord(rowData)
         };
     }
 

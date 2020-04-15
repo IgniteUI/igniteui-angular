@@ -139,14 +139,6 @@ export class JSZipWrapper {
         });
     }
 
-    public async verifyPinRowData(pinData: string, message = '') {
-        let result;
-        await this.readDataFiles().then(() => {
-            result = this.dataFilesContent[1];
-            expect(result.fileContent.indexOf(pinData) !== -1).toBeTruthy(message);
-        });
-    }
-
     /* Compares the content of two files based on the provided file type and expected value data. */
     private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string) {
         let result = true;
