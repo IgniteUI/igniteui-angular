@@ -15,7 +15,7 @@
     (click)="toggleCustomDialogDropDown()"
     type="box"
     [displayDensity]="displayDensity"
-    [supressInputAutofocus]="true">
+    [suppressInputAutofocus]="true">
 
     <igx-prefix>
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
@@ -34,7 +34,7 @@
     />
 </igx-input-group>
 
-<igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
+<igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity" [suppressInputAutofocus]="true">
     <input
         #inputValues
         igxInput
