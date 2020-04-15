@@ -125,12 +125,15 @@ describe('IgxSplitter', () => {
     });
 
     it('should not allow drag resize if resizable is set to false.', () => {
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        expect(splitterBarComponent.cursor).toBe('col-resize');
         const pane1 =  splitter.panes.toArray()[0];
         pane1.resizable = false;
-        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        fixture.detectChanges();
         const args = {cancel: false};
         splitterBarComponent.onDragStart(args);
         expect(args.cancel).toBeTruthy();
+        expect(splitterBarComponent.cursor).toBe('');
     });
 
     it('should allow resizing with up/down arrow keys', () => {
