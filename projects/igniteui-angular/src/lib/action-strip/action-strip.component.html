@@ -1,18 +1,3 @@
-<ng-template #menuTemplate>
-    <igx-icon [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">more_vert</igx-icon>
-    <igx-drop-down #dropdown>
-        <igx-drop-down-item *ngFor="let item of menuItems">
-            <div class="igx-drop-down__item-template">
-                <ng-container *ngTemplateOutlet="item.templateRef; context: {$implicit: item}";></ng-container>
-            </div>
-        </igx-drop-down-item>
-    </igx-drop-down>
-</ng-template>
-
-<ng-template #contentTemplate>
-    <ng-content #content></ng-content>
-</ng-template>
-
 <div class="igx-action-strip__container"
     *ngIf="!hidden">
     <ng-content #content></ng-content>
