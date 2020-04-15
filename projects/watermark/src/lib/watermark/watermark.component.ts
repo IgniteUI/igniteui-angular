@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 })
 export class IgxWatermarkComponent {
 
-  public textMessage;
+  @Input()
+  public textMessage = 'Text message';
 
   constructor() {
-    this.textMessage = 'Text message';
   }
 }
 
