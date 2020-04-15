@@ -1260,9 +1260,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1270,7 +1275,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             // Click prefix again to close conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1282,9 +1287,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
