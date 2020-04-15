@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxInputGroup`
   - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
+  - Clicking on prefix, suffix or label elements in the Input Group will no longer blur and re-focus the input.
 
 - New `igniteui-angular-extras` project providing Data analysis functionalities. Documentation available [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/framework-and-features/data-analysis.html). 
 
