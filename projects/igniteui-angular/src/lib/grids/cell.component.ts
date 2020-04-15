@@ -374,7 +374,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
-        return !this.column.editable;
+        return !this.editable;
     }
 
     get gridRowSpan(): number {
@@ -523,7 +523,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * Returns whether the cell is editable.
      */
     get editable(): boolean {
-        return this.column.editable;
+        return this.column.editable && !this.row.disabled;
+    }
+
+    /**
+     * @hidden
+     */
+    public get displayPinnedChip() {
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
     }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
