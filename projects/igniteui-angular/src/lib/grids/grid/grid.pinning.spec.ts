@@ -217,7 +217,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should allow navigating to/from pinned area', (async () => {
-                pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
 
                 const cellContactName = grid.getCellByColumn(0, 'ContactName');
                 const range = {
@@ -583,7 +582,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should allow navigating to/from pinned area', (async () => {
-                pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
 
                 const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
                 const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
@@ -607,7 +605,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
             }));
 
             it('should allow navigating to/from pinned area using Ctrl+Left/Right', (async () => {
-                pending('https://github.com/IgniteUI/igniteui-angular/pull/6910');
 
                 const cellCompanyName = grid.getCellByColumn(0, 'CompanyName');
                 const range = { rowStart: 0, rowEnd: 0, columnStart: 9, columnEnd: 9 };
