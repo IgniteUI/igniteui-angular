@@ -58,7 +58,7 @@ let nextId = 0;
 })
 export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
     /**
-     *@hidden
+     * @hidden
      */
     protected _value: any;
     /**
@@ -319,7 +319,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     /** @hidden @internal */
     public inputId = `${this.id}-input`;
     /**
-     *@hidden
+     * @hidden
      */
     private _onTouchedCallback: () => void = noop;
     /**

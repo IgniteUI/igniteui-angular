@@ -10,6 +10,7 @@
       true,
       "check-space"
     ],
+    "jsdoc-format": [true, "check-multiline-start"],
     "curly": true,
     "deprecation": {
       "severity": "warn"

@@ -5,7 +5,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { DataUtil } from '../../data-operations/data-util';
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridHierarchical',
@@ -51,7 +51,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridHierarchicalPaging',
@@ -75,5 +75,32 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
         const result: any[] = DataUtil.page(cloneArray(collection), state);
         this.gridAPI.grid.pagingState = state;
         return result;
+    }
+}
+
+/**
+ * @hidden
+ */
+@Pipe({
+    name: 'gridHierarchicalRowPinning',
+    pure: true
+})
+export class IgxGridHierarchicalRowPinning implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
+
+    public transform(collection: any[], pinnedArea: boolean, pipeTrigger: number): any[] {
+        const grid = this.gridAPI.grid;
+
+        if (grid.hasPinnedRecords && pinnedArea) {
+            return collection.filter(rec => grid.isRecordPinned(rec));
+        }
+
+        if (grid.childLayoutKeys.length) {
+            return collection.map((rec) => {
+                return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
+            });
+        }
+        return collection.filter(rec => !grid.isRecordPinned(rec));
     }
 }

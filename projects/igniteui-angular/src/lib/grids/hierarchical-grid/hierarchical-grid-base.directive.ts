@@ -69,7 +69,7 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
         return this._maxLevelHeaderDepth;
     }
 
-     /**
+    /**
      * @hidden
      */
     protected get outlet() {
@@ -88,7 +88,7 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
 
     /**
      * @hidden
-    */
+     */
     public childRow: IgxChildGridRowComponent;
 
     /**

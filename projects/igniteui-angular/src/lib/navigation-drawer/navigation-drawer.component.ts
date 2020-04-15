@@ -144,7 +144,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output() public isOpenChange = new EventEmitter<boolean>();
 
@@ -335,8 +335,8 @@ export class IgxNavigationDrawerComponent implements
     @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
 
     /**
-      * @hidden
-      */
+     * @hidden
+     */
     get drawer() {
         return this._drawer.nativeElement;
     }

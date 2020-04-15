@@ -4,10 +4,12 @@ import { IgxColumnComponent } from '../grids';
 import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
+import { IPinningConfig } from '../grids/common/grid.interface';
+import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true"
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
         <igx-column field="ID" [groupable]='true' [movable]='true'></igx-column>
         <igx-column-group header="Information">
@@ -40,10 +42,18 @@ import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.com
     providers: [ IgxHierarchicalTransactionServiceFactory ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
+
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
+
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     constructor() {
         // 3 level hierarchy
@@ -175,3 +185,24 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
         rowContext.selected ? rowContext.deselect() : rowContext.select();
     }
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid
+        [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+        <igx-row-island [key]="'childData1'" #rowIsland1 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 1 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" #rowIsland2 [primaryKey]="'ID'" [showToolbar]="true" [autoGenerate]="true">
+            <ng-template igxToolbarCustomContent>
+                <button igxButton="raised">Child 2 Button</button>
+            </ng-template>
+        </igx-row-island>
+        <ng-template igxToolbarCustomContent>
+            <button igxButton="raised">Parent Button</button>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridTestCustomToolbarComponent extends IgxHierarchicalGridTestBaseComponent { }

@@ -32,6 +32,19 @@ describe('IgxPaginator with default settings', () => {
         expect(totalPages).toBe(5);
     });
 
+    it('should change current page to equal last page, after changing perPage', () => {
+        const fix = TestBed.createComponent(DefaultPaginatorComponent);
+        fix.detectChanges();
+        const paginator = fix.componentInstance.paginator;
+
+        paginator.paginate(paginator.totalPages - 1);
+        paginator.perPage = paginator.totalRecords / 2;
+
+        fix.detectChanges();
+        const page = paginator.page;
+        expect(page).toBe(1);
+    });
+
     it('should disable go to first page when paginator is on first page', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
         fix.detectChanges();

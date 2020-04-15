@@ -32,13 +32,13 @@ export interface IRowExportingEventArgs extends IBaseEventArgs {
 }
 
 /**
-    * onColumnExport event arguments
-    * ```typescript
-    * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
-    * // set args properties here
-    * });
-    * ```
-    */
+ * onColumnExport event arguments
+ * ```typescript
+ * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+ * // set args properties here
+ * });
+ * ```
+ */
 export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting column header

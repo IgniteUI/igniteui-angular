@@ -163,31 +163,31 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private _formatterYear: any;
 
     /**
-     *@hidden
+     * @hidden
      */
     private _locale = 'en';
 
     /**
-     *@hidden
+     * @hidden
      */
     private _yearFormat = 'numeric';
 
     /**
-     *@hidden
+     * @hidden
      */
     private _calendarModel: Calendar;
 
     /**
-     *@hidden
+     * @hidden
      */
     private _onTouchedCallback: () => void = () => { };
     /**
-     *@hidden
+     * @hidden
      */
     private _onChangeCallback: (_: Date) => void = () => { };
 
@@ -209,7 +209,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public selectYear(event) {
         this.date = event;
@@ -219,7 +219,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public scroll(event) {
         event.preventDefault();
@@ -230,7 +230,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public pan(event) {
         const delta = event.deltaY < 0 ? 1 : -1;
@@ -299,14 +299,14 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private initYearFormatter() {
         this._formatterYear = new Intl.DateTimeFormat(this._locale, { year: this.yearFormat });
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     private generateYearRange(delta: number) {
         const currentYear = new Date().getFullYear();

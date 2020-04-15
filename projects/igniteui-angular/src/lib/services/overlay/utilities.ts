@@ -192,7 +192,7 @@ export class Util {
         return new Point(horizontalScrollPosition, verticalScrollPosition);
     }
 
-    /** @hidden @internal*/
+    /** @hidden @internal */
     static cloneInstance(object) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);

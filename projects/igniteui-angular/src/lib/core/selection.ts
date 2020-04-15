@@ -239,7 +239,7 @@ export class IgxSelectionAPIService {
     /**
      * Returns empty selection collection.
      * @returns empty set.
-    */
+     */
     public get_empty() {
         return new Set();
     }

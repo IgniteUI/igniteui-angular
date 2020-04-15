@@ -86,7 +86,7 @@ export class IgxDropDownGroupComponent {
      *      ...
      * </igx-drop-down-item-group>
      * ```
-    */
+     */
     @Input()
     public label: string;
 }

@@ -81,12 +81,12 @@ describe('Avatar', () => {
         instance.size = IgxAvatarSize.MEDIUM;
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.MEDIUM);
-        expect(hostEl.classList).not.toContain(classes.medium);
+        expect(hostEl.classList).toContain(classes.medium);
 
         instance.size = IgxAvatarSize.LARGE;
         fixture.detectChanges();
         expect(instance.size).toEqual(IgxAvatarSize.LARGE);
-        expect(hostEl.classList).not.toContain(classes.large);
+        expect(hostEl.classList).toContain(classes.large);
 
         instance.size = 'nonsense' as any;
         fixture.detectChanges();

@@ -411,7 +411,7 @@ function getActiveSpan(nativeParent: HTMLElement) {
  * and the expected active span index.
  * expectedActiveSpanIndex should be passed as -1 if there should be no active span element.
  * (Optionally the result from findNext/findPrev methods - the actualAPISearchCount, can also be checked.)
-*/
+ */
 function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedActiveSpanIndex, actualAPISearchCount?) {
     const spans = getHighlightSpans(nativeParent);
     const activeSpan = getActiveSpan(nativeParent);
@@ -438,7 +438,7 @@ function getHighlightedCellValue(cell: HTMLElement) {
 
 /**
  * Verifies that every single cell contains only one visible div with the cell value in it.
-*/
+ */
 function verifyVisibleCellValueDivsCount(fix) {
     // Verify that there is NO cell with a duplicated value.
     const allCells = TreeGridFunctions.getAllCells(fix);

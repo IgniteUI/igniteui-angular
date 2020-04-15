@@ -60,7 +60,7 @@ export class IgxCalendarContainerComponent {
      * Returns whether the date-picker is in readonly dialog mode.
      *
      * @hidden
-    */
+     */
     public get isReadonly() {
         return this.mode === InteractionMode.Dialog;
     }
@@ -73,8 +73,8 @@ export class IgxCalendarContainerComponent {
     }
 
     /**
-    * Emits today selection event for the calendar.
-    */
+     * Emits today selection event for the calendar.
+     */
     public triggerTodaySelection() {
         this.onTodaySelection.emit();
     }

@@ -10,7 +10,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown(inputGroupPrefix)"
                     (keydown)="onPrefixKeyDown($event)"
@@ -50,7 +50,7 @@
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown(inputGroupPrefix)"
@@ -67,8 +67,9 @@
                        [value]="value | igxdate: filteringService.grid.locale"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
-                <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
-                    <igx-icon>clear</igx-icon>
+                <igx-suffix *ngIf="value">
+                    <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
+                    <igx-icon (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
             </ng-template>

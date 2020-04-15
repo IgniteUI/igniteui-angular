@@ -149,11 +149,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public cssClass = 'igx-carousel';
 
     /**
-    * Gets the `touch-action` style of the `list item`.
-    * ```typescript
-    * let touchAction = this.listItem.touchAction;
-    * ```
-    */
+     * Gets the `touch-action` style of the `list item`.
+     * ```typescript
+     * let touchAction = this.listItem.touchAction;
+     * ```
+     */
     @HostBinding('style.touch-action')
     get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
@@ -215,23 +215,23 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @Input() public navigation = true;
 
     /**
-    * Controls whether the carousel should support keyboard navigation.
-    * Default value is `true`.
-    * ```html
-    * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
-    * ```
-    * @memberOf IgxCarouselComponent
-    */
+     * Controls whether the carousel should support keyboard navigation.
+     * Default value is `true`.
+     * ```html
+     * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
+     * ```
+     * @memberOf IgxCarouselComponent
+     */
     @Input() public keyboardSupport = true;
 
     /**
-  * Controls whether the carousel should support gestures.
-  * Default value is `true`.
-  * ```html
-  * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
-  * ```
-  * @memberOf IgxCarouselComponent
-  */
+     * Controls whether the carousel should support gestures.
+     * Default value is `true`.
+     * ```html
+     * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+     * ```
+     * @memberOf IgxCarouselComponent
+     */
     @Input() public gesturesSupport = true;
 
     /**
@@ -245,31 +245,31 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @Input() public maximumIndicatorsCount = 5;
 
     /**
-    * Gets/sets the display mode of carousel indicators. It can be top or bottom.
-    * Default value is `bottom`.
-    * ```html
-    * <igx-carousel indicatorsOrientation='top'>
-    * <igx-carousel>
-    * ```
-    * @memberOf IgxSlideComponent
-    */
+     * Gets/sets the display mode of carousel indicators. It can be top or bottom.
+     * Default value is `bottom`.
+     * ```html
+     * <igx-carousel indicatorsOrientation='top'>
+     * <igx-carousel>
+     * ```
+     * @memberOf IgxSlideComponent
+     */
     @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
 
     /**
-   * Gets/sets the animation type of carousel.
-   * Default value is `slide`.
-   * ```html
-   * <igx-carousel animationType='none'>
-   * <igx-carousel>
-   * ```
-   * @memberOf IgxSlideComponent
-   */
+     * Gets/sets the animation type of carousel.
+     * Default value is `slide`.
+     * ```html
+     * <igx-carousel animationType='none'>
+     * <igx-carousel>
+     * ```
+     * @memberOf IgxSlideComponent
+     */
     @Input() public animationType = CarouselAnimationType.slide;
 
     /**
-    * An accessor that sets the resource strings.
-    * By default it uses EN resources.
-    */
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
     @Input()
     set resourceStrings(value: ICarouselResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
@@ -277,7 +277,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /**
      * An accessor that returns the resource strings.
-    */
+     */
     get resourceStrings(): ICarouselResourceStrings {
         return this._resourceStrings;
     }
@@ -360,12 +360,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public prevButtonTemplate: TemplateRef<any> = null;
 
     /**
-    * The collection of `slides` currently in the carousel.
-    * ```typescript
-    * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
-    * ```
-    * @memberOf IgxCarouselComponent
-    */
+     * The collection of `slides` currently in the carousel.
+     * ```typescript
+     * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
+     * ```
+     * @memberOf IgxCarouselComponent
+     */
     @ContentChildren(IgxSlideComponent)
     public slides: QueryList<IgxSlideComponent>;
 
@@ -1043,8 +1043,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @HostListener('panend', ['$event'])
     public onPanEnd(event) {
         if (!this.gesturesSupport) {
