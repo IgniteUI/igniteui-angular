@@ -8,6 +8,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
 
+- `IgxInputGroup`
+  - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
+  - Clicking on prefix, suffix or label elements in the Input Group will no longer blur and re-focus the input.
+
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
 
