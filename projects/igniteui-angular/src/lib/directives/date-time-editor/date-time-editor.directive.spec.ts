@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxDateTimeEditor', () => {
+fdescribe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
         const maskParsingService = jasmine.createSpyObj('MaskParsingService',
@@ -274,7 +274,7 @@ describe('IgxDateTimeEditor', () => {
 
         it('should emit valueChanged event on clear()', () => {
             elementRef = { nativeElement: { value: '' } };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.ngOnInit();
             dateTimeEditor.inputFormat = 'dd/M/yy';
             const date = new Date(2000, 5, 6);
@@ -290,7 +290,7 @@ describe('IgxDateTimeEditor', () => {
 
         it('should update mask according to the input format', () => {
             elementRef = { nativeElement: { value: '' } };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, LOCALE_ID);
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.inputFormat = 'd/M/yy';
             dateTimeEditor.ngOnInit();
 
@@ -797,6 +797,8 @@ describe('IgxDateTimeEditor', () => {
             });
             it('should fire validationFailed when input date is invalid.', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
+                fixture.componentInstance.minDate = new Date(2000, 1, 1);
+                fixture.componentInstance.maxDate = new Date(2050, 1, 25);
                 fixture.detectChanges();
                 spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
 
@@ -812,9 +814,8 @@ describe('IgxDateTimeEditor', () => {
 
                 // invalid date
                 const oldDate = new Date(2020, 1, 22);
-                //const newDate = (dateTimeEditorDirective as any).parseDate('99-99-2020').value;
-                const args = { oldValue: oldDate, newValue: null };
                 inputDate = '99-99-2020';
+                const args = { oldValue: oldDate, newValue: null, userInput: inputDate };
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 10);
@@ -822,7 +823,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('__-__-____');
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
-                // expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
         });
 
