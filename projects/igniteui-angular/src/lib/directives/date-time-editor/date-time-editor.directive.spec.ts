@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('IgxDateTimeEditor', () => {
+describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
         const maskParsingService = jasmine.createSpyObj('MaskParsingService',
@@ -545,7 +545,7 @@ fdescribe('IgxDateTimeEditor', () => {
                 const date = new Date(0, 0, 0, 2, 0, 0);
                 const result = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
                 const offset = date.getTimezoneOffset();
-                const tz = (offset < 0 ? '+' : '-') + (Math.abs(offset) / 60);
+                const tz = (offset <= 0 ? '+' : '-') + (Math.abs(offset) / 60);
                 expect(inputElement.nativeElement.value).toEqual(`${result} GMT${tz}`);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
