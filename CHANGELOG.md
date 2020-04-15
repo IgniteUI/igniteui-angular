@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxInputGroup`
   - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
 
+- New `igniteui-angular-extras` project providing Data analysis functionalities. Documentation available [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/framework-and-features/data-analysis.html). 
+
 ### Themes
 - **Breaking Change**  Change the default `$legacy-support` value to false in the `igx-theme` function.
 
