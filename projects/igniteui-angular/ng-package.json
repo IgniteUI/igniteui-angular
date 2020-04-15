@@ -9,7 +9,6 @@
       "@types/hammerjs",
       "hammerjs",
       "jszip",
-      "resize-observer-polyfill",
-      "igniteui-watermark"
+      "resize-observer-polyfill"
     ]
 }

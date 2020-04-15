@@ -185,46 +185,6 @@
                     }
                 }
             }
-        },
-        "igniteui-watermark": {
-            "projectType": "library",
-            "root": "projects/igniteui-watermark",
-            "sourceRoot": "projects/igniteui-watermark/src",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-ng-packagr:build",
-                    "options": {
-                        "tsConfig": "projects/igniteui-watermark/tsconfig.lib.json",
-                        "project": "projects/igniteui-watermark/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/igniteui-watermark/tsconfig.lib.prod.json"
-                        }
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "projects/igniteui-watermark/src/test.ts",
-                        "tsConfig": "projects/igniteui-watermark/tsconfig.spec.json",
-                        "karmaConfig": "projects/igniteui-watermark/karma.conf.js"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "projects/igniteui-watermark/tsconfig.lib.json",
-                            "projects/igniteui-watermark/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
-                }
-            }
         }
     },
     "defaultProject": "igniteui-dev-demos"
