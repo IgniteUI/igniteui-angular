@@ -70,7 +70,13 @@
 <ng-template #defTemplate>
     <igx-date-single>
         <!-- display format instead? what about shortDate, etc? -->
-        <input #singleInput igxInput [placeholder]="appliedFormat" type="text" readonly>
+        <input #singleInput igxInput type="text" readonly
+        [placeholder]="this.value ? '' : appliedFormat"
+        role="combobox"
+        aria-haspopup="grid"
+        [attr.aria-expanded]="!this.toggleDirective?.collapsed"
+        [attr.aria-labelledby]="this.label?.id"
+        />
 
         <igx-prefix *ngIf="!this.prefix && !this.suffix" (click)="open()">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
@@ -80,7 +86,7 @@
             <ng-container *ngTemplateOutlet="this.prefix.templateRef"></ng-container>
         </igx-prefix>
 
-        <ng-container ngProjectAs="igxLabel">
+        <ng-container ngProjectAs="[igxLabel]">
             <ng-container *ngTemplateOutlet="this.label ? labelTemplate : defLabel"></ng-container>
         </ng-container>
         <ng-container ngProjectAs="igx-prefix">
