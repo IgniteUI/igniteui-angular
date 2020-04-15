@@ -2,7 +2,7 @@ import { IExcelFile } from './excel-interfaces';
 import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
-import * as JSZip from 'jszip/dist/jszip';
+import * as JSZip from 'jszip';
 
 /**
  * @hidden
