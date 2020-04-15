@@ -17,6 +17,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
+import { IgxButtonModule } from '../directives/button/button.directive';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -121,6 +122,6 @@ export class IgxActionStripComponent {
         IgxGridEditingActionsComponent,
         IgxGridActionsBaseDirective
     ],
-    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
+    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule]
 })
 export class IgxActionStripModule { }

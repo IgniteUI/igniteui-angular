@@ -1,2 +1,6 @@
-<igx-icon *ngIf="!pinned" fontSet="filtering-icons" (click)="pin()" name="pin"></igx-icon>
-<igx-icon *ngIf="pinned" fontSet="filtering-icons" (click)="unpin()" name="unpin"></igx-icon>
+<button *ngIf="!pinned" igxButton="icon" (click)="pin()">
+    <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+</button>
+<button *ngIf="pinned" igxButton="icon" (click)="unpin()">
+    <igx-icon fontSet="filtering-icons"  name="unpin"></igx-icon>
+</button>
