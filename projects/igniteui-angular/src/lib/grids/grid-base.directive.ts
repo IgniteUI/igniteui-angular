@@ -2441,6 +2441,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public columnWidthSetByUser = false;
 
+    /**
+     * @hidden @internal
+     */
+    public unpinnedRecords: any[];
+
     data: any[];
     filteredData: any[];
 
@@ -5156,7 +5161,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf.map(rec => this.isGhostRecord(rec) ? rec.recordRef : rec) ;
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
     }
 
     /**
@@ -5410,7 +5415,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
+        const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
