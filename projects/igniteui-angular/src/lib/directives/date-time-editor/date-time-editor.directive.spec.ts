@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-fdescribe('IgxDateTimeEditor', () => {
+describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
         const maskParsingService = jasmine.createSpyObj('MaskParsingService',
