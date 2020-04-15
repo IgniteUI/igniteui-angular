@@ -27,7 +27,8 @@ import { GridType } from './common/grid.interface';
 })
 export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
-    private _rowData: any;
+    protected _rowData: any;
+
     /**
      *  The data passed to the row component.
      *
@@ -57,6 +58,17 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @Input()
     public index: number;
+
+    /**
+     * Sets whether this specific row has disabled functionality for editing and row selection.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    @Input()
+    @HostBinding('class.igx-grid__tr--disabled')
+    public disabled = false;
 
     /**
      * Gets whether the row is pinned.
@@ -100,16 +112,31 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
     public checkboxElement: IgxCheckboxComponent;
 
+    @ViewChildren('cell')
+    protected _cells: QueryList<any>;
+
     /**
-     * The rendered cells in the row component.
+     * Gets the rendered cells in the row component.
      *
      * ```typescript
      * // get the cells of the third selected row
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxGridCellComponent))
-    public cells: QueryList<IgxGridCellComponent>;
+    public get cells() {
+        const res = new QueryList<any>();
+        if (!this._cells) {
+            return res;
+        }
+        const cList = this._cells.filter((item) => item.nativeElement.parentElement !== null)
+        .sort((item1, item2) => item1.column.visibleIndex - item2.column.visibleIndex);
+        res.reset(cList);
+        return res;
+    }
+
+    public set cells(cells) {
+
+    }
 
     /**
      * @hidden
@@ -309,7 +336,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
+        if (this.grid.rowSelection === 'none' || this.deleted || this.disabled) { return; }
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
@@ -321,6 +348,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     public onRowSelectorClick(event) {
+        if (this.disabled) { return; }
         event.stopPropagation();
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
@@ -361,6 +389,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public delete() {
         this.grid.deleteRowById(this.rowID);
+    }
+
+    public isCellActive(visibleColumnIndex) {
+        const node = this.grid.navigation.activeNode;
+        return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
 
     /**

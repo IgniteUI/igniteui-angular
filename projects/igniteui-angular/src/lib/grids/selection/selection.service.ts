@@ -2,8 +2,7 @@ import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IfStmt } from '@angular/compiler';
-
+import { isEdge } from '../../core/utils';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -104,6 +103,7 @@ export class IgxGridCRUDService {
     grid;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
+    public isInCompositionMode = false;
 
     createCell(cell): IgxCell {
         return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
@@ -199,7 +199,35 @@ export class IgxGridCRUDService {
     end(): void {
         this.cell = null;
     }
+    public enterEditMode(cell) {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (cell && cell.column.editable && !cell.row.deleted) {
+            if (this.inEditMode) {
+                this.grid.endEdit(true);
+                this.grid.tbody.nativeElement.focus();
+            } else {
+                this.begin(cell);
+            }
+        }
+    }
 
+    public exitEditMode() {
+        if (this.isInCompositionMode) {
+            return;
+        }
+        if (this.inEditMode) {
+            const args = this.cell.createEditEventArgs();
+            this.grid.onCellEditCancel.emit(args);
+            if (args.cancel) {
+                return;
+            }
+            this.grid.endEdit(false);
+            if (isEdge()) { this.grid.cdr.detectChanges(); }
+            this.grid.tbody.nativeElement.focus();
+        }
+    }
 
     isInEditMode(rowIndex: number, columnIndex: number): boolean {
         if (!this.cell) {
@@ -383,12 +411,12 @@ export class IgxGridSelectionService {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
-
+        if (!this.grid.navigation.isDataRow(node.row)) { return; }
         // Kb navigation with shift and no previous node.
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
             this.clear();
-            this.keyboardState.node = node;
+            this.keyboardState.node = Object.assign({}, node);
         }
     }
 
