@@ -5,18 +5,28 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { ColumnPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridSummaryFunctions, GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSummaryFunctions,
+         GridSelectionFunctions,
+         GridFunctions,
+         PINNED_SUMMARY,
+         GRID_HEADER_CLASS,
+         HEADER_PINNED_CLASS,
+         CELL_PINNED_CLASS,
+         GRID_MRL_BLOCK_CLASS,
+         GRID_SCROLL_CLASS} from '../../test-utils/grid-functions.spec';
 // tslint:disable-next-line: max-line-length
-import { PinOnInitAndSelectionComponent, PinningComponent, GridPinningMRLComponent, GridFeaturesComponent, MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
+import { PinOnInitAndSelectionComponent,
+         PinningComponent,
+         GridPinningMRLComponent,
+         GridFeaturesComponent,
+         MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 // tslint:disable: no-use-before-declare
 
-describe('IgxGrid - Column Pinning #grid', () => {
-    const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
+fdescribe('IgxGrid - Column Pinning #grid', () => {
     const DEBOUNCETIME = 30;
 
     configureTestSuite();
@@ -66,7 +76,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(headers[0].context.column.field).toEqual('CompanyName');
 
                 expect(headers[1].context.column.field).toEqual('ContactName');
-                expect(headers[1].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
+                expect(GridFunctions.isHeaderPinned(headers[1].parent)).toBe(true);
 
                 // verify container widths
                 expect(grid.pinnedWidth).toEqual(400);
@@ -312,23 +322,42 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid = fix.componentInstance.grid;
             }));
 
-            it('should emit onColumnPinning event and allow changing the insertAtIndex param.', () => {
+            fit('should emit onColumnPinning event and allow changing the insertAtIndex param.', () => {
 
                 spyOn(grid.onColumnPinning, 'emit').and.callThrough();
 
-                let col = grid.getColumnByName('ID');
-                col.pinned = true;
+                const idCol = grid.getColumnByName('ID');
+                const idColIndex = idCol.index;
+                idCol.pinned = true;
                 fix.detectChanges();
-
                 expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(1);
-                expect(col.visibleIndex).toEqual(0);
+                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                    column: idCol,
+                    insertAtIndex: 0,
+                    isPinned: true
+                });
+                expect(idCol.visibleIndex).toEqual(0);
 
-                col = grid.getColumnByName('City');
-                col.pinned = true;
+                const cityCol = grid.getColumnByName('City');
+                cityCol.pinned = true;
                 fix.detectChanges();
-
                 expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(2);
-                expect(col.visibleIndex).toEqual(0);
+                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                    column: cityCol,
+                    insertAtIndex: 0,
+                    isPinned: true
+                });
+                expect(cityCol.visibleIndex).toEqual(0);
+
+                idCol.pinned = false;
+                fix.detectChanges();
+                expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(3);
+                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                    column: idCol,
+                    insertAtIndex: idColIndex,
+                    isPinned: false
+                });
+                expect(cityCol.visibleIndex).toEqual(0);
 
                 // check DOM
                 const headers = GridFunctions.getColumnHeaders(fix);
@@ -364,7 +393,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 firstHeader = GridFunctions.getColumnHeaders(fix)[0];
 
                 expect(firstHeader.context.column.field).toEqual('CompanyName');
-                expect(firstHeader.parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
+                expect(GridFunctions.isHeaderPinned(firstHeader.parent)).toBe(true);
             });
 
             it('should allow pinning a hidden column.', () => {
@@ -534,9 +563,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(row.children[3].getAttribute('aria-describedby')).toBe(grid.id + '_ContactName');
 
                 // check scrollbar DOM
-                const scrBarStartSection = fix.debugElement.query(By.css('.igx-grid__scroll-start'));
-                const scrBarMainSection = fix.debugElement.query(By.css('.igx-grid__scroll-main'));
-                const scrBarEndSection = fix.debugElement.query(By.css('.igx-grid__scroll-end'));
+                const scrBarStartSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-start`));
+                const scrBarMainSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-main`));
+                const scrBarEndSection = fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}-end`));
 
                 // The default pinned-border-width in px
                 expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
@@ -575,10 +604,10 @@ describe('IgxGrid - Column Pinning #grid', () => {
                     ['Count'], ['27']);
 
                 const pinnedSummaryCells = GridSummaryFunctions.getRootPinnedSummaryCells(fix);
-                expect(pinnedSummaryCells[0].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
-                    .not.toBe(-1);
-                expect(pinnedSummaryCells[1].nativeElement.className.indexOf('igx-grid-summary--pinned-first'))
-                    .toBe(-1);
+                expect(pinnedSummaryCells[0].nativeElement.className.contains(`${PINNED_SUMMARY}-first`))
+                    .toBeTruthy();
+                expect(pinnedSummaryCells[1].nativeElement.className.constains(`${PINNED_SUMMARY}-first`))
+                    .toBeFalsy();
             });
 
             it('should allow navigating to/from pinned area', (async () => {
@@ -651,8 +680,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 }
 
                 // check correct headers have left border
-                const fistPinnedHeaders = fix.debugElement.query(By.css('.igx-grid__thead-wrapper'))
-                    .queryAll((By.css('.igx-grid__th--pinned-first')));
+                const fistPinnedHeaders = fix.debugElement.query(By.css(GRID_HEADER_CLASS))
+                    .queryAll((By.css(`.${HEADER_PINNED_CLASS}-first`)));
                 expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
                 expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
             }));
@@ -667,14 +696,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const row = grid.getRowByIndex(0).nativeElement;
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
-                expect(row.children[1].classList.contains('igx-grid__td--pinned-first')).toBeTruthy();
-                expect(row.children[1].classList.contains('igx-grid__mrl-block')).toBeTruthy();
+                expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();
+                expect(row.children[1].classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTruthy();
                 expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
                 // check correct headers have left border
-                const firstPinnedHeader = GridFunctions.getGridHeader(fix).query((By.css('.igx-grid__th--pinned-first')));
-                expect(firstPinnedHeader.classes['igx-grid__mrl-block']).toBeTruthy();
-                expect(firstPinnedHeader.classes['igx-grid__th--pinned-first']).toBeTruthy();
+                const firstPinnedHeader = GridFunctions.getGridHeader(fix).query((By.css(`.${HEADER_PINNED_CLASS}-first`)));
+                expect(firstPinnedHeader.classes[GRID_MRL_BLOCK_CLASS]).toBeTruthy();
+                expect(firstPinnedHeader.classes[`${HEADER_PINNED_CLASS}-first`]).toBeTruthy();
             }));
         });
     });

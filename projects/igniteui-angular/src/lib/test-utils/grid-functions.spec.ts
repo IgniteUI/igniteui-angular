@@ -65,7 +65,6 @@ const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
-const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
@@ -73,10 +72,13 @@ const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
-const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
-const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
-const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
+export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
+export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
+export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
+export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
