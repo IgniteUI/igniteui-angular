@@ -178,7 +178,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * ```
    */
   @Output()
-  public validationFail = new EventEmitter<IgxDateTimeEditorEventArgs>();
+  public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
   private _value: Date;
   private _format: string;
@@ -339,9 +339,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     if (this.isValidDate(parsedDate)) {
       this.updateValue(parsedDate);
     } else {
-      const oldValue = new Date(this.value.getTime());
+      const oldValue = this.value && new Date(this.value.getTime());
       const args = { oldValue: oldValue, newValue: parsedDate, userInput: this.inputValue };
-      this.validationFail.emit(args);
+      this.validationFailed.emit(args);
       if (args.newValue?.getTime && args.newValue.getTime() !== oldValue.getTime()) {
         this.updateValue(args.newValue);
       } else {
@@ -434,8 +434,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this._oldValue = this.value;
     this.value = newDate;
     this.onChangeCallback(this.value);
-    if (!this.valueInRange(this.value)) {
-      this.validationFail.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
+    if (this.value && !this.valueInRange(this.value)) {
+      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
     }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
       this.valueChange.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });

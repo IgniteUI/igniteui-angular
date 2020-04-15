@@ -716,12 +716,12 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith({ oldValue: undefined, newValue: newDate });
             });
-            it('should fire validationFail when input date is outside date range.', () => {
+            it('should fire validationFailed when input date is outside date range.', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.componentInstance.minDate = new Date(2020, 1, 20);
                 fixture.componentInstance.maxDate = new Date(2020, 1, 25);
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.validationFail, 'emit');
+                spyOn(dateTimeEditorDirective.validationFailed, 'emit');
 
                 // date within the range
                 let inputDate = '22-02-2020';
@@ -731,7 +731,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
-                expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
+                expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
 
                 // date > maxValue
                 let oldDate = new Date(2020, 1, 22);
@@ -744,8 +744,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
 
                 // date < minValue
                 oldDate = newDate;
@@ -758,13 +758,13 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(2);
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(2);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
-            it('should fire validationFail when input date is invalid.', () => {
+            it('should fire validationFailed when input date is invalid.', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.detectChanges();
-                spyOn(dateTimeEditorDirective.validationFail, 'emit').and.callThrough();
+                spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
 
                 // valid date
                 let inputDate = '22-02-2020';
@@ -774,7 +774,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
-                expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
+                expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
 
                 // invalid date
                 const oldDate = new Date(2020, 1, 22);
@@ -787,8 +787,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('__-__-____');
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
-                // expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
+                // expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
         });
 
@@ -817,7 +817,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
             });
             it('should validate properly when used as form control.', () => {
-                spyOn(dateTimeEditorDirective.validationFail, 'emit').and.callThrough();
+                spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
                 const dateEditor = form.controls['dateEditor'];
                 const newDate = (dateTimeEditorDirective as any).parseDate('99-99-9999').value;
                 const args = { oldValue: '', newValue: newDate };
@@ -833,13 +833,13 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__-__-____');
                 expect(form.valid).toBeFalsy();
                 expect(dateEditor.valid).toBeFalsy();
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
-                // expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
+                // expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
             it('should validate properly min/max value when used as form control.', () => {
                 fixture.componentInstance.minDate = new Date(2020, 2, 20);
                 fixture.componentInstance.maxDate = new Date(2020, 2, 25);
-                spyOn(dateTimeEditorDirective.validationFail, 'emit');
+                spyOn(dateTimeEditorDirective.validationFailed, 'emit');
                 const dateEditor = form.controls['dateEditor'];
 
                 let inputDate = '21-03-2020';
@@ -852,7 +852,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
                 expect(form.valid).toBeTruthy();
                 expect(dateEditor.valid).toBeTruthy();
-                expect(dateTimeEditorDirective.validationFail.emit).not.toHaveBeenCalled();
+                expect(dateTimeEditorDirective.validationFailed.emit).not.toHaveBeenCalled();
 
                 const args = { oldValue: new Date(2020, 2, 21), newValue: new Date(2020, 1, 21) };
                 inputDate = '21-02-2020';
@@ -865,8 +865,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
                 expect(form.valid).toBeFalsy();
                 expect(dateEditor.valid).toBeFalsy();
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledTimes(1);
-                expect(dateTimeEditorDirective.validationFail.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
+                expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
             it('should properly submit values when used as a form control', () => {
                 const inputDate = '09-04-2020';
