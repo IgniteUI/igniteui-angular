@@ -1,3 +1,4 @@
+import { RangeDatePickerResourceStringsEN } from './range-date-picker-resources';
 import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
 import { PaginatorResourceStringsEN } from './paginator-resources';
@@ -11,8 +12,9 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
  */
 export const CurrentResourceStrings = {
     GridResStrings: cloneValue(GridResourceStringsEN),
-    TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
     PaginatorResStrings: cloneValue(PaginatorResourceStringsEN),
+    TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
+    RangeDatePickerResStrings: cloneValue(RangeDatePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
 };
 

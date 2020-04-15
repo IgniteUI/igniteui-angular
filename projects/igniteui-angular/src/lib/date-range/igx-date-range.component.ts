@@ -20,6 +20,7 @@ import { IToggleView } from '../core/navigation';
 import { IgxLabelDirective, IgxPrefixDirective } from '../input-group';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 /**
  * Range Date Picker provides the ability to select a range of dates from the calendar UI.
@@ -258,6 +259,9 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
 
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
+
+    /** @hidden */
+    public prepTo = CurrentResourceStrings.RangeDatePickerResStrings.igx_range_date_picker_to;
 
     /** @hidden @internal */
     public get appliedFormat() {
