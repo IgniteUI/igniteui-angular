@@ -111,13 +111,15 @@ export class IgxActionStripComponent {
         IgxActionStripComponent,
         IgxActionStripMenuItemDirective,
         IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent
+        IgxGridEditingActionsComponent,
+        IgxGridActionsBaseDirective
     ],
     exports: [
         IgxActionStripComponent,
         IgxActionStripMenuItemDirective,
         IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent
+        IgxGridEditingActionsComponent,
+        IgxGridActionsBaseDirective
     ],
     imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxIconModule]
 })
