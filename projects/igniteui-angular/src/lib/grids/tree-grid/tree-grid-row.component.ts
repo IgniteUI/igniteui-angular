@@ -97,8 +97,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     protected resolveClasses(): string {
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
-        const pinnedRecordClass = false ? 'igx-grid__tr--disabled' : '';
-        return `${classes} ${filteredClass} ${pinnedRecordClass}`;
+        return `${classes} ${filteredClass}`;
     }
 
     /**
