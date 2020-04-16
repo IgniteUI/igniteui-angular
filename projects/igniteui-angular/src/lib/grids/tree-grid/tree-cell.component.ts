@@ -20,15 +20,15 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
 
     constructor(
-                selectionService: IgxGridSelectionService,
-                crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                protected zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                protected platformUtil: PlatformUtil) {
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        cdr: ChangeDetectorRef,
+        element: ElementRef,
+        protected zone: NgZone,
+        touchManager: HammerGesturesManager,
+        @Inject(DOCUMENT) public document,
+        protected platformUtil: PlatformUtil) {
         super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, document, platformUtil);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }

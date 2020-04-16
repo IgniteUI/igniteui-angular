@@ -29,7 +29,6 @@ import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
-import { IgxGridRowPinningPipe } from './grid/grid.pipes';
 /**
  * @hidden
  */
@@ -44,8 +43,7 @@ import { IgxGridRowPinningPipe } from './grid/grid.pipes';
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent,
-        IgxGridRowPinningPipe
+        IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -73,8 +71,7 @@ import { IgxGridRowPinningPipe } from './grid/grid.pipes';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxGridSharedModules,
-        IgxGridRowPinningPipe
+        IgxGridSharedModules
     ],
     imports: [
         IgxGridColumnModule,

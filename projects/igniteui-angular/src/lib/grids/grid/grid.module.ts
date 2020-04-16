@@ -13,8 +13,7 @@ import {
     IgxGridPagingPipe,
     IgxGridGroupingPipe,
     IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridRowPinningPipe
+    IgxGridFilteringPipe
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './grid-row.component';
