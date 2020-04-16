@@ -79,9 +79,14 @@
             </igx-hierarchical-grid>
         </div> -->
 
+        <div class="sample-switches">
+            <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
+            <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
+        </div>
+        <input igxButton="raised" type="button" (click)="treegrid.pinRow(0)" value="Pin 0"/>
         <div class="sample-column">
             <div>igxTreeGrid</div>
-            <igx-tree-grid #grid1 [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+            <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
             [paging]="true" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
             [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
            >

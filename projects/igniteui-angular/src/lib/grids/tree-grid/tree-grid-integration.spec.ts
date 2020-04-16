@@ -1536,7 +1536,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const gridFilterData = treeGrid.filteredData;
             expect(gridFilterData.length).toBe(2);
             expect(gridFilterData[0].ID).toBe(147);
-            expect(gridFilterData[1].recordRef.ID).toBe(147);
+            expect(gridFilterData[1].ID).toBe(147);
         });
 
         it('should apply sorting to both pinned and unpinned rows', () => {
