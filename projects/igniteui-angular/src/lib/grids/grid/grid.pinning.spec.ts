@@ -26,7 +26,7 @@ import { PinOnInitAndSelectionComponent,
 import { IgxGridComponent } from './grid.component';
 // tslint:disable: no-use-before-declare
 
-fdescribe('IgxGrid - Column Pinning #grid', () => {
+describe('IgxGrid - Column Pinning #grid', () => {
     const DEBOUNCETIME = 30;
 
     configureTestSuite();
@@ -55,6 +55,7 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
+                fix.detectChanges();
             }));
 
             it('should correctly initialize when there are initially pinned columns.', () => {
@@ -79,8 +80,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(headers[1].parent)).toBe(true);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(400);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
             it('should allow pinning/unpinning via the grid API', () => {
@@ -108,8 +109,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(thirdHeader)).toBe(false);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(200);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(600);
+                GridFunctions.verifyPinnedAreaWidth(grid, 200);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 600);
 
                 // pin back the column.
                 grid.pinColumn('CompanyName');
@@ -120,8 +121,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(400);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
 
                 expect(col.pinned).toBe(true);
                 expect(col.visibleIndex).toEqual(1);
@@ -131,7 +132,7 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isCellPinned(cell)).toBe(true);
             });
 
-            it('should allow pinning/unpinning via the column API', () => {
+           it('should allow pinning/unpinning via the column API', () => {
                 const col = grid.getColumnByName('ID');
 
                 col.pinned = true;
@@ -145,8 +146,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(8);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(600);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(200);
+                GridFunctions.verifyPinnedAreaWidth(grid, 600);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 200);
 
                 col.pinned = false;
                 fix.detectChanges();
@@ -159,8 +160,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(400);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
             it('on unpinning should restore the original location(index) of the column', () => {
@@ -322,7 +323,7 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 grid = fix.componentInstance.grid;
             }));
 
-            fit('should emit onColumnPinning event and allow changing the insertAtIndex param.', () => {
+            it('should emit onColumnPinning event and allow changing the insertAtIndex param.', () => {
 
                 spyOn(grid.onColumnPinning, 'emit').and.callThrough();
 
@@ -472,6 +473,7 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 fix.componentInstance.grid.pinning = pinningConfig;
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
+                fix.detectChanges();
             }));
 
             it('should correctly initialize when there are initially pinned columns.', () => {
@@ -498,8 +500,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(lastColumnHeader.context.column.field).toEqual('ContactName');
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(400);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
             });
 
             it('should allow pinning/unpinning via the grid API', () => {
@@ -527,8 +529,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(GridFunctions.isHeaderPinned(secondHeader)).toBe(false);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(200);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(600);
+                GridFunctions.verifyPinnedAreaWidth(grid, 200);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 600);
 
                 // pin back the column.
                 grid.pinColumn('CompanyName');
@@ -539,8 +541,8 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.unpinnedColumns.length).toEqual(9);
 
                 // verify container widths
-                expect(grid.pinnedWidth).toEqual(400);
-                expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
+                GridFunctions.verifyPinnedAreaWidth(grid, 400);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, 400);
 
                 expect(col.pinned).toBe(true);
                 expect(col.visibleIndex).toEqual(grid.unpinnedColumns.length + 1);
@@ -569,10 +571,9 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
 
                 // The default pinned-border-width in px
                 expect(scrBarStartSection.nativeElement.offsetWidth).toEqual(grid.featureColumnsWidth());
-                const pinnedColSum = grid.pinnedColumns.map(x => parseInt(x.calcWidth, 10)).reduce((x, y) => x + y);
-                expect(scrBarEndSection.nativeElement.offsetWidth).toEqual(pinnedColSum);
-                const expectedUnpinAreaWidth = parseInt(grid.width, 10) - grid.featureColumnsWidth() - pinnedColSum - grid.scrollWidth;
-                expect(parseInt(scrBarMainSection.nativeElement.style.width, 10)).toEqual(expectedUnpinAreaWidth);
+
+                GridFunctions.verifyPinnedAreaWidth(grid, scrBarEndSection.nativeElement.offsetWidth);
+                GridFunctions.verifyUnpinnedAreaWidth(grid, scrBarMainSection.nativeElement.offsetWidth, false);
             });
 
             it('should pin an unpinned column when drag/drop it among pinned columns.', () => {
@@ -604,10 +605,10 @@ fdescribe('IgxGrid - Column Pinning #grid', () => {
                     ['Count'], ['27']);
 
                 const pinnedSummaryCells = GridSummaryFunctions.getRootPinnedSummaryCells(fix);
-                expect(pinnedSummaryCells[0].nativeElement.className.contains(`${PINNED_SUMMARY}-first`))
-                    .toBeTruthy();
-                expect(pinnedSummaryCells[1].nativeElement.className.constains(`${PINNED_SUMMARY}-first`))
-                    .toBeFalsy();
+                expect(pinnedSummaryCells[0].classes[`${PINNED_SUMMARY}-first`])
+                    .toBeDefined();
+                expect(pinnedSummaryCells[1].classes[`${PINNED_SUMMARY}-first`])
+                    .toBeUndefined();
             });
 
             it('should allow navigating to/from pinned area', (async () => {
