@@ -618,7 +618,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /**
      * @hidden @internal
-     * This is overwritten because tree grid records have special record format - ITreeGridRecord, 
+     * This is overwritten because tree grid records have special record format - ITreeGridRecord,
      * which already has the rowID in the record object.
      */
     public isRecordPinned(rec) {
