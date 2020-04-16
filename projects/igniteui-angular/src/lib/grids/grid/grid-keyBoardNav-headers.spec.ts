@@ -19,7 +19,7 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid - Headers Keyboard navigation #grid', () => {
+describe('IgxGrid - Headers Keyboard navigation #grid', () => {
     describe('Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
