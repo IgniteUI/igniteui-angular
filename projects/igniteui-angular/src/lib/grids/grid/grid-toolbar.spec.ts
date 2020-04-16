@@ -1,26 +1,34 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, async, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, async, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
-import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../services/index';
+import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService, CsvFileTypes
+    } from '../../services/index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-describe('IgxGrid - Grid Toolbar #grid', () => {
+const CSS_CLASS_GRID_TOOLBAR = 'igx-grid-toolbar';
+const CSS_CLASS_GRID_TOOLBAR_COMPACT = `${CSS_CLASS_GRID_TOOLBAR}--compact`;
+const CSS_CLASS_GRID_TOOLBAR_COSY = `${CSS_CLASS_GRID_TOOLBAR}--cosy`;
+const CSS_CLASS_EXPORT_BTN = `.${CSS_CLASS_GRID_TOOLBAR}__dropdown#btnExport`;
+const CSS_CLASS_CUSTOM_CONTENT = `.${CSS_CLASS_GRID_TOOLBAR}__custom-content`;
+const CSS_CLASS_TITLE = `.${CSS_CLASS_GRID_TOOLBAR}__title`;
+const TOOLBAR_TITLE = 'Grid Toolbar Title';
+
+describe('IgxGrid - Grid Toolbar #grid - ', () => {
     configureTestSuite();
-    let fixture;
-    let grid;
+    let grid: IgxGridComponent;
 
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                GridToolbarTestPage1Component
+                GridToolbarTestPage1Component,
+                GridToolbarTestPage2Component
             ],
             imports: [
                 IgxGridModule,
@@ -33,6 +41,9 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         })
         .compileComponents();
     }));
+
+  describe('Basic Tests - ', () => {
+    let fixture: ComponentFixture<GridToolbarTestPage1Component>;
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
@@ -48,7 +59,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         expect(getToolbar(fixture)).toBe(null);
 
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
         expect(getToolbar(fixture)).not.toBe(null);
@@ -60,14 +71,14 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
     });
 
     it('testing toolbar title ', () => {
-        const someTitle = 'Grid Toobar Title';
+        const someTitle = TOOLBAR_TITLE;
 
         grid.showToolbar = true;
         grid.toolbarTitle = someTitle;
         fixture.detectChanges();
 
         const gridToolbar = getToolbar(fixture);
-        const gridToolbarTitle = gridToolbar.query(By.css('.igx-grid-toolbar__title')).nativeElement;
+        const gridToolbarTitle = gridToolbar.query(By.css(CSS_CLASS_TITLE)).nativeElement;
 
         expect(gridToolbarTitle.innerText).toBe(someTitle);
 
@@ -84,47 +95,47 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
 
     it('testing main export button visibility', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
         const gridToolbar = getToolbar(fixture);
 
-        let exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        let exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN));
         expect(exportButton).toBe(null);
 
         grid.exportExcel = true;
         fixture.detectChanges();
 
-        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN));
         expect(exportButton).not.toBe(null);
 
         grid.exportExcel = false;
         fixture.detectChanges();
 
-        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN));
         expect(exportButton).toBe(null);
 
         grid.exportCsv = true;
         fixture.detectChanges();
 
-        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN));
         expect(exportButton).not.toBe(null);
 
         grid.exportCsv = false;
         fixture.detectChanges();
 
-        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN));
         expect(exportButton).toBe(null);
     });
 
     it('testing main export button text', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
         const gridToolbar = getToolbar(fixture);
 
-        let exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport span span'));
+        let exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN + ' span span'));
         expect(exportButton).toBe(null);
 
         grid.exportText = 'NEWVALUE';
@@ -133,14 +144,14 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         fixture.detectChanges();
 
         expect(grid.exportText).toBe('NEWVALUE');
-        exportButton = gridToolbar.query(By.css('.igx-grid-toolbar__dropdown#btnExport span span'));
+        exportButton = gridToolbar.query(By.css(CSS_CLASS_EXPORT_BTN + ' span span'));
         expect(exportButton).not.toBe(null);
         expect(exportButton.nativeElement.innerText).toBe('NEWVALUE');
     });
 
     it('testing export to Excel button visibility', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
         expect(getExportButton(fixture)).toBe(null);
@@ -178,7 +189,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
 
     it('testing export to CSV button visibility', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         grid.exportCsv = true;
         fixture.detectChanges();
 
@@ -227,105 +238,105 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         expect(getExportOptions(fixture).length).toBe(2);
 
         getExportButton(fixture).nativeElement.click();
-
-        // expect(getOverlay()).toBe(null);
     });
 
-    it('testing excel export starting event (cancel)', (done) => {
+    it('testing excel export starting event (cancel)', () => {
         grid.showToolbar = true;
         grid.exportExcel = true;
         fixture.detectChanges();
 
+        spyOn(grid.onToolbarExporting, 'emit').and.callThrough();
+        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
+            args.cancel = true;
+        });
+        spyOn(grid.toolbar.excelExporter, 'export');
+
         getExportButton(fixture).nativeElement.click();
         const exportExcelButton = getOverlay(fixture).querySelector('li#btnExportExcel');
-
-        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
-            expect(args.grid).not.toBe(null);
-            expect(args.exporter).not.toBe(null);
-            expect(args.options).not.toBe(null);
-            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
-            expect(args.cancel).toBe(false);
-            args.cancel = true;
-            done();
-        });
-
         exportExcelButton.click();
+
+        expect(grid.toolbar.excelExporter.export).not.toHaveBeenCalled();
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledTimes(1);
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledWith({
+            grid: grid,
+            exporter: grid.toolbar.excelExporter,
+            cancel: true,
+            options: new IgxExcelExporterOptions('ExportedData')
+        });
     });
 
-    it('testing excel export starting event (non-cancel)', (done) => {
+    it('testing excel export starting event (non-cancel)', () => {
         grid.showToolbar = true;
         grid.exportExcel = true;
         fixture.detectChanges();
 
+        spyOn(grid.onToolbarExporting, 'emit').and.callThrough();
+        spyOn(grid.toolbar.excelExporter, 'export');
+
         getExportButton(fixture).nativeElement.click();
         const exportExcelButton = getOverlay(fixture).querySelector('li#btnExportExcel');
-
-        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
-            expect(args.grid).not.toBe(null);
-            expect(args.exporter).not.toBe(null);
-            expect(args.options).not.toBe(null);
-            expect(args.options instanceof IgxExcelExporterOptions).toBeTruthy();
-            expect(args.cancel).toBe(false);
-
-            // Spy the 'export' and 'exportData' methods so the files are not really created
-            spyOn(args.exporter, 'export');
-            spyOn(args.exporter, 'exportData');
-
-            done();
-        });
-
         exportExcelButton.click();
+
+        expect(grid.toolbar.excelExporter.export).toHaveBeenCalled();
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledTimes(1);
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledWith({
+            grid: grid,
+            exporter: grid.toolbar.excelExporter,
+            cancel: false,
+            options: new IgxExcelExporterOptions('ExportedData')
+        });
     });
 
-    it('testing csv export starting event (cancel)', (done) => {
+    it('testing csv export starting event (cancel)', () => {
         grid.showToolbar = true;
         grid.exportCsv = true;
         fixture.detectChanges();
 
-        getExportButton(fixture).nativeElement.click();
-        const exportCsvButton = getOverlay(fixture).querySelector('li#btnExportCsv');
-
+        spyOn(grid.onToolbarExporting, 'emit').and.callThrough();
         grid.onToolbarExporting.pipe(first()).subscribe((args) => {
-            expect(args.grid).not.toBe(null);
-            expect(args.exporter).not.toBe(null);
-            expect(args.options).not.toBe(null);
-            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
-            expect(args.cancel).toBe(false);
             args.cancel = true;
-            done();
         });
+        spyOn(grid.toolbar.csvExporter, 'export');
 
+        getExportButton(fixture).nativeElement.click();
+        const exportCsvButton = getOverlay(fixture).querySelector('li#btnExportCsv');
         exportCsvButton.click();
+
+        expect(grid.toolbar.csvExporter.export).not.toHaveBeenCalled();
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledTimes(1);
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledWith({
+            grid: grid,
+            exporter: grid.toolbar.csvExporter,
+            cancel: true,
+            options: new IgxCsvExporterOptions('ExportedData', CsvFileTypes.CSV)
+        });
     });
 
-    it('testing csv export starting event (non-cancel)', (done) => {
+    it('testing csv export starting event (non-cancel)', () => {
         grid.showToolbar = true;
         grid.exportCsv = true;
         fixture.detectChanges();
 
+        spyOn(grid.onToolbarExporting, 'emit').and.callThrough();
+        spyOn(grid.toolbar.csvExporter, 'export');
+
         getExportButton(fixture).nativeElement.click();
         const exportCsvButton = getOverlay(fixture).querySelector('li#btnExportCsv');
-
-        grid.onToolbarExporting.pipe(first()).subscribe((args) => {
-            expect(args.grid).not.toBe(null);
-            expect(args.exporter).not.toBe(null);
-            expect(args.options).not.toBe(null);
-            expect(args.options instanceof IgxCsvExporterOptions).toBeTruthy();
-            expect(args.cancel).toBe(false);
-
-            // Spy the 'export' and 'exportData' methods so the files are not really created
-            spyOn(args.exporter, 'export');
-            spyOn(args.exporter, 'exportData');
-
-            done();
-        });
-
         exportCsvButton.click();
+
+        expect(grid.toolbar.csvExporter.export).toHaveBeenCalled();
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledTimes(1);
+        expect(grid.onToolbarExporting.emit).toHaveBeenCalledWith({
+            grid: grid,
+            exporter: grid.toolbar.csvExporter,
+            cancel: false,
+            options: new IgxCsvExporterOptions('ExportedData', CsvFileTypes.CSV)
+        });
     });
 
     it('does not show Column Hiding button by default.', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
         expect(grid.toolbar.columnHidingUI).toBeUndefined();
 
@@ -362,7 +373,6 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         fixture.detectChanges();
         btnText = button.nativeElement.innerText.toLowerCase();
         expect(btnText.includes('0') && btnText.includes('visibility') && !btnText.includes('visibility_off')).toBe(true);
-
     });
 
     it('toggleColumnHidingUI() method opens and closes the ColumnHiding dropdown.', () => {
@@ -377,12 +387,11 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         expect(dropDownDiv.querySelector('igx-column-hiding')).not.toBe(null);
 
         getColumnHidingButton(fixture).nativeElement.click();
-
     });
 
     it('does not show Column Pinning button by default.', () => {
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
         expect(grid.toolbar.columnPinningUI).toBeUndefined();
         expect(getColumnPinningButton(fixture)).toBeUndefined();
@@ -405,7 +414,8 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         const icon = button.nativeElement.querySelector('igx-icon');
         const iconName = icon.getAttribute('name');
         const btnText = button.nativeElement.innerText.toLowerCase();
-        expect(btnText.includes('0') && iconName === 'unpin').toBe(true);
+        expect(btnText.includes('0')).toBe(true);
+        expect(iconName === 'unpin').toBe(true);
     });
 
     it('toggleColumnPinningUI() method opens and closes the ColumnPinning dropdown.', () => {
@@ -422,70 +432,65 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         getColumnPinningButton(fixture).nativeElement.click();
     });
 
-    it('display density is properly applied.', fakeAsync(() => {
+    it('display density is properly applied.', () => {
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
 
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR);
 
         expect(parseFloat(toolbar.offsetHeight)).toBe(58);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
-        tick(16);
         fixture.detectChanges();
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR_COMPACT);
         expect(parseFloat(toolbar.offsetHeight)).toBe(44);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
-        tick(16);
         fixture.detectChanges();
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR_COSY);
         expect(parseFloat(toolbar.offsetHeight)).toBe(52);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
-    }));
+    });
 
-    it('display density is properly applied through the grid.', fakeAsync(() => {
+    it('display density is properly applied through the grid.', () => {
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
 
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
-        tick(16);
         fixture.detectChanges();
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR_COMPACT);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
-        tick(16);
         fixture.detectChanges();
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
-        expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+        expect(toolbar.classList[0]).toBe(CSS_CLASS_GRID_TOOLBAR_COSY);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
 
         grid.displayDensity = DisplayDensity.comfortable;
-        tick(16);
         fixture.detectChanges();
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
-    }));
+    });
 
     it('test \'filterColumnsPrompt\' property.', () => {
         grid.showToolbar = true;
@@ -526,64 +531,41 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
 
         expect(grid.toolbar.columnHidingUI.columnsAreaMaxHeight).toBe(grid.calcHeight * 0.7 + 'px');
     }));
+  });
 
-});
-
-describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
-    configureTestSuite();
-    let fixture;
-    let grid;
-
-    beforeAll(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                GridToolbarTestPage1Component,
-                GridToolbarTestPage2Component
-            ],
-            imports: [
-                IgxGridModule,
-                NoopAnimationsModule
-            ],
-            providers: [
-                IgxExcelExporterService,
-                IgxCsvExporterService
-            ]
-        })
-        .compileComponents();
-    }));
-
+  describe('Custom Content - ', () => {
     afterEach(() => {
         UIInteractions.clearOverlay();
     });
 
     it('should not have content container when no template is provided', () => {
-        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
 
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
-        const customContainer = getToolbar(fixture).query(By.css('.igx-grid-toolbar__custom-content'));
+        const customContainer = getToolbar(fixture).query(By.css(CSS_CLASS_CUSTOM_CONTENT));
         expect(customContainer).toBe(null);
     });
 
     it('should have the content container when the template is provided', () => {
-        fixture = TestBed.createComponent(GridToolbarTestPage2Component);
+        const fixture = TestBed.createComponent(GridToolbarTestPage2Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
 
         grid.showToolbar = true;
-        grid.toolbarTitle = 'Grid Toobar Title';
+        grid.toolbarTitle = TOOLBAR_TITLE;
         fixture.detectChanges();
 
-        const customContainer = getToolbar(fixture).query(By.css('.igx-grid-toolbar__custom-content'));
+        const customContainer = getToolbar(fixture).query(By.css(CSS_CLASS_CUSTOM_CONTENT));
         expect(customContainer).not.toBe(null);
     });
 
     it('should expose the toolbar buttons with their correct type', () => {
-        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        const fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
 
@@ -603,11 +585,12 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
         aButton = grid.toolbar.exportButton;
         expect(aButton instanceof IgxButtonDirective).toBe(true, 'export button has wrong type');
     });
-
+  });
 });
 
+
 function getToolbar(fixture) {
-    return fixture.debugElement.query(By.css('igx-grid-toolbar'));
+    return fixture.debugElement.query(By.css(CSS_CLASS_GRID_TOOLBAR));
 }
 
 function getOverlay(fixture) {
@@ -624,7 +607,7 @@ function getColumnPinningButton(fixture) {
 }
 
 function getExportButton(fixture) {
-    const div = getToolbar(fixture).query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+    const div = getToolbar(fixture).query(By.css(CSS_CLASS_EXPORT_BTN));
     return (div) ? div.query(By.css('button')) : null;
 }
 
