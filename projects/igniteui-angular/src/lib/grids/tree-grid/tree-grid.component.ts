@@ -608,16 +608,22 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
-        if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
-        }
-        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this._pinnedRecordIDs.length : rowIndex;
         return {
-            $implicit: rowData,
-            index: rowIndex,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            index: this.getRowIndex(rowIndex, pinned),
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isSummaryRow(rowData) ? false : this.isGhostRecord(rowData.data)
+            disabled: this.isGhostRecord(rowData)
         };
+    }
+
+    /**
+     * @hidden @internal
+     * This is overwritten because tree grid records have special record format - ITreeGridRecord,
+     * which already has the rowID in the record object.
+     */
+    public isRecordPinned(rec) {
+        const id = rec.rowID;
+        return this._pinnedRecordIDs.indexOf(id) !== -1;
     }
 
     /**

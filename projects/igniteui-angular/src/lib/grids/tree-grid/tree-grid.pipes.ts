@@ -223,7 +223,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                this.gridAPI.grid.isGhostRecord(record) ? flatData.push(record.data.recordRef) : flatData.push(record.data);
+                flatData.push(record.data);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
@@ -310,80 +310,32 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     }
 }
 
+/**
+ * This pipe maps the original record to ITreeGridRecord format used in TreeGrid.
+ */
 @Pipe({
-    name: 'treeGridRowPinning',
+    name: 'treeGridNormalizeRecord',
     pure: true
 })
-export class IgxTreeGridRowPinningPipe implements PipeTransform {
-
+export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService> gridAPI;
     }
 
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        const grid = this.gridAPI.grid;
-
-        if (!grid.hasPinnedRecords) {
-            return [];
-        }
-
-        let result = grid.flatData.filter((value, index) => grid.isRecordPinned(value));
-
-        // pinned records should be ordered as they were pinned.
-        result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-
-        result = this.normalizePinnedRecords(result, this.gridAPI.grid.primaryKey);
-
-        return result;
-    }
-
-    private normalizePinnedRecords(collection: any[], primaryKey: string) {
-        const result: ITreeGridRecord[] = [];
-        collection.forEach(row => {
-            const record: ITreeGridRecord = {
-                rowID: this.getRowID(primaryKey, row),
-                data: row,
-                children: []
-            };
-            result.push(record);
-        });
-        return result;
-    }
-
-    private getRowID(primaryKey: any, rowData: any) {
-        return primaryKey ? rowData[primaryKey] : rowData;
-    }
-}
-
-@Pipe({
-    name: 'treeGridShadowRows',
-    pure: true
-})
-export class IgxTreeGridShadowRowsPipe implements PipeTransform {
-
-    private gridAPI: IgxTreeGridAPIService;
-
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
-    }
-
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        this.designateDisabledRows(collection);
-        return collection;
-    }
-
-    private designateDisabledRows(collection: ITreeGridRecord[]) {
-        collection.forEach(record => {
-            if (this.gridAPI.grid.isRecordPinned(record.data)) {
-                const recordData = {};
-                Object.assign(recordData, record.data);
-                record.data = { recordRef: recordData, ghostRecord: true };
-            }
-            if (record.children && record.children.length > 0) {
-                this.designateDisabledRows(record.children);
-            }
-        });
+    transform(collection: any[], pipeTrigger: number): any[] {
+        const grid =  this.gridAPI.grid;
+        const primaryKey = grid.primaryKey;
+        // using flattened data because origin data may be hierarchical.
+        const flatData = grid.flatData;
+        const res = flatData.map(rec =>
+            ({
+                    rowID: grid.primaryKey ? rec[primaryKey] : rec,
+                    data: Object.assign({}, rec),
+                    level: 0,
+                    children: []
+            }));
+        return res;
     }
 }

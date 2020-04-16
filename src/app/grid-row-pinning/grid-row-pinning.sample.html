@@ -81,8 +81,8 @@
 
         <div class="sample-column">
             <div>igxTreeGrid</div>
-            <igx-tree-grid #grid1 [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
-            [paging]="true" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
+            <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+            [width]="'900px'" [height]="'800px'" [showToolbar]="true"
             [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
            >
            <igx-column width='150px' [filterable]='false'>
@@ -99,7 +99,7 @@
             </igx-column>
 
             <ng-template igxToolbarCustomContent>
-                <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+                <app-grid-search-box [grid]="treegrid" [style.width]="'530px'"></app-grid-search-box>
             </ng-template>
         </igx-tree-grid>
         </div>
