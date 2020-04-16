@@ -104,6 +104,18 @@ export class GridFunctions {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
     }
 
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
     public static getGridScroll(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
     }
