@@ -5,7 +5,7 @@ import { GridType } from './common/grid.interface';
 import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
-import { GridKeydownTargetType } from './common/enums';
+import { GridKeydownTargetType, GridSelectionMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 export interface ColumnGroupsCache {
     level: number;
@@ -143,12 +143,12 @@ export class IgxGridNavigationService {
         const alt = event.altKey;
         if (column) {
             let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
-            if (ctrl && key.includes('up')) {
+            if (ctrl && key.includes('up') && column.sortable) {
                 direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
                 this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
                 return;
             }
-            if (ctrl && key.includes('down')) {
+            if (ctrl && key.includes('down') && column.sortable) {
                 direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
                 this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
                 return;
@@ -160,7 +160,12 @@ export class IgxGridNavigationService {
             }
             if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
                 column = this.currentActiveColumn;
-                column.selected = !column.selected;
+                if (!column.selectable || this.grid.columnSelection === GridSelectionMode.none ) { return; }
+                const clearSelection = this.grid.columnSelection === GridSelectionMode.single;
+                const columnsToSelect = !column.children ? [column.field] :
+                    column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
+                column.selected ? this.grid.selectionService.deselectColumns(columnsToSelect, event) :
+                this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, false, event);
             }
             if (alt && key === 'l') {
                 this.grid.openAdvancedFilteringDialog();
