@@ -799,7 +799,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return {
             $implicit: isGhost ? rowData.recordRef : rowData,
             index: rowIndex,
-            templateID: isGhost ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
             disabled: isGhost
         };
     }
