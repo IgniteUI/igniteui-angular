@@ -153,7 +153,7 @@ export class IgxGridNavigationService {
                 this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
                 return;
             }
-            if (shift && alt && (key.includes('right') || key.includes('left')) ) {
+            if (shift && alt && (key.includes('right') || key.includes('left')) && column.groupable) {
                 direction =  key.includes('left') ? SortingDirection.None : direction ? SortingDirection.Desc : SortingDirection.Asc;
                 (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
                 return;
@@ -167,10 +167,10 @@ export class IgxGridNavigationService {
                 column.selected ? this.grid.selectionService.deselectColumns(columnsToSelect, event) :
                 this.grid.selectionService.selectColumns(columnsToSelect, clearSelection, false, event);
             }
-            if (alt && key === 'l') {
+            if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
                 this.grid.openAdvancedFilteringDialog();
             }
-            if (ctrl && shift && key === 'l') {
+            if (ctrl && shift && key === 'l' && this.grid.allowFiltering && column.filterable) {
                 this.performHorizontalScrollToCell(column.visibleIndex);
                 this.grid.filteringService.filteredColumn = column;
                 this.grid.filteringService.isFilterRowVisible = true;
@@ -214,7 +214,7 @@ export class IgxGridNavigationService {
 
     focusFirstCell(header = true) {
         if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0 };
+        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0, mchCache: { level: 0, visibleIndex: 0} };
         this.performHorizontalScrollToCell(0);
     }
 
@@ -412,6 +412,14 @@ export class IgxGridNavigationService {
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
                 filter(c => c.level === this.activeNode.level).map(col => col.visibleIndex));
         let nextCol = activeCol;
+        if (alt && (ROW_EXPAND_KEYS.has(key) || ROW_COLLAPSE_KEYS.has(key)) && activeCol.children && activeCol.collapsible) {
+            if (!activeCol.expanded && ROW_EXPAND_KEYS.has(key)) {
+                activeCol.expanded = true;
+            } else if (activeCol.expanded && ROW_COLLAPSE_KEYS.has(key)) {
+                activeCol.expanded = false;
+            }
+            return;
+        }
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             nextCol =  this.getNextColumnMCH(index);
