@@ -64,8 +64,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * Set the minimum possible value the editor will allow.
    *
-   * If a `string` value is passed in, it must be in the defined input format; if no input format is defined
-   * then the value's format must match the format based on the current locale.
+   * If a `string` value is passed in, it must be in the defined input format.
    *
    * @example
    * ```html
@@ -85,8 +84,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * Set the maximum possible value the editor will allow.
    *
-   * If a `string` value is passed in, it must be in the defined input format; if no input format is defined
-   * then the value's format must match the format based on the current locale.
+   * If a `string` value is passed in, it must be in the defined input format.
    * @example
    * ```html
    * <input igxDateTimeEditor [maxValue]="maxDate">
@@ -164,11 +162,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * Emitted when the editor's value has changed.
    * @example
    * ```html
-   * <input igxDateTimeEditor (valueChanged)="onValueChanged($event)"/>
+   * <input igxDateTimeEditor (valueChange)="onValueChanged($event)"/>
    * ```
    */
   @Output()
-  public valueChange = new EventEmitter<IgxDateTimeEditorEventArgs>();
+  public valueChange = new EventEmitter<Date>();
 
   /**
    * Emitted when the editor is not within a specified range or when the editor's value is in an invalid state.
@@ -386,7 +384,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.setSelectionRange(cursor);
     } else {
       const format = this.displayFormat || this.inputFormat;
-      this.inputValue = formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+      if (format) {
+        this.inputValue = formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+      } else {
+        // TODO: formatter function?
+        this.inputValue = this.value.toLocaleString();
+      }
     }
   }
 
@@ -412,22 +415,29 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     const newDate = new Date(this.value.getTime());
     switch (datePart) {
       case DatePart.Date:
-        return DatePickerUtil.spinDate(delta, newDate, this.isSpinLoop);
+        DatePickerUtil.spinDate(delta, newDate, this.isSpinLoop);
+        break;
       case DatePart.Month:
-        return DatePickerUtil.spinMonth(delta, newDate, this.isSpinLoop);
+        DatePickerUtil.spinMonth(delta, newDate, this.isSpinLoop);
+        break;
       case DatePart.Year:
-        return DatePickerUtil.spinYear(delta, newDate);
+        DatePickerUtil.spinYear(delta, newDate);
+        break;
       case DatePart.Hours:
-        return DatePickerUtil.spinHours(delta, newDate, this.isSpinLoop);
+        DatePickerUtil.spinHours(delta, newDate, this.isSpinLoop);
+        break;
       case DatePart.Minutes:
-        return DatePickerUtil.spinMinutes(delta, newDate, this.isSpinLoop);
+        DatePickerUtil.spinMinutes(delta, newDate, this.isSpinLoop);
+        break;
       case DatePart.Seconds:
-        return DatePickerUtil.spinSeconds(delta, newDate, this.isSpinLoop);
+        DatePickerUtil.spinSeconds(delta, newDate, this.isSpinLoop);
+        break;
       case DatePart.AmPm:
         const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
         const amPmFromMask = this.inputValue.substring(formatPart.start, formatPart.end);
         return DatePickerUtil.spinAmPm(newDate, this.value, amPmFromMask);
     }
+    return newDate;
   }
 
   private updateValue(newDate: Date): void {
@@ -438,7 +448,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
     }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
-      this.valueChange.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
+      this.valueChange.emit(this.value);
     }
   }
 

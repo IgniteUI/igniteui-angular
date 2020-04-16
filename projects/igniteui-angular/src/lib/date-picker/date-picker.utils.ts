@@ -134,6 +134,10 @@ export abstract class DatePickerUtil {
     }
 
     public static getDefaultInputFormat(locale: string): string {
+        if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
+            // TODO: fallback with Intl.format for IE?
+            return DatePickerUtil.SHORT_DATE_MASK;
+        }
         const parts = DatePickerUtil.getDefaultLocaleMask(locale);
         parts.forEach(p => {
             if (p.type !== DatePart.Year && p.type !== DatePickerUtil.SEPARATOR) {
@@ -148,7 +152,7 @@ export abstract class DatePickerUtil {
         return DATE_CHARS.indexOf(char) !== -1 || TIME_CHARS.indexOf(char) !== -1;
     }
 
-    public static spinDate(delta: number, newDate: Date, isSpinLoop: boolean): Date {
+    public static spinDate(delta: number, newDate: Date, isSpinLoop: boolean): void {
         const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth());
         let date = newDate.getDate() + delta;
         if (date > maxDate) {
@@ -158,10 +162,9 @@ export abstract class DatePickerUtil {
         }
 
         newDate.setDate(date);
-        return newDate;
     }
 
-    public static spinMonth(delta: number, newDate: Date, isSpinLoop: boolean): Date {
+    public static spinMonth(delta: number, newDate: Date, isSpinLoop: boolean): void {
         const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth() + delta);
         if (newDate.getDate() > maxDate) {
             newDate.setDate(maxDate);
@@ -177,19 +180,17 @@ export abstract class DatePickerUtil {
         }
 
         newDate.setMonth(month);
-        return newDate;
     }
 
-    public static spinYear(delta: number, newDate: Date): Date {
+    public static spinYear(delta: number, newDate: Date): void {
         const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear() + delta, newDate.getMonth());
         if (newDate.getDate() > maxDate) {
             newDate.setDate(maxDate);
         }
         newDate.setFullYear(newDate.getFullYear() + delta);
-        return newDate;
     }
 
-    public static spinHours(delta: number, newDate: Date, isSpinLoop: boolean): Date {
+    public static spinHours(delta: number, newDate: Date, isSpinLoop: boolean): void {
         const maxHour = 23;
         const minHour = 0;
         let hours = newDate.getHours() + delta;
@@ -200,10 +201,9 @@ export abstract class DatePickerUtil {
         }
 
         newDate.setHours(hours);
-        return newDate;
     }
 
-    public static spinMinutes(delta: number, newDate: Date, isSpinLoop: boolean): Date {
+    public static spinMinutes(delta: number, newDate: Date, isSpinLoop: boolean): void {
         const maxMinutes = 59;
         const minMinutes = 0;
         let minutes = newDate.getMinutes() + delta;
@@ -214,10 +214,9 @@ export abstract class DatePickerUtil {
         }
 
         newDate.setMinutes(minutes);
-        return newDate;
     }
 
-    public static spinSeconds(delta: number, newDate: Date, isSpinLoop: boolean): Date {
+    public static spinSeconds(delta: number, newDate: Date, isSpinLoop: boolean): void {
         const maxSeconds = 59;
         const minSeconds = 0;
         let seconds = newDate.getSeconds() + delta;
@@ -228,10 +227,9 @@ export abstract class DatePickerUtil {
         }
 
         newDate.setSeconds(seconds);
-        return newDate;
     }
 
-    public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string) {
+    public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string): Date {
         switch (amPmFromMask) {
             case 'AM':
                 newDate = new Date(newDate.setHours(newDate.getHours() + 12));
