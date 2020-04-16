@@ -13,6 +13,20 @@
     @extend %igx-action-strip-display !optional;
 
     @include e(container) {
-        @extend %igx-action-strip--container !optional;
+        @extend %igx-action-strip__container !optional;
+    }
+
+    @include e(container, $m: 'cosy') {
+        @extend %igx-action-strip__container !optional;
+        @extend %igx-action-strip__container--cosy !optional;
+    }
+
+    @include e(container) {
+        @extend %igx-action-strip__container !optional;
+        @extend %igx-action-strip__container--compact !optional;
+    }
+
+    @include e(delete) {
+        @extend %igx-action-strip__delete !optional;
     }
 }

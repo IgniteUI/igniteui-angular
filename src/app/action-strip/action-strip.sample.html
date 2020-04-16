@@ -10,8 +10,10 @@
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
-                    <igx-action-strip #actionstrip class="my-action-strip" *ngIf="isVisible">
-                        <igx-icon (click)="doSomeAction()">alarm</igx-icon>
+                    <igx-action-strip #actionstrip *ngIf="isVisible">
+                        <div class="my-action-strip">
+                            <igx-icon (click)="doSomeAction()">alarm</igx-icon>
+                        </div>
                     </igx-action-strip>
                 </div>
             </div>
@@ -21,8 +23,8 @@
         </article>
 
         <article>
-            <h3>Grid Pinning Action</h3>
             <div class="sample-column">
+                <h5>Grid Pinning Action</h5>
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -43,7 +45,7 @@
 
         <article>
             <div class="sample-column">
-                <h3>Grid Pinning and Editing Actions</h3>
+                <h5>Grid Pinning and Editing Actions</h5>
                 <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -65,7 +67,7 @@
 
         <article>
             <div class="sample-column">
-                <h3>Actions in menu</h3>
+                <h5>Actions in menu</h5>
                 <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
                     [rowEditable]="true" [primaryKey]="'ID'">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"

@@ -1,23 +1,25 @@
-import { Component,
-    NgModule,
-    Input,
-    ViewContainerRef,
-    Renderer2,
-    HostBinding,
-    ContentChild,
+import {
+    Component,
     ContentChildren,
-    TemplateRef,
-    QueryList,
     Directive,
-    forwardRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IgxDropDownModule } from '../drop-down/index';
-import { IgxIconModule } from '../icon/index';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
-import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
-import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
+    forwardRef,
+    HostBinding,
+    Input,
+    NgModule,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewContainerRef
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {IgxDropDownModule} from '../drop-down/index';
+import {IgxIconModule} from '../icon/index';
+import {IgxToggleModule} from '../directives/toggle/toggle.directive';
+import {IgxGridPinningActionsComponent} from './grid-actions/grid-pinning-actions.component';
+import {IgxGridEditingActionsComponent} from './grid-actions/grid-editing-actions.component';
+import {IgxGridActionsBaseDirective} from './grid-actions/grid-actions-base.directive';
+import {IgxButtonModule} from '../directives/button/button.directive';
+import {IgxRippleModule} from '../directives/ripple/ripple.directive';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -122,6 +124,6 @@ export class IgxActionStripComponent {
         IgxGridEditingActionsComponent,
         IgxGridActionsBaseDirective
     ],
-    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule]
+    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule]
 })
 export class IgxActionStripModule { }

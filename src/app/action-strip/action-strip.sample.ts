@@ -1,9 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
-import { IgxActionStripComponent, IgxGridComponent } from 'igniteui-angular';
+import {Component, ViewChild} from '@angular/core';
+import {IgxActionStripComponent, IgxGridComponent} from 'igniteui-angular';
 
 @Component({
     selector: 'app-action-strip-sample',
-    styleUrls: ['action-strip.sample.css'],
+    styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`
 })
 export class ActionStripSampleComponent {
