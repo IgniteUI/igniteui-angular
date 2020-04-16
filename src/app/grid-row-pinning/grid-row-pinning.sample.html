@@ -32,7 +32,7 @@
                 <ng-template igxToolbarCustomContent>
                     <app-grid-search-box [grid]="grid1" [style.width]="'400px'"></app-grid-search-box>
                 </ng-template>
-                <igx-column width='70px' [filterable]='false'>
+                <igx-column width='120px' [filterable]='false'>
                     <ng-template igxCell let-cell="cell" let-val>
                         <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)"
                         fontSet="filtering-icons" name="{{cell.row.pinned ? 'unpin' : 'pin'}}">
@@ -77,5 +77,30 @@
                 </igx-row-island>
                 <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
             </igx-hierarchical-grid>
+        </div>
+
+        <div class="sample-column">
+            <div>igxTreeGrid</div>
+            <igx-tree-grid #grid1 [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+            [paging]="true" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
+            [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
+           >
+           <igx-column width='150px' [filterable]='false'>
+                <ng-template igxCell let-cell="cell" let-val>
+                    <igx-icon class="pin-icon" (mousedown)="togglePining(cell.row, $event)">
+                        {{cell.row.pinned ? 'lock' : 'lock_open'}}
+                    </igx-icon>
+                </ng-template>
+            </igx-column>
+            <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+                [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+            </igx-column>
+
+            <ng-template igxToolbarCustomContent>
+                <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+            </ng-template>
+        </igx-tree-grid>
         </div>
 </div>
