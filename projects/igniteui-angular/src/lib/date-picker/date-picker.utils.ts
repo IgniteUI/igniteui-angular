@@ -55,10 +55,10 @@ export abstract class DatePickerUtil {
      * @param inputData masked value to parse
      * @param dateTimeParts Date parts array for the mask
      */
-    public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[]): Date | null {
+    public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[], promptChar?: string): Date | null {
         const parts: { [key in DatePart]: number } = {} as any;
         dateTimeParts.forEach(dp => {
-            let value = parseInt(this.getCleanVal(inputData, dp), 10);
+            let value = parseInt(this.getCleanVal(inputData, dp, promptChar), 10);
             if (!value) {
                 value = dp.type === DatePart.Date || dp.type === DatePart.Month ? 1 : 0;
             }
@@ -256,8 +256,8 @@ export abstract class DatePickerUtil {
         return newDate;
     }
 
-    private static getCleanVal(inputData: string, datePart: DatePartInfo): string {
-        return DatePickerUtil.trimUnderlines(inputData.substring(datePart.start, datePart.end));
+    private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
+        return DatePickerUtil.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
     }
 
     private static determineDatePart(char: string): DatePart {
@@ -460,8 +460,8 @@ export abstract class DatePickerUtil {
      * This method replaces prompt chars with empty string.
      * @param value
      */
-    public static trimUnderlines(value: string): string {
-        const result = value.replace(/_/g, '');
+    public static trimEmptyPlaceholders(value: string, promptChar?: string): string {
+        const result = value.replace(new RegExp(promptChar || '_', 'g'), '');
         return result;
     }
 
@@ -654,7 +654,7 @@ export abstract class DatePickerUtil {
                     break;
                 }
                 case DateParts.Year: {
-                    dateStruct[i].formatType = formatterOptions.month;
+                    dateStruct[i].formatType = formatterOptions.year;
                     break;
                 }
             }
@@ -711,7 +711,7 @@ export abstract class DatePickerUtil {
     private static getDateValueFromInput(dateFormatParts: any[], type: DateParts, inputValue: string, trim: boolean = true): string {
         const partPosition = DatePickerUtil.getDateFormatPart(dateFormatParts, type).position;
         const result = inputValue.substring(partPosition[0], partPosition[1]);
-        return (trim) ? DatePickerUtil.trimUnderlines(result) : result;
+        return (trim) ? DatePickerUtil.trimEmptyPlaceholders(result) : result;
     }
 
     private static getDayValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {

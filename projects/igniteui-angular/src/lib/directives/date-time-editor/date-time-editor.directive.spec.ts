@@ -44,7 +44,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditor.clear();
                 expect(dateTimeEditor.value).toBeNull();
                 expect(dateTimeEditor.valueChange.emit).toHaveBeenCalledTimes(1);
-                expect(dateTimeEditor.valueChange.emit).toHaveBeenCalledWith({ oldValue: date, newValue: null, userInput: inputDate });
+                expect(dateTimeEditor.valueChange.emit).toHaveBeenCalledWith(null);
             });
 
             it('should update mask according to the input format', () => {
@@ -632,7 +632,7 @@ describe('IgxDateTimeEditor', () => {
                 date.setMonth(3);
                 const resultDate =
                     date.toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-                    .replace(/,/g, '');
+                        .replace(/,/g, '');
                 result = `${resultDate} ${formatShortTime(date)}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
             }));
@@ -695,7 +695,7 @@ describe('IgxDateTimeEditor', () => {
             });
             it('should revert to empty mask on clear()', fakeAsync(() => {
                 const date = new Date(2003, 4, 5);
-                fixture.componentInstance.date =  new Date(2003, 3, 5);
+                fixture.componentInstance.date = new Date(2003, 3, 5);
                 fixture.detectChanges();
                 tick();
                 const result = formatFullDateTime(date);
@@ -706,7 +706,7 @@ describe('IgxDateTimeEditor', () => {
             }));
             it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
                 const date = new Date(2003, 4, 5);
-                fixture.componentInstance.date =  new Date(2003, 3, 5);
+                fixture.componentInstance.date = new Date(2003, 3, 5);
                 fixture.detectChanges();
                 tick();
                 const result = formatFullDateTime(date);
@@ -833,10 +833,9 @@ describe('IgxDateTimeEditor', () => {
 
                 const year = (newDate.getFullYear().toString()).slice(-2);
                 const result = [newDate.getDate(), newDate.getMonth() + 1, year].join('/');
-                const args = { oldValue: undefined, newValue: newDate, userInput: result };
                 expect(inputElement.nativeElement.value).toEqual(result);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
-                expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(args);
+                expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(newDate);
             });
             it('should fire validationFailed when input date is outside date range.', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';

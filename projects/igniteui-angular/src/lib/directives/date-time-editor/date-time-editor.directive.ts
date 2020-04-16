@@ -191,7 +191,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private onValidatorChange = (...args: any[]) => { };
 
   private get emptyMask(): string {
-    return this.maskParser.applyMask(this.inputFormat, this.maskOptions);
+    return this.maskParser.applyMask(null, this.maskOptions);
   }
 
   private get targetDatePart(): DatePart {
@@ -524,7 +524,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private parseDate(val: string): Date | null {
     if (!val) { return null; }
-    return DatePickerUtil.parseValueFromMask(val, this._inputDateParts);
+    return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
 
   private moveCursor(event: KeyboardEvent): void {
