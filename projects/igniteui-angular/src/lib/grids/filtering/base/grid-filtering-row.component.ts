@@ -482,6 +482,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.value = value;
     }
 
+    /** @hidden @internal */
+    public inputGroupPrefixClick(event: MouseEvent) {
+        event.stopPropagation();
+        (event.currentTarget as HTMLElement).focus();
+        this.toggleConditionsDropDown(event.currentTarget);
+    }
+
     /**
      * Opens the conditions dropdown.
      */

@@ -1260,9 +1260,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1270,7 +1275,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             // Click prefix again to close conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1282,9 +1287,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -4253,6 +4263,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify ESF is not visible.
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).toBeNull();
+        }));
+
+        it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+
+            UIInteractions.sendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
     });
 
