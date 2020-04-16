@@ -30,7 +30,7 @@ export class IgxTextSelectionDirective {
     /**
      *  Determines whether the input element could be selected through the directive.
      *
-     *```html
+     * ```html
      * <!--set-->
      * <input
      *   type="text"
@@ -56,7 +56,7 @@ export class IgxTextSelectionDirective {
      * ```html
      * <input
      *   type="text"
-    *    id="firstName"
+     *   id="firstName"
      *   igxTextSelection>
      * </input>
      * ```

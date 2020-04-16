@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
 
 /**
- *@hidden
+ * @hidden
  */
 export function cloneArray(array: any[], deep?: boolean) {
     const arr = [];
@@ -67,7 +67,7 @@ export function mergeObjects(obj1: {}, obj2: {}): any {
  * If passed value is array returns shallow copy of the array.
  * @param value value to clone
  * @returns Deep copy of provided value
- *@hidden
+ * @hidden
  */
 export function cloneValue(value: any): any {
     if (isDate(value)) {
@@ -96,7 +96,7 @@ export function cloneValue(value: any): any {
  * Checks if provided variable is Object
  * @param value Value to check
  * @returns true if provided variable is Object
- *@hidden
+ * @hidden
  */
 export function isObject(value: any): boolean {
     return value && value.toString() === '[object Object]';
@@ -106,7 +106,7 @@ export function isObject(value: any): boolean {
  * Checks if provided variable is Date
  * @param value Value to check
  * @returns true if provided variable is Date
- *@hidden
+ * @hidden
  */
 export function isDate(value: any) {
     return Object.prototype.toString.call(value) === '[object Date]';
@@ -128,7 +128,7 @@ export function isEqual(obj1, obj2): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export const enum KEYCODES {
     ENTER = 13,
@@ -150,7 +150,7 @@ export const enum KEYCODES {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export const enum KEYS {
     ENTER = 'Enter',
@@ -167,18 +167,21 @@ export const enum KEYS {
     DOWN_ARROW = 'ArrowDown',
     DOWN_ARROW_IE = 'Down',
     F2 = 'F2',
-    TAB = 'Tab'
+    TAB = 'Tab',
+    SEMICOLON = ';',
+    HOME = 'Home',
+    END = 'End'
 }
 
 /**
- *@hidden
-* Returns the actual size of the node content, using Range
-* ```typescript
-* let range = document.createRange();
-* let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-*
-* let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
-* ```
+ * @hidden
+ * Returns the actual size of the node content, using Range
+ * ```typescript
+ * let range = document.createRange();
+ * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+ *
+ * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+ * ```
  */
 export function getNodeSizeViaRange(range: Range, node: any): number {
     let overflow = null;
@@ -199,14 +202,14 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
     return width;
 }
 /**
- *@hidden
-* Returns the actual size of the node content, using Canvas
-* ```typescript
-* let ctx = document.createElement('canvas').getContext('2d');
-* let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-*
-* let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
-* ```
+ * @hidden
+ * Returns the actual size of the node content, using Canvas
+ * ```typescript
+ * let ctx = document.createElement('canvas').getContext('2d');
+ * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+ *
+ * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
+ * ```
  */
 export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
     const s = this.grid.document.defaultView.getComputedStyle(node);
@@ -217,13 +220,13 @@ export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
     return canvas2dCtx.measureText(node.textContent).width;
 }
 /**
- *@hidden
+ * @hidden
  */
 export function isIE(): boolean {
     return navigator.appVersion.indexOf('Trident/') > 0;
 }
 /**
- *@hidden
+ * @hidden
  */
 export function isEdge(): boolean {
     const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -231,7 +234,7 @@ export function isEdge(): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export function isFirefox(): boolean {
     const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
@@ -278,7 +281,7 @@ export function isNavigationKey(key: string): boolean {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 export function flatten(arr: any[]) {
     let result = [];
@@ -312,6 +315,8 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
+export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);
+
 export const NAVIGATION_KEYS = new Set([
     'down',
     'up',
@@ -329,7 +334,7 @@ export const NAVIGATION_KEYS = new Set([
 ]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
-export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
 
 /**
  * @hidden

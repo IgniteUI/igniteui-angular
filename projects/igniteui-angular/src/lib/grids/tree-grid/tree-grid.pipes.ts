@@ -11,7 +11,7 @@ import { GridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'treeGridHierarchizing',
@@ -124,7 +124,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'treeGridFlattening',

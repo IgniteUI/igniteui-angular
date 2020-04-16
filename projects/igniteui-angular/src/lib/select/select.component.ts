@@ -167,7 +167,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * An @Input property that sets how the select will be styled.
      * The allowed values are `line`, `box` and `border`. The default is `line`.
      * ```html
-     *<igx-select [type]="'box'"></igx-select>
+     * <igx-select [type]="'box'"></igx-select>
      * ```
      */
     @Input()

@@ -738,7 +738,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public ngOnDestroy(): void {
         this.destroy$.next(true);

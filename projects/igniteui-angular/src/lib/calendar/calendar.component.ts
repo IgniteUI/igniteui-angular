@@ -661,9 +661,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * Deselects date(s) (based on the selection type).
      *
      * @example
-     *```typescript
-     * this.calendar.deselectDate(new Date(`2018-06-12`));
-     *````
+     * ```typescript
+     *  this.calendar.deselectDate(new Date(`2018-06-12`));
+     * ````
      */
     public deselectDate(value?: Date | Date[]) {
         super.deselectDate(value);

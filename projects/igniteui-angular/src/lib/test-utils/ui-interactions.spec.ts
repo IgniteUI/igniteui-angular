@@ -12,6 +12,19 @@ export class UIInteractions {
     public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
     public static clickEvent = new MouseEvent('click');
 
+
+    public static getClickEvent(eventType: string, altKey = false, shift = false, ctrl = false) {
+        const event = {
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new MouseEvent(eventType, event);
+    }
+
     public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = {
             key: keyPressed,
@@ -25,8 +38,21 @@ export class UIInteractions {
         return new KeyboardEvent(eventType, keyboardEvent);
     }
 
+    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false) {
+        const clickEvent = {
+            altKey: altKey,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            stopPropagation: () => { },
+            stopImmediatePropagation: () => { },
+            preventDefault: () => { }
+        };
+        return new MouseEvent(eventType, clickEvent);
+    }
+
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
+            target: elem.nativeElement,
             key: keyPressed,
             altKey: altKey,
             shiftKey: shift,
@@ -51,12 +77,6 @@ export class UIInteractions {
         elem.triggerEventHandler('keyup', event);
     }
 
-    public static triggerEventHandlerKeyDownWithBlur(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
-        UIInteractions.triggerEventHandlerKeyDown(keyPressed, elem, altKey, shift, ctrl);
-        elem.triggerEventHandler('blur', null);
-    }
-
-
     public static sendInput(element, text, fix?) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -68,6 +88,58 @@ export class UIInteractions {
     public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
         inputElement.nativeElement.value = inputValue;
         inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
+    }
+
+    public static triggerInputKeyInteraction(inputValue: string, target: DebugElement) {
+        const startPos = target.nativeElement.selectionStart;
+        const endPos = target.nativeElement.selectionEnd;
+        target.nativeElement.value =
+            target.nativeElement.value.substring(0, startPos) +
+            inputValue +
+            target.nativeElement.value.substring(endPos);
+        // move the caret
+        if (startPos !== endPos) {
+            // replaced selection, cursor goes to end
+            target.nativeElement.selectionStart = target.nativeElement.selectionEnd = startPos + inputValue.length;
+        } else {
+            // typing move the cursor after the typed value
+            target.nativeElement.selectionStart = target.nativeElement.selectionEnd = endPos + inputValue.length;
+        }
+        target.triggerEventHandler('input', { target: target.nativeElement });
+    }
+
+    public static simulateTyping(characters: string, target: DebugElement, selectionStart = 0, selectionEnd = 0) {
+        if (characters) {
+            if (selectionStart > selectionEnd) {
+                return Error('Selection start should be less than selection end position');
+            }
+            // target.triggerEventHandler('focus', {});
+            const inputEl = target.nativeElement as HTMLInputElement;
+            inputEl.setSelectionRange(selectionStart, selectionEnd);
+            for (let i = 0; i < characters.length; i++) {
+                const char = characters[i];
+                this.triggerEventHandlerKeyDown(char, target);
+                this.triggerInputKeyInteraction(char, target);
+                this.triggerEventHandlerKeyUp(char, target);
+            }
+        }
+    }
+
+    public static simulatePaste(pasteText: string, target: DebugElement, selectionStart = 0, selectionEnd = 0) {
+        if (selectionStart > selectionEnd) {
+            return Error('Selection start should be less than selection end position');
+        }
+        const inputEl = target.nativeElement as HTMLInputElement;
+        inputEl.setSelectionRange(selectionStart, selectionEnd);
+        UIInteractions.triggerPasteEvent(target, pasteText);
+        UIInteractions.triggerInputKeyInteraction(pasteText, target);
+    }
+
+    public static triggerPasteEvent(inputElement: DebugElement, inputValue: string) {
+        const pasteData = new DataTransfer();
+        pasteData.setData('text/plain', inputValue);
+        const event = new ClipboardEvent('paste', { clipboardData: pasteData });
+        inputElement.triggerEventHandler('paste', event);
     }
 
     public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
@@ -94,11 +166,6 @@ export class UIInteractions {
             altKey: altKey
         });
         elem.dispatchEvent(keyboardEvent);
-    }
-
-    public static triggerKeyDownWithBlur(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
-        UIInteractions.triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey, shift, ctrl);
-        elem.dispatchEvent(new Event('blur'));
     }
 
     public static findCellByInputElem(elem, focusedElem) {
@@ -226,13 +293,25 @@ export class UIInteractions {
 
     public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
-        element.nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+        element.nativeElement.dispatchEvent(new MouseEvent('click'));
+    }
+
+    public static simulateClickAndSelectHTMLElement(element: HTMLElement, shift = false, ctrl = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element, shift, ctrl);
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element);
+        element.dispatchEvent(new MouseEvent('click'));
+    }
+
+    public static simulateDoubleClickAndSelectCellEvent(element) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
     }
 
     public static simulateNonPrimaryClick(cell) {
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
-        cell.nativeElement.dispatchEvent(new Event('focus'));
+        cell.nativeElement.dispatchEvent(new Event('click'));
         cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
     }
 

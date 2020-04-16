@@ -19,7 +19,7 @@ import {
 } from '../core/utils';
 import { first, debounceTime } from 'rxjs/operators';
 /**
- *@hidden
+ * @hidden
  */
 @Injectable()
 export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {

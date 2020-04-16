@@ -38,6 +38,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SplitterSampleComponent } from './splitter/slitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -115,6 +116,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } from './grid-column-selection/grid-column-selection.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
@@ -151,6 +153,7 @@ const components = [
     ListPanningSampleComponent,
     ListPerformanceSampleComponent,
     MaskSampleComponent,
+    DateTimeEditorSampleComponent,
     NavbarSampleComponent,
     NavdrawerSampleComponent,
     OverlaySampleComponent,
@@ -160,6 +163,7 @@ const components = [
     RippleSampleComponent,
     SelectSampleComponent,
     SliderSampleComponent,
+    SplitterSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
     BottomNavRoutingSampleComponent,
@@ -249,7 +253,9 @@ const components = [
         IgxDividerModule,
         SharedModule,
         routing,
-        HammerModule
+        HammerModule,
+        IgxDateTimeEditorModule,
+        IgxButtonModule
     ],
     providers: [
         LocalService,

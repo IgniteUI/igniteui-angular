@@ -74,7 +74,7 @@ export class IgxHintDirective implements OnInit {
         return this._position.toString();
     }
     /**
-     *@hidden
+     * @hidden
      */
     ngOnInit() {
         this._applyPosition(this._position);

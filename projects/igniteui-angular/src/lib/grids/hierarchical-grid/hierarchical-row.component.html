@@ -1,4 +1,4 @@
-<div (click)="expanderClick($event)" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+<div (click)="expanderClick($event)" [ngClass]="expanderClassResolved" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
 </div>
@@ -47,6 +47,7 @@
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
+        [active]="isCellActive(col.visibleIndex)"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
         [style.min-width]="col.width"
@@ -68,6 +69,7 @@
 <ng-template #rowSelectorBaseTemplate>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
+            [tabindex]="-1"
             [readonly]="true"
             [checked]="selected"
             disableRipple="true"
@@ -88,6 +90,7 @@
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
+        [active]="isCellActive(col.visibleIndex)"
         [firstPinned]="col.isFirstPinned"
         [lastPinned]="col.isLastPinned"
         [style.min-height.px]="grid.rowHeight || 32"

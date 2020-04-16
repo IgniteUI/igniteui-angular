@@ -20,15 +20,13 @@
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
-import { IgxDragHandleDirective } from './drag-handle.directive';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { IBaseEventArgs } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
-export enum RestrictDrag {
-    VERTICALLY,
-    HORIZONTALLY,
-    NONE
+export enum DragDirection {
+    VERTICAL,
+    HORIZONTAL,
+    BOTH
 }
 
 export interface IgxDragCustomEventDetails {
@@ -41,7 +39,7 @@ export interface IgxDragCustomEventDetails {
 }
 
 export interface IDropBaseEventArgs extends IBaseEventArgs {
-        /**
+    /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
      */
@@ -100,7 +98,7 @@ export interface IDragBaseEventArgs extends IBaseEventArgs {
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
      */
     pageX: number;
-        /**
+    /**
      * The current position of the pointer on Y axis when the event was triggered.
      * Note: The browser might trigger the event with some delay and pointer would be already inside the igxDrop.
      */
@@ -146,6 +144,28 @@ export class IgxDragLocation {
 }
 
 @Directive({
+    selector: '[igxDragHandle]'
+})
+export class IgxDragHandleDirective {
+
+    @HostBinding('class.igx-drag__handle')
+    public baseClass = true;
+
+    constructor(public element: ElementRef<any>) {}
+}
+
+@Directive({
+    selector: '[igxDragIgnore]'
+})
+export class IgxDragIgnoreDirective {
+
+    @HostBinding('class.igx-drag__ignore')
+    public baseClass = true;
+
+    constructor(public element: ElementRef<any>) {}
+}
+
+@Directive({
     exportAs: 'drag',
     selector: '[igxDrag]'
 })
@@ -175,6 +195,22 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public dragTolerance = 5;
+
+    /**
+     * An @Input property that indicates the directions that the element can be dragged.
+     * By default it is set to both horizontal and vertical directions.
+     * ```html
+     * <div igxDrag [dragDirection]="dragDir">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * public dragDir = DragDirection.HORIZONTAL;
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public dragDirection = DragDirection.BOTH;
 
     /**
      * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
@@ -218,38 +254,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @Input()
     public ghostClass = '';
 
-    /**
-     * @deprecated Please use custom base styling instead.
-     * An @Input property that hides the draggable element.
-     * By default it's set to false.
-     * ```html
-     * <div igxDrag [dragTolerance]="100" [hideBaseOnDrag]="'true'">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * @memberof IgxDragDirective
-     */
-    @DeprecateProperty(`'hideBaseOnDrag' @Input property is deprecated and will be removed in future major versions.
-        Alternatives to it are using the new no ghost dragging and custom base styling.`)
-    @Input()
-    public hideBaseOnDrag = false;
-
-    /**
-     * @deprecated Please use provided transition functions in future.
-     * An @Input property that enables/disables the draggable element animation
-     * when the element is released.
-     * By default it's set to false.
-     * ```html
-     * <div igxDrag [animateOnRelease]="'true'">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * @memberof IgxDragDirective
-     */
-    @DeprecateProperty(`'animateOnRelease' @Input property is deprecated and will be removed in future major versions.
-        Please use 'transitionToOrigin' or 'transitionTo' methods instead.`)
-    @Input()
-    public animateOnRelease = false;
 
     /**
      * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
@@ -451,8 +455,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('style.visibility')
-    public _visibility = 'visible';
+    @ContentChildren(IgxDragIgnoreDirective)
+    public dragIgnoredElems: QueryList<IgxDragIgnoreDirective>;
 
     /**
      * @hidden
@@ -466,37 +470,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @HostBinding('class.igx-drag--select-disabled')
     public selectDisabled = false;
 
-    /**
-     * @deprecated Please use native angular ways of hiding it using custom to the base element styling for future versions.
-     * Sets the visibility of the draggable element.
-     * ```typescript
-     * @ViewChild("myDrag" ,{read: IgxDragDirective})
-     * public myDrag: IgxDragDirective;
-     * ngAfterViewInit(){
-     *     this.myDrag.visible = false;
-     * }
-     * ```
-     */
-    @DeprecateProperty(`'visible' @Input property is deprecated and will be removed in future major versions.
-        Please use native angular ways of hiding the base element using styling.`)
-    public set visible(bVisible) {
-        this._visibility = bVisible ? 'visible' : 'hidden';
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * Returns the visibility state of the draggable element.
-     * ```typescript
-     * @ViewChild("myDrag" ,{read: IgxDragDirective})
-     * public myDrag: IgxDragDirective;
-     * ngAfterViewInit(){
-     *     let dragVisibility = this.myDrag.visible;
-     * }
-     * ```
-     */
-    public get visible() {
-        return this._visibility === 'visible';
-    }
 
     /**
      * Gets the current location of the element relative to the page.
@@ -846,6 +819,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param event PointerDown event captured
      */
     public onPointerDown(event) {
+        const ignoredElement = this.dragIgnoredElems.find(elem => elem.element.nativeElement === event.target);
+        if (ignoredElement) {
+            return;
+        }
+
         this._clicked = true;
         this._pointerDownId = event.pointerId;
 
@@ -951,16 +929,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
             const setPageX = moveArgs.nextPageX;
             const setPageY = moveArgs.nextPageY;
-            const updatedMovedX = setPageX - this._startX;
-            const updatedMovedY = setPageY - this._startY;
-
             if (!moveArgs.cancel) {
                 if (this.ghost) {
-                    this.ghostLeft = this._ghostStartX + updatedMovedX;
-                    this.ghostTop = this._ghostStartY + updatedMovedY;
+                    const updatedTotalMovedX = this.dragDirection === DragDirection.VERTICAL ? 0 : setPageX - this._startX;
+                    const updatedTotalMovedY = this.dragDirection === DragDirection.HORIZONTAL ? 0 : setPageY - this._startY;
+                    this.ghostLeft = this._ghostStartX + updatedTotalMovedX;
+                    this.ghostTop = this._ghostStartY + updatedTotalMovedY;
                 } else {
-                    const lastMovedX = setPageX - this._lastX;
-                    const lastMovedY = setPageY - this._lastY;
+                    const lastMovedX = this.dragDirection === DragDirection.VERTICAL ? 0 : setPageX - this._lastX;
+                    const lastMovedY = this.dragDirection === DragDirection.HORIZONTAL ? 0 : setPageY - this._lastY;
                     const translateX = this.getTransformX(this.element.nativeElement) + lastMovedX;
                     const translateY = this.getTransformY(this.element.nativeElement) + lastMovedY;
                     this.setTransformXY(translateX, translateY);
@@ -1011,8 +988,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this._dragStarted) {
             if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement ) {
                 this.dispatchDropEvent(event.pageX, event.pageY, event);
-            } else if (this.animateOnRelease) {
-                this.transitionToOrigin();
             }
 
             this.zone.run(() => {
@@ -1056,9 +1031,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.zone.run(() => {
                 this.dragEnd.emit(eventArgs);
             });
-            if (this.animateOnRelease) {
-                this.transitionToOrigin();
-            } else if (!this.animInProgress) {
+            if (!this.animInProgress) {
                 this.onTransitionEnd(null);
             }
         }
@@ -1144,11 +1117,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.ghostElement.addEventListener('transitionend', (args) => {
             this.onTransitionEnd(args);
         });
-
-        // Hide the base after the ghostElement is created, because otherwise the ghostElement will be not visible.
-        if (this.hideBaseOnDrag) {
-            this.visible = false;
-        }
 
         this.cdr.detectChanges();
     }
@@ -1237,10 +1205,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.ghostDestroy.emit(ghostDestroyArgs);
             if (ghostDestroyArgs.cancel) {
                 return;
-            }
-
-            if (this.hideBaseOnDrag) {
-                this.visible = true;
             }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
             this.ghostElement = null;
@@ -1419,7 +1383,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
         return this._dropStrategy;
     }
 
-    /** Event triggered when dragged element enters the area of the element.
+    /**
+     * Event triggered when dragged element enters the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1434,7 +1399,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public enter = new EventEmitter<IDropBaseEventArgs>();
 
-        /** Event triggered when dragged element enters the area of the element.
+    /**
+     * Event triggered when dragged element enters the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (enter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1449,7 +1415,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public over = new EventEmitter<IDropBaseEventArgs>();
 
-    /** Event triggered when dragged element leaves the area of the element.
+    /**
+     * Event triggered when dragged element leaves the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (leave)="dragLeave()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
@@ -1464,7 +1431,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Output()
     public leave = new EventEmitter<IDropBaseEventArgs>();
 
-    /** Event triggered when dragged element is dropped in the area of the element.
+    /**
+     * Event triggered when dragged element is dropped in the area of the element.
      * Since the `igxDrop` has default logic that appends the dropped element as a child, it can be canceled here.
      * To cancel the default logic the `cancel` property of the event needs to be set to true.
      * ```html
@@ -1719,7 +1687,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective],
-    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective]
+    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective],
+    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective, IgxDragIgnoreDirective]
 })
 export class IgxDragDropModule { }

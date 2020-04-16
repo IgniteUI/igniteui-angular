@@ -6,7 +6,8 @@ import {
     Optional,
     ViewChild,
     Inject,
-    TemplateRef
+    TemplateRef,
+    AfterViewInit
 } from '@angular/core';
 
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
@@ -28,6 +29,10 @@ import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position';
 import { GridType } from '../common/grid.interface';
+import { IgxIconService } from '../../icon/icon.service';
+import icons from './../filtering/svgIcons';
+
+const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -37,7 +42,7 @@ import { GridType } from '../common/grid.interface';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase {
+export class IgxGridToolbarComponent extends DisplayDensityBase implements AfterViewInit {
     /**
      * @hidden
      */
@@ -67,6 +72,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
     }
 
     private _filterColumnsPrompt = 'Filter columns list ...';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    public class = '';
 
     /**
      * Gets the height for the `IgxGridToolbarComponent`'s drop down panels.
@@ -211,6 +223,10 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
 
     @HostBinding('attr.class')
     get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-grid-toolbar')];
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
         return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
@@ -218,7 +234,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        private iconService: IgxIconService) {
             super(_displayDensityOptions);
     }
 
@@ -378,6 +395,19 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
             return this.grid.toolbarCustomContentTemplate.template;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    ngAfterViewInit() {
+        const pinnedIcons = icons.filter(icon => icon.name === 'pin' || icon.name === 'unpin');
+        for (const icon of pinnedIcons) {
+            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
+                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+            }
         }
     }
 }

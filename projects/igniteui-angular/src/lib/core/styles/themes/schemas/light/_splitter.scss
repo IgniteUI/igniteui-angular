@@ -1,0 +1,64 @@
+@import '../shape/splitter';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light splitter schema.
+/// @type {Map}
+/// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for splitters of type icon.
+/// @property {Map} $bar-color [igx-color: 'surface', darken: 5%] - The background color of the bar.
+/// @property {Map} $handle-color [igx-color: 'surface', darken: 20%] - The color for the bar drag handle.
+/// @property {Map} $expander-color [igx-color: 'surface', darken: 20%] - The color for the arrow expander's.
+/// @property {Map} $border-radius [1] - The border radius fraction, between 0-1 to be used for the splitter component
+/// @property {Map} $focus-color [igx-color: ('secondary', 500)] - The color used for focused splitter bar.
+/// @property {Number} $size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
+/// @see $default-palette
+$_light-splitter: extend(
+    $_default-shape-splitter,
+    (
+        bar-color: (
+            igx-color: 'surface',
+            darken: 5%
+        ),
+
+        focus-color: (
+            igx-color: ('secondary', 500)
+        ),
+
+        handle-color: (
+            igx-color: 'surface',
+            darken: 20%
+        ),
+
+        expander-color: (
+            igx-color: 'surface',
+            darken: 20%
+        ),
+
+        size: 4px
+    )
+);
+
+/// Generates a fluent splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-splitter
+$_fluent-splitter: extend($_light-splitter);
+
+/// Generates a bootstrap splitter schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-splitter
+/// @requires $_bootstrap-shape-splitter
+$_bootstrap-splitter: extend(
+    $_light-splitter,
+    $_bootstrap-shape-splitter,
+    (
+        variant: 'bootstrap',
+    )
+);
+

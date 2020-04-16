@@ -95,7 +95,7 @@ export class IgxRippleDirective {
         protected renderer: Renderer2,
         private zone: NgZone) { }
     /**
-     *@hidden
+     * @hidden
      */
     @HostListener('mousedown', ['$event'])
     public onMouseDown(event) {

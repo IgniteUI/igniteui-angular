@@ -204,7 +204,7 @@ class ButtonsWithDisplayDensityComponent {
 
 /**
  * Verifies the display density of the igxButton based on its type.
-*/
+ */
 function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) {
     let expectedButtonDensityClass = '';
 

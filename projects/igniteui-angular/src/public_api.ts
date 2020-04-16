@@ -29,6 +29,7 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip/tooltip.directive';
+export * from './lib/directives/date-time-editor/index';
 
 /**
  * Data operations
@@ -91,6 +92,7 @@ export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/index';
+export * from './lib/splitter/splitter.module';
 
 
 /**
@@ -107,4 +109,4 @@ export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export { IRangeDatePickerResourceStrings } from './lib/core/i18n/range-date-picker-resources';
 export { InteractionMode } from './lib/core/enums';
-
+export { SplitterType } from './lib/splitter/splitter.component';

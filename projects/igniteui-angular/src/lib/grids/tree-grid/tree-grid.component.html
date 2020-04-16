@@ -3,7 +3,7 @@
 </igx-grid-toolbar>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
         <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -55,9 +55,9 @@
         <igx-grid-filtering-row #filteringRow *ngIf="filteringService.isFilterRowVisible"
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
-    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
-    <div [style.display]="shouldOverlayLoading ? 'flex' : 'none'" #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true">
+    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollWidth"></div>
+    <div #loadingOverlay>
+        <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
@@ -65,10 +65,9 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.dispatchEvent($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'
-        (wheel)="wheelHandler()">
+        [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
@@ -101,8 +100,7 @@
 
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (onCachedViewLoaded)='cachedViewLoaded($event)'
-                (onBeforeViewDetach)='viewDetachHandler($event)'>
+                (onCachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -110,19 +108,19 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-    <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
+    <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
         [style.height.px]='calcHeight'>
         <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
     </div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
-        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0"
+        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
-    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight'
+    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
         [style.width.px]="scrollWidth"></div>
 </div>
 
@@ -206,6 +204,7 @@
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <div class="igx-grid__cbx-padding">
         <igx-checkbox
+            [tabindex]="-1"
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [readonly]="true"
