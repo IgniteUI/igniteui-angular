@@ -524,7 +524,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private parseDate(val: string): Date | null {
     if (!val) { return null; }
-    return DatePickerUtil.parseDateFromMask(val, this._inputDateParts);
+    return DatePickerUtil.parseValueFromMask(val, this._inputDateParts);
   }
 
   private moveCursor(event: KeyboardEvent): void {

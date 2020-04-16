@@ -1,6 +1,5 @@
 import { isIE } from '../core/utils';
 import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
-import { max } from 'rxjs/operators';
 
 /**
  * This enum is used to keep the date validation result.
@@ -51,7 +50,12 @@ export abstract class DatePickerUtil {
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
 
-    public static parseDateFromMask(inputData: string, dateTimeParts: DatePartInfo[]): Date | null {
+    /**
+     * Parse a Date value from masked string input based on determined date parts
+     * @param inputData masked value to parse
+     * @param dateTimeParts Date parts array for the mask
+     */
+    public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[]): Date | null {
         const parts: { [key in DatePart]: number } = {} as any;
         dateTimeParts.forEach(dp => {
             let value = parseInt(this.getCleanVal(inputData, dp), 10);
@@ -102,18 +106,24 @@ export abstract class DatePickerUtil {
         }
     }
 
+    /**
+     * Parse the mask into date/time and literal parts
+     */
     public static parseDateTimeFormat(mask: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): DatePartInfo[] {
         const format = mask || DatePickerUtil.getDefaultInputFormat(locale);
         const dateTimeParts: DatePartInfo[] = [];
         const formatArray = Array.from(format);
         let currentPart: DatePartInfo = null;
         let position = 0;
-        for (let i = 0; ; i++, position++) {
+
+        for (let i = 0; i < formatArray.length; i++, position++) {
             const type = DatePickerUtil.determineDatePart(formatArray[i]);
             if (currentPart) {
                 if (currentPart.type === type) {
                     currentPart.format += formatArray[i];
-                    continue;
+                    if (i < formatArray.length - 1) {
+                        continue;
+                    }
                 }
 
                 DatePickerUtil.ensureLeadingZero(currentPart);
@@ -121,7 +131,7 @@ export abstract class DatePickerUtil {
                 position = currentPart.end;
                 dateTimeParts.push(currentPart);
             }
-            if (i >= formatArray.length) { break; }
+
             currentPart = {
                 start: position,
                 end: position + formatArray[i].length,
@@ -185,6 +195,7 @@ export abstract class DatePickerUtil {
     public static spinYear(delta: number, newDate: Date): void {
         const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear() + delta, newDate.getMonth());
         if (newDate.getDate() > maxDate) {
+            // clip to max to avoid leap year change shifting the entire value
             newDate.setDate(maxDate);
         }
         newDate.setFullYear(newDate.getFullYear() + delta);
