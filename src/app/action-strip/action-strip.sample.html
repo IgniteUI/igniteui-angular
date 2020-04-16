@@ -4,6 +4,14 @@
     </app-page-header>
     <section>
         <article>
+            <div>
+                <h4>Display Density</h4>
+                <button igxButton="raised" [disabled]="displayDensity === compact" (click)="setDensity(compact)">Compact</button>
+                <button igxButton="raised" [disabled]="displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
+                <button igxButton="raised" [disabled]="displayDensity === comfortable" (click)="setDensity(comfortable)">Comfortable</button>
+            </div>
+        </article>
+        <article>
             <div class="sample-column">
                 <div class="parent" (mouseenter)="showActions()" (mouseleave)="hideActions()">
                     <p>
@@ -24,7 +32,7 @@
             <div class="sample-column">
                 <h5>Grid Pinning Action</h5>
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'">
+                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
@@ -34,7 +42,7 @@
                         </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip1 (mouseleave)="actionstrip1.hide()">
+                    <igx-action-strip #actionstrip1 [(displayDensity)]="displayDensity">
                         <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
                     </igx-action-strip>
                 </igx-grid>
@@ -45,7 +53,7 @@
             <div class="sample-column">
                 <h5>Grid Pinning and Editing Actions</h5>
                 <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'">
+                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
@@ -55,7 +63,7 @@
                         </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip2 (mouseleave)="actionstrip2.hide()">
+                    <igx-action-strip #actionstrip2 (mouseleave)="actionstrip2.hide()" [(displayDensity)]="displayDensity">
                         <igx-grid-pinning-actions [grid]="grid2"></igx-grid-pinning-actions>
                         <igx-grid-editing-actions [grid]="grid2"></igx-grid-editing-actions>
                     </igx-action-strip>
@@ -67,7 +75,7 @@
             <div class="sample-column">
                 <h5>Actions in menu</h5>
                 <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'">
+                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
@@ -77,7 +85,7 @@
                         </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip3>
+                    <igx-action-strip #actionstrip3 [(displayDensity)]="displayDensity">
                         <igx-grid-pinning-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-pinning-actions>
                         <igx-grid-editing-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-editing-actions>
                     </igx-action-strip>

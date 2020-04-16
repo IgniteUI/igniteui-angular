@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {IgxActionStripComponent, IgxGridComponent} from 'igniteui-angular';
+import {IgxActionStripComponent, IgxGridComponent, DisplayDensity} from 'igniteui-angular';
 
 @Component({
     selector: 'app-action-strip-sample',
@@ -12,6 +12,10 @@ export class ActionStripSampleComponent {
     public result: string;
     public isVisible = false;
     private counter = 0;
+    public comfortable = DisplayDensity.comfortable;
+    public cosy = DisplayDensity.cosy;
+    public compact = DisplayDensity.compact;
+    public displayDensity = this.cosy;
 
     doSomeAction() {
         this.result = `Clicked ${this.counter++} times`;
@@ -23,6 +27,10 @@ export class ActionStripSampleComponent {
 
     hideActions() {
         this.isVisible = false;
+    }
+
+    setDensity(density: DisplayDensity) {
+        this.displayDensity = density;
     }
 
     data: any[];

@@ -9,7 +9,9 @@ import {
     QueryList,
     Renderer2,
     TemplateRef,
-    ViewContainerRef
+    ViewContainerRef,
+    Optional,
+    Inject
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IgxDropDownModule} from '../drop-down/index';
@@ -20,6 +22,7 @@ import {IgxGridEditingActionsComponent} from './grid-actions/grid-editing-action
 import {IgxGridActionsBaseDirective} from './grid-actions/grid-actions-base.directive';
 import {IgxButtonModule} from '../directives/button/button.directive';
 import {IgxRippleModule} from '../directives/ripple/ripple.directive';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -56,11 +59,13 @@ export class IgxActionStripMenuItemDirective {
     templateUrl: 'action-strip.component.html'
 })
 
-export class IgxActionStripComponent {
+export class IgxActionStripComponent extends DisplayDensityBase {
     constructor(
         private _viewContainer: ViewContainerRef,
-        private renderer: Renderer2) { }
-
+        private renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
+         }
 
     /**
      * @hidden
@@ -97,6 +102,18 @@ export class IgxActionStripComponent {
      */
     @HostBinding('class.igx-action-strip')
     public cssClass = 'igx-action-strip';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        const classes = [this.getComponentDensityClass('igx-action-strip')];
+        // The custom classes should be at the end.
+        classes.push(this.cssClass);
+        return classes.join(' ');
+    }
 
     public context;
 
