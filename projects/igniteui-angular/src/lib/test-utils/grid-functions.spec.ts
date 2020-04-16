@@ -65,6 +65,9 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+const GRID_SCROLL_CLASS = '.igx-grid__scroll';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
@@ -73,6 +76,10 @@ const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
 const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
 const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+const COLUMN_HIDING_CLASS = 'igx-column-hiding';
+const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
+const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
+const COLUMN_PINNING_CLASS = 'igx-column-pinning';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -95,6 +102,10 @@ export class GridFunctions {
 
     public static getGridFooter(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridScroll(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -572,38 +583,6 @@ export class GridFunctions {
     public static getExportOptions(fixture) {
         const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
-    }
-
-    public static getCheckboxElement(name: string, element: DebugElement, fix) {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const chkElement = checkboxElements.find((el) =>
-            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
-
-        return chkElement;
-    }
-
-    public static getCheckboxInput(name: string, element: DebugElement, fix) {
-        const checkboxEl = this.getCheckboxElement(name, element, fix);
-        const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
-
-        return chkInput;
-    }
-
-    public static getCheckboxInputs(element: DebugElement): HTMLInputElement[] {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const inputs = [];
-        checkboxElements.forEach((el) => {
-            inputs.push(el.query(By.css('input')).nativeElement as HTMLInputElement);
-        });
-
-        return inputs;
-    }
-
-    public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
-        const chkInput = this.getCheckboxInput(name, element, fix);
-        expect(chkInput.type).toBe('checkbox');
-        expect(chkInput.disabled).toBe(isDisabled);
-        expect(chkInput.checked).toBe(isChecked);
     }
 
     // Filtering
@@ -1873,6 +1852,53 @@ export class GridFunctions {
 
     public static isHeaderPinned(header: DebugElement): boolean {
         return header.nativeElement.classList.contains(HEADER_PINNED_CLASS);
+    }
+
+    public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_HIDING_CLASS));
+    }
+
+    public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_PINNING_CLASS));
+    }
+
+    public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css('h4'));
+    }
+
+    public static getColumnHidingHeaderInput(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_INPUT_CLASS));
+    }
+
+    public static getColumnChooserFilterInput(columnChooserElement: DebugElement): DebugElement {
+        return this.getColumnHidingHeaderInput(columnChooserElement).query(By.directive(IgxInputDirective));
+    }
+
+    public static getColumnChooserItems(columnChooserElement: DebugElement): DebugElement[] {
+        return columnChooserElement.queryAll(By.css('igx-checkbox'));
+    }
+
+    public static getColumnChooserItemElement(columnChooserElement: DebugElement, name: string): DebugElement {
+        const item = this.getColumnChooserItems(columnChooserElement).find((el) => el.nativeElement.outerText.includes(name));
+        return item;
+    }
+
+    public static clickColumnChooserItem(columnChooserElement: DebugElement, name: string) {
+        const item = this.getColumnChooserItemElement(columnChooserElement, name);
+        item.triggerEventHandler('change', new Event('change'));
+    }
+
+    public static getColumnChooserItemInput(item: DebugElement): HTMLInputElement {
+        return item.query(By.css('input')).nativeElement as HTMLInputElement;
+    }
+
+    public static getColumnChooserButton(columnChooserElement: DebugElement, name: string): DebugElement {
+        const buttonElements = columnChooserElement.queryAll(By.css('button'));
+        return buttonElements.find((el) => (el.nativeElement as HTMLButtonElement).textContent === name);
+    }
+
+    public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
     }
 }
 export class GridSummaryFunctions {
