@@ -4,12 +4,12 @@
   "lib": {
     "entryFile": "src/public_api.ts",
     "umdModuleIds": {
-      "jszip/dist/jszip": "JSZip",
       "resize-observer-polyfill": "ResizeObserver"
     }
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
+      "@types/jszip",
       "hammerjs",
       "jszip",
       "resize-observer-polyfill"

@@ -1,11 +1,10 @@
 <ng-content select="igx-splitter-pane"></ng-content>
 <ng-container *ngFor="let pane of panes; let last = last; let index= index;">
-    <igx-splitter-bar *ngIf="!last" [order]='pane.order + 1'
+    <igx-splitter-bar *ngIf="!last" [order]='pane.order + 1' role='separator'
                     [type]="type"
                     [pane]="pane"
                     [siblings]='getPaneSiblingsByOrder(pane.order + 1, index)'
                     (moveStart)="onMoveStart($event)"
-                    (moving)="onMoving($event)"
-                    (togglePane)="togglePane($event)">
+                    (moving)="onMoving($event)">
     </igx-splitter-bar>
 </ng-container>
