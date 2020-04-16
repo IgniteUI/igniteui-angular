@@ -8,6 +8,7 @@ import {IgxActionStripComponent, IgxGridComponent, DisplayDensity} from 'igniteu
 })
 export class ActionStripSampleComponent {
     @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
+    @ViewChild('actionstrip1') actionStrip1: IgxActionStripComponent;
     @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
     public result: string;
     public isVisible = false;
@@ -15,7 +16,7 @@ export class ActionStripSampleComponent {
     public comfortable = DisplayDensity.comfortable;
     public cosy = DisplayDensity.cosy;
     public compact = DisplayDensity.compact;
-    public displayDensity = this.cosy;
+    public displayDensity = this.comfortable;
 
     doSomeAction() {
         this.result = `Clicked ${this.counter++} times`;
@@ -27,6 +28,18 @@ export class ActionStripSampleComponent {
 
     hideActions() {
         this.isVisible = false;
+    }
+
+    onMouseOver(event, grid, actionStrip) {
+        if (event.target.nodeName.toLowerCase() === "igx-grid-cell") {
+            const rowIndex = parseInt(event.target.attributes["data-rowindex"].value, 10);
+            const row = grid.getRowByIndex(rowIndex);
+            actionStrip.show(row);
+        }
+    }
+
+    onMouseLeave(actionstrip) {
+        actionstrip.hide();
     }
 
     setDensity(density: DisplayDensity) {

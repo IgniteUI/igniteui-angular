@@ -32,17 +32,12 @@
             <div class="sample-column">
                 <h5>Grid Pinning Action</h5>
                 <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity">
+                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity" (mouseleave)="onMouseLeave(actionstrip1)" (mouseover)="onMouseOver($event, grid1, actionstrip1)">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-                        <ng-template igxCell let-cell="cell" let-val>
-                            <div class="cell-template" (mouseover)="actionstrip1.show(cell.row)">
-                                <span>{{val}}</span>
-                            </div>
-                        </ng-template>
                     </igx-column>
 
-                    <igx-action-strip #actionstrip1 [(displayDensity)]="displayDensity">
+                    <igx-action-strip #actionstrip1  [(displayDensity)]="displayDensity">
                         <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
                     </igx-action-strip>
                 </igx-grid>
