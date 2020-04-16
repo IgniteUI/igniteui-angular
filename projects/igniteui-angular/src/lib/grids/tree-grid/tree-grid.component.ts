@@ -364,18 +364,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    /**
-     * Gets an array of the pinned `IgxRowComponent`s.
-     * @example
-     * ```typescript
-     * const pinnedRow = this.grid.pinnedRows;
-     * ```
-     * @memberof IgxTreeGridComponent
-     */
-    get pinnedRows() {
-        return this.rowList.filter(x => x.pinned && !x.disabled);
-    }
-
     private loadChildrenOnRowExpansion(args: IRowToggleEventArgs) {
         if (this.loadChildrenOnDemand) {
             const parentID = args.rowID;
@@ -630,15 +618,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
             disabled: this.isSummaryRow(rowData) ? false : this.isGhostRecord(rowData.data)
         };
-    }
-
-    /**
-     * Informs whether the record is a ghost, i.e. a pinned body instance.
-     * @param record
-     * @hidden @internal
-     */
-    public isGhostRecord(record: any): boolean {
-        return record.ghostRecord !== undefined;
     }
 
     /**
