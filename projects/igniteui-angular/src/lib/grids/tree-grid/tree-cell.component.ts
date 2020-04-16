@@ -1,16 +1,14 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
-     ChangeDetectionStrategy, NgZone, OnInit, Input, TemplateRef } from '@angular/core';
-import { IgxGridCellComponent } from '../cell.component';
+import { Component, ChangeDetectorRef, ElementRef, Inject,
+     ChangeDetectionStrategy, NgZone, Input } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
 import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
-import { IgxChipComponent } from '../../chips';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
