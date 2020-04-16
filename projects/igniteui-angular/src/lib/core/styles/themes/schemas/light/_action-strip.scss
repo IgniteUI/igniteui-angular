@@ -37,7 +37,7 @@ $_light-action-strip: extend(
 $_fluent-action-strip: extend(
     $_light-action-strip,
     $_fluent-shape-action-strip,
-        (
+    (
         variant: 'fluent',
     )
 );
@@ -50,7 +50,7 @@ $_fluent-action-strip: extend(
 $_bootstrap-action-strip: extend(
     $_light-action-strip,
     $_bootstrap-shape-action-strip,
-        (
+    (
         variant: 'bootstrap',
     )
 );
