@@ -223,7 +223,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
-                this.gridAPI.grid.isGhostRecord(record) ? flatData.push(record.data.recordRef) : flatData.push(record.data);
+                flatData.push(record.data);
                 this.flattenTreeGridRecords(record.children, flatData);
             }
         }
@@ -332,7 +332,7 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
         const res = flatData.map(rec =>
             ({
                     rowID: grid.primaryKey ? rec[primaryKey] : rec,
-                    data: rec,
+                    data: Object.assign({}, rec),
                     level: 0,
                     children: []
             }));

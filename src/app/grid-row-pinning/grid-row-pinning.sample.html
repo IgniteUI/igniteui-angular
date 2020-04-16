@@ -4,7 +4,7 @@
     </app-page-header>
     <button (click)="grid1.addRow({'ID': 'TEST', 'CompanyName': 'Test'})">Add Row</button>
     <button (click)="exportButtonHandler()">Export</button>
-        <!-- <div class="sample-column">
+        <div class="sample-column">
             <div>igxGrid</div>
             <div>
                 <input igxButton="raised" type="button" name="Density" (click)="toggleDensity()" value="Density"/>
@@ -77,17 +77,12 @@
                 </igx-row-island>
                 <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
             </igx-hierarchical-grid>
-        </div> -->
-
-        <div class="sample-switches">
-            <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
-            <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
         </div>
-        <input igxButton="raised" type="button" (click)="treegrid.pinRow(0)" value="Pin 0"/>
+
         <div class="sample-column">
             <div>igxTreeGrid</div>
             <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
-            [paging]="true" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
+            [width]="'900px'" [height]="'800px'" [showToolbar]="true"
             [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
            >
            <igx-column width='150px' [filterable]='false'>
@@ -104,7 +99,7 @@
             </igx-column>
 
             <ng-template igxToolbarCustomContent>
-                <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+                <app-grid-search-box [grid]="treegrid" [style.width]="'530px'"></app-grid-search-box>
             </ng-template>
         </igx-tree-grid>
         </div>
