@@ -17,6 +17,16 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxActionStrip` component added.
+    - Provides a template area for one or more actions. In its simplest form the Action Strip
+        is an overlay of any container and shows additional content over that container.
+
+    ```html
+    <igx-action-strip #actionstrip>
+        <igx-icon (click)="doSomeAction()"></igx-icon>
+    </igx-action-strip>
+    ```
+
 - `igxSplitter` component added.
     - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
         Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
