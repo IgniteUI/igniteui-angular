@@ -2441,6 +2441,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public columnWidthSetByUser = false;
 
+    /**
+     * @hidden @internal
+     */
+    public unpinnedRecords: any[];
+
     data: any[];
     filteredData: any[];
 
@@ -5156,7 +5161,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf.map(rec => this.isGhostRecord(rec) ? rec.recordRef : rec) ;
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
     }
 
     /**

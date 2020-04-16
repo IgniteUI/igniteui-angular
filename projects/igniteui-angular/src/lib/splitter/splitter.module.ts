@@ -17,8 +17,7 @@ import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
     ],
     exports: [
         IgxSplitterComponent,
-        IgxSplitterPaneComponent,
-        IgxSplitBarComponent
+        IgxSplitterPaneComponent
     ]
 })
 export class IgxSplitterModule { }

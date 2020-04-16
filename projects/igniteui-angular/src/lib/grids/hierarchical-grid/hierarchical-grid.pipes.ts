@@ -77,4 +77,3 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
         return result;
     }
 }
-

@@ -192,6 +192,7 @@ export class IgxGridGhostRecordsPipe implements PipeTransform {
             return collection;
         }
 
+        grid.unpinnedRecords = collection;
         return collection.map((rec) => {
             return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
         });
