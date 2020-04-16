@@ -1,4 +1,5 @@
-import { Component, ChangeDetectorRef, ElementRef, Inject, ChangeDetectionStrategy, NgZone, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, Inject,
+     ChangeDetectionStrategy, NgZone, Input } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { PlatformUtil } from '../../core/utils';
