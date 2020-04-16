@@ -2441,6 +2441,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public columnWidthSetByUser = false;
 
+    /**
+     * @hidden @internal
+     */
+    public unpinnedRecords: any[];
+
     data: any[];
     filteredData: any[];
 
@@ -2641,6 +2646,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public isGroupByRecord(rec) {
         return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRecord !== undefined;
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
     }
 
     /**
@@ -3403,7 +3427,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned);
+        return this.rowList.filter(x => x.pinned && !x.disabled);
     }
 
     /**
@@ -5137,7 +5161,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf;
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
     }
 
     /**
