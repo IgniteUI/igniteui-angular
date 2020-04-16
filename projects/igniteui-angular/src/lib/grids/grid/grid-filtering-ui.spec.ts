@@ -3350,7 +3350,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(grid.rowList.length).toBe(3);
         });
 
-        fit('Should close filter row when hide the current column', fakeAsync(() => {
+        it('Should close filter row when hide the current column', fakeAsync(() => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             // Check that the filterRow is opened
