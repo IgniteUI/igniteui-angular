@@ -34,12 +34,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
                 rec.children = filteredChildren.length > 0 ? filteredChildren : null;
             }
 
-            const plainGhostRecord: any = {...rec};
-            if (rec.data.ghostRecord !== undefined) {
-                plainGhostRecord.data = plainGhostRecord.data.recordRef;
-            }
-
-            if (this.matchRecord(plainGhostRecord, expressionsTree) && this.matchRecord(plainGhostRecord, advancedExpressionsTree)) {
+            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, advancedExpressionsTree)) {
                 res.push(rec);
             } else if (rec.children && rec.children.length > 0) {
                 rec.isFilteredOutParent = true;
