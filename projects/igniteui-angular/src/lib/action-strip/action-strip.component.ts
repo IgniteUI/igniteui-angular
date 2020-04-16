@@ -61,6 +61,17 @@ export class IgxActionStripComponent {
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2) { }
 
+
+    /**
+     * @hidden
+     * @internal
+     * Sets/gets the 'display' property of the current `IgxActionStrip`
+     */
+    @HostBinding('style.display')
+    public display = 'flex';
+
+    private _hidden = false;
+
     /**
      * An @Input property that set the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
@@ -68,8 +79,15 @@ export class IgxActionStripComponent {
      *  <igx-action-strip [hidden]="false">
      * ```
      */
-    @Input() hidden = false;
+    @Input()
+    public set hidden(value) {
+        this._hidden = value;
+        this.display = this._hidden ? 'none' : 'flex' ;
+    }
 
+    public get hidden() {
+        return this._hidden;
+    }
 
     /**
      * Host `class.igx-action-strip` binding.
@@ -91,7 +109,6 @@ export class IgxActionStripComponent {
     show(context): void {
         this.context = context;
         this.hidden = false;
-        this.context = context;
         this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
         this.sendContext();
     }
@@ -102,7 +119,9 @@ export class IgxActionStripComponent {
     }
 
     private sendContext() {
-        this.gridActions.forEach(action => action.context = this.context);
+        if (this.gridActions) {
+            this.gridActions.forEach(action => action.context = this.context);
+        }
     }
 }
 

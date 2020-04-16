@@ -110,30 +110,11 @@ export class HelperUtils {
         return chkInput;
     }
 
-    public static getCheckboxInputs(element: DebugElement): HTMLInputElement[] {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const inputs = [];
-        checkboxElements.forEach((el) => {
-            inputs.push(el.query(By.css('input')).nativeElement as HTMLInputElement);
-        });
-
-        return inputs;
-    }
-
     public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
         const chkInput = HelperUtils.getCheckboxInput(name, element, fix);
         expect(chkInput.type).toBe('checkbox');
         expect(chkInput.disabled).toBe(isDisabled);
         expect(chkInput.checked).toBe(isChecked);
-    }
-
-    public static clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 }
 

@@ -103,10 +103,9 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!this.gridAPI.grid.paging) {
             return collection;
         }
-        const _perPage = perPage - this.gridAPI.grid.pinnedRecordsCount;
         const state = {
             index: page,
-            recordsPerPage: _perPage
+            recordsPerPage: perPage
         };
         DataUtil.correctPagingState(state, collection.data.length);
 
@@ -157,7 +156,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
  * @hidden
  */
 @Pipe({
-    name: 'rowPinning',
+    name: 'gridRowPinning',
     pure: true
 })
 export class IgxGridRowPinningPipe implements PipeTransform {
@@ -171,13 +170,15 @@ export class IgxGridRowPinningPipe implements PipeTransform {
             return isPinned ? [] : collection;
         }
 
-        const result = collection.filter((value, index) => {
-            return  isPinned ? grid.isRecordPinned(value) : !grid.isRecordPinned(value);
-        });
-        if (isPinned) {
-            // pinned records should be ordered as they were pinned.
+        if (grid.hasPinnedRecords && isPinned) {
+            const result = collection.filter(rec => grid.isRecordPinned(rec));
             result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
+            return result;
         }
-        return result;
+
+        grid.unpinnedRecords = collection;
+        return collection.map((rec) => {
+            return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
+        });
     }
 }

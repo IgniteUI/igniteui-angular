@@ -93,7 +93,6 @@
         align-items: center;
         background: $splitter-color;
         border: 1px solid $splitter-color;
-        cursor: row-resize;
         z-index: 99;
         opacity: .68;
         transition: opacity .15s $ease-out-quad !important;
@@ -123,7 +122,6 @@
     %igx-splitter-bar--vertical {
         flex-direction: column;
         height: 100%;
-        cursor: col-resize;
 
         &::before {
             @extend %handle-area--vertical;
