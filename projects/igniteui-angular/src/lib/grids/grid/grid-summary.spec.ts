@@ -935,6 +935,9 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('Grouping: should navigate with arrow keys from cell to summary row ', () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
@@ -947,7 +950,7 @@ describe('IgxGrid - Summaries #grid', () => {
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(2, 'ID');
@@ -967,7 +970,7 @@ describe('IgxGrid - Summaries #grid', () => {
             const row = grid.getRowByIndex(4);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
