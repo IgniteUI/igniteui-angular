@@ -32,46 +32,8 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     public set treeRow(value: ITreeGridRecord) {
         if (this._treeRow !== value) {
             this._treeRow = value;
-            this.rowData = this.grid.isGhostRecord(this._treeRow.data) ?
-                            this._treeRow.data.recordRef :
-                            this._treeRow.data;
+            this.rowData = this._treeRow.data;
         }
-    }
-
-    /**
-     * Gets whether the row is pinned.
-     *
-     * @example
-     * ```typescript
-     * let pinned = row.pinned;
-     * ```
-     */
-    public get pinned(): boolean {
-        return this.grid.isRecordPinned(this.rowData);
-    }
-
-    /**
-     * Sets whether the row is pinned.
-     * Default value is `false`.
-     * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
-     * ```
-     */
-    public set pinned(value: boolean) {
-        if (value) {
-            this.grid.pinRow(this.rowID);
-        } else {
-            this.grid.unpinRow(this.rowID);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @Input()
-    @HostBinding('attr.aria-selected')
-    get selected(): boolean {
-        return this.selectionService.isRowSelected(this.rowID);
     }
 
     /**

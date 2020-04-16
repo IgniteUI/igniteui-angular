@@ -42,7 +42,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
-    IgxGridRowPinningPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
     IgxGridExpandableCellComponent
@@ -63,7 +62,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
-    IgxGridRowPinningPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
     IgxGridCommonModule

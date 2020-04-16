@@ -310,12 +310,14 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     }
 }
 
+/**
+ * This pipe maps the original record to ITreeGridRecord format used in TreeGrid.
+ */
 @Pipe({
-    name: 'treeGridRowPinning',
+    name: 'treeGridNormalizeRecord',
     pure: true
 })
-export class IgxTreeGridRowPinningPipe implements PipeTransform {
-
+export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
@@ -323,67 +325,14 @@ export class IgxTreeGridRowPinningPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        const grid = this.gridAPI.grid;
-
-        if (!grid.hasPinnedRecords) {
-            return [];
-        }
-
-        let result = grid.flatData.filter((value, index) => grid.isRecordPinned(value));
-
-        // pinned records should be ordered as they were pinned.
-        result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-
-        result = this.normalizePinnedRecords(result, this.gridAPI.grid.primaryKey);
-
-        return result;
-    }
-
-    private normalizePinnedRecords(collection: any[], primaryKey: string) {
-        const result: ITreeGridRecord[] = [];
-        collection.forEach(row => {
-            const record: ITreeGridRecord = {
-                rowID: this.getRowID(primaryKey, row),
-                data: row,
-                children: []
-            };
-            result.push(record);
-        });
-        return result;
-    }
-
-    private getRowID(primaryKey: any, rowData: any) {
-        return primaryKey ? rowData[primaryKey] : rowData;
-    }
-}
-
-@Pipe({
-    name: 'treeGridShadowRows',
-    pure: true
-})
-export class IgxTreeGridShadowRowsPipe implements PipeTransform {
-
-    private gridAPI: IgxTreeGridAPIService;
-
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
-    }
-
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
-        this.designateDisabledRows(collection);
-        return collection;
-    }
-
-    private designateDisabledRows(collection: ITreeGridRecord[]) {
-        collection.forEach(record => {
-            if (this.gridAPI.grid.isRecordPinned(record.data)) {
-                const recordData = {};
-                Object.assign(recordData, record.data);
-                record.data = { recordRef: recordData, ghostRecord: true };
-            }
-            if (record.children && record.children.length > 0) {
-                this.designateDisabledRows(record.children);
-            }
-        });
+        const primaryKey = this.gridAPI.grid.primaryKey;
+        const res = collection.map(rec =>
+            ({
+                    rowID: primaryKey ? rec[primaryKey] : rec,
+                    data: rec,
+                    level: 0,
+                    children: []
+            }));
+        return res;
     }
 }
