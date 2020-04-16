@@ -2444,6 +2444,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public pinnedRecords: any[];
+
+    /**
+     * @hidden @internal
+     */
     public unpinnedRecords: any[];
 
     data: any[];
@@ -2657,10 +2662,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Returns the row index of a row that takes into account the full view data like pinning.
      */
-    public getRowIndex(rowIndex, pinned) {
+    public getDataViewIndex(rowIndex, pinned) {
         if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
+            rowIndex = rowIndex + this.unpinnedRecords.length;
         } else if (!pinned && this.isRowPinningToTop) {
             rowIndex = rowIndex + this.pinnedRecordsCount;
         }
@@ -2717,6 +2723,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public isRecordPinned(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordPinnedByIndex(rowIndex: number) {
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedRecordsCount) ||
+            (!this.isRowPinningToTop && rowIndex >= this.unpinnedRecords.length);
     }
 
     /**
@@ -5154,25 +5169,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid.
-     * @example
-     * ```typescript
-     *      const dataView = this.grid.dataView;
-     * ```
-     */
-    get dataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
-    }
-
-    /**
-     * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+     * Returns the currently transformed paged/filtered/sorted/grouped pinned row data, displayed in the grid.
      * @example
      * ```typescript
      *      const pinnedDataView = this.grid.pinnedDataView;
      * ```
      */
     get pinnedDataView(): any[] {
-        return this.pinnedRows.map(row => row.rowData);
+        return this.pinnedRecords ? this.pinnedRecords : [];
+    }
+
+    /**
+     * Returns currently transformed paged/filtered/sorted/grouped unpinned row data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get unpinnedDataView(): any[] {
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
+    }
+
+    /**
+     * Returns the currently transformed paged/filtered/sorted/grouped row data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const dataView = this.grid.dataView;
+     * ```
+     */
+    get dataView(): any[] {
+        return this.isRowPinningToTop ?
+            [...this.pinnedDataView, ...this.unpinnedDataView] :
+            [...this.unpinnedDataView, ...this.pinnedDataView];
     }
 
     /**
@@ -5415,7 +5443,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
+        const source = this.dataView;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
@@ -5619,10 +5647,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        // If the target row is pinned no need to scroll as well.
+        const shouldScrollVertically =
+            !this.isRecordPinnedByIndex(rowIndex) && this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+            // Only for top pinning we need to subtract pinned count because virtualization indexing doesn't count pinned rows.
+            const scrollRowIndex = this.isRowPinningToTop ? rowIndex - this.pinnedRecordsCount : rowIndex;
+            this.navigation.performVerticalScrollToCell(scrollRowIndex, visibleColIndex,
                 () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
@@ -5905,11 +5937,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof (row) === 'number' ? row : this.dataView.indexOf(row));
+                    typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof (row) === 'number' ? row : this.dataView.indexOf(row));
+                typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
