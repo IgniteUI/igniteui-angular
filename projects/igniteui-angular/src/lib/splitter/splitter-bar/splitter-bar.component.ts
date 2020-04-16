@@ -1,33 +1,34 @@
-import { Component, Input, HostBinding, EventEmitter, Output, HostListener } from '@angular/core';
-import { SplitterType } from '../splitter.component';
-import { IgxSplitterPaneComponent } from '../splitter-pane/splitter-pane.component';
-import { IDragMoveEventArgs, IDragStartEventArgs, DragDirection } from '../../directives/drag-drop/drag-drop.directive';
+import {Component, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
+import {SplitterType} from '../splitter.component';
+import {IgxSplitterPaneComponent} from '../splitter-pane/splitter-pane.component';
+import {DragDirection, IDragMoveEventArgs, IDragStartEventArgs} from '../../directives/drag-drop/drag-drop.directive';
 
 
 export const SPLITTER_INTERACTION_KEYS = new Set('right down left up arrowright arrowdown arrowleft arrowup'.split(' '));
 
 /**
- * Provides reference to `SplitBarComponent` component.
- * Represents the draggable gripper that visually separates panes and allows for changing their sizes.
- * @export
- * @class SplitBarComponent
+ * @hidden @internal
+ * Represents the draggable bar that visually separates panes and allows for changing their sizes.
  */
 @Component({
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html'
 })
 export class IgxSplitBarComponent {
+    /**
+     * Set css class to the host element.
+     */
+    @HostBinding('class.igx-splitter-bar-host')
+    public cssClass = 'igx-splitter-bar-host';
 
     /**
-     * Sets/gets `IgxSplitBarComponent` orientation.
-     * @type SplitterType
+     * Gets/Sets the orientation.
      */
     @Input()
-    public type: SplitterType = SplitterType.Vertical;
+    public type: SplitterType = SplitterType.Horizontal;
 
     /**
-     * Sets/gets `IgxSplitBarComponent` element order.
-     * @type SplitterType
+     * Sets/gets the element order.
      */
     @HostBinding('style.order')
     @Input()
@@ -38,7 +39,29 @@ export class IgxSplitBarComponent {
      * @internal
      */
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public get tabindex() {
+        return this.resizeDisallowed ? null : 0;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.aria-orientation')
+    public get orientation() {
+        return this.type === SplitterType.Horizontal ? 'horizontal' : 'vertical';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get cursor() {
+        if (this.resizeDisallowed) {
+            return '';
+        }
+        return this.type === SplitterType.Horizontal ? 'col-resize' : 'row-resize';
+    }
 
     /**
      * Sets/gets the `SplitPaneComponent` associated with the current `SplitBarComponent`.
@@ -55,27 +78,18 @@ export class IgxSplitBarComponent {
 
     /**
      * An event that is emitted whenever we start dragging the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
      */
     @Output()
     public moveStart = new EventEmitter<IgxSplitterPaneComponent>();
 
     /**
      * An event that is emitted while we are dragging the current `SplitBarComponent`.
-     * @memberof SplitBarComponent
      */
     @Output()
     public moving = new EventEmitter<number>();
 
     /**
-     * An event that is emitted when collapsing the pane
-     */
-    @Output()
-    public togglePane = new EventEmitter<IgxSplitterPaneComponent>();
-    /**
      * A temporary holder for the pointer coordinates.
-     * @private
-     * @memberof SplitBarComponent
      */
     private startPoint!: number;
 
@@ -83,7 +97,7 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get prevButtonHidden() {
-        return this.siblings[0].hidden && !this.siblings[1].hidden;
+        return this.siblings[0].collapsed && !this.siblings[1].collapsed;
     }
 
     /**
@@ -170,9 +184,12 @@ export class IgxSplitBarComponent {
      * @hidden @internal
      */
     public get nextButtonHidden() {
-        return this.siblings[1].hidden && !this.siblings[0].hidden;
+        return this.siblings[1].collapsed && !this.siblings[0].collapsed;
     }
 
+    /**
+     * @hidden @internal
+     */
     public onDragStart(event: IDragStartEventArgs) {
         if (this.resizeDisallowed) {
             event.cancel = true;
@@ -182,6 +199,9 @@ export class IgxSplitBarComponent {
         this.moveStart.emit(this.pane);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onDragMove(event: IDragMoveEventArgs) {
         const isHorizontal = this.type === SplitterType.Horizontal;
         const curr =  isHorizontal ? event.pageX : event.pageY;
@@ -195,20 +215,23 @@ export class IgxSplitBarComponent {
 
     protected get resizeDisallowed() {
         const relatedTabs = this.siblings;
-        return !!relatedTabs.find(x => x.resizable === false);
+        return !!relatedTabs.find(x => x.resizable === false || x.collapsed === true);
     }
 
+    /**
+     * @hidden @internal
+     */
     public onCollapsing(next: boolean) {
         const prevSibling = this.siblings[0];
         const nextSibling = this.siblings[1];
         let target;
         if (next) {
             // if next is clicked when prev pane is hidden, show prev pane, else hide next pane.
-            target = prevSibling.hidden ? prevSibling : nextSibling;
+            target = prevSibling.collapsed ? prevSibling : nextSibling;
         } else {
             // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
-            target = nextSibling.hidden ? nextSibling : prevSibling;
+            target = nextSibling.collapsed ? nextSibling : prevSibling;
         }
-        this.togglePane.emit(target);
+        target.toggle();
     }
 }

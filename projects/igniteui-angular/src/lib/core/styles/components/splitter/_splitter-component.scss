@@ -11,6 +11,12 @@
     $this: str-slice(bem--selector-to-string(&), 2, -1);
     @include register-component($this);
 
+    @include b(#{$this}-bar-host) {
+        &:focus {
+            @extend %igx-splitter-bar--focus !optional;
+        }
+    }
+
     @include b(#{$this}-bar) {
         @extend %igx-splitter-bar !optional;
 
