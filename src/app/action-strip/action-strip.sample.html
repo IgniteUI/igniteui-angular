@@ -28,7 +28,7 @@
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
-                            <div (mouseover)="actionstrip1.show(cell.row)">
+                            <div class="cell-template" (mouseover)="actionstrip1.show(cell.row)">
                                 <span>{{val}}</span>
                             </div>
                         </ng-template>
@@ -49,7 +49,7 @@
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
-                            <div (mouseover)="actionstrip2.show(cell.row)">
+                            <div class="cell-template" (mouseover)="actionstrip2.show(cell.row)">
                                 <span>{{val}}</span>
                             </div>
                         </ng-template>
@@ -71,7 +71,7 @@
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
                         <ng-template igxCell let-cell="cell" let-val>
-                            <div (mouseover)="actionstrip3.show(cell.row)">
+                            <div class="cell-template"  (mouseover)="actionstrip3.show(cell.row)">
                                 <span>{{val}}</span>
                             </div>
                         </ng-template>
