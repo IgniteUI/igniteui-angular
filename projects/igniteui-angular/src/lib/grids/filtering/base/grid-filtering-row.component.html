@@ -9,9 +9,9 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
-                    (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                    (click)="inputGroupPrefixClick($event)"
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
@@ -49,10 +49,10 @@
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
-                            (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                            (click)="inputGroupPrefixClick($event)"
                             (keydown)="onPrefixKeyDown($event)"
                             [igxDropDownItemNavigation]="inputGroupConditions">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
