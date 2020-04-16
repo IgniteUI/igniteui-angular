@@ -400,6 +400,10 @@
         @extend %grid-cell--pinned--column-selected !optional;
     }
 
+    @include e(td, $m: row-pinned-first) {
+        @extend %grid-cell--row-pinned-first !optional;
+    }
+
     @include e(td, $m: pinned-chip) {
         @extend %grid-cell--pinned-chip !optional;
     }

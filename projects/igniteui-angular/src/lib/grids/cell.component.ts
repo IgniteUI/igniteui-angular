@@ -107,6 +107,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     public cellTemplate: TemplateRef<any>;
 
+    @Input()
+    public pinnedIndicator: TemplateRef<any>;
+
     /**
      * Sets/gets the cell value.
      * ```typescript
@@ -186,6 +189,20 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return this.cellTemplate;
         }
         return this.defaultCellTemplate;
+    }
+
+    /**
+     * Gets the cell template.
+     * ```typescript
+     * let template = this.cell.template;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    get pinnedIndicatorTemplate() {
+        if (this.pinnedIndicator) {
+            return this.pinnedIndicator;
+        }
+        return this.defaultPinnedIndicator;
     }
 
     /**
@@ -529,12 +546,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * @hidden
      */
+    @HostBinding('class.igx-grid__td--row-pinned-first')
     public get displayPinnedChip() {
-        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0 && !(this.column as any).cellTemplate;
+        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0;
     }
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultPinnedIndicator', { read: TemplateRef, static: true })
+    protected defaultPinnedIndicator: TemplateRef<any>;
 
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
