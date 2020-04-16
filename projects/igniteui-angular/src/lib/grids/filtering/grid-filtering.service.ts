@@ -118,7 +118,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Internal method to create expressionsTree and filter grid used in both filter modes.
+     * Close filtering row if a column is hidden.
      */
     public hideColumnFilteringRowOnVisibilityChange(col: IgxColumnComponent) {
         const filteringRow = col.grid.filteringRow;
