@@ -415,13 +415,13 @@ export class IgxGridNavigationService {
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
             nextCol =  this.getNextColumnMCH(index);
-            this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
         }
         if ((key.includes('right') || key === 'end') && activeCol.visibleIndex < lastGroupIndex) {
             const nextVIndex = activeCol.children ? Math.max(...activeCol.allChildren.map(c => c.visibleIndex)) + 1 :
             activeCol.visibleIndex + 1;
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
-            this.activeNode.mchCache.visibleIndex = this.activeNode.column;
+            this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
         }
         if (key.includes('up') && this.activeNode.level > 0) {
             nextCol = activeCol.parent;
