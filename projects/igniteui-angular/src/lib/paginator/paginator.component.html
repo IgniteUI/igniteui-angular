@@ -3,28 +3,29 @@
     <div class="igx-paginator__select-input">
         <igx-select [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border"
             [disabled]="!dropdownEnabled">
+            <label igxLabel [hidden]="true">{{ selectLabel }}</label>
             <igx-select-item [value]="val" *ngFor="let val of selectOptions">
                 {{val}}
             </igx-select-item>
         </igx-select>
     </div>
 </div>
-<div class="igx-paginator__pager" [hidden]="pagerHidden">
-    <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
+<div class="igx-paginator__pager" [hidden]="pagerHidden" role="navigation">
+    <button [title]="firstPageLabel" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">first_page</igx-icon>
     </button>
-    <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
+    <button [title]="previousPageLabel" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">chevron_left</igx-icon>
     </button>
-    <div class='igx-paginator__pager-text'>
+    <div class='igx-paginator__pager-text' aria-current="page">
         <span>{{ page + 1 }}</span>
         <span>&nbsp;{{prepositionPage}}&nbsp;</span>
         <span>{{ totalPages }}</span>
     </div>
-    <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
+    <button [title]="nextPageLabel" [disabled]="isLastPageDisabled" [attr.aria-disabled]="isLastPageDisabled" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
         <igx-icon fontSet="material">chevron_right</igx-icon>
     </button>
-    <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="paginate(totalPages - 1)" igxButton="icon" igxRipple
+    <button [title]="lastPageLabel" [disabled]="isLastPageDisabled" [attr.aria-disabled]="isLastPageDisabled" (click)="paginate(totalPages - 1)" igxButton="icon" igxRipple
         igxRippleCentered="true">
         <igx-icon fontSet="material">last_page</igx-icon>
     </button>

@@ -7,6 +7,7 @@ import { IgxSelectModule } from '../select/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxInputGroupModule } from '../input-group';
 
 @Component({
     selector: 'igx-paginator',
@@ -177,6 +178,38 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
    @Input()
    public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
 
+   /**
+    * An @Input property, sets a tooltip text for first page button label
+    * The default is 'Go to first page' localized string.
+    * @memberof IgxPaginatorComponent
+    */
+   @Input()
+   public firstPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_first_page_button_text;
+
+   /**
+    * An @Input property, sets a tooltip text for the previous page button label
+    * The default is 'Previous page' localized string.
+    * @memberof IgxPaginatorComponent
+    */
+   @Input()
+   public previousPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_previous_page_button_text;
+
+   /**
+    * An @Input property, sets a tooltip text for last page button label
+    * The default is 'Go to last page' localized string.
+    * @memberof IgxPaginatorComponent
+    */
+   @Input()
+   public lastPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_last_page_button_text;
+
+   /**
+    * An @Input property, sets a tooltip text for the next page button label
+    * The default is 'Next page' localized string.
+    * @memberof IgxPaginatorComponent
+    */
+   @Input()
+   public nextPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_next_page_button_text;
+
     /**
      * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
      */
@@ -212,6 +245,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     get isFirstPage(): boolean {
         return this.page === 0;
+    }
+
+
+    /**
+     * Returns if the first pager buttons should be disabled
+     */
+    get isFirstPageDisabled(): boolean {
+        return this.isFirstPage || !this.pagerEnabled;
+    }
+
+    /**
+     * Returns if the last pager buttons should be disabled
+     */
+    get isLastPageDisabled(): boolean {
+        return this.isLastPage || !this.pagerEnabled;
     }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
@@ -255,7 +303,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     /**
      * Goes to the desired page index.
      * ```typescript
-     * this.pagiantor.paginate(1);
+     * this.paginator.paginate(1);
      * ```
      * @param val
      * @memberof IgxPaginatorComponent
@@ -271,6 +319,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 @NgModule({
     declarations: [IgxPaginatorComponent],
     exports: [IgxPaginatorComponent],
-    imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
 })
 export class IgxPaginatorModule { }
