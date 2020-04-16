@@ -43,7 +43,7 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent,
+        IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -71,7 +71,7 @@ import { IgxRowDirective } from './row.directive';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxGridSharedModules,
+        IgxGridSharedModules
     ],
     imports: [
         IgxGridColumnModule,
