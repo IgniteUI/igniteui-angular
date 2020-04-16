@@ -10,10 +10,8 @@
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                     </p>
-                    <igx-action-strip #actionstrip *ngIf="isVisible">
-                        <div class="my-action-strip">
-                            <igx-icon (click)="doSomeAction()">alarm</igx-icon>
-                        </div>
+                    <igx-action-strip class="my-action-strip" #actionstrip *ngIf="isVisible">
+                        <igx-icon (click)="doSomeAction()">alarm</igx-icon>
                     </igx-action-strip>
                 </div>
             </div>

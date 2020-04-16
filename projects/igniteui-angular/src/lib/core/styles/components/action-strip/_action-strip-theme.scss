@@ -12,7 +12,12 @@
 /// @param {Color} $color [null] - The color used for the action strip component text and icons.
 /// @param {Color} $background [null] - The color used for the action strip component content background.
 /// @param {Color} $delete-action [null] - The color used for the delete icon in action strip component.
+/// @param {actions-border-radius} $actions-border-radius [null] - The border radius used for actions container inside action strip component.
+///
 /// @requires extend
+/// @requires round-borders
+/// @requires apply-palette
+/// @requires text-contrast
 ///
 /// @example scss Change the background and icon colors in action strip
 ///   $my-action-strip-theme: igx-action-strip-theme($background: black);
@@ -25,6 +30,7 @@
     $background: null,
     $color: null,
     $delete-action: null,
+    $actions-border-radius: null,
 ) {
     $name: 'igx-action-strip';
     $action-strip-schema: ();
@@ -37,6 +43,10 @@
 
     $theme: apply-palette($action-strip-schema, $palette);
 
+    $actions-border-radius: round-borders(
+        if($actions-border-radius, $actions-border-radius, map-get($action-strip-schema, 'actions-border-radius')), 0, 24px
+    );
+
     @if not($color) and $background {
         $color: text-contrast($background);
     }
@@ -47,6 +57,7 @@
         background: $background,
         color: $color,
         delete-action: $delete-action,
+        actions-border-radius: $actions-border-radius,
     ));
 }
 
@@ -63,38 +74,51 @@
         compact: 0 rem(12px)
     );
 
-    %igx-action-strip-display {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        background: --var($theme, 'background');
-    }
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
-    %igx-action-strip__container {
+    %igx-action-strip-display {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        pointer-events: all;
-        color: --var($theme, 'color');
+        position: absolute;
         width: 100%;
         height: 100%;
-        backdrop-filter: blur(2px);
+        pointer-events: none;
+        top: 0;
+        #{$left}: 0;
+        background: --var($theme, 'background');
         padding: map-get($padding, 'comfortable');
+    }
+
+    %igx-action-strip--cosy{
+        padding: map-get($padding, 'cosy');
+    }
+
+    %igx-action-strip--compact{
+        padding: map-get($padding, 'compact');
+    }
+
+    %igx-action-strip__actions {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: all;
+        color: --var($theme, 'color');
+        backdrop-filter: blur(2px);
+        border-radius: --var($theme, 'actions-border-radius');
+        background: inherit;
+
+        > * {
+            margin-#{$left}: rem(4px);
+            &:first-of-type {
+                margin-#{$left}: 0;
+            }
+        }
 
         igx-icon {
             color: --var($theme, 'color');
         }
-    }
-
-    %igx-action-strip__container--cosy{
-        padding: map-get($padding, 'cosy');
-    }
-
-    %igx-action-strip__container--compact{
-        padding: map-get($padding, 'compact');
     }
 
     %igx-action-strip__delete {

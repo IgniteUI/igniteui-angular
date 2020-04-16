@@ -12,18 +12,16 @@
 
     @extend %igx-action-strip-display !optional;
 
-    @include e(container) {
-        @extend %igx-action-strip__container !optional;
+    @include m(cosy) {
+        @extend %igx-action-strip--cosy !optional;
     }
 
-    @include e(container, $m: 'cosy') {
-        @extend %igx-action-strip__container !optional;
-        @extend %igx-action-strip__container--cosy !optional;
+    @include m(compact) {
+        @extend %igx-action-strip--compact !optional;
     }
 
-    @include e(container) {
-        @extend %igx-action-strip__container !optional;
-        @extend %igx-action-strip__container--compact !optional;
+    @include e(actions) {
+        @extend %igx-action-strip__actions !optional;
     }
 
     @include e(delete) {
