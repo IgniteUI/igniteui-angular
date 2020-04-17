@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
@@ -7,6 +7,7 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../icon';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxPrefixDirective, IgxSuffixDirective } from '../chips';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -32,8 +33,7 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
                 InputGroupCompactDisplayDensityComponent,
-                InputGroupInputDisplayDensityComponent,
-                InputGroupSupressInputFocusComponent
+                InputGroupInputDisplayDensityComponent
             ],
             imports: [
                 IgxInputGroupModule, IgxIconModule
@@ -89,7 +89,7 @@ describe('IgxInputGroup', () => {
         testInputGroupType('search', igxInputGroup, inputGroupElement);
     });
 
-    it('Should be able to change input group type programatically.', () => {
+    it('Should be able to change input group type programmatically.', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
@@ -178,26 +178,89 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
     });
 
-    it('suppress focus on input when clicked', async () => {
-        const fixture = TestBed.createComponent(InputGroupSupressInputFocusComponent);
+    it('should correctly prevent default on pointer down', () => {
+        const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
-        UIInteractions.clickElement(inputGroup.element);
-        await wait();
+        const prefix = fixture.componentInstance.prefix;
+        const input = fixture.componentInstance.igxInput;
+        fixture.componentInstance.suppressInputAutofocus = false;
+
+        const pointOnPrefix = UIInteractions.getPointFromElement(prefix.nativeElement);
+        const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
+        const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
+
+        Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement });
+        const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+
+        // input group is not focused we should not prevent default on pointer down
+        inputGroupDebugElement.triggerEventHandler('pointerdown', pointerEvent);
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+
+        Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
+
+        // input group is not focused we should not prevent default on pointer down
+        inputGroupDebugElement.triggerEventHandler('pointerdown', pointerEvent);
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+
+        // input group is focused we should prevent default on pointer down on prefix/suffix
+        inputGroup.isFocused = true;
+        inputGroupDebugElement.triggerEventHandler('pointerdown', pointerEvent);
+        expect(preventDefaultSpy).toHaveBeenCalled();
+        expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not focus input on prefix/suffix click when group is not focused and suppressInputAutofocus=true', () => {
+        const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
-        expect(document.activeElement).not.toEqual(fixture.componentInstance.igxInput.nativeElement);
+        const inputGroup = fixture.componentInstance.igxInputGroup;
+        const prefix = fixture.componentInstance.prefix;
+        const input = fixture.componentInstance.igxInput;
+
+        const pointerEvent = UIInteractions.clickEvent;
+        Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
+        const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+
+        // input group is not focused and suppressInputAutofocus is true - click on prefix/suffix should not focus the input
+        fixture.componentInstance.suppressInputAutofocus = true;
+        inputGroup.isFocused = false;
+        fixture.detectChanges();
+        inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
+        expect(document.activeElement).not.toEqual(input.nativeElement);
+
+        // input group is not focused and suppressInputAutofocus is false - click on prefix/suffix should focus the input
+        fixture.componentInstance.suppressInputAutofocus = false;
+        inputGroup.isFocused = false;
+        fixture.detectChanges();
+        inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
+        expect(document.activeElement).toEqual(input.nativeElement);
+
+        // input group is focused and suppressInputAutofocus is true - click on prefix/suffix should focus the input
+        fixture.componentInstance.suppressInputAutofocus = true;
+        inputGroup.isFocused = true;
+        fixture.detectChanges();
+        inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
+        expect(document.activeElement).toEqual(input.nativeElement);
     });
 });
 
 @Component({
-    template: `<igx-input-group #igxInputGroup>
-                    <input igxInput />
+    template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="suppressInputAutofocus">
+                    <igx-prefix>PREFIX</igx-prefix>
+                    <igx-suffix>SUFFIX</igx-suffix>
+                    <input #igxInput igxInput />
                 </igx-input-group>`
 })
 class InputGroupComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
+    @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
+    @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
+    public suppressInputAutofocus = false;
 }
 
 @Component({
@@ -333,15 +396,4 @@ class InputGroupCompactDisplayDensityComponent {
 })
 class InputGroupInputDisplayDensityComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-}
-
-@Component({
-    template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="true">
-                    <igx-icon>phone</igx-icon>
-                    <input igxInput #igxInput/>
-                </igx-input-group>`
-})
-class InputGroupSupressInputFocusComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
 }

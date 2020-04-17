@@ -18,7 +18,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from '../common/events';
+import { IRowToggleEventArgs, IPinRowEventArgs } from '../common/events';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -136,7 +136,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     set filteredData(value) {
         this._filteredData = value;
-
     }
 
     /**
@@ -327,6 +326,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    protected recordTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('summary_template', { read: TemplateRef, static: true })
+    protected summaryTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -596,19 +607,30 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public getContext(rowData: any, rowIndex: Number): any {
+    public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
-            $implicit: rowData,
-            index: rowIndex,
-            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
+            index: this.getRowIndex(rowIndex, pinned),
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            disabled: this.isGhostRecord(rowData)
         };
+    }
+
+    /**
+     * @hidden @internal
+     * This is overwritten because tree grid records have special record format - ITreeGridRecord,
+     * which already has the rowID in the record object.
+     */
+    public isRecordPinned(rec) {
+        const id = rec.rowID;
+        return this._pinnedRecordIDs.indexOf(id) !== -1;
     }
 
     /**
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {
-        const source = [];
+        let source = [];
 
         const process = (record) => {
             if (record.summaries) {
@@ -619,6 +641,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         };
 
         this.dataView.forEach(process);
+        source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

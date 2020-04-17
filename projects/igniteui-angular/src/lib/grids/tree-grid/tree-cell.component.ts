@@ -1,9 +1,8 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
-     ChangeDetectionStrategy, NgZone, OnInit, Input, TemplateRef } from '@angular/core';
-import { IgxGridCellComponent } from '../cell.component';
+import { Component, ChangeDetectorRef, ElementRef, Inject,
+     ChangeDetectionStrategy, NgZone, Input } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
@@ -21,15 +20,15 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
 
     constructor(
-                selectionService: IgxGridSelectionService,
-                crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-                cdr: ChangeDetectorRef,
-                element: ElementRef,
-                protected zone: NgZone,
-                touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document,
-                protected platformUtil: PlatformUtil) {
+        selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        cdr: ChangeDetectorRef,
+        element: ElementRef,
+        protected zone: NgZone,
+        touchManager: HammerGesturesManager,
+        @Inject(DOCUMENT) public document,
+        protected platformUtil: PlatformUtil) {
         super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, document, platformUtil);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
@@ -45,7 +44,6 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     @Input()
     showIndicator = false;
-
 
     /**
      * @hidden

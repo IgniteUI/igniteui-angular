@@ -1417,6 +1417,10 @@
         }
     }
 
+    %grid-cell--row-pinned-first {
+        overflow: hidden;
+    }
+
     %grid-cell--pinned-chip {
         margin-#{$right}: rem(12px);
     }
