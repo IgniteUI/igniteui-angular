@@ -31,6 +31,7 @@ export class UIInteractions {
     public static simulateClickAndSelectEvent(element, shift = false, ctrl = false) {
         const nativeElement = element.nativeElement ? element.nativeElement : element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement, shift, ctrl);
+        nativeElement.dispatchEvent(new MouseEvent('focus', { bubbles: true }));
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
         nativeElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     }
@@ -53,6 +54,7 @@ export class UIInteractions {
     public static simulateNonPrimaryClick(element) {
         const nativeElement = element.nativeElement ? element.nativeElement : element;
         nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+        nativeElement.dispatchEvent(new Event('focus'));
         nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
         nativeElement.dispatchEvent(new Event('click'));
     }

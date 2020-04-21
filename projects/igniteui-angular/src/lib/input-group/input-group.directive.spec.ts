@@ -183,7 +183,7 @@ describe('IgxInputGroup', () => {
         fixture.detectChanges();
 
         const inputGroup = fixture.componentInstance.igxInputGroup;
-        UIInteractions.simulateClickEvent(inputGroup.element);
+        UIInteractions.simulateClickEvent(inputGroup.element.nativeElement);
         await wait();
         fixture.detectChanges();
 
