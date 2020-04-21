@@ -153,9 +153,11 @@ export class IgxGridNavigationService {
                 this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
                 return;
             }
-            if (shift && alt && (key.includes('right') || key.includes('left')) && column.groupable) {
-                direction =  key.includes('left') ? SortingDirection.None : direction ? SortingDirection.Desc : SortingDirection.Asc;
-                (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false });
+            if (shift && alt && (key.includes('right') || key.includes('left')) &&
+                !this.currentActiveColumn.columnGroup && column.groupable) {
+                direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
+                key.includes('right') ? (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false }) :
+                    (this.grid as any).clearGrouping(column.field);
                 return;
             }
             if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
@@ -176,6 +178,7 @@ export class IgxGridNavigationService {
                 this.grid.filteringService.isFilterRowVisible = true;
             }
         }
+        if (shift) { return; }
         if (this.grid.hasColumnGroups) {
             this.handleMCHeaderNav(key, ctrl, alt);
             return;
