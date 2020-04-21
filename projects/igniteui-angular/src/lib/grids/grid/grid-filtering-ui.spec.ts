@@ -1116,7 +1116,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should close FilterRow when Escape is pressed.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
@@ -1375,11 +1374,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
+
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
@@ -1650,7 +1649,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should open filterRow for respective column when pressing \'Enter\' on its filterCell chip.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
             // Verify filterRow is not opened.
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
@@ -1668,19 +1666,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
         }));
 
-        it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
-            const filterCellChip = GridFunctions.getFilterChipsForColumn('AnotherField', fix)[0];
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', filterCellChip.nativeElement, true);
-            tick(200);
-            fix.detectChanges();
-
-            const firstRow = GridFunctions.getGridDataRows(fix)[0];
-            const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
-            expect(document.activeElement).toBe(firstCell);
-        }));
-
-        it('Should remove first condition chip when click \'clear\' button and focus \'more\' icon.', fakeAsync(() => {
+         it('Should remove first condition chip when click \'clear\' button and focus \'more\' icon.', fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '160px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
