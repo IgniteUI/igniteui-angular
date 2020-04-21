@@ -150,7 +150,7 @@ export class IgxDateEndComponent extends IgxDateRangeBaseComponent { }
 /** @hidden @internal */
 @Component({
     selector: 'igx-date-single',
-    templateUrl: 'igx-date-range-inputs.common.html',
+    templateUrl: '../input-group/input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateSingleComponent }]
 })
 export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {

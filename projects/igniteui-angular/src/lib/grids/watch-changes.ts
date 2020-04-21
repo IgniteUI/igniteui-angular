@@ -1,8 +1,8 @@
 import { SimpleChanges, SimpleChange } from '@angular/core';
 
 /**
-* @hidden
-*/
+ * @hidden
+ */
 export function WatchChanges(): PropertyDecorator {
     return (target: any, key: string, propDesc?: PropertyDescriptor) => {
         const privateKey = '_' + key.toString();

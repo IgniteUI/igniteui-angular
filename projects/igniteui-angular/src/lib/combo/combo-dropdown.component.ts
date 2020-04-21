@@ -207,7 +207,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     *@hidden @internal
+     * @hidden @internal
      */
     public ngOnDestroy(): void {
         this.virtDir.getScroll().removeEventListener('scroll', this.scrollHandler);

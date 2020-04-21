@@ -32,6 +32,8 @@ export enum IgxTabsType {
     CONTENTFIT = 'contentfit'
 }
 
+let NEXT_TABS_ID = 0;
+
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
@@ -39,36 +41,38 @@ export enum IgxTabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
+    private _currentTabsId = NEXT_TABS_ID++;
+
     /**
-    * Provides an observable collection of all `IgxTabsGroupComponent`s.
-    * ```typescript
-    * const groupItems = this.myTabComponent.groups;
-    * ```
-    */
+     * Provides an observable collection of all `IgxTabsGroupComponent`s.
+     * ```typescript
+     * const groupItems = this.myTabComponent.groups;
+     * ```
+     */
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
     public groups: QueryList<IgxTabsGroupComponent>;
 
     /**
-    * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
-    * ```typescript
-    * const tabItems = this.myTabComponent.contentTabs;
-    * ```
-    */
+     * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
+     * ```typescript
+     * const tabItems = this.myTabComponent.contentTabs;
+     * ```
+     */
     @ContentChildren(forwardRef(() => IgxTabItemComponent))
     public contentTabs: QueryList<IgxTabItemComponent>;
 
     /**
-    * An @Input property that sets the value of the `selectedIndex`.
-    * Default value is 0.
-    * ```html
-    * <igx-tabs selectedIndex="1">
-    * ```
-    *
-    * Two-way data binding.
-    * ```html
-    * <igx-tabs [(selectedIndex)]="model.selectedIndex">
-    * ```
-    */
+     * An @Input property that sets the value of the `selectedIndex`.
+     * Default value is 0.
+     * ```html
+     * <igx-tabs selectedIndex="1">
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-tabs [(selectedIndex)]="model.selectedIndex">
+     * ```
+     */
     @Input()
     public get selectedIndex(): number {
         return this._selectedIndex;
@@ -89,7 +93,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     @Output()
     public selectedIndexChange = new EventEmitter<number>();
@@ -107,8 +111,24 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public type: string | IgxTabsType = 'contentfit';
 
     /**
-    * @hidden
-    */
+     * Sets/gets the `id` of the tabs.
+     *
+     * @remarks
+     * If not set, the `id` will have value `"igx-tabs-0"`.
+     *
+     * @example
+     * ```html
+     * <igx-tabs id="my-first-tabs"></igx-tabs>
+     * ```
+     * @memberof IgxTabsComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-tabs-${this._currentTabsId}`;
+
+    /**
+     * @hidden
+     */
     @Input()
     public class = '';
 
@@ -131,20 +151,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public onTabItemDeselected = new EventEmitter();
 
     /**
-    * Emitted when a tab item is selected.
-    * ```html
-    * <igx-tabs (onTabItemSelected)="itemSelected($event)">
-    *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-    *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
-    * </igx-tabs>
-    * ```
-    * ```typescript
-    * itemSelected(e){
-    *      const tabGroup = e.group;
-    *      const tabItem = e.tab;
-    * }
-    * ```
-    */
+     * Emitted when a tab item is selected.
+     * ```html
+     * <igx-tabs (onTabItemSelected)="itemSelected($event)">
+     *      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+     *      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+     * </igx-tabs>
+     * ```
+     * ```typescript
+     * itemSelected(e){
+     *      const tabGroup = e.group;
+     *      const tabItem = e.tab;
+     * }
+     * ```
+     */
     @Output()
     public onTabItemSelected = new EventEmitter();
 
@@ -173,8 +193,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public selectedIndicator: ElementRef;
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @ViewChild('tabsContainer', { static: true })
     public tabsContainer: ElementRef;
 
@@ -208,7 +228,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     public get hasContentTabs(): boolean {
         return (this.contentTabs && this.contentTabs.length > 0);
@@ -299,8 +319,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) {
-    }
+    constructor(private _element: ElementRef, private _ngZone: NgZone, private platformUtil: PlatformUtil) { }
 
     /**
      * @hidden
@@ -339,7 +358,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             });
         }
 
+        this.setGroupsAttributes();
         this._groupChanges$ = this.groups.changes.subscribe(() => {
+            this.setGroupsAttributes();
             this.resetSelectionOnCollectionChanged();
         });
     }
@@ -355,6 +376,15 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this._ngZone.runOutsideAngular(() => {
                 this._resizeObserver.disconnect();
             });
+        }
+    }
+
+    private setGroupsAttributes() {
+        const groupsArray = Array.from(this.groups);
+        for (let index = 0; index < this.groups.length; index++) {
+            const tabsGroup = groupsArray[index] as IgxTabsGroupComponent;
+            tabsGroup.nativeElement.setAttribute('id', this.getTabsGroupId(index));
+            tabsGroup.nativeElement.setAttribute('aria-labelledby', this.getTabItemId(index));
         }
     }
 
@@ -458,6 +488,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (delta > 1) {
             this.scrollElement(tabNativeElement, true);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabItemId(index: number): string {
+        return `igx-tab-item-${this._currentTabsId}-${index}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public getTabsGroupId(index: number): string {
+        return `igx-tabs-group-${this._currentTabsId}-${index}`;
     }
 
     /**

@@ -205,7 +205,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
-    */
+     */
     @Output()
     public onContentSizeChange = new EventEmitter<any>();
 
@@ -390,7 +390,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
-            if (this.scrollComponent) {
+            if (this.scrollComponent && !this.scrollComponent.destroyed) {
                 this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
                     this.igxForOf.length - this.state.chunkSize);
             }
@@ -879,15 +879,24 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected moveApplyScrollNext(prevIndex: number): void {
         const start = prevIndex + this.state.chunkSize;
         for (let i = start; i < start + this.state.startIndex - prevIndex && this.igxForOf[i] !== undefined; i++) {
-            const input = this.igxForOf[i];
-            const embView = this._embeddedViews.shift();
-            const cntx = embView.context;
-            cntx.$implicit = input;
-            cntx.index = this.getContextIndex(input);
-            cntx.count = this.igxForOf.length;
-            const view: ViewRef = this.dc.instance._vcr.detach(0);
-            this.dc.instance._vcr.insert(view);
-            this._embeddedViews.push(embView);
+            this._moveApply(i);
+        }
+    }
+
+    /**
+     *
+     */
+    protected _moveApply(contextIndex: number, topPosition = false) {
+        const context = this.igxForOf[contextIndex];
+        const forOfContext = new IgxForOfContext<T>(context, this.getContextIndex(context), this.igxForOf.length);
+        const view = this.dc.instance._vcr.createEmbeddedView(this._template, forOfContext, topPosition ? 0 : undefined);
+        this.dc.instance._vcr.detach(topPosition ? this.dc.instance._vcr.length - 1 : 0);
+        if (topPosition) {
+            this._embeddedViews.pop();
+            this._embeddedViews.unshift(view);
+        } else {
+            this._embeddedViews.shift();
+            this._embeddedViews.push(view);
         }
     }
 
@@ -897,20 +906,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected moveApplyScrollPrev(prevIndex: number): void {
         for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
-            const input = this.igxForOf[i];
-            const embView = this._embeddedViews.pop();
-            const cntx = embView.context;
-            cntx.$implicit = input;
-            cntx.index = this.getContextIndex(input);
-            const view: ViewRef = this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
-            this.dc.instance._vcr.insert(view, 0);
-            this._embeddedViews.unshift(embView);
+            this._moveApply(i, true);
         }
     }
 
     /**
      * @hidden
-    */
+     */
     protected getContextIndex(input) {
         return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input) : this.igxForOf.indexOf(input);
     }

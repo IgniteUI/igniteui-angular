@@ -375,6 +375,29 @@ describe('IgxGrid - Column properties #grid', () => {
         const row = grid.getRowByIndex(0);
         row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
     });
+
+    it('should set title attribute on column header spans', () => {
+        const fix = TestBed.createComponent(ColumnsFromIterableComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const idColumn = grid.getColumnByName('ID');
+        const nameColumn = grid.getColumnByName('Name');
+
+        idColumn.header = 'ID Header';
+        idColumn.elementRef.nativeElement.title = 'ID Title';
+        nameColumn.header = 'Name Header';
+        fix.detectChanges();
+
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const idHeader = headers[0].nativeElement;
+        const nameHeader = headers[1].nativeElement;
+        expect(idHeader.textContent).toBe('ID Header');
+        expect(idHeader.firstElementChild.firstElementChild.title).toBe('ID Title');
+        expect(nameHeader.textContent).toBe('Name Header');
+        expect(nameHeader.firstElementChild.firstElementChild.title).toBe('Name Header');
+    });
+
 });
 
 @Component({

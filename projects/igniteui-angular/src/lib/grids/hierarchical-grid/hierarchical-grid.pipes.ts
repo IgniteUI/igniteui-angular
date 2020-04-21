@@ -5,7 +5,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { DataUtil } from '../../data-operations/data-util';
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridHierarchical',
@@ -51,7 +51,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 }
 
 /**
- *@hidden
+ * @hidden
  */
 @Pipe({
     name: 'gridHierarchicalPaging',

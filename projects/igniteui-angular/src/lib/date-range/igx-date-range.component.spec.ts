@@ -29,8 +29,8 @@ describe('IgxDateRange', () => {
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
 
-    let singleInputRange: DateRangeSingleInputTestComponent;
-    let twoInputsRange: DateRangeTwoInputsTestComponent;
+    // let singleInputRange: DateRangeSingleInputTestComponent;
+    // let twoInputsRange: DateRangeTwoInputsTestComponent;
     let fixture: ComponentFixture<DateRangeTestComponent>;
 
     beforeEach(async(() => {

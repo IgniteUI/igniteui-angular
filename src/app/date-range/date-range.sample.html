@@ -1,6 +1,6 @@
 <div style="padding: 30px;">
     <div style="max-width: 300px;">
-        <igx-date-range [mode]="'dialog'"></igx-date-range>
+        <igx-date-range [mode]="'dropdown'"></igx-date-range>
     </div>
 
     <div style="max-width: 300px;">
@@ -9,7 +9,7 @@
 
     <div style="max-width: 300px;">
         <igx-date-range #dateRange [mode]="'dropdown'" [displayFormat]="'shortDate'" [(ngModel)]="range">
-            <igx-prefix igxReplace></igx-prefix>
+            <igx-prefix *igxDateRangePrefix></igx-prefix>
             <igx-suffix (click)="dateRange.open()">
                 <igx-icon>
                     calendar_view_day
@@ -49,29 +49,13 @@
         </igx-date-range>
 
     </div>
-
     <div style="display: flex; flex-flow: column;">
         <div>Valid: {{ formControl.valid }}</div>
         <div>Dirty: {{ formControl.dirty }}</div>
         <div>Touched: {{ formControl.touched }}</div>
         <div>Value: {{ formControl.value | json }}</div>
     </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- <div class="content-wrap">
     <form class="book-room-form" [formGroup]="twoInputForm" (ngSubmit)="submitTwoInputForm()">

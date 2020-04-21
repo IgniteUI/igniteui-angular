@@ -32,7 +32,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
 
     /**
      * @hidden
-    */
+     */
     @Input()
     expanded = false;
 
@@ -42,13 +42,13 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     @ViewChild('indentationDiv', { read: ElementRef })
     public indentationDiv: ElementRef;
 
-    /**
+   /**
     * @hidden
     */
    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
    protected defaultExpandedTemplate: TemplateRef<any>;
 
-    /**
+   /**
     * @hidden
     */
    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
@@ -90,12 +90,20 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
 
     /**
      * @hidden
-    */
+     */
     public get iconTemplate() {
         if (this.expanded) {
             return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
             return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public get showExpanderIndicator() {
+        const isGhost = this.row.pinned && this.row.disabled;
+        return !this.editMode && (!this.row.pinned || isGhost);
     }
 }

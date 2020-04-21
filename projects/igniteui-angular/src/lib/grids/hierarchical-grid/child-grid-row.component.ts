@@ -26,11 +26,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 private resolver;
 
     /**
- * Returns whether the row is expanded.
- * ```typescript
- * const RowExpanded = this.grid1.rowList.first.expanded;
- * ```
- */
+     * Returns whether the row is expanded.
+     * ```typescript
+     * const RowExpanded = this.grid1.rowList.first.expanded;
+     * ```
+     */
     public expanded = false;
 
     @Input()
@@ -45,8 +45,8 @@ private resolver;
 
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     @Input()
     public parentGridID: string;
 
@@ -73,13 +73,7 @@ private resolver;
     public index: number;
 
     @ViewChild('hgrid', { static: true })
-    private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
      * @hidden

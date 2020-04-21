@@ -534,10 +534,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
 
-    it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {
-        expect(grid.filteringService.areAllColumnsInView).toBeTruthy();
-    }));
-
     it('should correctly show and hide the "No records found." message.', fakeAsync(() => {
         grid.filter('ProductName', 'asdf', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();

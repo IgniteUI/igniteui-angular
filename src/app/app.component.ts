@@ -354,8 +354,13 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/slider',
-            icon: 'linear_scale',
+            icon: 'tab',
             name: 'Slider'
+        },
+        {
+            link: '/splitter',
+            icon: 'linear_scale',
+            name: 'Splitter'
         },
         {
             link: '/snackbar',

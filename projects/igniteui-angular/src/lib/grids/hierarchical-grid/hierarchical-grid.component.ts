@@ -112,10 +112,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     *@hidden
-     *@deprecated
+     * @hidden
+     * @deprecated
      * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
-    */
+     */
     @Input()
     @DeprecateProperty(`'hierarchicalState' property is deprecated. Use 'expansionStates' instead.`)
     public get hierarchicalState() {
@@ -141,8 +141,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     *@hidden
-     *@deprecated
+     * @hidden
+     * @deprecated
      */
     @Output()
     @DeprecateProperty(`'hierarchicalStateChange' @Output property is deprecated. Use 'expansionStates' instead.`)
@@ -401,8 +401,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public onRowIslandChange() {
         if (this.parent) {
             this.childLayoutKeys = this.parentIsland.children.filter(item => !(item as any)._destroyed).map((item) => item.key);
@@ -467,8 +467,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
@@ -494,6 +494,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public isHierarchicalRecord(record: any): boolean {
+        if (this.isGhostRecord(record)) {
+            record = record.recordRef;
+        }
         return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
@@ -519,7 +522,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public getContext(rowData): any {
+    public getContext(rowData, rowIndex, pinned): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this.childGridTemplates.get(rowData.rowID);
             if (cachedData) {
@@ -542,16 +545,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
-                index: this.dataView.indexOf(rowData)
+                index: this.getRowIndex(rowIndex, pinned),
+                disabled: this.isGhostRecord(rowData)
             };
         }
     }
 
     /**
      * @hidden
-    */
+     */
     public get rootGrid() {
         let currGrid = this;
         while (currGrid.parent) {
@@ -562,7 +566,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * @hidden
-    */
+     */
     public get iconTemplate() {
         const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
         if (!expanded && this.showExpandAll) {
@@ -585,7 +589,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * @hidden
-    */
+     */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
@@ -613,7 +617,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * @hidden
-    */
+     */
    toggleAll() {
     const expanded = this.hasExpandedRecords() && this.hasExpandableChildren;
     if (!expanded && this.showExpandAll) {
@@ -647,8 +651,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-    * @hidden
-    */
+     * @hidden
+     */
     public isExpanded(record: any): boolean {
         return this.gridAPI.get_row_expansion_state(record);
     }

@@ -16,7 +16,7 @@ const ARROW = 'Arrow';
 /**
  * @hidden
  * This service should be decoupled from the days View Component and it should become global for the whole calendar navigation.
- * */
+ */
 @Injectable()
 export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;

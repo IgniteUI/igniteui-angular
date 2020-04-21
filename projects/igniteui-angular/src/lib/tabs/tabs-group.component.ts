@@ -1,13 +1,11 @@
 import {
     AfterContentInit,
-    AfterViewChecked,
     Component,
     ContentChild,
     ElementRef,
     HostBinding,
     Input,
     TemplateRef,
-    HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
@@ -19,33 +17,32 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
-
+export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit {
     /**
-    * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
-    *```html
-    *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
-    *```
-    */
+     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
+     * ```html
+     * <igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
+     * ```
+     */
     @Input()
     public disabled = false;
 
     /**
-    * An @Input property that sets the value of the `icon`.
-    * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
-    *```html
-    *<igx-tabs-group label="Tab 1" icon="home">
-    *```
-    */
+     * An @Input property that sets the value of the `icon`.
+     * The value should be valid icon name from {@link https://material.io/tools/icons/?style=baseline}.
+     * ```html
+     * <igx-tabs-group label="Tab 1" icon="home">
+     * ```
+     */
     @Input()
     public icon: string;
 
     /**
-    * An @Input property that sets the value of the `label`.
-    *```html
-    *<igx-tabs-group label="Tab 1" icon="folder">
-    *```
-    */
+     * An @Input property that sets the value of the `label`.
+     * ```html
+     * <igx-tabs-group label="Tab 1" icon="folder">
+     * ```
+     */
     @Input()
     public label: string;
 
@@ -69,6 +66,16 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
+     * Returns the native element of the tabs-group component
+     * ```typescript
+     *  const mytabsGroupElement: HTMLElement = tabsGroup.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this._element.nativeElement;
+    }
+
+    /**
      * @hidden
      */
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
@@ -86,6 +93,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      */
     @HostBinding('attr.role')
     public role = 'tabpanel';
+
 
     /**
      * @hidden
@@ -134,7 +142,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
-     *@hidden
+     * @hidden
      */
     set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
@@ -150,23 +158,15 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     }
 
     /**
-     * @hidden
-     */
-    public ngAfterViewChecked() {
-        this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
-        this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
-    }
-
-    /**
      * A method that sets the focus on a tab.
      * @memberof {@link IgxTabsGroupComponent}
-     *```typescript
-     *@ViewChild("MyChild")
-     *public tab : IgxTabsGroupComponent;
-     *ngAfterViewInit(){
-     *    this.tab.select();
-     *}
-     *```
+     * ```typescript
+     *  @ViewChild("MyChild")
+     * public tab : IgxTabsGroupComponent;
+     * ngAfterViewInit(){
+     *     this.tab.select();
+     * }
+     * ```
      */
     public select(): void {
         if (!this.disabled && !this.isSelected) {
@@ -180,5 +180,4 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     public setSelectedInternal(newValue: boolean) {
         this._isSelected = newValue;
     }
-
 }

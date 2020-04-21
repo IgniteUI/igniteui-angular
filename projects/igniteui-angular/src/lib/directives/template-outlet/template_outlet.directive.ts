@@ -14,9 +14,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
     private _viewRef !: EmbeddedViewRef<any>;
 
     /**
-    * The embedded views cache. Collection is key-value paired.
-    * Key is the template id, value is the embedded view for the related template.
-    */
+     * The embedded views cache. Collection is key-value paired.
+     * Key is the template id, value is the embedded view for the related template.
+     */
     private _embeddedViewsMap: Map<string, EmbeddedViewRef<any>> = new Map();
 
     @Input() public igxTemplateOutletContext !: Object;

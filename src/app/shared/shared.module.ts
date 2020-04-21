@@ -32,12 +32,14 @@ import {
     IgxSliderModule,
     IgxSnackbarModule,
     IgxSwitchModule,
+    IgxSplitterModule,
     IgxTabsModule,
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
     IgxTooltipModule,
-    IgxSelectModule
+    IgxSelectModule,
+    IgxDateRangeModule
 } from 'igniteui-angular';
 
 
@@ -74,12 +76,14 @@ const igniteModules = [
     IgxSliderModule,
     IgxSnackbarModule,
     IgxSwitchModule,
+    IgxSplitterModule,
     IgxTabsModule,
     IgxTimePickerModule,
     IgxToastModule,
     IgxToggleModule,
     IgxTooltipModule,
-    IgxSelectModule
+    IgxSelectModule,
+    IgxDateRangeModule
 ];
 
 @NgModule({
