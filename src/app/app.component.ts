@@ -438,6 +438,11 @@ export class AppComponent implements OnInit {
             name: 'Mask Directive'
         },
         {
+            link: '/date-time-editor',
+            icon: 'view_column',
+            name: 'DateTime Editor'
+        },
+        {
             link: '/ripple',
             icon: 'wifi_tethering',
             name: 'Ripple'

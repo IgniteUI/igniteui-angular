@@ -159,4 +159,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public exportToCSV() {
         this.csvExporterService.export(this.grid1, new IgxCsvExporterOptions('TreeGrid', CsvFileTypes.CSV));
     }
+
+    public pinRow() {
+        this.grid1.pinRow(4);
+    }
 }
