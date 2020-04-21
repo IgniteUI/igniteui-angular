@@ -606,9 +606,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 const pinnedSummaryCells = GridSummaryFunctions.getRootPinnedSummaryCells(fix);
                 expect(pinnedSummaryCells[0].classes[`${PINNED_SUMMARY}-first`])
-                    .toBeDefined();
+                    .toBeTruthy();
                 expect(pinnedSummaryCells[1].classes[`${PINNED_SUMMARY}-first`])
-                    .toBeUndefined();
+                    .toBeFalsy();
             });
 
             it('should allow navigating to/from pinned area', (async () => {
