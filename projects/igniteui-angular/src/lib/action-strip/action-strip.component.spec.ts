@@ -1,5 +1,5 @@
 import { IgxActionStripComponent, IgxActionStripModule } from './action-strip.component';
-import { DebugElement, Component, ViewChild, ViewRef, ElementRef, ViewContainerRef, forwardRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
 import { IgxIconModule } from '../icon';
@@ -7,9 +7,8 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownComponent } from '../drop-down';
 
-const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__container';
+const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
 
 describe('igxActionStip', () => {
@@ -125,7 +124,7 @@ describe('igxActionStip', () => {
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
-            icon.triggerEventHandler('click', UIInteractions.clickEvent);
+            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
             fixture.detectChanges();
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
@@ -147,7 +146,7 @@ describe('igxActionStip', () => {
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
-            icon.triggerEventHandler('click', UIInteractions.clickEvent);
+            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
             fixture.detectChanges();
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
