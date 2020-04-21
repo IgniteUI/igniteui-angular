@@ -336,7 +336,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef, private element: ElementRef) {}
 
     /**
      * @hidden @internal
@@ -479,7 +479,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
         if (this.overlayComponentId) {
-            this.mainDropdown.nativeElement.style.display = 'none';
+            this.element.nativeElement.style.display = 'none';
         }
         this.subMenu.close();
         this.customDialog.open(this.mainDropdown.nativeElement);
