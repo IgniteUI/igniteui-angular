@@ -518,7 +518,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnName, false);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(4);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
         });
 
         it('Group by: Should be able group columns with keyboard', () => {
@@ -578,7 +578,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             expect(grid.groupingExpressions.length).toEqual(1);
             expect(grid.groupingExpressions[0].fieldName).toEqual('ID');
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalled();
+            expect(grid.onGroupingDone.emit).toHaveBeenCalled();
         });
 
         it('Group by: Should be able group columns with keyboard when hideGroupedColumns is true', fakeAsync(() => {
@@ -827,7 +827,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('CompanyName', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
         });
     });
 
@@ -861,7 +861,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             // Verify first header is focused
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
             fix.detectChanges();
@@ -873,11 +873,11 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('Address Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader);
             fix.detectChanges();
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
             fix.detectChanges();
@@ -889,13 +889,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
         });
 
         it('should navigate through groups with right and left arrow keys in child level', () => {
@@ -928,7 +928,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('City Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader);
             fix.detectChanges();
@@ -967,13 +967,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('Address Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, false, false, true);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             header = GridFunctions.getColumnHeader('City', fix);
             UIInteractions.simulateClickAndSelectCellEvent(header);
@@ -1007,31 +1007,31 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('City Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('Country Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('Address Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('Country Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader);
             fix.detectChanges();
 
             header = GridFunctions.getColumnGroupHeaderCell('City Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader);
             fix.detectChanges();
@@ -1050,7 +1050,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(header);
             fix.detectChanges();
 
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader);
             fix.detectChanges();
 
@@ -1063,14 +1063,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             let header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             // Verify children are not focused
             header = GridFunctions.getColumnGroupHeaderCell('Person Details', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent, false);
+            GridFunctions.verifyHeaderIsFocused(header, false);
 
             header = GridFunctions.getColumnGroupHeaderCell('Person Details', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent, false);
+            GridFunctions.verifyHeaderIsFocused(header, false);
 
             header = GridFunctions.getColumnHeader('CompanyName', fix);
             GridFunctions.verifyHeaderIsFocused(header.parent, false);
@@ -1092,12 +1092,12 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, true);
             fix.detectChanges();
 
-            GridFunctions.verifyColumnIsHidden(companyName, true, 11);
+            GridFunctions.verifyColumnIsHidden(companyName, true, 12);
             GridFunctions.verifyGroupIsExpanded(fix, getInfGroup, true, false);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, true);
@@ -1134,7 +1134,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             UIInteractions.triggerEventHandlerKeyDown('Space', gridHeader);
             fix.detectChanges();
@@ -1159,7 +1159,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             UIInteractions.simulateClickAndSelectCellEvent(header);
             fix.detectChanges();
 
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            GridFunctions.verifyHeaderIsFocused(header);
 
             // Press Ctrl+ Arrow Up and down on group to sort it
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);

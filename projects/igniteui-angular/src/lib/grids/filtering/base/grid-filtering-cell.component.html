@@ -1,21 +1,19 @@
 <ng-template #emptyFilter>
-        <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
-            <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" (keydown.enter)="onChipKeyDown($event)" [displayDensity]="'cosy'">
-                <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
-                <span [attr.draggable]="false">{{filteringService.grid.resourceStrings.igx_grid_filter}}</span>
-            </igx-chip>
-        </igx-chips-area>
+    <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
+        <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" [displayDensity]="'cosy'">
+            <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
+            <span [attr.draggable]="false">{{filteringService.grid.resourceStrings.igx_grid_filter}}</span>
+        </igx-chip>
+    </igx-chips-area>
 </ng-template>
 
 <ng-template #defaultFilter>
     <igx-chips-area #chipsArea class="igx-filtering-chips">
         <ng-container *ngFor="let item of expressionsList; let last = last; let index = index;" >
-            <igx-chip
-                *ngIf="isChipVisible(index)"
+            <igx-chip *ngIf="isChipVisible(index)"
                 [removable]="true"
                 [displayDensity]="'cosy'"
                 (click)="onChipClicked(item.expression)"
-                (keydown.enter)="onChipKeyDown($event, item.expression)"
                 (onRemove)="onChipRemoved($event, item)">
                 <igx-icon igxPrefix
                     fontSet="filtering-icons"
@@ -27,7 +25,7 @@
             </igx-chip>
             <span class="igx-filtering-chips__connector" *ngIf="!last && isChipVisible(index + 1)">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
         </ng-container>
-        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" (keydown.enter)="onChipKeyDown($event)" tabindex="0">
+        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()">
             <igx-icon>filter_list</igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>
