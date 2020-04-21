@@ -59,7 +59,7 @@ export class ControlsFunction {
   }
 
   public static getCheckboxInput(name: string, element: DebugElement, fix) {
-      const checkboxEl = this.getCheckboxElement(name, element, fix);
+      const checkboxEl = ControlsFunction.getCheckboxElement(name, element, fix);
       const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
 
       return chkInput;
@@ -76,7 +76,7 @@ export class ControlsFunction {
   }
 
   public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
-      const chkInput = this.getCheckboxInput(name, element, fix);
+      const chkInput = ControlsFunction.getCheckboxInput(name, element, fix);
       expect(chkInput.type).toBe('checkbox');
       expect(chkInput.disabled).toBe(isDisabled);
       expect(chkInput.checked).toBe(isChecked);

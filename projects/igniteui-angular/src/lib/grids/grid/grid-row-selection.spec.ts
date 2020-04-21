@@ -351,7 +351,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Press Space key on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -369,7 +369,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click Space on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -378,7 +378,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
             // Click again Space on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 

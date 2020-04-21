@@ -2657,7 +2657,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             const cell = grid.getCellByColumn(2, 'ID');
 
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
 
             expect(grid.getRowByIndex(2).selected).toBeTruthy();

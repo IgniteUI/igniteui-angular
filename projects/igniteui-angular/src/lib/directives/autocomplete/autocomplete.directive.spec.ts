@@ -616,7 +616,7 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             tick();
             fixture.detectChanges();
-            expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(1);
+            expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(3);
             expect(autocomplete.onInput).toHaveBeenCalledTimes(2);
             expect(autocomplete.close).toHaveBeenCalledTimes(1);
             expect(autocomplete.target.close).toHaveBeenCalledTimes(2);
@@ -625,7 +625,7 @@ describe('IgxAutocomplete', () => {
             spyOn(IgxDropDownItemNavigationDirective.prototype, 'handleKeyDown').and.callThrough();
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
-            expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(2);
+            expect(autocomplete.handleKeyDown).toHaveBeenCalledTimes(4);
             expect(IgxDropDownItemNavigationDirective.prototype.handleKeyDown).toHaveBeenCalledTimes(0);
 
             startsWith = 'w';
