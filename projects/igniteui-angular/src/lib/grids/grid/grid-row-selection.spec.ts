@@ -344,16 +344,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             let cell = grid.getCellByColumn(0, 'ProductName');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
-            GridSelectionFunctions.verifyRowSelected(firstRow, false);
-
-            // Press Space key on the cell
-            GridFunctions.simulateGridContentKeydown(fix, 'space');
-            fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -361,8 +356,9 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
 
             cell = grid.getCellByColumn(1, 'ProductName');
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -370,8 +366,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             // Click Space on the cell
             GridFunctions.simulateGridContentKeydown(fix, 'space');
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -784,12 +780,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             GridSelectionFunctions.verifyCellSelected(cell);
-            GridSelectionFunctions.verifyRowSelected(firstRow, false);
-
-            // Press Space key on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-            fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.selectedRows()).toEqual([1]);

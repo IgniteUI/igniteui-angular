@@ -1335,7 +1335,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             tick(16);
             // Cell will always be first
             const editTemplate = fix.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, '01/01/1901');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, '01/01/1901');
             tick(16);
             fix.detectChanges();
 
@@ -1824,7 +1824,7 @@ fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
             const editTemplate = fix.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Value');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Value');
             fix.detectChanges();
 
             // Click on cell in different row

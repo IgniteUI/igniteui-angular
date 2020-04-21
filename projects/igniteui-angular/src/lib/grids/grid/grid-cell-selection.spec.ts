@@ -2668,10 +2668,11 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
 
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
             GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).selected).toBeTruthy();
+            expect(grid.getRowByIndex(2).selected).toBeFalsy();
             GridSelectionFunctions.verifySelectedRange(grid, 2, 4, 0, 3, 1, 2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);

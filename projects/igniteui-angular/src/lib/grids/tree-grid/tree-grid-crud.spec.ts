@@ -806,7 +806,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, 146);
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 146);
                 fix.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
@@ -829,7 +829,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, 'Abc Def');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 'Abc Def');
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
@@ -854,7 +854,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, '146');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, '146');
 
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
@@ -950,7 +950,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, 146);
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 146);
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
@@ -971,7 +971,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, 'Abc Def');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 'Abc Def');
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
@@ -996,7 +996,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInputElementValue(editTemplate, '146');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, '146');
                 UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
                 fix.detectChanges();
 
