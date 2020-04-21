@@ -9,6 +9,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 @Component({
     selector: 'igx-paginator',
@@ -46,14 +47,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this.displayDensity === DisplayDensity.comfortable;
     }
 
-  /**
-   * An @Input property, sets current page of the `IgxPaginatorComponent`.
-   * The default is 0.
-   * ```typescript
-   * let page = this.paginator.page;
-   * ```
-   * @memberof IgxPaginatorComponent
-   */
+    /**
+     * An @Input property, sets current page of the `IgxPaginatorComponent`.
+     * The default is 0.
+     * ```typescript
+     * let page = this.paginator.page;
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public get page() {
         return this._page;
@@ -64,14 +65,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.pageChange.emit(this._page);
     }
 
-  /**
-   * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
-   * The default is 15.
-   * ```typescript
-   * let itemsPerPage = this.paginator.perPage;
-   * ```
-   * @memberof IgxPaginatorComponent
-   */
+    /**
+     * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
+     * The default is 15.
+     * ```typescript
+     * let itemsPerPage = this.paginator.perPage;
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public get perPage() {
         return this._perPage;
@@ -87,13 +88,13 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         }
     }
 
-   /**
-    * An @Input property that sets the total records.
-    * ```typescript
-    * let totalRecords = this.paginator.totalRecords;
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets the total records.
+     * ```typescript
+     * let totalRecords = this.paginator.totalRecords;
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public get totalRecords() {
         return this._totalRecords;
@@ -104,13 +105,13 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.totalPages = Math.ceil(this.totalRecords / this.perPage);
     }
 
-   /**
-    * An @Input property that sets custom options in the select of the paginator
-    * ```typescript
-    * let options = this.paginator.selectOptions;
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets custom options in the select of the paginator
+     * ```typescript
+     * let options = this.paginator.selectOptions;
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public get selectOptions() {
         return this._selectOptions;
@@ -121,43 +122,43 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this.defaultSelectValues = [...value];
     }
 
-   /**
-    * An @Input property that sets if the pager in the paginator should be enabled.
-    * ```html
-    * <igx-paginator [pagerEnabled]="true"></igx-paginator>
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets if the pager in the paginator should be enabled.
+     * ```html
+     * <igx-paginator [pagerEnabled]="true"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public pagerEnabled = true;
 
-   /**
-    * An @Input property that sets if the pager in the paginator should be hidden.
-    * ```html
-    * <igx-paginator [pagerHidden]="true"></igx-paginator>
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets if the pager in the paginator should be hidden.
+     * ```html
+     * <igx-paginator [pagerHidden]="true"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public pagerHidden = false;
 
-   /**
-    * An @Input property that sets if the dropdown in the paginator should be enabled.
-    * ```html
-    * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets if the dropdown in the paginator should be enabled.
+     * ```html
+     * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public dropdownEnabled = true;
 
-   /**
-    * An @Input property that sets if the dropdown in the paginator should be hidden.
-    * ```html
-    * <igx-paginator [dropdownHidden]="true"></igx-paginator>
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An @Input property that sets if the dropdown in the paginator should be hidden.
+     * ```html
+     * <igx-paginator [dropdownHidden]="true"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
     @Input()
     public dropdownHidden = false;
 
@@ -176,6 +177,29 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     get resourceStrings(): IPaginatorResourceStrings {
         return this._resourceStrings;
     }
+
+    /**
+     * @deprecated Use 'resourceStrings' instead.
+     * An @Input property, sets number of label of the select.
+     * The default is 'Items per page' localized string.
+     * ```html
+     * <igx-paginator label="My custom label"></igx-paginator>
+     * ```
+     * @memberof IgxPaginatorComponent
+     */
+    @DeprecateProperty(`'selectLabel' property is deprecated. Use 'resourceStrings' instead.`)
+    @Input()
+    public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
+
+    /**
+     * @deprecated Use 'resourceStrings' instead.
+     * An @Input property, sets a preposition between the current page and total pages.
+     * The default is 'of' localized string.
+     * @memberof IgxPaginatorComponent
+     */
+    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
+    @Input()
+    public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
 
     /**
      * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
