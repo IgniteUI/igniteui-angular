@@ -312,7 +312,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getFilterRow(fixture)).toBeDefined();
 
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
-            UIInteractions.clickElement(firstHeaderCell);
+            UIInteractions.simulateClickAndSelectEvent(firstHeaderCell);
 
             expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
 
@@ -327,7 +327,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
 
             const secondHeaderCell = GridFunctions.getColumnHeader('Name', fixture);
-            UIInteractions.clickElement(secondHeaderCell);
+            UIInteractions.simulateClickAndSelectEvent(secondHeaderCell);
             fixture.detectChanges();
 
             expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();

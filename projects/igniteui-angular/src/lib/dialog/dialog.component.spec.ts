@@ -318,7 +318,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(true);
 
         // Press 'escape' key
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Escape');
+        UIInteractions.triggerKeyDownEvtUponElem('Escape', document.documentElement);
         tick(100);
         fix.detectChanges();
 

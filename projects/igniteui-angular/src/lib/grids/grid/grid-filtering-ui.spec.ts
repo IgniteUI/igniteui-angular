@@ -1653,8 +1653,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const firstRow = GridFunctions.getGridDataRows(fix)[0];
-            const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
+            const firstCell: any = GridFunctions.getRowCells(fix, 0)[0].nativeElement;
             expect(document.activeElement).toBe(firstCell);
         }));
 

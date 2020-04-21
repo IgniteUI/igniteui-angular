@@ -10,14 +10,13 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
-    IgxGridGroupByRowComponent,
     IgxGridCellComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
-    IgxGridBaseDirective
+    IgxGridBaseDirective,
+    IgxGridGroupByRowComponent
 } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
@@ -231,7 +230,7 @@ export class GridFunctions {
 
     public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
-        UIInteractions.clickElement(icon.parentElement);
+        UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
         await wait(debounceTime);
         fix.detectChanges();
 
@@ -527,32 +526,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        UIInteractions.clickElement(debugElement.componentInstance.elementRef);
-    }
-
-    /* Search-related members */
-    public static findNext(grid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
-
-            grid.findNext(text);
-        });
-
-        return promise;
-    }
-
-    public static findPrev(grid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
-
-            grid.findPrev(text);
-        });
-
-        return promise;
+        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.elementRef);
     }
 
     public static isInView(index, state): boolean {
@@ -726,7 +700,7 @@ export class GridFunctions {
         const filterIcon = GridFunctions.getExcelFilterIcon(fix, columnField);
         const filterIconFiltered = GridFunctions.getExcelFilterIconFiltered(fix, columnField);
         const icon = (filterIcon) ? filterIcon : filterIconFiltered;
-        UIInteractions.clickElement(icon);
+        UIInteractions.simulateClickAndSelectEvent(icon);
     }
 
     public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridComponent, columnField: string) {
@@ -1196,13 +1170,6 @@ export class GridFunctions {
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
-    }
-
-    public static getGridDataRows(fix) {
-        const grid = fix.debugElement.query(By.css('igx-grid'));
-        const gridBody = grid.query(By.css('.igx-grid__tbody'));
-        return GridFunctions.sortNativeElementsVertically(
-            Array.from(gridBody.queryAll(By.css('igx-grid-row'))).map((r: any) => r.nativeElement));
     }
 
     public static getExcelStyleCustomFilteringDialog(fix: ComponentFixture<any>): HTMLElement {
@@ -1912,11 +1879,85 @@ export class GridFunctions {
     public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
         return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
     }
+
+    public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
+        for (let i; i < headerCells.length; i++) {
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
+                .toBe(rowCells[i].nativeElement.offsetWidth);
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
+                .toBe(rowCells[i].nativeElement.offsetHeight);
+        }
+    }
+
+    public static verifyDOMMatchesLayoutSettings(row, colSettings) {
+        const firstRowCells = row.cells.toArray();
+        const rowElem = row.nativeElement;
+        const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
+
+        colSettings.forEach((groupSetting, index) => {
+            // check group has rendered block
+            const groupBlock = mrlBlocks[index];
+            const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
+            expect(groupBlock).not.toBeNull();
+            groupSetting.columns.forEach((col, colIndex) => {
+                const cell = cellsFromBlock[colIndex];
+                const cellElem = cell.nativeElement;
+                // check correct attributes are applied
+                expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
+                expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
+                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
+
+                // check width
+                let sum = 0;
+                if (cell.gridColumnSpan > 1) {
+                    for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
+                        const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
+                        const col2 = row.grid.getColumnByName(colData ? colData.field : '');
+                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                    }
+                }
+                const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
+                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                // check height
+                const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
+                expect(cellElem.offsetHeight).toBe(expectedHeight);
+
+                // check offset left
+                const acc = (accum, c) => {
+                    if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
+                        return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
+                    } else {
+                        return accum;
+                    }
+                };
+                const expectedLeft = cellsFromBlock.reduce(acc, 0);
+                expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
+                // check offsetTop
+                const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
+                expect(cellElem.offsetTop).toBe(expectedTop);
+            });
+        });
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
         const footer = GridFunctions.getGridFooter(fix);
         return footer.query(By.css(SUMMARY_ROW));
+    }
+
+    public static calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
+        let maxSummaryLength = 0;
+        let index = 0;
+        columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+        const expectedLength = maxSummaryLength * defaultRowHeight;
+        return expectedLength;
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
@@ -2017,36 +2058,36 @@ export class GridSummaryFunctions {
 export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
             await wait();
             fix.detectChanges();
             resolve();
         })
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
         startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
-        UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-        UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
         fix.detectChanges();
     }
 
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+            UIInteractions.simulateClickAndSelectEvent(endCell, true);
             await wait();
             fix.detectChanges();
             resolve();
@@ -2054,10 +2095,10 @@ export class GridSelectionFunctions {
         })
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
-        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        UIInteractions.simulateClickAndSelectEvent(startCell);
         fix.detectChanges();
 
-        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        UIInteractions.simulateClickAndSelectEvent(endCell, true);
         fix.detectChanges();
     }
 

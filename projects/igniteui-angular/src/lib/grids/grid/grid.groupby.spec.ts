@@ -16,7 +16,6 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -1228,7 +1227,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
         const input = editCellDom.query(By.css('input'));
 
-        sendInput(input, 'NetAdvantage', fix);
+        sendInputElementValue(input, 'NetAdvantage', fix);
         await wait();
 
         UIInteractions.triggerKeyDownEvtUponElem('enter', editCellDom.nativeElement, true);
@@ -2609,7 +2608,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     });
 
-    function sendInput(element, text, fix) {
+    function sendInputElementValue(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
         fix.detectChanges();

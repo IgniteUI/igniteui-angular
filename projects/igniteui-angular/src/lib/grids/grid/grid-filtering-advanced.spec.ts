@@ -2343,7 +2343,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyContextMenuVisibility(fix, true);
 
                 // Press 'Escape' on the context menu.
-                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringContextMenu(fix), 'Escape');
+                UIInteractions.triggerKeyDownEvtUponElem('Escape', GridFunctions.getAdvancedFilteringContextMenu(fix));
                 tick();
 
                 // Verify context menu is closed.
@@ -2372,13 +2372,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 verifyExpressionChipSelection(fix, [1], false);
 
                 // Press 'Enter' on the second chip and verify it is selected.
-                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]), 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]));
                 tick(200);
                 fix.detectChanges();
                 verifyExpressionChipSelection(fix, [1], true);
 
                 // Press 'Enter' on the second chip again and verify it is not selected.
-                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]), 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]));
                 tick(200);
                 fix.detectChanges();
                 verifyExpressionChipSelection(fix, [1], false);
@@ -2410,8 +2410,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 // Press 'Enter' on the remove icon of the second chip.
                 const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]);
                 const removeIcon = ControlsFunction.getChipRemoveButton(chip);
-                UIInteractions.simulateKeyDownEvent(removeIcon, 'Enter');
-                tick(200);
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', removeIcon);
+                  tick(200);
                 fix.detectChanges();
 
                 // Verify the there is only one chip expression.
