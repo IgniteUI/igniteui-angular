@@ -11,10 +11,11 @@ import {
     TemplateRef,
     ViewContainerRef,
     Optional,
-    Inject
+    Inject,
+    ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
@@ -144,6 +145,14 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
     /**
+     * Reference to the menu
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dropdown')
+    public menu: IgxDropDownComponent;
+
+    /**
      * Showing the Action Strip and appending it the specified context element.
      * @param context
      * @example
@@ -154,8 +163,11 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     public show(context): void {
         this.context = context;
         this.hidden = false;
-        this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
-        this.sendContext();
+        this.closeMenu();
+        if (this.context && this.context.element) {
+            this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
+            this.sendContext();
+        }
     }
 
     /**
@@ -167,7 +179,16 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      */
     public hide(): void {
         this.hidden = true;
-        this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
+        this.closeMenu();
+        if (this.context && this.context.element) {
+            this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
+        }
+    }
+
+    private closeMenu() {
+        if (this.menu && !this.menu.collapsed) {
+            this.menu.close();
+        }
     }
 
     private sendContext() {

@@ -4,7 +4,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
 import { IgxIconModule } from '../icon';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 
@@ -152,6 +152,23 @@ describe('igxActionStip', () => {
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
             const dropDownItems = dropDownList.queryAll(By.css('igx-drop-down-item'));
             expect(dropDownItems.length).toBe(2);
+        });
+
+        it('should close the menu when hiding action strip', async() => {
+            fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            // there should be one rendered child and one hidden dropdown and one additional icon
+            const icon = fixture.debugElement.query(By.css(`igx-icon`));
+            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+            fixture.detectChanges();
+            let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
+            expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
+            actionStrip.hide();
+            await wait();
+            fixture.detectChanges();
+            dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
+            expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
         });
     });
 });
