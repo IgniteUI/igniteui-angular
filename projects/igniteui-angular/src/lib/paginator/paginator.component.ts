@@ -8,6 +8,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group';
+import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 
 @Component({
     selector: 'igx-paginator',
@@ -19,6 +20,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
+    private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions;
@@ -159,56 +161,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Input()
     public dropdownHidden = false;
 
-   /**
-    * An @Input property, sets number of label of the select.
-    * The default is 'Items per page' localized string.
-    * ```html
-    * <igx-paginator label="My custom label"></igx-paginator>
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
     @Input()
-    public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
+    set resourceStrings(value: IPaginatorResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
-   /**
-    * An @Input property, sets a preposition between the current page and total pages.
-    * The default is 'of' localized string.
-    * @memberof IgxPaginatorComponent
-    */
-   @Input()
-   public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
-
-   /**
-    * An @Input property, sets a tooltip text for first page button label
-    * The default is 'Go to first page' localized string.
-    * @memberof IgxPaginatorComponent
-    */
-   @Input()
-   public firstPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_first_page_button_text;
-
-   /**
-    * An @Input property, sets a tooltip text for the previous page button label
-    * The default is 'Previous page' localized string.
-    * @memberof IgxPaginatorComponent
-    */
-   @Input()
-   public previousPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_previous_page_button_text;
-
-   /**
-    * An @Input property, sets a tooltip text for last page button label
-    * The default is 'Go to last page' localized string.
-    * @memberof IgxPaginatorComponent
-    */
-   @Input()
-   public lastPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_last_page_button_text;
-
-   /**
-    * An @Input property, sets a tooltip text for the next page button label
-    * The default is 'Next page' localized string.
-    * @memberof IgxPaginatorComponent
-    */
-   @Input()
-   public nextPageLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_next_page_button_text;
+    /**
+     * An accessor that returns the resource strings.
+     */
+    get resourceStrings(): IPaginatorResourceStrings {
+        return this._resourceStrings;
+    }
 
     /**
      * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
