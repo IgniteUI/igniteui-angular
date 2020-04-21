@@ -93,6 +93,7 @@ export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/index';
 export * from './lib/splitter/splitter.module';
+export * from './lib/date-range/index';
 
 
 /**

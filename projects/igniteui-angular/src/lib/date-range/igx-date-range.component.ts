@@ -507,7 +507,9 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
                 this.calendar.deselectDate();
             }
         }
-        this.calendar.viewDate = this.value.start;
+        if (this.value) {
+            this.calendar.viewDate = this.value.start;
+        }
     }
 
     private extractRange(selection: Date[]): DateRange {
@@ -541,15 +543,17 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         if (this.hasProjectedInputs) {
             const start = this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
             const end = this.projectedInputs.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
-            start.dateTimeEditor.valueChanged
+            start.dateTimeEditor.valueChange
                 .pipe(takeUntil(this._destroy))
-                .subscribe((event: IgxDateTimeEditorEventArgs) => {
-                    this.value = { start: event.newValue as Date, end: this.value?.end };
+                .subscribe((event: Date) => {
+                    // TODO: update
+                    // this.value = { start: event.newValue as Date, end: this.value?.end };
                 });
-            end.dateTimeEditor.valueChanged
+            end.dateTimeEditor.valueChange
                 .pipe(takeUntil(this._destroy))
-                .subscribe((event: IgxDateTimeEditorEventArgs) => {
-                    this.value = { start: this.value?.start, end: event.newValue as Date };
+                .subscribe((event: Date) => {
+                    // TODO: update
+                    // this.value = { start: this.value?.start, end: event.newValue as Date };
                 });
             start.dateTimeEditor.validationFailed
                 .pipe(takeUntil(this._destroy))

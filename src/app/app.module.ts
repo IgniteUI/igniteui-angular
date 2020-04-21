@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateTimeEditorModule, IgxButtonModule, IgxDateRangeModule
+    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateTimeEditorModule, IgxButtonModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -120,6 +120,7 @@ import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-edit
 import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } from './grid-column-selection/grid-column-selection.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
+import { DateRangeSampleComponent } from './date-range/date-range.sample';
 
 const components = [
     AppComponent,
@@ -231,7 +232,8 @@ const components = [
     GridExternalFilteringComponent,
     GridSaveStateComponent,
     AboutComponent,
-    ReactiveFormSampleComponent
+    ReactiveFormSampleComponent,
+    DateRangeSampleComponent
 ];
 
 @NgModule({
