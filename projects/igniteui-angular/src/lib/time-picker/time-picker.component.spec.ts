@@ -1292,7 +1292,8 @@ describe('IgxTimePicker', () => {
 
             const customValue = '08:05 AM';
 
-            UIInteractions.sendInputElementValue(input, customValue);
+            input.nativeElement.value = customValue;
+            input.nativeElement.dispatchEvent(new Event('input'));
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1315,7 +1316,9 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toBe('11:05 AM', 'SpinLoop Down wrong time');
 
             // set a new value which is the max value
-            UIInteractions.sendInputElementValue(input, '11:03 AM');
+            input.nativeElement.focus();
+            input.nativeElement.value = '11:03 AM';
+            input.nativeElement.dispatchEvent(new Event('input'));
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
