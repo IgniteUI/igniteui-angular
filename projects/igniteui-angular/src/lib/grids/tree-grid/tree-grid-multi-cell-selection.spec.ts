@@ -284,7 +284,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
-            startCell.nativeElement.dispatchEvent(new MouseEvent('click'));
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
             detect();
 
             expect(startCell.focused).toBe(true);
