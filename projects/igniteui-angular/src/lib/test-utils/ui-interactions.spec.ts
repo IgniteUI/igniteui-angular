@@ -39,7 +39,7 @@ export class UIInteractions {
      * @param element - Native or debug element.
      */
     public static simulateDoubleClickAndSelectEvent(element) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement);
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
         nativeElement.dispatchEvent(new MouseEvent('dblclick'));
