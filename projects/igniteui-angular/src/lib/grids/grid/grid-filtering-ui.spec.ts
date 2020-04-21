@@ -229,13 +229,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
-
-            // greater than or equal to with invalid value should not reset filter
-            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
-            GridFunctions.typeValueInFilterRowInput('254..', fix, input);
-
-            expect(grid.rowList.length).toEqual(3);
-            verifyFilterRowUI(input, close, reset, false);
         }));
 
         // UI tests boolean column
