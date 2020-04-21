@@ -28,7 +28,7 @@ export class UIInteractions {
      * @param ctrl - if the ctrl key is pressed.
      */
     public static simulateClickAndSelectEvent(element, shift = false, ctrl = false) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement, shift, ctrl);
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
         nativeElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
