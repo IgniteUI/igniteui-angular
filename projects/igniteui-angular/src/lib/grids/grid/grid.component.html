@@ -115,7 +115,7 @@
         <ng-container *ngIf='data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridRowPinning:pipeTrigger
+        | gridRowPinning:id:true:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
             <div #pinContainer *ngIf='pinnedData.length > 0' 
@@ -140,7 +140,7 @@
         | gridPaging:page:perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
-        | gridGhostRecords:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
