@@ -518,7 +518,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnName, false);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(4);
+            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
         });
 
         it('Group by: Should be able group columns with keyboard', () => {
