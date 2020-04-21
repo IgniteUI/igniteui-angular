@@ -1103,10 +1103,10 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('20-10-11');
 
-            UIInteractions.sendInputElementValue(input, '28-02-19');
+            UIInteractions.clickAndSendInputElementValue(input, '28-02-19');
             fixture.detectChanges();
 
-            UIInteractions.sendInputElementValue(input, '29-02-19');
+            UIInteractions.clickAndSendInputElementValue(input, '29-02-19');
             fixture.detectChanges();
 
             // invalid date
@@ -1129,15 +1129,15 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('20-10-11');
 
-            UIInteractions.sendInputElementValue(input, '03-05-19');
+            UIInteractions.clickAndSendInputElementValue(input, '03-05-19');
             fixture.detectChanges();
 
             // disabled date
-            UIInteractions.sendInputElementValue(input, '03-09-18');
+            UIInteractions.clickAndSendInputElementValue(input, '03-09-18');
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('03-09-18');
 
-            UIInteractions.sendInputElementValue(input, '07-09-18');
+            UIInteractions.clickAndSendInputElementValue(input, '07-09-18');
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('07-09-18');
 
@@ -1151,7 +1151,7 @@ describe('IgxDatePicker', () => {
             datePicker.isSpinLoop = false;
 
             input.nativeElement.focus();
-            UIInteractions.sendInputElementValue(input, '31-03-19');
+            UIInteractions.clickAndSendInputElementValue(input, '31-03-19');
             expect(input.nativeElement.value).toBe('31-03-19');
 
             input.nativeElement.focus();
@@ -1165,7 +1165,7 @@ describe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('31-03-19');
 
             input.nativeElement.focus();
-            UIInteractions.sendInputElementValue(input, '01-03-19');
+            UIInteractions.clickAndSendInputElementValue(input, '01-03-19');
             expect(input.nativeElement.value).toBe('01-03-19');
 
             input.nativeElement.focus();
@@ -1180,7 +1180,7 @@ describe('IgxDatePicker', () => {
 
             // check min month
             input.nativeElement.focus();
-            UIInteractions.sendInputElementValue(input, '15-01-19');
+            UIInteractions.clickAndSendInputElementValue(input, '15-01-19');
             expect(input.nativeElement.value).toBe('15-01-19');
 
             input.nativeElement.setSelectionRange(3, 3);
@@ -1192,7 +1192,7 @@ describe('IgxDatePicker', () => {
 
             // check max month
             input.nativeElement.focus();
-            UIInteractions.sendInputElementValue(input, '31-12-19');
+            UIInteractions.clickAndSendInputElementValue(input, '31-12-19');
             expect(input.nativeElement.value).toBe('31-12-19');
 
             input.nativeElement.setSelectionRange(3, 3);

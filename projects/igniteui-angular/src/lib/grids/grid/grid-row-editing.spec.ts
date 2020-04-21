@@ -1823,7 +1823,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             const editTemplate = fix.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Value');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Value');
             fix.detectChanges();
 
             // Click on cell in different row

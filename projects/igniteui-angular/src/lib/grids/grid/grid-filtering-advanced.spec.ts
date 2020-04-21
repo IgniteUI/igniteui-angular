@@ -127,7 +127,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ign', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -155,7 +155,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             // Edit the filter value.
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'some non-existing value', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'some non-existing value', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -284,7 +284,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             verifyEditModeExpressionInputStates(fix, true, true, true, false);
 
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ign', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
             verifyEditModeExpressionInputStates(fix, true, true, true, true);
 
             // Commit the populated expression.
@@ -325,7 +325,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'angular', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -376,7 +376,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 0); // Select 'HeaderID' column
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'a', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -426,7 +426,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ign', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -467,7 +467,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, '20', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, '20', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -508,7 +508,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, '127', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, '127', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -676,7 +676,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ign', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -792,7 +792,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
             let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, '100', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, '100', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -807,7 +807,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'angular', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -822,7 +822,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'script', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -875,7 +875,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ign', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ign', fix); // Type filter value.
 
             // Discard the populated expression, so the whole new group gets discarded.
             GridFunctions.clickAdvancedFilteringExpressionCloseButton(fix);
@@ -1005,7 +1005,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, '500', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, '500', fix); // Type filter value.
 
             // Verify the edit mode container is visible.
             expect(GridFunctions.getAdvancedFilteringEditModeContainer(fix)).not.toBeNull();
@@ -1242,7 +1242,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'a', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -1305,7 +1305,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(200);
             fix.detectChanges();
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'a', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix); // Type filter value.
 
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
@@ -1435,7 +1435,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'some value', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'some value', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -1489,7 +1489,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'some value', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'some value', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -1503,7 +1503,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'another value', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'another value', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -1716,7 +1716,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'script', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -2527,7 +2527,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
 
             let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'angular', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'angular', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -2560,7 +2560,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
 
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'script', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'script', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -2642,7 +2642,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
             selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
             let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, '100', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, '100', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
@@ -2657,7 +2657,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
             selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
             input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
-            UIInteractions.sendInputElementValue(input, 'ignite', fix); // Type filter value.
+            UIInteractions.clickAndSendInputElementValue(input, 'ignite', fix); // Type filter value.
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();

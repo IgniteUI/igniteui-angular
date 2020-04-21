@@ -1489,7 +1489,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInputElementValue(editTemplate, 87);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 87);
             flush();
             fix.detectChanges();
 

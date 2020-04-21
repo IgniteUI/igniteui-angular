@@ -88,7 +88,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
 
             const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInputElementValue(editTemplate, 87);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 87);
 
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
@@ -109,7 +109,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
             expect(editTemplate).toBeDefined();
 
-            UIInteractions.sendInputElementValue(editTemplate, 0.3698);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 0.3698);
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
             fixture.detectChanges();
@@ -130,7 +130,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const editTemplate = cellDomNumber.query(By.css('input[type=\'number\']'));
 
-            UIInteractions.sendInputElementValue(editTemplate, editValue);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, editValue);
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
             fixture.detectChanges();
@@ -142,7 +142,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             editValue = '';
-            UIInteractions.sendInputElementValue(editTemplate, editValue);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, editValue);
             fixture.detectChanges();
             UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
             fixture.detectChanges();
@@ -211,7 +211,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(datePicker).toBeDefined();
 
             const editTemplate = cellDomDate.query(By.css('.igx-date-picker__input-date'));
-            UIInteractions.sendInputElementValue(editTemplate, editValue);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, editValue);
             fixture.detectChanges();
 
             expect(datePicker.value).toEqual(selectedDate);
@@ -257,7 +257,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(editCell.nativeElement.value).toBe('John Brown');
             expect(firstCell.editMode).toBeTruthy();
 
-            UIInteractions.sendInputElementValue(editCell, 'test');
+            UIInteractions.clickAndSendInputElementValue(editCell, 'test');
             fixture.detectChanges();
             cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fixture.detectChanges();
@@ -306,7 +306,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
             const editTemplate = cellDom.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'Gary Martin');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'Gary Martin');
             fixture.detectChanges();
 
             grid.pinColumn('firstName');
@@ -573,7 +573,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             let editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Name');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
             // press tab on edited cell
@@ -587,7 +587,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 1);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
             fixture.detectChanges();
 
             // press enter on edited cell
@@ -612,7 +612,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             let editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Name');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
             // press tab on edited cell
@@ -629,7 +629,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 1);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
             fixture.detectChanges();
 
             // press enter on edited cell
@@ -664,7 +664,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             let editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Name');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
             // press tab on edited cell
@@ -730,7 +730,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             const editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Name');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
             // press tab on edited cell
@@ -759,7 +759,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(true);
             const editTemplate = fixture.debugElement.query(By.css('input'));
-            UIInteractions.sendInputElementValue(editTemplate, 'New Name');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
             // press tab on edited cell
@@ -813,7 +813,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const editTemplate = cellDom.query(By.css('input'));
             expect(cell.editMode).toBe(true);
 
-            UIInteractions.sendInputElementValue(editTemplate, 'Rick Gilmore');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'Rick Gilmore');
             fixture.detectChanges();
 
             grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
@@ -839,7 +839,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
 
             const editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInputElementValue(editTemplate, 9);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 9);
             fixture.detectChanges();
 
             expect(() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
@@ -854,7 +854,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const editTemplate = cellDom.query(By.css('input'));
             expect(cell.editMode).toBe(true);
-            UIInteractions.sendInputElementValue(editTemplate, 'Rick Gilmore');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'Rick Gilmore');
             fixture.detectChanges();
 
             grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
@@ -875,7 +875,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const editTemplate = cellDom.query(By.css('input'));
             expect(cell.editMode).toBe(true);
             expect(cell.editValue).toBe('Tom Riddle');
-            UIInteractions.sendInputElementValue(editTemplate, 'Rick Gilmore');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 'Rick Gilmore');
             fixture.detectChanges();
 
             expect(cell.gridAPI.get_cell_inEditMode().editValue).toBe('Rick Gilmore');
@@ -921,7 +921,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(cell.editMode).toBe(true);
 
         let editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
-        UIInteractions.sendInputElementValue(editTemplate, 0);
+        UIInteractions.clickAndSendInputElementValue(editTemplate, 0);
         fixture.detectChanges();
         UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
         fixture.detectChanges();

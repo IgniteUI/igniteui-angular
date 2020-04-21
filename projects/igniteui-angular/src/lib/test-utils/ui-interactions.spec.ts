@@ -138,12 +138,27 @@ export class UIInteractions {
      * @param text - text to be set.
      * @param fix - if fixture is set it will detect changes on it.
      */
-    public static sendInputElementValue(element, text, fix?) {
+    public static clickAndSendInputElementValue(element, text, fix = null) {
         const nativeElement = element.nativeElement ? element.nativeElement : element;
         nativeElement.value = text;
         nativeElement.dispatchEvent(new Event('keydown'));
         nativeElement.dispatchEvent(new Event('input'));
         nativeElement.dispatchEvent(new Event('keyup'));
+        if (fix) {
+            fix.detectChanges();
+        }
+    }
+
+    /**
+     * Sets an input value- native or debug, by dispatching only input events.
+     * @param element - Native or debug element.
+     * @param text - text to be set.
+     * @param fix - if fixture is set it will detect changes on it.
+     */
+    public static setInputElementValue(element, text, fix = null) {
+        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        nativeElement.value = text;
+        nativeElement.dispatchEvent(new Event('input'));
         if (fix) {
             fix.detectChanges();
         }

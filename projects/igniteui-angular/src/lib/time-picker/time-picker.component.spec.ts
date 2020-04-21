@@ -1104,7 +1104,7 @@ describe('IgxTimePicker', () => {
 
             spyOn(timePicker.onValueChanged, 'emit');
 
-            UIInteractions.sendInputElementValue(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             expect(timePicker.onValueChanged.emit).toHaveBeenCalled();
@@ -1214,7 +1214,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '07:07 AM';
 
-            UIInteractions.sendInputElementValue(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1249,7 +1249,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '08:07 AM';
 
-            UIInteractions.sendInputElementValue(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1292,8 +1292,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '08:05 AM';
 
-            input.nativeElement.value = customValue;
-            input.nativeElement.dispatchEvent(new Event('input'));
+            UIInteractions.setInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1317,8 +1316,7 @@ describe('IgxTimePicker', () => {
 
             // set a new value which is the max value
             input.nativeElement.focus();
-            input.nativeElement.value = '11:03 AM';
-            input.nativeElement.dispatchEvent(new Event('input'));
+            UIInteractions.setInputElementValue(input, '11:03 AM');
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1380,7 +1378,7 @@ describe('IgxTimePicker', () => {
         it('should trigger onValidationFailed event when setting invalid time.', (() => {
             fixture.detectChanges();
 
-            UIInteractions.sendInputElementValue(input, '77:77 TT');
+            UIInteractions.clickAndSendInputElementValue(input, '77:77 TT');
 
             spyOn(timePicker.onValidationFailed, 'emit');
 

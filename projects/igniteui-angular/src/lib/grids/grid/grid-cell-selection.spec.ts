@@ -13,7 +13,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Cell selection #grid', () => {
@@ -2657,7 +2657,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             const cell = grid.getCellByColumn(2, 'ID');
 
-            GridFunctions.simulateGridContentKeydown(fix, 'space');
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
             expect(grid.getRowByIndex(2).selected).toBeTruthy();

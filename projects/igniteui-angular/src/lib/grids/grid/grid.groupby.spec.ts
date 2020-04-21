@@ -1227,7 +1227,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
         const input = editCellDom.query(By.css('input'));
 
-        sendInputElementValue(input, 'NetAdvantage', fix);
+        clickAndSendInputElementValue(input, 'NetAdvantage', fix);
         await wait();
 
         UIInteractions.triggerKeyDownEvtUponElem('enter', editCellDom.nativeElement, true);
@@ -2608,7 +2608,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     });
 
-    function sendInputElementValue(element, text, fix) {
+    function clickAndSendInputElementValue(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
         fix.detectChanges();

@@ -627,7 +627,7 @@ export class GridFunctions {
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
 
         // Enter key to submit
         UIInteractions.triggerEventHandlerKeyDown('Enter', input);
@@ -652,7 +652,7 @@ export class GridFunctions {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             input = filterUIRow.query(By.directive(IgxInputDirective));
         }
-        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
     }
 
     public static submitFilterRowInput(fix) {
@@ -881,7 +881,7 @@ export class GridFunctions {
 
     public static setInputValueESF(fix: ComponentFixture<any>, expressionIndex: number, value: any) {
         const input = GridFunctions.getExcelFilteringInput(fix, expressionIndex);
-        UIInteractions.sendInputElementValue(input, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input, value, fix);
     }
 
     /**
