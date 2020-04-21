@@ -28,7 +28,7 @@
 </div>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="composite" (focus)="navigation.focusFirstCell()"
+    <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="rowgroup" (focus)="navigation.focusFirstCell()"
     [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.headerNavigation($event)" (scroll)="preventHeaderScroll($event)" #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -209,7 +209,7 @@
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" [attr.aria-activedescendant]="activeDescendant"
 (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summariesHeight'
-        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
+        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
