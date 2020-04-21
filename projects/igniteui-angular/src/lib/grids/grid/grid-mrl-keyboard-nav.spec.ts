@@ -45,7 +45,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 let fourthCell;
                 [firstCell, secondCell, thirdCell, fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
 
                 fix.detectChanges();
 
@@ -103,7 +103,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let secondCell;
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -135,7 +135,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let secondCell;
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(thirdCell);
+                UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -162,7 +162,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let secondCell;
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -193,7 +193,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let secondCell;
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -224,7 +224,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let secondCell;
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -255,7 +255,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(thirdCell);
+                UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -286,7 +286,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(thirdCell);
+                UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -312,7 +312,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
@@ -338,7 +338,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(thirdCell);
+                UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
@@ -369,7 +369,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -421,7 +421,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const lastCell = firstRowCell[firstRowCell.length - 1];
 
-                UIInteractions.simulateClickAndSelectCellEvent(lastCell);
+                UIInteractions.simulateClickAndSelectEvent(lastCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft', false, false, true);
@@ -490,7 +490,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = firstRowCell[2];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
@@ -542,7 +542,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [thirdCell, secondCell, firstCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactName);
@@ -582,7 +582,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, firstCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -618,7 +618,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 let thirdCell;
                 [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ID);
@@ -658,7 +658,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell, dummyCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -700,7 +700,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, thirdCell, dummyCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -752,7 +752,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell, thirdCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].City);
@@ -803,7 +803,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell, firstCell
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].ContactName);
@@ -866,7 +866,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(grid.getCellByColumn(0, 'PostalCode').visibleColumnIndex).toBe(2);
                 // focus last
                 let cell = grid.getCellByColumn(0, 'Address');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow left
@@ -924,7 +924,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let groupRow = (<any>grid.getRowByIndex(0)) as IgxGridGroupByRowComponent;
-                UIInteractions.simulateClickAndSelectCellEvent(groupRow);
+                UIInteractions.simulateClickAndSelectEvent(groupRow);
                 fix.detectChanges();
 
                 // arrow down
@@ -1009,7 +1009,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell,
                     dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 // arrow down
@@ -1179,7 +1179,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell, dummyCell,
                     dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowLeft');
@@ -1230,7 +1230,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     firstCell, dummyCell] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
                 [secondCell,
                     dummyCell, dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -1283,7 +1283,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 [secondCell,
                     dummyCell, dummyCell,
                     dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -1335,7 +1335,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 [firstCell,
                     dummyCell, dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
@@ -1389,7 +1389,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     dummyCell, dummyCell,
                     dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
@@ -1446,7 +1446,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     secondCell,
                     dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -1495,7 +1495,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let targetCell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectCellEvent(targetCell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
                 fix.detectChanges();
 
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
@@ -1540,7 +1540,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const secondCell = penultRowCells[1];
                 const rowIndex = parseInt(secondCell.nativeElement.getAttribute('data-rowindex'), 10);
 
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
@@ -1576,7 +1576,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     thirdCell,
                 ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
-                UIInteractions.simulateClickAndSelectCellEvent(thirdCell);
+                UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].ContactTitle);
@@ -1631,7 +1631,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end');
@@ -1698,7 +1698,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
@@ -1753,7 +1753,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // last cell from first layout
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
-                UIInteractions.simulateClickAndSelectCellEvent(lastCell);
+                UIInteractions.simulateClickAndSelectEvent(lastCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'end');
@@ -1821,7 +1821,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 // last cell from first layout
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 
-                UIInteractions.simulateClickAndSelectCellEvent(lastCell);
+                UIInteractions.simulateClickAndSelectEvent(lastCell);
                 await wait();
                 fix.detectChanges();
 
@@ -1875,7 +1875,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
@@ -1935,7 +1935,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
@@ -1996,7 +1996,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 3rd row, first cell
                 let cell = grid.getCellByColumn(2, 'ContactName');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow down
@@ -2013,7 +2013,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 1st row, 2nd cell
                 cell = grid.getCellByColumn(0, 'Phone');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow up
@@ -2030,7 +2030,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 3rd row, first cell
                 cell = grid.getCellByColumn(2, 'ContactName');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow right
@@ -2047,7 +2047,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 1st row, Address
                 cell = grid.getCellByColumn(0, 'Address');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow left
@@ -2085,7 +2085,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 1st row, 2nd row cell
                 let cell = grid.getCellByColumn(0, 'Phone');
-                UIInteractions.simulateClickAndSelectCellEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 // arrow right
@@ -2141,7 +2141,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let firstCell = grid.getCellByColumn(0, 'ID');
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 // ctrl+arrow right
@@ -2192,7 +2192,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -2255,7 +2255,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus first pinned cell
                 const firstCell = grid.getCellByColumn(0, 'ID');
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 await wait();
                 fix.detectChanges();
 
@@ -2315,7 +2315,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -2354,7 +2354,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'End');
@@ -2392,7 +2392,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
-                UIInteractions.simulateClickAndSelectCellEvent(secondCell);
+                UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight', false, false, true);
@@ -2456,7 +2456,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+                UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -2513,7 +2513,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let cell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
                 fix.detectChanges();
 
                 const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];

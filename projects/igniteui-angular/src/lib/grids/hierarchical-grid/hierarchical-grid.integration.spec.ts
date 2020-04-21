@@ -277,7 +277,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
             let childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             let firstChildCell = childGrid.dataRowList.first.cells.first;
-            UIInteractions.simulateClickAndSelectCellEvent(firstChildCell);
+            UIInteractions.simulateClickAndSelectEvent(firstChildCell);
             expect(firstChildCell.selected).toBe(true);
 
             // apply some filter
@@ -709,7 +709,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.columnList.first.pinned).toBeFalsy();
             expect(firstHeaderIcon).toBeDefined();
 
-            UIInteractions.clickElement(firstHeaderIcon);
+            UIInteractions.simulateClickAndSelectEvent(firstHeaderIcon);
             fixture.detectChanges();
             tick();
 
