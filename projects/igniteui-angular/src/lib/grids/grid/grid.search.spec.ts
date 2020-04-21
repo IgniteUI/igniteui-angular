@@ -696,7 +696,7 @@ describe('IgxGrid - search API #grid - ', () => {
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
 
-            grid.data[29] = { ID: 30, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '1887-11-28T11:23:17.714Z' };
+            grid.data[29].HireDate = '1887-11-28T11:23:17.714Z';
             grid.width = '500px';
             grid.height = '600px';
             fixNativeElement = fix.debugElement.nativeElement;
