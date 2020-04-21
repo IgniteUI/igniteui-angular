@@ -3368,6 +3368,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Check that the filterRow is closed
             filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).toBeNull();
+            expect(grid.rowList.length).toBe(3, 'filter is not applied');
         }));
 
         it('Unary conditions should be committable', fakeAsync(() => {
