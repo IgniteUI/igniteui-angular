@@ -50,7 +50,7 @@ export class UIInteractions {
      * @param element - Native or debug element.
      */
     public static simulateNonPrimaryClick(element) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
         nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
         nativeElement.dispatchEvent(new Event('click'));
