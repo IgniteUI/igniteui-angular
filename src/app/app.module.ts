@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity
+    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateTimeEditorModule, IgxButtonModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -116,6 +116,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } from './grid-column-selection/grid-column-selection.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
@@ -152,6 +153,7 @@ const components = [
     ListPanningSampleComponent,
     ListPerformanceSampleComponent,
     MaskSampleComponent,
+    DateTimeEditorSampleComponent,
     NavbarSampleComponent,
     NavdrawerSampleComponent,
     OverlaySampleComponent,
@@ -251,7 +253,9 @@ const components = [
         IgxDividerModule,
         SharedModule,
         routing,
-        HammerModule
+        HammerModule,
+        IgxDateTimeEditorModule,
+        IgxButtonModule
     ],
     providers: [
         LocalService,

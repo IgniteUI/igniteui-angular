@@ -202,7 +202,8 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
         id: string,
-        pipeTrigger: number): ITreeGridRecord[] {
+        pipeTrigger: number,
+        pinned?: boolean): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
 
         let result: ITreeGridRecord[];
@@ -211,9 +212,10 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting);
         }
+
         const filteredSortedData = [];
         this.flattenTreeGridRecords(result, filteredSortedData);
-        grid.filteredSortedData = filteredSortedData;
+        grid.setFilteredSortedData(filteredSortedData, pinned);
 
         return result;
     }
@@ -305,5 +307,35 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
             }
         }
         return collection;
+    }
+}
+
+/**
+ * This pipe maps the original record to ITreeGridRecord format used in TreeGrid.
+ */
+@Pipe({
+    name: 'treeGridNormalizeRecord',
+    pure: true
+})
+export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+    }
+
+    transform(collection: any[], pipeTrigger: number): any[] {
+        const grid =  this.gridAPI.grid;
+        const primaryKey = grid.primaryKey;
+        // using flattened data because origin data may be hierarchical.
+        const flatData = grid.flatData;
+        const res = flatData.map(rec =>
+            ({
+                    rowID: grid.primaryKey ? rec[primaryKey] : rec,
+                    data: Object.assign({}, rec),
+                    level: 0,
+                    children: []
+            }));
+        return res;
     }
 }
