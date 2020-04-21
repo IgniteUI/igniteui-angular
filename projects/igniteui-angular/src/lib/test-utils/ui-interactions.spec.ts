@@ -29,7 +29,7 @@ export class UIInteractions {
      * @param ctrl - if the ctrl key is pressed.
      */
     public static simulateClickAndSelectEvent(element, shift = false, ctrl = false) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement, shift, ctrl);
         nativeElement.dispatchEvent(new MouseEvent('focus', { bubbles: true }));
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
@@ -41,7 +41,7 @@ export class UIInteractions {
      * @param element - Native or debug element.
      */
     public static simulateDoubleClickAndSelectEvent(element) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement);
         UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
         nativeElement.dispatchEvent(new MouseEvent('dblclick'));
@@ -52,7 +52,7 @@ export class UIInteractions {
      * @param element - Native or debug element.
      */
     public static simulateNonPrimaryClick(element) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
         nativeElement.dispatchEvent(new Event('focus'));
         nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
@@ -141,7 +141,7 @@ export class UIInteractions {
      * @param fix - if fixture is set it will detect changes on it.
      */
     public static clickAndSendInputElementValue(element, text, fix = null) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         nativeElement.value = text;
         nativeElement.dispatchEvent(new Event('keydown'));
         nativeElement.dispatchEvent(new Event('input'));
@@ -158,7 +158,7 @@ export class UIInteractions {
      * @param fix - if fixture is set it will detect changes on it.
      */
     public static setInputElementValue(element, text, fix = null) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         nativeElement.value = text;
         nativeElement.dispatchEvent(new Event('input'));
         if (fix) {
