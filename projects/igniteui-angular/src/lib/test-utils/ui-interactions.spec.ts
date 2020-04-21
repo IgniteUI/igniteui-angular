@@ -151,7 +151,7 @@ export class UIInteractions {
      * @param fix - if fixture is set it will detect changes on it.
      */
     public static setInputElementValue(element, text, fix = null) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const nativeElement = element.nativeElement ?? element;
         nativeElement.value = text;
         nativeElement.dispatchEvent(new Event('input'));
         if (fix) {
