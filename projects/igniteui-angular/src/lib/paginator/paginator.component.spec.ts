@@ -146,9 +146,10 @@ describe('IgxPaginator with custom settings', () => {
         const fix = TestBed.createComponent(CustomizedPaginatorComponent);
         fix.detectChanges();
         const paginator = fix.componentInstance.paginator;
-        const selectLabel = paginator.selectLabel;
+        paginator.resourceStrings.igx_paginator_label = 'Per page';
 
-        expect(selectLabel).toEqual('Per page');
+        fix.detectChanges();
+        expect(paginator.resourceStrings.igx_paginator_label).toEqual('Per page');
     });
 
     it('should disable the dropdown and pager buttons if set to false through input', () => {
@@ -189,7 +190,6 @@ export class DefaultPaginatorComponent {
 }
 @Component({
     template: `<igx-paginator
-        [selectLabel]="'Per page'"
         [totalRecords]="25"
         [selectOptions]="[3,10,25,40]"
         [perPage]="7"
