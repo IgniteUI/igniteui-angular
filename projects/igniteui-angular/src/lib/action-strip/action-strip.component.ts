@@ -13,15 +13,15 @@ import {
     Optional,
     Inject
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {IgxDropDownModule} from '../drop-down/index';
-import {IgxIconModule} from '../icon/index';
-import {IgxToggleModule} from '../directives/toggle/toggle.directive';
-import {IgxGridPinningActionsComponent} from './grid-actions/grid-pinning-actions.component';
-import {IgxGridEditingActionsComponent} from './grid-actions/grid-editing-actions.component';
-import {IgxGridActionsBaseDirective} from './grid-actions/grid-actions-base.directive';
-import {IgxButtonModule} from '../directives/button/button.directive';
-import {IgxRippleModule} from '../directives/ripple/ripple.directive';
+import { CommonModule } from '@angular/common';
+import { IgxDropDownModule } from '../drop-down/index';
+import { IgxIconModule } from '../icon/index';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
+import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
+import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
+import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 @Directive({
@@ -64,13 +64,13 @@ export class IgxActionStripComponent extends DisplayDensityBase {
         private _viewContainer: ViewContainerRef,
         private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
-         }
+        super(_displayDensityOptions);
+    }
 
     /**
+     * Sets/gets the 'display' property of the current `IgxActionStrip`
      * @hidden
      * @internal
-     * Sets/gets the 'display' property of the current `IgxActionStrip`
      */
     @HostBinding('style.display')
     public display = 'flex';
@@ -80,6 +80,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     /**
      * An @Input property that set the visibility of the Action Strip.
      * Could be used to set if the Action Strip will be initially hidden.
+     * @example
      * ```html
      *  <igx-action-strip [hidden]="false">
      * ```
@@ -87,7 +88,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     @Input()
     public set hidden(value) {
         this._hidden = value;
-        this.display = this._hidden ? 'none' : 'flex' ;
+        this.display = this._hidden ? 'none' : 'flex';
     }
 
     public get hidden() {
@@ -96,7 +97,6 @@ export class IgxActionStripComponent extends DisplayDensityBase {
 
     /**
      * Host `class.igx-action-strip` binding.
-     *
      * @hidden
      * @internal
      */
@@ -104,6 +104,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     public cssClass = 'igx-action-strip';
 
     /**
+     * Host `attr.class` binding.
      * @hidden
      * @internal
      */
@@ -115,22 +116,56 @@ export class IgxActionStripComponent extends DisplayDensityBase {
         return classes.join(' ');
     }
 
+    /**
+     * Sets the context of an action strip.
+     * The context should be an instance of a @Component, that has element property.
+     * This element will be the placeholder of the action strip.
+     * @example
+     * ```html
+     * <igx-action-strip [context]="cell"></igx-action-strip>
+     * ```
+     */
     public context;
 
+    /**
+     *  Grid Action ContentChildren inside the Action Strip
+     * @hidden
+     * @internal
+     */
     @ContentChildren(forwardRef(() => IgxGridActionsBaseDirective), { descendants: true })
     public gridActions: QueryList<IgxGridActionsBaseDirective>;
 
+    /**
+     * Menu Items ContentChildren inside the Action Strip
+     * @hidden
+     * @internal
+     */
     @ContentChildren(IgxActionStripMenuItemDirective)
     public menuItems: QueryList<IgxActionStripMenuItemDirective>;
 
-    show(context): void {
+    /**
+     * Showing the Action Strip and appending it the specified context element.
+     * @param context
+     * @example
+     * ```typescript
+     * this.actionStrip.show(row);
+     * ```
+     */
+    public show(context): void {
         this.context = context;
         this.hidden = false;
         this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
         this.sendContext();
     }
 
-    hide(): void {
+    /**
+     * Hiding the Action Strip and removing it from its current context element.
+     * @example
+     * ```typescript
+     * this.actionStrip.hide();
+     * ```
+     */
+    public hide(): void {
         this.hidden = true;
         this.renderer.removeChild(this.context.element.nativeElement, this._viewContainer.element.nativeElement);
     }
