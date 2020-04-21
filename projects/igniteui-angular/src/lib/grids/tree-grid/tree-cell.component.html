@@ -1,3 +1,6 @@
+<ng-template #defaultPinnedIndicator>
+    <igx-chip *ngIf="displayPinnedChip" class="igx-grid__td--pinned-chip" [disabled]="true" [displayDensity]="'compact'">{{ grid.resourceStrings.igx_grid_pinned_row_indicator }}</igx-chip>
+</ng-template>
 <ng-template #defaultCell>
     <div igxTextHighlight style="pointer-events: none" [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
         [value]="formatter ? formatter(value) : column.dataType === 'number' ? (value | igxdecimal: grid.locale) : column.dataType === 'date' ? (value | igxdate: grid.locale) : value"
@@ -35,6 +38,8 @@
          [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
          <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">
         </ng-container>
     </div>
     <div *ngIf="isLoading"

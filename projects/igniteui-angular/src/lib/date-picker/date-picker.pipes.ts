@@ -16,7 +16,7 @@ export class DatePickerDisplayValuePipe implements PipeTransform {
                 return '';
             }
             this._datePicker.rawDateString = value;
-            return DatePickerUtil.trimUnderlines(value);
+            return DatePickerUtil.trimEmptyPlaceholders(value);
         }
         return '';
     }
