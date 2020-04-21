@@ -119,7 +119,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-        return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
+    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
