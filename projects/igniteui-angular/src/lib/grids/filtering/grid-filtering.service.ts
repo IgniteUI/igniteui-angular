@@ -103,10 +103,10 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Close filtering row if a column is hidden.
      */
-    public hideColumnFilteringRowOnVisibilityChange(col: IgxColumnComponent) {
-        const filteringRow = col.grid.filteringRow;
+    public hideFilteringRowOnColumnVisibilityChange(col: IgxColumnComponent) {
+        const filteringRow = this.grid.filteringRow;
 
-        if (filteringRow && filteringRow.column) {
+        if (filteringRow && filteringRow.column && filteringRow.column === col) {
             filteringRow.close();
         }
     }
