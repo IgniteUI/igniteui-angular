@@ -41,7 +41,7 @@ describe('igxGridEditingActions #grid ', () => {
         fixture.detectChanges();
         editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
         expect(editIcon.nativeElement.innerText).toBe('edit');
-        editIcon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+        editIcon.parent.triggerEventHandler('click', new Event('click'));
         fixture.detectChanges();
         expect(grid.rowInEditMode).not.toBeNull();
         expect(grid.rowList.first.inEditMode).toBe(true);
@@ -50,7 +50,7 @@ describe('igxGridEditingActions #grid ', () => {
         const dataLenght = grid.dataLength;
         deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
         expect(deleteIcon.nativeElement.innerText).toBe('delete');
-        deleteIcon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+        deleteIcon.parent.triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
         expect(grid.rowList.first.rowData['ID']).toBe('ANATR');

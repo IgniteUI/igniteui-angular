@@ -42,7 +42,7 @@ describe('igxGridPinningActions #grid ', () => {
         pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
         unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
         expect(unpinIcon).toBeNull();
-        pinIcon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+        pinIcon.parent.triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
         expect(grid.pinnedRows.length).toBe(1);
@@ -52,7 +52,7 @@ describe('igxGridPinningActions #grid ', () => {
         pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
         unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
         expect(pinIcon).toBe(null);
-        unpinIcon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+        unpinIcon.parent.triggerEventHandler('click', new Event('click'));
         actionStrip.hide();
         fixture.detectChanges();
         expect(grid.pinnedRows.length).toBe(0);

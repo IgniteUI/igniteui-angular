@@ -12,7 +12,7 @@ import { IgxActionStripModule } from './action-strip.module';
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
 
-describe('igxActionStip', () => {
+fdescribe('igxActionStip', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let actionStripElement: ElementRef;
@@ -85,7 +85,7 @@ describe('igxActionStip', () => {
 
         it('should allow interacting with the content elements', () => {
             const asIcon = fixture.debugElement.query(By.css('.asIcon'));
-            asIcon.triggerEventHandler('click', UIInteractions.clickEvent);
+            asIcon.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
             expect(fixture.componentInstance.flag).toBeTruthy();
         });
@@ -125,7 +125,7 @@ describe('igxActionStip', () => {
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
-            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+            icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
@@ -147,7 +147,7 @@ describe('igxActionStip', () => {
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('true');
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
-            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+            icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
             dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
@@ -161,7 +161,7 @@ describe('igxActionStip', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             // there should be one rendered child and one hidden dropdown and one additional icon
             const icon = fixture.debugElement.query(By.css(`igx-icon`));
-            icon.parent.triggerEventHandler('click', UIInteractions.clickEvent);
+            icon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
             let dropDownList = fixture.debugElement.query(By.css(`.${DROP_DOWN_LIST}`));
             expect(dropDownList.nativeElement.getAttribute('aria-hidden')).toBe('false');
