@@ -1113,8 +1113,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
-            // To Do update to exit row correct
-            // grid.filteringRow.onEscKeydown(UIInteractions.escapeEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', filteringRow.nativeElement, true);
             tick(100);
             fix.detectChanges();
 
@@ -1132,7 +1131,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('Close');
             expect(reset.nativeElement.innerText).toBe('Reset');
         }));
 
@@ -1367,8 +1365,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
+            pending(`The test needs refactoring. The dispatchEvent doesn't focus elements with tabindex over them.
+                Also, the focus is now persistent over the tbody element`);
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
-
 
             const cell = grid.getCellByColumn(0, 'ID');
             UIInteractions.simulateClickAndSelectCellEvent(cell);
@@ -1641,12 +1640,15 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        it('Should open filterRow for respective column when pressing \'Enter\' on its filterCell chip.', fakeAsync(() => {
+        it('Should open filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.', fakeAsync(() => {
             // Verify filterRow is not opened.
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
-            const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            UIInteractions.triggerEventHandlerKeyDown('Enter', filterCellChip);
+            const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
+            UIInteractions.clickElement(releaseDateColumn);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);
             tick(200);
             fix.detectChanges();
 
@@ -1695,15 +1697,17 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             ControlsFunction.clickChipRemoveButton(filterCellChip.nativeElement);
             tick(50);
             fix.detectChanges();
-            const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
-            expect(document.activeElement).toBe(moreIcon[0].nativeElement);
+
+            const header = GridFunctions.getGridHeader(fix);
+            // const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
+            expect(document.activeElement).toBe(header.nativeElement);
 
             // Verify new chip text.
             filterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
             expect(GridFunctions.getChipText(filterCellChip)).toBe('e');
         }));
 
-        it('Should focus \'more\' icon when close filter row.', fakeAsync(() => {
+        it('Should focus \'grid header\' when close filter row.', fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '80px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
@@ -1736,11 +1740,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.closeFilterRow(fix);
             tick(DEBOUNCETIME);
 
-            moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
-            expect(document.activeElement).toBe(moreIcon.nativeElement);
+            const header = GridFunctions.getGridHeader(fix);
+            expect(document.activeElement).toEqual(header.nativeElement);
         }));
 
         it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', fakeAsync(() => {
+            pending('This this is not valid anymore, so we should probably dellete it.');
             grid.getColumnByName('ProductName').width = '350px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
