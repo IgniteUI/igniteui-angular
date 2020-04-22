@@ -267,7 +267,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     it('should update scroll height after expanding/collapsing rows.', async() => {
         const scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-            UIInteractions.clickElement(firstRow.nativeElement.children[0]);
+            UIInteractions.simulateClickAndSelectEvent(firstRow.nativeElement.children[0]);
             fixture.detectChanges();
             await wait(200);
             const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];

@@ -90,7 +90,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(checkboxElem.nativeElement.contains(tracedCheckbox)).toBeTruthy();
             expect(checkboxElem.componentInstance.checked).toBeTruthy();
 
-            UIInteractions.clickElement(inputElem);
+            UIInteractions.simulateClickAndSelectEvent(inputElem);
             fix.detectChanges();
 
             expect(inputElem.nativeElement.contains(tracedInput)).toBeTruthy();
@@ -809,7 +809,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 const endCell =  grid.getCellByColumn(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
 
-                UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
                 startCell.nativeElement.dispatchEvent(new Event('focus'));
                 grid.cdr.detectChanges();
 
@@ -818,15 +818,15 @@ describe('IgxGrid Master Detail #grid', () => {
                 for (let i = 2; i < 6; i++) {
                     const cell = grid.getCellByColumn(i, 'ContactName');
                     if (!cell) {
-                        UIInteractions.simulatePointerOverCellEvent('pointerenter',
+                        UIInteractions.simulatePointerOverElementEvent('pointerenter',
                         fix.debugElement.query(By.css('.addressArea')).nativeElement);
                         continue;
                     }
-                    UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                    UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                     grid.cdr.detectChanges();
                 }
-                UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement);
-                UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement);
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 0, 1, true);
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 5, 0, 1, true);
                 grid.cdr.detectChanges();

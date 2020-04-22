@@ -1,14 +1,12 @@
 
 import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../../directives/button/button.directive';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import {
     ColumnPinningTestComponent,
     ColumnGroupsPinningTestComponent,
@@ -17,6 +15,7 @@ import {
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 describe('Column Pinning UI #grid', () => {
     configureTestSuite();
@@ -25,7 +24,7 @@ describe('Column Pinning UI #grid', () => {
     let columnChooser: IgxColumnPinningComponent;
     let columnChooserElement: DebugElement;
 
-    const verifyCheckbox = HelperUtils.verifyCheckbox;
+    const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
     beforeAll(async(() => {

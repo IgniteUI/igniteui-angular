@@ -395,7 +395,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const footerRow = GridSummaryFunctions.getRootSummaryRow(fix).nativeElement.getBoundingClientRect().height;
                 const tfootSize = +footerRow;
 
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
+                const expectedHeight = GridSummaryFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
 
                 expect(tfootSize).toBe(expectedHeight);
             });
@@ -415,7 +415,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaries = fix.debugElement.queryAll(By.css(SUMMARY_CELL)).filter((el) =>
                     el.nativeElement.classList.contains(EMPTY_SUMMARY_CLASS) === false);
                 const tfootSize = GridSummaryFunctions.getRootSummaryRow(fix).nativeElement.getBoundingClientRect().height;
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
+                const expectedHeight = GridSummaryFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
                 expect(tfootSize).toBe(expectedHeight);
 
                 grid.getColumnByName('ProductName').hasSummary = false;
@@ -1489,7 +1489,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInput(editTemplate, 87);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 87);
             flush();
             fix.detectChanges();
 
