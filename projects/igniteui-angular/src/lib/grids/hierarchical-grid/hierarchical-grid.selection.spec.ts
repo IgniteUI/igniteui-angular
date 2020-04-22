@@ -668,7 +668,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('should not select row on expander click.', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-            UIInteractions.clickElement(firstRow.expander);
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
             fix.detectChanges();
 
             // check row is not selected

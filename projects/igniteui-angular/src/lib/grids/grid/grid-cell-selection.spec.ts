@@ -13,7 +13,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
-import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Cell selection #grid', () => {
@@ -49,7 +49,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const endCell =  grid.getCellByColumn(3, 'ID');
             const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
             startCell.nativeElement.dispatchEvent(new Event('focus'));
             detect();
 
@@ -57,33 +57,33 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             for (let i = 3; i < 5; i++) {
               const cell = grid.getCellByColumn(i, grid.columns[i - 1].field);
-              UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+              UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
               detect();
               GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, i - 1);
             }
 
             for (let i = 3; i >= 0; i--) {
                 const cell = grid.getCellByColumn(i, 'HireDate');
-                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, 3);
             }
 
             for (let i = 2; i >= 0; i--) {
                 const cell = grid.getCellByColumn(0, grid.columns[i].field);
-                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 0, 1, i);
             }
 
             for (let i = 1; i < 4; i++) {
                 const cell = grid.getCellByColumn(i, 'ID');
-                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, i, 1, 0);
             }
 
-            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement);
             detect();
 
             expect(startCell.focused).toBe(true);
@@ -111,7 +111,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
 
             const c = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(c);
+            UIInteractions.simulateClickAndSelectEvent(c);
             detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -161,27 +161,27 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', firstCell.nativeElement, false, true);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', firstCell.nativeElement, false, true);
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             detect();
 
             expect(firstCell.focused).toBe(true);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', secondCell.nativeElement, false, true);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', secondCell.nativeElement, false, true);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', thirdCell.nativeElement, false, true);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', thirdCell.nativeElement, false, true);
             detect();
 
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
             GridSelectionFunctions.verifySelectedRange(grid, 2, 3, 1, 2);
 
-            UIInteractions.simulatePointerOverCellEvent('pointerup', thirdCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', thirdCell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
@@ -197,14 +197,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             const thirdCell = grid.getCellByColumn(0, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -212,7 +212,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(secondCell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -240,7 +240,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 3, 0, 3);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 3, 0, 3);
 
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(8);
@@ -287,7 +287,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 { ID: 12, ParentID: 17, Name: 'Pedro Afonso' }
             ];
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             await wait();
             fix.detectChanges();
 
@@ -298,7 +298,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const secondCell = grid.getCellByColumn(7, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, true);
             await wait();
             fix.detectChanges();
 
@@ -310,7 +310,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 3, 7, 0, 1);
 
             const thirdCell = grid.getCellByColumn(6, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             await wait();
             fix.detectChanges();
 
@@ -354,7 +354,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
 
             // Click on another cell holding control
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -365,7 +365,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             // Click on a cell in the region and verify it is not changed
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 2, 0, 1);
@@ -378,7 +378,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             // Click on a cell without holding Ctrl
             cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -811,7 +811,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
         it('Should be able to clear the selection when a single cell is selected', () => {
             const cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -840,15 +840,15 @@ describe('IgxGrid - Cell selection #grid', () => {
                 selectedData = grid.getSelectedData();
             });
 
-            const cell =  grid.getCellByColumn(2, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            const cell = grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(1);
             expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
 
-            const idCell =  grid.getCellByColumn(1, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(idCell, false, true);
+            const idCell = grid.getCellByColumn(1, 'ID');
+            UIInteractions.simulateClickAndSelectEvent(idCell, false, true);
             fix.detectChanges();
 
             expect(selectedData.length).toBe(2);
@@ -873,7 +873,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Should be able to select a with arrow keys and holding Shift', () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1);
@@ -919,7 +919,8 @@ describe('IgxGrid - Cell selection #grid', () => {
         it(`Should not clear selection from keyboard shift-state on non-primary click`, () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 1, 1, 1, 1);
@@ -949,7 +950,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             + arrrow keys and then click on other cell with pressed Ctrl'`, () => {
             pending('# Issue should be fixedy');
             let cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
@@ -963,7 +964,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
             cell = grid.getCellByColumn(3, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(cell, false, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -974,7 +975,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Should be able to select and move scroll with arrow keys and holding Shift', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -1020,7 +1021,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('Should not fire event when no new cells are selected', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
 
@@ -1049,7 +1050,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             cell = grid.getCellByColumn(7, 'OnPTO');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -1079,7 +1080,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 {  Name: 'Monica Reyes' },
                 { ParentID: 847 }
             ];
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
@@ -1090,7 +1091,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 2, 2);
 
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.getSelectedData()).toEqual(expectedData);
@@ -1108,7 +1109,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 { ParentID: 147, Name: 'Thomas Hardy' },
                 { ParentID: 147, Name: 'Monica Reyes' }
             ];
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
@@ -1119,7 +1120,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
 
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, true);
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
@@ -1181,14 +1182,14 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1210,7 +1211,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.getCellByColumn(2, 'Name');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1236,7 +1237,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const cell = grid.getCellByColumn(4, 'ParentID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1256,7 +1257,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.getCellByColumn(3, 'HireDate');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1275,7 +1276,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.getCellByColumn(4, 'Name');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1295,7 +1296,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.getCellByColumn(3, 'HireDate');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1321,7 +1322,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const firstCell = grid.getCellByColumn(2, 'ID');
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1349,7 +1350,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -1415,7 +1416,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -1451,7 +1452,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1493,7 +1494,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -1569,7 +1570,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(2, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -2567,7 +2568,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(0, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell.setEditMode(true);
@@ -2656,6 +2657,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             const cell = grid.getCellByColumn(2, 'ID');
 
+            expect(grid.getRowByIndex(2).selected).toBeFalsy();
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
@@ -2877,19 +2879,19 @@ describe('IgxGrid - Cell selection #grid', () => {
             const secondCell = grid.getCellByColumn(2, 'Name');
             const thirdCell = grid.getCellByColumn(0, 'ID');
 
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             expect(firstCell.focused).toBeTruthy();
             expect(grid.selectedCells.length).toBe(0);
 
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             GridSelectionFunctions.verifyCellSelected(secondCell, false);
             expect(grid.selectedCells.length).toBe(0);
 
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
@@ -2906,7 +2908,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const selectionChangeSpy = spyOn<any>(grid.onSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
@@ -3038,14 +3040,14 @@ describe('IgxGrid - Cell selection #grid', () => {
             const thirdCell = grid.getCellByColumn(0, 'ID');
 
             // Click on a cell
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
 
             // Click on a cell holding Ctrl
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, false, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, false, true);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
             GridSelectionFunctions.verifyCellSelected(secondCell);
@@ -3053,7 +3055,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
 
             // Click on a cell holding Shift
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(firstCell, false);
@@ -3069,7 +3071,7 @@ describe('IgxGrid - Cell selection #grid', () => {
         it('When when navigate with arrow keys cell selection should be changed', () => {
             const selectionChangeSpy = spyOn<any>(grid.onSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(1, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
@@ -3098,7 +3100,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             const selectionChangeSpy = spyOn<any>(grid.onSelection, 'emit').and.callThrough();
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(3, 'ParentID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
@@ -3167,7 +3169,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             ];
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.single);
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            UIInteractions.simulateClickAndSelectEvent(startCell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(startCell);
 
@@ -3193,7 +3195,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             expect(grid.cellSelection).toEqual(GridSelectionMode.single);
 
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             GridSelectionFunctions.verifyCellSelected(cell);
 
@@ -3213,8 +3215,8 @@ describe('IgxGrid - Cell selection #grid', () => {
                 selectedData = grid.getSelectedData();
             });
 
-            const cell =  grid.getCellByColumn(2, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            const cell = grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(selectedData.length).toBe(1);
             expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
