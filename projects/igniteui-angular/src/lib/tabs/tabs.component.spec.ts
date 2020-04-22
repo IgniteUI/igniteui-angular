@@ -542,7 +542,7 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             const button = dom.query(By.css('.igx-button--flat'));
-            UIInteractions.clickElement(button);
+            UIInteractions.simulateClickAndSelectEvent(button);
             tick(50);
             fixture.detectChanges();
 
@@ -576,15 +576,15 @@ describe('IgxTabs', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[2].nativeTabItem); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[2].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view3');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].nativeTabItem); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view2');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].nativeTabItem); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view1');
         }));
@@ -745,7 +745,7 @@ describe('IgxTabs', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].nativeTabItem); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -753,7 +753,7 @@ describe('IgxTabs', () => {
             expect(theTabs[0].isSelected).toBe(true);
             expect(theTabs[1].isSelected).toBe(false);
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].nativeTabItem); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem); });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();

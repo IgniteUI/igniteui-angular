@@ -346,42 +346,38 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             let cell = grid.getCellByColumn(0, 'ProductName');
 
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
-            fix.detectChanges();
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
-            GridSelectionFunctions.verifyRowSelected(firstRow, false);
-
-            // Press Space key on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
-            fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', grid.tbody.nativeElement, true);
-            fix.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
 
             cell = grid.getCellByColumn(1, 'ProductName');
             GridSelectionFunctions.verifyCellSelected(cell);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click Space on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
-            fix.detectChanges();
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
             // Click again Space on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
+            GridFunctions.simulateGridContentKeydown(fix, 'space');
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -785,17 +781,12 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             let cell = grid.getCellByColumn(0, 'ProductName');
 
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             GridSelectionFunctions.verifyCellSelected(cell);
-            GridSelectionFunctions.verifyRowSelected(firstRow, false);
-
-            // Press Space key on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
-            fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.selectedRows()).toEqual([1]);

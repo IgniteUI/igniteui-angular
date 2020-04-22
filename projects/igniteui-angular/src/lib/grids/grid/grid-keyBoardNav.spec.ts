@@ -229,7 +229,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(100, 'value');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -332,7 +332,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const bottomRowHeight = rows[4].nativeElement.offsetHeight;
             const displayContainer = GridFunctions.getGridDisplayContainer(fix).nativeElement;
             const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % bottomRowHeight;
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -360,7 +360,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(displayContainer.style.top).toEqual('-25px');
             const cell = grid.getCellByColumn(1, '1');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -379,7 +379,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
         it('should allow navigating first/last cell in column with down/up and Ctrl key.', async () => {
             let cell = grid.getCellByColumn(1, 'value');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -392,7 +392,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridSelectionFunctions.verifyGridCellSelected(fix, cell);
 
             cell = grid.getCellByColumn(998, 'other');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -414,7 +414,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(101, '2');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -427,7 +427,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
 
             cell = grid.getCellByColumn(4, '2');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -454,7 +454,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(rowDisplayContainer.style.left).toEqual('-50px');
             const curCell = grid.getCellByColumn(1, '1');
-            UIInteractions.simulateClickAndSelectCellEvent(curCell);
+            UIInteractions.simulateClickAndSelectEvent(curCell);
             await wait();
             fix.detectChanges();
 
@@ -480,7 +480,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const rowDisplayContainer = GridFunctions.getRowDisplayContainer(fix, 1).nativeElement;
             expect(rowDisplayContainer.style.left).toEqual('0px');
             const curCell = grid.getCellByColumn(1, '2');
-            UIInteractions.simulateClickAndSelectCellEvent(curCell);
+            UIInteractions.simulateClickAndSelectEvent(curCell);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -507,7 +507,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(scrollContainerOffset).toEqual(-25);
 
             const cell = grid.getCellByColumn(1, 'value');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -596,7 +596,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
 
             const cell = grid.getCellByColumn(1, '2');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
@@ -802,7 +802,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
 
             let cell = grid.getCellByColumn(2, 'Released');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
             let row;
@@ -846,7 +846,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(1, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -860,7 +860,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.verifyGroupRowIsFocused(groupRow);
 
             cell = grid.getCellByColumn(2, 'ProductName');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -880,7 +880,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(2, 'Released');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
 
@@ -932,7 +932,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const rowEl = grid.rowList.find(r => r.index === 0);
-            UIInteractions.simulateClickAndSelectCellEvent(rowEl);
+            UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
             const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
