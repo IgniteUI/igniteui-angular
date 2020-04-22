@@ -1458,7 +1458,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         });
 
-        it('should add pinned badge in the pinned row instance in the body', () => {
+        it('should add pinned chip in the pinned row instance in the body', () => {
             const rowToPin = treeGrid.getRowByIndex(0);
             const primaryKey = treeGrid.primaryKey;
 
@@ -1635,6 +1635,21 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 {ID: 147, Name: 'John Winchester'},
                 {ID: 475, Name: 'Michael Langdon'},
             ]);
+        });
+
+        it('should remove the pinned chip for filtered out parent', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            const firstColumnField = treeGrid.columns[0].field;
+            const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, firstColumnField);
+            const pinnedRow = pinnedChipExpectedPosition.row;
+
+            expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+            expect(pinnedRow.disabled).toBe(false);
         });
     });
 });

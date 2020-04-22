@@ -612,7 +612,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isGhostRecord(rowData)
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
         };
     }
 
