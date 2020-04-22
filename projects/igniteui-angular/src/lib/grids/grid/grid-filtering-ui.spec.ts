@@ -1370,7 +1370,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const cell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
@@ -1645,7 +1645,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
             const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
-            UIInteractions.clickElement(releaseDateColumn);
+            UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);

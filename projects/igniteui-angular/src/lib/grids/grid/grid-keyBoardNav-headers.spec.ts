@@ -49,7 +49,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             let header = GridFunctions.getColumnHeader('OnPTO', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             await wait(200);
             fix.detectChanges();
 
@@ -113,7 +113,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         it('should navigation to first last header', async () => {
             // Focus grid header
             let header = GridFunctions.getColumnHeader('ParentID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify header is focused
@@ -155,7 +155,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         it('should not change active header on arrow up or down pressed', () => {
             // Focus grid header
             const header = GridFunctions.getColumnHeader('Name', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify header is focused
@@ -208,7 +208,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Click on the pinned column
             header = GridFunctions.getColumnHeader('ParentID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Start navigating right
@@ -233,21 +233,21 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(hScroll);
         });
 
-        it('Sorting: Should be able to sort a column with the keyboard', async () => {
+        it('Sorting: Should be able to sort a column with the keyboard', fakeAsync (() => {
             spyOn(grid.onSortingDone, 'emit').and.callThrough();
             grid.getColumnByName('ID').sortable = true;
             fix.detectChanges();
 
             // Focus grid header
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, true);
@@ -258,7 +258,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false);
@@ -267,7 +267,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, true);
@@ -276,7 +276,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, true);
@@ -285,7 +285,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Desc);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false);
@@ -299,26 +299,26 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false, false);
             expect(grid.sortingExpressions.length).toEqual(0);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderSortIndicator(header, false, false, false);
             expect(grid.sortingExpressions.length).toEqual(0);
 
             expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(5);
-        });
+        }));
 
         it('Filtering: Should be able to open filter row with the keyboard', () => {
             // Focus grid header
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -365,7 +365,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
              let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Try to open filter for not filterable column
@@ -390,7 +390,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('Advanced Filtering: Should be able to open Advanced filter', () => {
             const header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -421,7 +421,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             columnName.selectable = false;
             expect(grid.columnSelection).toEqual(GridSelectionMode.none);
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -483,7 +483,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid.columnSelection = GridSelectionMode.single;
 
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -527,7 +527,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid.getColumnByName('Name').groupable = true;
 
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -588,7 +588,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
             tick(100);
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Group by first column
@@ -655,7 +655,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through a layout with right and left arrow keys in first level', async () => {
             let header = GridFunctions.getColumnHeader('CompanyName', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -706,7 +706,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through a layout with right and left arrow keys in second level', async () => {
             let header = GridFunctions.getColumnHeader('ContactTitle', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -750,7 +750,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through a layout with home and end keys', async () => {
             let header = GridFunctions.getColumnHeader('ContactTitle', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -771,7 +771,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
 
             header = GridFunctions.getColumnHeader('Address', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('End', gridHeader);
@@ -791,7 +791,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through a layout with up and down arrow keys', () => {
             let header = GridFunctions.getColumnHeader('ContactTitle', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -857,7 +857,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through groups with right and left arrow keys in first level', () => {
             let header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -900,7 +900,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through groups with right and left arrow keys in child level', () => {
             let header = GridFunctions.getColumnHeader('ContactTitle', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -957,7 +957,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through groups with Home and End keys', () => {
             let header = GridFunctions.getColumnHeader('ID', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -976,7 +976,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header);
 
             header = GridFunctions.getColumnHeader('City', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -997,7 +997,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should navigate through groups with arrowUp and down keys', () => {
             let header = GridFunctions.getColumnHeader('City', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -1047,7 +1047,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             // click on parent
             header = GridFunctions.getColumnGroupHeaderCell('Address Information', fix);
 
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderIsFocused(header);
@@ -1156,7 +1156,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
-            UIInteractions.simulateClickAndSelectCellEvent(header);
+            UIInteractions.simulateClickAndSelectEvent(header);
             fix.detectChanges();
 
             GridFunctions.verifyHeaderIsFocused(header);
