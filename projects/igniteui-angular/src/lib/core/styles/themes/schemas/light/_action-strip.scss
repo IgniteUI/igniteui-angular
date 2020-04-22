@@ -12,7 +12,6 @@
 /// @prop {Map} actions-background [igx-color: ('grays', 200), hexrgba: #fff, rgba: .9] - The color used for actions background.
 /// @prop {Map} delete-action [igx-color: ('error')] - The color used for the delete icon in action strip component.
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for action strip actions container.
-
 /// @see $default-palette
 $_light-action-strip: extend(
     $_default-shape-action-strip,
