@@ -2875,10 +2875,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
-
-        this.onRowPinning.subscribe(() => {
-            this.summaryService.clearSummaryCache();
-        });
     }
 
     /**
