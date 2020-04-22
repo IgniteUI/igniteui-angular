@@ -3,6 +3,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { UIInteractions } from './ui-interactions.spec';
 import { IgxChipComponent } from '../chips/chip.component';
+import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 const CHIP_REMOVE_BUTTON = '.igx-chip__remove';
 const DROP_DOWN_SELECTED_ITEM_CLASS = '.igx-drop-down__item--selected';
@@ -48,4 +49,36 @@ export class ControlsFunction {
       expect(element.classList.contains(CHECKBOX_CHECKED_CLASS)).toEqual(checked);
       expect(element.classList.contains(CHECKBOX_IND_CLASS)).toEqual(indeterminate);
    }
+
+   public static getCheckboxElement(name: string, element: DebugElement, fix) {
+      const checkboxElements = element.queryAll(By.css('igx-checkbox'));
+      const chkElement = checkboxElements.find((el) =>
+          (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
+
+      return chkElement;
+  }
+
+  public static getCheckboxInput(name: string, element: DebugElement, fix) {
+      const checkboxEl = ControlsFunction.getCheckboxElement(name, element, fix);
+      const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
+
+      return chkInput;
+  }
+
+  public static getCheckboxInputs(element: DebugElement): HTMLInputElement[] {
+      const checkboxElements = element.queryAll(By.css('igx-checkbox'));
+      const inputs = [];
+      checkboxElements.forEach((el) => {
+          inputs.push(el.query(By.css('input')).nativeElement as HTMLInputElement);
+      });
+
+      return inputs;
+  }
+
+  public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
+      const chkInput = ControlsFunction.getCheckboxInput(name, element, fix);
+      expect(chkInput.type).toBe('checkbox');
+      expect(chkInput.disabled).toBe(isDisabled);
+      expect(chkInput.checked).toBe(isChecked);
+  }
 }

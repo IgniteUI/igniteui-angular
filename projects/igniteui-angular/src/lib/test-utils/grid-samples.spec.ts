@@ -569,6 +569,45 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
 }
 
 @Component({
+    template: `
+        <igx-grid
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="false">
+            <igx-column-layout *ngFor='let group of colGroups' [pinned]='group.pinned'>
+                <igx-column *ngFor='let col of group.columns'
+                [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+                [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field'></igx-column>
+            </igx-column-layout>
+        </igx-grid>
+    `
+})
+export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
+    colGroups = [
+        {
+            group: 'group1',
+            pinned: true,
+            columns: [
+                { field: 'ID', rowStart: 1, colStart: 1 },
+                { field: 'CompanyName', rowStart: 1, colStart: 2 },
+                { field: 'ContactName', rowStart: 1, colStart: 3 },
+                { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
+            ]
+        },
+        {
+            group: 'group2',
+            columns: [
+                { field: 'Country', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
+                { field: 'Region', rowStart: 3, colStart: 1 },
+                { field: 'PostalCode', rowStart: 3, colStart: 2 },
+                { field: 'Fax', rowStart: 3, colStart: 3 }
+            ]
+        }
+    ];
+}
+
+@Component({
     template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
                 `${ EventSubscriptions.onSelection }${ EventSubscriptions.onColumnPinning }`,
                 ColumnDefinitions.generatedWithWidth)
