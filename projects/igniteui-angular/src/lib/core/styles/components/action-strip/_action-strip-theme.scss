@@ -97,13 +97,13 @@
 
     %action-icons-density {
         [igxButton='icon'] {
-            width: 28px;
-            height: 28px;
+            width: rem(28px);
+            height: rem(28px);
 
             igx-icon {
-                width: 14px;
-                height: 14px;
-                font-size: 14px;
+                width: rem(14px);
+                height: rem(14px);
+                font-size: rem(14px);
             }
         }
     }
