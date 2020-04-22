@@ -1457,7 +1457,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         });
 
-        it('should add chip badge in the pinned row instance in the body', () => {
+        it('should add pinned chip in the pinned row instance in the body', () => {
             const rowToPin = treeGrid.getRowByIndex(0);
             const primaryKey = treeGrid.primaryKey;
 
