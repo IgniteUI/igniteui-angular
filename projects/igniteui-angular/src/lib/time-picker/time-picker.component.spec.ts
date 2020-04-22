@@ -79,7 +79,7 @@ describe('IgxTimePicker', () => {
             `:${testElementTime.getSeconds()} ${testElementTime.getHours() >= 12 ? 'PM' : 'AM'}`;
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -97,7 +97,7 @@ describe('IgxTimePicker', () => {
 
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -146,7 +146,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -159,19 +159,19 @@ describe('IgxTimePicker', () => {
         const secondsColumn = dom.query(By.css('.igx-time-picker__secondsList'));
         const selectSeconds = secondsColumn.children[middlePos - 3];
 
-        UIInteractions.clickElement(selectHour);
+        UIInteractions.simulateClickAndSelectEvent(selectHour);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectMinutes);
+        UIInteractions.simulateClickAndSelectEvent(selectMinutes);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectSeconds);
+        UIInteractions.simulateClickAndSelectEvent(selectSeconds);
         fixture.detectChanges();
 
         const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
         const selectAMPM = findByInnerText(AMPMColumn.children, 'AM');
 
-        UIInteractions.clickElement(selectAMPM);
+        UIInteractions.simulateClickAndSelectEvent(selectAMPM);
         fixture.detectChanges();
 
         const OkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
@@ -194,12 +194,12 @@ describe('IgxTimePicker', () => {
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         spyOn(timePicker.onValidationFailed, 'emit');
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
         const cancelButton = dom.query(By.css('.igx-button--flat'));
-        UIInteractions.clickElement(cancelButton);
+        UIInteractions.simulateClickAndSelectEvent(cancelButton);
         tick();
         fixture.detectChanges();
 
@@ -215,7 +215,7 @@ describe('IgxTimePicker', () => {
         const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -228,26 +228,26 @@ describe('IgxTimePicker', () => {
         const secondsColumn = dom.query(By.css('.igx-time-picker__secondsList'));
         const selectSeconds = secondsColumn.children[middlePos - 3];
 
-        UIInteractions.clickElement(selectHour);
+        UIInteractions.simulateClickAndSelectEvent(selectHour);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectMinutes);
+        UIInteractions.simulateClickAndSelectEvent(selectMinutes);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectSeconds);
+        UIInteractions.simulateClickAndSelectEvent(selectSeconds);
         fixture.detectChanges();
 
         const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
         const selectAMPM = findByInnerText(AMPMColumn.children, 'AM');
 
-        UIInteractions.clickElement(selectAMPM);
+        UIInteractions.simulateClickAndSelectEvent(selectAMPM);
         fixture.detectChanges();
 
         const cancelButton = dom.queryAll(By.css('.igx-button--flat'))[0];
 
         spyOn(timePicker.onValueChanged, 'emit');
 
-        UIInteractions.clickElement(cancelButton);
+        UIInteractions.simulateClickAndSelectEvent(cancelButton);
         tick();
         fixture.detectChanges();
 
@@ -265,7 +265,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -285,23 +285,23 @@ describe('IgxTimePicker', () => {
         const selectAMPM = AMPMColumn.children[4];
         const aMPMValue = selectAMPM.nativeElement.innerText;
 
-        UIInteractions.clickElement(selectHour);
+        UIInteractions.simulateClickAndSelectEvent(selectHour);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectMinutes);
+        UIInteractions.simulateClickAndSelectEvent(selectMinutes);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectSeconds);
+        UIInteractions.simulateClickAndSelectEvent(selectSeconds);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectAMPM);
+        UIInteractions.simulateClickAndSelectEvent(selectAMPM);
         fixture.detectChanges();
 
         const OkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
 
         spyOn(timePicker.onValueChanged, 'emit');
 
-        UIInteractions.clickElement(OkButton);
+        UIInteractions.simulateClickAndSelectEvent(OkButton);
         tick();
         fixture.detectChanges();
 
@@ -320,7 +320,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -408,7 +408,7 @@ describe('IgxTimePicker', () => {
         const initialTime = dom.query(By.directive(IgxInputDirective)).nativeElement.value;
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         fixture.detectChanges();
 
         const hourColumn: any = dom.query(By.css('.igx-time-picker__hourList'));
@@ -468,7 +468,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick(100);
         fixture.detectChanges();
 
@@ -505,7 +505,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -600,7 +600,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -690,7 +690,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -710,7 +710,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -733,7 +733,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -795,7 +795,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -854,7 +854,7 @@ describe('IgxTimePicker', () => {
         timePicker.selectedHour = notValidHour;
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -881,7 +881,7 @@ describe('IgxTimePicker', () => {
         timePicker.selectedMinute = notValidValue;
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -904,7 +904,7 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -936,7 +936,7 @@ describe('IgxTimePicker', () => {
         const initialTime = initialValue.getHours() + ':' + initialValue.getMinutes();
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -945,15 +945,15 @@ describe('IgxTimePicker', () => {
         const minutesColumn = dom.query(By.css('.igx-time-picker__minuteList'));
         const selectMinutes = minutesColumn.children[2];
 
-        UIInteractions.clickElement(selectHour);
+        UIInteractions.simulateClickAndSelectEvent(selectHour);
         fixture.detectChanges();
 
-        UIInteractions.clickElement(selectMinutes);
+        UIInteractions.simulateClickAndSelectEvent(selectMinutes);
         fixture.detectChanges();
 
         const OkButton = dom.queryAll(By.css('.igx-button--flat'))[1];
 
-        UIInteractions.clickElement(OkButton);
+        UIInteractions.simulateClickAndSelectEvent(OkButton);
         tick();
         fixture.detectChanges();
 
@@ -973,7 +973,7 @@ describe('IgxTimePicker', () => {
         const dom = fixture.debugElement;
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
 
-        UIInteractions.clickElement(timePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
         tick();
         fixture.detectChanges();
 
@@ -1104,7 +1104,7 @@ describe('IgxTimePicker', () => {
 
             spyOn(timePicker.onValueChanged, 'emit');
 
-            UIInteractions.sendInput(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             expect(timePicker.onValueChanged.emit).toHaveBeenCalled();
@@ -1185,7 +1185,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1198,7 +1198,7 @@ describe('IgxTimePicker', () => {
 
             const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
 
-            UIInteractions.clickElement(clearTime);
+            UIInteractions.simulateClickAndSelectEvent(clearTime);
             fixture.detectChanges();
 
             expect(input.nativeElement.innerText).toEqual('');
@@ -1214,7 +1214,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '07:07 AM';
 
-            UIInteractions.sendInput(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1249,7 +1249,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '08:07 AM';
 
-            UIInteractions.sendInput(input, customValue);
+            UIInteractions.clickAndSendInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1292,7 +1292,7 @@ describe('IgxTimePicker', () => {
 
             const customValue = '08:05 AM';
 
-            UIInteractions.sendInput(input, customValue);
+            UIInteractions.setInputElementValue(input, customValue);
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1315,7 +1315,8 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toBe('11:05 AM', 'SpinLoop Down wrong time');
 
             // set a new value which is the max value
-            UIInteractions.sendInput(input, '11:03 AM');
+            input.nativeElement.focus();
+            UIInteractions.setInputElementValue(input, '11:03 AM');
             fixture.detectChanges();
 
             input.nativeElement.dispatchEvent(new Event('blur'));
@@ -1377,7 +1378,7 @@ describe('IgxTimePicker', () => {
         it('should trigger onValidationFailed event when setting invalid time.', (() => {
             fixture.detectChanges();
 
-            UIInteractions.sendInput(input, '77:77 TT');
+            UIInteractions.clickAndSendInputElementValue(input, '77:77 TT');
 
             spyOn(timePicker.onValidationFailed, 'emit');
 
@@ -1395,7 +1396,7 @@ describe('IgxTimePicker', () => {
             const initVal = fixture.componentInstance.date;
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1447,7 +1448,7 @@ describe('IgxTimePicker', () => {
             const initVal = fixture.componentInstance.date;
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1480,7 +1481,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1489,7 +1490,7 @@ describe('IgxTimePicker', () => {
             fixture.componentInstance.timePicker.mode = InteractionMode.Dialog;
             fixture.detectChanges();
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1503,7 +1504,7 @@ describe('IgxTimePicker', () => {
 
             spyOn(timePicker.onOpened, 'emit');
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1511,7 +1512,7 @@ describe('IgxTimePicker', () => {
 
             spyOn(timePicker.onClosed, 'emit');
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1523,7 +1524,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1551,7 +1552,7 @@ describe('IgxTimePicker', () => {
             const inputGroup = dom.query(By.directive(IgxInputDirective));
             expect(inputGroup.nativeElement.value).toEqual('05:45 PM');
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1567,7 +1568,7 @@ describe('IgxTimePicker', () => {
             timePicker.okButtonLabel = '';
             timePicker.cancelButtonLabel = '';
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1580,7 +1581,7 @@ describe('IgxTimePicker', () => {
             expect(overlayToggle.length).toEqual(0);
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1601,7 +1602,7 @@ describe('IgxTimePicker', () => {
             expect(input).toEqual(document.activeElement);
 
             // Cancel btn
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
             const cancelBtn = dom.queryAll(By.css('.igx-button--flat'))[0];
@@ -1614,7 +1615,7 @@ describe('IgxTimePicker', () => {
             expect(input).toEqual(document.activeElement);
 
             // Enter key
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick(100);
             fixture.detectChanges();
             document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -1625,7 +1626,7 @@ describe('IgxTimePicker', () => {
             expect(input).toEqual(document.activeElement);
 
             // Esc key
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick(100);
             fixture.detectChanges();
             document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -1646,7 +1647,7 @@ describe('IgxTimePicker', () => {
             expect(overlayToggle.length).toEqual(0);
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1681,7 +1682,7 @@ describe('IgxTimePicker', () => {
 
             expect(() => {
                 const timePickerTarget = dom.query(By.directive(IgxInputDirective));
-                UIInteractions.clickElement(timePickerTarget);
+                UIInteractions.simulateClickAndSelectEvent(timePickerTarget);
                 tick();
                 fixture.detectChanges();
             }).not.toThrowError();
@@ -1717,7 +1718,7 @@ describe('IgxTimePicker', () => {
             expect(icon).not.toBeNull();
 
             expect(() => {
-                UIInteractions.clickElement(icon);
+                UIInteractions.simulateClickAndSelectEvent(icon);
                 tick();
                 fixture.detectChanges();
             }).not.toThrowError();
@@ -1735,7 +1736,7 @@ describe('IgxTimePicker', () => {
         it('should be able to add custom buttons.', fakeAsync(() => {
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1780,7 +1781,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1800,7 +1801,7 @@ describe('IgxTimePicker', () => {
 
             const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
 
-            UIInteractions.clickElement(clearTime);
+            UIInteractions.simulateClickAndSelectEvent(clearTime);
             fixture.detectChanges();
             input.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
@@ -1824,7 +1825,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1855,7 +1856,7 @@ describe('IgxTimePicker', () => {
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            UIInteractions.clickElement(iconTime);
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
             tick();
             fixture.detectChanges();
 
@@ -1937,7 +1938,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             input = dom.query(By.directive(IgxInputDirective));
-            UIInteractions.clickElement(input);
+            UIInteractions.simulateClickAndSelectEvent(input);
             fixture.detectChanges();
 
             const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
@@ -1965,7 +1966,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             input = dom.query(By.directive(IgxInputDirective));
-            UIInteractions.clickElement(input);
+            UIInteractions.simulateClickAndSelectEvent(input);
             tick();
             fixture.detectChanges();
 

@@ -10,7 +10,6 @@ import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
@@ -25,7 +24,7 @@ describe('Column Hiding UI #grid', () => {
     let columnChooser: IgxColumnHidingComponent;
     let columnChooserElement: DebugElement;
 
-    const verifyCheckbox = HelperUtils.verifyCheckbox;
+    const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
