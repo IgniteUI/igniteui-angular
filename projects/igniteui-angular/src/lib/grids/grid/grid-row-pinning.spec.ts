@@ -8,7 +8,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../common/grid.interface';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridTransaction } from '../tree-grid';
@@ -686,8 +685,8 @@ describe('Row Pinning #grid', () => {
             const headerCells = grid.headerGroups.first.children.toArray();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
-            verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
             const row = grid.pinnedRows[0];
@@ -700,8 +699,8 @@ describe('Row Pinning #grid', () => {
             const gridUnpinnedRow = grid.getRowByIndex(1);
             const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
 
-            verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
-            verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
 
         it('should pin/unpin correctly to bottom', () => {
@@ -727,8 +726,8 @@ describe('Row Pinning #grid', () => {
             const headerCells = grid.headerGroups.first.children.toArray();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
-            verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridPinnedRow, fix.componentInstance.colGroups);
 
             // unpin
             const row = grid.pinnedRows[0];
@@ -741,8 +740,8 @@ describe('Row Pinning #grid', () => {
             const gridUnpinnedRow = grid.getRowByIndex(1);
             const unpinnedRowCells = gridUnpinnedRow.cells.toArray();
 
-            verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
-            verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
     });
 
