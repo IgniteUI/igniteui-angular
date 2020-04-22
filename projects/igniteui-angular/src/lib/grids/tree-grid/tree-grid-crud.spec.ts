@@ -821,8 +821,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, 146);
-                await wait(DEBOUNCETIME);
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 146);
                 fix.detectChanges();
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
@@ -847,7 +846,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, 'Abc Def');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 'Abc Def');
                 await wait(DEBOUNCETIME);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -875,8 +874,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, '146');
-                await wait(DEBOUNCETIME);
+                UIInteractions.clickAndSendInputElementValue(editTemplate, '146');
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -991,7 +989,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, 146);
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 146);
                 await wait(DEBOUNCETIME);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -1015,7 +1013,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, 'Abc Def');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, 'Abc Def');
                 await wait(DEBOUNCETIME);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -1043,7 +1041,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
-                UIInteractions.sendInput(editTemplate, '146');
+                UIInteractions.clickAndSendInputElementValue(editTemplate, '146');
                 await wait(DEBOUNCETIME);
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
@@ -1055,7 +1053,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(editTemplate).toBeNull();
             });
         });
-
     });
 
     describe('Delete', () => {

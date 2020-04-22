@@ -10,14 +10,13 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
-    IgxGridGroupByRowComponent,
     IgxGridCellComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
-    IgxGridBaseDirective
+    IgxGridBaseDirective,
+    IgxGridGroupByRowComponent
 } from '../grids/grid';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
@@ -65,6 +64,9 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
+const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+const GRID_SCROLL_CLASS = '.igx-grid__scroll';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
@@ -73,6 +75,10 @@ const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
 const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
 const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+const COLUMN_HIDING_CLASS = 'igx-column-hiding';
+const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
+const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
+const COLUMN_PINNING_CLASS = 'igx-column-pinning';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -95,6 +101,22 @@ export class GridFunctions {
 
     public static getGridFooter(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
+    public static getGridScroll(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -208,7 +230,7 @@ export class GridFunctions {
 
     public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
-        UIInteractions.clickElement(icon.parentElement);
+        UIInteractions.simulateClickAndSelectEvent(icon.parentElement);
         await wait(debounceTime);
         fix.detectChanges();
 
@@ -293,6 +315,17 @@ export class GridFunctions {
         const pinnedColumns = column.grid.pinnedColumns;
         expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+    }
+
+    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+        const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
     }
 
     /* Filtering-related methods */
@@ -504,32 +537,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        UIInteractions.clickElement(debugElement.componentInstance.elementRef);
-    }
-
-    /* Search-related members */
-    public static findNext(grid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
-
-            grid.findNext(text);
-        });
-
-        return promise;
-    }
-
-    public static findPrev(grid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            grid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
-
-            grid.findPrev(text);
-        });
-
-        return promise;
+        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.elementRef);
     }
 
     public static isInView(index, state): boolean {
@@ -572,38 +580,6 @@ export class GridFunctions {
     public static getExportOptions(fixture) {
         const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
-    }
-
-    public static getCheckboxElement(name: string, element: DebugElement, fix) {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const chkElement = checkboxElements.find((el) =>
-            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
-
-        return chkElement;
-    }
-
-    public static getCheckboxInput(name: string, element: DebugElement, fix) {
-        const checkboxEl = this.getCheckboxElement(name, element, fix);
-        const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
-
-        return chkInput;
-    }
-
-    public static getCheckboxInputs(element: DebugElement): HTMLInputElement[] {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const inputs = [];
-        checkboxElements.forEach((el) => {
-            inputs.push(el.query(By.css('input')).nativeElement as HTMLInputElement);
-        });
-
-        return inputs;
-    }
-
-    public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
-        const chkInput = this.getCheckboxInput(name, element, fix);
-        expect(chkInput.type).toBe('checkbox');
-        expect(chkInput.disabled).toBe(isDisabled);
-        expect(chkInput.checked).toBe(isChecked);
     }
 
     // Filtering
@@ -662,7 +638,7 @@ export class GridFunctions {
     public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
-        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
 
         // Enter key to submit
         UIInteractions.triggerEventHandlerKeyDown('Enter', input);
@@ -687,7 +663,7 @@ export class GridFunctions {
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             input = filterUIRow.query(By.directive(IgxInputDirective));
         }
-        UIInteractions.sendInputElementValue(input.nativeElement, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input.nativeElement, value, fix);
     }
 
     public static submitFilterRowInput(fix) {
@@ -735,7 +711,7 @@ export class GridFunctions {
         const filterIcon = GridFunctions.getExcelFilterIcon(fix, columnField);
         const filterIconFiltered = GridFunctions.getExcelFilterIconFiltered(fix, columnField);
         const icon = (filterIcon) ? filterIcon : filterIconFiltered;
-        UIInteractions.clickElement(icon);
+        UIInteractions.simulateClickAndSelectEvent(icon);
     }
 
     public static clickExcelFilterIconFromCode(fix: ComponentFixture<any>, grid: IgxGridComponent, columnField: string) {
@@ -916,7 +892,7 @@ export class GridFunctions {
 
     public static setInputValueESF(fix: ComponentFixture<any>, expressionIndex: number, value: any) {
         const input = GridFunctions.getExcelFilteringInput(fix, expressionIndex);
-        UIInteractions.sendInputElementValue(input, value, fix);
+        UIInteractions.clickAndSendInputElementValue(input, value, fix);
     }
 
     /**
@@ -1205,13 +1181,6 @@ export class GridFunctions {
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
             .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
-    }
-
-    public static getGridDataRows(fix) {
-        const grid = fix.debugElement.query(By.css('igx-grid'));
-        const gridBody = grid.query(By.css('.igx-grid__tbody'));
-        return GridFunctions.sortNativeElementsVertically(
-            Array.from(gridBody.queryAll(By.css('igx-grid-row'))).map((r: any) => r.nativeElement));
     }
 
     public static getExcelStyleCustomFilteringDialog(fix: ComponentFixture<any>): HTMLElement {
@@ -1874,11 +1843,132 @@ export class GridFunctions {
     public static isHeaderPinned(header: DebugElement): boolean {
         return header.nativeElement.classList.contains(HEADER_PINNED_CLASS);
     }
+
+    public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_HIDING_CLASS));
+    }
+
+    public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_PINNING_CLASS));
+    }
+
+    public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css('h4'));
+    }
+
+    public static getColumnHidingHeaderInput(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_INPUT_CLASS));
+    }
+
+    public static getColumnChooserFilterInput(columnChooserElement: DebugElement): DebugElement {
+        return this.getColumnHidingHeaderInput(columnChooserElement).query(By.directive(IgxInputDirective));
+    }
+
+    public static getColumnChooserItems(columnChooserElement: DebugElement): DebugElement[] {
+        return columnChooserElement.queryAll(By.css('igx-checkbox'));
+    }
+
+    public static getColumnChooserItemElement(columnChooserElement: DebugElement, name: string): DebugElement {
+        const item = this.getColumnChooserItems(columnChooserElement).find((el) => el.nativeElement.outerText.includes(name));
+        return item;
+    }
+
+    public static clickColumnChooserItem(columnChooserElement: DebugElement, name: string) {
+        const item = this.getColumnChooserItemElement(columnChooserElement, name);
+        item.triggerEventHandler('change', new Event('change'));
+    }
+
+    public static getColumnChooserItemInput(item: DebugElement): HTMLInputElement {
+        return item.query(By.css('input')).nativeElement as HTMLInputElement;
+    }
+
+    public static getColumnChooserButton(columnChooserElement: DebugElement, name: string): DebugElement {
+        const buttonElements = columnChooserElement.queryAll(By.css('button'));
+        return buttonElements.find((el) => (el.nativeElement as HTMLButtonElement).textContent === name);
+    }
+
+    public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+    }
+
+    public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
+        for (let i; i < headerCells.length; i++) {
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
+                .toBe(rowCells[i].nativeElement.offsetWidth);
+            expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
+                .toBe(rowCells[i].nativeElement.offsetHeight);
+        }
+    }
+
+    public static verifyDOMMatchesLayoutSettings(row, colSettings) {
+        const firstRowCells = row.cells.toArray();
+        const rowElem = row.nativeElement;
+        const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
+
+        colSettings.forEach((groupSetting, index) => {
+            // check group has rendered block
+            const groupBlock = mrlBlocks[index];
+            const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
+            expect(groupBlock).not.toBeNull();
+            groupSetting.columns.forEach((col, colIndex) => {
+                const cell = cellsFromBlock[colIndex];
+                const cellElem = cell.nativeElement;
+                // check correct attributes are applied
+                expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
+                expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
+                expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+                expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
+
+                // check width
+                let sum = 0;
+                if (cell.gridColumnSpan > 1) {
+                    for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
+                        const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
+                        const col2 = row.grid.getColumnByName(colData ? colData.field : '');
+                        sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                    }
+                }
+                const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
+                expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+                // check height
+                const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
+                expect(cellElem.offsetHeight).toBe(expectedHeight);
+
+                // check offset left
+                const acc = (accum, c) => {
+                    if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
+                        return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
+                    } else {
+                        return accum;
+                    }
+                };
+                const expectedLeft = cellsFromBlock.reduce(acc, 0);
+                expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
+                // check offsetTop
+                const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
+                expect(cellElem.offsetTop).toBe(expectedTop);
+            });
+        });
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
         const footer = GridFunctions.getGridFooter(fix);
         return footer.query(By.css(SUMMARY_ROW));
+    }
+
+    public static calcMaxSummaryHeight(columnList, summaries: DebugElement[], defaultRowHeight) {
+        let maxSummaryLength = 0;
+        let index = 0;
+        columnList.filter((col) => col.hasSummary).forEach((column) => {
+            const currentLength = summaries[index].queryAll(By.css(SUMMARY_LABEL_CLASS)).length;
+            if (maxSummaryLength < currentLength) {
+                maxSummaryLength = currentLength;
+            }
+            index++;
+        });
+        const expectedLength = maxSummaryLength * defaultRowHeight;
+        return expectedLength;
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
@@ -1979,36 +2069,36 @@ export class GridSummaryFunctions {
 export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
             startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
             await wait();
             fix.detectChanges();
             resolve();
         })
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement, shift, ctrl);
         startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
-        UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
-        UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement, shift, ctrl);
         fix.detectChanges();
     }
 
     public static selectCellsRangeWithShiftKey =
         (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
-            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            UIInteractions.simulateClickAndSelectEvent(startCell);
             await wait();
             fix.detectChanges();
 
-            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+            UIInteractions.simulateClickAndSelectEvent(endCell, true);
             await wait();
             fix.detectChanges();
             resolve();
@@ -2016,10 +2106,10 @@ export class GridSelectionFunctions {
         })
 
     public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
-        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        UIInteractions.simulateClickAndSelectEvent(startCell);
         fix.detectChanges();
 
-        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        UIInteractions.simulateClickAndSelectEvent(endCell, true);
         fix.detectChanges();
     }
 

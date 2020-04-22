@@ -40,6 +40,7 @@ import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';
+import { IgxDecimalPipeComponent, IgxDatePipeComponent } from '../../common/pipes';
 
 /**
  *@hidden
@@ -50,6 +51,7 @@ export class FilterListItem {
     public isSelected: boolean;
     public indeterminate: boolean;
     public isSpecial = false;
+    public isBlanks = false;
 }
 
 @Directive({
@@ -334,7 +336,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef, private element: ElementRef) {}
 
     /**
      * @hidden @internal
@@ -477,7 +479,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
         if (this.overlayComponentId) {
-            this.mainDropdown.nativeElement.style.display = 'none';
+            this.element.nativeElement.style.display = 'none';
         }
         this.subMenu.close();
         this.customDialog.open(this.mainDropdown.nativeElement);
@@ -672,6 +674,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private addItems(shouldUpdateSelection: boolean) {
         this.selectAllSelected = true;
         this.selectAllIndeterminate = false;
+
+        const numberPipe = new IgxDecimalPipeComponent(this.column.grid.locale);
+        const datePipe = new IgxDatePipeComponent(this.column.grid.locale);
+
         this.uniqueValues.forEach(element => {
             if (element !== undefined && element !== null && element !== '') {
                 const filterListItem = new FilterListItem();
@@ -691,12 +697,29 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     filterListItem.isSelected = true;
                 }
                 if (this.column.dataType === DataType.Date) {
-                    filterListItem.value = new Date(element);
-                    filterListItem.label = new Date(element);
+                    const date = new Date(element);
+
+                    filterListItem.value = date;
+
+                    filterListItem.label = this.column.formatter ?
+                        this.column.formatter(date) :
+                        datePipe.transform(date, this.column.grid.locale);
+
+                } else if (this.column.dataType === DataType.Number) {
+                    filterListItem.value = element;
+
+                    filterListItem.label = this.column.formatter ?
+                        this.column.formatter(element) :
+                        numberPipe.transform(element, this.column.grid.locale);
+
                 } else {
                     filterListItem.value = element;
-                    filterListItem.label = element;
+
+                    filterListItem.label = this.column.formatter ?
+                        this.column.formatter(element) :
+                        element;
                 }
+
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             } else {
@@ -732,6 +755,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         blanks.label = this.grid.resourceStrings.igx_grid_excel_blanks;
         blanks.indeterminate = false;
         blanks.isSpecial = true;
+        blanks.isBlanks = true;
         this.listData.unshift(blanks);
     }
 

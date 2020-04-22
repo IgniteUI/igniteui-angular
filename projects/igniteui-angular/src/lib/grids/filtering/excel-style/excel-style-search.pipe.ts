@@ -20,8 +20,9 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
 
         searchText = searchText.toLowerCase();
         const result = items.filter((it, i) => (i === 0 && it.isSpecial) ||
-            (it.value !== null && it.value !== undefined) &&
-            it.value.toString().toLowerCase().indexOf(searchText) > -1);
+            (it.label !== null && it.label !== undefined) &&
+            !it.isBlanks &&
+            it.label.toString().toLowerCase().indexOf(searchText) > -1);
 
         // If 'result' contains the 'Select All' item and at least one more - we use it, otherwise we use an empty array.
         return result.length > 1 ? result : [];
