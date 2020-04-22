@@ -292,14 +292,6 @@ export class IgxGridNavigationService {
         });
     }
 
-    public handleFilterNavigation(visibleIndex: number, previous: boolean) {
-        const nextFilterableCell = previous ? this.grid.getPreviousCell(this.findFirstDataRowIndex(), visibleIndex, (col) => col.filterable)
-            : this.grid.getNextCell(this.findFirstDataRowIndex(), visibleIndex, (col) => col.filterable);
-        this.activeNode.column = previous ? this.activeNode.column - 1 : this.activeNode.column + 1;
-
-        this.grid.navigateTo(nextFilterableCell.rowIndex, this.activeNode.column, () => { });
-    }
-
     public shouldPerformHorizontalScroll(visibleColIndex: number, rowIndex = -1) {
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             return !this.isColumnFullyVisible(visibleColIndex);
