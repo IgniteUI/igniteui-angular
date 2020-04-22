@@ -56,7 +56,6 @@ export class IgxGridNavigationService {
     }
 
     protected getNextPosition(rowIndex: number, colIndex: number, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
-
         if (!this.isDataRow(rowIndex, true) && (key.indexOf('down') < 0 || key.indexOf('up') < 0) && ctrl) {
             return { rowIndex, colIndex };
         }
