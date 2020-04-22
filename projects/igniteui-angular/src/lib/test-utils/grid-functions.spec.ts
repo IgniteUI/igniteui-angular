@@ -318,6 +318,17 @@ export class GridFunctions {
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
     }
 
+    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+        const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
+    }
+
     /* Filtering-related methods */
     public static verifyFilterUIPosition(filterUIContainer, grid) {
         const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
