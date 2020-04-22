@@ -18,6 +18,7 @@ before_script:
 script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
+- ng build igniteui-angular-extras --prod
 - npm run build:style
 # - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:perf; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:others; fi
@@ -31,18 +32,20 @@ script:
 before_deploy:
 - npm run build:schematics
 - npm run build:migration
-# move to dist
-- cd dist/igniteui-angular
-# update package versions
-- npm version "${TRAVIS_TAG}" --no-git-tag-version --save
-- if [[ "${TRAVIS_TAG}" == *"alpha"* || "${TRAVIS_TAG}" == *"beta"* || "${TRAVIS_TAG}" == *"rc"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
 
+- npm run node ./node_modules/typescript/lib/tsc.js scripts/*.ts
+# update igniteui-angular package version
+- node scripts/version-script.js "${TRAVIS_TAG}"
+
+- if [[ "${TRAVIS_TAG}" == *"alpha"* || "${TRAVIS_TAG}" == *"beta"* || "${TRAVIS_TAG}" == *"rc"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
 # copy readme
 - cp ../../README.md README.md
+- echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+
 
 deploy:
-  provider: npm
-  tag: "${NPM_TAG}"
+  provider: script
+  script: node scripts/publish-script.js "${NPM_TAG}" 
   skip_cleanup: true
   email: igniteui@infragistics.com
   api_key:

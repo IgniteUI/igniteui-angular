@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Default App Live Editing",
+            "type": "node",
+            "request": "launch",
+            "args": ["scripts/publish-script.js", "${NPM_TAG}"],
+            "stopOnEntry": false,
+            "cwd": "${workspaceRoot}",
+            "console": "internalConsole"
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Node migration tests",
