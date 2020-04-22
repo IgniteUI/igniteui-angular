@@ -10,7 +10,8 @@ import {
     ElementRef,
     HostBinding,
     ChangeDetectionStrategy,
-    ViewRef
+    ViewRef,
+    HostListener
 } from '@angular/core';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -155,6 +156,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         this.input.nativeElement.focus();
+    }
+
+    @HostListener('keydown.esc', ['$event'])
+    public onEscHandler(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.close();
     }
 
     get disabled(): boolean {
