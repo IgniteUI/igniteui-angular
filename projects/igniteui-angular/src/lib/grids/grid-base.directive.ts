@@ -5238,7 +5238,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Deselects all rows
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
-     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
+     * If you set the parameter onlyFilterData to false that will deselect all rows in the grid exept deleted rows.
      * @example
      * ```typescript
      * this.grid.deselectAllRows();

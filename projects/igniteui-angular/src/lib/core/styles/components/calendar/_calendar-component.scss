@@ -177,7 +177,7 @@
         &:hover,
         &:focus {
             @extend %cal-value--month-hover !optional;
-            @extend %cal-value--month-current !optional;
+            @extend %cal-value--month-current-hover !optional;
         }
     }
 
