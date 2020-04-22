@@ -49,20 +49,16 @@ export class IgxFilteringService implements OnDestroy {
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _filterIconsRegistered = false;
-
-    public gridId: string;
-    public isFilterRowVisible = false;
-    public filteredColumn: IgxColumnComponent = null;
-    public selectedExpression: IFilteringExpression = null;
-    public shouldFocusNext = false;
-    public columnToMoreIconHidden = new Map<string, boolean>();
-    public activeFilterCell = 0;
-
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
     private column;
 
+    public isFilterRowVisible = false;
+    public filteredColumn: IgxColumnComponent = null;
+    public selectedExpression: IFilteringExpression = null;
+    public columnToMoreIconHidden = new Map<string, boolean>();
+    public activeFilterCell = 0;
     grid: IgxGridBaseDirective;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
@@ -77,12 +73,10 @@ export class IgxFilteringService implements OnDestroy {
         if (!this._componentOverlayId) {
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
-            const headerTarget = element;
-            const filterIconTarget = headerTarget.querySelector('.' + filterIcon);
+            const filterIconTarget = element.querySelector('.' + filterIcon);
 
             this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
-
             this._componentOverlayId =
                 this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);
             this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
@@ -92,21 +86,15 @@ export class IgxFilteringService implements OnDestroy {
     public initFilteringSettings() {
         this._filterMenuPositionSettings = {
             verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, {
-                params: { duration: '250ms' }
-            }),
-            closeAnimation: useAnimation(fadeOut, {
-                params: { duration: '200ms' }
-            })
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
+            closeAnimation: useAnimation(fadeOut, { params: { duration: '200ms' }})
         };
-
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };
-
         this._overlayService.onOpening.pipe(
             filter((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
@@ -120,6 +108,7 @@ export class IgxFilteringService implements OnDestroy {
             filter(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe(() => {
                 this._componentOverlayId = null;
+                this.grid.theadRow.nativeElement.focus();
             });
     }
 

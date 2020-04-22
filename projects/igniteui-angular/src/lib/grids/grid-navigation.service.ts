@@ -5,7 +5,7 @@ import { GridType } from './common/grid.interface';
 import { NAVIGATION_KEYS, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
-import { GridKeydownTargetType, GridSelectionMode } from './common/enums';
+import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 export interface ColumnGroupsCache {
     level: number;
@@ -164,10 +164,15 @@ export class IgxGridNavigationService {
         if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
             this.grid.openAdvancedFilteringDialog();
         }
-        if (ctrl && shift && key === 'l' && this.grid.allowFiltering && column.filterable) {
-            this.performHorizontalScrollToCell(column.visibleIndex);
-            this.grid.filteringService.filteredColumn = column;
-            this.grid.filteringService.isFilterRowVisible = true;
+        if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
+            if (this.grid.filterMode === FilterMode.excelStyleFilter) {
+                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column);
+            } else {
+                this.performHorizontalScrollToCell(column.visibleIndex);
+                this.grid.filteringService.filteredColumn = column;
+                this.grid.filteringService.isFilterRowVisible = true;
+            }
         }
         if (shift) { return; }
         !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl, alt);
