@@ -21,6 +21,7 @@ import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../grid';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -500,7 +501,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            UIInteractions.simulateDoubleClickAndSelectCellEvent(dateCell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(dateCell);
             await wait(30);
             fix.detectChanges();
 
@@ -1570,6 +1571,54 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             expect(treeGrid.dataView.length).toBe(10);
+        });
+
+        it('should correctly apply paging state for grid and paginator when there are pinned rows.', fakeAsync(() => {
+            treeGrid.paging = true;
+            treeGrid.perPage = 3;
+            treeGrid.height = '700px';
+            fix.detectChanges();
+            const paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
+            // pin the first row
+            treeGrid.getRowByIndex(0).pin();
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toEqual(4);
+            expect(treeGrid.perPage).toEqual(3);
+            expect(paginator.perPage).toEqual(3);
+            expect(paginator.totalRecords).toEqual(10);
+            expect(paginator.totalPages).toEqual(4);
+
+            // pin the second row
+            treeGrid.getRowByIndex(2).pin();
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toEqual(5);
+            expect(treeGrid.perPage).toEqual(3);
+            expect(paginator.perPage).toEqual(3);
+            expect(paginator.totalRecords).toEqual(10);
+            expect(paginator.totalPages).toEqual(4);
+        }));
+
+        it('should have the correct records shown for pages with pinned rows', () => {
+            treeGrid.paging = true;
+            treeGrid.perPage = 6;
+            treeGrid.height = '700px';
+            fix.detectChanges();
+            treeGrid.getRowByIndex(0).pin();
+            treeGrid.getRowByIndex(1).pin();
+            fix.detectChanges();
+
+            let rows = treeGrid.rowList.toArray();
+
+            [147, 475, 147, 475, 957, 317, 711, 998].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+
+            treeGrid.paginate(1);
+            fix.detectChanges();
+
+            rows = treeGrid.rowList.toArray();
+
+            [147, 475, 299, 19, 847, 663].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
         });
 
         it('should make a correct selection', () => {
