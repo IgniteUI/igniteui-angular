@@ -1,4 +1,4 @@
-import { DebugElement, ViewChild, Component } from '@angular/core';
+import { ViewChild, Component } from '@angular/core';
 import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -364,7 +364,7 @@ describe('Row Pinning #grid', () => {
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
 
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
 
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
@@ -374,7 +374,7 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer.length).toBe(0);
 
             expect(grid.pinnedRowHeight).toBe(0);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 -  grid.theadRow.nativeElement.offsetHeight;
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
 
@@ -401,47 +401,6 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData[1].ID).toBe('BERGS');
         });
 
-        it('should page through unpinned collection with modified pageSize = pageSize - pinnedRows.lenght.', () => {
-            // pin 2nd row
-            grid.paging = true;
-            grid.perPage = 5;
-            fix.detectChanges();
-            const paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent));
-            expect(paginator.componentInstance.totalPages).toEqual(6);
-
-            grid.getRowByIndex(1).pin();
-            fix.detectChanges();
-
-            expect(grid.pinnedRows.length).toBe(1);
-            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(1);
-            expect(grid.dataView.length).toBe(5);
-            expect(paginator.componentInstance.totalPages).toEqual(6);
-
-            grid.getRowByIndex(3).pin();
-            fix.detectChanges();
-
-            expect(grid.pinnedRows.length).toBe(2);
-            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(1);
-            expect(grid.dataView.length).toBe(5);
-            expect(paginator.componentInstance.totalPages).toEqual(6);
-
-            // unpin
-            grid.getRowByIndex(0).unpin();
-            fix.detectChanges();
-
-            grid.getRowByIndex(0).unpin();
-            fix.detectChanges();
-
-            expect(grid.pinnedRows.length).toBe(0);
-            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
-            expect(pinRowContainer.length).toBe(0);
-
-            expect(grid.dataView.length).toBe(5);
-            expect(paginator.componentInstance.totalPages).toEqual(6);
-        });
-
         it('should apply sorting to both pinned and unpinned rows.', () => {
             grid.getRowByIndex(1).pin();
             grid.getRowByIndex(5).pin();
@@ -462,6 +421,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[lastIndex]);
         });
     });
+
     describe('Row pinning with Master Detail View', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithMDVComponent);
@@ -563,6 +523,62 @@ describe('Row Pinning #grid', () => {
         });
     });
 
+    describe('Paging', () => {
+        let paginator: IgxPaginatorComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningComponent);
+            fix.componentInstance.createSimpleData(12);
+            grid = fix.componentInstance.instance;
+            grid.paging = true;
+            grid.perPage = 5;
+
+            fix.detectChanges();
+            tick();
+
+            paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
+        }));
+
+        it('should correctly apply paging state for grid and paginator when there are pinned rows.', () => {
+            // pin the first row
+            grid.getRowByIndex(0).pin();
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(6);
+            expect(grid.perPage).toEqual(5);
+            expect(paginator.perPage).toEqual(5);
+            expect(paginator.totalRecords).toEqual(12);
+            expect(paginator.totalPages).toEqual(3);
+
+            // pin the second row
+            grid.getRowByIndex(2).pin();
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(7);
+            expect(grid.perPage).toEqual(5);
+            expect(paginator.perPage).toEqual(5);
+            expect(paginator.totalRecords).toEqual(12);
+            expect(paginator.totalPages).toEqual(3);
+        });
+
+        it('should have the correct records shown for pages with pinned rows', () => {
+            grid.getRowByIndex(0).pin();
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+
+            let rows = grid.rowList.toArray();
+
+            [1, 2, 1, 2, 3, 4, 5].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+
+            grid.paginate(2);
+            fix.detectChanges();
+
+            rows = grid.rowList.toArray();
+
+            [1, 2, 11, 12].forEach((x, index) => expect(rows[index].cells.first.value).toEqual(x));
+        });
+    });
+
     describe(' Editing ', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithTransactionsComponent);
@@ -641,6 +657,7 @@ describe('Row Pinning #grid', () => {
         });
 
     });
+
     describe('Row pinning with MRL', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningWithMRLComponent);
@@ -727,6 +744,7 @@ describe('Row Pinning #grid', () => {
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
     });
+
     describe(' Hiding', () => {
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
@@ -788,11 +806,15 @@ describe('Row Pinning #grid', () => {
     `
 })
 export class GridRowPinningComponent {
-    public data = SampleTestData.contactInfoDataFull();
+    public data: any[] = SampleTestData.contactInfoDataFull();
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
+
+    public createSimpleData(count: number) {
+        this.data = Array(count).fill({}).map((x, idx) => x = { 'idx': idx + 1 });
+    }
 }
 
 @Component({
@@ -838,7 +860,7 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
 </igx-grid>`
 })
-export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {}
+export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
 
 
 @Component({
@@ -854,4 +876,4 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {}
     `,
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
-export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent {}
+export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
