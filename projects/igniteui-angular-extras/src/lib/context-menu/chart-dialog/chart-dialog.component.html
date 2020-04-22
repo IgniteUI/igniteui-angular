@@ -1,0 +1,44 @@
+<div class="header">
+    <span class="header-text">
+        {{ title }} Chart
+    </span>
+    <span class="action-buttons-wrapper">
+        <button igxButton="icon" (click)="toggleFullScreen()">
+            <igx-icon class="material">fullscreen{{fullScreen ? '_exit' : ''}}</igx-icon>
+        </button>
+        <button igxButton="icon" (click)="onClose.emit()">
+            <igx-icon class="material">close</igx-icon>
+        </button>
+    </span>
+</div>
+<div class="selection-area">
+    <div class="chart-area" [ngClass]="{'expanded': isConfigAreaExpanded}">
+        <ng-template #chartArea ></ng-template>
+    </div>
+    <div>
+        <button igxButton="icon" igxRipple (click)="isConfigAreaExpanded = !isConfigAreaExpanded">
+            <igx-icon fontSet="material">chevron_{{ isConfigAreaExpanded ? 'left': 'right'}}</igx-icon>
+        </button>
+    </div>
+    <div #configArea [ngClass]="{'chart-config-area': true, 'opened': !isConfigAreaExpanded, 'closed': isConfigAreaExpanded }">
+        <div class="config-area-header">
+            <span>Chart Types</span>
+        </div>
+        <igx-divider class="divider"></igx-divider>
+        <div class="wrapper" *ngFor="let chartType of mainChartTypes">
+            <ng-container *ngIf="hasAvailableChart(chartType)">
+                <div>{{chartType | titlecase}} Chart</div>
+                <div class="types-section">
+                    <ng-container *ngFor="let chart of allCharts">
+                    <span *ngIf="chart.startsWith(chartType)"  class="types-section-btn" title="{{chart}}"
+                            [ngClass]="{'selected': chart === currentChartType}" (click)="createChart(chart)">
+                        <div  [innerHTML]="images[chart] | svg">
+                        </div>
+                    </span>
+                    </ng-container>
+                </div>
+                <igx-divider></igx-divider>
+            </ng-container>
+        </div>
+    </div>
+</div>

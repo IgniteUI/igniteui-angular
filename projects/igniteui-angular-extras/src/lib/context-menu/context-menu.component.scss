@@ -1,0 +1,129 @@
+@import '../../../../igniteui-angular/src/lib/core/styles/themes/index';
+
+@include igx-fluent-theme($fluent-excel-palette);
+
+.analytics-btn {
+    @include igx-button(igx-button-theme($palette: $fluent-excel-palette,
+    $icon-color: #fff,
+    $icon-background: #335e3b,
+    $icon-hover-background: #459a55,
+    $icon-border-radius: 0));
+}
+
+.disableButton {
+    opacity: .4;
+    pointer-events: none;
+}
+
+.clear,
+.more-action {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    border-left: 1px solid #bdbdbd;
+
+    .btn,
+    .more-btn {
+        width: 68px;
+        margin: 0 0 7px;
+        padding: 0;
+    }
+
+    .more-btn {
+        width: 36px;
+        height: 36px;
+        align-self: center;
+        border-radius: 20px;
+    }
+
+    .name {
+        font-size: .9rem;
+        font-weight: 400;
+        text-align: center;
+    }
+}
+
+.icon {
+    pointer-events: none;
+}
+
+.btn {
+    &.condition {
+        padding-right: 16px;
+    }
+
+    &.chart {
+        padding-right: 24px;
+    }
+
+    display: inline-flex;
+    flex-flow: column;
+    align-items: center;
+
+    img {
+        pointer-events: none;
+    }
+
+    span {
+        pointer-events: none;
+    }
+}
+
+.chart-preview {
+    width: 350px;
+    height: 300px;
+    background-color: #fff;
+    overflow: hidden;
+
+    .chart-preview-title {
+        margin: 1rem;
+        justify-content: center;
+    }
+
+    .chart-preview-area {
+        height: 270px;
+    }
+}
+
+::ng-deep {
+    .toggle-content {
+        width: 354px;
+        max-width: 358px;
+        height: 148px;
+        background-color: #fff;
+
+        .tabs {
+            max-height: 100px;
+            display: flex !important;
+        }
+
+        .tab-option {
+            padding: .9rem;
+            height: 100px;
+            width: 358px;
+            display: inline-flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            align-content: center;
+
+            .selected {
+                opacity: .5;
+            }
+
+            .chartImgButton {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        .tab-option,
+        .clear.action {
+            .imgSize {
+                width: 36px;
+                height: 36px;
+                align-self: center;
+            }
+        }
+    }
+}

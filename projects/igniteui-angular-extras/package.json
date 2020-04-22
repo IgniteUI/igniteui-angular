@@ -1,0 +1,11 @@
+{
+  "name": "@infragistics/igniteui-angular-extras",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
+    "igniteui-angular": "^9.0.6",
+    "igniteui-angular-charts": "^9.0.0",
+    "igniteui-angular-core": "^9.0.0"
+  }
+}
