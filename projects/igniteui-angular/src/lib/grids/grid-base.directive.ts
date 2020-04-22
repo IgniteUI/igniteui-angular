@@ -2666,9 +2666,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public getDataViewIndex(rowIndex, pinned) {
         if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.unpinnedRecords.length;
+            rowIndex = rowIndex + this.unpinnedDataView.length;
         } else if (!pinned && this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.pinnedRecordsCount;
+            rowIndex = rowIndex + this.pinnedDataView.length;
         }
         return rowIndex;
     }
@@ -2730,8 +2730,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public isRecordPinnedByIndex(rowIndex: number) {
-        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedRecordsCount) ||
-            (!this.isRowPinningToTop && rowIndex >= this.unpinnedRecords.length);
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
     }
 
     /**
@@ -3004,6 +3004,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public setFilteredSortedData(data, pinned: boolean) {
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
+            this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
         } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
@@ -5648,13 +5649,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             visibleColIndex = -1;
         }
         // If the target row is pinned no need to scroll as well.
-        const shouldScrollVertically =
-            !this.isRecordPinnedByIndex(rowIndex) && this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            // Only for top pinning we need to subtract pinned count because virtualization indexing doesn't count pinned rows.
-            const scrollRowIndex = this.isRowPinningToTop ? rowIndex - this.pinnedRecordsCount : rowIndex;
-            this.navigation.performVerticalScrollToCell(scrollRowIndex, visibleColIndex,
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
                 () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
