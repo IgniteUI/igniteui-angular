@@ -1,7 +1,6 @@
 
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { take } from 'rxjs/operators';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
@@ -63,8 +62,6 @@ const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
-const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
-const GRID_SCROLL_CLASS = '.igx-grid__scroll';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
@@ -72,12 +69,17 @@ const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
-const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
-const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_HIDING_CLASS = 'igx-column-hiding';
 const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
 const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
 const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
+export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
+export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
+export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -115,7 +117,7 @@ export class GridFunctions {
     }
 
     public static getGridScroll(fix): DebugElement {
-        return fix.debugElement.query(By.css(GRID_SCROLL_CLASS));
+    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -282,6 +284,17 @@ export class GridFunctions {
         const pinnedColumns = column.grid.pinnedColumns;
         expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+    }
+
+    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+        const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
     }
 
     /* Filtering-related methods */
@@ -1922,6 +1935,11 @@ export class GridSummaryFunctions {
         });
         const expectedLength = maxSummaryLength * defaultRowHeight;
         return expectedLength;
+    }
+
+    public static getRootPinnedSummaryCells(fix): DebugElement[] {
+        const rootSummaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+        return rootSummaryRow.queryAll(By.css(`${SUMMARY_CELL}.${PINNED_SUMMARY}`));
     }
 
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
