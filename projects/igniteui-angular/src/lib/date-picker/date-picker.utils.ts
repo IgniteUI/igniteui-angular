@@ -1,4 +1,5 @@
 import { isIE } from '../core/utils';
+import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
 
 /**
  * This enum is used to keep the date validation result.
@@ -27,6 +28,9 @@ const enum DateChars {
     DayChar = 'd'
 }
 
+const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
+const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
+
 /**
  * @hidden
  */
@@ -45,6 +49,242 @@ export abstract class DatePickerUtil {
     private static readonly NUMBER_OF_MONTHS = 12;
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
+
+    /**
+     * Parse a Date value from masked string input based on determined date parts
+     * @param inputData masked value to parse
+     * @param dateTimeParts Date parts array for the mask
+     */
+    public static parseValueFromMask(inputData: string, dateTimeParts: DatePartInfo[], promptChar?: string): Date | null {
+        const parts: { [key in DatePart]: number } = {} as any;
+        dateTimeParts.forEach(dp => {
+            let value = parseInt(this.getCleanVal(inputData, dp, promptChar), 10);
+            if (!value) {
+                value = dp.type === DatePart.Date || dp.type === DatePart.Month ? 1 : 0;
+            }
+            parts[dp.type] = value;
+        });
+
+        if (parts[DatePart.Month] < 1 || 12 < parts[DatePart.Month]) {
+            return null;
+        }
+
+        // TODO: Century threshold
+        if (parts[DatePart.Year] < 50) {
+            parts[DatePart.Year] += 2000;
+        }
+
+        if (parts[DatePart.Date] > DatePickerUtil.daysInMonth(parts[DatePart.Year], parts[DatePart.Month])) {
+            return null;
+        }
+
+        if (parts[DatePart.Hours] > 23 || parts[DatePart.Minutes] > 59 || parts[DatePart.Seconds] > 59) {
+            return null;
+        }
+
+        return new Date(
+            parts[DatePart.Year] || 2000,
+            parts[DatePart.Month] - 1 || 0,
+            parts[DatePart.Date] || 1,
+            parts[DatePart.Hours] || 0,
+            parts[DatePart.Minutes] || 0,
+            parts[DatePart.Seconds] || 0
+        );
+    }
+
+    private static ensureLeadingZero(part: DatePartInfo) {
+        switch (part.type) {
+            case DatePart.Date:
+            case DatePart.Month:
+            case DatePart.Hours:
+            case DatePart.Minutes:
+            case DatePart.Seconds:
+                if (part.format.length === 1) {
+                    part.format = part.format.repeat(2);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Parse the mask into date/time and literal parts
+     */
+    public static parseDateTimeFormat(mask: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): DatePartInfo[] {
+        const format = mask || DatePickerUtil.getDefaultInputFormat(locale);
+        const dateTimeParts: DatePartInfo[] = [];
+        const formatArray = Array.from(format);
+        let currentPart: DatePartInfo = null;
+        let position = 0;
+
+        for (let i = 0; i < formatArray.length; i++, position++) {
+            const type = DatePickerUtil.determineDatePart(formatArray[i]);
+            if (currentPart) {
+                if (currentPart.type === type) {
+                    currentPart.format += formatArray[i];
+                    if (i < formatArray.length - 1) {
+                        continue;
+                    }
+                }
+
+                DatePickerUtil.ensureLeadingZero(currentPart);
+                currentPart.end = currentPart.start + currentPart.format.length;
+                position = currentPart.end;
+                dateTimeParts.push(currentPart);
+            }
+
+            currentPart = {
+                start: position,
+                end: position + formatArray[i].length,
+                type: type,
+                format: formatArray[i]
+            };
+        }
+
+        return dateTimeParts;
+    }
+
+    public static getDefaultInputFormat(locale: string): string {
+        if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
+            // TODO: fallback with Intl.format for IE?
+            return DatePickerUtil.SHORT_DATE_MASK;
+        }
+        const parts = DatePickerUtil.getDefaultLocaleMask(locale);
+        parts.forEach(p => {
+            if (p.type !== DatePart.Year && p.type !== DatePickerUtil.SEPARATOR) {
+                p.formatType = FormatDesc.TwoDigits;
+            }
+        });
+
+        return DatePickerUtil.getMask(parts);
+    }
+
+    public static isDateOrTimeChar(char: string): boolean {
+        return DATE_CHARS.indexOf(char) !== -1 || TIME_CHARS.indexOf(char) !== -1;
+    }
+
+    public static spinDate(delta: number, newDate: Date, isSpinLoop: boolean): void {
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth());
+        let date = newDate.getDate() + delta;
+        if (date > maxDate) {
+            date = isSpinLoop ? date % maxDate : maxDate;
+        } else if (date < 1) {
+            date = isSpinLoop ? maxDate + (date % maxDate) : 1;
+        }
+
+        newDate.setDate(date);
+    }
+
+    public static spinMonth(delta: number, newDate: Date, isSpinLoop: boolean): void {
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth() + delta);
+        if (newDate.getDate() > maxDate) {
+            newDate.setDate(maxDate);
+        }
+
+        const maxMonth = 11;
+        const minMonth = 0;
+        let month = newDate.getMonth() + delta;
+        if (month > maxMonth) {
+            month = isSpinLoop ? (month % maxMonth) - 1 : maxMonth;
+        } else if (month < minMonth) {
+            month = isSpinLoop ? maxMonth + (month % maxMonth) + 1 : minMonth;
+        }
+
+        newDate.setMonth(month);
+    }
+
+    public static spinYear(delta: number, newDate: Date): void {
+        const maxDate = DatePickerUtil.daysInMonth(newDate.getFullYear() + delta, newDate.getMonth());
+        if (newDate.getDate() > maxDate) {
+            // clip to max to avoid leap year change shifting the entire value
+            newDate.setDate(maxDate);
+        }
+        newDate.setFullYear(newDate.getFullYear() + delta);
+    }
+
+    public static spinHours(delta: number, newDate: Date, isSpinLoop: boolean): void {
+        const maxHour = 23;
+        const minHour = 0;
+        let hours = newDate.getHours() + delta;
+        if (hours > maxHour) {
+            hours = isSpinLoop ? hours % maxHour - 1 : maxHour;
+        } else if (hours < minHour) {
+            hours = isSpinLoop ? maxHour + (hours % maxHour) + 1 : minHour;
+        }
+
+        newDate.setHours(hours);
+    }
+
+    public static spinMinutes(delta: number, newDate: Date, isSpinLoop: boolean): void {
+        const maxMinutes = 59;
+        const minMinutes = 0;
+        let minutes = newDate.getMinutes() + delta;
+        if (minutes > maxMinutes) {
+            minutes = isSpinLoop ? minutes % maxMinutes - 1 : maxMinutes;
+        } else if (minutes < minMinutes) {
+            minutes = isSpinLoop ? maxMinutes + (minutes % maxMinutes) + 1 : minMinutes;
+        }
+
+        newDate.setMinutes(minutes);
+    }
+
+    public static spinSeconds(delta: number, newDate: Date, isSpinLoop: boolean): void {
+        const maxSeconds = 59;
+        const minSeconds = 0;
+        let seconds = newDate.getSeconds() + delta;
+        if (seconds > maxSeconds) {
+            seconds = isSpinLoop ? seconds % maxSeconds - 1 : maxSeconds;
+        } else if (seconds < minSeconds) {
+            seconds = isSpinLoop ? maxSeconds + (seconds % maxSeconds) + 1 : minSeconds;
+        }
+
+        newDate.setSeconds(seconds);
+    }
+
+    public static spinAmPm(newDate: Date, currentDate: Date, amPmFromMask: string): Date {
+        switch (amPmFromMask) {
+            case 'AM':
+                newDate = new Date(newDate.setHours(newDate.getHours() + 12));
+                break;
+            case 'PM':
+                newDate = new Date(newDate.setHours(newDate.getHours() - 12));
+                break;
+        }
+        if (newDate.getDate() !== currentDate.getDate()) {
+            return currentDate;
+        }
+
+        return newDate;
+    }
+
+    private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
+        return DatePickerUtil.trimEmptyPlaceholders(inputData.substring(datePart.start, datePart.end), promptChar);
+    }
+
+    private static determineDatePart(char: string): DatePart {
+        switch (char) {
+            case 'd':
+            case 'D':
+                return DatePart.Date;
+            case 'M':
+                return DatePart.Month;
+            case 'y':
+            case 'Y':
+                return DatePart.Year;
+            case 'h':
+            case 'H':
+                return DatePart.Hours;
+            case 'm':
+                return DatePart.Minutes;
+            case 's':
+            case 'S':
+                return DatePart.Seconds;
+            case 't':
+            case 'T':
+                return DatePart.AmPm;
+            default:
+                return DatePart.Literal;
+        }
+    }
 
     /**
      * This method generates date parts structure based on editor mask and locale.
@@ -204,7 +444,7 @@ export abstract class DatePickerUtil {
             return { state: DateState.Invalid, value: inputValue };
         }
 
-        if ((day < 1) || (day > DatePickerUtil.daysInMonth(fullYear, month + 1)) || (day === NaN)) {
+        if ((day < 1) || (day > DatePickerUtil.daysInMonth(fullYear, month)) || (day === NaN)) {
             return { state: DateState.Invalid, value: inputValue };
         }
 
@@ -220,8 +460,8 @@ export abstract class DatePickerUtil {
      * This method replaces prompt chars with empty string.
      * @param value
      */
-    public static trimUnderlines(value: string): string {
-        const result = value.replace(/_/g, '');
+    public static trimEmptyPlaceholders(value: string, promptChar?: string): string {
+        const result = value.replace(new RegExp(promptChar || '_', 'g'), '');
         return result;
     }
 
@@ -339,6 +579,10 @@ export abstract class DatePickerUtil {
         return '';
     }
 
+    public static daysInMonth(fullYear: number, month: number): number {
+        return new Date(fullYear, month + 1, 0).getDate();
+    }
+
     private static getYearFormatType(format: string): string {
         switch (format.match(new RegExp(DateChars.YearChar, 'g')).length) {
             case 1: {
@@ -394,7 +638,7 @@ export abstract class DatePickerUtil {
                 });
             } else {
                 dateStruct.push({
-                    type: formatToParts[i].type,
+                    type: formatToParts[i].type
                 });
             }
         }
@@ -410,7 +654,7 @@ export abstract class DatePickerUtil {
                     break;
                 }
                 case DateParts.Year: {
-                    dateStruct[i].formatType = formatterOptions.month;
+                    dateStruct[i].formatType = formatterOptions.year;
                     break;
                 }
             }
@@ -464,14 +708,10 @@ export abstract class DatePickerUtil {
         return { min: minValue, max: maxValue };
     }
 
-    private static daysInMonth(fullYear: number, month: number): number {
-        return new Date(fullYear, month, 0).getDate();
-    }
-
     private static getDateValueFromInput(dateFormatParts: any[], type: DateParts, inputValue: string, trim: boolean = true): string {
         const partPosition = DatePickerUtil.getDateFormatPart(dateFormatParts, type).position;
         const result = inputValue.substring(partPosition[0], partPosition[1]);
-        return (trim) ? DatePickerUtil.trimUnderlines(result) : result;
+        return (trim) ? DatePickerUtil.trimEmptyPlaceholders(result) : result;
     }
 
     private static getDayValueFromInput(dateFormatParts: any[], inputValue: string, trim: boolean = true): string {

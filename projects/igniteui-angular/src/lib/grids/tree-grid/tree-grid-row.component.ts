@@ -36,6 +36,10 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
         }
     }
 
+    public get pinned() {
+        return this.grid.isRecordPinned(this._treeRow);
+    }
+
     /**
      * Returns a value indicating whether the row component is expanded.
      *

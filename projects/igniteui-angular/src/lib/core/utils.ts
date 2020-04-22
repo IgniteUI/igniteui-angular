@@ -168,6 +168,7 @@ export const enum KEYS {
     DOWN_ARROW_IE = 'Down',
     F2 = 'F2',
     TAB = 'Tab',
+    SEMICOLON = ';',
     HOME = 'Home',
     END = 'End'
 }

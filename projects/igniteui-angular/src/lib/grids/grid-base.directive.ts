@@ -2945,8 +2945,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public setFilterData(data, pinned: boolean) {
         if (this.hasPinnedRecords && pinned) {
-            this._filteredPinnedData = data;
-            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+            this._filteredPinnedData = data || [];
+            const filteredUnpinned =  this._filteredUnpinnedData || [];
+            this.filteredData = [... this._filteredPinnedData, ... filteredUnpinned];
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
@@ -3002,6 +3003,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
+        data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.pinnedRecords = data;
@@ -5265,7 +5267,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Deselects all rows
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
-     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
+     * If you set the parameter onlyFilterData to false that will deselect all rows in the grid exept deleted rows.
      * @example
      * ```typescript
      * this.grid.deselectAllRows();

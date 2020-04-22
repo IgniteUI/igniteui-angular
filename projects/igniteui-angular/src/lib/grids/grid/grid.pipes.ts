@@ -29,7 +29,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
-                     id: string, pipeTrigger: number, pinned?): any[] {
+        id: string, pipeTrigger: number, pinned?): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
@@ -149,37 +149,5 @@ export class IgxGridFilteringPipe implements PipeTransform {
         const result = DataUtil.filter(cloneArray(collection), state);
         grid.setFilterData(result, pinned);
         return result;
-    }
-}
-
-/**
- * @hidden
- */
-@Pipe({
-    name: 'gridRowPinning',
-    pure: true
-})
-export class IgxGridRowPinningPipe implements PipeTransform {
-
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
-
-    public transform(collection: any[] , id: string, isPinned = false, pipeTrigger: number) {
-        const grid = this.gridAPI.grid;
-
-        if (grid.hasPinnedRecords && isPinned) {
-            const result = collection.filter(rec => grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-            return result;
-        }
-
-        grid.unpinnedRecords = collection;
-        if (!grid.hasPinnedRecords) {
-            grid.pinnedRecords = [];
-            return isPinned ? [] : collection;
-        }
-
-        return collection.map((rec) => {
-            return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
-        });
     }
 }
