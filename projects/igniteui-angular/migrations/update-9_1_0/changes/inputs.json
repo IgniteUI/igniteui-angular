@@ -1,0 +1,13 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "supressInputAutofocus",
+            "replaceWith": "suppressInputAutofocus",
+            "owner": {
+                "selector": "igx-input-group",
+                "type": "component"
+            }
+        }
+    ]
+}

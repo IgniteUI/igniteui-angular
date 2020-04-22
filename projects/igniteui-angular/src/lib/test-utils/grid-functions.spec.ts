@@ -13,7 +13,6 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
-    IgxGridGroupByRowComponent,
     IgxGridCellComponent,
     IgxGridRowComponent,
     IgxColumnComponent,
@@ -47,17 +46,16 @@ const BANNER_ROW_CLASS = '.igx-banner__row';
 const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
 const PAGER_BUTTONS = '.igx-paginator__pager > button';
 const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
+const ACTIVE_HEADER_CLASS = 'igx-grid__th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
-const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
 const CHECKBOX_ELEMENT = 'igx-checkbox';
 const ICON_CSS_CLASS = 'material-icons igx-icon';
 const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
-const DEBOUNCETIME = 50;
 const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
 const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -65,14 +63,25 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
 const GRID_BODY_CLASS = '.igx-grid__tbody';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
+const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
 const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
+const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
-const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
-const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+const SUMMARY_CELL = 'igx-grid-summary-cell';
+const COLUMN_HIDING_CLASS = 'igx-column-hiding';
+const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
+const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
+const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
+export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
+export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
+export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
+export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
 
 export class GridFunctions {
@@ -88,13 +97,29 @@ export class GridFunctions {
         return rowElement.queryAll(By.css(CELL_CSS_CLASS));
     }
 
+    public static getGridBody(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_BODY_CLASS));
+    }
+
+    public static getGridContent(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
+    }
+
+    public static getGridHeader(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    }
+
     public static getGridDisplayContainer(fix): DebugElement {
-        const gridBody = fix.debugElement.query(By.css(GRID_BODY_CLASS));
+        const gridBody = this.getGridBody(fix);
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
     public static getGridFooter(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridScroll(fix): DebugElement {
+    return fix.debugElement.query(By.css(`.${GRID_SCROLL_CLASS}`));
     }
 
     public static getRowDisplayContainer(fix, index: number): DebugElement {
@@ -125,6 +150,34 @@ export class GridFunctions {
         });
         const expectedLength = maxSummaryLength * defaultRowHeight;
         return expectedLength;
+    }
+
+    /**
+     * Focus the grid header
+     */
+    public static focusHeader(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
+    /**
+     * Focus the first cell in the grid
+     */
+    public static focusFirstCell(fix: ComponentFixture<any>) {
+        this.getGridHeader(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+    }
+
+    /**
+     * Focus the cell in the grid
+     */
+    public static focusCell(fix: ComponentFixture<any>, cell: IgxGridCellComponent) {
+        this.getGridContent(fix).triggerEventHandler('focus', null);
+        fix.detectChanges();
+        cell.activate(null);
+        fix.detectChanges();
     }
 
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
@@ -162,7 +215,7 @@ export class GridFunctions {
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
@@ -182,7 +235,7 @@ export class GridFunctions {
             }
         })
 
-    public static getMasterRowDetail(row: IgxGridRowComponent) {
+    public static getMasterRowDetail(row) {
         const nextSibling = row.element.nativeElement.nextElementSibling;
         if (nextSibling &&
             nextSibling.tagName.toLowerCase() === 'div' &&
@@ -190,6 +243,10 @@ export class GridFunctions {
             return nextSibling;
         }
         return null;
+    }
+
+    public static verifyMasterDetailRowFocused(row: HTMLElement, focused = true) {
+        expect(row.classList.contains(FOCUSED_DETAILS_ROW_CLASS)).toEqual(focused);
     }
 
     public static setAllExpanded(grid: IgxGridComponent, data: Array<any>) {
@@ -225,7 +282,7 @@ export class GridFunctions {
             altKey: altKey
         });
         Object.defineProperty(keyboardEvent, 'target', { value: detailRow });
-        grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
+        // grid.detailsKeyboardHandler(keyboardEvent, masterRow.index + 1, detailRow);
     }
 
     public static toggleMasterRow(fix: ComponentFixture<any>, row: IgxGridRowComponent) {
@@ -254,9 +311,12 @@ export class GridFunctions {
         return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
     }
 
-    public static verifyGroupRowIsFocused(groupRow: IgxGridGroupByRowComponent, focused = true) {
-        expect(groupRow.focused).toBe(focused);
+    public static verifyGroupRowIsFocused(groupRow, focused = true) {
         expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(focused);
+    }
+
+    public static verifyHeaderIsFocused(header, focused = true) {
+        expect(header.nativeElement.classList.contains(ACTIVE_HEADER_CLASS)).toBe(focused);
     }
 
     public static getCurrentCellFromGrid(grid, row, cell) {
@@ -293,6 +353,17 @@ export class GridFunctions {
         const pinnedColumns = column.grid.pinnedColumns;
         expect(pinnedColumns.length).toBe(pinnedColumnsCount, 'Unexpected pinned columns count!');
         expect(pinnedColumns.findIndex((col) => col === column) > -1).toBe(isPinned, 'Unexpected result for pinnedColumns collection!');
+    }
+
+    public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+                                               Math.abs(expectedWidth - grid.unpinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
+    }
+
+    public static verifyPinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number) {
+        const tolerans = Math.abs(expectedWidth - grid.pinnedWidth);
+        expect(tolerans).toBeLessThanOrEqual(1);
     }
 
     /* Filtering-related methods */
@@ -572,38 +643,6 @@ export class GridFunctions {
     public static getExportOptions(fixture) {
         const div = GridFunctions.getOverlay(fixture);
         return (div) ? div.querySelectorAll('li') : null;
-    }
-
-    public static getCheckboxElement(name: string, element: DebugElement, fix) {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const chkElement = checkboxElements.find((el) =>
-            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
-
-        return chkElement;
-    }
-
-    public static getCheckboxInput(name: string, element: DebugElement, fix) {
-        const checkboxEl = this.getCheckboxElement(name, element, fix);
-        const chkInput = checkboxEl.query(By.css('input')).nativeElement as HTMLInputElement;
-
-        return chkInput;
-    }
-
-    public static getCheckboxInputs(element: DebugElement): HTMLInputElement[] {
-        const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const inputs = [];
-        checkboxElements.forEach((el) => {
-            inputs.push(el.query(By.css('input')).nativeElement as HTMLInputElement);
-        });
-
-        return inputs;
-    }
-
-    public static verifyCheckbox(name: string, isChecked: boolean, isDisabled: boolean, element: DebugElement, fix) {
-        const chkInput = this.getCheckboxInput(name, element, fix);
-        expect(chkInput.type).toBe('checkbox');
-        expect(chkInput.disabled).toBe(isDisabled);
-        expect(chkInput.checked).toBe(isChecked);
     }
 
     // Filtering
@@ -1845,6 +1884,12 @@ export class GridFunctions {
         expandInd.dispatchEvent(new Event('click', {}));
     }
 
+    public static simulateGridContentKeydown(fix: ComponentFixture<any>, keyName: string,
+        altKey = false, shiftKey = false, ctrlKey = false) {
+        const gridContent = GridFunctions.getGridContent(fix);
+        UIInteractions.triggerEventHandlerKeyDown(keyName, gridContent, altKey, shiftKey, ctrlKey);
+    }
+
     public static simulateCellKeydown(cellComp: IgxGridCellComponent, keyName: string,
         altKey = false, shiftKey = false, ctrlKey = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
@@ -1853,26 +1898,8 @@ export class GridFunctions {
             ctrlKey: ctrlKey,
             altKey: altKey
         });
-        cellComp.dispatchEvent(keyboardEvent);
-        if (!altKey) {
-            cellComp.onBlur();
-        }
+        cellComp.nativeElement.dispatchEvent(keyboardEvent);
     }
-
-    public static simulateGroupRowKeydown(rowComp: IgxGridGroupByRowComponent, keyName: string,
-        altKey = false, shiftKey = false, ctrlKey = false) {
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            key: keyName,
-            shiftKey: shiftKey,
-            ctrlKey: ctrlKey,
-            altKey: altKey
-        });
-        rowComp.onKeydown(keyboardEvent);
-        if (!altKey) {
-            rowComp.onBlur();
-        }
-    }
-
 
     public static getHeaderSortIcon(header: DebugElement): DebugElement {
         return header.query(By.css(SORT_ICON_CLASS));
@@ -1894,6 +1921,53 @@ export class GridFunctions {
     public static isHeaderPinned(header: DebugElement): boolean {
         return header.nativeElement.classList.contains(HEADER_PINNED_CLASS);
     }
+
+    public static getColumnHidingElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_HIDING_CLASS));
+    }
+
+    public static getColumnPinningElement(fix: ComponentFixture<any>): DebugElement {
+        return fix.debugElement.query(By.css(COLUMN_PINNING_CLASS));
+    }
+
+    public static getColumnChooserTitle(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css('h4'));
+    }
+
+    public static getColumnHidingHeaderInput(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_INPUT_CLASS));
+    }
+
+    public static getColumnChooserFilterInput(columnChooserElement: DebugElement): DebugElement {
+        return this.getColumnHidingHeaderInput(columnChooserElement).query(By.directive(IgxInputDirective));
+    }
+
+    public static getColumnChooserItems(columnChooserElement: DebugElement): DebugElement[] {
+        return columnChooserElement.queryAll(By.css('igx-checkbox'));
+    }
+
+    public static getColumnChooserItemElement(columnChooserElement: DebugElement, name: string): DebugElement {
+        const item = this.getColumnChooserItems(columnChooserElement).find((el) => el.nativeElement.outerText.includes(name));
+        return item;
+    }
+
+    public static clickColumnChooserItem(columnChooserElement: DebugElement, name: string) {
+        const item = this.getColumnChooserItemElement(columnChooserElement, name);
+        item.triggerEventHandler('change', new Event('change'));
+    }
+
+    public static getColumnChooserItemInput(item: DebugElement): HTMLInputElement {
+        return item.query(By.css('input')).nativeElement as HTMLInputElement;
+    }
+
+    public static getColumnChooserButton(columnChooserElement: DebugElement, name: string): DebugElement {
+        const buttonElements = columnChooserElement.queryAll(By.css('button'));
+        return buttonElements.find((el) => (el.nativeElement as HTMLButtonElement).textContent === name);
+    }
+
+    public static getColumnHidingColumnsContainer(columnChooserElement: DebugElement): DebugElement {
+        return columnChooserElement.query(By.css(COLUMN_HIDING_COLUMNS_CLASS));
+    }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -1901,8 +1975,14 @@ export class GridSummaryFunctions {
         return footer.query(By.css(SUMMARY_ROW));
     }
 
+    public static getRootPinnedSummaryCells(fix): DebugElement[] {
+        const rootSummaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+        return rootSummaryRow.queryAll(By.css(`${SUMMARY_CELL}.${PINNED_SUMMARY}`));
+    }
+
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summaryRow = rowIndex ? GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex)
+            : GridSummaryFunctions.getRootSummaryRow(fix);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
@@ -1978,21 +2058,11 @@ export class GridSummaryFunctions {
         expect(hasClass === active).toBeTruthy();
     }
 
-    public static moveSummaryCell =
-        (fix, row, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
-            const summaryRow = typeof row === 'number' ?
-                GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
-            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            UIInteractions.triggerEventHandlerKeyDown(key, summaryCell, false, shift, ctrl);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            resolve();
-        })
-
-    public static focusSummaryCell(fix, rowIndex, cellIndex) {
-        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+    public static focusSummaryCell(fix, row, cellIndex) {
+        const summaryRow = typeof row === 'number' ?
+            GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        summaryCell.triggerEventHandler('focus', {});
+        UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
         fix.detectChanges();
     }
 }
@@ -2000,7 +2070,6 @@ export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
             UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-            startCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
             await wait();
             fix.detectChanges();
@@ -2014,7 +2083,6 @@ export class GridSelectionFunctions {
 
     public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
         UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
-        startCell.nativeElement.dispatchEvent(new Event('focus'));
         fix.detectChanges();
 
         UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);

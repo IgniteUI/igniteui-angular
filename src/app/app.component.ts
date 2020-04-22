@@ -354,8 +354,13 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/slider',
-            icon: 'linear_scale',
+            icon: 'tab',
             name: 'Slider'
+        },
+        {
+            link: '/splitter',
+            icon: 'linear_scale',
+            name: 'Splitter'
         },
         {
             link: '/snackbar',
@@ -431,6 +436,11 @@ export class AppComponent implements OnInit {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
+        },
+        {
+            link: '/date-time-editor',
+            icon: 'view_column',
+            name: 'DateTime Editor'
         },
         {
             link: '/ripple',

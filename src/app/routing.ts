@@ -23,6 +23,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
+import { SplitterSampleComponent } from './splitter/slitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -93,6 +94,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 
@@ -215,6 +217,10 @@ const appRoutes = [
         component: MaskSampleComponent
     },
     {
+        path: 'date-time-editor',
+        component: DateTimeEditorSampleComponent
+    },
+    {
         path: 'navbar',
         component: NavbarSampleComponent
     },
@@ -249,6 +255,10 @@ const appRoutes = [
     {
         path: 'slider',
         component: SliderSampleComponent
+    },
+    {
+        path: 'splitter',
+        component: SplitterSampleComponent
     },
     {
         path: 'snackbar',

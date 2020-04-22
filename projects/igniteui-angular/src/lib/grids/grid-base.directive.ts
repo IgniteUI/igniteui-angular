@@ -28,9 +28,9 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, combineLatest, pipe } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -203,7 +203,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
-
     /**
      * @hidden @internal
      */
@@ -215,7 +214,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
     protected defaultCollapsedTemplate: TemplateRef<any>;
-
 
     /**
      * Gets/Sets the resource strings.
@@ -267,7 +265,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public loadingGridTemplate: TemplateRef<any>;
-
 
     /**
      * Gets/Sets the filtering logic of the `IgxGridComponent`.
@@ -1356,6 +1353,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
+    @DeprecateProperty('onGridKeydown event is deprecated. Now you can directly bind to keydown on the IgxGrid component.')
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
@@ -1898,17 +1896,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get firstEditableColumnIndex(): number {
-        const index = this.navigation.gridOrderedColumns.findIndex(e => e.editable);
-        return index !== -1 ? index : null;
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a - b);
+        return index.length ? index[0] : null;
     }
 
     /**
      * @hidden @internal
      */
     public get lastEditableColumnIndex(): number {
-        const orderedColumns = this.navigation.gridOrderedColumns;
-        const index = orderedColumns.reverse().findIndex(e => e.editable);
-        return index !== -1 ? orderedColumns.length - 1 - index : null;
+        const index = this.visibleColumns.filter(col => col.editable)
+            .map(c => c.visibleIndex).sort((a, b) => a > b ? -1 : 1);
+        return index.length ? index[0] : null;
     }
 
     /**
@@ -1942,6 +1941,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @HostBinding('attr.tabindex')
     public tabindex = 0;
+
+    get activeDescendant() {
+        const activeElem = this.navigation.activeNode;
+        if (activeElem) {
+            return !this.navigation.isDataRow(activeElem.row, true) ? this.id + '_' + activeElem.row :
+                this.id + '_' + activeElem.row + '_' + activeElem.column;
+        }
+        return null;
+    }
 
     /**
      * @hidden @internal
@@ -2326,7 +2334,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._rowSelectionMode;
     }
 
-
     set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
@@ -2433,6 +2440,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public columnWidthSetByUser = false;
+
+    /**
+     * @hidden @internal
+     */
+    public unpinnedRecords: any[];
 
     data: any[];
     filteredData: any[];
@@ -2582,17 +2594,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
-        if (isEdge()) { this.wheelHandler(false); }
         this.disableTransitions = true;
 
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                if (this.rowEditable) {
+                    this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+                }
             });
-
-            if (this.rowEditable) {
-                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
-            }
         });
         this.disableTransitions = false;
 
@@ -2601,7 +2611,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private horizontalScrollHandler = (event) => {
         const scrollLeft = event.target.scrollLeft;
-        if (isEdge()) { this.wheelHandler(true); }
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.cdr.markForCheck();
@@ -2637,6 +2646,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public isGroupByRecord(rec) {
         return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isGhostRecord(record: any): boolean {
+        return record.ghostRecord !== undefined;
+    }
+
+    /**
+     * @hidden
+     */
+    public getRowIndex(rowIndex, pinned) {
+        if (pinned && !this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.dataView.length;
+        } else if (!pinned && this.isRowPinningToTop) {
+            rowIndex = rowIndex + this.pinnedRecordsCount;
+        }
+        return rowIndex;
     }
 
     /**
@@ -2716,25 +2744,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this._pinnedRecordIDs.length;
     }
 
-    private keydownHandler = (event) => {
-        const key = event.key.toLowerCase();
-        if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
-            event.preventDefault();
-            if (key === 'pagedown') {
-                this.verticalScrollContainer.scrollNextPage();
-                this.nativeElement.focus();
-            } else if (key === 'pageup') {
-                this.verticalScrollContainer.scrollPrevPage();
-                this.nativeElement.focus();
-            }
-        }
-    }
-
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        protected gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -2817,7 +2831,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
 
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
+            if (this.overlayService.getOverlayById(event.id)?.settings?.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
             }
@@ -2857,10 +2871,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
-            this._headerFeaturesWidth = NaN;
-            this.summaryService.summaryHeight = 0;
             this.endEdit(true);
-            this.cdr.markForCheck();
+            this.summaryService.summaryHeight = 0;
+            this.notifyChanges(true);
         });
 
         this.onRowPinning.subscribe(() => {
@@ -2917,8 +2930,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public setFilterData(data, pinned: boolean) {
         if (this.hasPinnedRecords && pinned) {
-            this._filteredPinnedData = data;
-            this.filteredData = [... this._filteredPinnedData, ... this._filteredUnpinnedData];
+            this._filteredPinnedData = data || [];
+            const filteredUnpinned =  this._filteredUnpinnedData || [];
+            this.filteredData = [... this._filteredPinnedData, ... filteredUnpinned];
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
@@ -2974,6 +2988,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
+        data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
@@ -3009,10 +3024,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.addEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
-
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
@@ -3031,8 +3044,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.scrollHandler);
-        vertScrDC.addEventListener('wheel', () => this.wheelHandler());
-
         this.pinContainers.changes.subscribe((c) => {
             if (this.hasPinnedRecords) {
                 // on row pin containers change grid sizes should be recalculated.
@@ -3107,12 +3118,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.scrollHandler);
-            vertScrDC.removeEventListener('wheel', () => this.wheelHandler());
         });
     }
 
@@ -3420,7 +3429,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned);
+        return this.rowList.filter(x => x.pinned && !x.disabled);
     }
 
     /**
@@ -3466,6 +3475,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
+    }
+
+    public getColumnByVisibleIndex(index: number): IgxColumnComponent {
+        return this.visibleColumns.find((col) => !col.columnGroup && !col.columnLayout && col.visibleIndex === index);
     }
 
     /**
@@ -3523,6 +3536,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (columnId !== -1) {
             return this.gridAPI.get_cell_by_index(rowIndex, columnId);
         }
+    }
+
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): IgxGridCellComponent {
+        return this.gridAPI.get_cell_by_visible_index(rowIndex, index);
+
     }
 
     /**
@@ -5145,7 +5163,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get dataView(): any[] {
-        return this.verticalScrollContainer.igxForOf;
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
+    }
+
+     /**
+      * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
+      * @example
+      * ```typescript
+      *      const pinnedDataView = this.grid.pinnedDataView;
+      * ```
+      */
+    get pinnedDataView(): any[] {
+        return this.pinnedRows.map(row => row.rowData);
     }
 
     /**
@@ -5209,7 +5238,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Deselects all rows
      * @remarks
      * By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
-     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
+     * If you set the parameter onlyFilterData to false that will deselect all rows in the grid exept deleted rows.
      * @example
      * ```typescript
      * this.grid.deselectAllRows();
@@ -5272,7 +5301,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             default:
                 return;
         }
-        this.wheelHandler();
     }
 
     /**
@@ -5353,8 +5381,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 columnsArray.forEach((col) => {
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
-                        record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
-                            : source[row][col.field];
+                        const value = source[row].ghostRecord ? source[row].recordRef[col.field] : source[row][col.field];
+                        record[key] = formatters && col.formatter ? col.formatter(value) : value;
                     }
                 });
             }
@@ -5389,7 +5417,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
@@ -5590,18 +5618,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
-        this.wheelHandler();
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
-        const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
             this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
                 () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }
@@ -5629,7 +5655,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
         if (this.dataView.slice(currRowIndex, currRowIndex + 1)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
             if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex) === currRowIndex) {
@@ -5662,13 +5688,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
         if (this.dataView.slice(currRowIndex, currRowIndex + 1)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
+            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData) && prevCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
         } else {
-            if (colIndexes.length === 0 || this.getPrevDataRowIndex(currRowIndex) === currRowIndex) {
+            if (colIndexes.length === 0 || this.getNextDataRowIndex(currRowIndex, true) === currRowIndex) {
                 return { rowIndex: currRowIndex, visibleColumnIndex: curVisibleColIndex };
             } else {
-                return { rowIndex: this.getPrevDataRowIndex(currRowIndex), visibleColumnIndex: colIndexes[0] };
+                return { rowIndex: this.getNextDataRowIndex(currRowIndex, true), visibleColumnIndex: colIndexes[0] };
             }
         }
     }
@@ -5701,19 +5727,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         cb(args);
     }
 
-    private getPrevDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex <= 0) { return currentRowIndex; }
-
-        const prevRow = this.dataView.slice(0, currentRowIndex).reverse()
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
-        return prevRow ? this.dataView.indexOf(prevRow) : currentRowIndex;
-    }
-
-    private getNextDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex === this.dataView.length) { return currentRowIndex; }
-
-        const nextRow = this.dataView.slice(currentRowIndex + 1, this.dataView.length)
-            .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
+    private getNextDataRowIndex(currentRowIndex, previous = false): number {
+        if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
+            return currentRowIndex;
+        }
+        const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :
+            this.dataView.slice(currentRowIndex + 1, this.dataView.length);
+        const nextRow = rows.find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData);
         return nextRow ? this.dataView.indexOf(nextRow) : currentRowIndex;
     }
 
@@ -5722,24 +5742,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0 && !col.hidden).length;
         if (rows < 1 || cols < 1) { return false; }
         if (rowIndex > -1 && rowIndex < this.dataView.length &&
-            colIndex > - 1 && colIndex < cols) {
+            colIndex > - 1 && colIndex <= Math.max(...this.visibleColumns.map(c => c.visibleIndex))) {
             return true;
         }
         return false;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public wheelHandler = (isScroll = false) => {
-        if (this.document.activeElement &&
-            // tslint:disable-next-line:no-bitwise
-            (this.document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-                // tslint:disable-next-line:no-bitwise
-                (this.document.activeElement.
-                    compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
-            (this.document.activeElement as HTMLElement).blur();
-        }
     }
 
     /**
@@ -6166,7 +6172,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
                 if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
-                    c.target.nativeElement.focus();
+                    c.target.activate();
                 }
             });
         }
@@ -6270,22 +6276,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
-        const context = args.view.context;
-        if (context['templateID'] === 'dataRow') {
-            // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
-            // hence we need to trigger it manually when cell is detached.
-            const row = this.getRowByIndex(context.index);
-            const focusedCell = row && row.cells ? row.cells.find(x => x.focused) : false;
-            if (focusedCell) {
-                focusedCell.onBlur();
-            }
-        }
     }
 
     /**

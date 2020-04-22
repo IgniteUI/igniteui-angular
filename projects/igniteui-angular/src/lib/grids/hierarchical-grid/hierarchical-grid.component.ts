@@ -494,6 +494,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     public isHierarchicalRecord(record: any): boolean {
+        if (this.isGhostRecord(record)) {
+            record = record.recordRef;
+        }
         return this.childLayoutList.length !== 0 && record[this.childLayoutList.first.key];
     }
 
@@ -519,7 +522,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public getContext(rowData): any {
+    public getContext(rowData, rowIndex, pinned): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this.childGridTemplates.get(rowData.rowID);
             if (cachedData) {
@@ -542,9 +545,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
-                index: this.dataView.indexOf(rowData)
+                index: this.getRowIndex(rowIndex, pinned),
+                disabled: this.isGhostRecord(rowData)
             };
         }
     }
