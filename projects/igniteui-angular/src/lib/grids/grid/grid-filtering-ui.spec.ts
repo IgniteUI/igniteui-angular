@@ -1725,7 +1725,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click more icon
-            let moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
             moreIcon.triggerEventHandler('click', null);
             tick(100);
             fix.detectChanges();
