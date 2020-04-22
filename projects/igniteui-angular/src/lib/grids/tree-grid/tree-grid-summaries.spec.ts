@@ -1238,7 +1238,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         it('should be able to select root summaries with arrow keys', async () => {
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
-            UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+            UIInteractions.simulateClickAndSelectEvent(summaryCell);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -1287,7 +1287,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
-            UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+            UIInteractions.simulateClickAndSelectEvent(summaryCell);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridFooter, false, false, true);
@@ -1314,7 +1314,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
-            UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+            UIInteractions.simulateClickAndSelectEvent(summaryCell);
             fix.detectChanges();
 
             for (let i = 0; i < 5; i++) {
@@ -1346,7 +1346,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
-            UIInteractions.simulateClickAndSelectCellEvent(summaryCell);
+            UIInteractions.simulateClickAndSelectEvent(summaryCell);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 6, 1);
@@ -1411,7 +1411,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             let cell = treeGrid.getCellByColumn(0, 'ID');
-           UIInteractions.simulateClickAndSelectCellEvent(cell);
+           UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             expect(cell.selected).toBe(true);

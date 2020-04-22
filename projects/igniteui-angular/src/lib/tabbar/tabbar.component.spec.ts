@@ -270,15 +270,15 @@ describe('IgxBottomNav', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[2].elementRef()); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[2].elementRef()); });
             tick();
             expect(location.path()).toBe('/view3');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].elementRef()); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].elementRef()); });
             tick();
             expect(location.path()).toBe('/view2');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].elementRef()); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].elementRef()); });
             tick();
             expect(location.path()).toBe('/view1');
         }));
@@ -326,7 +326,7 @@ describe('IgxBottomNav', () => {
             tick();
             expect(location.path()).toBe('/');
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[0].elementRef()); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[0].elementRef()); });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
@@ -334,7 +334,7 @@ describe('IgxBottomNav', () => {
             expect(theTabs[0].isSelected).toBe(true);
             expect(theTabs[1].isSelected).toBe(false);
 
-            fixture.ngZone.run(() => { UIInteractions.clickElement(theTabs[1].elementRef()); });
+            fixture.ngZone.run(() => { UIInteractions.simulateClickAndSelectEvent(theTabs[1].elementRef()); });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
