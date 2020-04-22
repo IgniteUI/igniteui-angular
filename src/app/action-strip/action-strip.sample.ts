@@ -38,8 +38,10 @@ export class ActionStripSampleComponent {
         }
     }
 
-    onMouseLeave(actionstrip) {
-        actionstrip.hide();
+    onMouseLeave(actionstrip, event?) {
+        if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
+            actionstrip.hide();
+        }
     }
 
     setDensity(density: DisplayDensity) {

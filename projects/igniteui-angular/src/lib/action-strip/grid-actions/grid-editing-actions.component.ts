@@ -1,5 +1,5 @@
-import {Component, HostBinding} from '@angular/core';
-import {IgxGridActionsBaseDirective} from './grid-actions-base.directive';
+import { Component, HostBinding } from '@angular/core';
+import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -24,9 +24,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public startEdit(): void {
-        const firstEditable = this.context.cells ?
-            this.context.cells.filter(cell => cell.editable)[0] : this.context;
-        this.grid.crudService.begin(firstEditable);
+        const context = this.strip.context;
+        const firstEditable = context.cells ?
+            context.cells.filter(cell => cell.editable)[0] : context;
+        const grid = firstEditable.row.grid;
+        grid.crudService.begin(firstEditable);
         firstEditable.focused = true;
     }
 
@@ -38,7 +40,9 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     deleteRow() {
-        const row = this.context.row ? this.context.row : this.context;
-        this.grid.deleteRow(row.rowID);
+        const context = this.strip.context;
+        const row = context.row ? context.row : context;
+        const grid = row.grid;
+        grid.deleteRow(row.rowID);
     }
 }

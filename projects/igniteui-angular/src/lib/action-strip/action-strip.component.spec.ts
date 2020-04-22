@@ -1,4 +1,4 @@
-import { IgxActionStripComponent, IgxActionStripModule } from './action-strip.component';
+import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxActionStripModule } from './action-strip.module';
 
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';

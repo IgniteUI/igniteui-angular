@@ -38,7 +38,7 @@
                     </igx-column>
 
                     <igx-action-strip #actionstrip1  [(displayDensity)]="displayDensity">
-                        <igx-grid-pinning-actions [grid]="grid1"></igx-grid-pinning-actions>
+                        <igx-grid-pinning-actions></igx-grid-pinning-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
@@ -59,8 +59,8 @@
                     </igx-column>
 
                     <igx-action-strip #actionstrip2 [(displayDensity)]="displayDensity">
-                        <igx-grid-pinning-actions [grid]="grid2"></igx-grid-pinning-actions>
-                        <igx-grid-editing-actions [grid]="grid2"></igx-grid-editing-actions>
+                        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>
@@ -70,19 +70,14 @@
             <div class="sample-column">
                 <h5>Actions in menu</h5>
                 <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
-                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity" (mouseleave)="onMouseLeave(actionstrip3)">
+                    [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity" (mouseleave)="onMouseLeave(actionstrip3, $event)" (mouseover)="onMouseOver($event, grid3, actionstrip3)">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
                         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
-                        <ng-template igxCell let-cell="cell" let-val>
-                            <div class="cell-template" (mouseover)="actionstrip3.show(cell.row)">
-                                <span>{{val}}</span>
-                            </div>
-                        </ng-template>
                     </igx-column>
 
                     <igx-action-strip #actionstrip3 [(displayDensity)]="displayDensity">
-                        <igx-grid-pinning-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-pinning-actions>
-                        <igx-grid-editing-actions *igxActionStripMenuItem [grid]="grid3"></igx-grid-editing-actions>
+                        <igx-grid-pinning-actions *igxActionStripMenuItem></igx-grid-pinning-actions>
+                        <igx-grid-editing-actions *igxActionStripMenuItem></igx-grid-editing-actions>
                     </igx-action-strip>
                 </igx-grid>
             </div>

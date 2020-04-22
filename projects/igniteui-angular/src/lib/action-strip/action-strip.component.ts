@@ -1,29 +1,19 @@
 import {
     Component,
-    ContentChildren,
     Directive,
-    forwardRef,
     HostBinding,
     Input,
-    NgModule,
-    QueryList,
     Renderer2,
     TemplateRef,
     ViewContainerRef,
     Optional,
     Inject,
+    ContentChildren,
+    QueryList,
     ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IgxDropDownModule, IgxDropDownComponent } from '../drop-down/index';
-import { IgxIconModule } from '../icon/index';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-actions.component';
-import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
-import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IgxDropDownComponent } from '../drop-down';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -127,15 +117,6 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * ```
      */
     public context;
-
-    /**
-     *  Grid Action ContentChildren inside the Action Strip
-     * @hidden
-     * @internal
-     */
-    @ContentChildren(forwardRef(() => IgxGridActionsBaseDirective), { descendants: true })
-    public gridActions: QueryList<IgxGridActionsBaseDirective>;
-
     /**
      * Menu Items ContentChildren inside the Action Strip
      * @hidden
@@ -161,12 +142,14 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * ```
      */
     public show(context): void {
+        // when shown for different context make sure the menu won't stay opened
+        if (this.context !== context) {
+           this.closeMenu();
+        }
         this.context = context;
         this.hidden = false;
-        this.closeMenu();
         if (this.context && this.context.element) {
             this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
-            this.sendContext();
         }
     }
 
@@ -190,32 +173,5 @@ export class IgxActionStripComponent extends DisplayDensityBase {
             this.menu.close();
         }
     }
-
-    private sendContext() {
-        if (this.gridActions) {
-            this.gridActions.forEach(action => action.context = this.context);
-        }
-    }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [
-        IgxActionStripComponent,
-        IgxActionStripMenuItemDirective,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective
-    ],
-    exports: [
-        IgxActionStripComponent,
-        IgxActionStripMenuItemDirective,
-        IgxGridPinningActionsComponent,
-        IgxGridEditingActionsComponent,
-        IgxGridActionsBaseDirective
-    ],
-    imports: [CommonModule, IgxDropDownModule, IgxToggleModule, IgxButtonModule, IgxIconModule, IgxRippleModule]
-})
-export class IgxActionStripModule { }

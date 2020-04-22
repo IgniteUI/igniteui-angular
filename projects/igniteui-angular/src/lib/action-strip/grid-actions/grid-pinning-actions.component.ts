@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, HostBinding} from '@angular/core';
-import {IgxGridActionsBaseDirective} from './grid-actions-base.directive';
+import { Component, HostBinding } from '@angular/core';
+import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-pinning-actions',
@@ -7,7 +7,7 @@ import {IgxGridActionsBaseDirective} from './grid-actions-base.directive';
     providers: [{ provide: IgxGridActionsBaseDirective, useExisting: IgxGridPinningActionsComponent }]
 })
 
-export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {
+export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective {
     /**
      * Host `class.igx-action-strip` binding.
      * @hidden
@@ -16,14 +16,21 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
     @HostBinding('class.igx-action-strip__pining-actions')
     public cssClass = 'igx-action-strip__pining-actions';
 
+    private iconsRendered = false;
+
     /**
      * Getter to know if the row is pinned
      * @hidden
      * @internal
      */
     get pinned() {
-        return this.context &&
-            (this.context.pinned || this.context.row && this.context.row.pinned);
+        const context = this.strip.context;
+        if (context && !this.iconsRendered) {
+            this.renderIcons();
+            this.iconsRendered = true;
+        }
+        return context &&
+            (context.pinned || context.row && context.row.pinned);
     }
 
     /**
@@ -34,8 +41,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public pin(): void {
-        const row = this.context.row ? this.context.row : this.context;
-        this.grid.pinRow(row.rowID);
+        const context = this.strip.context;
+        const row = context.row ? context.row : context;
+        const grid = row.grid;
+        grid.pinRow(row.rowID);
     }
 
     /**
@@ -46,13 +55,17 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public unpin(): void {
-        const row = this.context.row ? this.context.row : this.context;
-        this.grid.unpinRow(row.rowID);
+        const context = this.strip.context;
+        const row = context.row ? context.row : context;
+        const grid = row.grid;
+        grid.unpinRow(row.rowID);
     }
 
-    ngAfterViewInit() {
-        if (this.grid) {
-            this.grid.filteringService.registerSVGIcons();
+    private renderIcons() {
+        const context = this.strip.context;
+        const grid = context.row ? context.row.grid : context.grid;
+        if (grid) {
+            grid.filteringService.registerSVGIcons();
         }
     }
 }

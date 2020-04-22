@@ -1,6 +1,8 @@
-<button igxButton="icon" igxRipple (click)="startEdit()">
-    <igx-icon>edit</igx-icon>
-</button>
-<button igxButton="icon" class="igx-action-strip__delete" igxRipple (click)="deleteRow()">
-    <igx-icon >delete</igx-icon>
-</button>
+<ng-container *ngIf="isRowContext">
+    <button igxButton="icon" igxRipple (click)="startEdit()">
+        <igx-icon>edit</igx-icon>
+    </button>
+    <button igxButton="icon" class="igx-action-strip__delete" igxRipple (click)="deleteRow()">
+        <igx-icon >delete</igx-icon>
+    </button>
+</ng-container>
