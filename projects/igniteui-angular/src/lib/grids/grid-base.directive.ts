@@ -2454,10 +2454,26 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
+    /**
+     * @hidden
+     */
     protected _filteredSortedPinnedData;
+    /**
+     * @hidden
+     */
     protected _filteredSortedUnpinnedData;
+    /**
+     * @hidden
+     */
     protected _filteredPinnedData;
+    /**
+     * @hidden
+     */
     protected _filteredUnpinnedData;
+    /**
+     * @hidden
+     */
+    private _pinnedRowHeight = 0;
 
     /**
      * @hidden
@@ -4241,17 +4257,33 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return true;
     }
 
-    get pinnedRowHeight() {
+    /**
+     * @hidden @internal
+     */
+    public get pinnedRowHeight(): number {
+        if (!this.hasPinnedRecords) {
+            return 0;
+        }
         const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
         const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
-        return this.hasPinnedRecords ? containerHeight : 0;
+        if (containerHeight !== this._pinnedRowHeight) {
+            this._pinnedRowHeight = containerHeight;
+            this.calcHeight = this._calculateGridBodyHeight() - containerHeight;
+        }
+        return containerHeight;
     }
 
-    get totalHeight() {
+    /**
+     * @hidden @internal
+     */
+    public get totalHeight(): number {
         return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
     }
 
-    get pinnedBottom() {
+    /**
+     * @hidden @internal
+     */
+    public get pinnedBottom(): number {
         const start = this.verticalScrollContainer.state.startIndex;
         const end = this.verticalScrollContainer.state.startIndex + this.verticalScrollContainer.state.chunkSize - 1;
         const bottom = this.verticalScrollContainer.getScrollForIndex(end, true) - this.verticalScrollContainer.getScrollForIndex(start);

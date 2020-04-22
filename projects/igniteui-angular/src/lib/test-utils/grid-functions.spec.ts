@@ -74,6 +74,7 @@ const COLUMN_HIDING_CLASS = 'igx-column-hiding';
 const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
 const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
 const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+const GRID_SCROLLBAR_CLASS = 'igx-grid__tbody-scrollbar';
 export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
 export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
@@ -1915,6 +1916,15 @@ export class GridFunctions {
                 expect(cellElem.offsetTop).toBe(expectedTop);
             });
         });
+    }
+
+    /**
+     * Returns the offset height for a grid scrollbar element
+     * @param fix The component fixture
+     * @param element The scrollbar element to return the height for (start, main, end)
+     */
+    public static getScrollElementHeight(fix: ComponentFixture<any>, element: 'start' | 'end' | 'main'): number {
+        return fix.debugElement.query(By.css(`.${GRID_SCROLLBAR_CLASS}-${element}`)).nativeElement.offsetHeight;
     }
 }
 export class GridSummaryFunctions {

@@ -401,6 +401,27 @@ describe('Row Pinning #grid', () => {
             expect(gridFilterData[1].ID).toBe('BERGS');
         });
 
+        it('should keep the scrollbar sizes correct when partially filtering out pinned records', async() => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(3).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(7).pin();
+            fix.detectChanges();
+
+            const pah = GridFunctions.getScrollElementHeight(fix, 'start');
+            const uah = GridFunctions.getScrollElementHeight(fix, 'main');
+
+            grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+            await wait(DEBOUNCE_TIME);
+
+            expect(GridFunctions.getScrollElementHeight(fix, 'start')).toBeLessThan(pah);
+            expect(GridFunctions.getScrollElementHeight(fix, 'main')).toBeGreaterThan(uah);
+        });
+
         it('should apply sorting to both pinned and unpinned rows.', () => {
             grid.getRowByIndex(1).pin();
             grid.getRowByIndex(5).pin();
