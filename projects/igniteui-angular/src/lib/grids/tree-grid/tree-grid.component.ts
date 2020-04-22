@@ -640,7 +640,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             source.push(record.data);
         };
 
-        this.dataView.forEach(process);
+        this.unpinnedDataView.forEach(process);
         source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }

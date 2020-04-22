@@ -5194,7 +5194,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the currently transformed paged/filtered/sorted/grouped row data, displayed in the grid.
+     * Returns the currently transformed paged/filtered/sorted/grouped/pinned/unpinned row data, displayed in the grid.
      * @example
      * ```typescript
      *      const dataView = this.grid.dataView;
@@ -5446,7 +5446,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.dataView;
+        const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
