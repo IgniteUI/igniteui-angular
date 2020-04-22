@@ -221,7 +221,7 @@ describe('IgxInputGroup', () => {
         const prefix = fixture.componentInstance.prefix;
         const input = fixture.componentInstance.igxInput;
 
-        const pointerEvent = UIInteractions.clickEvent;
+        const pointerEvent = UIInteractions.getMouseEvent('click');
         Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
         const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 

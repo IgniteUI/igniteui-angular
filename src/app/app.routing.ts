@@ -68,6 +68,7 @@ import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sam
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 
 const appRoutes = [
@@ -159,6 +160,10 @@ const appRoutes = [
     {
         path: 'mask',
         component: MaskSampleComponent
+    },
+    {
+        path: 'date-time-editor',
+        component: DateTimeEditorSampleComponent
     },
     {
         path: 'navbar',

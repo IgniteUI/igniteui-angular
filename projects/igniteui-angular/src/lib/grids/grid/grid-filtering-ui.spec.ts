@@ -229,13 +229,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
-
-            // greater than or equal to with invalid value should not reset filter
-            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
-            GridFunctions.typeValueInFilterRowInput('254..', fix, input);
-
-            expect(grid.rowList.length).toEqual(3);
-            verifyFilterRowUI(input, close, reset, false);
         }));
 
         // UI tests boolean column
@@ -1675,8 +1668,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const firstRow = GridFunctions.getGridDataRows(fix)[0];
-            const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
+            const firstCell: any = GridFunctions.getRowCells(fix, 0)[0].nativeElement;
             expect(document.activeElement).toBe(firstCell);
         }));
 
@@ -3215,7 +3207,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'ignite', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3496,7 +3488,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'false', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'false', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3580,7 +3572,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'sale', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'sale', fix);
             await wait(200);
             fix.detectChanges();
 
@@ -3601,12 +3593,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(6);
 
-            UIInteractions.sendInputElementValue(input, 'a', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4);
 
-            UIInteractions.sendInputElementValue(input, 'al', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0);
@@ -4278,14 +4270,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const todayDate = todayDateFull.getDate().toString();
             const dayOfWeek = todayDateFull.toString().substring(0, 3);
 
-            UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, todayDate, fix);
             tick(100);
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4, 'incorrect rendered list items count');
 
-            UIInteractions.sendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
             tick(100);
             fix.detectChanges();
 
