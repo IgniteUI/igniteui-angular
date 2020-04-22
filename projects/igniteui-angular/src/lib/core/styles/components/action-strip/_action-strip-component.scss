@@ -27,4 +27,12 @@
     @include e(delete) {
         @extend %igx-action-strip__delete !optional;
     }
+
+    @include e(editing-actions) {
+        @extend %igx-action-strip__editing-actions !optional;
+    }
+
+    @include e(pining-actions) {
+        @extend %igx-action-strip__pining-actions !optional;
+    }
 }

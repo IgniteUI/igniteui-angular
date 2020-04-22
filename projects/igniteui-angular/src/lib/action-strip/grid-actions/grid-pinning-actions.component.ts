@@ -1,5 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
+import {AfterViewInit, Component, HostBinding} from '@angular/core';
+import {IgxGridActionsBaseDirective} from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-pinning-actions',
@@ -8,6 +8,14 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 })
 
 export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective implements AfterViewInit {
+    /**
+     * Host `class.igx-action-strip` binding.
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-action-strip__pining-actions')
+    public cssClass = 'igx-action-strip__pining-actions';
+
     /**
      * Getter to know if the row is pinned
      * @hidden

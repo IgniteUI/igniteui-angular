@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
+import {Component, HostBinding} from '@angular/core';
+import {IgxGridActionsBaseDirective} from './grid-actions-base.directive';
 
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -8,6 +8,14 @@ import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
 })
 
 export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective {
+    /**
+     * Host `class.igx-action-strip` binding.
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-action-strip__editing-actions')
+    public cssClass = 'igx-action-strip__editing-actions';
+
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
      * @example
