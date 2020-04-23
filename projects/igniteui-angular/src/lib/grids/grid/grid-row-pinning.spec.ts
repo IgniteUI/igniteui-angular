@@ -459,6 +459,9 @@ describe('Row Pinning #grid', () => {
             expect(grid.expansionStates.get(pinnedRow.rowID)).toBeTruthy();
             // disabled row should have expand icon
             expect(firstRowIconName).toEqual('expand_more');
+            // disabled row should have chip
+            const cell = grid.getRowByIndex(0).cells.first;
+            expect(cell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
             // pinned row shouldn't have expand icon
             const hasIconForPinnedRow = pinnedRow.cells.first.nativeElement.querySelector('igx-icon');
             expect(hasIconForPinnedRow).toBeNull();
