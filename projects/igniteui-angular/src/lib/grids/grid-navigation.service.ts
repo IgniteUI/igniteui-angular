@@ -138,12 +138,12 @@ export class IgxGridNavigationService {
         const alt = event.altKey;
         let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
 
-        if (ctrl && key.includes('up') && column.sortable) {
+        if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
             this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
             return;
         }
-        if (ctrl && key.includes('down') && column.sortable) {
+        if (ctrl && key.includes('down') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
             this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
             return;
@@ -176,8 +176,8 @@ export class IgxGridNavigationService {
                 this.grid.filteringService.isFilterRowVisible = true;
             }
         }
-        if (shift) { return; }
-        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl, alt);
+        if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
+        !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
     }
 
     protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
@@ -396,7 +396,7 @@ export class IgxGridNavigationService {
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
 
-    private handleMCHeaderNav(key: string, ctrl: boolean, alt: boolean) {
+    private handleMCHeaderNav(key: string, ctrl: boolean) {
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
                 filter(c => c.level === this.activeNode.level).map(col => col.visibleIndex));

@@ -182,6 +182,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         it('should focus the first cell when focus the grid body', async () => {
+            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
+            fix.detectChanges();
             const cols = [];
             for (let i = 0; i < 10; i++) {
                 cols.push({ field: 'col' + i });
@@ -634,6 +636,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         it('should focus the first cell when focus the grid body and there is a grouped column', async () => {
+            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
+            fix.detectChanges();
             grid.columnWidth = '200px';
             await wait();
             fix.detectChanges();
@@ -650,11 +654,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const cell = grid.getCellByColumn(1, 'col0');
-            expect(cell).toBeDefined();
-            expect(cell.active).toBeTruthy();
-            expect(cell.selected).toBeTruthy();
-            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
+            const row = grid.getRowByIndex(0);
+            expect(row).toBeDefined();
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
         });
 
