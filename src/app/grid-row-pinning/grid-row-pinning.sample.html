@@ -81,7 +81,7 @@
 
         <div class="sample-column">
             <div>igxTreeGrid</div>
-            <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+            <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
             [width]="'900px'" [height]="'800px'" [showToolbar]="true"
             [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
            >
@@ -94,7 +94,7 @@
             </igx-column>
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
                 [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-                [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
                 [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
 
