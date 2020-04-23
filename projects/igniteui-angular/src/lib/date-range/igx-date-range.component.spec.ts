@@ -26,8 +26,12 @@ function getDatesInView(dates: DebugElement[]): DebugElement[] {
 
 // tslint:disable: no-use-before-declare
 describe('IgxRangeDatePicker', () => {
+    let endDate: Date;
+    let startDate: Date;
+    let toggleBtn: DebugElement;
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
+    let singleInputElement: DebugElement;
 
     // let singleInputRange: DateRangeSingleInputTestComponent;
     // let twoInputsRange: DateRangeTwoInputsTestComponent;
@@ -67,34 +71,43 @@ describe('IgxRangeDatePicker', () => {
         });
 
         it('should render aria attributes properly', fakeAsync(() => {
-            fixture = TestBed.createComponent(DateRangeSingleInputTestARIAComponent);
+            fixture = TestBed.createComponent(DateRangeDefaultARIAComponent);
             fixture.detectChanges();
             const dateRangeSingle = fixture.componentInstance.dateRange;
-            fixture.detectChanges();
 
-            const singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             calendarElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR));
-            calendarWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR_WRAPPER));
+            singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            startDate = new Date(2020, 1, 1);
+            endDate = new Date(2020, 1, 4);
             const expectedLabelID = dateRangeSingle.label.id;
-            const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
+            const expectedPlaceholder = singleInputElement.nativeElement.getAttribute('placeholder');
 
             expect(singleInputElement.nativeElement.getAttribute('role')).toEqual('combobox');
+            expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual(expectedPlaceholder);
             expect(singleInputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('grid');
             expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
             expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
             expect(calendarElement.nativeElement.getAttribute('role')).toEqual('grid');
             expect(singleInputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(expectedLabelID);
-            dateRangeSingle.toggle();
+            dateRangeSingle.toggleDirective.toggle();
             tick();
             fixture.detectChanges();
 
+            calendarWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR_WRAPPER));
             expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
             expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
-            dateRangeSingle.toggle();
+            dateRangeSingle.toggleDirective.toggle();
             tick();
             fixture.detectChanges();
+
             expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
+            expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
+
+            dateRangeSingle.selectRange(startDate, endDate);
+            fixture.detectChanges();
+            expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
         }));
 
     });
@@ -382,24 +395,18 @@ export class DateRangeSingleInputTestComponent extends DateRangeTestComponent {
 @Component({
     selector: 'igx-date-range-single-input-aria-test',
     template: `
-    <igx-date-range [mode]="mode" [doneButtonText]="doneButtonText">
-        <igx-input-group>
-            <input #singleInput igxInput igxDateRange type="text">
-            <label igxLabel for="singleInput">Input Date</label>
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-        </igx-input-group>
+    <igx-date-range [mode]="'dropdown'">
+        <label igxLabel>Select Date</label>
     </igx-date-range>
-`
+    `
 })
-export class DateRangeSingleInputTestARIAComponent extends DateRangeTestComponent {
+export class DateRangeDefaultARIAComponent extends DateRangeTestComponent {
 }
 
 @NgModule({
     declarations: [
         DateRangeSingleInputTestComponent,
-        DateRangeSingleInputTestARIAComponent,
+        DateRangeDefaultARIAComponent,
         DateRangeTwoInputsTestComponent,
         DateRangeTestComponent
     ],
@@ -415,7 +422,7 @@ export class DateRangeSingleInputTestARIAComponent extends DateRangeTestComponen
     ],
     exports: [
         DateRangeSingleInputTestComponent,
-        DateRangeSingleInputTestARIAComponent,
+        DateRangeDefaultARIAComponent,
         DateRangeTwoInputsTestComponent,
         DateRangeTestComponent
     ]

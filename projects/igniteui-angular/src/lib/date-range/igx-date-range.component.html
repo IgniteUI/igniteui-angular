@@ -1,10 +1,8 @@
-<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
+<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
-    <div class="igx-date-picker">
-        <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
-                      [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
-                      (onSelection)="handleSelection($event)"></igx-calendar>
-    </div>
+    <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
+        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
+        (onSelection)="handleSelection($event)"></igx-calendar>
     <div class="buttonsWrapper">
         <div *ngIf="mode === 'dialog'">
             <div class="doneButton">
@@ -67,9 +65,13 @@
 
 <ng-template #defTemplate>
     <igx-date-single>
-        <input #singleInput igxInput type="text" readonly [placeholder]="this.value ? '' : appliedFormat"
-            role="combobox" aria-haspopup="grid"
-            [attr.aria-labelledby]="this.label?.id" />
+        <input #singleInput igxInput type="text" readonly
+            [placeholder]="this.value ? '' : appliedFormat"
+            role="combobox"
+            aria-haspopup="grid"
+            [attr.aria-expanded]="!toggle.collapsed"
+            [attr.aria-labelledby]="this.label?.id"
+            />
 
         <igx-prefix *ngIf="!this.prefix && !this.suffix" (click)="open()">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
