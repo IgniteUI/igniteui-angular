@@ -152,6 +152,8 @@ export class IgxGridNavigationService {
             direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
             key.includes('right') ? (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false }) :
                 (this.grid as any).clearGrouping(column.field);
+            this.activeNode.column = key.includes('right') && (this.grid as any).hideGroupedColumns &&
+                column.visibleIndex === this.lastColumnIndex ? this.lastColumnIndex - 1 : this.activeNode.column;
             return;
         }
         if (alt && (ROW_EXPAND_KEYS.has(key) || ROW_COLLAPSE_KEYS.has(key))) {
@@ -208,7 +210,8 @@ export class IgxGridNavigationService {
 
     focusFirstCell(header = true) {
         if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
-        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0, level: 0, mchCache: { level: 0, visibleIndex: 0} };
+        this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
+                level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
         this.performHorizontalScrollToCell(0);
     }
 

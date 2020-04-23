@@ -827,7 +827,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('CompanyName', fix);
-            GridFunctions.verifyHeaderIsFocused(header);
+            GridFunctions.verifyHeaderIsFocused(header.parent);
         });
     });
 

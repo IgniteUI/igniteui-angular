@@ -70,7 +70,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public toggleFilterDropdown(element, column) {
-        if (!this._componentOverlayId) {
+        if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
             this.column = column;
             const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
             const filterIconTarget = element.querySelector('.' + filterIcon);
@@ -107,6 +107,7 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.onClosed.pipe(
             filter(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe(() => {
+                console.log('Close');
                 this._componentOverlayId = null;
                 this.grid.theadRow.nativeElement.focus();
             });
