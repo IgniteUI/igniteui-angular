@@ -1,5 +1,5 @@
 {
-  "name": "@infragistics/igniteui-angular-extras",
+  "name": "igniteui-angular-extras",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^9.0.0",

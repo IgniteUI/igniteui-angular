@@ -12,5 +12,5 @@ projectNames.forEach( async(project) => {
     if (stderr) {
         throw new Error(`error: ${stderr}`);
       }
-      console.log(`Number of files ${stdout}`);
+      console.log(`${stdout}`);
 });
