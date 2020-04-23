@@ -6,7 +6,6 @@ import { IgxIconModule } from '../../icon';
 import { IgxGridModule, IgxGridComponent, IgxGridRowComponent } from '../../grids/grid';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxActionStripModule } from '../action-strip.module';
 
 
@@ -67,7 +66,7 @@ describe('igxGridEditingActions #grid ', () => {
     </igx-column>
 
     <igx-action-strip #actionStrip>
-        <igx-grid-editing-actions [grid]="grid"></igx-grid-editing-actions>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
 `
