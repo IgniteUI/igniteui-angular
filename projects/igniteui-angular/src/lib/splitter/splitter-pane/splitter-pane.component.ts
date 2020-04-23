@@ -1,10 +1,17 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 
 /**
- * Provides reference to `SplitPaneComponent` component.
- * Represents individual resizable panes. Users can control the resize behavior via the min and max size properties.
- * @export
- * @class SplitPaneComponent
+ * Represents individual resizable/collapsible panes.
+ * @igxModule IgxSplitterModule
+ *
+ * @igxParent IgxSplitterComponent
+ *
+ * @igxKeywords pane
+ *
+ * @igxGroup presentation
+ *
+ * @remarks
+ *  Users can control the resize behavior via the min and max size properties.
  */
 @Component({
     selector: 'igx-splitter-pane',
@@ -12,9 +19,20 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
 })
 export class IgxSplitterPaneComponent {
 
-    public _size = 'auto';
+    private _size = 'auto';
+    private _collapsed = false;
+
+    /** @hidden @internal */
+    public owner;
+
     /**
-     * Sets/gets the size of the current `IgxSplitterPaneComponent`.
+     * Gets/Sets the size of the current pane.
+     *  * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
      */
     @Input()
     get size() {
@@ -24,73 +42,98 @@ export class IgxSplitterPaneComponent {
     set size(value) {
         this._size = value;
         this.el.nativeElement.style.flex = this.flex;
-        this.sizeChange.emit(value);
     }
 
     /**
-     * @hidden @internal
-     */
-    @Output()
-    public sizeChange = new EventEmitter<string>();
-
-    /**
-     * Sets/gets the minimum allowable size of the current `IgxSplitterPaneComponent`.
+     * Gets/Sets the minimum allowed size of the current pane.
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [minSize]='minSize'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
      */
     @Input()
     public minSize!: string;
 
     /**
-     * Sets/gets the maximum allowable size of the current `IgxSplitterPaneComponent`.
+     * Gets/Set the maximum allowed size of the current pane.
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [maxSize]='maxSize'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
      */
     @Input()
     public maxSize!: string;
 
     /**
-     * Sets/Gets whether pane is resizable.
+     * Gets/Sets whether pane is resizable.
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [resizable]='false'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     * @remarks
+     * If pane is not resizable its related splitter bar cannot be dragged.
      */
     @Input()
     public resizable = true;
 
-
     /**
-     * Sets/gets the `order` property of the current `IgxSplitterPaneComponent`.
+     * Event fired when collapsed state of pane is changed.
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane (onToggle)='onPaneToggle($event)'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
      */
-    @Input()
+    @Output()
+    public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
+
+
+    /** @hidden @internal */
     @HostBinding('style.order')
     public order!: number;
 
     /**
+     *
+     * @hidden @internal
      * Gets the host native element.
-     * @readonly
-     * @type *
      */
     public get element(): any {
         return this.el.nativeElement;
     }
 
     /**
-     * Sets/gets the `overflow` property of the current `IgxSplitterPaneComponent`.
+     * @hidden @internal
+     * Gets/Sets the `overflow`.
      */
     @HostBinding('style.overflow')
     public overflow = 'auto';
 
     /**
-     * Sets/gets the `minHeight` and `minWidth` propertis of the current `IgxSplitterPaneComponent`.
+     * @hidden @internal
+     * Gets/Sets the `minHeight` and `minWidth` properties of the current pane.
      */
     @HostBinding('style.min-height')
     @HostBinding('style.min-width')
     public minHeight = 0;
 
     /**
-     * Sets/gets the `maxHeight` and `maxWidth` propertis of the current `IgxSplitterPaneComponent`.
+     * @hidden @internal
+     * Gets/Sets the `maxHeight` and `maxWidth` properties of the current `IgxSplitterPaneComponent`.
      */
     @HostBinding('style.max-height')
     @HostBinding('style.max-width')
     public maxHeight = '100%';
 
     /**
+     * @hidden @internal
      * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
-     * @readonly
      */
     @HostBinding('style.flex')
     public get flex() {
@@ -101,31 +144,56 @@ export class IgxSplitterPaneComponent {
     }
 
     /**
-     * Sets/gets the 'display' property of the current `IgxSplitterPaneComponent`
+     * @hidden @internal
+     * Gets/Sets the 'display' property of the current pane.
      */
     @HostBinding('style.display')
     public display = 'flex';
 
-    private _hidden = false;
-
     /**
-     * Sets/gets whether current `IgxSplitterPanecomponent` is hidden
+     * Gets/Sets whether current pane is collapsed.
+     * @example
+     * ```typescript
+     * const isCollapsed = pane.collapsed;
+     * ```
      */
     @Input()
-    public set hidden(value) {
-        this._hidden = value;
-        this.display = this._hidden ? 'none' : 'flex' ;
+    public set collapsed(value) {
+        this._collapsed = value;
+        this.display = this._collapsed ? 'none' : 'flex' ;
     }
 
-    public get hidden() {
-        return this._hidden;
+    public get collapsed() {
+        return this._collapsed;
+    }
+
+    /** @hidden @internal */
+    private _getSiblings() {
+        const panes = this.owner.panes.toArray();
+        const index = panes.indexOf(this);
+        const siblings = [];
+        if (index !== 0) {
+            siblings.push(panes[index - 1]);
+        }
+        if (index !== panes.length - 1) {
+            siblings.push(panes[index + 1]);
+        }
+        return siblings;
     }
 
     /**
-     * Event fired when collapsing and changing the hidden state of the current pane
+     * Toggles the collapsed state of the pane.
+     * @example
+     * ```typescript
+     * pane.toggle();
+     * ```
      */
-    @Output()
-    public onPaneToggle = new EventEmitter<IgxSplitterPaneComponent>();
+    public toggle() {
+        // reset sibling sizes when pane collapse state changes.
+        this._getSiblings().forEach(sibling => sibling.size = 'auto');
+        this.collapsed = !this.collapsed;
+        this.onToggle.emit(this);
+    }
 
     constructor(private el: ElementRef) { }
 }

@@ -1945,7 +1945,7 @@ describe('IgxGrid Component Tests #grid', () => {
             };
             observer = new MutationObserver(callback);
             observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
-            // UIInteractions.clickElement(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
+            // UIInteractions.simulateClickAndSelectEvent(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
             await wait(16);
             fix.detectChanges();
         });

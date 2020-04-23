@@ -91,6 +91,7 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_column_placeholder?: string;
     igx_grid_advanced_filter_value_placeholder?: string;
     igx_grid_watermark_placeholder?: string;
+    igx_grid_pinned_row_indicator?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -185,5 +186,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"',
     igx_grid_advanced_filter_column_placeholder: 'Select column',
     igx_grid_advanced_filter_value_placeholder: 'Value',
-    igx_grid_watermark_placeholder: 'Text Message'
+    igx_grid_watermark_placeholder: 'Text Message',
+    igx_grid_pinned_row_indicator: 'Pinned'
 };

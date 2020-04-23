@@ -29,7 +29,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     }
 
     public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
-                     id: string, pipeTrigger: number, pinned?): any[] {
+        id: string, pipeTrigger: number, pinned?): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
@@ -103,10 +103,9 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!this.gridAPI.grid.paging) {
             return collection;
         }
-        const _perPage = perPage - this.gridAPI.grid.pinnedRecordsCount;
         const state = {
             index: page,
-            recordsPerPage: _perPage
+            recordsPerPage: perPage
         };
         DataUtil.correctPagingState(state, collection.data.length);
 
@@ -149,35 +148,6 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
         const result = DataUtil.filter(cloneArray(collection), state);
         grid.setFilterData(result, pinned);
-        return result;
-    }
-}
-
-/**
- * @hidden
- */
-@Pipe({
-    name: 'rowPinning',
-    pure: true
-})
-export class IgxGridRowPinningPipe implements PipeTransform {
-
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {}
-
-    public transform(collection: any[] , id: string, isPinned = false, pipeTrigger: number) {
-        const grid = this.gridAPI.grid;
-
-        if (!grid.hasPinnedRecords) {
-            return isPinned ? [] : collection;
-        }
-
-        const result = collection.filter((value, index) => {
-            return  isPinned ? grid.isRecordPinned(value) : !grid.isRecordPinned(value);
-        });
-        if (isPinned) {
-            // pinned records should be ordered as they were pinned.
-            result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
-        }
         return result;
     }
 }

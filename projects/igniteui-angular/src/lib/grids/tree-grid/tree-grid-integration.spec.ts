@@ -8,7 +8,8 @@ import {
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
     IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent,
     IgxTreeGridRowEditingTransactionComponent,
-    IgxTreeGridRowEditingHierarchicalDSTransactionComponent
+    IgxTreeGridRowEditingHierarchicalDSTransactionComponent,
+    IgxTreeGridRowPinningComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -16,10 +17,11 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
-import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../grid';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -38,6 +40,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 IgxTreeGridDateTreeColumnComponent,
                 IgxTreeGridBooleanTreeColumnComponent,
                 IgxTreeGridRowEditingComponent,
+                IgxTreeGridRowPinningComponent,
                 IgxTreeGridMultiColHeadersComponent,
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridRowEditingHierarchicalDSTransactionComponent
@@ -498,7 +501,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            UIInteractions.simulateDoubleClickAndSelectCellEvent(dateCell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(dateCell);
             await wait(30);
             fix.detectChanges();
 
@@ -1372,6 +1375,281 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(leftMostRightPinnedCellsPart < rightMostGridPart).toBeTruthy();
             // Expects that the whole pinned column is visible
             expect(leftMostRightPinnedCellsPart + Number.parseInt(pinnedCellWidth, 10) <= rightMostGridPart).toBeTruthy();
+        });
+    });
+
+    describe('Row Pinning', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(IgxTreeGridRowPinningComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+        }));
+
+        it('should pin/unpin a row', () => {
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+            expect(treeGrid.getRowByKey(711).pinned).toBe(true);
+
+            treeGrid.unpinRow(711);
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
+            expect(treeGrid.getRowByKey(711).pinned).toBe(false);
+
+            treeGrid.getRowByKey(711).pin();
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+
+            treeGrid.getRowByKey(711).unpin();
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
+        });
+
+        it('should pin/unpin a row at the bottom', () => {
+            /* Pin rows to bottom */
+            treeGrid.pinning.rows = 1;
+
+            const visibleRecordsLength = treeGrid.records.size;
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(visibleRecordsLength).rowID).toBe(711);
+        });
+
+        it('should calculate row indices correctly after row pinning', async () => {
+            const firstRow = treeGrid.getRowByIndex(0);
+            const secondRow = treeGrid.getRowByIndex(1);
+
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            await wait();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(firstRow.rowID);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(secondRow.rowID);
+
+            treeGrid.unpinRow(711);
+            fix.detectChanges();
+
+            await wait();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(firstRow.rowID);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(secondRow.rowID);
+        });
+
+        it('should disable pinned row instance in the body', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
+            expect(treeGrid.getRowByIndex(1).disabled).toBe(true);
+
+            treeGrid.unpinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
+            expect(treeGrid.getRowByIndex(1).disabled).toBe(false);
+
+        });
+
+        it('should add pinned chip in the pinned row instance in the body', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            const firstColumnField = treeGrid.columns[0].field;
+            const pinnedChipPosition = treeGrid.getCellByColumn(1, firstColumnField);
+            const pinnedRowCell = treeGrid.getCellByColumn(0, firstColumnField);
+            const wrongChipPosition = treeGrid.getCellByColumn(2, firstColumnField);
+
+            expect(pinnedChipPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
+            expect(pinnedRowCell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+            expect(wrongChipPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+        });
+
+        it('pinned chip should always be in the first column', () => {
+            const rowToPin = treeGrid.getRowByIndex(0);
+            const primaryKey = treeGrid.primaryKey;
+
+            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
+
+            const thirdColumnField = treeGrid.columns[2].field;
+
+            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0]);
+            fix.detectChanges();
+
+            const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, thirdColumnField);
+            expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
+        });
+
+        it('should expand/collapse a pinned row with children', () => {
+            let rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(10);
+            const rowToPin = treeGrid.getRowByIndex(0);
+
+            rowToPin.pin();
+            fix.detectChanges();
+
+            // collapse pinned row
+            treeGrid.toggleRow(rowToPin.rowID);
+            fix.detectChanges();
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(5);
+
+            // expand the pinned row
+            treeGrid.toggleRow(rowToPin.rowID);
+            fix.detectChanges();
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(11);
+        });
+
+        it('should search in both pinned and unpinned rows', () => {
+            let searchResultsCount = treeGrid.findNext('John');
+            expect(searchResultsCount).toBe(1);
+
+            const rowToPin = treeGrid.getRowByIndex(0);
+            rowToPin.pin();
+            fix.detectChanges();
+
+            searchResultsCount = treeGrid.findNext('John');
+            expect(searchResultsCount).toBe(2);
+        });
+
+        it('should apply filtering to both pinned and unpinned rows', () => {
+            treeGrid.pinRow(147);
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            treeGrid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            const gridFilterData = treeGrid.filteredData;
+            expect(gridFilterData.length).toBe(2);
+            expect(gridFilterData[0].ID).toBe(147);
+            expect(gridFilterData[1].ID).toBe(147);
+        });
+
+        it('should apply sorting to both pinned and unpinned rows', () => {
+            treeGrid.pinRow(147);
+            treeGrid.pinRow(711);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(147);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(147);
+
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(1).rowID).toBe(147);
+            expect(treeGrid.getRowByIndex(2).rowID).toBe(847);
+        });
+
+        it('should not take into account pinned rows when changing items per page', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            treeGrid.paging = true;
+            treeGrid.perPage = 5;
+            fix.detectChanges();
+
+            expect(treeGrid.dataView.length).toBe(5);
+
+            treeGrid.perPage = 10;
+            fix.detectChanges();
+
+            expect(treeGrid.dataView.length).toBe(10);
+        });
+
+        it('should correctly apply paging state for grid and paginator when there are pinned rows.', fakeAsync(() => {
+            treeGrid.paging = true;
+            treeGrid.perPage = 3;
+            treeGrid.height = '700px';
+            fix.detectChanges();
+            const paginator = fix.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
+            // pin the first row
+            treeGrid.getRowByIndex(0).pin();
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toEqual(4);
+            expect(treeGrid.perPage).toEqual(3);
+            expect(paginator.perPage).toEqual(3);
+            expect(paginator.totalRecords).toEqual(10);
+            expect(paginator.totalPages).toEqual(4);
+
+            // pin the second row
+            treeGrid.getRowByIndex(2).pin();
+            fix.detectChanges();
+
+            expect(treeGrid.rowList.length).toEqual(5);
+            expect(treeGrid.perPage).toEqual(3);
+            expect(paginator.perPage).toEqual(3);
+            expect(paginator.totalRecords).toEqual(10);
+            expect(paginator.totalPages).toEqual(4);
+        }));
+
+        it('should have the correct records shown for pages with pinned rows', () => {
+            treeGrid.paging = true;
+            treeGrid.perPage = 6;
+            treeGrid.height = '700px';
+            fix.detectChanges();
+            treeGrid.getRowByIndex(0).pin();
+            treeGrid.getRowByIndex(1).pin();
+            fix.detectChanges();
+
+            let rows = treeGrid.rowList.toArray();
+
+            [147, 475, 147, 475, 957, 317, 711, 998].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+
+            treeGrid.paginate(1);
+            fix.detectChanges();
+
+            rows = treeGrid.rowList.toArray();
+
+            [147, 475, 299, 19, 847, 663].forEach((x, index) => expect(parseInt(rows[index].cells.first.value, 10)).toEqual(x));
+        });
+
+        it('should make a correct selection', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            const range = { rowStart: 0, rowEnd: 2, columnStart: 'ID', columnEnd: 'Name' };
+            treeGrid.selectRange(range);
+            fix.detectChanges();
+
+            const selectedRange = treeGrid.getSelectedData();
+            expect(selectedRange).toEqual([
+                {ID: 147, Name: 'John Winchester'},
+                {ID: 147, Name: 'John Winchester'},
+                {ID: 475, Name: 'Michael Langdon'},
+            ]);
+        });
+
+        it('should remove the pinned chip for filtered out parent', () => {
+            treeGrid.pinRow(147);
+            fix.detectChanges();
+
+            treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            const firstColumnField = treeGrid.columns[0].field;
+            const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, firstColumnField);
+            const pinnedRow = pinnedChipExpectedPosition.row;
+
+            expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
+            expect(pinnedRow.disabled).toBe(false);
         });
     });
 });

@@ -229,13 +229,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
-
-            // greater than or equal to with invalid value should not reset filter
-            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
-            GridFunctions.typeValueInFilterRowInput('254..', fix, input);
-
-            expect(grid.rowList.length).toEqual(3);
-            verifyFilterRowUI(input, close, reset, false);
         }));
 
         // UI tests boolean column
@@ -1260,9 +1253,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1270,7 +1268,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.verifyFilteringDropDownIsOpened(fix);
 
             // Click prefix again to close conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1282,9 +1280,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const prefix = GridFunctions.getFilterRowPrefix(fix);
+            const event = {
+                currentTarget: prefix.nativeElement,
+                preventDefault: () => {},
+                stopPropagation: () => {}
+            };
 
             // Click prefix to open conditions dropdown
-            prefix.triggerEventHandler('click', {});
+            prefix.triggerEventHandler('click', event);
             tick(100);
             fix.detectChanges();
 
@@ -1665,8 +1668,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const firstRow = GridFunctions.getGridDataRows(fix)[0];
-            const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
+            const firstCell: any = GridFunctions.getRowCells(fix, 0)[0].nativeElement;
             expect(document.activeElement).toBe(firstCell);
         }));
 
@@ -2136,11 +2138,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should close filter row when hide the current column', fakeAsync(() => {
-            pending('This issue is failing because of bug #');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             // Check that the filterRow is opened
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).not.toBeNull();
 
             // Add first chip.
@@ -2148,12 +2149,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
 
             grid.getColumnByName('ProductName').hidden = true;
-            fix.detectChanges();
             tick(100);
+            fix.detectChanges();
 
             // Check that the filterRow is closed
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
-            expect(grid.rowList.length).toBe(8);
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull();
+            expect(grid.rowList.length).toBe(3, 'filter is not applied');
         }));
 
         it('Should keep existing column filter after hiding another column.', fakeAsync(() => {
@@ -3205,7 +3207,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'ignite', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3486,7 +3488,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'false', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'false', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3570,7 +3572,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'sale', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'sale', fix);
             await wait(200);
             fix.detectChanges();
 
@@ -3591,12 +3593,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(6);
 
-            UIInteractions.sendInputElementValue(input, 'a', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4);
 
-            UIInteractions.sendInputElementValue(input, 'al', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0);
@@ -4253,6 +4255,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify ESF is not visible.
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             expect(excelMenu).toBeNull();
+        }));
+
+        it('Should filter date by input string', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
+            fix.detectChanges();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            const todayDateFull = SampleTestData.today;
+            const todayDate = todayDateFull.getDate().toString();
+            const dayOfWeek = todayDateFull.toString().substring(0, 3);
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, todayDate, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            tick(100);
+            fix.detectChanges();
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
     });
 

@@ -97,7 +97,7 @@
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
-            | gridHierarchicalRowPinning:true:pipeTrigger
+            | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
@@ -119,7 +119,7 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
-        | gridHierarchicalRowPinning:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -168,7 +168,7 @@
 <div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
  (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
-        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
+        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>

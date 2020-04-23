@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { SplitterType } from 'projects/igniteui-angular/src/lib/splitter/splitter.component';
 import { RemoteService } from '../shared/remote.service';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, SplitterType } from 'igniteui-angular';
 
 @Component({
     selector: 'app-splitter-sample',

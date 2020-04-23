@@ -379,7 +379,7 @@ export class ColumnDefinitions {
     public static multiColHeadersWithGroupingColumns = `
   <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="false"
               [sortable]="true" [filterable]="true" field="Missing"></igx-column>
-  <igx-column-group [movable]="true" header="General Information" [groupable]='true'>
+  <igx-column-group [movable]="true" header="General Information" [groupable]='true'  [pinned]="isPinned">
       <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
       <igx-column-group [movable]="true" header="Person Details">
           <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>

@@ -244,7 +244,7 @@ describe('IgxTooltip', () => {
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            UIInteractions.clickElement(button);
+            UIInteractions.simulateClickAndSelectEvent(button);
             flush();
 
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
@@ -255,7 +255,7 @@ describe('IgxTooltip', () => {
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, true);
 
-            UIInteractions.simulateKeyDownEvent(document.documentElement, 'Escape');
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', document.documentElement);
 
             flush();
             verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
