@@ -1,4 +1,4 @@
-<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()"
+<div #toggle igxToggle [style.width]="'600px'" (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)"
     class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
@@ -65,13 +65,14 @@
 </ng-template>
 
 <ng-template #defTemplate>
-    <igx-date-single>
+    <igx-input-group>
         <input #singleInput igxInput type="text" readonly
             [placeholder]="this.value ? '' : appliedFormat"
             role="combobox"
             aria-haspopup="grid"
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
+            [value]="this.value | dateRange: this.inputFormat : this.locale"
             />
 
         <igx-prefix *ngIf="!this.prefix && !this.suffix" (click)="open()">
@@ -98,5 +99,5 @@
         <igx-suffix *ngIf="this.suffix" (click)="open()">
             <ng-container *ngTemplateOutlet="this.suffix.templateRef"></ng-container>
         </igx-suffix>
-    </igx-date-single>
+    </igx-input-group>
 </ng-template>

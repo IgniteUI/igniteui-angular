@@ -13,15 +13,15 @@ import {
     QueryList,
     ViewChild
 } from '@angular/core';
-import {InteractionMode} from '../core/enums';
-import {IgxToggleDirective} from '../directives/toggle/toggle.directive';
-import {IgxCalendarComponent, WEEKDAYS} from '../calendar/index';
-import {AutoPositionStrategy, GlobalPositionStrategy, OverlaySettings} from '../services/index';
-import {fromEvent, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {IBaseEventArgs, KEYS} from '../core/utils';
-import {PositionSettings} from '../services/overlay/utilities';
-import {fadeIn, fadeOut} from '../animations/fade';
+import { InteractionMode } from '../core/enums';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
+import { AutoPositionStrategy, GlobalPositionStrategy, OverlaySettings } from '../services/index';
+import { fromEvent, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { IBaseEventArgs, KEYS, CancelableBrowserEventArgs, CancelableEventArgs } from '../core/utils';
+import { PositionSettings } from '../services/overlay/utilities';
+import { fadeIn, fadeOut } from '../animations/fade';
 import {
     DateRange,
     IgxDateEndComponent,
@@ -30,12 +30,16 @@ import {
     IgxDateSingleComponent,
     IgxDateStartComponent
 } from './igx-date-range-inputs.common';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {IToggleView} from '../core/navigation';
-import {IgxLabelDirective} from '../input-group';
-import {IgxInputGroupBase} from '../input-group/input-group.common';
-import {IgxDateTimeEditorEventArgs} from '../directives/date-time-editor';
-import {CurrentResourceStrings} from '../core/i18n/resources';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IToggleView } from '../core/navigation';
+import { IgxLabelDirective } from '../input-group';
+import { IgxInputGroupBase } from '../input-group/input-group.common';
+import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+
+
+// TODO: use default input format from date-time-editor.common?
+const DEFAULT_INPUT_FORMAT = 'dd/MM/yyyy';
 
 /**
  * Range Date Picker provides the ability to select a range of dates from the calendar UI.
@@ -70,10 +74,8 @@ import {CurrentResourceStrings} from '../core/i18n/resources';
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangeComponent), multi: true }]
 })
 export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDestroy, ControlValueAccessor {
-    @HostBinding('class.igx-date-range')
-    public cssClass = 'igx-date-range';
     /**
-     * Gets/Sets whether `IgxDateRangeComponent` is in dialog or dropdown mode.
+     * `IgxDateRangeComponent` can be in `dialog` or `dropdown` mode.
      * @remarks
      * Default mode is `dialog`
      *
@@ -86,7 +88,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public mode = InteractionMode.Dialog;
 
     /**
-     * Gets/Sets the number of displayed month views
+     * The number of displayed month views.
      *
      * @remarks
      * Default is `2`.
@@ -114,7 +116,8 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public hideOutsideDays: boolean;
 
     /**
-     * Gets/Sets the start day of the week.
+     * The start day of the week.
+     *
      * @remarks
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      *
@@ -127,7 +130,8 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public weekStart = WEEKDAYS.SUNDAY;
 
     /**
-     * Gets/Sets which gets the `locale` of the calendar.
+     * The `locale` of the calendar.
+     *
      * @remarks
      * Default value is `"en"`.
      *
@@ -140,7 +144,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public locale = 'en';
 
     /**
-     * Gets/Sets a custom formatter function, applied on the selected or passed in date.
+     * A custom formatter function, applied on the selected or passed in date.
      *
      * @remarks
      * Default is noop()
@@ -162,7 +166,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public formatter: (val: DateRange) => string;
 
     /**
-     * Gets/Sets the default text of the `done` button.
+     * The default text of the `done` button.
      *
      * @remarks
      * Default value is `Done`.
@@ -177,7 +181,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public doneButtonText = 'Done'; // optional
 
     /**
-     * Gets/Sets any custom overlay settings that should be used by the `IgxDateRangeComponent`.
+     * The custom overlay settings that should be used by the `IgxDateRangeComponent`.
      *
      * @remarks
      * Default is `null`.
@@ -190,12 +194,23 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     @Input()
     public overlaySettings: OverlaySettings;
 
-    // TODO
+    /**
+     * The format used when editable inputs are not focused.
+     *
+     * @remarks
+     * Uses Angular's DatePipe.
+     *
+     * @example
+     * ```html
+     * <igx-date-range [displayFormat]="'EE/M/yy'"></igx-date-range>
+     * ```
+     *
+     */
     @Input()
     public displayFormat: string;
 
     /**
-     * Gets/Sets the input format of the default date-range input
+     * The input format of the default date-range input.
      *
      * @remarks
      * Default is `"'dd/MM/yyyy'"`
@@ -211,7 +226,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     /**
      * Emitted when a range is selected in the `IgxDateRangeComponent`.
      *
-     * @remakrs
+     * @remarks
      * Emitted args are of type `DateRange`
      *
      * @example
@@ -220,7 +235,10 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      * ```
      */
     @Output()
-    public onSelected = new EventEmitter<DateRange>();
+    public rangeSelected = new EventEmitter<DateRange>();
+
+    @Output()
+    public onOpening = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted when the `IgxDateRangeComponent` is opened.
@@ -236,6 +254,9 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     @Output()
     public onOpened = new EventEmitter<IBaseEventArgs>();
 
+    @Output()
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
+
     /**
      * Emitted when the `IgxDateRangeComponent` is closed.
      *
@@ -249,6 +270,10 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      */
     @Output()
     public onClosed = new EventEmitter<IBaseEventArgs>();
+
+    /** @hidden */
+    @HostBinding('class.igx-date-range')
+    public cssClass = 'igx-date-range';
 
     /** @hidden */
     @ViewChild(IgxDateSingleComponent)
@@ -287,9 +312,9 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
             // TODO: use displayFormat - see how shortDate, longDate can be defined
             return this.inputFormat
                 ? `${this.inputFormat} - ${this.inputFormat}`
-                : `${this._defaultInputFormat} - ${this._defaultInputFormat}`;
+                : `${DEFAULT_INPUT_FORMAT} - ${DEFAULT_INPUT_FORMAT}`;
         } else {
-            return this.inputFormat ? this.inputFormat : this._defaultInputFormat;
+            return this.inputFormat ? this.inputFormat : DEFAULT_INPUT_FORMAT;
         }
     }
 
@@ -298,15 +323,21 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         return this.projectedInputs.some(i => i instanceof IgxDateStartComponent || i instanceof IgxDateEndComponent);
     }
 
-    // TODO: use default input format from date-time-editor.common?
-    private _defaultInputFormat = 'dd/MM/yyyy';
     private _value: DateRange;
     private _destroy = new Subject<boolean>();
     private _onChangeCallback: (_: any) => void;
     private _positionSettings: PositionSettings;
     private _positionStrategy: AutoPositionStrategy;
-    private _dialogOverlaySettings: OverlaySettings;
-    private _dropDownOverlaySettings: OverlaySettings;
+    private _dialogOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: true,
+        positionStrategy: new GlobalPositionStrategy()
+    };
+    private _dropDownOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        positionStrategy: this._positionStrategy
+    };
 
     constructor(public element: ElementRef) {
         this._onChangeCallback = (_: any) => { };
@@ -323,18 +354,26 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      * ```
      */
     public open(): void {
-        if (this.value && this.value.start?.getTime() > this.value.end?.getTime()) {
-            this.value = { start: this.value.end, end: this.value.start };
+        const range: Date[] = [];
+        if (this.value) {
+            if (this.value.start) {
+                range.push(this.value.start);
+            }
+            if (this.value.end) {
+                range.push(this.value.end);
+            }
         }
-        this.updateCalendar();
-        if (this.mode === InteractionMode.Dialog) {
-            this.activateToggleOpen(this._dialogOverlaySettings);
-        }
-        if (this.mode === InteractionMode.DropDown) {
-            this.activateToggleOpen(this._dropDownOverlaySettings);
+        if (range.length > 0) {
+            this.value = { start: range[0], end: range[range.length - 1] };
         }
 
-        this.onOpened.emit({ owner: this });
+        this.updateCalendar();
+        if (this.mode === InteractionMode.Dialog) {
+            this.openToggle(this._dialogOverlaySettings);
+        }
+        if (this.mode === InteractionMode.DropDown) {
+            this.openToggle(this._dropDownOverlaySettings);
+        }
     }
 
     /**
@@ -350,7 +389,6 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public close(): void {
         if (!this.toggleDirective.collapsed) {
             this.toggleDirective.close();
-            this.onClosed.emit({ owner: this });
         }
     }
 
@@ -406,8 +444,8 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      * }
      * ```
      */
-    public selectRange(startDate: Date, endDate?: Date): void { // todo: set value
-        endDate = !endDate ? startDate : endDate;
+    public selectRange(startDate: Date, endDate?: Date): void {
+        endDate = endDate ?? startDate;
         const dateRange = [startDate, endDate];
         this.calendar.selectDate(dateRange);
         this.handleSelection(dateRange);
@@ -438,6 +476,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
                 this.applyFocusOnClose();
                 break;
         }
+        this.subscribeToToggleEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
     }
@@ -448,15 +487,14 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this._destroy.complete();
     }
 
-    /**
-     * @hidden
-     * @internal
-     * Handles the toggle's onClosing event.
-     */
-    public onClosing() {
-        if (this.value && !this.value.end) {
-            this.value = { start: this.value.start, end: this.value.start };
-        }
+    /** @hidden @internal */
+    public handleOpening(event: CancelableEventArgs): void {
+        this.onOpening.emit(event);
+    }
+
+    /** @hidden @internal */
+    public handleClosing(event: CancelableEventArgs): void {
+        this.onClosing.emit(event);
     }
 
     /** @hidden @internal */
@@ -486,7 +524,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public handleSelection(selectionData: Date[]): void {
         this.value = this.extractRange(selectionData);
         this._onChangeCallback(this.value);
-        this.onSelected.emit(this.value);
+        this.rangeSelected.emit(this.value);
     }
 
     /** @hidden @internal */
@@ -503,28 +541,22 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this.open();
     }
 
-    /** @hidden @internal */
-    public onCalendarOpened(): void {
-        requestAnimationFrame(() => {
-            this.calendar.daysView.focusActiveDate();
-        });
-    }
-
     private updateCalendar() {
-        if (this.value && this.value.start && this.value.end) {
-            this.calendar.selectDate([this.value.start, this.value.end]);
-        } else {
-            if (this.value && this.value.start) {
-                this.calendar.selectDate(this.value.start);
-            } else if (this.value && this.value.end) {
-                this.calendar.selectDate(this.value.end);
-                this.value = { start: this.value.end, end: this.value.end };
-            } else {
-                this.calendar.deselectDate();
+        const range: Date[] = [];
+        if (this.value) {
+            if (this.value.start) {
+                range.push(this.value.start);
+            }
+            if (this.value.end) {
+                range.push(this.value.end);
             }
         }
-        if (this.value) {
+        if (range.length > 0) {
+            this.calendar.selectDate(range);
+            this.value = { start: range[0], end: range[range.length - 1] };
             this.calendar.viewDate = this.value.start;
+        } else {
+            this.calendar.deselectDate();
         }
     }
 
@@ -535,7 +567,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         };
     }
 
-    private activateToggleOpen(overlaySettings: OverlaySettings): void {
+    private openToggle(overlaySettings: OverlaySettings): void {
         if (this.toggleDirective.collapsed) {
             this.toggleDirective.open(overlaySettings);
         }
@@ -559,29 +591,44 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         if (this.hasProjectedInputs) {
             const start = this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
             const end = this.projectedInputs.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
-            start.dateTimeEditor.valueChange
-                .pipe(takeUntil(this._destroy))
-                .subscribe((event: Date) => {
-                    // TODO: update
-                    // this.value = { start: event.newValue as Date, end: this.value?.end };
-                });
-            end.dateTimeEditor.valueChange
-                .pipe(takeUntil(this._destroy))
-                .subscribe((event: Date) => {
-                    // TODO: update
-                    // this.value = { start: this.value?.start, end: event.newValue as Date };
-                });
-            start.dateTimeEditor.validationFailed
-                .pipe(takeUntil(this._destroy))
-                .subscribe((event: IgxDateTimeEditorEventArgs) => {
-                    this.value = { start: event.newValue as Date, end: this.value?.end };
-                });
-            end.dateTimeEditor.validationFailed
-                .pipe(takeUntil(this._destroy))
-                .subscribe((event: IgxDateTimeEditorEventArgs) => {
-                    this.value = { start: this.value?.start, end: event.newValue as Date };
-                });
+            if (start && end) {
+                start.dateTimeEditor.valueChange
+                    .pipe(takeUntil(this._destroy))
+                    .subscribe((date: Date) => {
+                        this.value = { start: date as Date, end: this.value?.end };
+                    });
+                end.dateTimeEditor.valueChange
+                    .pipe(takeUntil(this._destroy))
+                    .subscribe((date: Date) => {
+                        this.value = { start: this.value?.start, end: date as Date };
+                    });
+                start.dateTimeEditor.validationFailed
+                    .pipe(takeUntil(this._destroy))
+                    .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                        this.value = { start: event.newValue as Date, end: this.value?.end };
+                    });
+                end.dateTimeEditor.validationFailed
+                    .pipe(takeUntil(this._destroy))
+                    .subscribe((event: IgxDateTimeEditorEventArgs) => {
+                        this.value = { start: this.value?.start, end: event.newValue as Date };
+                    });
+            }
         }
+    }
+
+    private subscribeToToggleEvents(): void {
+        this.toggleDirective.onOpened.subscribe(() => {
+            requestAnimationFrame(() => {
+                this.calendar.daysView.focusActiveDate();
+                this.onOpened.emit({ owner: this });
+            });
+        });
+        this.toggleDirective.onClosed.subscribe(() => {
+            if (this.value && !this.value.end) {
+                this.value = { start: this.value.start, end: this.value.start };
+                this.onClosed.emit({ owner: this });
+            }
+        });
     }
 
     private configPositionStrategy(): void {
@@ -594,16 +641,10 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     private configOverlaySettings(): void {
-        this._dropDownOverlaySettings = this.overlaySettings ? this.overlaySettings : {
-            closeOnOutsideClick: true,
-            modal: false,
-            positionStrategy: this._positionStrategy
-        };
-        this._dialogOverlaySettings = this.overlaySettings ? this.overlaySettings : {
-            closeOnOutsideClick: true,
-            modal: true,
-            positionStrategy: new GlobalPositionStrategy()
-        };
+        if (this.overlaySettings !== null) {
+            this._dropDownOverlaySettings = Object.assign({}, this._dropDownOverlaySettings, this.overlaySettings);
+            this._dialogOverlaySettings = Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
+        }
     }
 
     private updateInputs() {

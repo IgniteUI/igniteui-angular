@@ -1,4 +1,4 @@
-import { Component, ContentChild, Pipe, PipeTransform, OnInit, Input, Directive, TemplateRef } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Directive, TemplateRef } from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
@@ -13,7 +13,7 @@ export interface DateRange {
 /** @hidden @internal */
 @Pipe({ name: 'dateRange' })
 export class DateRangeFormatPipe implements PipeTransform {
-    transform(values: DateRange, inputFormat?: string, locale?: string): string {
+    public transform(values: DateRange, inputFormat?: string, locale?: string): string {
         if (!values) {
             return '';
         }
@@ -27,23 +27,10 @@ export class DateRangeFormatPipe implements PipeTransform {
             if (end) {
                 formatted += endDate;
             }
-        } else if (end) {
-            formatted = `${endDate} - `;
-            if (start) {
-                formatted += startDate;
-            }
         }
 
         // TODO: no need to set format twice
         return formatted ? formatted : '';
-    }
-
-    parse(value: string): DateRange {
-        const values = value.trim().split(/ - /g);
-        return {
-            start: values[0] && new Date(Date.parse(values[0])),
-            end: values[1] && new Date(Date.parse(values[1]))
-        };
     }
 }
 
@@ -53,17 +40,12 @@ export class DateRangeFormatPipe implements PipeTransform {
     selector: `igx-date-range-base`,
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeBaseComponent }]
 })
-class IgxDateRangeBaseComponent extends IgxInputGroupComponent implements OnInit {
+class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
     @ContentChild(NgControl)
     protected ngControl: NgControl;
 
     @ContentChild(IgxDateTimeEditorDirective)
     public dateTimeEditor: IgxDateTimeEditorDirective;
-
-    /** @hidden @internal */
-    public ngOnInit(): void {
-        // this.input.nativeElement.readOnly = true;
-    }
 
     /** @hidden @internal */
     public get nativeElement() {
@@ -79,9 +61,9 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent implements OnInit
     public updateInput(value: Date) {
         if (this.ngControl) {
             this.ngControl.control.setValue(value);
+        } else {
+            this.dateTimeEditor.value = value;
         }
-
-        this.dateTimeEditor.value = value;
     }
 }
 
