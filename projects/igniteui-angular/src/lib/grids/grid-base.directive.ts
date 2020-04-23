@@ -1509,6 +1509,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren('row')
     private _rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChildren('pinnedRow')
+    private _pinnedRowList: QueryList<IgxGridRowComponent>;
+
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
@@ -1754,8 +1757,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChildren('pinContainer', { read: ElementRef })
-    public pinContainers: QueryList<ElementRef>;
+    @ViewChild('pinContainer', { read: ElementRef })
+    public pinContainer: ElementRef;
 
     /**
      * @hidden @internal
@@ -2544,6 +2547,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     private columnListDiffer;
+    private rowListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
     private _height = '100%';
@@ -2888,6 +2892,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         super.ngOnInit();
         this._setupServices();
         this._setupListeners();
+        this.rowListDiffer = this.differs.find([]).create(null);
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
@@ -3044,11 +3049,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.scrollHandler);
-        this.pinContainers.changes.subscribe((c) => {
-            if (this.hasPinnedRecords) {
-                // on row pin containers change grid sizes should be recalculated.
-                this.calculateGridSizes();
-            }
+
+        this._pinnedRowList.changes
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((change: QueryList<IgxGridRowComponent>) => {
+            this.onPinnedRowsChanged(change);
         });
     }
 
@@ -3429,7 +3434,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned && !x.disabled);
+        return this._pinnedRowList.toArray().sort((a, b) => {
+            return a.index - b.index;
+        });
     }
 
     /**
@@ -4205,7 +4212,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
-            this.notifyChanges(true);
+            this.notifyChanges();
         }
     }
 
@@ -4236,14 +4243,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
-            this.notifyChanges(true);
         }
         return true;
     }
 
     get pinnedRowHeight() {
-        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
-        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
         return this.hasPinnedRecords ? containerHeight : 0;
     }
 
@@ -4815,6 +4820,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected getDataBasedBodyHeight(): number {
         return !this.data || (this.data.length < this._defaultTargetRecordNumber) ?
             0 : this.defaultTargetBodyHeight;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected onPinnedRowsChanged(change: QueryList<IgxGridRowComponent>) {
+        const diff = this.rowListDiffer.diff(change);
+        if (diff) {
+            this.notifyChanges(true);
+         }
     }
 
     /**

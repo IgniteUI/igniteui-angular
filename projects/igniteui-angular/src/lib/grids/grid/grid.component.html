@@ -125,7 +125,7 @@
                 }"
                 class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
                 <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
-                    <ng-container *ngTemplateOutlet="getRowTemplate(rowData); context: getContext(rowData, rowIndex, true)">
+                    <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                     </ng-container>
                 </ng-container>
             </div>
@@ -158,6 +158,10 @@
         </ng-container>
         <ng-template #record_template let-rowIndex="index" let-rowData let-disabledRow="disabled">
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" [disabled]="disabledRow" #row>
+            </igx-grid-row>
+        </ng-template>
+        <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row #pinnedRow>
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
