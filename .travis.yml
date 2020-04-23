@@ -33,8 +33,8 @@ before_deploy:
 - npm run build:schematics
 - npm run build:migration
 
-- npm run node ./node_modules/typescript/lib/tsc.js scripts/*.ts
-# update igniteui-angular package version
+- node ./node_modules/typescript/lib/tsc.js scripts/*.ts
+
 - node scripts/version-script.js "${TRAVIS_TAG}"
 
 - if [[ "${TRAVIS_TAG}" == *"alpha"* || "${TRAVIS_TAG}" == *"beta"* || "${TRAVIS_TAG}" == *"rc"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
