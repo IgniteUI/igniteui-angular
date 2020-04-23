@@ -1,0 +1,89 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $theme - theme used to style the component.
+/// @param {color} $color - Date range separator label color.
+/// @requires --var
+/// @requires rem
+@function igx-date-range-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $color: null
+) {
+    $name: 'igx-date-range';
+    $date-range-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $date-range-schema: map-get($schema, $name);
+    } @else {
+        $date-range-schema: $schema;
+    }
+
+    $theme: apply-palette($date-range-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+        color: $color,
+    ));
+}
+
+@mixin igx-date-range($theme) {
+    @include igx-root-css-vars($theme);
+
+    $base-scale-size: (
+        'comfortable': rem(19px),
+        'cosy': rem(22px),
+        'compact': rem(22px)
+    );
+
+    %igx-date-range {
+        display: flex;
+        align-items: center;
+
+        > igx-icon {
+            cursor: pointer;
+        }
+    }
+
+    %igx-date-range--cosy {
+        %igx-date-range__label {
+            padding-top: map-get($base-scale-size, 'cosy');
+        }
+    }
+
+    %igx-date-range--compact {
+        %igx-date-range__label {
+            padding-top: map-get($base-scale-size, 'compact');
+        }
+    }
+
+    %igx-date-range__label {
+        color: --var($theme, 'color');
+        margin: 0 rem(8px);
+        padding-top: map-get($base-scale-size, 'comfortable');
+    }
+}
+
+/// Adds typography styles for the igx-date-range component.
+/// Uses the 'caption'
+/// categories from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'caption')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-drop-down-typography(
+    $type-scale,
+    $categories: (
+        label: 'body-1',
+    )
+) {
+    $label: map-get($categories, 'caption');
+
+    %igx-date-range__label {
+        @include igx-type-style($type-scale, $label);
+    }
+}

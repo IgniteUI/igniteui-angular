@@ -242,7 +242,7 @@ describe('IgxMonthPicker', () => {
 
         expect(prev.nativeElement).toBe(document.activeElement);
 
-        UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', prev.nativeElement);
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2018);
@@ -252,9 +252,9 @@ describe('IgxMonthPicker', () => {
 
         expect(next.nativeElement).toBe(document.activeElement);
 
-        UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
-        UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
-        UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
@@ -262,13 +262,13 @@ describe('IgxMonthPicker', () => {
 
         yearBtn.nativeElement.focus();
 
-        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowRight');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', yearBtn.nativeElement);
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2022);
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2022');
 
-        UIInteractions.simulateKeyDownEvent(yearBtn.nativeElement, 'ArrowLeft');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', yearBtn.nativeElement);
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getFullYear()).toEqual(2021);
@@ -287,25 +287,25 @@ describe('IgxMonthPicker', () => {
 
         expect(year.nativeElement).toBe(document.activeElement);
 
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+        UIInteractions.triggerKeyDownEvtUponElem('Enter' , document.activeElement );
         fixture.detectChanges();
 
         let currentYear = dom.query(By.css('.igx-calendar__year--current'));
 
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowDown');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown' , currentYear.nativeElement );
         fixture.detectChanges();
 
         currentYear = dom.query(By.css('.igx-calendar__year--current'));
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2020');
 
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp' , currentYear.nativeElement );
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp' , currentYear.nativeElement );
         fixture.detectChanges();
 
         currentYear = dom.query(By.css('.igx-calendar__year--current'));
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2018');
 
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'Enter');
+        UIInteractions.triggerKeyDownEvtUponElem('Enter' , currentYear.nativeElement );
         fixture.detectChanges();
 
         year = dom.query(By.css('.igx-calendar-picker__date'));
@@ -327,28 +327,28 @@ describe('IgxMonthPicker', () => {
         expect(months.length).toEqual(11);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');
 
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
+        UIInteractions.triggerKeyDownEvtUponElem('Home' , currentMonth.nativeElement );
         fixture.detectChanges();
 
         expect(document.activeElement.textContent.trim()).toMatch('Jan');
 
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'End');
+        UIInteractions.triggerKeyDownEvtUponElem('End' , currentMonth.nativeElement );
         fixture.detectChanges();
 
         expect(document.activeElement.textContent.trim()).toMatch('Dec');
 
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft' , document.activeElement );
         fixture.detectChanges();
 
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp' , document.activeElement );
         fixture.detectChanges();
 
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight' , document.activeElement );
         fixture.detectChanges();
 
         expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+        UIInteractions.triggerKeyDownEvtUponElem('Enter' , document.activeElement );
         fixture.detectChanges();
 
         expect(monthPicker.viewDate.getMonth()).toEqual(8);
