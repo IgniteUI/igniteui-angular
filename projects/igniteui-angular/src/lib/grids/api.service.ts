@@ -34,6 +34,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public get_summary_data() {
         const grid = this.grid;
         let data = grid.filteredData;
+        if (data && grid.hasPinnedRecords) {
+           data = grid._filteredUnpinnedData;
+        }
         if (!data) {
             if (grid.transactions.enabled) {
                 data = DataUtil.mergeTransactions(
