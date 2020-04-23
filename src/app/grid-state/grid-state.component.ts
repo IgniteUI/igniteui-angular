@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
   IPagingState, ISortingExpression, IgxNumberSummaryOperand,
-  IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective } from 'igniteui-angular';
+  IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective, IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
 import { Router, NavigationStart } from '@angular/router';
+import { HierarchicalGridSampleComponent } from '../hierarchical-grid/hierarchical-grid.sample';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -31,9 +32,11 @@ class MySummary extends IgxNumberSummaryOperand {
 
 export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public localData: any[];
+  public localData2: any[];
   public columns: IColumnState[];
   public gridId = 'grid1';
   public stateKey = this.gridId + '-state';
+  public stateKey2 = 'hgrid-state';
   public gridState: IGridState;
   public serialize = true;
 
@@ -49,8 +52,11 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     columns: true
   };
 
-  @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
+  private readonly newProperty = { static: true };
+
+  @ViewChildren(IgxGridStateDirective) public state: QueryList<IgxGridStateDirective>;
   @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+  @ViewChild('hGrid', { static: true }) hGrid: IgxHierarchicalGridComponent;
 
   public initialColumns: any[] = [
     // tslint:disable:max-line-length
@@ -67,6 +73,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public selectionModes = [];
 
   constructor(private router: Router) {
+    this.localData2 = this.generateDataUneven(100, 3);
     this.selectionModes = [
       { label: 'none', selected: this.selectionMode === 'none', togglable: true },
       { label: 'single', selected: this.selectionMode === 'single', togglable: true },
@@ -101,51 +108,62 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 }
 
   public saveGridState() {
-      const state = this.state.getState(this.serialize);
+      const state = this.state.first.getState(this.serialize);
+      const state2 = this.state.last.getState(this.serialize);
       // const state = this.state.getState(this.serialize, ['sorting', 'filtering']);
       if (typeof state === 'string') {
         window.localStorage.setItem(this.stateKey, state);
+        window.localStorage.setItem(this.stateKey2, state2 as string);
       } else {
         window.localStorage.setItem(this.stateKey, JSON.stringify(state));
+        window.localStorage.setItem(this.stateKey2, JSON.stringify(state2));
       }
   }
 
   public restoreGridState() {
       const state = window.localStorage.getItem(this.stateKey);
+      const state2 = window.localStorage.getItem(this.stateKey2);
       if (state) {
-        this.state.setState(state);
+        this.state.first.setState(state);
+        this.state.last.setState(state2);
       }
   }
 
   public restoreColumns() {
-    const state = this.getColumnsState();
+    const state = this.getColumnsState(this.stateKey);
+    const state2 = this.getColumnsState(this.stateKey2);
     if (state) {
-      this.state.setState({ columns: state });
+      this.state.first.setState({ columns: state });
+      this.state.last.setState({ columns: state2 });
     }
   }
 
-  public getColumnsState(): any {
-    let state = window.localStorage.getItem(this.stateKey);
+  public getColumnsState(stateKey: string): any {
+    let state = window.localStorage.getItem(stateKey);
     state =  state ? JSON.parse(state).columns : null;
     return state;
   }
 
   public restoreFiltering() {
     const state = window.localStorage.getItem(this.stateKey);
+    const state2 = window.localStorage.getItem(this.stateKey2);
     const filteringState: FilteringExpressionsTree = state ? JSON.parse(state).filtering : null;
+    const filteringState2: FilteringExpressionsTree = state2 ? JSON.parse(state2).filtering : null;
     if (filteringState) {
       const gridFilteringState: IGridState = { filtering: filteringState};
-      this.state.setState(gridFilteringState);
+      const gridFilteringState2: IGridState = { filtering: filteringState2};
+      this.state.first.setState(gridFilteringState);
+      this.state.last.setState(gridFilteringState2);
     }
   }
 
   public restoreAdvancedFiltering() {
-    const state = window.localStorage.getItem(this.stateKey);
-    const advFilteringState: FilteringExpressionsTree = state ? JSON.parse(state).advancedFiltering : null;
-    if (advFilteringState) {
-      const gridAdvancedFilteringState: IGridState = { advancedFiltering: advFilteringState};
-      this.state.setState(gridAdvancedFilteringState);
-    }
+    // const state = window.localStorage.getItem(this.stateKey);
+    // const advFilteringState: FilteringExpressionsTree = state ? JSON.parse(state).advancedFiltering : null;
+    // if (advFilteringState) {
+    //   const gridAdvancedFilteringState: IGridState = { advancedFiltering: advFilteringState};
+    //   this.state.setState(gridAdvancedFilteringState);
+    // }
   }
 
   public restoreSorting() {
@@ -153,7 +171,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const sortingState: ISortingExpression[] =  state ? JSON.parse(state).sorting : null;
     if (sortingState) {
       const gridSortingState: IGridState = { sorting: sortingState};
-      this.state.setState(gridSortingState);
+      this.state.first.setState(gridSortingState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const sortingState2: ISortingExpression[] =  state2 ? JSON.parse(state2).sorting : null;
+    if (sortingState2) {
+      const gridSortingState2: IGridState = { sorting: sortingState2};
+      this.state.last.setState(gridSortingState2);
     }
   }
 
@@ -162,7 +187,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const groupByState: IGroupingState = state ? JSON.parse(state).groupBy : null;
     if (groupByState) {
       const gridGroupByState: IGridState = { groupBy: groupByState };
-      this.state.setState(gridGroupByState);
+      this.state.first.setState(gridGroupByState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const groupByState2: IGroupingState = state2 ? JSON.parse(state2).groupBy : null;
+    if (groupByState2) {
+      const gridGroupByState2: IGridState = { groupBy: groupByState2 };
+      this.state.last.setState(gridGroupByState2);
     }
   }
 
@@ -171,7 +203,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const rowSelectionState = state ? JSON.parse(state).rowSelection : null;
     if (rowSelectionState) {
       const gridRowSelectionState: IGridState = { rowSelection: rowSelectionState };
-      this.state.setState(gridRowSelectionState);
+      this.state.first.setState(gridRowSelectionState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const rowSelectionState2 = state ? JSON.parse(state2).rowSelection : null;
+    if (rowSelectionState2) {
+      const gridRowSelectionState2: IGridState = { rowSelection: rowSelectionState2 };
+      this.state.last.setState(gridRowSelectionState2);
     }
   }
 
@@ -180,7 +219,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const columnSelectionState = state ? JSON.parse(state).columnSelection : null;
     if (columnSelectionState) {
       const gridColumnSelectionState: IGridState = { columnSelection: columnSelectionState };
-      this.state.setState(gridColumnSelectionState);
+      this.state.first.setState(gridColumnSelectionState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const columnSelectionState2 = state ? JSON.parse(state).columnSelection : null;
+    if (columnSelectionState2) {
+      const gridColumnSelectionState2: IGridState = { columnSelection: columnSelectionState2 };
+      this.state.last.setState(gridColumnSelectionState2);
     }
   }
 
@@ -189,7 +235,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const cellSelectionState = state ? JSON.parse(state).cellSelection : null;
     if (state) {
       const gridCellSelectionState: IGridState = { cellSelection: cellSelectionState };
-      this.state.setState(gridCellSelectionState);
+      this.state.first.setState(gridCellSelectionState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const cellSelectionState2 = state2 ? JSON.parse(state2).cellSelection : null;
+    if (state2) {
+      const gridCellSelectionState2: IGridState = { cellSelection: cellSelectionState2 };
+      this.state.last.setState(gridCellSelectionState2);
     }
   }
 
@@ -198,7 +251,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     const pagingState: IPagingState = state ? JSON.parse(state).paging : null;
     if (state) {
       const gridPagingState: IGridState = { paging: pagingState };
-      this.state.setState(gridPagingState);
+      this.state.first.setState(gridPagingState);
+    }
+
+    const state2 = window.localStorage.getItem(this.stateKey2);
+    const pagingState2: IPagingState = state2 ? JSON.parse(state2).paging : null;
+    if (state2) {
+      const gridPagingState2: IGridState = { paging: pagingState2};
+      this.state.last.setState(gridPagingState2);
     }
   }
 
@@ -210,7 +270,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   }
 
   public onChange(event: any, action: string) {
-    this.state.options[action] = event.checked;
+    this.state.first.options[action] = event.checked;
   }
 
   public selectCellSelectionMode(args) {
@@ -224,4 +284,29 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public reloadPage() {
       window.location.reload();
   }
+
+  generateDataUneven(count: number, level: number, parendID: string = null) {
+    const prods = [];
+    const currLevel = level;
+    let children;
+    for (let i = 0; i < count; i++) {
+        const rowID = parendID ? parendID + i : i.toString();
+        if (level > 0) {
+            // Have child grids for row with even id less rows by not multiplying by 2
+            children = this.generateDataUneven(((i % 2) + 1) * Math.round(count / 3), currLevel - 1, rowID);
+        }
+        prods.push({
+            ID: rowID,
+            ChildLevels: currLevel,
+            ProductName: 'Product: A' + i,
+            Col1: i,
+            Col2: i,
+            Col3: i,
+            childData: children,
+            childData2: i % 2 ? [] : children,
+            hasChild: true
+        });
+    }
+    return prods;
+}
 }

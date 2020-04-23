@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef, Inject } from '@angular/core';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -12,7 +12,9 @@ import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
-import { IPinningConfig } from './common/grid.interface';
+import { IPinningConfig, GridType } from './common/grid.interface';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
+import { IgxGridBaseDirective, IGX_GRID_BASE_DIRECTIVE } from 'igniteui-angular';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -119,7 +121,8 @@ export class IgxGridStateDirective {
      * @hidden
      */
     constructor(
-        @Host() @Optional() private grid: IgxGridComponent,
+        // @Host() @Optional() private grid: IgxGridBaseDirective,
+        @Host() @Inject(IGX_GRID_BASE_DIRECTIVE) public grid: IgxGridBaseDirective,
         private resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef) { }
 
@@ -176,7 +179,7 @@ export class IgxGridStateDirective {
         }
         this.state = state as IGridState;
         this.restoreGridState();
-        this.grid.cdr.detectChanges();
+        (this.grid as any).cdr.detectChanges();
     }
 
     /**
@@ -346,7 +349,7 @@ export class IgxGridStateDirective {
     }
 
     private getFiltering(): IGridState {
-        const filteringState = this.grid.filteringExpressionsTree;
+        const filteringState = (this.grid as any).filteringExpressionsTree;
         return { filtering: filteringState };
     }
 
@@ -356,7 +359,7 @@ export class IgxGridStateDirective {
     }
 
     private getPaging(): IGridState {
-        const pagingState = this.grid.pagingState;
+        const pagingState = (this.grid as any).pagingState;
         return { paging: pagingState };
     }
 
@@ -369,37 +372,37 @@ export class IgxGridStateDirective {
     }
 
     private getGroupBy(): IGridState {
-        const groupingExpressions = this.grid.groupingExpressions;
+        const groupingExpressions = (this.grid as any).groupingExpressions;
         groupingExpressions.forEach(expr => {
             delete expr.strategy;
         });
-        const expansionState = this.grid.groupingExpansionState;
-        const groupsExpanded = this.grid.groupsExpanded;
+        const expansionState = (this.grid as any).groupingExpansionState;
+        const groupsExpanded = (this.grid as any).groupsExpanded;
 
         return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
     }
 
     private getRowSelection(): IGridState {
-        const selection = this.grid.selectedRows();
+        const selection = (this.grid as any).selectedRows();
         return { rowSelection: selection };
     }
 
     private getRowPinning(): IGridState {
-        const pinned = this.grid.pinnedRows.map(x => x.rowID);
+        const pinned = (this.grid as any).pinnedRows.map(x => x.rowID);
         return { rowPinning: pinned };
     }
 
     private getPinningConfig(): IGridState {
-        return { pinningConfig: this.grid.pinning };
+        return { pinningConfig: (this.grid as any).pinning };
     }
 
     private getColumnSelection(): IGridState {
-        const selection = this.grid.selectedColumns().map(c => c.field);
+        const selection = (this.grid as any).selectedColumns().map(c => c.field);
         return { columnSelection: selection };
     }
 
     private getCellSelection(): IGridState {
-        const selection = this.grid.getSelectedRanges().map(range => {
+        const selection = (this.grid as any).getSelectedRanges().map(range => {
             return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
         });
         return { cellSelection: selection };
@@ -432,7 +435,7 @@ export class IgxGridStateDirective {
      */
     private restoreFiltering(state: FilteringExpressionsTree) {
         const filterTree = this.createExpressionsTreeFromObject(state);
-        this.grid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
+        (this.grid as any).filteringExpressionsTree = filterTree as FilteringExpressionsTree;
     }
 
     /**
@@ -454,11 +457,11 @@ export class IgxGridStateDirective {
      * Restores the grid grouping state, i.e. sets the `groupbyExpressions` property value.
      */
     private restoreGroupBy(state: IGroupingState) {
-        (this.grid as IgxGridComponent).groupingExpressions = state.expressions as IGroupingExpression[];
-        if ((this.grid as IgxGridComponent).groupsExpanded !== state.defaultExpanded) {
-            this.grid.toggleAllGroupRows();
+        (this.grid as any).groupingExpressions = state.expressions as IGroupingExpression[];
+        if ((this.grid as any).groupsExpanded !== state.defaultExpanded) {
+            (this.grid as any).toggleAllGroupRows();
         } else {
-            (this.grid as IgxGridComponent).groupingExpansionState = state.expansion as IGroupByExpandState[];
+            (this.grid as any).groupingExpansionState = state.expansion as IGroupByExpandState[];
         }
     }
 
@@ -466,33 +469,33 @@ export class IgxGridStateDirective {
      * Restores the grid paging state, i.e. sets the `perPage` property value and paginate to index.
      */
     private restorePaging(state: IPagingState) {
-        if (this.grid.perPage !== state.recordsPerPage) {
-            this.grid.perPage = state.recordsPerPage;
-            this.grid.cdr.detectChanges();
+        if ((this.grid as any).perPage !== state.recordsPerPage) {
+            (this.grid as any).perPage = state.recordsPerPage;
+            (this.grid as any).cdr.detectChanges();
         }
-        this.grid.page = state.index;
+        (this.grid as any).page = state.index;
     }
 
     private restoreRowSelection(state: any[]) {
-        this.grid.selectRows(state);
+        (this.grid as any).selectRows(state);
     }
 
     private restoreRowPinning(state: any[]) {
-        state.forEach(rowID => this.grid.pinRow(rowID));
+        state.forEach(rowID => (this.grid as any).pinRow(rowID));
     }
 
     private restorePinningConfig(state: IPinningConfig) {
-       this.grid.pinning = state;
+        (this.grid as any).pinning = state;
     }
 
     private restoreColumnSelection(state: string[]) {
-        this.grid.selectColumns(state);
+        (this.grid as any).selectColumns(state);
     }
 
     private restoreCellSelection(state: GridSelectionRange[]) {
         state.forEach(r => {
             const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
-            this.grid.selectRange(range);
+            (this.grid as any).selectRange(range);
         });
     }
 
