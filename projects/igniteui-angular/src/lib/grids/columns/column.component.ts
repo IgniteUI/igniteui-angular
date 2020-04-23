@@ -655,19 +655,6 @@ export class IgxColumnComponent implements AfterContentInit {
     public pinnedChange = new EventEmitter<boolean>();
 
     /**
-     * @deprecated
-     * Gets/Sets the `id` of the `igx-grid`.
-     * ```typescript
-     * let columnGridId = this.column.gridID;
-     * ```
-     * ```typescript
-     * this.column.gridID = 'grid-1';
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    @DeprecateProperty(`The property is deprecated. Please, use \`column.grid.id\` instead.`)
-    public gridID: string;
-    /**
      * Gets the column `summaries`.
      * ```typescript
      * let columnSummaries = this.column.summaries;

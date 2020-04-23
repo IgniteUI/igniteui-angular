@@ -235,7 +235,7 @@
             <h4>Performance grid with transactions and row edit</h4>
             <app-grid-with-transactions>
                 <igx-grid #gridPerformance [primaryKey]="'ID'" [data]="performanceData" [rowEditable]="true" [width]="'1200px'"
-                    [height]="'800px'" [rowSelectable]="true">
+                    [height]="'800px'" [rowSelection]="selectionMode">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field"
                         [header]="c.field" [width]="c.width">
                     </igx-column>

@@ -36,10 +36,6 @@ export interface IActiveHighlightInfo {
      */
     columnIndex?: number;
     /**
-     * The page index of the highlight. This property is deprecated.
-     */
-    page?: number;
-    /**
      * The row of the highlight.
      */
     row?: any;
@@ -174,10 +170,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     @Input('column')
     public column: any;
-
-    @Input('page')
-    @DeprecateProperty(`IgxTextHighlightDirective 'page' input property is deprecated.`)
-    public page: number;
 
     /**
      * @hidden
@@ -328,14 +320,14 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     }
 
     /**
-     * Activates the highlight if it is on the currently active row, column and page.
+     * Activates the highlight if it is on the currently active row and column.
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
         const row = group.rowIndex === undefined ? group.row : group.rowIndex;
 
-        if (column === this.column && row === this.row && group.page === this.page) {
+        if (column === this.column && row === this.row) {
             this.activate(group.index);
         }
     }

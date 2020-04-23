@@ -361,7 +361,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should size summaries with row selectors for parent and child grids correctly.', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);

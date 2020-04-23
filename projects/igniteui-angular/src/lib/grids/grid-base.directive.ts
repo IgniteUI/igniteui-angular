@@ -526,17 +526,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    @DeprecateProperty('rowSelectable property is deprecated. Use rowSelection property instead.')
-    @WatchChanges()
-    @Input()
-    get rowSelectable(): boolean {
-        return this.isRowSelectable;
-    }
-
-    set rowSelectable(val: boolean) {
-        this.rowSelection = val ? GridSelectionMode.multiple : GridSelectionMode.none;
-    }
-
     /**
      * Gets/Sets if the row selectors are hidden.
      * @remarks
