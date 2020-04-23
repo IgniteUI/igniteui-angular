@@ -2138,11 +2138,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should close filter row when hide the current column', fakeAsync(() => {
-            pending('This issue is failing because of bug #');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             // Check that the filterRow is opened
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).not.toBeNull();
 
             // Add first chip.
@@ -2150,12 +2149,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
 
             grid.getColumnByName('ProductName').hidden = true;
-            fix.detectChanges();
             tick(100);
+            fix.detectChanges();
 
             // Check that the filterRow is closed
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
-            expect(grid.rowList.length).toBe(8);
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull();
+            expect(grid.rowList.length).toBe(3, 'filter is not applied');
         }));
 
         it('Should keep existing column filter after hiding another column.', fakeAsync(() => {

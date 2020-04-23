@@ -97,13 +97,17 @@ export class IgxFilteringService implements OnDestroy {
                     filterCell.updateFilterCellArea();
                 });
             });
+        }
+    }
 
-            this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnVisibilityChangedEventArgs) => {
-                if (this.grid.filteringRow && this.grid.filteringRow.column === eventArgs.column ) {
-                    this.grid.filteringRow.close();
+    /**
+     * Close filtering row if a column is hidden.
+     */
+    public hideFilteringRowOnColumnVisibilityChange(col: IgxColumnComponent) {
+        const filteringRow = this.grid.filteringRow;
 
-                }
-            });
+        if (filteringRow && filteringRow.column && filteringRow.column === col) {
+            filteringRow.close();
         }
     }
 
