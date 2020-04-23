@@ -1,7 +1,8 @@
-<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
+<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()"
+    class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
-        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
+        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
         (onSelection)="handleSelection($event)"></igx-calendar>
     <div class="buttonsWrapper">
         <div *ngIf="mode === 'dialog'">

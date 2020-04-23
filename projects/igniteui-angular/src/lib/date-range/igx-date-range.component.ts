@@ -366,8 +366,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
      */
     public toggle(): void {
         if (!this.toggleDirective.collapsed) {
-            this.toggleDirective.close();
-            this.onClosed.emit({ owner: this });
+            this.close();
         } else {
             this.open();
         }
@@ -602,7 +601,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         };
         this._dialogOverlaySettings = this.overlaySettings ? this.overlaySettings : {
             closeOnOutsideClick: true,
-            modal: false,
+            modal: true,
             positionStrategy: new GlobalPositionStrategy()
         };
     }
