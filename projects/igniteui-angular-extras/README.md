@@ -1,24 +1,27 @@
-# IgniteuiAngularExtras
+## Ignite UI for Angular Extras
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.14.
+### Start using IgniteUI for Angular Extras
 
-## Code scaffolding
+#### Create a project from scratch
+```
+npm i -g @igniteui/angular-schematics
+ng new <project name> --collection="@igniteui/angular-schematics" --template=<template id>
+cd <project name>
+ng g @igniteui/angular-schematics:component grid <component name>
+npm install @infragistics/igniteui-angular-extras
+ng g @igniteui/angular-schematics:start
+```
 
-Run `ng generate component component-name --project igniteui-angular-extras` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project igniteui-angular-extras`.
-> Note: Don't forget to add `--project igniteui-angular-extras` or else it will be added to the default project in your `angular.json` file. 
+#### Adding IgniteUI for Angular Extras to Existing Project
 
-## Build
+Including the `igniteui-angular-extras` and `igniteui-cli` packages to your project:
 
-Run `ng build igniteui-angular-extras` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+ng add igniteui-angular-extras
+```
 
-## Publishing
+* [Available templates](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/cli-overview.html#add-template)
 
-After building your library with `ng build igniteui-angular-extras`, go to the dist folder `cd dist/igniteui-angular-extras` and run `npm publish`.
+### Build
 
-## Running unit tests
-
-Run `ng test igniteui-angular-extras` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Run `build:extras:lib` to build the project. The build artifacts will be stored in the `dist/` directory. By default it builds the project with `--prod` flag for a production build.
