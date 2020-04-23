@@ -1,7 +1,7 @@
 import { IgxDateRangeComponent } from './igx-date-range.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, NgModule, DebugElement } from '@angular/core';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule} from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +11,12 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDateRangeModule } from './igx-date-range.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
+import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+
+// The number of milliseconds in one day
+const ONE_DAY = 1000 * 60 * 60 * 24;
 
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
@@ -26,18 +32,22 @@ function getDatesInView(dates: DebugElement[]): DebugElement[] {
 
 // tslint:disable: no-use-before-declare
 describe('IgxRangeDatePicker', () => {
+    let fixture: ComponentFixture<any>;
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
+    let dateRange: IgxDateRangeComponent;
 
-    // let singleInputRange: DateRangeSingleInputTestComponent;
-    // let twoInputsRange: DateRangeTwoInputsTestComponent;
-    let fixture: ComponentFixture<DateRangeTestComponent>;
-
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [DateRangeTestingModule]
-        }).compileComponents();
-    }));
+/**
+ * Formats a date to 'MM/dd/yyyy' string
+ * @param date Date to be formatted
+ */
+    function formatFullDate(date: Date): string {
+        const year = `${date.getFullYear()}`.padStart(4, '0');
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        const day = `${date.getDate()}`.padStart(2, '0');
+        const fullDate = [month, day, year].join('/');
+        return fullDate;
+    }
 
     describe('Single Input', () => {
         beforeEach(fakeAsync(() => {
@@ -100,24 +110,115 @@ describe('IgxRangeDatePicker', () => {
     });
 
     describe('Two Inputs', () => {
-        it('Should update the start input on first date selection', () => {
-            // TODO
+        let startInput: DebugElement;
+        let endInput: DebugElement;
+        let calendarDays: DebugElement[];
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    DateRangeTestComponent,
+                    DateRangeTwoInputsTestComponent
+                ],
+                imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+            })
+                .compileComponents();
+        }));
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.detectChanges();
+            dateRange = fixture.componentInstance.dateRange;
+            startInput = fixture.debugElement.query(By.css('input'));
+            endInput = fixture.debugElement.queryAll(By.css('input'))[1];
+            calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
         });
 
-        it('Should update the end input on last date selection', () => {
-            // TODO
+        function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
+            const startDateDayElIndex = startDateDay - 1;
+            const endDateDayElIndex = startDateDayElIndex + dayRange;
+            dateRange.open();
+            fixture.detectChanges();
+            calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.clickEvent);
+            if (dayRange !== 0) {
+                calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.clickEvent);
+            }
+            dateRange.close();
+            fixture.detectChanges();
+        }
+
+        function verifyDateRange(startDate: Date, endDate: Date) {
+            expect(dateRange.value.start).toEqual(startDate);
+            expect(dateRange.value.end).toEqual(endDate);
+            expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
+            expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
+        }
+
+        it('should assign start and end values correctly when selecting dates from the calendar', () => {
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            let dayRange = 15;
+            const today = new Date();
+            let startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+            let endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + dayRange);
+            selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+            verifyDateRange(startDate, endDate);
+
+            dayRange = 13;
+            startDate = new Date(today.getFullYear(), today.getMonth(), 6, 0, 0, 0);
+            endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + dayRange);
+            selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+            verifyDateRange(startDate, endDate);
         });
 
-        it('Should assign start and end input values correctly when selecting dates from the calendar', () => {
-            // TODO
+        it('should assign start and end values correctly when selecting dates in reversed order', () => {
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            const dayRange = 10;
+            const today = new Date();
+            const startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + dayRange);
+            selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+            verifyDateRange(startDate, endDate);
         });
 
-        it('Should clear end input if start and end input have values and a new selection is made', () => {
-            // TODO
+        it('should apply selection to start and end date when single date is selected', () => {
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            const today = new Date();
+            const date = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
+
+            selectDateRangeFromCalendar(date.getDate(), 0);
+            verifyDateRange(date, date);
         });
 
-        it('Should do a range selection if a date is selected and "Today" is pressed', () => {
-            // TODO
+        it('should update inputs correctly on first and last date selection', () => {
+            const today = new Date();
+            const startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+            const endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
+            const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
+            const dayRange = Math.round(differenceMs / ONE_DAY);
+            selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+            verifyDateRange(startDate, endDate);
+        });
+
+        it('should assign start and end values correctly when selecting through API', () => {
+            let startDate = new Date(2020, 10, 8, 0, 0, 0);
+            let endDate = new Date(2020, 11, 8, 0, 0, 0);
+            dateRange.selectRange(startDate, endDate);
+            fixture.detectChanges();
+            verifyDateRange(startDate, endDate);
+
+            startDate = new Date(2003, 5, 18, 0, 0, 0);
+            endDate = new Date(2003, 8, 18, 0, 0, 0);
+            dateRange.selectRange(startDate, endDate);
+            fixture.detectChanges();
+            verifyDateRange(startDate, endDate);
         });
     });
 
@@ -155,66 +256,27 @@ describe('IgxRangeDatePicker', () => {
         }));
     }); // Use component instance
 
-    describe('Templates ', () => {});
+    describe('Templates ', () => { });
 
     describe('Calendar UI', () => {
-
-        it('Should select today properly', fakeAsync(() => {
-            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-            fixture.componentInstance.mode = InteractionMode.DropDown;
-            fixture.detectChanges();
-
-            fixture.componentInstance.dateRange.open();
-            tick();
-            fixture.detectChanges();
-
-            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-            UIInteractions.clickElement(button);
-            tick();
-            fixture.detectChanges();
-
-            // expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    DateRangeTestComponent,
+                    DateRangeTwoInputsTestComponent
+                ],
+                imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+            })
+                .compileComponents();
         }));
-
-        it('Should select a range when pressing "today" if a start date is selected', fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-            fixture.componentInstance.mode = InteractionMode.DropDown;
             fixture.detectChanges();
+            dateRange = fixture.componentInstance.dateRange;
+        });
 
-            fixture.componentInstance.dateRange.open();
-            tick();
-            fixture.detectChanges();
-
-            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-            const dates = getDatesInView(fixture.debugElement.queryAll(By.css('.igx-calendar__date')));
-
-            UIInteractions.clickElement(dates[0].nativeElement);
-            tick();
-            fixture.detectChanges();
-            // expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
-
-            UIInteractions.clickElement(button);
-            tick();
-            fixture.detectChanges();
-            // expect((fixture.componentInstance.dateRange.value as Date[]).length).toBeGreaterThan(1);
-        }));
-
-        it('Should open the calendar on mouse click', fakeAsync(() => {
-            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-            fixture.componentInstance.mode = InteractionMode.DropDown;
-            fixture.detectChanges();
-
-            spyOn(fixture.componentInstance.dateRange.onOpened, 'emit');
-
-            const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            UIInteractions.clickElement(startInput.nativeElement);
-            tick();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-        }));
-
-        it('Should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
+        it('should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
             fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
             fixture.componentInstance.mode = InteractionMode.DropDown;
             fixture.detectChanges();
@@ -226,7 +288,7 @@ describe('IgxRangeDatePicker', () => {
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
         }));
 
-        it('Should move focus to the calendar on open in dialog mode', fakeAsync(() => {
+        it('should move focus to the calendar on open in dialog mode', fakeAsync(() => {
             fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
             fixture.componentInstance.mode = InteractionMode.Dialog;
             fixture.detectChanges();
@@ -238,7 +300,7 @@ describe('IgxRangeDatePicker', () => {
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
         }));
 
-        it('Should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
+        it('should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
             fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
             fixture.componentInstance.mode = InteractionMode.DropDown;
             fixture.detectChanges();
@@ -259,7 +321,7 @@ describe('IgxRangeDatePicker', () => {
             expect(document.activeElement).toHaveClass('igx-input-group__input');
         }));
 
-        it('Should move the focus to the single input on close', fakeAsync(() => {
+        it('should move the focus to the single input on close', fakeAsync(() => {
             fixture = TestBed.createComponent(DateRangeSingleInputTestComponent);
             fixture.componentInstance.mode = InteractionMode.DropDown;
             fixture.detectChanges();
@@ -328,32 +390,18 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-input-group>
-        <input #fullName igxInput type="text">
-        <label for="fullName" igxLabel>Full Name</label>
-        <igx-prefix>
-            <igx-icon>person</igx-icon>
-        </igx-prefix>
-    </igx-input-group>
-    <igx-date-range [doneButtonText]="doneButtonText" [mode]="mode">
-        <igx-input-group>
-            <input #startDate igxDateRangeStart igxInput type="text">
-            <label for="startDate" igxLabel>Check-in Date</label>
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-        </igx-input-group>
-        <igx-input-group>
-            <input #endDate igxDateRangeEnd igxInput type="text">
-            <label for="endDate" igxLabel>Check-out Date</label>
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-        </igx-input-group>
-    </igx-date-range>
+    <igx-date-range [mode]="mode">
+            <igx-date-start>
+                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="startDate" required>
+            </igx-date-start>
+            <igx-date-end>
+                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="endDate" required>
+            </igx-date-end>
+        </igx-date-range>
 `
 })
-export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent { }
+export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
+}
 
 @Component({
     selector: 'igx-date-range-single-input-test',
