@@ -1,4 +1,4 @@
-<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
+<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()" (onClosing)="onClosing()">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
@@ -73,7 +73,7 @@
             [placeholder]="this.value ? '' : appliedFormat"
             role="combobox"
             aria-haspopup="grid"
-            [attr.aria-expanded]="!this.toggleDirective?.collapsed"
+            [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
             />
 
