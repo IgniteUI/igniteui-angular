@@ -2457,7 +2457,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _filteredSortedPinnedData;
     protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
-    protected _filteredUnpinnedData;
+
+    /**
+     * @hidden
+     */
+    public _filteredUnpinnedData;
 
     /**
      * @hidden
