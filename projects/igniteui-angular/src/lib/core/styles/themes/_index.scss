@@ -21,6 +21,7 @@
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/combo/combo-theme';
 @import '../components/date-picker/date-picker-theme';
+@import '../components/date-range/date-range-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/divider/divider-theme';
 @import '../components/drop-down/drop-down-theme';
@@ -68,6 +69,7 @@
 /// @requires {mixin} igx-carousel
 /// @requires {mixin} igx-checkbox
 /// @requires {mixin} igx-date-picker
+/// @requires {mixin} igx-date-range
 /// @requires {mixin} igx-dialog
 /// @requires {mixin} igx-drop-down
 /// @requires {mixin} igx-expansion-panel
@@ -239,6 +241,10 @@
             $schema,
             $border-radius: $roundness,
         ));
+    }
+
+    @if not(index($exclude, 'igx-date-range')) {
+        @include igx-date-range(igx-date-range-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-dialog')) {

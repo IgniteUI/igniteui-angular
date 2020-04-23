@@ -1,26 +1,41 @@
 import {
-    Component, Input, ContentChild, ViewChild,
-    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef, ContentChildren, QueryList, TemplateRef
+    AfterViewInit,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    Input,
+    OnDestroy,
+    Output,
+    QueryList,
+    ViewChild
 } from '@angular/core';
-import { InteractionMode } from '../core/enums';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
-import { OverlaySettings, GlobalPositionStrategy, AutoPositionStrategy } from '../services/index';
-import { Subject, fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { KEYS, isIE, IBaseEventArgs } from '../core/utils';
-import { PositionSettings } from '../services/overlay/utilities';
-import { fadeIn, fadeOut } from '../animations/fade';
+import {InteractionMode} from '../core/enums';
+import {IgxToggleDirective} from '../directives/toggle/toggle.directive';
+import {IgxCalendarComponent, WEEKDAYS} from '../calendar/index';
+import {AutoPositionStrategy, GlobalPositionStrategy, OverlaySettings} from '../services/index';
+import {fromEvent, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
+import {IBaseEventArgs, KEYS} from '../core/utils';
+import {PositionSettings} from '../services/overlay/utilities';
+import {fadeIn, fadeOut} from '../animations/fade';
 import {
-    IgxDateStartComponent, IgxDateEndComponent,
-    IgxDateSingleComponent, DateRange, IgxDateRangePrefixDirective, IgxDateRangeSuffixDirective
+    DateRange,
+    IgxDateEndComponent,
+    IgxDateRangePrefixDirective,
+    IgxDateRangeSuffixDirective,
+    IgxDateSingleComponent,
+    IgxDateStartComponent
 } from './igx-date-range-inputs.common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IToggleView } from '../core/navigation';
-import { IgxLabelDirective, IgxPrefixDirective } from '../input-group';
-import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
-import { CurrentResourceStrings } from '../core/i18n/resources';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {IToggleView} from '../core/navigation';
+import {IgxLabelDirective} from '../input-group';
+import {IgxInputGroupBase} from '../input-group/input-group.common';
+import {IgxDateTimeEditorEventArgs} from '../directives/date-time-editor';
+import {CurrentResourceStrings} from '../core/i18n/resources';
 
 /**
  * Range Date Picker provides the ability to select a range of dates from the calendar UI.
@@ -55,6 +70,8 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangeComponent), multi: true }]
 })
 export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDestroy, ControlValueAccessor {
+    @HostBinding('class.igx-date-range')
+    public cssClass = 'igx-date-range';
     /**
      * Gets/Sets whether `IgxDateRangeComponent` is in dialog or dropdown mode.
      * @remarks

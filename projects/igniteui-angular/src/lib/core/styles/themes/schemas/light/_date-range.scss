@@ -1,0 +1,28 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light date-range schema.
+/// @type {Map}
+/// @prop {Map} color [igx-color: 'surface'] - date range text color.
+$_light-date-range: (
+    color: (
+        igx-color: ('grays', 500),
+    )
+);
+
+/// Generates a fluent date-range schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-date-range
+/// @see $default-palette
+$_fluent-date-range: extend($_light-date-range);
+
+/// Generates a bootstrap date-range schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-date-range
+/// @see $bootstrap-palette
+$_bootstrap-date-range: extend($_light-date-range);
