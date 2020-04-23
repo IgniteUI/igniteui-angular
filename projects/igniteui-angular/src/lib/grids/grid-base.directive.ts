@@ -2457,7 +2457,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _filteredSortedPinnedData;
     protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
-    protected _filteredUnpinnedData;
+
+    /**
+     * @hidden
+     */
+    public _filteredUnpinnedData;
 
     /**
      * @hidden
@@ -2874,10 +2878,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.endEdit(true);
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
-        });
-
-        this.onRowPinning.subscribe(() => {
-            this.summaryService.clearSummaryCache();
         });
     }
 
