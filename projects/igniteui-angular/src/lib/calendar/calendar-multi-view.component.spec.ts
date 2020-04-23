@@ -213,32 +213,31 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[10], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', secondMonthDates[10]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(secondMonthDates[3]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[3], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', secondMonthDates[3]);
             fixture.detectChanges();
             tick();
 
             let firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(firstMonthDates[27]);
 
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[27], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', firstMonthDates[27]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(firstMonthDates[20]);
 
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[20], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', firstMonthDates[20]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(firstMonthDates[13]);
-
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[13], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', firstMonthDates[13]);
             fixture.detectChanges();
             tick();
 
@@ -246,7 +245,7 @@ describe('Multi-View Calendar - ', () => {
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2019, nov2019, dec2019]);
 
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[6], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', firstMonthDates[6]);
             fixture.detectChanges();
             tick(600);
 
@@ -264,38 +263,36 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[22], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[22]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(monthDates[29]);
-            UIInteractions.simulateKeyDownEvent(monthDates[29], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[29]);
             fixture.detectChanges();
 
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
             expect(document.activeElement).toEqual(monthDates[6]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[5], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[5]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(monthDates[12]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[12], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[12]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(monthDates[19]);
-
-            UIInteractions.simulateKeyDownEvent(monthDates[19], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[19]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(monthDates[26]);
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2019, nov2019, dec2019]);
-
-            UIInteractions.simulateKeyDownEvent(monthDates[26], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[26]);
             fixture.detectChanges();
             tick(600);
 
@@ -311,13 +308,12 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[1], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', secondMonthDates[1]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(secondMonthDates[0]);
-
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[0], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', secondMonthDates[0]);
             fixture.detectChanges();
             tick();
 
@@ -325,7 +321,7 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(firstMonthDates[30]);
 
             for (let index = 30; index > 0; index--) {
-                UIInteractions.simulateKeyDownEvent(firstMonthDates[index], 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', firstMonthDates[index]);
                 fixture.detectChanges();
                 tick();
 
@@ -334,8 +330,7 @@ describe('Multi-View Calendar - ', () => {
 
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2019, nov2019, dec2019]);
-
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[0], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', firstMonthDates[0]);
             fixture.detectChanges();
             tick(600);
 
@@ -356,13 +351,12 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             for (let index = 20; index < 29; index++) {
-                UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[index]);
                 fixture.detectChanges();
                 tick();
                 expect(document.activeElement).toEqual(monthDates[index + 1]);
             }
-
-            UIInteractions.simulateKeyDownEvent(monthDates[29], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[29]);
             fixture.detectChanges();
             tick();
 
@@ -370,7 +364,7 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(monthDates[0]);
 
             for (let index = 0; index < 30; index++) {
-                UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[index]);
                 fixture.detectChanges();
                 tick();
                 expect(document.activeElement).toEqual(monthDates[index + 1]);
@@ -378,8 +372,7 @@ describe('Multi-View Calendar - ', () => {
 
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2019, nov2019, dec2019]);
-
-            UIInteractions.simulateKeyDownEvent(monthDates[30], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[30]);
             fixture.detectChanges();
             tick(600);
 
@@ -401,13 +394,13 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[27], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', secondMonthDates[27]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(secondMonthDates[13]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[13], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', secondMonthDates[13]);
             fixture.detectChanges();
             tick();
 
@@ -416,7 +409,7 @@ describe('Multi-View Calendar - ', () => {
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dec2019, jan2020, feb2020]);
 
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[9], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', firstMonthDates[9]);
             fixture.detectChanges();
             tick(600);
 
@@ -437,20 +430,20 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[16], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', secondMonthDates[16]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(secondMonthDates[30]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[30], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', secondMonthDates[30]);
             fixture.detectChanges();
             tick();
 
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
             expect(document.activeElement).toEqual(monthDates[20]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[20], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', monthDates[20]);
             fixture.detectChanges();
             tick(600);
 
@@ -471,21 +464,20 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[25], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', secondMonthDates[25]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(secondMonthDates[17]);
 
             for (let index = 17; index > 11; index--) {
-                UIInteractions.simulateKeyDownEvent(secondMonthDates[index], 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', secondMonthDates[index]);
                 fixture.detectChanges();
                 tick();
 
                 expect(document.activeElement).toEqual(secondMonthDates[index - 1]);
             }
-
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[11], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', secondMonthDates[11]);
             fixture.detectChanges();
             tick();
 
@@ -493,7 +485,7 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(firstMonthDates[13]);
 
             for (let index = 13; index > 8; index--) {
-                UIInteractions.simulateKeyDownEvent(firstMonthDates[index], 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', firstMonthDates[index]);
                 fixture.detectChanges();
                 tick();
 
@@ -502,8 +494,7 @@ describe('Multi-View Calendar - ', () => {
 
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dec2019, jan2020, feb2020]);
-
-            UIInteractions.simulateKeyDownEvent(firstMonthDates[8], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', firstMonthDates[8]);
             fixture.detectChanges();
             tick(600);
 
@@ -524,20 +515,19 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[17], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[17]);
             fixture.detectChanges();
             tick();
 
             expect(document.activeElement).toEqual(monthDates[25]);
 
             for (let index = 25; index < 30; index++) {
-                UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[index]);
                 fixture.detectChanges();
                 tick();
                 expect(document.activeElement).toEqual(monthDates[index + 1]);
             }
-
-            UIInteractions.simulateKeyDownEvent(monthDates[30], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[30]);
             fixture.detectChanges();
             tick();
 
@@ -545,7 +535,7 @@ describe('Multi-View Calendar - ', () => {
             expect(document.activeElement).toEqual(monthDates[15]);
 
             for (let index = 15; index < 23; index++) {
-                UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[index]);
                 fixture.detectChanges();
                 tick();
                 expect(document.activeElement).toEqual(monthDates[index + 1]);
@@ -554,7 +544,7 @@ describe('Multi-View Calendar - ', () => {
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dec2019, jan2020, feb2020]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[23], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[23]);
             fixture.detectChanges();
             tick(600);
 
@@ -570,12 +560,12 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[16], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[16]);
             fixture.detectChanges();
 
             expect(document.activeElement).toEqual(monthDates[17]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[17], 'PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', monthDates[17]);
             fixture.detectChanges();
             tick(600);
 
@@ -585,7 +575,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [sept2019, oct2019, nov2019]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[17], 'PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', monthDates[17]);
             fixture.detectChanges();
             tick(600);
 
@@ -600,12 +590,12 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[17], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[17]);
             fixture.detectChanges();
 
             expect(document.activeElement).toEqual(monthDates[18]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[18], 'PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', monthDates[18]);
             fixture.detectChanges();
             tick(600);
 
@@ -615,7 +605,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [nov2019, dec2019, jan2020]);
 
-            UIInteractions.simulateKeyDownEvent(monthDates[18], 'PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', monthDates[18]);
             fixture.detectChanges();
             tick(600);
 
@@ -631,7 +621,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[16], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[16]);
             fixture.detectChanges();
 
             expect(document.activeElement).toEqual(monthDates[17]);
@@ -660,7 +650,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick();
 
-            UIInteractions.simulateKeyDownEvent(monthDates[16], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[16]);
             fixture.detectChanges();
 
             expect(document.activeElement).toEqual(monthDates[17]);
@@ -773,7 +763,7 @@ describe('Multi-View Calendar - ', () => {
 
             for (let i = 1; i < dates.length - 1; i++) {
                 const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
-                UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowRight);
                 tick(100);
                 fixture.detectChanges();
 
@@ -781,7 +771,7 @@ describe('Multi-View Calendar - ', () => {
             }
             for (let index = dates.length - 2; index > 0; index--) {
                 const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
-                UIInteractions.simulateKeyDownEvent(arrowLeft, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowLeft);
                 tick(100);
                 fixture.detectChanges();
 
@@ -816,7 +806,7 @@ describe('Multi-View Calendar - ', () => {
             }
         })));
 
-        it('When navigating to a new month the selected date should not steal the focus', (fakeAsync (() => {
+        it('When navigating to a new month the selected date should not steal the focus', (fakeAsync(() => {
             calendar.monthsViewNumber = 2;
             tick(100);
             fixture.detectChanges();
@@ -832,7 +822,7 @@ describe('Multi-View Calendar - ', () => {
             calendar.selectDate(dates[2]);
             fixture.detectChanges();
 
-            UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', arrowRight);
             tick(100);
             fixture.detectChanges();
 
@@ -843,39 +833,39 @@ describe('Multi-View Calendar - ', () => {
         it('When select a new month - should come at correct position', fakeAsync(() => {
             const secondMonthPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[2];
-            UIInteractions.simulateKeyDownEvent(secondMonthPicker, 'Enter');
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', secondMonthPicker);
             fixture.detectChanges();
             tick(100);
             const months = HelperTestFunctions.getMonthsFromMonthView(fixture);
             expect(months.length).toBe(12);
             expect(document.activeElement).toEqual(months[10]);
 
-            UIInteractions.simulateKeyDownEvent(months[10], 'ArrowUp');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', months[10]);
             fixture.detectChanges();
             tick(100);
             expect(document.activeElement).toEqual(months[7]);
 
-            UIInteractions.simulateKeyDownEvent(months[7], 'ArrowLeft');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', months[7]);
             fixture.detectChanges();
             tick(100);
             expect(document.activeElement).toEqual(months[6]);
 
-            UIInteractions.simulateKeyDownEvent(months[6], 'ArrowDown');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', months[6]);
             fixture.detectChanges();
             tick(100);
             expect(document.activeElement).toEqual(months[9]);
 
-            UIInteractions.simulateKeyDownEvent(months[9], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', months[9]);
             fixture.detectChanges();
             tick(100);
             expect(document.activeElement).toEqual(months[10]);
 
-            UIInteractions.simulateKeyDownEvent(months[10], 'ArrowRight');
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', months[10]);
             fixture.detectChanges();
             tick(100);
             expect(document.activeElement).toEqual(months[11]);
 
-            UIInteractions.simulateKeyDownEvent(months[11], 'Enter');
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', months[11]);
             fixture.detectChanges();
             tick(100);
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-11-12'), new Date('2019-12-1'), new Date('2020-1-2')]);
@@ -889,7 +879,7 @@ describe('Multi-View Calendar - ', () => {
 
             const secondYearPicker = HelperTestFunctions.getCalendarSubHeader(fixture)
                 .querySelectorAll(HelperTestFunctions.CALENDAR_DATE_CSSCLASS)[3];
-            UIInteractions.simulateKeyDownEvent(secondYearPicker, 'Enter');
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', secondYearPicker);
             fixture.detectChanges();
             tick(150);
             fixture.detectChanges();
@@ -899,7 +889,7 @@ describe('Multi-View Calendar - ', () => {
             expect(Number(years[3].innerText)).toEqual(2020);
 
             for (let i = 1; i < 4; i++) {
-                UIInteractions.simulateKeyDownEvent(years[3], 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', years[3]);
                 tick(100);
                 fixture.detectChanges();
 
@@ -908,15 +898,14 @@ describe('Multi-View Calendar - ', () => {
             }
 
             for (let i = 1; i < 5; i++) {
-                UIInteractions.simulateKeyDownEvent(years[3], 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', years[3]);
                 tick(100);
                 fixture.detectChanges();
 
                 years = HelperTestFunctions.getYearsFromYearView(fixture);
                 expect(Number(years[3].innerText)).toEqual(2017 + i);
             }
-
-            UIInteractions.simulateKeyDownEvent(years[3], 'Enter');
+            UIInteractions.triggerKeyDownEvtUponElem('Enter', years[3]);
             tick(100);
             fixture.detectChanges();
 
@@ -1234,7 +1223,7 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
             let target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
-            UIInteractions.clickElement(target);
+            UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);
             fixture.detectChanges();
 
@@ -1244,7 +1233,7 @@ describe('Multi-View Calendar - ', () => {
 
             // close the datePicker
             const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.clickElement(overlayDiv);
+            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
             tick(400);
             fixture.detectChanges();
 
@@ -1254,7 +1243,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
-            UIInteractions.clickElement(target);
+            UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);
             fixture.detectChanges();
 
@@ -1265,7 +1254,7 @@ describe('Multi-View Calendar - ', () => {
 
         it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
             const target = fixture.nativeElement.querySelector(HelperTestFunctions.ICON_CSSCLASS);
-            UIInteractions.clickElement(target);
+            UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);
             fixture.detectChanges();
 
@@ -1277,7 +1266,7 @@ describe('Multi-View Calendar - ', () => {
 
             // close the datePicker
             const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.clickElement(overlayDiv);
+            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
             tick(400);
             fixture.detectChanges();
 
@@ -1285,7 +1274,7 @@ describe('Multi-View Calendar - ', () => {
             tick();
             fixture.detectChanges();
 
-            UIInteractions.clickElement(target);
+            UIInteractions.simulateClickAndSelectEvent(target);
             tick(400);
             fixture.detectChanges();
 
