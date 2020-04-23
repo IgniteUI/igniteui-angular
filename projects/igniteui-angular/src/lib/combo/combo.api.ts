@@ -10,6 +10,10 @@ export class IgxComboAPIService {
 
     public disableTransitions = false;
 
+    public triggerCheck() {
+        this.combo.triggerCheck();
+    }
+
     public register(combo: IgxComboBase) {
         this.combo = combo;
     }
