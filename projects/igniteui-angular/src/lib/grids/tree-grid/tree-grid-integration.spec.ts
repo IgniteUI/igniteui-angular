@@ -1405,6 +1405,15 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.getRowByKey(711).unpin();
             fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(0);
+
+
+            treeGrid.getRowByKey(711).pinned = true;
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+
+            treeGrid.getRowByKey(711).pinned = false;
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
         });
 
         it('should pin/unpin a row at the bottom', () => {
