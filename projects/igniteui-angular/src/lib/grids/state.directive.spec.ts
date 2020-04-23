@@ -416,6 +416,7 @@ describe('IgxGridState - input properties #grid', () => {
         expect(gridState).toBe(rowPinState);
 
         grid.getRowByIndex(3).pin();
+        fix.detectChanges();
 
         state.setState(rowPinStateObject);
         fix.detectChanges();
