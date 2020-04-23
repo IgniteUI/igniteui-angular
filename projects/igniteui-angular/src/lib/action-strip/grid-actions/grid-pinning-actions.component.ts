@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
+import { IgxRowDirective } from '../../grids';
 
 @Component({
     selector: 'igx-grid-pinning-actions',
@@ -24,13 +25,12 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @internal
      */
     get pinned() {
-        const context = this.strip.context;
+        const context = this.strip.context as IgxRowDirective<any>;
         if (context && !this.iconsRendered) {
             this.renderIcons();
             this.iconsRendered = true;
         }
-        return context &&
-            (context.pinned || context.row && context.row.pinned);
+        return context && context.pinned;
     }
 
     /**
@@ -41,8 +41,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public pin(): void {
-        const context = this.strip.context;
-        const row = context.row ? context.row : context;
+        if (!this.isRowContext) {
+            return;
+        }
+        const row = this.strip.context as IgxRowDirective<any>;
         const grid = row.grid;
         grid.pinRow(row.rowID);
     }
@@ -55,8 +57,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public unpin(): void {
-        const context = this.strip.context;
-        const row = context.row ? context.row : context;
+        if (!this.isRowContext) {
+            return;
+        }
+        const row = this.strip.context as IgxRowDirective<any>;
         const grid = row.grid;
         grid.unpinRow(row.rowID);
     }

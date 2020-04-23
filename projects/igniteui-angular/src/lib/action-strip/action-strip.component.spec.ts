@@ -12,7 +12,7 @@ import { IgxActionStripModule } from './action-strip.module';
 const ACTION_STRIP_CONTAINER_CSS = 'igx-action-strip__actions';
 const DROP_DOWN_LIST = 'igx-drop-down__list';
 
-fdescribe('igxActionStip', () => {
+describe('igxActionStrip', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let actionStripElement: ElementRef;

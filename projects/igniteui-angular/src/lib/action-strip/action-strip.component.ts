@@ -4,16 +4,25 @@ import {
     HostBinding,
     Input,
     Renderer2,
-    TemplateRef,
     ViewContainerRef,
     Optional,
     Inject,
     ContentChildren,
     QueryList,
-    ViewChild
+    ViewChild,
+    ElementRef,
+    TemplateRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down';
+import { IgxGridBaseDirective, IgxRowDirective } from '../grids';
+
+export interface IActionStripContext {
+    element: ElementRef<any>;
+    grid?: IgxGridBaseDirective;
+    row?: IgxRowDirective<any>;
+    cells?: any;
+}
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -59,12 +68,14 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     }
 
     /**
-     * Sets/gets the 'display' property of the current `IgxActionStrip`
+     * Getter for the 'display' property of the current `IgxActionStrip`
      * @hidden
      * @internal
      */
     @HostBinding('style.display')
-    public display = 'flex';
+    get display(): string {
+        return this._hidden ? 'none' : 'flex';
+    }
 
     private _hidden = false;
 
@@ -79,7 +90,6 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     @Input()
     public set hidden(value) {
         this._hidden = value;
-        this.display = this._hidden ? 'none' : 'flex';
     }
 
     public get hidden() {
@@ -91,8 +101,8 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    @HostBinding('class.igx-action-strip')
-    public cssClass = 'igx-action-strip';
+    @Input()
+    public class = 'igx-action-strip';
 
     /**
      * Host `attr.class` binding.
@@ -103,7 +113,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
     get hostClass(): string {
         const classes = [this.getComponentDensityClass('igx-action-strip')];
         // The custom classes should be at the end.
-        classes.push(this.cssClass);
+        classes.push(this.class);
         return classes.join(' ');
     }
 
@@ -116,7 +126,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * <igx-action-strip [context]="cell"></igx-action-strip>
      * ```
      */
-    public context;
+    public context: IActionStripContext;
     /**
      * Menu Items ContentChildren inside the Action Strip
      * @hidden
@@ -131,7 +141,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @ViewChild('dropdown')
-    public menu: IgxDropDownComponent;
+    private menu: IgxDropDownComponent;
 
     /**
      * Showing the Action Strip and appending it the specified context element.
@@ -141,13 +151,16 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * this.actionStrip.show(row);
      * ```
      */
-    public show(context): void {
+    public show(context?: IActionStripContext): void {
+        this.hidden = false;
+        if (!context) {
+            return;
+        }
         // when shown for different context make sure the menu won't stay opened
         if (this.context !== context) {
-           this.closeMenu();
+            this.closeMenu();
         }
         this.context = context;
-        this.hidden = false;
         if (this.context && this.context.element) {
             this.renderer.appendChild(context.element.nativeElement, this._viewContainer.element.nativeElement);
         }
