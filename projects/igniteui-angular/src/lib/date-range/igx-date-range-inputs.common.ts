@@ -166,3 +166,10 @@ export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {
     }
 }
 
+@Directive({
+    selector: '[igxDateSeparator]'
+})
+export class IgxDateSeparatorDirective {
+}
+
+

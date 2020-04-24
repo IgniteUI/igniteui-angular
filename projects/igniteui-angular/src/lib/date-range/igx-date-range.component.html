@@ -51,7 +51,9 @@
 
 <ng-template #startEndTemplate>
     <ng-content select="igx-date-start"></ng-content>
-    <div class="igx-date-range__label">{{ prepTo }}</div>
+    <div class="igx-date-range__label">
+        <ng-container *ngTemplateOutlet="dateSeparatorTemplate ? dateSeparatorTemplate : defDateSeparatorTemplate;"></ng-container>
+    </div>
     <ng-content select="igx-date-end"></ng-content>
 </ng-template>
 
@@ -60,6 +62,8 @@
         calendar_today
     </igx-icon>
 </ng-template>
+
+<ng-template #defDateSeparatorTemplate>{{ dateSeparator }}</ng-template>
 
 <ng-template #defTemplate>
     <igx-input-group>

@@ -11,7 +11,8 @@ import {
     OnDestroy,
     Output,
     QueryList,
-    ViewChild
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -27,7 +28,8 @@ import {
     IgxDateEndComponent,
     IgxDateSingleComponent,
     IgxDateStartComponent,
-    IgxPickerToggleComponent
+    IgxPickerToggleComponent,
+    IgxDateSeparatorDirective
 } from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IToggleView } from '../core/navigation';
@@ -298,7 +300,11 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public label: IgxLabelDirective;
 
     /** @hidden */
-    public prepTo = CurrentResourceStrings.RangeDatePickerResStrings.igx_range_date_picker_to;
+    @ContentChild(IgxDateSeparatorDirective, { read: TemplateRef })
+    public dateSeparatorTemplate: TemplateRef<any>;
+
+    /** @hidden */
+    public dateSeparator = CurrentResourceStrings.RangeDatePickerResStrings.igx_range_date_picker_date_separator;
 
     /** @hidden @internal */
     public get appliedFormat() {
