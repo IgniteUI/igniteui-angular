@@ -1,14 +1,13 @@
 $range-sample-space: 16px;
 
 .range-holder {
-    max-width: 400px;
+    display: flex;
 }
 
 .range-sample-column {
     display: flex;
     flex-direction: column;
     padding: $range-sample-space;
-    width: 100%;
     border-right: 1px solid #ddd;
 
     > * {

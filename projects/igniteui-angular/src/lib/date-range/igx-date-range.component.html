@@ -4,11 +4,9 @@
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
         (onSelection)="handleSelection($event)"></igx-calendar>
-    <div class="buttonsWrapper">
-        <div *ngIf="mode === 'dialog'">
-            <div class="doneButton">
-                <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
-            </div>
+    <div class="igx-overlay__dialog-buttons">
+        <div class="igx-overlay__dialog-buttons-inner" *ngIf="mode === 'dialog'">
+            <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
         </div>
     </div>
 </div>
