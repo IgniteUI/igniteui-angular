@@ -2457,7 +2457,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _filteredSortedPinnedData;
     protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
-    protected _filteredUnpinnedData;
+
+    /**
+     * @hidden
+     */
+    public _filteredUnpinnedData;
 
     /**
      * @hidden
@@ -2875,10 +2879,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
-
-        this.onRowPinning.subscribe(() => {
-            this.summaryService.clearSummaryCache();
-        });
     }
 
     /**
@@ -2932,7 +2932,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasPinnedRecords && pinned) {
             this._filteredPinnedData = data || [];
             const filteredUnpinned =  this._filteredUnpinnedData || [];
-            this.filteredData = [... this._filteredPinnedData, ... filteredUnpinned];
+            const filteredData =  [... this._filteredPinnedData, ... filteredUnpinned];
+            this.filteredData =  filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
