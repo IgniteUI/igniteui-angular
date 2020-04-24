@@ -58,7 +58,7 @@ describe('IgxRangeDatePicker', () => {
             dateRange.calendar = calendar;
             const today = new Date();
 
-            dateRange.selectToday();
+            dateRange.selectRange(new Date());
             expect(dateRange.value.start).toEqual(today);
             expect(dateRange.value.end).toEqual(today);
         });
@@ -92,7 +92,7 @@ describe('IgxRangeDatePicker', () => {
             spyOn(dateRange.rangeSelected, 'emit');
             const today = new Date();
 
-            dateRange.selectToday();
+            dateRange.selectRange(new Date());
             expect(dateRange.value.start).toEqual(today);
             expect(dateRange.value.end).toEqual(today);
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(1);
@@ -333,7 +333,7 @@ describe('IgxRangeDatePicker', () => {
                 fixture.componentInstance.mode = InteractionMode.DropDown;
                 fixture.detectChanges();
 
-                fixture.componentInstance.dateRange.selectToday();
+                fixture.componentInstance.dateRange.selectRange(new Date());
                 fixture.whenStable().then(() => {
                     fixture.detectChanges();
                     // expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);

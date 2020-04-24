@@ -1,4 +1,4 @@
-import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener, Directive } from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
