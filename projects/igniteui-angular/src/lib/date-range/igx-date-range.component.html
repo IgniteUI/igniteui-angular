@@ -1,4 +1,4 @@
-<div #toggle igxToggle [style.width]="'600px'" (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)"
+<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)"
     class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'">
     <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
