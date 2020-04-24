@@ -547,7 +547,7 @@ describe('IgxDateTimeEditor', () => {
                 result = [day, month, year].join('/');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
-            fit('should support long and short date formats', () => {
+            it('should support long and short date formats', () => {
                 fixture.componentInstance.displayFormat = 'longDate';
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('9', inputElement);
