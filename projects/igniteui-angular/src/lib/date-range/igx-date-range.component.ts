@@ -358,9 +358,11 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         if (this.value) {
             if (this.value.start) {
                 range.push(this.value.start);
-            }
-            if (this.value.end) {
-                range.push(this.value.end);
+                if (this.value.end) {
+                    range.push(this.value.end);
+                }
+            } else {
+                this.value = { start: null, end: null };
             }
         }
         if (range.length > 0) {
@@ -411,7 +413,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     /**
-     * Gets/Sets the currently selected value / range from the calendar
+     * The currently selected value / range from the calendar
      *
      * @remarks
      * The current value is of type `DateRange`
@@ -540,20 +542,6 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this.rangeSelected.emit(this.value);
     }
 
-    /** @hidden @internal */
-    public selectToday(): void {
-        this.selectRange(new Date());
-    }
-
-    /** @hidden @internal */
-    public onClick(event: MouseEvent): void {
-        if (event) {
-            event.stopPropagation();
-            event.preventDefault();
-        }
-        this.open();
-    }
-
     private updateCalendar() {
         const range: Date[] = [];
         if (this.value) {
@@ -630,13 +618,13 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     private subscribeToToggleEvents(): void {
-        this.toggleDirective.onOpened.subscribe(() => {
+        this.toggleDirective.onOpened.pipe(takeUntil(this.$destroy)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.calendar.daysView.focusActiveDate();
                 this.onOpened.emit({ owner: this });
             });
         });
-        this.toggleDirective.onClosed.subscribe(() => {
+        this.toggleDirective.onClosed.pipe(takeUntil(this.$destroy)).subscribe(() => {
             if (this.value && !this.value.end) {
                 this.value = { start: this.value.start, end: this.value.start };
                 this.onClosed.emit({ owner: this });

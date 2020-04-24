@@ -1,7 +1,4 @@
-import {
-    Component, ContentChild, Pipe, PipeTransform, Directive,
-    TemplateRef, Output, EventEmitter, HostListener, ContentChildren, QueryList
-} from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener } from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
@@ -82,7 +79,7 @@ export class IgxPickerToggleComponent {
     public clicked = new EventEmitter();
 
     @HostListener('click')
-    public onIconClick() {
+    public onClick() {
         this.clicked.emit();
     }
 }

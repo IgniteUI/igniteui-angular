@@ -45,10 +45,6 @@
     </ng-container>
 </ng-template>
 
-<ng-template #defLabel>
-    <label for="singleInput" igxLabel>Range</label>
-</ng-template>
-
 <ng-template #startEndTemplate>
     <ng-content select="igx-date-start"></ng-content>
     <div class="igx-date-range__label">
@@ -66,7 +62,7 @@
 <ng-template #defDateSeparatorTemplate>{{ dateSeparator }}</ng-template>
 
 <ng-template #defTemplate>
-    <igx-input-group>
+    <igx-input-group (click)="open()">
         <input #singleInput igxInput type="text" readonly
             [placeholder]="this.value ? '' : appliedFormat"
             role="combobox"
@@ -76,12 +72,12 @@
             [value]="this.value | dateRange: this.inputFormat : this.locale"
             />
 
-        <igx-prefix *ngIf="!this.toggleComponents.length" (click)="open()">
+        <igx-prefix *ngIf="!this.toggleComponents.length">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
         </igx-prefix>
 
         <ng-container ngProjectAs="[igxLabel]">
-            <ng-container *ngTemplateOutlet="this.label ? labelTemplate : defLabel"></ng-container>
+            <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
         </ng-container>
         <ng-container ngProjectAs="igx-prefix">
             <ng-container *ngTemplateOutlet="prefixTemplate"></ng-container>
