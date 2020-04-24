@@ -86,6 +86,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostBinding('class.igx-grid__th--active')
     public get active() {
         const node = this.grid.navigation.activeNode;
+        return  node && !this.column.columnGroup ?
+            node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
+    }
+
+    public get activeGroup() {
+        const node = this.grid.navigation.activeNode;
         return  node ? node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
     }
 
@@ -289,7 +295,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public onMouseDown(event): void {
         // hack for preventing text selection in IE and Edge while dragging the resizer
         event.preventDefault();
-        this.grid.theadRow.nativeElement.focus();
     }
 
     /**
@@ -299,6 +304,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     public pointerdown(event): void {
         event.stopPropagation();
         this.activate();
+        this.grid.theadRow.nativeElement.focus();
     }
 
     /*
