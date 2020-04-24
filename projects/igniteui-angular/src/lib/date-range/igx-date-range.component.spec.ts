@@ -21,7 +21,8 @@ const ONE_DAY = 1000 * 60 * 60 * 24;
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_WRAPPER = 'igx-toggle'; // TODO Implementation -> maybe add class for the div container
+const CSS_CLASS_CALENDAR_WRAPPER = 'igx-toggle'; // TODO Implementation -> maybe add class for the div container ('igx-date-picker')
+const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 function getDatesInView(dates: DebugElement[]): DebugElement[] {
     return dates.filter(d => {
@@ -36,6 +37,7 @@ describe('IgxRangeDatePicker', () => {
     let endDate: Date;
     let startDate: Date;
     let toggleBtn: DebugElement;
+    // let datePickerElement: DebugElement;
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
     let dateRange: IgxDateRangeComponent;
@@ -53,20 +55,20 @@ describe('IgxRangeDatePicker', () => {
     }
 
     describe('Single Input', () => {
-        let singleInputElement: DebugElement;
+        // let singleInputElement: DebugElement;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     DateRangeTestComponent,
-                    DateRangeDefaultARIAComponent
+                    DateRangeSingleInputTestComponent
                 ],
                 imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
             })
                 .compileComponents();
         }));
         beforeEach(fakeAsync(() => {
-            fixture = TestBed.createComponent(DateRangeDefaultARIAComponent);
+            fixture = TestBed.createComponent(DateRangeSingleInputTestComponent);
             fixture.detectChanges();
         }));
 
@@ -89,9 +91,28 @@ describe('IgxRangeDatePicker', () => {
         it('Should do a range selection if a date is selected and "Today" is pressed', () => {
             // TODO
         });
+    });
 
+    describe('ARIA', () => {
+        let singleInputElement: DebugElement;
+        let dateRangeSingle: IgxDateRangeComponent;
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    DateRangeTestComponent,
+                    DateRangeDefaultCustomLabelComponent
+                ],
+                imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+            })
+                .compileComponents();
+        }));
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
+            fixture.detectChanges();
+        }));
         it('should render aria attributes properly', fakeAsync(() => {
-            const dateRangeSingle = fixture.componentInstance.dateRange;
+            dateRangeSingle = fixture.componentInstance.dateRange;
 
             toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             calendarElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR));
@@ -108,7 +129,8 @@ describe('IgxRangeDatePicker', () => {
             expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
             expect(calendarElement.nativeElement.getAttribute('role')).toEqual('grid');
             expect(singleInputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(expectedLabelID);
-            dateRangeSingle.toggleDirective.toggle();
+
+            dateRangeSingle.toggle();
             tick();
             fixture.detectChanges();
 
@@ -116,7 +138,7 @@ describe('IgxRangeDatePicker', () => {
             expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
             expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
-            dateRangeSingle.toggleDirective.toggle();
+            dateRangeSingle.toggle();
             tick();
             fixture.detectChanges();
 
@@ -127,9 +149,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
             expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
         }));
-
     });
-
     describe('Two Inputs', () => {
         let startInput: DebugElement;
         let endInput: DebugElement;
@@ -303,7 +323,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -315,7 +335,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -331,7 +351,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-           // UIInteractions.clickElement(button);
+            // UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
 
@@ -352,7 +372,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-            //UIInteractions.clickElement(button);
+           // UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
 
@@ -365,20 +385,122 @@ describe('IgxRangeDatePicker', () => {
     });
 
     describe('Keyboard Navigation', () => {
-        it('Should open the calendar with ALT + DOWN ARROW key', () => {
-            // TODO
-        });
+        const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+        const altArrowDownKeyEvent = new KeyboardEvent('keydown', { altKey: true, key: 'ArrowDown' });
+        const altArrowUpKeyEvent = new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' });
 
-        it('Should close the calendar with ALT + UP ARROW key', () => {
-            // TODO
-            // should focus start input | single input
-        });
 
-        it('Should close the calendar with ESC', () => {
-            // TODO
-            // should focus start input | single input
-        });
+
+        configureTestSuite();
+        beforeAll(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    DateRangeTestComponent,
+                    DateRangeDefaultComponent,
+                    DateRangeTwoInputsTestComponent
+                ],
+                imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule]
+            })
+                .compileComponents();
+        }));
+
+        describe('Keyboard Navigation Single Input', () => {
+            let singleInputElement: DebugElement;
+            let dateRangeSingle: IgxDateRangeComponent;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                dateRangeSingle = fixture.componentInstance.dateRange;
+                fixture.detectChanges();
+                singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            }));
+            xit('Should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeTruthy(); // collapsed needs implementation
+                singleInputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
+                tick();
+                fixture.detectChanges();
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeFalsy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeFalsy(); // collapsed needs implementation
+
+                singleInputElement.triggerEventHandler('keydown', altArrowUpKeyEvent);
+                tick();
+                fixture.detectChanges();
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeTruthy(); // collapsed needs implementation
+                expect(singleInputElement).toBe(document.activeElement);
+            }));
+
+            xit('Should close the calendar with ESC', fakeAsync(() => {
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeTruthy();
+                dateRangeSingle.toggle();
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeFalsy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeFalsy();
+
+                singleInputElement.triggerEventHandler('keydown', escapeKeyEvent);
+                tick();
+                fixture.detectChanges();
+
+                expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                // alternatively expect(dateRangeSingle.collapsed).toBeTruthy();
+
+                // should focus input on close
+                expect(singleInputElement).toBe(document.activeElement);
+            }));
     });
+    describe('Keyboard Navigation Two Inputs', () => {
+        let firstInputElement: DebugElement;
+        let secondInputElement: DebugElement;
+        let dateRangeTwoInputs: IgxDateRangeComponent;
+
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            dateRangeTwoInputs = fixture.componentInstance.dateRange;
+            fixture.detectChanges();
+            firstInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[0];
+            secondInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[1];
+        }));
+
+        xit('Should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+            expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+            // alternatively expect(dateRangeTwoInputs.collapsed).toBeTruthy(); // collapsed needs implementation
+            firstInputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeFalsy();
+            // alternatively expect(dateRangeTwoInputs.collapsed).toBeFalsy(); // collapsed needs implementation
+
+            firstInputElement.triggerEventHandler('keydown', altArrowUpKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+            // alternatively expect(dateRangeTwoInputs.collapsed).toBeTruthy(); // collapsed needs implementation
+
+            expect(firstInputElement).toBe(document.activeElement);
+        }));
+
+        xit('Should close the calendar with ESC', fakeAsync(() => {
+            expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+
+            dateRangeTwoInputs.toggle();
+            tick();
+            fixture.detectChanges();
+
+            expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeFalsy();
+            // alternatively expect(dateRangeTwoInputs.collapsed).toBeFalsy();
+
+            firstInputElement.triggerEventHandler('keydown', escapeKeyEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(firstInputElement).toBe(document.activeElement);
+        }));
+    });
+});
 
     describe('Validation', () => {
 
@@ -422,6 +544,8 @@ export class DateRangeTestComponent implements OnInit {
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
+    startDate = new Date(2020, 1, 1);
+    endDate = new Date(2020, 1, 4);
 }
 
 @Component({
@@ -449,12 +573,48 @@ export class DateRangeSingleInputTestComponent extends DateRangeTestComponent {
 }
 
 @Component({
-    selector: 'igx-date-range-single-input-aria-test',
+    selector: 'igx-date-range-single-input-label-test',
     template: `
     <igx-date-range [mode]="'dropdown'">
         <label igxLabel>Select Date</label>
     </igx-date-range>
     `
 })
-export class DateRangeDefaultARIAComponent extends DateRangeTestComponent {
+export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent {
 }
+
+@Component({
+    selector: 'igx-date-range-single-input-test',
+    template: `
+    <igx-date-range [mode]="'dropdown'">
+    </igx-date-range>
+    `
+})
+export class DateRangeDefaultComponent extends DateRangeTestComponent {
+}
+
+@NgModule({
+    declarations: [
+        DateRangeSingleInputTestComponent,
+        DateRangeDefaultCustomLabelComponent,
+        DateRangeTwoInputsTestComponent,
+        DateRangeTestComponent
+    ],
+    imports: [
+        IgxDateRangeModule,
+        NoopAnimationsModule,
+        ReactiveFormsModule,
+        IgxIconModule,
+        IgxCalendarModule,
+        IgxButtonModule,
+        FormsModule,
+        IgxInputGroupModule
+    ],
+    exports: [
+        DateRangeSingleInputTestComponent,
+        DateRangeDefaultCustomLabelComponent,
+        DateRangeTwoInputsTestComponent,
+        DateRangeTestComponent
+    ]
+})
+export class DateRangeTestingModule { }
