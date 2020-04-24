@@ -7,6 +7,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 export interface ColumnGroupsCache {
     level: number;
     visibleIndex: number;
@@ -169,7 +170,7 @@ export class IgxGridNavigationService {
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
             if (this.grid.filterMode === FilterMode.excelStyleFilter) {
                 const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
-                this.grid.filteringService.toggleFilterDropdown(headerEl, column);
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
             } else {
                 this.performHorizontalScrollToCell(column.visibleIndex);
                 this.grid.filteringService.filteredColumn = column;
