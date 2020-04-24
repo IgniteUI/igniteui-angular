@@ -358,6 +358,23 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[4]);
         });
 
+        it('should calculate global summaries correctly when filtering is applied.', () => {
+            grid.getColumnByName('ID').hasSummary = true;
+            fix.detectChanges();
+            grid.filter('ID', 'BERGS', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+
+            // pin row
+            grid.getRowByIndex(0).pin();
+            fix.detectChanges();
+
+            summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+        });
+
         it('should remove pinned container and recalculate sizes when all pinned records are filtered out.', () => {
             grid.getRowByIndex(1).pin();
             fix.detectChanges();
@@ -456,6 +473,9 @@ describe('Row Pinning #grid', () => {
             expect(grid.expansionStates.get(pinnedRow.rowID)).toBeTruthy();
             // disabled row should have expand icon
             expect(firstRowIconName).toEqual('expand_more');
+            // disabled row should have chip
+            const cell = grid.getRowByIndex(0).cells.first;
+            expect(cell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
             // pinned row shouldn't have expand icon
             const hasIconForPinnedRow = pinnedRow.cells.first.nativeElement.querySelector('igx-icon');
             expect(hasIconForPinnedRow).toBeNull();

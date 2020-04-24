@@ -31,7 +31,7 @@ function getDatesInView(dates: DebugElement[]): DebugElement[] {
     });
 }
 
-describe('IgxRangeDatePicker', () => {
+fdescribe('IgxRangeDatePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
@@ -286,7 +286,8 @@ describe('IgxRangeDatePicker', () => {
                 expect(dateRange.value.start).toEqual(startDate);
                 expect(dateRange.value.end).toEqual(endDate);
                 expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
+                const expectedEndDate = endDate ? formatFullDate(endDate) : '__/__/____';
+                expect(endInput.nativeElement.value).toEqual(expectedEndDate);
             }
 
             it('should assign start and end values correctly when selecting dates from the calendar', () => {
@@ -327,7 +328,8 @@ describe('IgxRangeDatePicker', () => {
                 fixture.detectChanges();
 
                 const today = new Date();
-                startDate = endDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
+                startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
+                endDate = null;
 
                 selectDateRangeFromCalendar(startDate.getDate(), 0);
                 verifyDateRange();
