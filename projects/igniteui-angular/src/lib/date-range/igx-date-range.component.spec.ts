@@ -383,7 +383,7 @@ describe('IgxRangeDatePicker', () => {
                 fixture.detectChanges();
 
                 const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-                //UIInteractions.clickElement(startInput.nativeElement);
+                // UIInteractions.clickElement(startInput.nativeElement);
                 tick(100);
                 fixture.detectChanges();
                 expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -395,7 +395,7 @@ describe('IgxRangeDatePicker', () => {
                 fixture.detectChanges();
 
                 const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-                //UIInteractions.clickElement(startInput.nativeElement);
+                // UIInteractions.clickElement(startInput.nativeElement);
                 tick(100);
                 fixture.detectChanges();
                 expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -507,7 +507,7 @@ describe('IgxRangeDatePicker', () => {
                     // alternatively expect(dateRangeSingle.collapsed).toBeTruthy();
 
                     // should focus input on close
-                    //expect(singleInputElement).toBe(document.activeElement);
+                    // expect(singleInputElement).toBe(document.activeElement);
                 }));
             });
             describe('Keyboard Navigation Two Inputs', () => {
@@ -538,7 +538,7 @@ describe('IgxRangeDatePicker', () => {
                     expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
                     // alternatively expect(dateRangeTwoInputs.collapsed).toBeTruthy(); // collapsed needs implementation
 
-                    //expect(firstInputElement).toBe(document.activeElement);
+                    // expect(firstInputElement).toBe(document.activeElement);
                 }));
 
                 xit('Should close the calendar with ESC', fakeAsync(() => {
@@ -555,7 +555,7 @@ describe('IgxRangeDatePicker', () => {
                     tick();
                     fixture.detectChanges();
 
-                    //expect(firstInputElement).toBe(document.activeElement);
+                    // expect(firstInputElement).toBe(document.activeElement);
                 }));
             });
         });

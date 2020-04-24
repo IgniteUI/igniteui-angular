@@ -442,7 +442,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-                       await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
@@ -451,7 +451,6 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate up through a detail view completely out of view by scrolling to it.', async() => {
-            pending('To be revised after keyboard navigation refactoring');
             grid.verticalScrollContainer.addScrollTop(170);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -508,10 +507,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
             at the bottom of the grid without losing focus.`, async() => {
-            pending('To be revised after keyboard navigation refactor');
             // navigate to last
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -523,7 +521,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement.active).toBeTruthy();
 
             // collapse with alt + arrowup
-            UIInteractions.triggerEventHandlerKeyDown('Arrowp', gridContent, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
