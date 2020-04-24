@@ -1464,6 +1464,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.pinRow(rowToPin.rowData[primaryKey]);
             fix.detectChanges();
+            fix.detectChanges();
 
             const firstColumnField = treeGrid.columns[0].field;
             const pinnedChipPosition = treeGrid.getCellByColumn(1, firstColumnField);
