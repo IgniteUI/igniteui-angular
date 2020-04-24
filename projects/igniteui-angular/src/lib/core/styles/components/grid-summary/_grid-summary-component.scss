@@ -48,6 +48,10 @@
         @extend %grid-summary--fixed-width !optional;
     }
 
+    @include m(active) {
+        @extend %igx-grid-summary--active !optional;
+    }
+
     @include m(cosy) {
         @extend %igx-grid-summary !optional;
         @extend %igx-grid-summary--cosy !optional;
