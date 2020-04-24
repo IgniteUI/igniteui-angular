@@ -37,7 +37,7 @@ describe('IgxRangeDatePicker', () => {
     let endDate: Date;
     let startDate: Date;
     let toggleBtn: DebugElement;
-    let datePickerElement: DebugElement;
+    // let datePickerElement: DebugElement;
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
     let dateRange: IgxDateRangeComponent;
@@ -55,7 +55,7 @@ describe('IgxRangeDatePicker', () => {
     }
 
     describe('Single Input', () => {
-        let singleInputElement: DebugElement;
+        // let singleInputElement: DebugElement;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -323,7 +323,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -335,7 +335,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -384,7 +384,7 @@ describe('IgxRangeDatePicker', () => {
         }));
     });
 
-    fdescribe('Keyboard Navigation', () => {
+    describe('Keyboard Navigation', () => {
         const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
         const altArrowDownKeyEvent = new KeyboardEvent('keydown', { altKey: true, key: 'ArrowDown' });
         const altArrowUpKeyEvent = new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' });
