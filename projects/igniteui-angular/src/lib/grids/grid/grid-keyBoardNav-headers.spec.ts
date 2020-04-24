@@ -59,21 +59,18 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus first header when the grid is scrolled', async () => {
-            grid.headerContainer.getScroll().scrollLeft = 1000;
+            grid.navigateTo(7, 5);
             await wait(100);
             fix.detectChanges();
 
-            grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(100);
-            fix.detectChanges();
-
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.triggerEventHandler('focus', {});
             await wait(200);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('ID', fix);
-            expect(header).toBeDefined();
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(0);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
             expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
         });
@@ -110,7 +107,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyHeaderIsFocused(header.parent);
         });
 
-        it('should navigation to first last header', async () => {
+        it('should navigate to first/last header', async () => {
             // Focus grid header
             let header = GridFunctions.getColumnHeader('ParentID', fix);
             UIInteractions.simulateClickAndSelectEvent(header);
@@ -121,27 +118,33 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             // Press end key
             UIInteractions.triggerEventHandlerKeyDown('End', gridHeader);
-            await wait(DEBOUNCETIME * 2);
+            await wait(100);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(5);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
 
             // Press Home ket
             UIInteractions.triggerEventHandlerKeyDown('home', gridHeader);
-            await wait(DEBOUNCETIME * 2);
+            await wait(100);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ID', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(0);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
 
             // Press Ctrl+ Arrow right
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridHeader, false, false, true);
-            await wait(DEBOUNCETIME * 2);
+            await wait(100);
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(5);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
 
             // Press Ctrl+ Arrow left
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridHeader, false, false, true);
@@ -149,7 +152,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('ID', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(0);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
         });
 
         it('should not change active header on arrow up or down pressed', () => {
@@ -204,7 +209,9 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
-            GridFunctions.verifyHeaderIsFocused(header.parent);
+            expect(header).toBeTruthy();
+            expect(grid.navigation.activeNode.column).toEqual(5);
+            expect(grid.navigation.activeNode.row).toEqual(-1);
 
             // Click on the pinned column
             header = GridFunctions.getColumnHeader('ParentID', fix);
