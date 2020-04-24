@@ -8,7 +8,12 @@ import { IgxRowDirective } from '../../grids';
 export class IgxGridActionsBaseDirective {
     constructor(@Inject(IgxActionStripComponent) protected strip: IgxActionStripComponent) { }
 
-    get isRowContext(): boolean {
+    /**
+     * Getter to be used in template
+     * @hidden
+     * @internal
+     */
+    isRowContext(): boolean {
         return this.isRow(this.strip.context);
     }
 
@@ -18,7 +23,7 @@ export class IgxGridActionsBaseDirective {
      * @internal
      * @param context
      */
-    private isRow(context): context is IgxRowDirective<any> {
+    protected isRow(context): context is IgxRowDirective<any> {
         return context && context instanceof IgxRowDirective;
     }
 }

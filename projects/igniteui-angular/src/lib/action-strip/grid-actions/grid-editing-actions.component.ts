@@ -1,6 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
-import { IgxRowDirective } from '../../grids';
 
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -25,7 +24,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public startEdit(): void {
-        if (!this.isRowContext) {
+        if (!this.isRow(this.strip.context)) {
             return;
         }
         const context = this.strip.context;
@@ -42,12 +41,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * ```
      */
     public deleteRow(): void {
-        if (!this.isRowContext) {
+        if (!this.isRow(this.strip.context)) {
             return;
         }
         const context = this.strip.context;
-        const row = context as IgxRowDirective<any>;
-        const grid = row.grid;
-        grid.deleteRow(row.rowID);
+        const grid = context.grid;
+        grid.deleteRow(context.rowID);
     }
 }

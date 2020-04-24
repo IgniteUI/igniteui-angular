@@ -10,19 +10,10 @@ import {
     ContentChildren,
     QueryList,
     ViewChild,
-    ElementRef,
     TemplateRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down';
-import { IgxGridBaseDirective, IgxRowDirective } from '../grids';
-
-export interface IActionStripContext {
-    element: ElementRef<any>;
-    grid?: IgxGridBaseDirective;
-    row?: IgxRowDirective<any>;
-    cells?: any;
-}
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -126,7 +117,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * <igx-action-strip [context]="cell"></igx-action-strip>
      * ```
      */
-    public context: IActionStripContext;
+    public context: any;
     /**
      * Menu Items ContentChildren inside the Action Strip
      * @hidden
@@ -151,7 +142,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * this.actionStrip.show(row);
      * ```
      */
-    public show(context?: IActionStripContext): void {
+    public show(context?: any): void {
         this.hidden = false;
         if (!context) {
             return;
