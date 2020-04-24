@@ -9,9 +9,8 @@ import { IgxIconModule } from '../icon/index';
 import {
     IgxDateStartComponent, IgxDateEndComponent,
     DateRangeFormatPipe,
-    IgxDateRangePrefixDirective,
-    IgxDateRangeSuffixDirective,
-    IgxDateSingleComponent
+    IgxDateSingleComponent,
+    IgxPickerToggleComponent
 } from './igx-date-range-inputs.common';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 
@@ -25,8 +24,7 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
         IgxDateEndComponent,
         IgxDateSingleComponent,
         DateRangeFormatPipe,
-        IgxDateRangePrefixDirective,
-        IgxDateRangeSuffixDirective
+        IgxPickerToggleComponent
     ],
     imports: [
         CommonModule,
@@ -41,8 +39,7 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
         IgxDateRangeComponent,
         IgxDateStartComponent,
         IgxDateEndComponent,
-        IgxDateRangePrefixDirective,
-        IgxDateRangeSuffixDirective
+        IgxPickerToggleComponent
     ]
 })
 export class IgxDateRangeModule { }

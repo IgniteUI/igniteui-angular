@@ -52,7 +52,6 @@
 </ng-template>
 
 <ng-template #startEndTemplate>
-    <igx-icon (click)="open()">calendar_today</igx-icon>
     <ng-content select="igx-date-start"></ng-content>
     <div class="igx-date-range__label">{{ prepTo }}</div>
     <ng-content select="igx-date-end"></ng-content>
@@ -75,12 +74,8 @@
             [value]="this.value | dateRange: this.inputFormat : this.locale"
             />
 
-        <igx-prefix *ngIf="!this.prefix && !this.suffix" (click)="open()">
+        <igx-prefix *ngIf="!this.toggleComponents.length" (click)="open()">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
-        </igx-prefix>
-
-        <igx-prefix *ngIf="this.prefix" (click)="open()">
-            <ng-container *ngTemplateOutlet="this.prefix.templateRef"></ng-container>
         </igx-prefix>
 
         <ng-container ngProjectAs="[igxLabel]">
@@ -95,9 +90,5 @@
         <ng-container ngProjectAs="igx-hint">
             <ng-container *ngTemplateOutlet="hintTemplate"></ng-container>
         </ng-container>
-
-        <igx-suffix *ngIf="this.suffix" (click)="open()">
-            <ng-container *ngTemplateOutlet="this.suffix.templateRef"></ng-container>
-        </igx-suffix>
     </igx-input-group>
 </ng-template>
