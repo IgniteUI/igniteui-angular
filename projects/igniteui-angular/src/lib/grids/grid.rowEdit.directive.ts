@@ -50,7 +50,7 @@ export class IgxRowEditTabStopDirective {
     @HostListener('keydown.Escape', [`$event`])
     public handleEscape(event: KeyboardEvent): void {
         this.grid.endEdit(false, event);
-        this.grid.nativeElement.focus();
+        this.grid.tbody.nativeElement.focus();
     }
 
     /**
@@ -64,7 +64,7 @@ export class IgxRowEditTabStopDirective {
         this.grid.navigation.activeNode.row = this.grid.rowInEditMode.index;
         this.grid.navigation.activeNode.column = this.currentCellIndex;
         this.grid.navigateTo(this.grid.rowInEditMode.index, this.currentCellIndex, (obj) => {
-            obj.target.setEditMode(true);
+            obj.target.activate(event);
             this.grid.cdr.detectChanges();
         });
     }
