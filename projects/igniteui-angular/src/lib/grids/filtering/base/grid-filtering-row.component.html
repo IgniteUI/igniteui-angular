@@ -1,7 +1,6 @@
 <!-- Have to apply styles inline because of the overlay outlet ... -->
 <igx-drop-down #inputGroupConditions [height]="'200px'" (onSelection)="onConditionsChanged($event)">
-    <igx-drop-down-item
-        *ngFor="let condition of conditions"
+    <igx-drop-down-item *ngFor="let condition of conditions"
         [value]="condition"
         [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>

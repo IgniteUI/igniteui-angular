@@ -338,6 +338,9 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should select multiple rows with clicking Space on a cell', (async () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
@@ -770,6 +773,9 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should not select multiple rows with clicking Space on a cell', (async () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
@@ -787,13 +793,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', grid.tbody.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             // Click Space on the cell
             cell = grid.getCellByColumn(1, 'ProductName');
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
@@ -803,7 +809,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
             // Click again Space on the cell
-            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('space', grid.tbody.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
