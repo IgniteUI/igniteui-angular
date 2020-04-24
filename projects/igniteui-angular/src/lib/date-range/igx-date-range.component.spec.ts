@@ -31,7 +31,7 @@ function getDatesInView(dates: DebugElement[]): DebugElement[] {
     });
 }
 
-fdescribe('IgxRangeDatePicker', () => {
+describe('IgxRangeDatePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
@@ -121,29 +121,8 @@ fdescribe('IgxRangeDatePicker', () => {
             const fullDate = [month, day, year].join('/');
             return fullDate;
         }
-
-        describe('Single Input', () => {
-            let singleInputElement: DebugElement;
+        describe('Selection tests', () => {
             let calendarDays: DebugElement[];
-            configureTestSuite();
-            beforeAll(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeDefaultComponent
-                    ],
-                    imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
-                })
-                    .compileComponents();
-            }));
-            beforeEach(fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeDefaultComponent);
-                fixture.detectChanges();
-                dateRange = fixture.componentInstance.dateRange;
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
-                singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-            }));
-
             function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
                 const startDateDayElIndex = startDateDay - 1;
                 const endDateDayElIndex = startDateDayElIndex + dayRange;
@@ -156,207 +135,195 @@ fdescribe('IgxRangeDatePicker', () => {
                 dateRange.close();
                 fixture.detectChanges();
             }
+            describe('Single Input', () => {
+                let singleInputElement: DebugElement;
+                configureTestSuite();
+                beforeAll(async(() => {
+                    TestBed.configureTestingModule({
+                        declarations: [
+                            DateRangeTestComponent,
+                            DateRangeDefaultComponent
+                        ],
+                        imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    })
+                        .compileComponents();
+                }));
+                beforeEach(fakeAsync(() => {
+                    fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                    fixture.detectChanges();
+                    dateRange = fixture.componentInstance.dateRange;
+                    calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                    singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                }));
 
-            /* The single input's text looks like this -> START_DATE - END_DATE */
-
-            xit('Should set the first part of the input properly on first date selection', () => {
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
-                let dayRange = 15;
-                const today = new Date();
-                startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + dayRange);
-                selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                // TODO
-                // it should set the START_DATE only
-            });
-
-            it('Should the second part of the input properly on last date selection', () => {
-                // TODO
-                // it should set the END_DATE only
-            });
-
-            it('Should assign the proper dates to the input when selecting a range from the calendar', () => {
-                // TODO
-            });
-
-            it('Should do a range selection if a date is selected and "Today" is pressed', () => {
-                // TODO
-            });
-        });
-
-        describe('ARIA', () => {
-            let singleInputElement: DebugElement;
-            let dateRangeSingle: IgxDateRangeComponent;
-            configureTestSuite();
-            beforeAll(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeDefaultCustomLabelComponent
-                    ],
-                    imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
-                })
-                    .compileComponents();
-            }));
-            beforeEach(fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
-                fixture.detectChanges();
-            }));
-            it('should render aria attributes properly', fakeAsync(() => {
-                dateRangeSingle = fixture.componentInstance.dateRange;
-
-                toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
-                calendarElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR));
-                singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-                startDate = new Date(2020, 1, 1);
-                endDate = new Date(2020, 1, 4);
-                const expectedLabelID = dateRangeSingle.label.id;
-                const expectedPlaceholder = singleInputElement.nativeElement.getAttribute('placeholder');
-
-                expect(singleInputElement.nativeElement.getAttribute('role')).toEqual('combobox');
-                expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual(expectedPlaceholder);
-                expect(singleInputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('grid');
-                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
-                expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
-                expect(calendarElement.nativeElement.getAttribute('role')).toEqual('grid');
-                expect(singleInputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(expectedLabelID);
-
-                dateRangeSingle.toggle();
-                tick();
-                fixture.detectChanges();
-
-                calendarWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR_WRAPPER));
-                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
-                expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
-
-                dateRangeSingle.toggle();
-                tick();
-                fixture.detectChanges();
-
-                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
-                expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
-
-                dateRangeSingle.selectRange(startDate, endDate);
-                fixture.detectChanges();
-                expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
-            }));
-        });
-
-        describe('Two Inputs', () => {
-            let startInput: DebugElement;
-            let endInput: DebugElement;
-            let calendarDays: DebugElement[];
-            configureTestSuite();
-            beforeAll(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent
-                    ],
-                    imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
-                })
-                    .compileComponents();
-            }));
-            beforeEach(async () => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.detectChanges();
-                dateRange = fixture.componentInstance.dateRange;
-                startInput = fixture.debugElement.query(By.css('input'));
-                endInput = fixture.debugElement.queryAll(By.css('input'))[1];
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
-            });
-
-            function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
-                const startDateDayElIndex = startDateDay - 1;
-                const endDateDayElIndex = startDateDayElIndex + dayRange;
-                dateRange.open();
-                fixture.detectChanges();
-                calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-                if (dayRange !== 0) {
-                    calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                function verifyDateRangeInSingleInput() {
+                    expect(dateRange.value.start).toEqual(startDate);
+                    expect(dateRange.value.end).toEqual(endDate);
+                    const inputStartDate = [startDate.getMonth() + 1, startDate.getDate(), startDate.getFullYear()].join('/');
+                    const inputEndDate = endDate ? [endDate.getMonth() + 1, endDate.getDate(), endDate.getFullYear()].join('/') : '';
+                    expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 }
-                dateRange.close();
-                fixture.detectChanges();
-            }
 
-            function verifyDateRange() {
-                expect(dateRange.value.start).toEqual(startDate);
-                expect(dateRange.value.end).toEqual(endDate);
-                expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                const expectedEndDate = endDate ? formatFullDate(endDate) : '__/__/____';
-                expect(endInput.nativeElement.value).toEqual(expectedEndDate);
-            }
+                it('should assign range dates to the input when selecting a range from the calendar', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
 
-            it('should assign start and end values correctly when selecting dates from the calendar', () => {
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
+                    const dayRange = 15;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + dayRange);
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRangeInSingleInput();
+                });
 
-                let dayRange = 15;
-                const today = new Date();
-                startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + dayRange);
-                selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                verifyDateRange();
+                it('should assign range values correctly when selecting dates in reversed order', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
 
-                dayRange = 13;
-                startDate = new Date(today.getFullYear(), today.getMonth(), 6, 0, 0, 0);
-                endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + dayRange);
-                selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                verifyDateRange();
+                    const dayRange = -5;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    verifyDateRangeInSingleInput();
+                });
+
+                it('should set start date on single date selection', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    const dayRange = 0;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    endDate = null;
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRangeInSingleInput();
+                });
+
+                it('should update input correctly on first and last date selection', () => {
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
+                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
+                    const dayRange = Math.round(differenceMs / ONE_DAY);
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRangeInSingleInput();
+                });
+
+                it('should assign range values correctly when selecting through API', () => {
+                    startDate = new Date(2020, 10, 8, 0, 0, 0);
+                    endDate = new Date(2020, 11, 8, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    verifyDateRangeInSingleInput();
+
+                    startDate = new Date(2006, 5, 18, 0, 0, 0);
+                    endDate = new Date(2006, 8, 18, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    verifyDateRangeInSingleInput();
+                });
             });
 
-            it('should assign start and end values correctly when selecting dates in reversed order', () => {
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
+            describe('Two Inputs', () => {
+                let startInput: DebugElement;
+                let endInput: DebugElement;
+                configureTestSuite();
+                beforeAll(async(() => {
+                    TestBed.configureTestingModule({
+                        declarations: [
+                            DateRangeTestComponent,
+                            DateRangeTwoInputsTestComponent
+                        ],
+                        imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    })
+                        .compileComponents();
+                }));
+                beforeEach(async () => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+                    fixture.detectChanges();
+                    dateRange = fixture.componentInstance.dateRange;
+                    startInput = fixture.debugElement.query(By.css('input'));
+                    endInput = fixture.debugElement.queryAll(By.css('input'))[1];
+                    calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                });
 
-                const dayRange = 10;
-                const today = new Date();
-                startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + dayRange);
-                selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                verifyDateRange();
-            });
+                function verifyDateRange() {
+                    expect(dateRange.value.start).toEqual(startDate);
+                    expect(dateRange.value.end).toEqual(endDate);
+                    expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
+                    const expectedEndDate = endDate ? formatFullDate(endDate) : '__/__/____';
+                    expect(endInput.nativeElement.value).toEqual(expectedEndDate);
+                }
 
-            it('should apply selection to start and end date when single date is selected', () => {
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
+                it('should assign range values correctly when selecting dates from the calendar', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
 
-                const today = new Date();
-                startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                endDate = null;
+                    let dayRange = 15;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + dayRange);
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRange();
 
-                selectDateRangeFromCalendar(startDate.getDate(), 0);
-                verifyDateRange();
-            });
+                    dayRange = 13;
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 6, 0, 0, 0);
+                    endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + dayRange);
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRange();
+                });
 
-            it('should update inputs correctly on first and last date selection', () => {
-                const today = new Date();
-                startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
-                endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                const dayRange = Math.round(differenceMs / ONE_DAY);
-                selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                verifyDateRange();
-            });
+                it('should assign range values correctly when selecting dates in reversed order', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
 
-            it('should assign start and end values correctly when selecting through API', () => {
-                startDate = new Date(2020, 10, 8, 0, 0, 0);
-                endDate = new Date(2020, 11, 8, 0, 0, 0);
-                dateRange.selectRange(startDate, endDate);
-                fixture.detectChanges();
-                verifyDateRange();
+                    const dayRange = -10;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 20, 0, 0, 0);
+                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    verifyDateRange();
+                });
 
-                startDate = new Date(2003, 5, 18, 0, 0, 0);
-                endDate = new Date(2003, 8, 18, 0, 0, 0);
-                dateRange.selectRange(startDate, endDate);
-                fixture.detectChanges();
-                verifyDateRange();
+                it('should apply selection to start date when single date is selected', () => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
+                    endDate = null;
+
+                    selectDateRangeFromCalendar(startDate.getDate(), 0);
+                    verifyDateRange();
+                });
+
+                it('should update inputs correctly on first and last date selection', () => {
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
+                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
+                    const dayRange = Math.round(differenceMs / ONE_DAY);
+                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    verifyDateRange();
+                });
+
+                it('should assign range values correctly when selecting through API', () => {
+                    startDate = new Date(2020, 10, 8, 0, 0, 0);
+                    endDate = new Date(2020, 11, 8, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    verifyDateRange();
+
+                    startDate = new Date(2003, 5, 18, 0, 0, 0);
+                    endDate = new Date(2003, 8, 18, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    verifyDateRange();
+                });
             });
         });
 
@@ -373,10 +340,6 @@ fdescribe('IgxRangeDatePicker', () => {
                     done();
                 });
             });
-
-            it('Should assign start and end input values correctly when selecting dates from the API', fakeAsync(() => {
-                // TODO
-            }));
 
             it('Should close the calendar properly with the "Done" button', fakeAsync(() => {
                 // TODO
@@ -601,6 +564,64 @@ fdescribe('IgxRangeDatePicker', () => {
         });
 
         describe('Templating', () => {
+        });
+
+        describe('ARIA', () => {
+            let singleInputElement: DebugElement;
+            let dateRangeSingle: IgxDateRangeComponent;
+            configureTestSuite();
+            beforeAll(async(() => {
+                TestBed.configureTestingModule({
+                    declarations: [
+                        DateRangeTestComponent,
+                        DateRangeDefaultCustomLabelComponent
+                    ],
+                    imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                })
+                    .compileComponents();
+            }));
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
+                fixture.detectChanges();
+            }));
+            it('should render aria attributes properly', fakeAsync(() => {
+                dateRangeSingle = fixture.componentInstance.dateRange;
+
+                toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
+                calendarElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR));
+                singleInputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                startDate = new Date(2020, 1, 1);
+                endDate = new Date(2020, 1, 4);
+                const expectedLabelID = dateRangeSingle.label.id;
+                const expectedPlaceholder = singleInputElement.nativeElement.getAttribute('placeholder');
+
+                expect(singleInputElement.nativeElement.getAttribute('role')).toEqual('combobox');
+                expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual(expectedPlaceholder);
+                expect(singleInputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('grid');
+                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
+                expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
+                expect(calendarElement.nativeElement.getAttribute('role')).toEqual('grid');
+                expect(singleInputElement.nativeElement.getAttribute('aria-labelledby')).toEqual(expectedLabelID);
+
+                dateRangeSingle.toggle();
+                tick();
+                fixture.detectChanges();
+
+                calendarWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_CALENDAR_WRAPPER));
+                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
+                expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
+
+                dateRangeSingle.toggle();
+                tick();
+                fixture.detectChanges();
+
+                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
+                expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
+
+                dateRangeSingle.selectRange(startDate, endDate);
+                fixture.detectChanges();
+                expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
+            }));
         });
     });
 });
