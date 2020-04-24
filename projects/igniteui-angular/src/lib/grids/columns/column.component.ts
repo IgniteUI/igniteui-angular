@@ -966,7 +966,7 @@ export class IgxColumnComponent implements AfterContentInit {
         let vIndex = -1;
 
         if (this.columnGroup) {
-            col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
+            col = this.allChildren.filter(c => !c.columnGroup && !c.hidden)[0] as any;
         }
         if (this.columnLayoutChild) {
             return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;

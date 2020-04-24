@@ -22,7 +22,6 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
-const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -69,6 +68,9 @@ const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
+const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
+const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
+const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_HIDING_CLASS = 'igx-column-hiding';
 const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
@@ -1800,6 +1802,18 @@ export class GridFunctions {
         const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
+
+    public static verifyHeaderSortIndicator(header: DebugElement, sortedAsc = true, sortedDesc = false, sortable = true) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        if (sortable) {
+            const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
+            expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);
+            expect(header.nativeElement.classList.contains(SORTED_COLUMN_CLASS)).toEqual(sortedAsc || sortedDesc);
+        } else {
+            expect(sortIcon).toBeNull();
+        }
+    }
+
 
     public static getDragIndicators(fix: ComponentFixture<any>): HTMLElement[] {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
