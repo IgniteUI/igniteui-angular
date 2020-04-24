@@ -34,12 +34,6 @@
 @mixin igx-date-range($theme) {
     @include igx-root-css-vars($theme);
 
-    $base-scale-size: (
-        'comfortable': rem(19px),
-        'cosy': rem(22px),
-        'compact': rem(22px)
-    );
-
     %igx-date-range {
         display: flex;
         align-items: center;
@@ -49,22 +43,9 @@
         }
     }
 
-    %igx-date-range--cosy {
-        %igx-date-range__label {
-            padding-top: map-get($base-scale-size, 'cosy');
-        }
-    }
-
-    %igx-date-range--compact {
-        %igx-date-range__label {
-            padding-top: map-get($base-scale-size, 'compact');
-        }
-    }
-
     %igx-date-range__label {
         color: --var($theme, 'color');
         margin: 0 rem(8px);
-        padding-top: map-get($base-scale-size, 'comfortable');
     }
 }
 
@@ -78,7 +59,7 @@
 @mixin igx-drop-down-typography(
     $type-scale,
     $categories: (
-        label: 'body-1',
+        label: 'caption',
     )
 ) {
     $label: map-get($categories, 'caption');
