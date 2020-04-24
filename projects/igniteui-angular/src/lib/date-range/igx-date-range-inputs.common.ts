@@ -1,4 +1,7 @@
-import { Component, ContentChild, Pipe, PipeTransform, Directive, TemplateRef } from '@angular/core';
+import {
+    Component, ContentChild, Pipe, PipeTransform, Directive,
+    TemplateRef, Output, EventEmitter, HostListener, ContentChildren, QueryList
+} from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
@@ -64,6 +67,23 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
         } else {
             this.dateTimeEditor.value = value;
         }
+    }
+}
+
+/**
+ * TODO: docs
+ */
+@Component({
+    template: `<ng-content></ng-content>`,
+    selector: 'igx-picker-toggle'
+})
+export class IgxPickerToggleComponent {
+    @Output()
+    public clicked = new EventEmitter();
+
+    @HostListener('click')
+    public onIconClick() {
+        this.clicked.emit();
     }
 }
 
@@ -146,18 +166,3 @@ export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {
     }
 }
 
-@Directive({
-    selector: '[igxDateRangePrefix]',
-    exportAs: 'igxDateRangePrefix',
-})
-export class IgxDateRangePrefixDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
-}
-
-@Directive({
-    selector: '[igxDateRangeSuffix]',
-    exportAs: 'igxDateRangeSuffix',
-})
-export class IgxDateRangeSuffixDirective {
-    constructor(public templateRef: TemplateRef<any>) { }
-}

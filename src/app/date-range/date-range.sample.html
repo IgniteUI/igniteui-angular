@@ -2,29 +2,31 @@
     Allows the user to select a range of dates from a calendar or input fields.
 </app-page-header>
 
-<igx-date-range [mode]="'dialog'"></igx-date-range>
+<igx-date-range [mode]="'dialog'">
+    <igx-picker-toggle igxSuffix>
+        <igx-icon>calendar_view_day</igx-icon>
+    </igx-picker-toggle>
+</igx-date-range>
 <igx-date-range [mode]="'dropdown'"></igx-date-range>
 
-
 <igx-date-range #dateRange [mode]="'dropdown'" [displayFormat]="'shortDate'" [(ngModel)]="range">
-    <igx-prefix *igxDateRangePrefix></igx-prefix>
-    <igx-suffix (click)="dateRange.open()">
-        <igx-icon>
-            calendar_view_day
-        </igx-icon>
-    </igx-suffix>
+    <igx-picker-toggle igxSuffix>
+        <igx-icon>calendar_view_day</igx-icon>
+    </igx-picker-toggle>
 </igx-date-range>
 
 <igx-date-range [mode]="'dropdown'" [(ngModel)]="range">
     <igx-date-start>
         <input igxInput igxDateTimeEditor type="text" required>
+        <igx-picker-toggle igxPrefix>
+            <igx-icon>calendar_view_day</igx-icon>
+        </igx-picker-toggle>
     </igx-date-start>
     <igx-date-end>
         <input igxInput igxDateTimeEditor type="text" required>
     </igx-date-end>
 </igx-date-range>
 
-<!-- TODO: if ngmodel is present in either start or end; ngmodel should be ignored in daterange -->
 <igx-date-range #formControl="ngModel" [(ngModel)]="range" mode="'dropdown'">
     <igx-date-start>
         <input igxInput igxDateTimeEditor [(ngModel)]="range.start" type="text" required>

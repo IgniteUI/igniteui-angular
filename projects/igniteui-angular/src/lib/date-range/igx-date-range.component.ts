@@ -25,10 +25,9 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import {
     DateRange,
     IgxDateEndComponent,
-    IgxDateRangePrefixDirective,
-    IgxDateRangeSuffixDirective,
     IgxDateSingleComponent,
-    IgxDateStartComponent
+    IgxDateStartComponent,
+    IgxPickerToggleComponent
 } from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IToggleView } from '../core/navigation';
@@ -288,16 +287,12 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     public toggleDirective: IgxToggleDirective;
 
     /** @hidden */
+    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
+    public toggleComponents: QueryList<IgxPickerToggleComponent>;
+
+    /** @hidden */
     @ContentChildren(IgxInputGroupBase)
     public projectedInputs: QueryList<IgxInputGroupBase>;
-
-    /** @hidden */
-    @ContentChild(IgxDateRangePrefixDirective)
-    public prefix: IgxDateRangePrefixDirective;
-
-    /** @hidden */
-    @ContentChild(IgxDateRangeSuffixDirective)
-    public suffix: IgxDateRangeSuffixDirective;
 
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
@@ -324,10 +319,10 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     }
 
     private _value: DateRange;
-    private _destroy = new Subject<boolean>();
+    private $destroy = new Subject();
+    private $toggleClickNotifier = new Subject();
     private _onChangeCallback: (_: any) => void;
     private _positionSettings: PositionSettings;
-    private _positionStrategy: AutoPositionStrategy;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
@@ -335,8 +330,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
     };
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        modal: false,
-        positionStrategy: this._positionStrategy
+        modal: false
     };
 
     constructor(public element: ElementRef) {
@@ -479,12 +473,25 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         this.subscribeToToggleEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
+
+        const subsToClicked = () => {
+            this.$toggleClickNotifier.next();
+
+            this.toggleComponents.forEach(toggle => {
+                toggle.clicked.pipe(takeUntil(this.$toggleClickNotifier)).subscribe(() => this.open());
+            });
+        };
+
+        this.toggleComponents.changes.pipe(takeUntil(this.$destroy)).subscribe(() => subsToClicked());
+        subsToClicked();
     }
 
     /** @hidden */
     public ngOnDestroy(): void {
-        this._destroy.next(true);
-        this._destroy.complete();
+        this.$destroy.next();
+        this.$destroy.complete();
+        this.$toggleClickNotifier.next();
+        this.$toggleClickNotifier.complete();
     }
 
     /** @hidden @internal */
@@ -575,13 +582,13 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
 
     private attachOnKeydown(): void {
         fromEvent(this.element.nativeElement, 'keydown')
-            .pipe(takeUntil(this._destroy))
+            .pipe(takeUntil(this.$destroy))
             .subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
     }
 
     private applyFocusOnClose() {
         this.toggleDirective.onClosed
-            .pipe(takeUntil(this._destroy))
+            .pipe(takeUntil(this.$destroy))
             .subscribe(() => (
                 this.single || this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent
             )?.setFocus());
@@ -593,22 +600,22 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
             const end = this.projectedInputs.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
             if (start && end) {
                 start.dateTimeEditor.valueChange
-                    .pipe(takeUntil(this._destroy))
+                    .pipe(takeUntil(this.$destroy))
                     .subscribe((date: Date) => {
                         this.value = { start: date as Date, end: this.value?.end };
                     });
                 end.dateTimeEditor.valueChange
-                    .pipe(takeUntil(this._destroy))
+                    .pipe(takeUntil(this.$destroy))
                     .subscribe((date: Date) => {
                         this.value = { start: this.value?.start, end: date as Date };
                     });
                 start.dateTimeEditor.validationFailed
-                    .pipe(takeUntil(this._destroy))
+                    .pipe(takeUntil(this.$destroy))
                     .subscribe((event: IgxDateTimeEditorEventArgs) => {
                         this.value = { start: event.newValue as Date, end: this.value?.end };
                     });
                 end.dateTimeEditor.validationFailed
-                    .pipe(takeUntil(this._destroy))
+                    .pipe(takeUntil(this.$destroy))
                     .subscribe((event: IgxDateTimeEditorEventArgs) => {
                         this.value = { start: this.value?.start, end: event.newValue as Date };
                     });
@@ -637,7 +644,7 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
             closeAnimation: fadeOut,
             target: this.element.nativeElement
         };
-        this._positionStrategy = new AutoPositionStrategy(this._positionSettings);
+        this._dropDownOverlaySettings.positionStrategy = new AutoPositionStrategy(this._positionSettings);
     }
 
     private configOverlaySettings(): void {
