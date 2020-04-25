@@ -77,6 +77,7 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[0]);
             expect(grid.getRowByIndex(5).rowID).toBe(fix.componentInstance.data[3]);
 
+            fix.detectChanges();
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
             const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
@@ -111,7 +112,7 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer[0].children.length).toBe(2);
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
             expect(pinRowContainer[0].children[1].context.rowID).toBe(fix.componentInstance.data[0]);
-
+            fix.detectChanges();
             // check last pinned is fully in view
             const last = pinRowContainer[0].children[1].context.nativeElement;
             expect(last.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);
@@ -358,12 +359,30 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[4]);
         });
 
+        it('should calculate global summaries correctly when filtering is applied.', () => {
+            grid.getColumnByName('ID').hasSummary = true;
+            fix.detectChanges();
+            grid.filter('ID', 'BERGS', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+
+            // pin row
+            grid.getRowByIndex(0).pin();
+            fix.detectChanges();
+
+            summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+        });
+
         it('should remove pinned container and recalculate sizes when all pinned records are filtered out.', () => {
             grid.getRowByIndex(1).pin();
             fix.detectChanges();
             let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
 
+            fix.detectChanges();
             let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
 
@@ -373,6 +392,7 @@ describe('Row Pinning #grid', () => {
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(0);
 
+            fix.detectChanges();
             expect(grid.pinnedRowHeight).toBe(0);
             expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
@@ -456,6 +476,9 @@ describe('Row Pinning #grid', () => {
             expect(grid.expansionStates.get(pinnedRow.rowID)).toBeTruthy();
             // disabled row should have expand icon
             expect(firstRowIconName).toEqual('expand_more');
+            // disabled row should have chip
+            const cell = grid.getRowByIndex(0).cells.first;
+            expect(cell.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(1);
             // pinned row shouldn't have expand icon
             const hasIconForPinnedRow = pinnedRow.cells.first.nativeElement.querySelector('igx-icon');
             expect(hasIconForPinnedRow).toBeNull();
@@ -785,9 +808,35 @@ describe('Row Pinning #grid', () => {
             expect(grid.getRowByIndex(2).rowID).toBe(fix.componentInstance.data[1]);
             expect(grid.getRowByIndex(3).rowID).toBe(fix.componentInstance.data[2]);
 
+            fix.detectChanges();
             // 1 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
             const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+        });
+
+        it('should keep the scrollbar sizes correct when partially filtering out pinned records', () => {
+            grid.getRowByIndex(1).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(3).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(5).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(7).pin();
+            fix.detectChanges();
+
+            fix.detectChanges();
+            // 4 records pinned + 2px border
+            expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+
+            grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            // 2 records pinned + 2px border
+            expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
             expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         });
     });
