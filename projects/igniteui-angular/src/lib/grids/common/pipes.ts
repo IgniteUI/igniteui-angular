@@ -232,8 +232,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         }
 
         if (grid.hasPinnedRecords && isPinned) {
-            let result = collection.filter(rec => grid.isRecordPinned(rec));
-            result = result.map(rec => Object.assign({}, rec));
+            const result = collection.filter(rec => grid.isRecordPinned(rec));
             result.sort((rec1, rec2) => grid.pinRecordIndex(rec1) - grid.pinRecordIndex(rec2));
             return result;
         }

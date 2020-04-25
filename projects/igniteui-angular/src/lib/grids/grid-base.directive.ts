@@ -5832,6 +5832,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             IgxTextHighlightDirective.setActiveHighlight(this.id, {
                 column: matchInfo.column,
                 row: matchInfo.row,
+                rowIndex: matchInfo.rowIndex,
                 index: matchInfo.index,
             });
 
@@ -5971,7 +5972,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
-        data.forEach((dataRow) => {
+        data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
                     c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
@@ -5984,6 +5985,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         if (searchValue === searchText) {
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
+                                rowIndex: this.pinnedRecordsCount > 0 ? rowIndex : undefined,
                                 column: c.field,
                                 index: 0,
                             });
@@ -5995,6 +5997,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         while (searchIndex !== -1) {
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
+                                rowIndex: this.pinnedRecordsCount > 0 ? rowIndex : undefined,
                                 column: c.field,
                                 index: occurenceIndex++,
                             });

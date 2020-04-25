@@ -182,6 +182,11 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     /**
      * @hidden
      */
+    public metadata: Map<string, any> = new Map<string, any>();
+
+    /**
+     * @hidden
+     */
     public get lastSearchInfo(): ISearchInfo {
         return this._lastSearchInfo;
     }
@@ -333,9 +338,18 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
-        const row = group.rowIndex === undefined ? group.row : group.rowIndex;
+        const row = group.row;
+        const rowIndex = group.rowIndex;
+        const rowIndexMetadata = this.metadata.has('rowIndex') ? this.metadata.get('rowIndex') : undefined;
+        let rowCheck;
 
-        if (column === this.column && row === this.row && group.page === this.page) {
+        if (rowIndex === undefined) {
+            rowCheck = row === this.row;
+        } else {
+            rowCheck = rowIndexMetadata === rowIndex;
+        }
+
+        if (column === this.column && rowCheck && group.page === this.page) {
             this.activate(group.index);
         }
     }

@@ -12,7 +12,8 @@
     OnInit,
     OnDestroy,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    DoCheck
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
@@ -49,7 +50,7 @@ import { ISearchInfo } from './grid';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements DoCheck, OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
     protected _lastSearchInfo: ISearchInfo;
 
@@ -618,6 +619,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngDoCheck() {
+        if (this.highlight) {
+            this.highlight.metadata.set('rowIndex', this.rowIndex);
+        }
     }
 
     /**
