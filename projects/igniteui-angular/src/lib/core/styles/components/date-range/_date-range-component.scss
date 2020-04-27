@@ -27,3 +27,7 @@
     }
 }
 
+@include b(igx-date-range-buttons) {
+    @extend %igx-date-range-buttons !optional;
+}
+
