@@ -553,7 +553,7 @@ export class IgxGridStateDirective {
                 if (this.grid.columnList.length > 0) {
                     dataType = this.grid.columnList.find(c => c.field === expr.fieldName).dataType;
                 } else {
-                    dataType = this.state[COLUMNS].find(c => c.field === expr.fieldName).dataType;
+                    dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 }
                 // when ESF, values are stored in Set.
                 // First those values are converted to an array before returning string in the stringifyCallback
