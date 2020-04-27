@@ -36,7 +36,7 @@
          *ngIf="!isLoading"
          class="igx-grid__tree-grouping-indicator"
          [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
-         (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
+         (click)="toggle($event)" (focus)="onIndicatorFocus()">
          <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
         </ng-container>
         <ng-container *ngTemplateOutlet="pinnedIndicatorTemplate; context: context">

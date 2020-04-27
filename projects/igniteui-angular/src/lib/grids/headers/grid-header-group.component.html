@@ -45,7 +45,8 @@
             'igx-grid__th--pinned-first': hasFirstPinnedChildColumn,
             'igx-grid__th--collapsible': column.collapsible,
             'igx-grid__th--selectable': selectable,
-            'igx-grid__th--selected': selected}"
+            'igx-grid__th--selected': selected,
+            'igx-grid__th--active': activeGroup}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
@@ -83,9 +84,9 @@
     <igx-grid-header [igxColumnMovingDrag]="column" [ghostHost]="grid.outletDirective.nativeElement" [attr.droppable]="true" (pointerdown)="activate()" [igxColumnMovingDrop]="column" [gridID]="column.grid.id" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid__th-resize-handle"
-          [igxResizeHandle]="column"
-          [attr.draggable]="false"
-          [style.cursor]="colResizingService.resizeCursor">
+        [igxResizeHandle]="column"
+        [attr.draggable]="false"
+        [style.cursor]="colResizingService.resizeCursor">
     </span>
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
 </ng-container>
