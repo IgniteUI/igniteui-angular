@@ -924,13 +924,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @hidden
      * @internal
      */
-    public setSearchMetadata(matchInfo: any) {
-        if (this.highlight !== undefined) {
-            if (matchInfo.rowIndex === this.rowIndex) {
-                this.highlight.metadata.set('rowIndexMatch', true);
-            } else {
-                this.highlight.metadata.set('rowIndexMatch', false);
-            }
-        }
+    public get searchMetadata() {
+        const meta = new Map<string, any>();
+        meta.set('dataIndex', (this.row as any).viewIndex);
+        return meta;
     }
 }

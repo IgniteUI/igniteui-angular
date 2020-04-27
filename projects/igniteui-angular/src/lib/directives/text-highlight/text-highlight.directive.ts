@@ -51,6 +51,10 @@ export interface IActiveHighlightInfo {
      * The index of the highlight.
      */
     index: number;
+    /**
+     * Additional, custom checks to perform prior an element highlighting.
+     */
+    metadata?: Map<string, any>;
 }
 
 @Directive({
@@ -180,8 +184,23 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public page: number;
 
     /**
-     * @hidden
+     * A map that contains all aditional checks, that you need, in order to activate
+     * your highlighted element. To activate the check, you will have to add a new metadata key to
+     * the `metadata` property into the IActiveHighlightInfo interface.
+     *
+     * @example
+     * ```typescript
+     * // Set a property, which would disable the highlight for a given element on a cetain condition
+     * if (dontActivateCondition) {
+     *     cell.highlight.metadata.set('highlightElement', false);
+     * }
+     *
+     * const metadataMap = new Map<string, any>();
+     * metadataMap.set('highlightElement') = true;
+     * IgxTextHighlightDirective.setActiveHighlight(id, {index: index, metadata: metadataMap});
+     * ```
      */
+    @Input()
     public metadata: Map<string, any> = new Map<string, any>();
 
     /**
@@ -340,15 +359,16 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
         const row = group.rowIndex ? group.rowIndex : group.row;
 
-        let metadataRules = true;
+        let metadataMatch = true;
 
-        this.metadata.forEach(rule => {
-            if (!rule) {
-                metadataRules = false;
-            }
-        });
+        if (group.metadata) {
+            const metadata = group.metadata;
+            group.metadata.forEach((value, key) => {
+                metadataMatch = this.metadata.get(key) === value;
+            });
+        }
 
-        if (column === this.column && row === this.row && group.page === this.page && metadataRules) {
+        if (column === this.column && row === this.row && group.page === this.page && metadataMatch) {
             this.activate(group.index);
         }
     }
