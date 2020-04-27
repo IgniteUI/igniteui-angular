@@ -414,6 +414,16 @@ describe('IgxGridState - input properties #grid', () => {
         expect(grid.pinnedRows[1].rowID).toBe(3);
         gridState = state.getState(true, 'rowPinning');
         expect(gridState).toBe(rowPinState);
+
+        grid.getRowByIndex(3).pin();
+        fix.detectChanges();
+
+        state.setState(rowPinStateObject);
+        fix.detectChanges();
+
+        expect(grid.pinnedRows.length).toBe(2);
+        expect(grid.pinnedRows[0].rowID).toBe(1);
+        expect(grid.pinnedRows[1].rowID).toBe(3);
     });
 
     it('setState should correctly restore grid cell selection state from string', () => {

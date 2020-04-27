@@ -478,6 +478,8 @@ export class IgxGridStateDirective {
     }
 
     private restoreRowPinning(state: any[]) {
+        // clear current state.
+        this.grid.pinnedRows.forEach(row => row.unpin());
         state.forEach(rowID => this.grid.pinRow(rowID));
     }
 
