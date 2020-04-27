@@ -853,61 +853,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (newStart + this.state.chunkSize > count) {
             newStart = count - this.state.chunkSize;
         }
-        const prevStart = this.state.startIndex;
         const diff = newStart - this.state.startIndex;
         this.state.startIndex = newStart;
         if (diff) {
             this.onChunkPreload.emit(this.state);
             if (!this.isRemote) {
-                /*recalculate and apply page size.*/
-                if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
-                    this.moveApplyScrollNext(prevStart);
-                } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
-                    this.moveApplyScrollPrev(prevStart);
-                } else {
-                    this.fixedApplyScroll();
-                }
+                this.fixedApplyScroll();
             }
         }
         return inScrollTop - this.sizesCache[this.state.startIndex];
-    }
-
-    /**
-     * @hidden
-     * The function applies an optimized state change for scrolling down/right employing context change with view rearrangement
-     */
-    protected moveApplyScrollNext(prevIndex: number): void {
-        const start = prevIndex + this.state.chunkSize;
-        for (let i = start; i < start + this.state.startIndex - prevIndex && this.igxForOf[i] !== undefined; i++) {
-            this._moveApply(i);
-        }
-    }
-
-    /**
-     *
-     */
-    protected _moveApply(contextIndex: number, topPosition = false) {
-        const context = this.igxForOf[contextIndex];
-        const forOfContext = new IgxForOfContext<T>(context, this.getContextIndex(context), this.igxForOf.length);
-        const view = this.dc.instance._vcr.createEmbeddedView(this._template, forOfContext, topPosition ? 0 : undefined);
-        this.dc.instance._vcr.detach(topPosition ? this.dc.instance._vcr.length - 1 : 0);
-        if (topPosition) {
-            this._embeddedViews.pop();
-            this._embeddedViews.unshift(view);
-        } else {
-            this._embeddedViews.shift();
-            this._embeddedViews.push(view);
-        }
-    }
-
-    /**
-     * @hidden
-     * The function applies an optimized state change for scrolling up/left employing context change with view rearrangement
-     */
-    protected moveApplyScrollPrev(prevIndex: number): void {
-        for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
-            this._moveApply(i, true);
-        }
     }
 
     /**
