@@ -5825,6 +5825,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
             this.lastSearchInfo = { ...this.lastSearchInfo };
 
+            this.rowList.forEach((row) => {
+                if (row.cells) {
+                    row.cells.forEach((c) => {
+                        c.setSearchMetadata(matchInfo);
+                    });
+                }
+            });
+
             if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column);
             }
@@ -5832,7 +5840,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             IgxTextHighlightDirective.setActiveHighlight(this.id, {
                 column: matchInfo.column,
                 row: matchInfo.row,
-                rowIndex: matchInfo.rowIndex,
                 index: matchInfo.index,
             });
 
@@ -5985,7 +5992,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         if (searchValue === searchText) {
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
-                                rowIndex: this.pinnedRecordsCount > 0 ? rowIndex : undefined,
+                                rowIndex: rowIndex,
                                 column: c.field,
                                 index: 0,
                             });
@@ -5997,7 +6004,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         while (searchIndex !== -1) {
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
-                                rowIndex: this.pinnedRecordsCount > 0 ? rowIndex : undefined,
+                                rowIndex: rowIndex,
                                 column: c.field,
                                 index: occurenceIndex++,
                             });

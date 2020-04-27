@@ -338,18 +338,17 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
-        const row = group.row;
-        const rowIndex = group.rowIndex;
-        const rowIndexMetadata = this.metadata.has('rowIndex') ? this.metadata.get('rowIndex') : undefined;
-        let rowCheck;
+        const row = group.rowIndex ? group.rowIndex : group.row;
 
-        if (rowIndex === undefined) {
-            rowCheck = row === this.row;
-        } else {
-            rowCheck = rowIndexMetadata === rowIndex;
-        }
+        let metadataRules = true;
 
-        if (column === this.column && rowCheck && group.page === this.page) {
+        this.metadata.forEach(rule => {
+            if (!rule) {
+                metadataRules = false;
+            }
+        });
+
+        if (column === this.column && row === this.row && group.page === this.page && metadataRules) {
             this.activate(group.index);
         }
     }

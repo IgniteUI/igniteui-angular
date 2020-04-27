@@ -12,8 +12,7 @@
     OnInit,
     OnDestroy,
     OnChanges,
-    SimpleChanges,
-    DoCheck
+    SimpleChanges
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
@@ -50,7 +49,7 @@ import { ISearchInfo } from './grid';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements DoCheck, OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
     protected _lastSearchInfo: ISearchInfo;
 
@@ -625,16 +624,6 @@ export class IgxGridCellComponent implements DoCheck, OnInit, OnChanges, OnDestr
      * @hidden
      * @internal
      */
-    public ngDoCheck() {
-        if (this.highlight) {
-            this.highlight.metadata.set('rowIndex', this.rowIndex);
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
             this.addPointerListeners(this.cellSelectionMode);
@@ -929,5 +918,19 @@ export class IgxGridCellComponent implements DoCheck, OnInit, OnChanges, OnDestr
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setSearchMetadata(matchInfo: any) {
+        if (this.highlight !== undefined) {
+            if (matchInfo.rowIndex === this.rowIndex) {
+                this.highlight.metadata.set('rowIndexMatch', true);
+            } else {
+                this.highlight.metadata.set('rowIndexMatch', false);
+            }
+        }
     }
 }
