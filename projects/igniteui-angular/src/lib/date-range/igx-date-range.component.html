@@ -47,7 +47,7 @@
 
 <ng-template #startEndTemplate>
     <ng-content select="igx-date-start"></ng-content>
-    <div class="igx-date-range__label">
+    <div [className]="separatorClass">
         <ng-container *ngTemplateOutlet="dateSeparatorTemplate ? dateSeparatorTemplate : defDateSeparatorTemplate;"></ng-container>
     </div>
     <ng-content select="igx-date-end"></ng-content>

@@ -6,7 +6,7 @@
 
 /// Generates a light date-range schema.
 /// @type {Map}
-/// @prop {Map} color [igx-color: 'surface'] - date range text color.
+/// @prop {Map} color [igx-color: 'surface'] - The Color for date range separator label.
 $_light-date-range: (
     color: (
         igx-color: ('grays', 500),
