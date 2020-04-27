@@ -161,6 +161,8 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
+
+
 @Directive({
     selector: '[igxGridBaseComponent]'
 })

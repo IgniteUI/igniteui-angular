@@ -76,6 +76,7 @@ export enum GridFeatures {
     ROW_PINNING = 'rowPinning',
     PINNING_CONFIG = 'pinningConfig',
     CELL_SELECTION = 'cellSelection',
+    ROW_SELECTION = 'rowSelection',
     COLUMN_SELECTION = 'columnSelection',
     EXPANSION = 'expansion'
 }
@@ -83,19 +84,6 @@ export enum GridFeatures {
 export enum FlatGridFeatures {
     GROUP_BY = 'groupBy',
 }
-
-const COLUMNS = 'columns';
-const FILTERING = 'filtering';
-const ADVANCED_FILTERING = 'advancedFiltering';
-const SORTING = 'sorting';
-const GROUPBY = 'groupBy';
-const PAGING = 'paging';
-const ROW_SELECTION = 'rowSelection';
-const ROW_PINNING = 'rowPinning';
-const PINNING_CONFIG = 'pinningConfig';
-const CELL_SELECTION = 'cellSelection';
-const COLUMN_SELECTION = 'columnSelection';
-const EXPANSION = 'expansion';
 
 @Directive({
     selector: '[igxGridState]'
@@ -220,51 +208,51 @@ export class IgxGridStateDirective {
     private restoreFeature(feature: string, state: IColumnState[] | IPagingState | ISortingExpression[] |
         IGroupingState | FilteringExpressionsTree | GridSelectionRange[] | any[]) {
         switch (feature) {
-            case COLUMNS: {
+            case GridFeatures.COLUMNS: {
                this.restoreColumns(state as IColumnState[]);
                break;
             }
-            case FILTERING: {
+            case GridFeatures.FILTERING: {
                 this.restoreFiltering(state as FilteringExpressionsTree);
                 break;
             }
-            case ADVANCED_FILTERING: {
+            case GridFeatures.ADVANCED_FILTERING: {
                 this.restoreAdvancedFiltering(state as FilteringExpressionsTree);
                 break;
             }
-            case SORTING: {
+            case GridFeatures.SORTING: {
                 this.restoreSorting(state as ISortingExpression[]);
                 break;
              }
-             case GROUPBY: {
+             case FlatGridFeatures.GROUP_BY: {
                 this.restoreGroupBy(state as IGroupingState);
                 break;
              }
-             case PAGING: {
+             case GridFeatures.PAGING: {
                 this.restorePaging(state as IPagingState);
                 break;
               }
-              case ROW_SELECTION: {
+              case GridFeatures.ROW_SELECTION: {
                 this.restoreRowSelection(state as any[]);
                 break;
               }
-              case ROW_PINNING: {
+              case GridFeatures.ROW_PINNING: {
                 this.restoreRowPinning(state as any[]);
                 break;
               }
-              case PINNING_CONFIG: {
+              case GridFeatures.PINNING_CONFIG: {
                 this.restorePinningConfig(state as IPinningConfig);
                 break;
               }
-              case CELL_SELECTION: {
+              case GridFeatures.CELL_SELECTION: {
                 this.restoreCellSelection(state as GridSelectionRange[]);
                 break;
               }
-              case COLUMN_SELECTION: {
+              case GridFeatures.COLUMN_SELECTION: {
                 this.restoreColumnSelection(state as string[]);
                 break;
               }
-              case EXPANSION: {
+              case GridFeatures.EXPANSION: {
                 this.restoreExpansion(state as string[]);
                 break;
               }
@@ -534,6 +522,9 @@ export class IgxGridStateDirective {
         });
     }
 
+    /**
+     * Helper method that restores expansion states for the grid.
+     */
     private restoreExpansion(state: any[]) {
         const expansionStates = new Map<any, boolean>(state);
         this.grid.expansionStates = expansionStates;
