@@ -3,7 +3,7 @@ import {
   Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, } from '@angular/forms';
-import { CommonModule, formatDate, DOCUMENT } from '@angular/common';
+import { formatDate, DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { KEYS } from '../../core/utils';
@@ -50,9 +50,11 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
 })
 export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, Validator, ControlValueAccessor {
   /**
-   * Set the locale settings used in `displayFormat`.
+   * Locale settings used for value formatting.
    *
-   * Uses Angular's `LOCALE_ID` for the default value.
+   * @remarks
+   * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+   *
    * @example
    * ```html
    * <input igxDateTimeEditor [locale]="'en'">
@@ -62,9 +64,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public locale: string;
 
   /**
-   * Set the minimum possible value the editor will allow.
+   * Minimum value required for the editor to remain valid.
    *
-   * If a `string` value is passed in, it must be in the defined input format.
+   * @remarks
+   * If a `string` value is passed, it must be in the defined input format.
    *
    * @example
    * ```html
@@ -82,9 +85,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * Set the maximum possible value the editor will allow.
+   * Maximum value required for the editor to remain valid.
    *
+   * @remarks
    * If a `string` value is passed in, it must be in the defined input format.
+   *
    * @example
    * ```html
    * <input igxDateTimeEditor [maxValue]="maxDate">
@@ -122,7 +127,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public displayFormat: string;
 
   /**
-   * get/set the expected user input format (and placeholder).
+   * Expected user input format (and placeholder).
    * @example
    * ```html
    * <input [igxDateTimeEditor]="'dd/MM/yyyy'">
@@ -142,7 +147,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * get/set the editor's value.
+   * Editor value.
    * @example
    * ```html
    * <input igxDateTimeEditor [value]="date">
@@ -573,7 +578,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
 @NgModule({
   declarations: [IgxDateTimeEditorDirective],
-  exports: [IgxDateTimeEditorDirective],
-  imports: [CommonModule]
+  exports: [IgxDateTimeEditorDirective]
 })
 export class IgxDateTimeEditorModule { }
