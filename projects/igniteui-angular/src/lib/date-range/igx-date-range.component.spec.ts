@@ -23,6 +23,7 @@ const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_CALENDAR_WRAPPER = 'igx-toggle'; // TODO Implementation -> maybe add class for the div container ('igx-date-picker')
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
+const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 
 function getDatesInView(dates: DebugElement[]): DebugElement[] {
     return dates.filter(d => {
@@ -132,6 +133,7 @@ describe('IgxRangeDatePicker', () => {
                 if (dayRange !== 0) {
                     calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 }
+                fixture.detectChanges();
                 dateRange.close();
                 fixture.detectChanges();
             }
@@ -223,6 +225,74 @@ describe('IgxRangeDatePicker', () => {
                     dateRange.selectRange(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
+                });
+
+                it('should close the calendar with the "Done" button', () => {
+                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.detectChanges();
+                    const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+
+                    const dayRange = 8;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                    endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + dayRange);
+                    const startDateDayElIndex = startDate.getDate() - 1;
+                    const endDateDayElIndex = startDateDayElIndex + dayRange;
+                    dateRange.open();
+                    fixture.detectChanges();
+                    calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                    calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                    fixture.detectChanges();
+                    doneBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                    fixture.detectChanges();
+                    verifyDateRangeInSingleInput();
+                    // TODO verify collapsed
+                });
+
+                it('should show the "Done" button only in dialog mode', () => {
+                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.detectChanges();
+
+                    dateRange.toggle();
+                    fixture.detectChanges();
+                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                    expect(doneBtn).not.toBe(null);
+                    dateRange.toggle();
+                    fixture.detectChanges();
+
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    dateRange.toggle();
+                    fixture.detectChanges();
+                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                    expect(doneBtn).toBe(null);
+                    dateRange.toggle();
+                    fixture.detectChanges();
+                });
+
+                it('should be able to change the "Done" button text', () => {
+                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.detectChanges();
+
+                    let doneBtnText = 'Done';
+                    dateRange.toggle();
+                    fixture.detectChanges();
+                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
+                    dateRange.toggle();
+                    fixture.detectChanges();
+
+                    doneBtnText = 'Close';
+                    dateRange.doneButtonText = doneBtnText;
+                    fixture.detectChanges();
+                    dateRange.toggle();
+                    fixture.detectChanges();
+                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
+                    dateRange.toggle();
+                    fixture.detectChanges();
                 });
             });
 
@@ -326,36 +396,6 @@ describe('IgxRangeDatePicker', () => {
                 });
             });
         });
-
-        describe('Test API - properties, methods and events', () => {
-            xit('Should select today properly', (done) => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
-                fixture.componentInstance.dateRange.selectRange(new Date());
-                fixture.whenStable().then(() => {
-                    fixture.detectChanges();
-                    // expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
-                    done();
-                });
-            });
-
-            it('Should close the calendar properly with the "Done" button', fakeAsync(() => {
-                // TODO
-                // dialog mode
-                // should not lose selection
-            }));
-
-            it('Should be able to change the text of its two buttons', fakeAsync(() => {
-                // TODO
-                // dialog mode
-            }));
-
-            it('Should show the "Done" button only in dialog mode', fakeAsync(() => {
-                // TODO
-            }));
-        }); // Use component instance
 
         describe('Templates ', () => { });
 
