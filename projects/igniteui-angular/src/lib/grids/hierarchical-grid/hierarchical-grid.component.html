@@ -145,7 +145,7 @@
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
             }">
-                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="getRowIndex(rowIndex, false)"
+                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
                     [rowData]="rowData" [layout]='layout' #row>
                 </igx-child-grid-row>
             </div>
