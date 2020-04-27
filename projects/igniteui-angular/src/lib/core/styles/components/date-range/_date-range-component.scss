@@ -15,6 +15,14 @@
         @extend %igx-date-range__label !optional;
     }
 
+    @include e(dialog-buttons) {
+        @extend %igx-date-range__dialog-buttons !optional;
+    }
+
+    @include e(dialog-buttons-inner) {
+        @extend %igx-date-range__dialog-buttons-inner !optional;
+    }
+
     @include m(cosy){
         @extend %igx-date-range !optional;
         @extend %igx-date-range--cosy !optional;
