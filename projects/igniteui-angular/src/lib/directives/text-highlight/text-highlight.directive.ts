@@ -28,14 +28,6 @@ interface ISearchInfo {
  */
 export interface IActiveHighlightInfo {
     /**
-     * The row index of the highlight. This property is deprecated, use `row` instead.
-     */
-    rowIndex?: number;
-    /**
-     * The column index of the highlight. This property is deprecated, use `column` instead.
-     */
-    columnIndex?: number;
-    /**
      * The row of the highlight.
      */
     row?: any;
@@ -324,8 +316,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
-        const column = group.columnIndex === undefined ? group.column : group.columnIndex;
-        const row = group.rowIndex === undefined ? group.row : group.rowIndex;
+        const column = group.column === undefined ? group.column : group.column;
+        const row = group.row === undefined ? group.row : group.row;
 
         if (column === this.column && row === this.row) {
             this.activate(group.index);
