@@ -33,6 +33,8 @@
 
 @mixin igx-date-range($theme) {
     @include igx-root-css-vars($theme);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %igx-date-range {
         display: flex;
@@ -52,6 +54,24 @@
         color: --var($theme, 'color');
         margin: 0 rem(8px);
     }
+
+    %igx-date-range-buttons {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 rem(16px) rem(16px) rem(16px);
+
+        > * {
+            margin-#{$right}: rem(8px);
+
+            &:last-of-type {
+                margin-#{$right}: 0;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
 }
 
 /// Adds typography styles for the igx-date-range component.
@@ -69,27 +89,7 @@
 ) {
     $label: map-get($categories, 'caption');
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     %igx-date-range__label {
         @include igx-type-style($type-scale, $label);
-    }
-
-    %igx-date-range__dialog-buttons {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    %igx-date-range__dialog-buttons-inner {
-        padding: 0 rem(16px) rem(16px) rem(16px);
-
-        > * {
-            margin-#{$right}: rem(8px);
-
-            &:last-of-type {
-                margin-#{$right}: 0;
-            }
-        }
     }
 }
