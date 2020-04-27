@@ -95,19 +95,24 @@
         [displayDensity]="'cosy'"
         [cellSelection]="selectionMode"
         [rowSelection]="'none'">
-        <igx-column *ngFor="let c of columns"
-            [sortable]="c.sortable"
-            [movable]="c.movable"
-            [editable]="true"
-            [hasSummary]="c.hasSummary"
-            [filterable]="c.filterable"
-            [groupable]="c.groupable"
-            [field]="c.field"
-            [header]="c.header"
-            [dataType]="c.dataType"
-            [pinned]="c.pinned"
-            [hidden]="c.hidden">
-        </igx-column>
+            <igx-column *ngFor="let c of columns"
+                [sortable]="c.sortable"
+                [movable]="c.movable"
+                [editable]="true"
+                [hasSummary]="c.hasSummary"
+                [filterable]="c.filterable"
+                [groupable]="c.groupable"
+                [field]="c.field"
+                [header]="c.header"
+                [dataType]="c.dataType"
+                [pinned]="c.pinned"
+                [hidden]="c.hidden">
+            </igx-column>
+
+            <!-- Grid Detail View Template -->
+            <ng-template igxGridDetail let-dataItem>
+                <span>Detail view</span>
+            </ng-template>
         </igx-grid>
 
     <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
@@ -117,7 +122,7 @@
 <br />
 <div class="grid__wrapper">
     <igx-hierarchical-grid #grid1 [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
-        [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true"
+        [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
         [height]="'600px'" [width]="'100%'" #hGrid>
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column-group header="Information">

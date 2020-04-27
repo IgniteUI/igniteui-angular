@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
   IPagingState, ISortingExpression, IgxNumberSummaryOperand,
-  IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective, IgxHierarchicalGridComponent } from 'igniteui-angular';
+  IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective,
+  IgxHierarchicalGridComponent } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
 import { Router, NavigationStart } from '@angular/router';
-import { HierarchicalGridSampleComponent } from '../hierarchical-grid/hierarchical-grid.sample';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -51,8 +51,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     groupBy: true,
     columns: true
   };
-
-  private readonly newProperty = { static: true };
 
   @ViewChildren(IgxGridStateDirective) public state: QueryList<IgxGridStateDirective>;
   @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
@@ -108,33 +106,36 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 }
 
   public saveGridState() {
-      const state = this.state.first.getState(this.serialize);
-      const state2 = this.state.last.getState(this.serialize);
+      let state = this.state.first.getState(this.serialize);
+      let hierGridState = this.state.last.getState(this.serialize);
       // const state = this.state.getState(this.serialize, ['sorting', 'filtering']);
-      if (typeof state === 'string') {
+      if (typeof state !== 'string') {
+          state = JSON.stringify(state);
+          hierGridState = JSON.stringify(state);
+      }
+      try {
         window.localStorage.setItem(this.stateKey, state);
-        window.localStorage.setItem(this.stateKey2, state2 as string);
-      } else {
-        window.localStorage.setItem(this.stateKey, JSON.stringify(state));
-        window.localStorage.setItem(this.stateKey2, JSON.stringify(state2));
+        window.localStorage.setItem(this.stateKey2, hierGridState as string);
+      } catch (e) {
+          console.log('Storage is full, or the value that you try to se is too long to be written in single item, Please empty data');
       }
   }
 
   public restoreGridState() {
       const state = window.localStorage.getItem(this.stateKey);
-      const state2 = window.localStorage.getItem(this.stateKey2);
+      const hierGridState = window.localStorage.getItem(this.stateKey2);
       if (state) {
         this.state.first.setState(state);
-        this.state.last.setState(state2);
+        this.state.last.setState(hierGridState);
       }
   }
 
   public restoreColumns() {
     const state = this.getColumnsState(this.stateKey);
-    const state2 = this.getColumnsState(this.stateKey2);
+    const hierGridState = this.getColumnsState(this.stateKey2);
     if (state) {
       this.state.first.setState({ columns: state });
-      this.state.last.setState({ columns: state2 });
+      this.state.last.setState({ columns: hierGridState });
     }
   }
 
@@ -146,9 +147,9 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreFiltering() {
     const state = window.localStorage.getItem(this.stateKey);
-    const state2 = window.localStorage.getItem(this.stateKey2);
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
     const filteringState: FilteringExpressionsTree = state ? JSON.parse(state).filtering : null;
-    const filteringState2: FilteringExpressionsTree = state2 ? JSON.parse(state2).filtering : null;
+    const filteringState2: FilteringExpressionsTree = hierGridState ? JSON.parse(hierGridState).filtering : null;
     if (filteringState) {
       const gridFilteringState: IGridState = { filtering: filteringState};
       const gridFilteringState2: IGridState = { filtering: filteringState2};
@@ -174,8 +175,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridSortingState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
-    const sortingState2: ISortingExpression[] =  state2 ? JSON.parse(state2).sorting : null;
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
+    const sortingState2: ISortingExpression[] =  hierGridState ? JSON.parse(hierGridState).sorting : null;
     if (sortingState2) {
       const gridSortingState2: IGridState = { sorting: sortingState2};
       this.state.last.setState(gridSortingState2);
@@ -190,8 +191,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridGroupByState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
-    const groupByState2: IGroupingState = state2 ? JSON.parse(state2).groupBy : null;
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
+    const groupByState2: IGroupingState = hierGridState ? JSON.parse(hierGridState).groupBy : null;
     if (groupByState2) {
       const gridGroupByState2: IGridState = { groupBy: groupByState2 };
       this.state.last.setState(gridGroupByState2);
@@ -206,8 +207,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridRowSelectionState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
-    const rowSelectionState2 = state ? JSON.parse(state2).rowSelection : null;
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
+    const rowSelectionState2 = state ? JSON.parse(hierGridState).rowSelection : null;
     if (rowSelectionState2) {
       const gridRowSelectionState2: IGridState = { rowSelection: rowSelectionState2 };
       this.state.last.setState(gridRowSelectionState2);
@@ -222,7 +223,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridColumnSelectionState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
     const columnSelectionState2 = state ? JSON.parse(state).columnSelection : null;
     if (columnSelectionState2) {
       const gridColumnSelectionState2: IGridState = { columnSelection: columnSelectionState2 };
@@ -238,9 +239,9 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridCellSelectionState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
-    const cellSelectionState2 = state2 ? JSON.parse(state2).cellSelection : null;
-    if (state2) {
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
+    const cellSelectionState2 = hierGridState ? JSON.parse(hierGridState).cellSelection : null;
+    if (hierGridState) {
       const gridCellSelectionState2: IGridState = { cellSelection: cellSelectionState2 };
       this.state.last.setState(gridCellSelectionState2);
     }
@@ -254,9 +255,9 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       this.state.first.setState(gridPagingState);
     }
 
-    const state2 = window.localStorage.getItem(this.stateKey2);
-    const pagingState2: IPagingState = state2 ? JSON.parse(state2).paging : null;
-    if (state2) {
+    const hierGridState = window.localStorage.getItem(this.stateKey2);
+    const pagingState2: IPagingState = hierGridState ? JSON.parse(hierGridState).paging : null;
+    if (hierGridState) {
       const gridPagingState2: IGridState = { paging: pagingState2};
       this.state.last.setState(gridPagingState2);
     }
