@@ -284,51 +284,51 @@ export class IgxGridStateDirective {
     private getGridFeature(feature: string): IGridState {
         const state: IGridState = {};
         switch (feature) {
-            case COLUMNS: {
+            case GridFeatures.COLUMNS: {
                Object.assign(state, this.getColumns());
                break;
             }
-            case FILTERING: {
+            case GridFeatures.FILTERING: {
                 Object.assign(state, this.getFiltering());
                 break;
             }
-            case ADVANCED_FILTERING: {
+            case GridFeatures.ADVANCED_FILTERING: {
                 Object.assign(state, this.getAdvancedFiltering());
                 break;
             }
-            case SORTING: {
+            case GridFeatures.SORTING: {
                 Object.assign(state, this.getSorting());
                 break;
              }
-             case GROUPBY: {
+             case FlatGridFeatures.GROUP_BY: {
                 Object.assign(state, this.getGroupBy());
                 break;
              }
-             case PAGING: {
+             case GridFeatures.PAGING: {
                 Object.assign(state, this.getPaging());
                 break;
               }
-              case ROW_SELECTION: {
+              case GridFeatures.ROW_SELECTION: {
                 Object.assign(state, this.getRowSelection());
                 break;
               }
-              case ROW_PINNING: {
+              case GridFeatures.ROW_PINNING: {
                 Object.assign(state, this.getRowPinning());
                 break;
               }
-              case PINNING_CONFIG: {
+              case GridFeatures.PINNING_CONFIG: {
                 Object.assign(state, this.getPinningConfig());
                 break;
               }
-              case CELL_SELECTION: {
+              case GridFeatures.CELL_SELECTION: {
                 Object.assign(state, this.getCellSelection());
                 break;
               }
-              case COLUMN_SELECTION: {
+              case GridFeatures.COLUMN_SELECTION: {
                 Object.assign(state, this.getColumnSelection());
                 break;
               }
-              case EXPANSION: {
+              case GridFeatures.EXPANSION: {
                 Object.assign(state, this.getExpansion());
                 break;
               }
