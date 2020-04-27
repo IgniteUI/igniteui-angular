@@ -20,6 +20,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { Subject } from 'rxjs';
 import { GridType } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -182,7 +183,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
 
     public onFilteringIconClick(event) {
-        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column);
+        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
     }
 
     get grid(): any {
