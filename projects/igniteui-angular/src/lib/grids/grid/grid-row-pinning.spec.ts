@@ -859,6 +859,7 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = grid.getRowByIndex(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
@@ -880,9 +881,10 @@ describe('Row Pinning #grid', () => {
             grid.navigateTo(10);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-
+            
             const firstRowCell = grid.getRowByIndex(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
@@ -904,11 +906,14 @@ describe('Row Pinning #grid', () => {
             grid.navigateTo(27);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-
+            await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
+            
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
-
+            
             const lastRowCell = grid.getRowByIndex(27).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
@@ -931,6 +936,7 @@ describe('Row Pinning #grid', () => {
 
             const thirdRowCell = grid.getRowByIndex(2).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(thirdRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(2);
@@ -954,9 +960,12 @@ describe('Row Pinning #grid', () => {
             grid.navigateTo(26);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-
+            await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
+            
             const lastRowCell = grid.getRowByIndex(27).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(27);
@@ -981,6 +990,7 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = grid.getRowByIndex(27).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
@@ -1004,6 +1014,7 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = grid.getRowByIndex(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
@@ -1028,9 +1039,12 @@ describe('Row Pinning #grid', () => {
             grid.navigateTo(26);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fix.detectChanges();
 
             const firstRowCell = grid.getRowByIndex(26).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(26);
@@ -1056,6 +1070,7 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = grid.getRowByIndex(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
