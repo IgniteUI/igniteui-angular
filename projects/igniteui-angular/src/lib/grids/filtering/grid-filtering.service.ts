@@ -1,11 +1,11 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, NgModuleRef } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -14,6 +14,13 @@ import { IColumnVisibilityChangedEventArgs } from '../grid';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { IgxDatePipeComponent } from '../common/pipes';
+import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
+import { IgxOverlayService } from '../../services/overlay/overlay';
+import { useAnimation } from '@angular/animations';
+import { fadeIn, fadeOut } from '../../animations/main';
+import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
+import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
+import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -42,23 +49,74 @@ export class IgxFilteringService implements OnDestroy {
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
     private _filterIconsRegistered = false;
+    private _componentOverlayId: string;
+    private _filterMenuPositionSettings: PositionSettings;
+    private _filterMenuOverlaySettings: OverlaySettings;
+    private column;
 
-    public gridId: string;
     public isFilterRowVisible = false;
     public filteredColumn: IgxColumnComponent = null;
     public selectedExpression: IFilteringExpression = null;
-    public columnToFocus: IgxColumnComponent = null;
-    public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
     public activeFilterCell = 0;
-
     grid: IgxGridBaseDirective;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
+        private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    public toggleFilterDropdown(element, column) {
+        if (!this._componentOverlayId || (this.column  && this.column.field !== column.field)) {
+            this.column = column;
+            const filterIcon = this.column.filteringExpressionsTree ? 'igx-excel-filter__icon--filtered' : 'igx-excel-filter__icon';
+            const filterIconTarget = element.querySelector('.' + filterIcon);
+
+            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
+            this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
+            this._componentOverlayId =
+                this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);
+            this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
+        }
+    }
+
+    public initFilteringSettings() {
+        this._filterMenuPositionSettings = {
+            verticalStartPoint: VerticalAlignment.Bottom,
+            openAnimation: useAnimation(fadeIn, { params: { duration: '250ms' }}),
+            closeAnimation: useAnimation(fadeOut, { params: { duration: '200ms' }})
+        };
+        this._filterMenuOverlaySettings = {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
+            scrollStrategy: new AbsoluteScrollStrategy()
+        };
+        this._overlayService.onOpening.pipe(
+            filter((overlay) => overlay.id === this._componentOverlayId),
+            takeUntil(this.destroy$)).subscribe((eventArgs) => {
+                const instance = eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
+                if (instance) {
+                    instance.initialize(this.column, this._overlayService, eventArgs.id);
+                }
+            });
+
+        this._overlayService.onClosed.pipe(
+            filter(overlay => overlay.id === this._componentOverlayId),
+            takeUntil(this.destroy$)).subscribe(() => {
+                console.log('Close');
+                this._componentOverlayId = null;
+                this.grid.theadRow.nativeElement.focus();
+            });
+    }
+
+    public hideExcelFiltering() {
+        if (this._componentOverlayId) {
+            this._overlayService.hide(this._componentOverlayId);
+        }
     }
 
     public get datePipe(): IgxDatePipeComponent {
@@ -86,10 +144,6 @@ export class IgxFilteringService implements OnDestroy {
                         filterCell.updateFilterCellArea();
                     });
                 }
-                if (this.columnToFocus) {
-                    this.focusFilterCellChip(this.columnToFocus, false);
-                    this.columnToFocus = null;
-                }
             });
 
             this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -97,13 +151,17 @@ export class IgxFilteringService implements OnDestroy {
                     filterCell.updateFilterCellArea();
                 });
             });
+        }
+    }
 
-            this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnVisibilityChangedEventArgs) => {
-                if (this.grid.filteringRow && this.grid.filteringRow.column === eventArgs.column ) {
-                    this.grid.filteringRow.close();
+    /**
+     * Close filtering row if a column is hidden.
+     */
+    public hideFilteringRowOnColumnVisibilityChange(col: IgxColumnComponent) {
+        const filteringRow = this.grid.filteringRow;
 
-                }
-            });
+        if (filteringRow && filteringRow.column && filteringRow.column === col) {
+            filteringRow.close();
         }
     }
 
@@ -356,23 +414,6 @@ export class IgxFilteringService implements OnDestroy {
         if (filterCell) {
             filterCell.updateFilterCellArea();
         }
-    }
-
-    /**
-     * Focus a chip in a filterCell.
-     */
-    public focusFilterCellChip(column: IgxColumnComponent, focusFirst: boolean) {
-        const filterCell = column.filterCell;
-        if (filterCell) {
-            filterCell.focusChip(focusFirst);
-        }
-    }
-
-    /**
-     * Focus the close button in the filtering row.
-     */
-    public focusFilterRowCloseButton() {
-        this.grid.filteringRow.closeButton.nativeElement.focus();
     }
 
     public get filteredData() {

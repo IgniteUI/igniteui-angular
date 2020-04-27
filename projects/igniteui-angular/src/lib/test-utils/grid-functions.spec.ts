@@ -22,7 +22,6 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
-const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -69,11 +68,17 @@ const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
+const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
+const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
+const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
 const COLUMN_HIDING_CLASS = 'igx-column-hiding';
 const COLUMN_HIDING_INPUT_CLASS = '.igx-column-hiding__header-input';
 const COLUMN_HIDING_COLUMNS_CLASS = '.igx-column-hiding__columns';
 const COLUMN_PINNING_CLASS = 'igx-column-pinning';
+const GRID_TOOLBAR_CLASS = 'igx-grid-toolbar';
+const GRID_TOOLBAR_EXPORT_BUTTON_CLASS = '.igx-grid-toolbar__dropdown#btnExport';
+const GRID_OUTLET_CLASS = 'div.igx-grid__outlet';
 export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
 export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
@@ -515,12 +520,12 @@ export class GridFunctions {
 
     /* Toolbar-related members */
     public static getToolbar(fixture) {
-        return fixture.debugElement.query(By.css('igx-grid-toolbar'));
+        return fixture.debugElement.query(By.css(GRID_TOOLBAR_CLASS));
     }
 
     public static getOverlay(fixture) {
-        const div = fixture.debugElement.nativeElement.parentElement.lastChild;
-        return div.classList.contains('igx-overlay') ? div : null;
+        const div = fixture.debugElement.query(By.css(GRID_OUTLET_CLASS));
+        return div.nativeElement;
     }
 
     public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
@@ -542,7 +547,7 @@ export class GridFunctions {
     }
 
     public static getExportButton(fixture) {
-        const div = GridFunctions.getToolbar(fixture).query(By.css('.igx-grid-toolbar__dropdown#btnExport'));
+        const div = GridFunctions.getToolbar(fixture).query(By.css(GRID_TOOLBAR_EXPORT_BUTTON_CLASS));
         return (div) ? div.query(By.css('button')) : null;
     }
 
@@ -1797,6 +1802,18 @@ export class GridFunctions {
         const sortIcon = header.query(By.css(SORT_ICON_CLASS));
         sortIcon.triggerEventHandler('click', new Event('click'));
     }
+
+    public static verifyHeaderSortIndicator(header: DebugElement, sortedAsc = true, sortedDesc = false, sortable = true) {
+        const sortIcon = header.query(By.css(SORT_ICON_CLASS));
+        if (sortable) {
+            const sortIconText = sortedDesc ? SORTING_ICON_DESC_CONTENT : SORTING_ICON_ASC_CONTENT;
+            expect(sortIcon.nativeElement.textContent.trim()).toEqual(sortIconText);
+            expect(header.nativeElement.classList.contains(SORTED_COLUMN_CLASS)).toEqual(sortedAsc || sortedDesc);
+        } else {
+            expect(sortIcon).toBeNull();
+        }
+    }
+
 
     public static getDragIndicators(fix: ComponentFixture<any>): HTMLElement[] {
         return fix.nativeElement.querySelectorAll(DRAG_INDICATOR_CLASS);
