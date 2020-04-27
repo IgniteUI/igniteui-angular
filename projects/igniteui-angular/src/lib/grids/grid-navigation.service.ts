@@ -113,7 +113,7 @@ export class IgxGridNavigationService {
             case 'spacebar':
             case 'space':
                 const rowObj = this.grid.getRowByIndex(this.activeNode.row);
-                if (this.grid.isRowSelectable && this.isDataRow(rowIndex) && !rowObj.disabled) {
+                if (this.grid.isRowSelectable && this.isDataRow(rowIndex)) {
                     rowObj && rowObj.selected ? this.grid.selectionService.deselectRow(rowObj.rowID, event) :
                         this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
                 }
