@@ -38,7 +38,7 @@ describe('IgxRangeDatePicker', () => {
     let endDate: Date;
     let startDate: Date;
     let toggleBtn: DebugElement;
-    let datePickerElement: DebugElement;
+    // let datePickerElement: DebugElement;
     let calendarElement: DebugElement;
     let calendarWrapper: DebugElement;
     let dateRange: IgxDateRangeComponent;
@@ -56,7 +56,7 @@ describe('IgxRangeDatePicker', () => {
     }
 
     describe('Single Input', () => {
-        let singleInputElement: DebugElement;
+        // let singleInputElement: DebugElement;
         configureTestSuite();
         beforeAll(async(() => {
             TestBed.configureTestingModule({
@@ -325,7 +325,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -337,7 +337,7 @@ describe('IgxRangeDatePicker', () => {
             fixture.detectChanges();
 
             const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-            //UIInteractions.clickElement(startInput.nativeElement);
+            // UIInteractions.clickElement(startInput.nativeElement);
             tick(100);
             fixture.detectChanges();
             expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
@@ -505,25 +505,28 @@ describe('IgxRangeDatePicker', () => {
     describe('Validation', () => {
         // Single Input (Default) Range Picker
         // Two Inputs Range Picker
-        let firstInputElement: DebugElement;
-        let secondInputElement: DebugElement;
+        // let firstInputElement: DebugElement;
+        // let secondInputElement: DebugElement;
         let inputGroupWithRequiredAsteriskSI: DebugElement;
         let inputGroupWithRequiredAsteriskTI: DebugElement;
         let dateRangeSingle: IgxDateRangeComponent;
         let dateRangeTwoInputs: IgxDateRangeComponent;
-        let fix: ComponentFixture<DateRangetReactiveFormComponent>;
+        let fix: ComponentFixture<DateRangeReactiveFormComponent>;
+
+        // TODO it('Should correctly implement interface methods', () => {
+
         describe('Should properly initialize when used as a reactive form control', () => {
             beforeAll(async(() => {
                 TestBed.configureTestingModule({
                     declarations: [
-                        DateRangetReactiveFormComponent
+                        DateRangeReactiveFormComponent
                     ],
                     imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule,
                         FormsModule, FormGroup, FormBuilder, Validators, FormControl ]
                 })
                 .compileComponents();
                 beforeEach(fakeAsync(() => {
-                    fix = TestBed.createComponent(DateRangetReactiveFormComponent);
+                    fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                     dateRangeSingle = fix.componentInstance.singleInputDateRange;
                     dateRangeTwoInputs = fix.componentInstance.twoInputsDateRange;
                     fix.detectChanges();
@@ -535,10 +538,9 @@ describe('IgxRangeDatePicker', () => {
             }));
             it('Without initial validators - add validators later', fakeAsync(() => {
                 // // test two inputs date range
-                // fix.detectChanges();
+
                 // const formGroup: FormGroup = fix.componentInstance.twoInputForm;
                 // fix.componentInstance.removeValidators(formGroup);
-                // const rangeFormReferenceSI = fix.componentInstance.twoInputForm.controls.dateRange[0];
                 // const rangeFormReferenceTI = fix.componentInstance.twoInputForm.controls.dateRange[1];
                 // expect(rangeFormReferenceTI).toBeDefined();
                 // expect(dateRangeTwoInputs).toBeDefined();
@@ -710,7 +712,7 @@ export class DateRangeSingleTemplateFormComponent {
     </form>
         `
 })
-export class DateRangetReactiveFormComponent {
+export class DateRangeReactiveFormComponent {
     @ViewChild('singleInputDateRange')
     public singleInputDateRange: IgxDateRangeComponent;
 
@@ -761,7 +763,7 @@ export class DateRangetReactiveFormComponent {
         DateRangeDefaultCustomLabelComponent,
         DateRangeTwoInputsTestComponent,
         DateRangeTestComponent,
-        DateRangetReactiveFormComponent,
+        DateRangeReactiveFormComponent,
         DateRangeSingleTemplateFormComponent
     ],
     imports: [
@@ -778,7 +780,7 @@ export class DateRangetReactiveFormComponent {
         DateRangeDefaultCustomLabelComponent,
         DateRangeTwoInputsTestComponent,
         DateRangeTestComponent,
-        DateRangetReactiveFormComponent,
+        DateRangeReactiveFormComponent,
         DateRangeSingleTemplateFormComponent
     ]
 })
