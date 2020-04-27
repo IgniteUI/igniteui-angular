@@ -24,7 +24,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from './grid-filtering.service';
-import { KEYS, isEdge, isIE } from '../../../core/utils';
+import { KEYS, isEdge, isIE } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 
 /**
