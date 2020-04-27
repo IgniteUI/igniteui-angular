@@ -12,7 +12,9 @@ import {
     Output,
     QueryList,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    Optional,
+    Inject
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -37,6 +39,7 @@ import { IgxLabelDirective } from '../input-group';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../core/density';
 
 
 // TODO: use default input format from date-time-editor.common?
@@ -74,7 +77,7 @@ const DEFAULT_INPUT_FORMAT = 'dd/MM/yyyy';
     templateUrl: './igx-date-range.component.html',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangeComponent), multi: true }]
 })
-export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class IgxDateRangeComponent extends DisplayDensityBase implements IToggleView, AfterViewInit, OnDestroy, ControlValueAccessor {
     /**
      * `IgxDateRangeComponent` can be in `dialog` or `dropdown` mode.
      * @remarks
@@ -339,7 +342,9 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
         modal: false
     };
 
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
         this._onChangeCallback = (_: any) => { };
     }
 
@@ -465,6 +470,11 @@ export class IgxDateRangeComponent implements IToggleView, AfterViewInit, OnDest
 
     /** @hidden @internal */
     public registerOnTouched(fn: any): void { }
+
+    /** @hidden @internal */
+    get separatorClass(): string {
+        return this.getComponentDensityClass('igx-date-range__label');
+    }
 
     /** @hidden */
     public ngAfterViewInit(): void {
