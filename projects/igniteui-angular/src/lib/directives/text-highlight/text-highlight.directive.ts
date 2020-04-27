@@ -190,14 +190,20 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      *
      * @example
      * ```typescript
-     * // Set a property, which would disable the highlight for a given element on a cetain condition
-     * if (dontActivateCondition) {
-     *     cell.highlight.metadata.set('highlightElement', false);
-     * }
+     *  // Set a property, which would disable the highlight for a given element on a cetain condition
      *
-     * const metadataMap = new Map<string, any>();
-     * metadataMap.set('highlightElement') = true;
-     * IgxTextHighlightDirective.setActiveHighlight(id, {index: index, metadata: metadataMap});
+     *  const metadata = new Map<string, any>();
+     *  metadata.set('highlightElement') = false;
+     *
+     *  const metadataMap = new Map<string, any>();
+     *  metadataMap.set('highlightElement') = true;
+     *  IgxTextHighlightDirective.setActiveHighlight(id, {index: index, metadata: metadataMap});
+     * ```
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [metadata]="metadata">
+     * </div>
      * ```
      */
     @Input()
@@ -357,15 +363,25 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
-        const row = group.rowIndex ? group.rowIndex : group.row;
+        const row = group.rowIndex === undefined ? group.row : group.rowIndex;
 
         let metadataMatch = true;
 
         if (group.metadata) {
-            const metadata = group.metadata;
-            group.metadata.forEach((value, key) => {
-                metadataMatch = this.metadata.get(key) === value;
-            });
+            if (group.metadata.size !== this.metadata.size) {
+                metadataMatch = false;
+            } else {
+                for (const [key, value] of group.metadata) {
+                    if (this.metadata.has(key)) {
+                        metadataMatch = this.metadata.get(key) === value;
+                    } else {
+                        metadataMatch = false;
+                    }
+                    if (!metadataMatch) {
+                        break;
+                    }
+                }
+            }
         }
 
         if (column === this.column && row === this.row && group.page === this.page && metadataMatch) {

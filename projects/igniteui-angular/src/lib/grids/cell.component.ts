@@ -926,7 +926,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public get searchMetadata() {
         const meta = new Map<string, any>();
-        meta.set('dataIndex', (this.row as any).viewIndex);
+        meta.set('dataIndex', this.row.viewIndex);
         return meta;
     }
 }
