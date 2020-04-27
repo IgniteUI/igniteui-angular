@@ -64,10 +64,11 @@ All notable changes for each version of this project will be documented in this 
     - `deselectColumns` API method is added for the `IgxGrid`. It allows to deselect columns by passing array of IgxColumnComponent or column fields.
     - `deselectAllColumns` API method is added for the `IgxGrid`. It allows to deselect all columns.
     - `getSelectedColumnsData` API method is added for the `IgxGrid`. It allows to get the selected columns data.
-    KeyBoard navigation support in the IgxGrid headers. Now is possible to navigate with the arrows keys through grid headers. Also we provide a number of key combinations that trigger a different column functionality like filtering, sorting, grouping and etc. You can read more information in the [Grid Specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
+    Added keyBoard navigation support in the IgxGrid headers. Now is possible to navigate with the arrows keys through grid headers. Also we provide a number of key combinations that trigger a different column functionality like filtering, sorting, grouping and etc. You can read more information in the [Grid Specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
     - **Behavioral Change**
         - *you can not use* `tab` key to navigate between the cell in the Igx Grid. The navigation is performed only with arrow keys.
         - when you are in edit mode with `tab` key you can navigate to the next editable cell.
+        - `page up` and `page down` keys will perform action only if the focused element is the tbody of the grid.
         - The grid introduces the following basic `tab stops`:
             - Toolbar / Group by Area if existing;
             - The first cell in the header row;
