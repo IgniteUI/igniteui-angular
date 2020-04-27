@@ -881,7 +881,7 @@ describe('Row Pinning #grid', () => {
             grid.navigateTo(10);
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-            
+
             const firstRowCell = grid.getRowByIndex(0).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
             await wait(DEBOUNCE_TIME);
@@ -908,9 +908,9 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-            
+
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
-            
+
             const lastRowCell = grid.getRowByIndex(27).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
             await wait(DEBOUNCE_TIME);
@@ -962,7 +962,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
-            
+
             const lastRowCell = grid.getRowByIndex(27).cells.toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
             await wait(DEBOUNCE_TIME);
