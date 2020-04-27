@@ -1324,8 +1324,6 @@
         // border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
-            @extend %grid-cell--active;
-
             &:hover {
                 color: --var($theme, 'cell-selected-text-color');
             }
