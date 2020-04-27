@@ -93,7 +93,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @Input('class')
-    klass: string;
+    hostClass: string;
 
     /**
      * Host `attr.class` binding.
@@ -101,10 +101,13 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @HostBinding('attr.class')
-    get hostClass(): string {
+    get hostClasses(): string {
         const classes = [this.getComponentDensityClass('igx-action-strip')];
         // The custom classes should be at the end.
-        classes.push(this.klass);
+        if (!classes.includes('igx-action-strip')) {
+            classes.push('igx-action-strip');
+        }
+        classes.push(this.hostClass);
         return classes.join(' ');
     }
 
