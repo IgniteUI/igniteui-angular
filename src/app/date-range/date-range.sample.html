@@ -6,20 +6,20 @@
         <div class="sample-row">
             <div class="range-holder">
                 <div class="range-sample-column">
-                    <igx-date-range [mode]="'dialog'">
+                    <igx-date-range-picker [mode]="'dialog'">
                         <igx-picker-toggle igxSuffix>
                             <igx-icon>calendar_view_day</igx-icon>
                         </igx-picker-toggle>
-                    </igx-date-range>
-                    <igx-date-range [mode]="'dropdown'"></igx-date-range>
+                    </igx-date-range-picker>
+                    <igx-date-range-picker [mode]="'dropdown'"></igx-date-range-picker>
 
-                    <igx-date-range #dateRange [mode]="'dropdown'" [displayFormat]="'shortDate'" [(ngModel)]="range">
+                    <igx-date-range-picker #dateRange [mode]="'dropdown'" [displayFormat]="'shortDate'" [(ngModel)]="range">
                         <igx-picker-toggle igxSuffix>
                             <igx-icon>calendar_view_day</igx-icon>
                         </igx-picker-toggle>
-                    </igx-date-range>
+                    </igx-date-range-picker>
 
-                    <igx-date-range [mode]="'dropdown'" [(ngModel)]="range">
+                    <igx-date-range-picker [mode]="'dropdown'" [(ngModel)]="range">
                         <igx-date-start>
                             <input igxInput igxDateTimeEditor type="text" required>
                             <igx-picker-toggle igxPrefix>
@@ -29,9 +29,9 @@
                         <igx-date-end>
                             <input igxInput igxDateTimeEditor type="text" required>
                         </igx-date-end>
-                    </igx-date-range>
+                    </igx-date-range-picker>
 
-                    <igx-date-range #formControl="ngModel" [(ngModel)]="range" mode="'dropdown'">
+                    <igx-date-range-picker #formControl="ngModel" [(ngModel)]="range" mode="'dropdown'">
                         <igx-date-start>
                             <input igxInput igxDateTimeEditor [(ngModel)]="range.start" type="text" required>
                         </igx-date-start>
@@ -39,7 +39,7 @@
                         <igx-date-end>
                             <input igxInput igxDateTimeEditor [(ngModel)]="range.end" type="text" required>
                         </igx-date-end>
-                    </igx-date-range>
+                    </igx-date-range-picker>
                 </div>
                 <ul class="sample-ul">
                     <li>Valid: {{ formControl.valid }}</li>
@@ -58,14 +58,14 @@
             <h4 class="title">Book your room</h4>
 
             <div class="date-range-wrapper">
-                <igx-date-range #defDateRange [mode]="'dropdown'" formControlName="dateRange">
+                <igx-date-range-picker #defDateRange [mode]="'dropdown'" formControlName="dateRange">
                     <igx-date-start>
                         <input igxInput igxDateTimeEditor type="text">
                     </igx-date-start>
                     <igx-date-end>
                         <input igxInput igxDateTimeEditor type="text">
                     </igx-date-end>
-                </igx-date-range>
+                </igx-date-range-picker>
             </div>
 
             <div class="button-wrap">
@@ -78,12 +78,12 @@
     <form class="book-room-form">
         <div class="container">
             <div class="date-range-wrapper">
-                <igx-date-range #singleInputDateRange (rangeSelected)="onRangeSelected($event)" [(ngModel)]="content"
+                <igx-date-range-picker #singleInputDateRange (rangeSelected)="onRangeSelected($event)" [(ngModel)]="content"
                     [ngModelOptions]="{ standalone: true }" [mode]="'dropdown'">
                     <igx-date-single>
                         <input igxInput type="text">
                     </igx-date-single>
-                </igx-date-range>
+                </igx-date-range-picker>
             </div>
             <div class="button-wrap">
                 <button igxButton (click)="selectDateRangeSingleInput()"> Select Range </button>

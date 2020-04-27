@@ -1,4 +1,4 @@
-import { RangeDatePickerResourceStringsEN } from './range-date-picker-resources';
+import { DateRangePickerResourceStringsEN } from './range-date-picker-resources';
 import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
 import { PaginatorResourceStringsEN } from './paginator-resources';
@@ -14,7 +14,7 @@ export const CurrentResourceStrings = {
     GridResStrings: cloneValue(GridResourceStringsEN),
     PaginatorResStrings: cloneValue(PaginatorResourceStringsEN),
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
-    RangeDatePickerResStrings: cloneValue(RangeDatePickerResourceStringsEN),
+    RangeDatePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
 };
 

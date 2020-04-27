@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxDateRangeComponent } from './igx-date-range.component';
+import { IgxDateRangePickerComponent } from './igx-date-range.component';
 import { IgxCalendarModule } from '../calendar/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { IgxInputGroupModule } from '../input-group/index';
 import { IgxIconModule } from '../icon/index';
 import {
     IgxDateStartComponent, IgxDateEndComponent,
-    DateRangeFormatPipe,
+    DateRangePickerFormatPipe,
     IgxDateSingleComponent,
     IgxPickerToggleComponent,
     IgxDateSeparatorDirective
@@ -20,11 +20,11 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
  */
 @NgModule({
     declarations: [
-        IgxDateRangeComponent,
+        IgxDateRangePickerComponent,
         IgxDateStartComponent,
         IgxDateEndComponent,
         IgxDateSingleComponent,
-        DateRangeFormatPipe,
+        DateRangePickerFormatPipe,
         IgxPickerToggleComponent,
         IgxDateSeparatorDirective
     ],
@@ -38,11 +38,11 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
         IgxDateTimeEditorModule
     ],
     exports: [
-        IgxDateRangeComponent,
+        IgxDateRangePickerComponent,
         IgxDateStartComponent,
         IgxDateEndComponent,
         IgxPickerToggleComponent,
         IgxDateSeparatorDirective
     ]
 })
-export class IgxDateRangeModule { }
+export class IgxDateRangePickerModule { }

@@ -12,7 +12,7 @@ export interface DateRange {
 
 /** @hidden @internal */
 @Pipe({ name: 'dateRange' })
-export class DateRangeFormatPipe implements PipeTransform {
+export class DateRangePickerFormatPipe implements PipeTransform {
     public transform(values: DateRange, inputFormat?: string, locale?: string): string {
         if (!values) {
             return '';
@@ -68,7 +68,22 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
 }
 
 /**
- * TODO: docs
+ * Templates the default icon in the `IgxDateRangePicker`.
+ *
+ * @igxModule IgxDateRangePickerModule
+ *
+ * @igxKeyWords date range icon, date picker icon
+ *
+ * @igxGroup scheduling
+ *
+ * @example
+ * html```
+ * <igx-date-range-picker>
+ *   <igx-picker-toggle igxSuffix>
+ *      <igx-icon>calendar_view_day</igx-icon>
+ *   </igx-picker-toggle>
+ * </igx-date-range-picker>
+ * ```
  */
 @Component({
     template: `<ng-content></ng-content>`,
@@ -87,25 +102,25 @@ export class IgxPickerToggleComponent {
 /**
  * Defines the start input for a date range picker
  *
- * @igxModule IgxDateRangeModule
+ * @igxModule IgxDateRangePickerModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
  * @igxGroup scheduling
  *
  * @remarks
- * When templating, start input has to be template seperately
+ * When templating, start input has to be templated separately
  *
  * @example
- * ```html
- * <igx-date-range mode="dropdown">
+ * html```
+ * <igx-date-range-picker mode="dropdown">
  *      <igx-date-start>
- *          <input igxInput igxDateTimeEditor type="text" required>
+ *          <input igxInput igxDateTimeEditor type="text">
  *      </igx-date-start>
  *      ...
- * </igx-date-range>
+ * </igx-date-range-picker>
  * ```
  */
 @Component({
@@ -154,7 +169,7 @@ export class IgxDateEndComponent extends IgxDateRangeBaseComponent { }
 })
 export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {
     public updateInput(value: any, inputFormat?: string, locale?: string) {
-        value = new DateRangeFormatPipe().transform(value, inputFormat, locale);
+        value = new DateRangePickerFormatPipe().transform(value, inputFormat, locale);
         if (this.ngControl) {
             this.ngControl.control.setValue(value);
         } else {

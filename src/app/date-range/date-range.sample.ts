@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { IgxDateRangeComponent, DateRange } from 'igniteui-angular';
+import { IgxDateRangePickerComponent, DateRange } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',
@@ -9,10 +9,10 @@ import { IgxDateRangeComponent, DateRange } from 'igniteui-angular';
 })
 export class DateRangeSampleComponent implements OnInit {
     @ViewChild('defDateRange')
-    public defDateRange: IgxDateRangeComponent;
+    public defDateRange: IgxDateRangePickerComponent;
 
     @ViewChild('singleInputDateRange')
-    public singleInputDateRange: IgxDateRangeComponent;
+    public singleInputDateRange: IgxDateRangePickerComponent;
 
     public content: any;
 

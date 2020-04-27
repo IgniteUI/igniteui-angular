@@ -1,7 +1,7 @@
-export interface IRangeDatePickerResourceStrings {
-    igx_range_date_picker_date_separator?: string;
+export interface IDateRangePickerResourceStrings {
+    igx_date_range_picker_to?: string;
 }
 
-export const RangeDatePickerResourceStringsEN: IRangeDatePickerResourceStrings = {
-    igx_range_date_picker_date_separator: 'to'
+export const DateRangePickerResourceStringsEN: IDateRangePickerResourceStrings = {
+    igx_date_range_picker_to: 'to'
 };

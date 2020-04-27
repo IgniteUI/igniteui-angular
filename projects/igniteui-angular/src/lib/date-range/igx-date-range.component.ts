@@ -14,7 +14,10 @@ import {
     ViewChild,
     TemplateRef,
     Optional,
-    Inject
+    Inject,
+    OnChanges,
+    LOCALE_ID,
+    SimpleChanges
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -40,14 +43,13 @@ import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { IgxDateTimeEditorEventArgs } from '../directives/date-time-editor';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../core/density';
+import { DatePickerUtil } from '../date-picker/date-picker.utils';
 
-
-// TODO: use default input format from date-time-editor.common?
-const DEFAULT_INPUT_FORMAT = 'dd/MM/yyyy';
+const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
 
 /**
- * Range Date Picker provides the ability to select a range of dates from the calendar UI.
- * It displays the range selection in a single or two input fields.
+ * Provides the ability to select a range of dates from a calendar UI or editable inputs.
+ *
  * @igxModule IgxDateRangeModule
  *
  * @igxTheme igx-input-group-theme, igx-calendar-theme
@@ -57,35 +59,30 @@ const DEFAULT_INPUT_FORMAT = 'dd/MM/yyyy';
  * @igxGroup scheduling
  *
  * @remarks
- * Range Date Picker provides the ability to select a range of dates from the calendar UI.
  * It displays the range selection in a single or two input fields.
+ * The default template displays a single *readonly* input field while projecting `igx-date-start` and `igx-date-end`
+ * displays two *editable* input fields.
  *
- * @example:
+ * @example
  * ```html
- * <igx-date-range>
- *  <input igxDateRangeStart>
- *  <input igxDateRangeEnd>
- * </igx-date-range>
- * ```
- * @example:
- * ```html
- * <igx-date-range mode="dropdown"></igx-date-range>
+ * <igx-date-range-picker [mode]="dropdown"></igx-date-range-picker>
  * ```
  */
 @Component({
-    selector: 'igx-date-range',
+    selector: 'igx-date-range-picker',
     templateUrl: './igx-date-range.component.html',
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangeComponent), multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangePickerComponent), multi: true }]
 })
-export class IgxDateRangeComponent extends DisplayDensityBase implements IToggleView, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class IgxDateRangePickerComponent extends DisplayDensityBase
+    implements IToggleView, OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
     /**
-     * `IgxDateRangeComponent` can be in `dialog` or `dropdown` mode.
+     * Display calendar in either `dialog` or `dropdown` mode.
      * @remarks
      * Default mode is `dialog`
      *
      * @example
      * ```html
-     * <igx-date-range mode="dropdown"></igx-date-range
+     * <igx-date-range-picker [mode]="dropdown"></igx-date-range-picker
      * ```
      */
     @Input()
@@ -99,7 +96,7 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range [monthsViewNumber]="3"></igx-date-range>
+     * <igx-date-range-picker [monthsViewNumber]="3"></igx-date-range-picker>
      * ```
      */
     @Input()
@@ -113,7 +110,7 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range [hideOutsideDays]="true"></igx-date-range>
+     * <igx-date-range-picker [hideOutsideDays]="true"></igx-date-range-picker>
      * ```
      */
     @Input()
@@ -127,7 +124,7 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range [weekStart]="1"></igx-date-range>
+     * <igx-date-range-picker [weekStart]="1"></igx-date-range-picker>
      * ```
      */
     @Input()
@@ -141,17 +138,14 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range locale="jp"></igx-date-range>
+     * <igx-date-range-picker locale="jp"></igx-date-range-picker>
      * ```
      */
     @Input()
-    public locale = 'en';
+    public locale: string;
 
     /**
      * A custom formatter function, applied on the selected or passed in date.
-     *
-     * @remarks
-     * Default is noop()
      *
      * @example
      * ```typescript
@@ -163,14 +157,14 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      * }
      * ```
      * ```html
-     * <igx-date-range [formatter]="formatter"></igx-date-range>
+     * <igx-date-range-picker [formatter]="formatter"></igx-date-range-picker>
      * ```
      */
     @Input()
     public formatter: (val: DateRange) => string;
 
     /**
-     * The default text of the `done` button.
+     * The default text of the calendar dialog `done` button.
      *
      * @remarks
      * Default value is `Done`.
@@ -178,21 +172,18 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range [doneButtonText]="'完了'"></igx-date-range>
+     * <igx-date-range-picker [doneButtonText]="'完了'"></igx-date-range-picker>
      * ```
      */
     @Input()
-    public doneButtonText = 'Done'; // optional
+    public doneButtonText = 'Done';
 
     /**
-     * The custom overlay settings that should be used by the `IgxDateRangeComponent`.
-     *
-     * @remarks
-     * Default is `null`.
+     * Custom overlay settings that should be used to display the calendar.
      *
      * @example
      * ```html
-     * <igx-date-range [overlaySettings]="customOverlaySettings"></igx-date-range>
+     * <igx-date-range-picker [overlaySettings]="customOverlaySettings"></igx-date-range-picker>
      * ```
      */
     @Input()
@@ -206,7 +197,7 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range [displayFormat]="'EE/M/yy'"></igx-date-range>
+     * <igx-date-range-picker [displayFormat]="'EE/M/yy'"></igx-date-range-picker>
      * ```
      *
      */
@@ -214,70 +205,84 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
     public displayFormat: string;
 
     /**
-     * The input format of the default date-range input.
+     * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `"'dd/MM/yyyy'"`
+     * Default is `"'MM/dd/yyyy'"`
      *
      * @example
      * ```html
-     * <igx-date-range inputFormat="MM/dd/yy"></igx-date-range>
+     * <igx-date-range-picker [inputFormat]="dd/MM/yy"></igx-date-range-picker>
      * ```
      */
     @Input()
-    public inputFormat: string;
+    public get inputFormat(): string {
+        return this._inputFormat;
+    }
+
+    public set inputFormat(value: string) {
+        this._inputFormat = value;
+    }
+
 
     /**
-     * Emitted when a range is selected in the `IgxDateRangeComponent`.
-     *
-     * @remarks
-     * Emitted args are of type `DateRange`
+     * Emitted when a range is selected.
      *
      * @example
      * ```html
-     * <igx-date-range (onSelected)="handleSelected($event)"></igx-date-range>
+     * <igx-date-range-picker (rangeSelected)="handleSelected($event)"></igx-date-range-picker>
      * ```
      */
     @Output()
     public rangeSelected = new EventEmitter<DateRange>();
 
+    /**
+     * Emitted when the calendar starts opening, cancelable.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker (onOpening)="handleOpening($event)"></igx-date-range-picker>
+     * ```
+     */
     @Output()
     public onOpening = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted when the `IgxDateRangeComponent` is opened.
      *
-     * @remarks
-     * Emitted args are of type `IBaseEventArgs`
-     *
      * @example
      * ```html
-     * <igx-date-range (onOpened)="handleOpened($event)"></igx-date-range>
+     * <igx-date-range-picker (onOpened)="handleOpened($event)"></igx-date-range-picker>
      * ```
      */
     @Output()
     public onOpened = new EventEmitter<IBaseEventArgs>();
 
+    /**
+     * Emitted when the calendar starts closing, cancelable.
+     *
+     * @example
+     * ```html
+     * <igx-date-range-picker (onClosing)="handleClosing($event)"></igx-date-range-picker>
+     * ```
+     */
     @Output()
     public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted when the `IgxDateRangeComponent` is closed.
      *
-     * @remarks
-     * Emitted args are of type `IBaseEventArgs`
-     *
      * @example
      * ```html
-     * <igx-date-range (onClosed)="handleClosed($event)"></igx-date-range>
+     * <igx-date-range-picker (onClosed)="handleClosed($event)"></igx-date-range-picker>
      * ```
      */
     @Output()
     public onClosed = new EventEmitter<IBaseEventArgs>();
 
     /** @hidden */
-    @HostBinding('class.igx-date-range')
-    public cssClass = 'igx-date-range';
+    @HostBinding('class.igx-date-range-picker')
+    public cssClass = 'igx-date-range-picker';
 
     /** @hidden */
     @ViewChild(IgxDateSingleComponent)
@@ -327,10 +332,19 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
         return this.projectedInputs.some(i => i instanceof IgxDateStartComponent || i instanceof IgxDateEndComponent);
     }
 
+    private get dropdownOverlaySettings(): OverlaySettings {
+        return Object.assign({}, this._dropDownOverlaySettings, this.overlaySettings);
+    }
+
+    private get dialogOverlaySettings(): OverlaySettings {
+        return Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
+    }
+
     private _value: DateRange;
+    private _inputFormat: string;
     private $destroy = new Subject();
     private $toggleClickNotifier = new Subject();
-    private _onChangeCallback: (_: any) => void;
+    private _onChangeCallback: (...args: any[]) => void;
     private _positionSettings: PositionSettings;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -343,9 +357,11 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
     };
 
     constructor(public element: ElementRef,
+        @Inject(LOCALE_ID) private _locale: any,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
-        this._onChangeCallback = (_: any) => { };
+        this._onChangeCallback = (...args: any[]) => { };
+        this.locale = this.locale || this._locale;
     }
 
     /**
@@ -353,12 +369,12 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      *
      * @example
      * ```html
-     * <igx-date-range #dateRange mode="dialog"></igx-date-range>
+     * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
      * <button (click)="dateRange.open()">Open Dialog</button
      * ```
      */
-    public open(): void {
+    public open(overlaySettings?: OverlaySettings): void {
         const range: Date[] = [];
         if (this.value) {
             if (this.value.start) {
@@ -375,11 +391,9 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
         }
 
         this.updateCalendar();
-        if (this.mode === InteractionMode.Dialog) {
-            this.openToggle(this._dialogOverlaySettings);
-        }
-        if (this.mode === InteractionMode.DropDown) {
-            this.openToggle(this._dropDownOverlaySettings);
+        const settings = this.mode === InteractionMode.Dialog ? this.dialogOverlaySettings : this.dropdownOverlaySettings;
+        if (this.toggleDirective.collapsed) {
+            this.toggleDirective.open(Object.assign(settings, overlaySettings));
         }
     }
 
@@ -387,8 +401,8 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      * Closes the date range picker's dropdown or dialog.
      *
      * @example
-     * ```html
-     * <igx-date-range #dateRange [mode]="'dialog'"></igx-date-range>
+     * html```
+     * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
      * <button (click)="dateRange.close()">Close Dialog</button>
      * ```
@@ -403,8 +417,8 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
      * Toggles the date range picker's dropdown or dialog
      *
      * @example
-     * ```html
-     * <igx-date-range #dateRange [mode]="'dialog'"></igx-date-range>
+     * html```
+     * <igx-date-range-picker #dateRange></igx-date-range-picker>
      *
      * <button (click)="dateRange.toggle()">Toggle Dialog</button>
      * ```
@@ -444,6 +458,7 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
         return this._value;
     }
 
+    @Input()
     public set value(value: DateRange) {
         this._value = value;
         this._onChangeCallback(value);
@@ -499,13 +514,11 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
                 this.applyFocusOnClose();
                 break;
         }
-        this.subscribeToToggleEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
 
         const subsToClicked = () => {
             this.$toggleClickNotifier.next();
-
             this.toggleComponents.forEach(toggle => {
                 toggle.clicked.pipe(takeUntil(this.$toggleClickNotifier)).subscribe(() => this.open());
             });
@@ -515,7 +528,14 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
         subsToClicked();
     }
 
-    /** @hidden */
+    /** @hidden @internal */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes['locale']) {
+            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DEFAULT_INPUT_FORMAT;
+        }
+    }
+
+    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.$destroy.next();
         this.$destroy.complete();
@@ -529,13 +549,28 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
     }
 
     /** @hidden @internal */
+    public handleOpened(): void {
+        requestAnimationFrame(() => {
+            this.calendar.daysView.focusActiveDate();
+            this.onOpened.emit({ owner: this });
+        });
+    }
+
+    /** @hidden @internal */
     public handleClosing(event: CancelableEventArgs): void {
         this.onClosing.emit(event);
     }
 
     /** @hidden @internal */
+    public handleClosed(): void {
+        if (this.value && !this.value.end) {
+            this.value = { start: this.value.start, end: this.value.start };
+            this.onClosed.emit({ owner: this });
+        }
+    }
+
+    /** @hidden @internal */
     public onKeyDown(event: KeyboardEvent): void {
-        // TODO: make sure IgxDateTimeEditorDirective doesn't spin if ALT is pressed
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
@@ -589,12 +624,6 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
         };
     }
 
-    private openToggle(overlaySettings: OverlaySettings): void {
-        if (this.toggleDirective.collapsed) {
-            this.toggleDirective.open(overlaySettings);
-        }
-    }
-
     private attachOnKeydown(): void {
         fromEvent(this.element.nativeElement, 'keydown')
             .pipe(takeUntil(this.$destroy))
@@ -636,21 +665,6 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
                     });
             }
         }
-    }
-
-    private subscribeToToggleEvents(): void {
-        this.toggleDirective.onOpened.pipe(takeUntil(this.$destroy)).subscribe(() => {
-            requestAnimationFrame(() => {
-                this.calendar.daysView.focusActiveDate();
-                this.onOpened.emit({ owner: this });
-            });
-        });
-        this.toggleDirective.onClosed.pipe(takeUntil(this.$destroy)).subscribe(() => {
-            if (this.value && !this.value.end) {
-                this.value = { start: this.value.start, end: this.value.start };
-                this.onClosed.emit({ owner: this });
-            }
-        });
     }
 
     private configPositionStrategy(): void {

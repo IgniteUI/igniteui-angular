@@ -1,6 +1,7 @@
-<div #toggle="toggle" igxToggle [style.width]="'600px'" (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)"
+<div #toggle="toggle" igxToggle [style.width]="'600px'"
+    (onOpening)="handleOpening($event)" (onOpened)="handleOpened()"
+    (onClosing)="handleClosing($event)" (onClosed)="handleClosed()"
     class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'">
-    <!-- TODO: create dynamic with overlay service api, move to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
         (onSelection)="handleSelection($event)"></igx-calendar>
@@ -17,22 +18,6 @@
     <div (click)="open()" class="content-wrap">
         <ng-content select="igx-date-single"></ng-content>
     </div>
-</ng-template>
-
-<ng-template #suffixTemplate>
-    <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
-</ng-template>
-
-<ng-template #prefixTemplate>
-    <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
-</ng-template>
-
-<ng-template #hintTemplate>
-    <ng-content select="igx-hint,[igxHint]"></ng-content>
-</ng-template>
-
-<ng-template #labelTemplate>
-    <ng-content select="[igxLabel]"></ng-content>
 </ng-template>
 
 <ng-template #defPrefix>
@@ -77,16 +62,16 @@
         </igx-prefix>
 
         <ng-container ngProjectAs="[igxLabel]">
-            <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
+            <ng-content select="[igxLabel]"></ng-content>
         </ng-container>
         <ng-container ngProjectAs="igx-prefix">
-            <ng-container *ngTemplateOutlet="prefixTemplate"></ng-container>
+            <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
         </ng-container>
         <ng-container ngProjectAs="igx-suffix">
-            <ng-container *ngTemplateOutlet="suffixTemplate"></ng-container>
+            <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
         </ng-container>
         <ng-container ngProjectAs="igx-hint">
-            <ng-container *ngTemplateOutlet="hintTemplate"></ng-container>
+            <ng-content select="igx-hint,[igxHint]"></ng-content>
         </ng-container>
     </igx-input-group>
 </ng-template>

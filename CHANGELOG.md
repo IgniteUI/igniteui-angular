@@ -87,6 +87,49 @@ All notable changes for each version of this project will be documented in this 
     - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
     - New `dragDirection` input that can specify only one direction of dragging or both.
 
+- `IgxDateRangePicker` component added.
+    - Allows the selection of a range of dates from a calendar UI or input fields. Supports `dialog` and `dropdown` modes.
+    - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
+    - The default template consists of a single *readonly* field:
+    ```html
+    <igx-date-range [(ngModel)]="range"></igx-date-range>
+    ```
+    - Projection of input fields using `igxDateTimeEditor`
+        ```html
+        <igx-date-range>
+            <igx-date-start>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.start">
+            </igx-date-start>
+            <igx-date-end>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.end">
+            </igx-date-end>
+        </igx-date-range>
+        ```
+    - Added `IgxPickerToggleComponent` which allows templating of the default icon in the input through `igxPrefix` and `igxSuffix`.
+        - default template:
+        ```html
+        <igx-date-range>
+            <igx-picker-toggle igxSuffix>
+                <igx-icon>calendar_view_day</igx-icon>
+            </igx-picker-toggle>
+        </igx-date-range>
+        ```
+        - with projections:
+        ```html
+        <igx-date-range>
+            <igx-date-start>
+                ...
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
+                ...
+            </igx-date-start>
+            <igx-date-end>
+                ...
+            </igx-date-end>
+        </igx-date-range>
+        ```
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 

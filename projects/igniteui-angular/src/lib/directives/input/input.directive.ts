@@ -73,7 +73,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @DeprecateProperty('"value" is deprecated, set native value instead.')
+    @Input()
     set value(value: any) {
         this.nativeElement.value = value;
         this.checkValidity();
