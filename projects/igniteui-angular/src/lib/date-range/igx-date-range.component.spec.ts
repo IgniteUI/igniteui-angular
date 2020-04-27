@@ -428,7 +428,7 @@ describe('IgxRangeDatePicker', () => {
                 fixture.detectChanges();
                 expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
                 // alternatively expect(dateRangeSingle.collapsed).toBeTruthy(); // collapsed needs implementation
-                expect(singleInputElement).toBe(document.activeElement);
+                expect(singleInputElement.nativeElement).toBe(document.activeElement);
             }));
 
             xit('Should close the calendar with ESC', fakeAsync(() => {
@@ -449,7 +449,7 @@ describe('IgxRangeDatePicker', () => {
                 // alternatively expect(dateRangeSingle.collapsed).toBeTruthy();
 
                 // should focus input on close
-                expect(singleInputElement).toBe(document.activeElement);
+                expect(singleInputElement.nativeElement).toBe(document.activeElement);
             }));
     });
     describe('Keyboard Navigation Two Inputs', () => {
@@ -480,7 +480,7 @@ describe('IgxRangeDatePicker', () => {
             expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
             // alternatively expect(dateRangeTwoInputs.collapsed).toBeTruthy(); // collapsed needs implementation
 
-            expect(firstInputElement).toBe(document.activeElement);
+            expect(firstInputElement.nativeElement).toBe(document.activeElement);
         }));
 
         xit('Should close the calendar with ESC', fakeAsync(() => {
@@ -497,7 +497,7 @@ describe('IgxRangeDatePicker', () => {
             tick();
             fixture.detectChanges();
 
-            expect(firstInputElement).toBe(document.activeElement);
+            expect(firstInputElement.nativeElement).toBe(document.activeElement);
         }));
     });
     });
@@ -507,47 +507,51 @@ describe('IgxRangeDatePicker', () => {
         // Two Inputs Range Picker
         // let firstInputElement: DebugElement;
         // let secondInputElement: DebugElement;
-        let inputGroupWithRequiredAsteriskSI: DebugElement;
-        let inputGroupWithRequiredAsteriskTI: DebugElement;
-        let dateRangeSingle: IgxDateRangeComponent;
-        let dateRangeTwoInputs: IgxDateRangeComponent;
-        let fix: ComponentFixture<DateRangeReactiveFormComponent>;
+        // let thirdInputElement: DebugElement;
+        // let groupWithRequiredAsteriskSI: DebugElement;
+        // let groupWithRequiredAsteriskTIStart: DebugElement;
+        // let groupWithRequiredAsteriskTIEnd: DebugElement;
+        // let dateRangeSingle: IgxDateRangeComponent;
+        // let dateRangeTwoInputs: IgxDateRangeComponent;
+        // let fix: ComponentFixture<DateRangeReactiveFormComponent>;
 
-        // TODO it('Should correctly implement interface methods', () => {
+        // // TODO it('Should correctly implement interface methods', () => {
 
-        describe('Should properly initialize when used as a reactive form control', () => {
-            beforeAll(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeReactiveFormComponent
-                    ],
-                    imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule,
-                        FormsModule, FormGroup, FormBuilder, Validators, FormControl ]
-                })
-                .compileComponents();
-                beforeEach(fakeAsync(() => {
-                    fix = TestBed.createComponent(DateRangeReactiveFormComponent);
-                    dateRangeSingle = fix.componentInstance.singleInputDateRange;
-                    dateRangeTwoInputs = fix.componentInstance.twoInputsDateRange;
-                    fix.detectChanges();
-                    // firstInputElement = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[0];
-                    // secondInputElement = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[1];
-                    inputGroupWithRequiredAsteriskSI = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED))[0];
-                    inputGroupWithRequiredAsteriskTI = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED))[1];
-                }));
-            }));
-            it('Without initial validators - add validators later', fakeAsync(() => {
-                // // test two inputs date range
+        // describe('Should properly initialize when used as a reactive form control', () => {
+        //     beforeAll(async(() => {
+        //         TestBed.configureTestingModule({
+        //             declarations: [
+        //                 DateRangeReactiveFormComponent
+        //             ],
+        //             imports: [IgxDateRangeModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule,
+        //                 FormsModule, FormGroup, FormBuilder, Validators, FormControl ]
+        //         })
+        //         .compileComponents();
+        //         beforeEach(fakeAsync(() => {
+        //             fix = TestBed.createComponent(DateRangeReactiveFormComponent);
+        //             dateRangeSingle = fix.componentInstance.singleInputDateRange;
+        //             dateRangeTwoInputs = fix.componentInstance.twoInputsDateRange;
+        //             fix.detectChanges();
+        //             firstInputElement = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[0];
+        //             secondInputElement = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[1];
+        //             thirdInputElement = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT))[2];
+        //             groupWithRequiredAsteriskSI = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED))[0];
+        //             groupWithRequiredAsteriskTIStart = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED))[1];
+        //             groupWithRequiredAsteriskTIEnd = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED))[2];
+        //         }));
+        //     }));
+        //     it('Without initial validators - add validators later', fakeAsync(() => {
+        //         // // test two inputs date range
 
-                // const formGroup: FormGroup = fix.componentInstance.twoInputForm;
-                // fix.componentInstance.removeValidators(formGroup);
-                // const rangeFormReferenceTI = fix.componentInstance.twoInputForm.controls.dateRange[1];
-                // expect(rangeFormReferenceTI).toBeDefined();
-                // expect(dateRangeTwoInputs).toBeDefined();
-                // expect(dateRangeTwoInputs.value).toBeUndefined();
-                // // expect(dateRangeTwoInputs.value).toEqual('');
-                // expect(inputGroupWithRequiredAsteriskTI).toBeNull();
-                // expect(dateRangeTwoInputs.projectedInputs[0].valid).toEqual(IgxInputState.INITIAL);
+        //         const formGroup: FormGroup = fix.componentInstance.twoInputForm;
+        //         fix.componentInstance.removeValidators(formGroup);
+        //         const rangeFormReferenceTI = fix.componentInstance.twoInputForm.controls.dateRange[1];
+        //         expect(rangeFormReferenceTI).toBeDefined();
+        //         expect(dateRangeTwoInputs).toBeDefined();
+        //         expect(dateRangeTwoInputs.value).toBeUndefined();
+        //         // expect(dateRangeTwoInputs.value).toEqual('');
+        //         expect(groupWithRequiredAsteriskTIStart).toBeNull();
+        //         expect(dateRangeTwoInputs.projectedInputs[0].valid).toEqual(IgxInputState.INITIAL);
 
                 // dateRangeTwoInputs.onBlur();
 
@@ -568,17 +572,17 @@ describe('IgxRangeDatePicker', () => {
 
                 // fix.componentInstance.addValidators(formGroup);
                 // fix.detectChanges();
-                // inputGroupWithRequiredAsteriskTI = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
-                // expect(inputGroupWithRequiredAsteriskTI).toBeDefined();
+                // groupWithRequiredAsteriskTIStart = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+                // expect(groupWithRequiredAsteriskTIStart).toBeDefined();
 
 
                 // test single input date range
 
-            }));
-            it('With initial validators set', fakeAsync(() => {
+        //     }));
+        //     it('With initial validators set', fakeAsync(() => {
 
-            }));
-        });
+        //     }));
+        // });
     });
 
     describe('Templating', () => {
