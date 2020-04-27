@@ -93,7 +93,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * @internal
      */
     @Input('class')
-    klass: string
+    klass: string;
 
     /**
      * Host `attr.class` binding.
