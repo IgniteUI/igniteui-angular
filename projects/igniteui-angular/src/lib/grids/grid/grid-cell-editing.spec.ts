@@ -388,8 +388,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             await wait(500);
             fixture.detectChanges();
 
-            const testCells = grid.getColumnByName('firstName').cells;
-            const cell = testCells[testCells.length - 1];
+            let testCells = grid.getColumnByName('firstName').cells;
+            let cell = testCells[testCells.length - 1];
             cellElem = cell.nativeElement;
 
             cellElem.dispatchEvent(new Event('focus'));
@@ -407,6 +407,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             await wait(DEBOUNCETIME);
 
             inputElem = document.activeElement as HTMLInputElement;
+            testCells = grid.getColumnByName('firstName').cells;
+            cell = testCells[testCells.length - 1];
+            cellElem = cell.nativeElement;
             expect(cell.editMode).toBeTruthy();
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             expect(verticalScroll.scrollTop).toBe(expectedScroll);

@@ -620,7 +620,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+        UIInteractions.triggerEventHandlerKeyDown('tab', baseHGridContent, false, true, false);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         const activeEl = document.activeElement;
