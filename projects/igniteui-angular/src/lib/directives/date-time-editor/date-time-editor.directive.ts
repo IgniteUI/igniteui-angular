@@ -329,11 +329,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public onBlur(event): void {
+  public onBlur(value: string): void {
     this._isFocused = false;
 
     if (this.inputValue === this.emptyMask) {
-      this.updateValue(null);
+      if (this.value) {
+        this.updateValue(null);
+      }
       this.inputValue = '';
       return;
     }
@@ -353,14 +355,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     this.updateMask();
-    this.onTouchCallback();
-    super.onBlur(event);
+    super.onBlur(value);
   }
 
   /** @hidden @internal */
   public updateMask(): void {
     if (!this.value || !this.isValidDate(this.value)) {
-      this.inputValue = this.emptyMask;
+      this.inputValue = this._isFocused ? this.emptyMask : '';
       return;
     }
     if (this._isFocused) {
