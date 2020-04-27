@@ -15,6 +15,7 @@
 @import '../components/column-hiding/column-hiding-theme';
 @import '../components/dialog/dialog-theme';
 @import '../components/drop-down/drop-down-theme';
+@import '../components/date-range/date-range-theme';
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/excel-filtering-theme';
 @import '../components/input/input-group-theme';
@@ -104,6 +105,7 @@
         @include igx-column-hiding-typography($type-scale);
         @include igx-dialog-typography($type-scale);
         @include igx-drop-down-typography($type-scale);
+        @include igx-date-range-typography($type-scale);
         @include igx-expansion-panel-typography($type-scale);
         @include _excel-filtering-typography($type-scale);
         @include igx-input-group-typography($type-scale);
