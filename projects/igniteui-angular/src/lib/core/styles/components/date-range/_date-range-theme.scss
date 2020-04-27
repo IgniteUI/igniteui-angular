@@ -44,6 +44,10 @@
             cursor: pointer;
         }
 
+        igx-input-group {
+            flex: 1;
+        }
+
         igx-date-start,
         igx-date-end {
             flex: 1 0 0%;
