@@ -87,6 +87,9 @@ All notable changes for each version of this project will be documented in this 
     - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
     - New `dragDirection` input that can specify only one direction of dragging or both.
 
+- `IgxHighlightDirective`
+    - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 
