@@ -371,16 +371,16 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
             if (group.metadata.size !== this.metadata.size) {
                 metadataMatch = false;
             } else {
-                for (const [key, value] of group.metadata) {
+                group.metadata.forEach((value, key) => {
+                    if (!metadataMatch) {
+                        return;
+                    }
                     if (this.metadata.has(key)) {
                         metadataMatch = this.metadata.get(key) === value;
                     } else {
                         metadataMatch = false;
                     }
-                    if (!metadataMatch) {
-                        break;
-                    }
-                }
+                });
             }
         }
 
