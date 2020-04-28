@@ -27,7 +27,7 @@
     $background-image: null,
     $link-background: null,
     $color: null,
-    $border-color: null
+    $border-color: null,
 ) {
     $name: 'igx-watermark';
     $watermark-schema: ();
@@ -41,7 +41,7 @@
     $theme: apply-palette($watermark-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
+            if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
     );
 
     @return extend($theme, (
@@ -97,6 +97,12 @@
         left: 0;
         z-index: 10001;
         pointer-events: none;
-        background: rgba(255, 0, 0, .07);
+        background-image: --var($theme, 'background-image');
+        // Target only IE 10,11.
+        @media all and (-ms-high-contrast:none)
+        {
+            background-image: none;
+        }
+        // END Target only IE 10,11.
     }
 }
