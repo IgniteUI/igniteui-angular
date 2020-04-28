@@ -100,7 +100,8 @@ export class IgxGridStateDirective {
         rowSelection: true,
         columnSelection: true,
         rowPinning: true,
-        expansion: true
+        expansion: true,
+        groupBy: true
     };
 
     private state: IGridState;
@@ -121,8 +122,8 @@ export class IgxGridStateDirective {
     }
 
     public set options(value: IGridStateOptions) {
-        if (this.grid instanceof IgxGridComponent) {
-            this._options.groupBy = value.groupBy ? value.groupBy : false;
+        if (!(this.grid instanceof IgxGridComponent)) {
+            this._options.groupBy = false;
         }
         Object.assign(this._options, value);
     }
