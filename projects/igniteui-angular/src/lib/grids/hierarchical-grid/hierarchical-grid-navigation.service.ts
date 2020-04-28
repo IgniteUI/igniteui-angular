@@ -318,7 +318,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         let top = currGrid.tbody.nativeElement.getBoundingClientRect().top;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
-            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top);
+            const pinnedRowsHeight = currGrid.hasPinnedRecords && currGrid.isRowPinningToTop ? currGrid.pinnedRowHeight : 0;
+            top = Math.max(top, currGrid.tbody.nativeElement.getBoundingClientRect().top + pinnedRowsHeight);
         }
         return top;
     }
@@ -332,7 +333,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         let bottom = currGrid.tbody.nativeElement.getBoundingClientRect().bottom;
         while (currGrid.parent) {
             currGrid = currGrid.parent;
-            bottom = Math.min(bottom, currGrid.tbody.nativeElement.getBoundingClientRect().bottom);
+            const pinnedRowsHeight = currGrid.hasPinnedRecords && !currGrid.isRowPinningToTop ? currGrid.pinnedRowHeight : 0;
+            bottom = Math.min(bottom, currGrid.tbody.nativeElement.getBoundingClientRect().bottom - pinnedRowsHeight);
         }
         return bottom;
     }
