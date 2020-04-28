@@ -120,6 +120,7 @@ export class IgxActionStripComponent extends DisplayDensityBase {
      * <igx-action-strip [context]="cell"></igx-action-strip>
      * ```
      */
+    @Input()
     public context: any;
     /**
      * Menu Items ContentChildren inside the Action Strip
