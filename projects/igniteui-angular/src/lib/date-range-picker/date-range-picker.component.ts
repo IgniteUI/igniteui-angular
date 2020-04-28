@@ -52,7 +52,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @igxModule IgxDateRangeModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
@@ -65,7 +65,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @example
  * ```html
- * <igx-date-range-picker [mode]="dropdown"></igx-date-range-picker>
+ * <igx-date-range-picker mode="dropdown"></igx-date-range-picker>
  * ```
  */
 @Component({
@@ -82,7 +82,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker [mode]="dropdown"></igx-date-range-picker
+     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker
      * ```
      */
     @Input()
@@ -172,7 +172,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker [doneButtonText]="'完了'"></igx-date-range-picker>
+     * <igx-date-range-picker doneButtonText="完了"></igx-date-range-picker>
      * ```
      */
     @Input()
@@ -197,7 +197,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker [displayFormat]="'EE/M/yy'"></igx-date-range-picker>
+     * <igx-date-range-picker displayFormat="EE/M/yy"></igx-date-range-picker>
      * ```
      *
      */
@@ -212,18 +212,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker [inputFormat]="dd/MM/yy"></igx-date-range-picker>
+     * <igx-date-range-picker inputFormat="dd/MM/yy"></igx-date-range-picker>
      * ```
      */
     @Input()
-    public get inputFormat(): string {
-        return this._inputFormat;
-    }
-
-    public set inputFormat(value: string) {
-        this._inputFormat = value;
-    }
-
+    public inputFormat: string;
 
     /**
      * Emitted when a range is selected.
@@ -315,7 +308,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public dateSeparator = CurrentResourceStrings.DateRangePickerResStrings.igx_date_range_picker_date_separator;
 
     /** @hidden @internal */
-    public get appliedFormat() {
+    public get appliedFormat(): string {
         // TODO: apply formatter if present
         if (!this.hasProjectedInputs) {
             // TODO: use displayFormat - see how shortDate, longDate can be defined
@@ -323,7 +316,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 ? `${this.inputFormat} - ${this.inputFormat}`
                 : `${DEFAULT_INPUT_FORMAT} - ${DEFAULT_INPUT_FORMAT}`;
         } else {
-            return this.inputFormat ? this.inputFormat : DEFAULT_INPUT_FORMAT;
+            return this.inputFormat || DEFAULT_INPUT_FORMAT;
         }
     }
 
@@ -341,7 +334,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private _value: DateRange;
-    private _inputFormat: string;
     private $destroy = new Subject();
     private $toggleClickNotifier = new Subject();
     private _onChangeCallback: (...args: any[]) => void;
@@ -423,11 +415,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * <button (click)="dateRange.toggle()">Toggle Dialog</button>
      * ```
      */
-    public toggle(): void {
+    public toggle(overlaySettings?: OverlaySettings): void {
         if (!this.toggleDirective.collapsed) {
             this.close();
         } else {
-            this.open();
+            this.open(overlaySettings);
         }
     }
 
@@ -507,11 +499,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         switch (this.mode) {
             case InteractionMode.DropDown:
                 this.attachOnKeydown();
-                this.applyFocusOnClose();
                 this.subscribeToDateEditorEvents();
-                break;
-            case InteractionMode.Dialog:
-                this.applyFocusOnClose();
                 break;
         }
         this.configPositionStrategy();
@@ -565,8 +553,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public handleClosed(): void {
         if (this.value && !this.value.end) {
             this.value = { start: this.value.start, end: this.value.start };
-            this.onClosed.emit({ owner: this });
         }
+        this.onClosed.emit({ owner: this });
+        (this.single || this.projectedInputs
+            .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
     }
 
     /** @hidden @internal */
@@ -628,14 +618,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         fromEvent(this.element.nativeElement, 'keydown')
             .pipe(takeUntil(this.$destroy))
             .subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-    }
-
-    private applyFocusOnClose() {
-        this.toggleDirective.onClosed
-            .pipe(takeUntil(this.$destroy))
-            .subscribe(() => (
-                this.single || this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent
-            )?.setFocus());
     }
 
     private subscribeToDateEditorEvents() {

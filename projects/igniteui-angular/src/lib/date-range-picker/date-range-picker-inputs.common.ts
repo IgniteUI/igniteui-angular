@@ -5,6 +5,9 @@ import { NgControl } from '@angular/forms';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { formatDate } from '@angular/common';
 
+/**
+ * Represents a range between two dates.
+ */
 export interface DateRange {
     start: Date;
     end: Date;
@@ -135,7 +138,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
  *
  * @igxModule IgxDateRangeModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
