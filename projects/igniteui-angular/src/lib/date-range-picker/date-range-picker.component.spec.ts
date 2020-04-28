@@ -1,4 +1,4 @@
-import { IgxDateRangePickerComponent } from './igx-date-range-picker.component';
+import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { IgxIconModule } from '../icon';
 import { IgxCalendarModule, IgxCalendarComponent } from '../calendar/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDateRangePickerModule } from './igx-date-range-picker.module';
+import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';

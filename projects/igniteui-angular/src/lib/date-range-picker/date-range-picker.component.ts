@@ -35,7 +35,7 @@ import {
     IgxDateRangeStartComponent,
     IgxPickerToggleComponent,
     IgxDateRangeSeparatorDirective
-} from './igx-date-range-picker-inputs.common';
+} from './date-range-picker-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IToggleView } from '../core/navigation';
 import { IgxLabelDirective } from '../input-group';
@@ -70,7 +70,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  */
 @Component({
     selector: 'igx-date-range-picker',
-    templateUrl: './igx-date-range-picker.component.html',
+    templateUrl: './date-range-picker.component.html',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangePickerComponent), multi: true }]
 })
 export class IgxDateRangePickerComponent extends DisplayDensityBase
