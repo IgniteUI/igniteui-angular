@@ -606,7 +606,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const lastCell = grid.rowList.first.cells.toArray()[6];
+            const lastCell = grid.rowList.first.cells.toArray()[5];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
             expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) -
