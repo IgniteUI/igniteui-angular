@@ -113,7 +113,7 @@ export class IgxGridNavigationService {
             case 'spacebar':
             case 'space':
                 const rowObj = this.grid.getRowByIndex(this.activeNode.row);
-                if (this.grid.isRowSelectable && this.isDataRow(rowIndex) && !rowObj.disabled) {
+                if (this.grid.isRowSelectable && this.isDataRow(rowIndex)) {
                     rowObj && rowObj.selected ? this.grid.selectionService.deselectRow(rowObj.rowID, event) :
                         this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
                 }
@@ -309,8 +309,11 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
+        if (this.grid.isRecordPinnedByIndex(targetRowIndex)) { return false; }
+        const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
+            targetRowIndex - this.grid.pinnedDataView.length : targetRowIndex;
         const targetRow = this.getRowElementByIndex(targetRowIndex);
-        const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
+        const rowHeight = this.grid.verticalScrollContainer.getSizeAt(scrollRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
@@ -323,7 +326,10 @@ export class IgxGridNavigationService {
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
-        this.grid.verticalScrollContainer.scrollTo(rowIndex);
+        // Only for top pinning we need to subtract pinned count because virtualization indexing doesn't count pinned rows.
+        const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
+            rowIndex - this.grid.pinnedDataView.length : rowIndex;
+        this.grid.verticalScrollContainer.scrollTo(scrollRowIndex);
         this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {
                 if (cb) { cb(); }
