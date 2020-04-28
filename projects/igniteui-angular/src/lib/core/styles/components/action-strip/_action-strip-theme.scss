@@ -93,6 +93,7 @@
         background: --var($theme, 'background');
         color: inherit;
         padding: map-get($padding, 'comfortable');
+        z-index: 9999;
     }
 
     %action-icons-density {
