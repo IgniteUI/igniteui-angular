@@ -13,8 +13,8 @@
 
     @extend %igx-watermark !optional;
 
-    @include e(inner) {
-        @extend %igx-watermark__inner !optional;
+    @include e(link) {
+        @extend %igx-watermark__link !optional;
     }
 
     @include e(background-img) {

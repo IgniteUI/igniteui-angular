@@ -44,6 +44,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './watermark';
 
 /// The default dark schema for all components.
 /// @type {Map}
@@ -131,7 +132,8 @@ $dark-schema: (
     igx-tabs: $_dark-tabs,
     igx-time-picker: $_dark-time-picker,
     igx-toast: $_dark-toast,
-    igx-tooltip: $_dark-tooltip
+    igx-tooltip: $_dark-tooltip,
+    igx-watermark: $_dark-watermark,
 );
 
 /// The default dark fluent schema for all components.
@@ -220,7 +222,8 @@ $dark-fluent-schema: (
     igx-tabs: $_dark-fluent-tabs,
     igx-time-picker: $_dark-fluent-time-picker,
     igx-toast: $_dark-fluent-toast,
-    igx-tooltip: $_dark-fluent-tooltip
+    igx-tooltip: $_dark-fluent-tooltip,
+    igx-watermark: $_dark-fluent-watermark
 );
 
 /// The default dark bootstrap schema for all components.
@@ -309,5 +312,6 @@ $dark-bootstrap-schema: (
     igx-tabs: $_dark-bootstrap-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-bootstrap-toast,
-    igx-tooltip: $_dark-bootstrap-tooltip
+    igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-watermark: $_dark-bootstrap-watermark
 );
