@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } 
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
   IPagingState, ISortingExpression, IgxNumberSummaryOperand,
   IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective,
-  IgxHierarchicalGridComponent } from 'igniteui-angular';
+  IgxHierarchicalGridComponent, IgxExpansionPanelComponent} from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
 import { Router, NavigationStart } from '@angular/router';
@@ -39,6 +39,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public stateKey2 = 'hgrid-state';
   public gridState: IGridState;
   public serialize = true;
+  public templatedIcon = false;
 
   public options = {
     cellSelection: true,
@@ -52,6 +53,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     columns: true
   };
 
+  @ViewChild(IgxExpansionPanelComponent, { static: true }) public igxExpansionPanel: IgxExpansionPanelComponent;
   @ViewChildren(IgxGridStateDirective) public state: QueryList<IgxGridStateDirective>;
   @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
   @ViewChild('hGrid', { static: true }) hGrid: IgxHierarchicalGridComponent;
@@ -285,6 +287,14 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public reloadPage() {
       window.location.reload();
   }
+
+  public templateIcon() {
+    this.templatedIcon = !this.templatedIcon;
+  }
+
+  public collapsed() {
+    return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
+ }
 
   generateDataUneven(count: number, level: number, parendID: string = null) {
     const prods = [];

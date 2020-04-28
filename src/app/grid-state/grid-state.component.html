@@ -121,67 +121,79 @@
 
 <br />
 <div class="grid__wrapper">
-    <igx-hierarchical-grid #grid1 [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
-        [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
-        [height]="'600px'" [width]="'100%'" #hGrid>
-        <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
-        <igx-column-group header="Information">
-            <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
-            <igx-column field="ProductName" hasSummary='true'></igx-column>
-        </igx-column-group>
-        <ng-template igxHeaderCollapsedIndicator>
-            <igx-icon role="button" fontSet="material">add</igx-icon>
-        </ng-template>
-        <ng-template igxHeaderExpandedIndicator>
-            <igx-icon role="button" fontSet="material">remove</igx-icon>
-        </ng-template>
-        <ng-template igxRowExpandedIndicator>
-            <igx-icon role="button" fontSet="material">remove</igx-icon>
-        </ng-template>
-        <ng-template igxRowCollapsedIndicator>
-            <igx-icon role="button" fontSet="material">add</igx-icon>
-        </ng-template>
-        <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelectable='true' #layout1 >
-                <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
-                <igx-column-group header="Information2">
-                    <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
-                    <igx-column field="ProductName" [resizable]="true" [groupable]='true'></igx-column>
-                </igx-column-group>
-                <ng-template let-data igxRowDragGhost>
-                    <div class="dragGhost">
-                            <igx-icon fontSet="material"></igx-icon> 
-                             Moving child {{data.ProductName}}!
-                        </div>
-                </ng-template>
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true' [allowFiltering]='true' >
-                    <igx-column field="ID" [hasSummary]='true'></igx-column>
-                    <igx-column-group header="Information3">
-                        <igx-column [resizable]="true" field="ChildLevels"></igx-column>
-                        <igx-column field="ProductName"></igx-column>
+    <igx-expansion-panel #collapsibleComponent [collapsed]="false">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Hierarchical Grid</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div style='width: 100%; height: 100%'>
+                <igx-hierarchical-grid #grid1 [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
+                    [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
+                    [height]="'600px'" [width]="'100%'" #hGrid>
+                    <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
+                    <igx-column-group header="Information">
+                        <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
+                        <igx-column field="ProductName" hasSummary='true'></igx-column>
                     </igx-column-group>
-                    <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true'>
-                        <igx-column field="ID" [hasSummary]='true'></igx-column>
-                        <igx-column-group header="Information4">
-                            <igx-column field="ChildLevels"></igx-column>
-                            <igx-column field="ProductName"></igx-column>
-                        </igx-column-group>
+                    <ng-template igxHeaderCollapsedIndicator>
+                        <igx-icon role="button" fontSet="material">add</igx-icon>
+                    </ng-template>
+                    <ng-template igxHeaderExpandedIndicator>
+                        <igx-icon role="button" fontSet="material">remove</igx-icon>
+                    </ng-template>
+                    <ng-template igxRowExpandedIndicator>
+                        <igx-icon role="button" fontSet="material">remove</igx-icon>
+                    </ng-template>
+                    <ng-template igxRowCollapsedIndicator>
+                        <igx-icon role="button" fontSet="material">add</igx-icon>
+                    </ng-template>
+                    <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelectable='true' #layout1 >
+                            <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
+                            <igx-column-group header="Information2">
+                                <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
+                                <igx-column field="ProductName" [resizable]="true" [groupable]='true'></igx-column>
+                            </igx-column-group>
+                            <ng-template let-data igxRowDragGhost>
+                                <div class="dragGhost">
+                                        <igx-icon fontSet="material"></igx-icon> 
+                                        Moving child {{data.ProductName}}!
+                                    </div>
+                            </ng-template>
+                        <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true' [allowFiltering]='true' >
+                                <igx-column field="ID" [hasSummary]='true'></igx-column>
+                                <igx-column-group header="Information3">
+                                    <igx-column [resizable]="true" field="ChildLevels"></igx-column>
+                                    <igx-column field="ProductName"></igx-column>
+                                </igx-column-group>
+                                <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true'>
+                                    <igx-column field="ID" [hasSummary]='true'></igx-column>
+                                    <igx-column-group header="Information4">
+                                        <igx-column field="ChildLevels"></igx-column>
+                                        <igx-column field="ProductName"></igx-column>
+                                    </igx-column-group>
+                                </igx-row-island>
+                                <igx-row-island [key]="'childData2'" [autoGenerate]="false">
+                                    <igx-column field="ChildLevels" [groupable]='true' [hasSummary]='true'></igx-column>
+                                    <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
+                            </igx-row-island>
+            
+                        </igx-row-island>
                     </igx-row-island>
-                    <igx-row-island [key]="'childData2'" [autoGenerate]="false">
-                        <igx-column field="ChildLevels" [groupable]='true' [hasSummary]='true'></igx-column>
-                        <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
-                </igx-row-island>
-
-            </igx-row-island>
-        </igx-row-island>
-    <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
-                <igx-column field="ChildLevels" [groupable]='true'></igx-column>
-                <igx-column field="ProductName" [groupable]='true'></igx-column>
-        </igx-row-island>  -->
-        <ng-template let-data igxRowDragGhost>
-            <div class="dragGhost">
-                    <igx-icon fontSet="material"></igx-icon> 
-                     Moving parent {{data.ProductName}}!
-                </div>
-        </ng-template>
-    </igx-hierarchical-grid>
+                    <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
+                            <igx-column field="ChildLevels" [groupable]='true'></igx-column>
+                            <igx-column field="ProductName" [groupable]='true'></igx-column>
+                    </igx-row-island>  -->
+                    <ng-template let-data igxRowDragGhost>
+                        <div class="dragGhost">
+                                <igx-icon fontSet="material"></igx-icon> 
+                                Moving parent {{data.ProductName}}!
+                            </div>
+                    </ng-template>
+                </igx-hierarchical-grid>
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
 </div>
