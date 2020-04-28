@@ -13,7 +13,7 @@ export class IgxWatermarkComponent {
   public textMessage;
 
   constructor() {
-    this.textMessage = this.resourceStrings.igx_grid_watermark_placeholder || 'Text message';
+    this.textMessage = this.resourceStrings.igx_grid_watermark_placeholder || 'Trial version of Ignite UI for Angular';
   }
 }
 
@@ -23,3 +23,4 @@ export class IgxWatermarkComponent {
   imports: [CommonModule],
 })
 export class IgxWatermarkModule {}
+

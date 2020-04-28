@@ -1,0 +1,98 @@
+////
+/// @group themes
+/// @access privet
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Returns a map containing all style properties related to the theming the watermark directive.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The background color of the watermark.
+/// @param {Color} $color [null] - The text color of the watermark.
+/// @param {Color} $border-color [null] - The border color of the watermark.
+///
+/// @param {border-radius} $border-radius [null] - The border radius used for the watermark component.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+/// @requires text-contrast
+/// @requires round-borders
+///
+/// @example scss Change the watermark background
+///   $my-watermark-theme: igx-watermark-theme($background: magenta);
+///   // Pass the theme to the igx-watermark component mixin
+///   @include igx-watermark($my-checkbox-theme);
+@function igx-watermark-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $border-radius: null,
+    $background: null,
+    $color: null,
+    $border-color: null
+) {
+    $name: 'igx-watermark';
+    $watermark-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $watermark-schema: map-get($schema, $name);
+    } @else {
+        $watermark-schema: $schema;
+    }
+
+    $theme: apply-palette($watermark-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
+    );
+
+    @if not($color) and $background {
+        $text-color: text-contrast($background);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        palette: $default-palette,
+        background: $background,
+        border-radius: $border-radius,
+        color: $color,
+        border-color: $border-color,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+@mixin igx-watermark($theme) {
+    @include igx-root-css-vars($theme);
+
+    %igx-watermark {
+        display: inline-flex;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: rem(14px);
+        padding: rem(2px) rem(4px);
+        line-height: normal;
+        border: 1px solid --var($theme, 'border-color');
+        color: --var($theme, 'color');
+        background: --var($theme, 'background');
+    }
+
+    %igx-watermark__background-img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 4;
+        pointer-events: none;
+        background: rgba(255, 0, 0, .07);
+    }
+}
+
+

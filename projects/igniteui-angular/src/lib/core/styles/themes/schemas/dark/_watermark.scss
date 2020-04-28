@@ -1,0 +1,25 @@
+@import '../light/watermark';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark watermark schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-watermark
+/// @see $default-palette
+$_dark-watermark: extend($_light-watermark);
+
+/// Generates a dark fluent watermark schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-watermark
+$_dark-fluent-watermark: extend($_fluent-watermark);
+
+/// Generates a dark bootstrap watermark schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-watermark
+$_dark-bootstrap-watermark: extend($_bootstrap-watermark);

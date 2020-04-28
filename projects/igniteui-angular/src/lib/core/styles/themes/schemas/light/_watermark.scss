@@ -1,0 +1,69 @@
+@import '../shape/watermark';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light watermark schema.
+/// @type {Map}
+///
+/// @prop {map} background [igx-color: ('grays', 100)] - The background color of the watermark.
+/// @prop {map} color [igx-color: ('grays', 800)] - The text color of the watermark.
+/// @prop {map} border-color [igx-color: ('secondary')] - The border color of the watermark.
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for the watermark component.
+///
+/// @see $default-palette
+$_light-watermark: extend(
+    $_default-shape-watermark,
+    (
+        variant: 'material',
+
+        background: (
+            igx-color: ('surface'),
+        ),
+
+        color: (
+            igx-color: ('secondary'),
+        ),
+
+        border-color: (
+            igx-color: ('secondary'),
+        ),
+
+        roundness: rem(0)
+    )
+);
+
+/// Generates a light fluent watermark schema.
+/// @type {Map}
+/// @prop {map} background [igx-color: 'surface'] - The background color of the watermark.
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the watermark component.
+/// @requires {function} extend
+/// @requires $_light-watermark
+/// @requires $_fluent-shape-watermark
+$_fluent-watermark: extend(
+    $_light-watermark,
+    $_fluent-shape-watermark,
+    (
+        variant: 'fluent',
+        roundness: rem(2px)
+    )
+);
+
+/// Generates a bootstrap watermark schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the watermark component.
+
+/// @requires {function} extend
+/// @requires $_light-watermark
+$_bootstrap-watermark: extend(
+    $_light-watermark,
+    $_bootstrap-shape-watermark,
+    (
+        variant: 'bootstrap',
+        roundness: rem(4px)
+    )
+);
+
