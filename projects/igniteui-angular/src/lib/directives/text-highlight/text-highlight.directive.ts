@@ -184,9 +184,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public page: number;
 
     /**
-     * A map that contains all aditional checks, that you need, in order to activate
-     * your highlighted element. To activate the check, you will have to add a new metadata key to
-     * the `metadata` property into the IActiveHighlightInfo interface.
+     * A map that contains all aditional conditions, that you need to activate a highlighted
+     * element. To activate the condition, you will have to add a new metadata key to
+     * the `metadata` property of the IActiveHighlightInfo interface.
      *
      * @example
      * ```typescript
