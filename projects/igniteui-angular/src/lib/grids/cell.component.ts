@@ -919,4 +919,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get searchMetadata() {
+        const meta = new Map<string, any>();
+        meta.set('dataIndex', this.row.viewIndex);
+        return meta;
+    }
 }

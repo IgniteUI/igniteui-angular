@@ -36,7 +36,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
@@ -4345,7 +4345,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
-                        match.index === activeInfo.index) {
+                        match.index === activeInfo.index &&
+                        this.compareMetadata(match, activeInfo)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
@@ -5863,6 +5864,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 column: matchInfo.column,
                 row: matchInfo.row,
                 index: matchInfo.index,
+                metadata: matchInfo.metadata,
             });
 
         } else {
@@ -6001,7 +6003,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
-        data.forEach((dataRow) => {
+        data.forEach((dataRow, viewIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
                     c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
@@ -6012,10 +6014,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('dataIndex', viewIndex);
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
+                                metadata: metadata,
                             });
                         }
                     } else {
@@ -6023,10 +6028,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         let searchIndex = searchValue.indexOf(searchText);
 
                         while (searchIndex !== -1) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('dataIndex', viewIndex);
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
+                                metadata: metadata,
                             });
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
@@ -6378,5 +6386,30 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             advancedFilteringDialog.closeDialog();
         }
+    }
+
+    /**
+     * @internal
+     * @hidden
+     */
+    private compareMetadata(match: any, activeInfo: IActiveHighlightInfo) {
+        let metadataMatch = true;
+        if (activeInfo.metadata) {
+            if (activeInfo.metadata.size !== match.size) {
+                return false;
+            } else {
+                activeInfo.metadata.forEach((value, key) => {
+                    if (!metadataMatch) {
+                        return false;
+                    }
+                    if (match.has(key)) {
+                        metadataMatch = match.get(key) === value;
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        }
+        return metadataMatch;
     }
 }

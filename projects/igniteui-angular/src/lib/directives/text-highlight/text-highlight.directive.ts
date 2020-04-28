@@ -51,6 +51,10 @@ export interface IActiveHighlightInfo {
      * The index of the highlight.
      */
     index: number;
+    /**
+     * Additional, custom checks to perform prior an element highlighting.
+     */
+    metadata?: Map<string, any>;
 }
 
 @Directive({
@@ -178,6 +182,32 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     @Input('page')
     @DeprecateProperty(`IgxTextHighlightDirective 'page' input property is deprecated.`)
     public page: number;
+
+    /**
+     * A map that contains all aditional checks, that you need, in order to activate
+     * your highlighted element. To activate the check, you will have to add a new metadata key to
+     * the `metadata` property into the IActiveHighlightInfo interface.
+     *
+     * @example
+     * ```typescript
+     *  // Set a property, which would disable the highlight for a given element on a cetain condition
+     *
+     *  const metadata = new Map<string, any>();
+     *  metadata.set('highlightElement') = false;
+     *
+     *  const metadataMap = new Map<string, any>();
+     *  metadataMap.set('highlightElement') = true;
+     *  IgxTextHighlightDirective.setActiveHighlight(id, {index: index, metadata: metadataMap});
+     * ```
+     * ```html
+     * <div
+     *   igxTextHighlight
+     *   [metadata]="metadata">
+     * </div>
+     * ```
+     */
+    @Input()
+    public metadata: Map<string, any> = new Map<string, any>();
 
     /**
      * @hidden
@@ -335,7 +365,26 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
         const row = group.rowIndex === undefined ? group.row : group.rowIndex;
 
-        if (column === this.column && row === this.row && group.page === this.page) {
+        let metadataMatch = true;
+
+        if (group.metadata) {
+            if (group.metadata.size !== this.metadata.size) {
+                metadataMatch = false;
+            } else {
+                group.metadata.forEach((value, key) => {
+                    if (!metadataMatch) {
+                        return;
+                    }
+                    if (this.metadata.has(key)) {
+                        metadataMatch = this.metadata.get(key) === value;
+                    } else {
+                        metadataMatch = false;
+                    }
+                });
+            }
+        }
+
+        if (column === this.column && row === this.row && group.page === this.page && metadataMatch) {
             this.activate(group.index);
         }
     }
