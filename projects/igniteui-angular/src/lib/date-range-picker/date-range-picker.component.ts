@@ -59,7 +59,8 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @remarks
  * It displays the range selection in a single or two input fields.
- * The default template displays a single *readonly* input field while projecting `igx-date-range-picker-start` and `igx-date-range-picker-end`
+ * The default template displays a single *readonly* input field
+ * while projecting `igx-date-range-start` and `igx-date-range-end`
  * displays two *editable* input fields.
  *
  * @example
@@ -81,7 +82,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker
+     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker>
      * ```
      */
     @Input()

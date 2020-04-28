@@ -32,7 +32,7 @@ export class AppModule { }
 As for the component that you want to use `igx-date-range-picker` in, import `IgxDateRangePickerComponent`:
 
 ```typescript
-import { IgxDateRangePickerComponent } from 'igniteui-angular';
+import { IgxDateRangePickerComponent, DateRange } from 'igniteui-angular';
 
 @Component({
     selector: 'my-component',
@@ -108,7 +108,7 @@ With projected inputs:
 ### Inputs
 | Name             | Type               | Description |
 |:-----------------|:-------------------|:------------|
-| mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. |
+| mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
 | monthsViewNumber | number             | Sets the number displayed month views. Default is `2`. |
 | hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |

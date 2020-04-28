@@ -1,4 +1,4 @@
-import { DateRangePickerResourceStringsEN } from './range-date-picker-resources';
+import { DateRangePickerResourceStringsEN } from './date-range-picker-resources';
 import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
 import { PaginatorResourceStringsEN } from './paginator-resources';
