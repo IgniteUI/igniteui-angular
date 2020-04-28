@@ -316,10 +316,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
-        const column = group.column === undefined ? group.column : group.column;
-        const row = group.row === undefined ? group.row : group.row;
 
-        if (column === this.column && row === this.row) {
+        if (group.column === this.column && group.row === this.row) {
             this.activate(group.index);
         }
     }
