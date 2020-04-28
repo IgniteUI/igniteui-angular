@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import {Component, HostBinding, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { getCurrentResourceStrings } from '../core/i18n/resources';
 
@@ -8,13 +8,15 @@ import { getCurrentResourceStrings } from '../core/i18n/resources';
   templateUrl: './watermark.component.html' ,
 })
 export class IgxWatermarkComponent {
-  private resourceStrings = getCurrentResourceStrings();
+    private resourceStrings = getCurrentResourceStrings();
 
-  public textMessage;
+    @HostBinding('class.igx-watermark')
+    public cssClass = 'igx-watermark';
 
-  constructor() {
-    this.textMessage = this.resourceStrings.igx_grid_watermark_placeholder || 'Trial version of Ignite UI for Angular';
-  }
+    public textMessage;
+    constructor() {
+        this.textMessage = this.resourceStrings.igx_grid_watermark_placeholder || 'Trial version of Ignite UI for Angular';
+    }
 }
 
 @NgModule({
@@ -22,5 +24,7 @@ export class IgxWatermarkComponent {
   exports: [IgxWatermarkComponent],
   imports: [CommonModule],
 })
+
 export class IgxWatermarkModule {}
+
 
