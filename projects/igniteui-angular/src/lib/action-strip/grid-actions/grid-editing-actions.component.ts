@@ -27,10 +27,13 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         if (!this.isRow(this.strip.context)) {
             return;
         }
-        const context = this.strip.context;
-        const firstEditable = context.cells.filter(cell => cell.editable)[0];
-        const grid = context.grid;
-        grid.crudService.begin(firstEditable);
+        const row = this.strip.context;
+        const firstEditable = row.cells.filter(cell => cell.editable)[0];
+        const grid = row.grid;
+        // be sure row is in view
+        if (grid.rowList.filter(r => r === row).length !== 0) {
+            grid.crudService.begin(firstEditable);
+        }
     }
 
     /**

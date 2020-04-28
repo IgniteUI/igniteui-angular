@@ -1,7 +1,9 @@
 <div class="igx-action-strip__actions">
     <ng-content #content></ng-content>
     <ng-container *ngIf="menuItems.length > 0">
-        <button igxButton="icon" igxRipple [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">
+        <button igxButton="icon" igxRipple [igxToggleAction]="dropdown"
+            [overlaySettings]="menuOverlaySettings"
+            [igxDropDownItemNavigation]="dropdown">
             <igx-icon>more_vert</igx-icon>
         </button>
         <igx-drop-down #dropdown>

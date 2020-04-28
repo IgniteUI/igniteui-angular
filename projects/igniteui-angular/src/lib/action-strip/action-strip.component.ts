@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down';
+import { CloseScrollStrategy, OverlaySettings } from '../services';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
@@ -176,7 +177,21 @@ export class IgxActionStripComponent extends DisplayDensityBase {
         }
     }
 
-    private closeMenu() {
+    /**
+     * Getter for menu overlay settings
+     * @hidden
+     * @internal
+     */
+    get menuOverlaySettings (): OverlaySettings {
+        return { scrollStrategy: new CloseScrollStrategy() };
+    }
+
+    /**
+     * Close the menu if opened
+     * @hidden
+     * @internal
+     */
+    private closeMenu(): void {
         if (this.menu && !this.menu.collapsed) {
             this.menu.close();
         }
