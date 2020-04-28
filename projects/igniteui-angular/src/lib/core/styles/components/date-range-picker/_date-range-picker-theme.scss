@@ -5,13 +5,13 @@
 ////
 
 /// @param {Map} $theme - theme used to style the component.
-/// @param {color} $color - The Color for date range separator label.
+/// @param {color} $label-color - The Color for date range separator label.
 /// @requires --var
 /// @requires rem
 @function igx-date-range-picker-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-    $color: null
+    $label-color: null
 ) {
     $name: 'igx-date-range';
     $date-range-schema: ();
@@ -27,7 +27,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        color: $color,
+        label-color: $label-color,
     ));
 }
 
@@ -64,7 +64,7 @@
     %igx-date-range-picker__label {
         display: flex;
         align-items: center;
-        color: --var($theme, 'color');
+        color: --var($theme, 'label-color');
         margin: 0 rem(8px);
         padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
     }

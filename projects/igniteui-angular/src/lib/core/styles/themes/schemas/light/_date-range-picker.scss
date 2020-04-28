@@ -6,9 +6,9 @@
 
 /// Generates a light date-range-picker schema.
 /// @type {Map}
-/// @prop {Map} color [igx-color: 'surface'] - The Color for date range separator label.
+/// @prop {Map} label-color [igx-color: 'surface'] - The Color for date range separator label.
 $_light-date-range-picker: (
-    color: (
+    label-color: (
         igx-color: ('grays', 500),
     )
 );
