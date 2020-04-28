@@ -656,7 +656,7 @@ describe('IgxDateRangePicker', () => {
 
         describe('Validation', () => {
             let dateRangePicker: IgxDateRangePickerComponent;
-            fit('IgxDateRangePickerComponent ControlValueAccessor Unit', () => {
+            it('IgxDateRangePickerComponent ControlValueAccessor Unit', () => {
                 const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
                 const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28)};
                 const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25)};
