@@ -13,6 +13,7 @@ import {
     ColumnEditablePropertyTestComponent
 } from '../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -381,38 +382,36 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
-            const verticalScroll = grid.verticalScrollContainer.getScroll();
-            let expectedScroll;
-            let cellElem;
-            GridFunctions.scrollTop(grid, 1000);
-            await wait(500);
-            fixture.detectChanges();
-
-            let testCells = grid.getColumnByName('firstName').cells;
-            let cell = testCells[testCells.length - 1];
-            cellElem = cell.nativeElement;
-
-            cellElem.dispatchEvent(new Event('focus'));
-            cellElem.dispatchEvent(new MouseEvent('dblclick'));
-            fixture.detectChanges();
-            await wait(50);
-
-            let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
-            expect(cell.editMode).toBeTruthy();
-            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-            expectedScroll = verticalScroll.scrollTop;
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
+            setupGridScrollDetection(fixture, grid);
+            grid.navigateTo(8);
+            await wait(DEBOUNCETIME);
             fixture.detectChanges();
             await wait(DEBOUNCETIME);
+            fixture.detectChanges();
 
-            inputElem = document.activeElement as HTMLInputElement;
-            testCells = grid.getColumnByName('firstName').cells;
-            cell = testCells[testCells.length - 1];
+            const testCells = grid.getColumnByName('firstName').cells;
+            let cell = testCells[testCells.length - 1];
+            const cellRowIndex = cell.rowIndex;
+            let cellElem = cell.nativeElement;
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
+            expect(cell.editMode).toBeTruthy();
+            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
+           const expectedScroll = grid.verticalScrollContainer.getScroll().scrollTop;
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
+            await wait(DEBOUNCETIME);
+            fixture.detectChanges();
+
+            cell = grid.getCellByColumn(cellRowIndex, 'firstName' );
             cellElem = cell.nativeElement;
             expect(cell.editMode).toBeTruthy();
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-            expect(verticalScroll.scrollTop).toBe(expectedScroll);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(expectedScroll);
         }));
 
         it('When cell in editMode and try to navigate with `ArrowRight` - focus should remain over the input.', (async () => {
