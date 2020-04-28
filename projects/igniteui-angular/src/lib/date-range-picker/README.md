@@ -19,12 +19,12 @@ export class AppModule { }
 ```
 
 # Usage
-Import the `IgxDateRangeModule` in the module that you want to use it in:
+Import the `IgxDateRangePickerModule` in the module that you want to use it in:
 ```typescript
-import { IgxDateRangeModule } from 'igniteui-angular';
+import { IgxDateRangePickerModule } from 'igniteui-angular';
 
 @NgModule({
-    imports: [IgxDateRangeModule]
+    imports: [IgxDateRangePickerModule]
 })
 export class AppModule { }
 ```
@@ -54,12 +54,12 @@ The default initialization produces a single *readonly* input:
 With `IgxDateStartComponent`, `IgxDateEndComponent` and `IgxDateTimeEditorDirective` two *editable* inputs can be projected:
 ```html
 <igx-date-range-picker>
-    <igx-date-start>
+    <igx-date-range-start>
         <input igxInput igxDateTimeEditor [(ngModel)]="range.start">
-    </igx-date-start>
-    <igx-date-emd>
+    </igx-date-range-start>
+    <igx-date-range-end>
         <input igxInput igxDateTimeEditor [(ngModel)]="range.end">
-    </igx-date-end>
+    </igx-date-range-end>
 </igx-date-range-picker>
 ```
 
@@ -77,13 +77,13 @@ The default template:
 With projected inputs:
 ```html
 <igx-date-range-picker>
-    <igx-date-start>
+    <igx-date-range-start>
         <igx-pickers-toggle igxPrefix>
             <igx-icon>calendar_view_day</igx-icon>
         </igx-pickers-toggle>
-    </igx-date-start>
-    <igx-date-end>
-    </igx-date-end>
+    </igx-date-range-start>
+    <igx-date-range-end>
+    </igx-date-range-end>
 </igx-date-range-picker>
 ```
 
@@ -110,7 +110,7 @@ With projected inputs:
 |:-----------------|:-------------------|:------------|
 | mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. |
 | monthsViewNumber | number             | Sets the number displayed month views. Default is `2`. |
-| hideOutsideDays  | boolean            | Sets the whether dates that are not part of the current month will be displayed. Default value is `false`. |
+| hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
 | locale           | string             | Gets the `locale` of the calendar. Default value is `"en"`. |
 | formatter        | function => string | Applies a custom formatter function on the selected or passed date. |

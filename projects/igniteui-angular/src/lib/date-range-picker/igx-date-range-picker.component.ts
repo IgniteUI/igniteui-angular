@@ -30,12 +30,12 @@ import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 import {
     DateRange,
-    IgxDateEndComponent,
-    IgxDateSingleComponent,
-    IgxDateStartComponent,
+    IgxDateRangeEndComponent,
+    IgxDateRangeSingleComponent,
+    IgxDateRangeStartComponent,
     IgxPickerToggleComponent,
-    IgxDateSeparatorDirective
-} from './igx-date-range-inputs.common';
+    IgxDateRangeSeparatorDirective
+} from './igx-date-range-picker-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IToggleView } from '../core/navigation';
 import { IgxLabelDirective } from '../input-group';
@@ -60,7 +60,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @remarks
  * It displays the range selection in a single or two input fields.
- * The default template displays a single *readonly* input field while projecting `igx-date-start` and `igx-date-end`
+ * The default template displays a single *readonly* input field while projecting `igx-date-range-start` and `igx-date-range-end`
  * displays two *editable* input fields.
  *
  * @example
@@ -70,7 +70,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  */
 @Component({
     selector: 'igx-date-range-picker',
-    templateUrl: './igx-date-range.component.html',
+    templateUrl: './igx-date-range-picker.component.html',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangePickerComponent), multi: true }]
 })
 export class IgxDateRangePickerComponent extends DisplayDensityBase
@@ -285,8 +285,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public cssClass = 'igx-date-range-picker';
 
     /** @hidden */
-    @ViewChild(IgxDateSingleComponent)
-    public single: IgxDateSingleComponent;
+    @ViewChild(IgxDateRangeSingleComponent)
+    public single: IgxDateRangeSingleComponent;
 
     /** @hidden */
     @ViewChild(IgxCalendarComponent)
@@ -308,11 +308,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public label: IgxLabelDirective;
 
     /** @hidden */
-    @ContentChild(IgxDateSeparatorDirective, { read: TemplateRef })
+    @ContentChild(IgxDateRangeSeparatorDirective, { read: TemplateRef })
     public dateSeparatorTemplate: TemplateRef<any>;
 
     /** @hidden */
-    public dateSeparator = CurrentResourceStrings.RangeDatePickerResStrings.igx_range_date_picker_date_separator;
+    public dateSeparator = CurrentResourceStrings.DateRangePickerResStrings.igx_date_range_picker_date_separator;
 
     /** @hidden @internal */
     public get appliedFormat() {
@@ -329,7 +329,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public get hasProjectedInputs(): boolean {
-        return this.projectedInputs.some(i => i instanceof IgxDateStartComponent || i instanceof IgxDateEndComponent);
+        return this.projectedInputs.some(i => i instanceof IgxDateRangeStartComponent || i instanceof IgxDateRangeEndComponent);
     }
 
     private get dropdownOverlaySettings(): OverlaySettings {
@@ -634,14 +634,14 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.toggleDirective.onClosed
             .pipe(takeUntil(this.$destroy))
             .subscribe(() => (
-                this.single || this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent
+                this.single || this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent
             )?.setFocus());
     }
 
     private subscribeToDateEditorEvents() {
         if (this.hasProjectedInputs) {
-            const start = this.projectedInputs.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
-            const end = this.projectedInputs.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
             if (start && end) {
                 start.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
@@ -684,8 +684,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private updateInputs() {
-        const start = this.projectedInputs?.find(i => i instanceof IgxDateStartComponent) as IgxDateStartComponent;
-        const end = this.projectedInputs?.find(i => i instanceof IgxDateEndComponent) as IgxDateEndComponent;
+        const start = this.projectedInputs?.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+        const end = this.projectedInputs?.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
         if (start && end && this.value) {
             start.updateInput(this.value.start);
             end.updateInput(this.value.end);

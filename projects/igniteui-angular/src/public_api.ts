@@ -93,7 +93,7 @@ export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/index';
 export * from './lib/splitter/splitter.module';
-export * from './lib/date-range/index';
+export * from './lib/date-range-picker/index';
 
 
 /**
@@ -108,6 +108,6 @@ export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
-export { IDateRangePickerResourceStrings as IRangeDatePickerResourceStrings } from './lib/core/i18n/range-date-picker-resources';
+export { IDateRangePickerResourceStrings as IDateRangePickerResourceStrings } from './lib/core/i18n/range-date-picker-resources';
 export { InteractionMode } from './lib/core/enums';
 export { SplitterType } from './lib/splitter/splitter.component';

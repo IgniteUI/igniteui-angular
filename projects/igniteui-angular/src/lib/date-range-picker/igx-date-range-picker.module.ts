@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { IgxDateRangePickerComponent } from './igx-date-range.component';
+import { IgxDateRangePickerComponent } from './igx-date-range-picker.component';
 import { IgxCalendarModule } from '../calendar/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CommonModule } from '@angular/common';
@@ -7,12 +7,12 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxInputGroupModule } from '../input-group/index';
 import { IgxIconModule } from '../icon/index';
 import {
-    IgxDateStartComponent, IgxDateEndComponent,
+    IgxDateRangeStartComponent, IgxDateRangeEndComponent,
     DateRangePickerFormatPipe,
-    IgxDateSingleComponent,
+    IgxDateRangeSingleComponent,
     IgxPickerToggleComponent,
-    IgxDateSeparatorDirective
-} from './igx-date-range-inputs.common';
+    IgxDateRangeSeparatorDirective
+} from './igx-date-range-picker-inputs.common';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 
 /**
@@ -21,12 +21,12 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 @NgModule({
     declarations: [
         IgxDateRangePickerComponent,
-        IgxDateStartComponent,
-        IgxDateEndComponent,
-        IgxDateSingleComponent,
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxDateRangeSingleComponent,
         DateRangePickerFormatPipe,
         IgxPickerToggleComponent,
-        IgxDateSeparatorDirective
+        IgxDateRangeSeparatorDirective
     ],
     imports: [
         CommonModule,
@@ -39,10 +39,10 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
     ],
     exports: [
         IgxDateRangePickerComponent,
-        IgxDateStartComponent,
-        IgxDateEndComponent,
-        IgxPickerToggleComponent,
-        IgxDateSeparatorDirective
+        IgxDateRangeStartComponent,
+        IgxDateRangeEndComponent,
+        IgxDateRangeSeparatorDirective,
+        IgxPickerToggleComponent
     ]
 })
 export class IgxDateRangePickerModule { }

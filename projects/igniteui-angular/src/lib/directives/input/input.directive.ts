@@ -14,7 +14,6 @@ import {
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IgxInputGroupBase } from '../../input-group/input-group.common';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 const nativeValidationAttributes = ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step'];
 

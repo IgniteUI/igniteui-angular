@@ -14,7 +14,7 @@ export const CurrentResourceStrings = {
     GridResStrings: cloneValue(GridResourceStringsEN),
     PaginatorResStrings: cloneValue(PaginatorResourceStringsEN),
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
-    RangeDatePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
+    DateRangePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
 };
 

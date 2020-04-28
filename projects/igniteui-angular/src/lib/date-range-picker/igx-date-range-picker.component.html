@@ -31,11 +31,11 @@
 </ng-template>
 
 <ng-template #startEndTemplate>
-    <ng-content select="igx-date-start"></ng-content>
+    <ng-content select="igx-date-range-start"></ng-content>
     <div [className]="separatorClass">
         <ng-container *ngTemplateOutlet="dateSeparatorTemplate ? dateSeparatorTemplate : defDateSeparatorTemplate;"></ng-container>
     </div>
-    <ng-content select="igx-date-end"></ng-content>
+    <ng-content select="igx-date-range-end"></ng-content>
 </ng-template>
 
 <ng-template #defIcon>

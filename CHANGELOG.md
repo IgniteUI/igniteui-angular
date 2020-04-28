@@ -92,42 +92,42 @@ All notable changes for each version of this project will be documented in this 
     - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
     - The default template consists of a single *readonly* field:
     ```html
-    <igx-date-range [(ngModel)]="range"></igx-date-range>
+    <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
     ```
     - Projection of input fields using `igxDateTimeEditor`
         ```html
-        <igx-date-range>
-            <igx-date-start>
+        <igx-date-range-picker>
+            <igx-date-range-start>
                 <input igxInput igxDateTimeEditor [(ngModel)]="range.start">
-            </igx-date-start>
-            <igx-date-end>
+            </igx-date-range-start>
+            <igx-date-range-end>
                 <input igxInput igxDateTimeEditor [(ngModel)]="range.end">
-            </igx-date-end>
-        </igx-date-range>
+            </igx-date-range-end>
+        </igx-date-range-picker>
         ```
     - Added `IgxPickerToggleComponent` which allows templating of the default icon in the input through `igxPrefix` and `igxSuffix`.
         - default template:
         ```html
-        <igx-date-range>
+        <igx-date-range-picker>
             <igx-picker-toggle igxSuffix>
                 <igx-icon>calendar_view_day</igx-icon>
             </igx-picker-toggle>
-        </igx-date-range>
+        </igx-date-range-picker>
         ```
         - with projections:
         ```html
-        <igx-date-range>
-            <igx-date-start>
+        <igx-date-range-picker>
+            <igx-date-range-start>
                 ...
                 <igx-picker-toggle igxPrefix>
                     <igx-icon>calendar_view_day</igx-icon>
                 </igx-picker-toggle>
                 ...
-            </igx-date-start>
-            <igx-date-end>
+            </igx-date-range-start>
+            <igx-date-range-end>
                 ...
-            </igx-date-end>
-        </igx-date-range>
+            </igx-date-range-end>
+        </igx-date-range-picker>
         ```
 
 ### RTL Support

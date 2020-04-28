@@ -1,4 +1,4 @@
-import { IgxDateRangePickerComponent } from './igx-date-range.component';
+import { IgxDateRangePickerComponent } from './igx-date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { IgxIconModule } from '../icon';
 import { IgxCalendarModule, IgxCalendarComponent } from '../calendar/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDateRangePickerModule } from './igx-date-range.module';
+import { IgxDateRangePickerModule } from './igx-date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -683,12 +683,12 @@ export class DateRangeTestComponent implements OnInit {
     selector: 'igx-date-range-two-inputs-test',
     template: `
     <igx-date-range-picker [mode]="mode">
-            <igx-date-start>
+            <igx-date-range-start>
                 <input igxInput igxDateTimeEditor type="text" [(ngModel)]="startDate" required>
-            </igx-date-start>
-            <igx-date-end>
+            </igx-date-range-start>
+            <igx-date-range-end>
                 <input igxInput igxDateTimeEditor type="text" [(ngModel)]="endDate" required>
-            </igx-date-end>
+            </igx-date-range-end>
         </igx-date-range-picker>
 `
 })
