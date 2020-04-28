@@ -186,9 +186,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @internal
      */
     get viewIndex(): number {
-        if ((this.grid as any).groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.rowData);
-        }
         return this.index + this.grid.page * this.grid.perPage;
     }
 
