@@ -160,8 +160,11 @@ export class IgxGridCRUDService {
     }
 
     begin(cell): void {
-        const newCell = this.createCell(cell);
+        // this is necessary beacuse when the cell enters edit mode the focus should be moved to the edit template
+        // if we constantly retrigger the focus over the edit template we broke the scrolling experience in the hierarchical grid
+        // This fix should be removed, when the issue #7219 is resolved
         cell.focused = true;
+        const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
         const args = {
             cellID: newCell.id,
