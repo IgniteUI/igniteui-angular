@@ -80,7 +80,7 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
  * @igxGroup scheduling
  *
  * @example
- * html```
+ * ```html
  * <igx-date-range-picker>
  *   <igx-picker-toggle igxSuffix>
  *      <igx-icon>calendar_view_day</igx-icon>
@@ -117,7 +117,7 @@ export class IgxPickerToggleComponent {
  * When templating, start input has to be templated separately
  *
  * @example
- * html```
+ * ```html
  * <igx-date-range-picker mode="dropdown">
  *      <igx-date-range-start>
  *          <input igxInput igxDateTimeEditor type="text">
@@ -164,27 +164,8 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeBaseComponent { }
 
-/** @hidden @internal */
-@Component({
-    selector: 'igx-date-single',
-    templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeSingleComponent }]
-})
-export class IgxDateRangeSingleComponent extends IgxDateRangeBaseComponent {
-    public updateInput(value: any, inputFormat?: string, locale?: string) {
-        value = new DateRangePickerFormatPipe().transform(value, inputFormat, locale);
-        if (this.ngControl) {
-            this.ngControl.control.setValue(value);
-        } else {
-            this.input.value = value;
-        }
-    }
-}
-
 @Directive({
     selector: '[igxDateRangeSeparator]'
 })
 export class IgxDateRangeSeparatorDirective {
 }
-
-

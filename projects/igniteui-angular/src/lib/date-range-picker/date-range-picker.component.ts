@@ -31,7 +31,6 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import {
     DateRange,
     IgxDateRangeEndComponent,
-    IgxDateRangeSingleComponent,
     IgxDateRangeStartComponent,
     IgxPickerToggleComponent,
     IgxDateRangeSeparatorDirective
@@ -278,10 +277,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public cssClass = 'igx-date-range-picker';
 
     /** @hidden */
-    @ViewChild(IgxDateRangeSingleComponent)
-    public single: IgxDateRangeSingleComponent;
-
-    /** @hidden */
     @ViewChild(IgxCalendarComponent)
     public calendar: IgxCalendarComponent;
 
@@ -322,7 +317,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public get hasProjectedInputs(): boolean {
-        return this.projectedInputs.some(i => i instanceof IgxDateRangeStartComponent || i instanceof IgxDateRangeEndComponent);
+        return this.projectedInputs.length > 0;
     }
 
     private get dropdownOverlaySettings(): OverlaySettings {
@@ -340,8 +335,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _positionSettings: PositionSettings;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        modal: true,
-        positionStrategy: new GlobalPositionStrategy()
+        modal: true
     };
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -514,6 +508,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
         this.toggleComponents.changes.pipe(takeUntil(this.$destroy)).subscribe(() => subsToClicked());
         subsToClicked();
+        this.updateInputs();
     }
 
     /** @hidden @internal */
@@ -554,9 +549,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this.value && !this.value.end) {
             this.value = { start: this.value.start, end: this.value.start };
         }
-        this.onClosed.emit({ owner: this });
-        (this.single || this.projectedInputs
+        (this.projectedInputs
             .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
+        this.onClosed.emit({ owner: this });
     }
 
     /** @hidden @internal */
@@ -671,8 +666,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (start && end && this.value) {
             start.updateInput(this.value.start);
             end.updateInput(this.value.end);
-        } else if (this.single && this.value) {
-            this.single.updateInput(this.value, this.inputFormat, this.locale);
         }
     }
 }
