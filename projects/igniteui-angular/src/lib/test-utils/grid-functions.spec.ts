@@ -244,7 +244,7 @@ export class GridFunctions {
     }
 
     public static getGroupedRows(fix): DebugElement[] {
-        return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
+        return this.sortDebugElementsVertically(fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS)));
     }
 
     public static verifyGroupRowIsFocused(groupRow, focused = true) {
