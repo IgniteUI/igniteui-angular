@@ -382,35 +382,30 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
-            setupGridScrollDetection(fixture, grid);
-            grid.navigateTo(8);
-            await wait(DEBOUNCETIME);
+            let cell = grid.getCellByColumn(0, 'firstName' );
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            GridFunctions.simulateGridContentKeydown(fixture, 'ArrowDown', false, false, true);
+            await wait(100);
             fixture.detectChanges();
 
-            const testCells = grid.getColumnByName('firstName').cells;
-            let cell = testCells[testCells.length - 1];
-            const cellRowIndex = cell.rowIndex;
-            let cellElem = cell.nativeElement;
-
-            UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+            cell = grid.getCellByColumn(8, 'firstName' );
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
             const inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
-            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-           const expectedScroll = grid.verticalScrollContainer.getScroll().scrollTop;
+            expect(cell.nativeElement.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
+            const expectedScroll = grid.verticalScrollContainer.getScroll().scrollTop;
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
-            cell = grid.getCellByColumn(cellRowIndex, 'firstName' );
-            cellElem = cell.nativeElement;
+            cell = grid.getCellByColumn(8, 'firstName' );
             expect(cell.editMode).toBeTruthy();
-            expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
+            expect(cell.nativeElement.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(expectedScroll);
         }));
 
