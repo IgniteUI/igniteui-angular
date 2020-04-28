@@ -1,11 +1,11 @@
-<div #toggle="toggle" igxToggle [style.width]="'600px'"
+<div #toggle="toggle" igxToggle class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'"
     (onOpening)="handleOpening($event)" (onOpened)="handleOpened()"
-    (onClosing)="handleClosing($event)" (onClosed)="handleClosed()"
-    class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'">
+    (onClosing)="handleClosing($event)" (onClosed)="handleClosed()">
+    <!-- TODO: use IgxCalendarContainerComponent instead -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
         (onSelection)="handleSelection($event)"></igx-calendar>
-    <div class="igx-date-range-buttons">
+    <div class="igx-date-range-picker-buttons">
         <ng-container *ngIf="mode === 'dialog'">
             <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
         </ng-container>

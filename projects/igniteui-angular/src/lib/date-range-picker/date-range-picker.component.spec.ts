@@ -1,13 +1,11 @@
-import { IgxDateRangePickerComponent } from './igx-date-range-picker.component';
+import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { IgxIconModule } from '../icon';
-import { IgxCalendarModule, IgxCalendarComponent } from '../calendar/index';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxCalendarComponent } from '../calendar/index';
 import { IgxDateRangePickerModule } from './igx-date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -500,7 +498,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeDefaultComponent,
                         DateRangeTwoInputsTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule, FormsModule]
                 })
                     .compileComponents();
             }));

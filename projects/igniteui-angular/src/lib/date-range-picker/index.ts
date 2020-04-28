@@ -1,3 +1,3 @@
-export * from './igx-date-range-picker-inputs.common';
-export * from './igx-date-range-picker.component';
-export * from './igx-date-range-picker.module';
+export * from './date-range-picker-inputs.common';
+export * from './date-range-picker.component';
+export * from './date-range-picker.module';
