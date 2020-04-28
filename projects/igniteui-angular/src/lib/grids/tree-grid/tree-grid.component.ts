@@ -627,6 +627,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public pinRecordIndex(rec) {
+        const id = this.primaryKey ? rec.data[this.primaryKey] : rec.data;
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {
