@@ -4346,7 +4346,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
-                        this.compareMetadata(match, activeInfo)) {
+                        this.compareMetadata(match.metadata, activeInfo)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
@@ -6015,7 +6015,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             const metadata = new Map<string, any>();
-                            metadata.set('dataIndex', viewIndex);
+                            metadata.set('pinned', this.isRecordPinnedByIndex(viewIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
@@ -6029,7 +6029,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             const metadata = new Map<string, any>();
-                            metadata.set('dataIndex', viewIndex);
+                            metadata.set('pinned', this.isRecordPinnedByIndex(viewIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
