@@ -148,7 +148,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
  * ```html
  * <igx-date-range mode="dropdown">
  *      <igx-date-range-end>
- *          <input igxInput igxDateTimeEditor type="text" required>
+ *          <input igxInput igxDateTimeEditor type="text">
  *      </igx-date-range-end>
  *      ...
  * </igx-date-range>
