@@ -495,7 +495,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeDefaultComponent,
                         DateRangeTwoInputsTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, NoopAnimationsModule, FormsModule]
                 })
                     .compileComponents();
             }));
@@ -680,18 +680,19 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [(ngModel)]="range">
-            <igx-date-range-start>
-                <input igxInput igxDateTimeEditor type="text" required>
-            </igx-date-range-start>
-            <igx-date-range-end>
-                <input igxInput igxDateTimeEditor type="text" required>
-            </igx-date-range-end>
-        </igx-date-range-picker>
+    <igx-date-range-picker [mode]="mode">
+        <igx-date-range-start>
+            <input igxInput igxDateTimeEditor type="text" [(ngModel)]="startDate" required>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput igxDateTimeEditor type="text" [(ngModel)]="endDate" required>
+        </igx-date-range-end>
+    </igx-date-range-picker>
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
-    public range = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
+    startDate = new Date(2020, 1, 1);
+    endDate = new Date(2020, 1, 4);
 }
 
 @Component({
