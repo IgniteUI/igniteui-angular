@@ -15,6 +15,7 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
+const DEBOUNCE_TIME = 16;
 
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
@@ -120,7 +121,7 @@ describe('IgxDateRangePicker', () => {
             const fullDate = [month, day, year].join('/');
             return fullDate;
         }
-        describe('Selection tests', () => {
+        describe('API tests', () => {
             let calendarDays: DebugElement[];
             function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
                 const startDateDayElIndex = startDateDay - 1;
@@ -164,136 +165,196 @@ describe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 }
 
-                it('should assign range dates to the input when selecting a range from the calendar', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
+                describe('Selection tests', () => {
+                    it('should assign range dates to the input when selecting a range from the calendar', () => {
+                        fixture.componentInstance.mode = InteractionMode.DropDown;
+                        fixture.detectChanges();
 
-                    const dayRange = 15;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                    verifyDateRangeInSingleInput();
+                        const dayRange = 15;
+                        const today = new Date();
+                        startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                        endDate = new Date(startDate);
+                        endDate.setDate(endDate.getDate() + dayRange);
+                        selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                        verifyDateRangeInSingleInput();
+                    });
+
+                    it('should assign range values correctly when selecting dates in reversed order', () => {
+                        fixture.componentInstance.mode = InteractionMode.DropDown;
+                        fixture.detectChanges();
+
+                        const dayRange = -5;
+                        const today = new Date();
+                        startDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                        endDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                        selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                        verifyDateRangeInSingleInput();
+                    });
+
+                    it('should set start date on single date selection', () => {
+                        fixture.componentInstance.mode = InteractionMode.DropDown;
+                        fixture.detectChanges();
+
+                        const dayRange = 0;
+                        const today = new Date();
+                        startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                        endDate = null;
+                        selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                        verifyDateRangeInSingleInput();
+                    });
+
+                    it('should update input correctly on first and last date selection', () => {
+                        const today = new Date();
+                        startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                        endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
+                        const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
+                        const dayRange = Math.round(differenceMs / ONE_DAY);
+                        selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                        verifyDateRangeInSingleInput();
+                    });
+
+                    it('should assign range values correctly when selecting through API', () => {
+                        startDate = new Date(2020, 10, 8, 0, 0, 0);
+                        endDate = new Date(2020, 11, 8, 0, 0, 0);
+                        dateRange.selectRange(startDate, endDate);
+                        fixture.detectChanges();
+                        verifyDateRangeInSingleInput();
+
+                        startDate = new Date(2006, 5, 18, 0, 0, 0);
+                        endDate = new Date(2006, 8, 18, 0, 0, 0);
+                        dateRange.selectRange(startDate, endDate);
+                        fixture.detectChanges();
+                        verifyDateRangeInSingleInput();
+                    });
                 });
 
-                it('should assign range values correctly when selecting dates in reversed order', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
+                describe('Done button tests', () => {
+                    it('should close the calendar with the "Done" button', fakeAsync(() => {
+                        fixture.componentInstance.mode = InteractionMode.Dialog;
+                        fixture.detectChanges();
+                        const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
 
-                    const dayRange = -5;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    endDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
-                    verifyDateRangeInSingleInput();
+                        const dayRange = 8;
+                        const today = new Date();
+                        startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
+                        endDate = new Date(startDate);
+                        endDate.setDate(endDate.getDate() + dayRange);
+                        const startDateDayElIndex = startDate.getDate() - 1;
+                        const endDateDayElIndex = startDateDayElIndex + dayRange;
+                        dateRange.open();
+                        tick();
+                        fixture.detectChanges();
+                        expect(dateRange.collapsed).toBeFalsy();
+                        calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                        calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                        fixture.detectChanges();
+                        doneBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                        tick();
+                        fixture.detectChanges();
+                        verifyDateRangeInSingleInput();
+                        expect(dateRange.collapsed).toBeTruthy();
+                    }));
+
+                    it('should show the "Done" button only in dialog mode', () => {
+                        fixture.componentInstance.mode = InteractionMode.Dialog;
+                        fixture.detectChanges();
+
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                        let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                        expect(doneBtn).not.toBe(null);
+                        dateRange.toggle();
+                        fixture.detectChanges();
+
+                        fixture.componentInstance.mode = InteractionMode.DropDown;
+                        fixture.detectChanges();
+
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                        doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                        expect(doneBtn).toBe(null);
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                    });
+
+                    it('should be able to change the "Done" button text', () => {
+                        fixture.componentInstance.mode = InteractionMode.Dialog;
+                        fixture.detectChanges();
+
+                        let doneBtnText = 'Done';
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                        let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                        expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
+                        dateRange.toggle();
+                        fixture.detectChanges();
+
+                        doneBtnText = 'Close';
+                        dateRange.doneButtonText = doneBtnText;
+                        fixture.detectChanges();
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                        doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                        expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
+                        dateRange.toggle();
+                        fixture.detectChanges();
+                    });
                 });
+                describe('Open/close events tests', () => {
+                    it('should emit open/close events - open/close methods', fakeAsync(() => {
+                        spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                        spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                        spyOn(dateRange.onClosing, 'emit').and.callThrough();
+                        spyOn(dateRange.onClosed, 'emit').and.callThrough();
 
-                it('should set start date on single date selection', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
+                        dateRange.open();
+                        tick(DEBOUNCE_TIME);
+                        fixture.detectChanges();
+                        expect(dateRange.collapsed).toBeFalsy();
+                        expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ cancel: false });
+                        expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
-                    const dayRange = 0;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = null;
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                    verifyDateRangeInSingleInput();
-                });
+                        startDate = new Date(2020, 10, 8, 0, 0, 0);
+                        selectDateRangeFromCalendar(startDate.getDate(), 5);
 
-                it('should update input correctly on first and last date selection', () => {
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
-                    endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                    const dayRange = Math.round(differenceMs / ONE_DAY);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
-                    verifyDateRangeInSingleInput();
-                });
+                        dateRange.close();
+                        tick();
+                        fixture.detectChanges();
+                        expect(dateRange.collapsed).toBeTruthy();
+                        expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: undefined });
+                        expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    }));
+                    it('should emit open/close events - toggle method', fakeAsync(() => {
+                        spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                        spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                        spyOn(dateRange.onClosing, 'emit').and.callThrough();
+                        spyOn(dateRange.onClosed, 'emit').and.callThrough();
 
-                it('should assign range values correctly when selecting through API', () => {
-                    startDate = new Date(2020, 10, 8, 0, 0, 0);
-                    endDate = new Date(2020, 11, 8, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
-                    fixture.detectChanges();
-                    verifyDateRangeInSingleInput();
+                        dateRange.toggle();
+                        tick(DEBOUNCE_TIME);
+                        fixture.detectChanges();
+                        expect(dateRange.collapsed).toBeFalsy();
+                        expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ cancel: false });
+                        expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
-                    startDate = new Date(2006, 5, 18, 0, 0, 0);
-                    endDate = new Date(2006, 8, 18, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
-                    fixture.detectChanges();
-                    verifyDateRangeInSingleInput();
-                });
+                        startDate = new Date(2020, 10, 8, 0, 0, 0);
+                        selectDateRangeFromCalendar(startDate.getDate(), 5);
 
-                it('should close the calendar with the "Done" button', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
-                    fixture.detectChanges();
-                    const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-
-                    const dayRange = 8;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() - 1;
-                    const endDateDayElIndex = startDateDayElIndex + dayRange;
-                    dateRange.open();
-                    tick();
-                    fixture.detectChanges();
-                    expect(dateRange.collapsed).toBeFalsy();
-                    calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-                    calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-                    fixture.detectChanges();
-                    doneBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-                    tick();
-                    fixture.detectChanges();
-                    verifyDateRangeInSingleInput();
-                    expect(dateRange.collapsed).toBeTruthy();
-                }));
-
-                it('should show the "Done" button only in dialog mode', () => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
-                    fixture.detectChanges();
-
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn).not.toBe(null);
-                    dateRange.toggle();
-                    fixture.detectChanges();
-
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
-
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn).toBe(null);
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                });
-
-                it('should be able to change the "Done" button text', () => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
-                    fixture.detectChanges();
-
-                    let doneBtnText = 'Done';
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
-                    dateRange.toggle();
-                    fixture.detectChanges();
-
-                    doneBtnText = 'Close';
-                    dateRange.doneButtonText = doneBtnText;
-                    fixture.detectChanges();
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
-                    dateRange.toggle();
-                    fixture.detectChanges();
+                        dateRange.toggle();
+                        tick();
+                        fixture.detectChanges();
+                        expect(dateRange.collapsed).toBeTruthy();
+                        expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ cancel: false, event: undefined });
+                        expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                        expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    }));
                 });
             });
 
