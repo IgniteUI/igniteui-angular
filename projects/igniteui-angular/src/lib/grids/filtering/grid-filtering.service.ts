@@ -105,7 +105,6 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.onClosed.pipe(
             filter(overlay => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe(() => {
-                console.log('Close');
                 this._componentOverlayId = null;
                 this.grid.theadRow.nativeElement.focus();
             });

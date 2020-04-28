@@ -369,6 +369,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            await wait(30);
             fix.detectChanges();
 
             const gridContent = GridFunctions.getGridContent(fix);
@@ -378,14 +379,14 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             GridSelectionFunctions.verifyCellSelected(cell);
 
-            for (let i = 8; i < 16; i++) {
+            for (let i = 8; i < 12; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
                 await wait(30);
                 fix.detectChanges();
             }
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 11, 1, 1);
 
             for (let i = 1; i < 3; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
@@ -393,13 +394,13 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 fix.detectChanges();
             }
 
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 11, 1, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent, false, true);
             await wait(30);
             fix.detectChanges();
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 15, 1, 3);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 11, 1, 3);
         }));
 
         it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
