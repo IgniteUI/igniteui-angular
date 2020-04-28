@@ -161,6 +161,7 @@ export class IgxGridCRUDService {
 
     begin(cell): void {
         const newCell = this.createCell(cell);
+        cell.focused = true;
         newCell.primaryKey = this.primaryKey;
         const args = {
             cellID: newCell.id,
