@@ -655,9 +655,45 @@ describe('IgxDateRangePicker', () => {
         });
 
         describe('Validation', () => {
-            // Single Input (Default) Range Picker
-            // Two Inputs Range Picker
-            // TODO it('Should correctly implement interface methods', () => {
+            let dateRangePicker: IgxDateRangePickerComponent;
+            fit('IgxDateRangePickerComponent ControlValueAccessor Unit', () => {
+                const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+                const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28)};
+                const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25)};
+
+                // init
+                dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null);
+                dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
+                dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
+                spyOn(dateRangePicker, 'handleSelection');
+
+                // writeValue
+                expect(dateRangePicker.value).toBeUndefined();
+                expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
+                dateRangePicker.writeValue(range);
+                expect(dateRangePicker.value).toBe(range);
+
+                // set value & handleSelection call _onChangeCallback
+                dateRangePicker.value = rangeUpdate;
+                expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
+
+                dateRangePicker.handleSelection([range.start]);
+                expect(dateRangePicker.handleSelection).toHaveBeenCalledWith([range.start]);
+                expect(dateRangePicker.handleSelection).toHaveBeenCalledTimes(1);
+                expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({start: range.start, end: range.end});
+
+                // awaiting implementation - OnTouched callback
+                // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
+                // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
+                // dateRangePicker.handleSelection([range.start]);
+                // expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+
+                // awaiting implementation - setDisabledState
+                // dateRangePicker.setDisabledState(true);
+                // expect(dateRangePicker.disabled).toBe(true);
+                // dateRangePicker.setDisabledState(false);
+                // expect(dateRangePicker.disabled).toBe(false);
+            });
         });
 
         describe('Templating', () => {
