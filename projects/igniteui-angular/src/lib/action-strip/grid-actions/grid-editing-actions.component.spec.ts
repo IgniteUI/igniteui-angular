@@ -3,7 +3,7 @@ import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon';
-import { IgxGridModule, IgxGridComponent, IgxGridRowComponent } from '../../grids/grid';
+import { IgxGridModule, IgxGridComponent } from '../../grids/grid';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxActionStripModule } from '../action-strip.module';
