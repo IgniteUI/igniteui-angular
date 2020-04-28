@@ -682,10 +682,10 @@ export class DateRangeTestComponent implements OnInit {
     template: `
     <igx-date-range-picker [mode]="mode" [(ngModel)]="range">
             <igx-date-range-start>
-                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="range.start" required>
+                <input igxInput igxDateTimeEditor type="text" required>
             </igx-date-range-start>
             <igx-date-range-end>
-                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="range.end" required>
+                <input igxInput igxDateTimeEditor type="text" required>
             </igx-date-range-end>
         </igx-date-range-picker>
 `
