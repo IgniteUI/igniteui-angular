@@ -418,6 +418,17 @@ export class IgxDateRangeComponent extends DisplayDensityBase implements IToggle
     }
 
     /**
+     * Gets calendar state.
+     *
+     * ```typescript
+     * let state = this.dateRange.collapsed;
+     * ```
+     */
+    public get collapsed(): boolean {
+        return this.toggleDirective.collapsed;
+    }
+
+    /**
      * The currently selected value / range from the calendar
      *
      * @remarks
