@@ -385,7 +385,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.value.start).toEqual(startDate);
                     expect(dateRange.value.end).toEqual(endDate);
                     expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                    const expectedEndDate = endDate ? formatFullDate(endDate) : '__/__/____';
+                    const expectedEndDate = endDate ? formatFullDate(endDate) : '';
                     expect(endInput.nativeElement.value).toEqual(expectedEndDate);
                 }
 
