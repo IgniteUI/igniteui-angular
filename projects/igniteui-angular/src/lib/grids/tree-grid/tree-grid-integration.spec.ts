@@ -1575,12 +1575,12 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.perPage = 5;
             fix.detectChanges();
 
-            expect(treeGrid.dataView.length).toBe(5);
+            expect(treeGrid.dataView.length).toBe(6);
 
             treeGrid.perPage = 10;
             fix.detectChanges();
 
-            expect(treeGrid.dataView.length).toBe(10);
+            expect(treeGrid.dataView.length).toBe(11);
         });
 
         it('should correctly apply paging state for grid and paginator when there are pinned rows.', fakeAsync(() => {
