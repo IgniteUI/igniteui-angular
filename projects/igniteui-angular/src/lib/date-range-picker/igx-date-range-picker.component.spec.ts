@@ -5,9 +5,7 @@ import { IgxInputGroupModule } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { IgxIconModule } from '../icon';
-import { IgxCalendarModule, IgxCalendarComponent } from '../calendar/index';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxCalendarComponent } from '../calendar/index';
 import { IgxDateRangePickerModule } from './igx-date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -682,19 +680,18 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode">
+    <igx-date-range-picker [mode]="mode" [(ngModel)]="range">
             <igx-date-range-start>
-                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="startDate" required>
+                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="range.start" required>
             </igx-date-range-start>
             <igx-date-range-end>
-                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="endDate" required>
+                <input igxInput igxDateTimeEditor type="text" [(ngModel)]="range.end" required>
             </igx-date-range-end>
         </igx-date-range-picker>
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
-    startDate = new Date(2020, 1, 1);
-    endDate = new Date(2020, 1, 4);
+    public range = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
 }
 
 @Component({
