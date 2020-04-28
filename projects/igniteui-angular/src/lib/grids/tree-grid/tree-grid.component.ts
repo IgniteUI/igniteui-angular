@@ -627,6 +627,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public pinRecordIndex(rec) {
+        return super.pinRecordIndex(rec.data);
+    }
+
+    /**
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {
