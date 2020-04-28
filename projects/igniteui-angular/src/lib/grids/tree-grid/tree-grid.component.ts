@@ -631,8 +631,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @internal
      */
     public pinRecordIndex(rec) {
-        const id = this.primaryKey ? rec.data[this.primaryKey] : rec.data;
-        return this._pinnedRecordIDs.indexOf(id);
+        return super.pinRecordIndex(rec.data);
     }
 
     /**
