@@ -10,7 +10,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridCellComponent, IGridCellEventArgs } from '../grid';
+import { IGridCellEventArgs } from '../grid';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 const DEBOUNCE_TIME = 60;
@@ -610,17 +610,14 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         hierarchicalGrid.getColumnByName('ID').hidden = true;
         await wait(50);
         fixture.detectChanges();
-        hierarchicalGrid.navigateTo(2);
-        await wait(DEBOUNCE_TIME);
-        fixture.detectChanges();
 
-        const cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
+        const cell = hierarchicalGrid.getCellByColumn(0, 'ChildLevels');
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+        UIInteractions.triggerEventHandlerKeyDown('tab', baseHGridContent, false, true, false);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         const activeEl = document.activeElement;
