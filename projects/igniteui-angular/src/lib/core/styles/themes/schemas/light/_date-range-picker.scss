@@ -4,25 +4,25 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a light date-range schema.
+/// Generates a light date-range-picker schema.
 /// @type {Map}
 /// @prop {Map} color [igx-color: 'surface'] - The Color for date range separator label.
-$_light-date-range: (
+$_light-date-range-picker: (
     color: (
         igx-color: ('grays', 500),
     )
 );
 
-/// Generates a fluent date-range schema.
+/// Generates a fluent date-range-picker schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-date-range
+/// @requires {map} $_light-date-range-picker
 /// @see $default-palette
-$_fluent-date-range: extend($_light-date-range);
+$_fluent-date-range-picker: extend($_light-date-range-picker);
 
-/// Generates a bootstrap date-range schema.
+/// Generates a bootstrap date-range-picker schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires {map} $_light-date-range
+/// @requires {map} $_light-date-range-picker
 /// @see $bootstrap-palette
-$_bootstrap-date-range: extend($_light-date-range);
+$_bootstrap-date-range-picker: extend($_light-date-range-picker);

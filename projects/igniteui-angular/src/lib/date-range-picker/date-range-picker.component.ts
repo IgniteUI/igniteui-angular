@@ -51,7 +51,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @igxModule IgxDateRangeModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
@@ -59,7 +59,7 @@ const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
  *
  * @remarks
  * It displays the range selection in a single or two input fields.
- * The default template displays a single *readonly* input field while projecting `igx-date-range-start` and `igx-date-range-end`
+ * The default template displays a single *readonly* input field while projecting `igx-date-range-picker-start` and `igx-date-range-picker-end`
  * displays two *editable* input fields.
  *
  * @example
@@ -485,7 +485,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     get separatorClass(): string {
-        return this.getComponentDensityClass('igx-date-range__label');
+        return this.getComponentDensityClass('igx-date-range-picker__label');
     }
 
     /** @hidden */

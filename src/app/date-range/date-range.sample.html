@@ -57,14 +57,14 @@
         <div class="container">
             <h4 class="title">Book your room</h4>
 
-            <div class="date-range-wrapper">
+            <div class="date-range-picker-wrapper">
                 <igx-date-range-picker #defDateRange [mode]="'dropdown'" formControlName="dateRange">
-                    <igx-date-range-start>
+                    <igx-date-range-picker-start>
                         <input igxInput igxDateTimeEditor type="text">
-                    </igx-date-range-start>
-                    <igx-date-range-end>
+                    </igx-date-range-picker-start>
+                    <igx-date-range-picker-end>
                         <input igxInput igxDateTimeEditor type="text">
-                    </igx-date-range-end>
+                    </igx-date-range-picker-end>
                 </igx-date-range-picker>
             </div>
 
@@ -77,7 +77,7 @@
 
     <form class="book-room-form">
         <div class="container">
-            <div class="date-range-wrapper">
+            <div class="date-range-picker-wrapper">
                 <igx-date-range-picker #singleInputDateRange (rangeSelected)="onRangeSelected($event)" [(ngModel)]="content"
                     [ngModelOptions]="{ standalone: true }" [mode]="'dropdown'">
                     <igx-date-single>
