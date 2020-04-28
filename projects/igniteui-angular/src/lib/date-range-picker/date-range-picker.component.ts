@@ -81,7 +81,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      *
      * @example
      * ```html
-     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker
+     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker>
      * ```
      */
     @Input()
