@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMetadata } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -4346,7 +4346,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
-                        this.compareMetadata(match.metadata, activeInfo)) {
+                        compareMetadata(match.metadata, activeInfo)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
@@ -6386,30 +6386,5 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             advancedFilteringDialog.closeDialog();
         }
-    }
-
-    /**
-     * @internal
-     * @hidden
-     */
-    private compareMetadata(match: any, activeInfo: IActiveHighlightInfo) {
-        let metadataMatch = true;
-        if (activeInfo.metadata) {
-            if (activeInfo.metadata.size !== match.size) {
-                return false;
-            } else {
-                activeInfo.metadata.forEach((value, key) => {
-                    if (!metadataMatch) {
-                        return false;
-                    }
-                    if (match.has(key)) {
-                        metadataMatch = match.get(key) === value;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-        }
-        return metadataMatch;
     }
 }

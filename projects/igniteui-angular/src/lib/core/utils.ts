@@ -2,6 +2,7 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
+import { IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 
 /**
  * @hidden
@@ -354,4 +355,25 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
         const unsubscribe = () => instance.disconnect();
         return unsubscribe;
     });
+}
+
+export function compareMetadata(match: any, activeInfo: IActiveHighlightInfo) {
+    let metadataMatch = true;
+    if (activeInfo.metadata) {
+        if (activeInfo.metadata.size !== match.size) {
+            return false;
+        } else {
+            activeInfo.metadata.forEach((value, key) => {
+                if (!metadataMatch) {
+                    return false;
+                }
+                if (match.has(key)) {
+                    metadataMatch = match.get(key) === value;
+                } else {
+                    return false;
+                }
+            });
+        }
+    }
+    return metadataMatch;
 }

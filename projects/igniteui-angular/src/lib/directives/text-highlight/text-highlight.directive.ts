@@ -14,6 +14,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
+import { compareMetadata } from '../../core/utils';
 
 interface ISearchInfo {
     searchedText: string;
@@ -193,7 +194,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      *  // Set a property, which would disable the highlight for a given element on a cetain condition
      *
      *  const metadata = new Map<string, any>();
-     *  metadata.set('highlightElement') = false;
+     *  metadata.set('highlightElement', false);
      *
      *  const metadataMap = new Map<string, any>();
      *  metadataMap.set('highlightElement') = true;
@@ -365,26 +366,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
         const row = group.rowIndex === undefined ? group.row : group.rowIndex;
 
-        let metadataMatch = true;
-
-        if (group.metadata) {
-            if (group.metadata.size !== this.metadata.size) {
-                metadataMatch = false;
-            } else {
-                group.metadata.forEach((value, key) => {
-                    if (!metadataMatch) {
-                        return;
-                    }
-                    if (this.metadata.has(key)) {
-                        metadataMatch = this.metadata.get(key) === value;
-                    } else {
-                        metadataMatch = false;
-                    }
-                });
-            }
-        }
-
-        if (column === this.column && row === this.row && group.page === this.page && metadataMatch) {
+        if (column === this.column && row === this.row && group.page === this.page && compareMetadata(this.metadata, group)) {
             this.activate(group.index);
         }
     }
