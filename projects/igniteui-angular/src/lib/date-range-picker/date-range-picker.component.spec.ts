@@ -1,4 +1,4 @@
-import { IgxDateRangePickerComponent } from './igx-date-range-picker.component';
+import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
