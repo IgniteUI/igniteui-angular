@@ -225,7 +225,7 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRangeInSingleInput();
                 });
 
-                it('should close the calendar with the "Done" button', () => {
+                it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
                     const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
@@ -238,15 +238,18 @@ describe('IgxDateRangePicker', () => {
                     const startDateDayElIndex = startDate.getDate() - 1;
                     const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
+                    tick();
                     fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
                     calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                     fixture.detectChanges();
                     doneBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                    tick();
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
-                    // TODO verify collapsed
-                });
+                    expect(dateRange.collapsed).toBeTruthy();
+                }));
 
                 it('should show the "Done" button only in dialog mode', () => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
@@ -461,7 +464,7 @@ describe('IgxDateRangePicker', () => {
             }));
 
             xit('should move the focus to the single input on close', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeSingleInputTestComponent);
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.componentInstance.mode = InteractionMode.DropDown;
                 fixture.detectChanges();
 
@@ -716,43 +719,19 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode">
-        <igx-date-range-start>
-            <input igxInput igxDateTimeEditor type="text" [(ngModel)]="startDate" required>
-        </igx-date-range-start>
-        <igx-date-range-end>
-            <input igxInput igxDateTimeEditor type="text" [(ngModel)]="endDate" required>
-        </igx-date-range-end>
-    </igx-date-range-picker>
+    <igx-date-range-picker [mode]="mode" [(ngModel)]="range">
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor type="text" required>
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor type="text" required>
+            </igx-date-range-end>
+        </igx-date-range-picker>
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     startDate = new Date(2020, 1, 1);
     endDate = new Date(2020, 1, 4);
-}
-
-@Component({
-    selector: 'igx-date-range-single-input-test',
-    template: `
-    <igx-input-group>
-        <input #fullName igxInput type="text">
-        <label for="fullName" igxLabel>Full Name</label>
-        <igx-prefix>
-            <igx-icon>person</igx-icon>
-        </igx-prefix>
-    </igx-input-group>
-    <igx-date-range-picker [mode]="mode" [doneButtonText]="doneButtonText">
-        <igx-input-group>
-            <input #singleInput igxInput igxDateRange type="text">
-            <label igxLabel for="singleInput">Input Date</label>
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-        </igx-input-group>
-    </igx-date-range-picker>
-`
-})
-export class DateRangeSingleInputTestComponent extends DateRangeTestComponent {
 }
 
 @Component({

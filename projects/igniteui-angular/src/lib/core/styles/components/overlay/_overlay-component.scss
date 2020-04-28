@@ -15,13 +15,6 @@
         @extend %overlay-wrapper !optional;
     }
 
-    @include e(dialog-buttons) {
-        @extend %igx-overlay__dialog-buttons !optional;
-    }
-    @include e(dialog-buttons-inner) {
-        @extend %igx-overlay__dialog-buttons-inner !optional;
-    }
-
     @include e(wrapper, $m: modal) {
         @extend %overlay-wrapper !optional;
         @extend %overlay-wrapper--modal !optional;

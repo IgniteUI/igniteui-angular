@@ -18,7 +18,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
-@import './date-range';
+@import './date-range-picker';
 @import './divider';
 @import './drop-down';
 @import './expansion-panel';
@@ -63,7 +63,7 @@
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
-/// @property {Map} igx-date-range  [$_light-date-range ]
+/// @property {Map} igx-date-range-picker [$_light-date-range-picker ]
 /// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
@@ -107,7 +107,7 @@ $light-schema: (
     igx-column-hiding: $_light-column-hiding,
     igx-combo: $_light-combo,
     igx-dialog: $_light-dialog,
-    igx-date-range: $_light-date-range,
+    igx-date-range: $_light-date-range-picker,
     igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
@@ -153,7 +153,7 @@ $light-fluent-schema: (
     igx-column-hiding: $_fluent-column-hiding,
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
-    igx-date-range: $_fluent-date-range,
+    igx-date-range: $_fluent-date-range-picker,
     igx-divider: $_fluent-divider,
     igx-drop-down: $_fluent-drop-down,
     igx-expansion-panel: $_fluent-expansion-panel,
@@ -199,7 +199,7 @@ $light-bootstrap-schema: (
     igx-column-hiding: $_bootstrap-column-hiding,
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,
-    igx-date-range: $_bootstrap-date-range,
+    igx-date-range: $_bootstrap-date-range-picker,
     igx-divider: $_bootstrap-divider,
     igx-drop-down: $_bootstrap-drop-down,
     igx-expansion-panel: $_bootstrap-expansion-panel,

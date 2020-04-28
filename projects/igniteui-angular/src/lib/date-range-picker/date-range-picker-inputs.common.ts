@@ -5,6 +5,9 @@ import { NgControl } from '@angular/forms';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { formatDate } from '@angular/common';
 
+/**
+ * Represents a range between two dates.
+ */
 export interface DateRange {
     start: Date;
     end: Date;
@@ -77,7 +80,7 @@ class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
  * @igxGroup scheduling
  *
  * @example
- * html```
+ * ```html
  * <igx-date-range-picker>
  *   <igx-picker-toggle igxSuffix>
  *      <igx-icon>calendar_view_day</igx-icon>
@@ -104,7 +107,7 @@ export class IgxPickerToggleComponent {
  *
  * @igxModule IgxDateRangePickerModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
@@ -114,11 +117,11 @@ export class IgxPickerToggleComponent {
  * When templating, start input has to be templated separately
  *
  * @example
- * html```
+ * ```html
  * <igx-date-range-picker mode="dropdown">
- *      <igx-date-range-start>
+ *      <igx-date-range-picker-start>
  *          <input igxInput igxDateTimeEditor type="text">
- *      </igx-date-range-start>
+ *      </igx-date-range-picker-start>
  *      ...
  * </igx-date-range-picker>
  * ```
@@ -135,7 +138,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
  *
  * @igxModule IgxDateRangeModule
  *
- * @igxTheme igx-input-group-theme, igx-calendar-theme
+ * @igxTheme igx-input-group-theme, igx-calendar-theme, igx-date-range-picker-theme
  *
  * @igxKeywords date, range, date range, date picker
  *
@@ -146,12 +149,12 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
  *
  * @example
  * ```html
- * <igx-date-range mode="dropdown">
- *      <igx-date-range-end>
+ * <igx-date-range-picker mode="dropdown">
+ *      <igx-date-range-picker-end>
  *          <input igxInput igxDateTimeEditor type="text">
- *      </igx-date-range-end>
+ *      </igx-date-range-picker-end>
  *      ...
- * </igx-date-range>
+ * </igx-date-range-picker>
  * ```
  */
 @Component({
@@ -161,27 +164,8 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeBaseComponent { }
 
-/** @hidden @internal */
-@Component({
-    selector: 'igx-date-single',
-    templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeSingleComponent }]
-})
-export class IgxDateRangeSingleComponent extends IgxDateRangeBaseComponent {
-    public updateInput(value: any, inputFormat?: string, locale?: string) {
-        value = new DateRangePickerFormatPipe().transform(value, inputFormat, locale);
-        if (this.ngControl) {
-            this.ngControl.control.setValue(value);
-        } else {
-            this.input.value = value;
-        }
-    }
-}
-
 @Directive({
     selector: '[igxDateRangeSeparator]'
 })
 export class IgxDateRangeSeparatorDirective {
 }
-
-
