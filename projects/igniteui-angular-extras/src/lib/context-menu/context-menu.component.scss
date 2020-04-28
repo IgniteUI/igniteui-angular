@@ -1,7 +1,5 @@
 @import '../../../../igniteui-angular/src/lib/core/styles/themes/index';
 
-@include igx-fluent-theme($fluent-excel-palette);
-
 .analytics-btn {
     @include igx-button(igx-button-theme($palette: $fluent-excel-palette,
     $icon-color: #fff,
