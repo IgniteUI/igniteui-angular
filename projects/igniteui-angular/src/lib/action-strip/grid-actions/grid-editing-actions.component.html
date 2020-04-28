@@ -1,4 +1,4 @@
-<ng-container *ngIf="isRowContext">
+<ng-container *ngIf="isRowContext && !disabled">
     <button igxButton="icon" igxRipple (click)="startEdit()">
         <igx-icon>edit</igx-icon>
     </button>

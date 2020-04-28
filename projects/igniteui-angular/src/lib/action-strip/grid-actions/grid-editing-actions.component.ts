@@ -48,4 +48,16 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const grid = context.grid;
         grid.deleteRow(context.rowID);
     }
+
+    /**
+     * Getter if the row is disabled
+     * @hidden
+     * @internal
+     */
+    get disabled(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        return this.strip.context.disabled;
+    }
 }

@@ -13,7 +13,7 @@ export class IgxGridActionsBaseDirective {
      * @hidden
      * @internal
      */
-    isRowContext(): boolean {
+    get isRowContext(): boolean {
         return this.isRow(this.strip.context);
     }
 

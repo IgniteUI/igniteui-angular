@@ -17,7 +17,8 @@ describe('igxGridEditingActions #grid ', () => {
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxActionStripTestingComponent
+                IgxActionStripTestingComponent,
+                IgxActionStripPinEditComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -54,6 +55,24 @@ describe('igxGridEditingActions #grid ', () => {
         fixture.detectChanges();
         expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
         expect(dataLenght - 1).toBe(grid.dataLength);
+    });
+
+    describe('integration with pinning actions ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        });
+        it('should allow editing actions on disabled rows', () => {
+            grid.rowList.first.pin();
+            fixture.detectChanges();
+            actionStrip.show(grid.rowList[1]);
+            const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
+            const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`));
+            expect(editingIcons.length).toBe(0);
+            expect(pinningIcons.length).toBe(0);
+        });
     });
 });
 
@@ -128,4 +147,22 @@ class IgxActionStripTestingComponent implements OnInit {
         ];
         // tslint:enable:max-line-length
     }
+}
+
+@Component({
+    template: `
+<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-pinnig-actions></igx-grid-pinnig-actions>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 }
