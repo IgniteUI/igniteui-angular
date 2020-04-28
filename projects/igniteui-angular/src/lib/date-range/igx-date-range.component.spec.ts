@@ -518,30 +518,30 @@ describe('IgxRangeDatePicker', () => {
                 }));
 
                 it('Should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeSingle.collapsed).toBeTruthy();
                     calendar.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     tick();
                     fixture.detectChanges();
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeFalsy();
+                    expect(dateRangeSingle.collapsed).toBeFalsy();
                     calendar.triggerEventHandler('keydown', altArrowUpKeyEvent);
                     tick();
                     fixture.detectChanges();
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeSingle.collapsed).toBeTruthy();
                 }));
 
                 it('Should close the calendar with ESC', fakeAsync(() => {
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeSingle.collapsed).toBeTruthy();
                     dateRangeSingle.toggleDirective.toggle();
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeFalsy();
+                    expect(dateRangeSingle.collapsed).toBeFalsy();
 
                     calendar.triggerEventHandler('keydown', escapeKeyEvent);
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRangeSingle.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeSingle.collapsed).toBeTruthy();
                 }));
             });
             describe('Keyboard Navigation Two Inputs', () => {
@@ -561,33 +561,33 @@ describe('IgxRangeDatePicker', () => {
                 }));
 
                 it('Should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeTwoInputs.collapsed).toBeTruthy();
 
                     calendar.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     tick();
                     fixture.detectChanges();
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeFalsy();
+                    expect(dateRangeTwoInputs.collapsed).toBeFalsy();
 
                     calendar.triggerEventHandler('keydown', altArrowUpKeyEvent);
                     tick();
                     fixture.detectChanges();
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeTwoInputs.collapsed).toBeTruthy();
                 }));
 
                 it('Should close the calendar with ESC', fakeAsync(() => {
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeTwoInputs.collapsed).toBeTruthy();
 
                     dateRangeTwoInputs.toggle();
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeFalsy();
+                    expect(dateRangeTwoInputs.collapsed).toBeFalsy();
 
                     calendar.triggerEventHandler('keydown', escapeKeyEvent);
                     tick();
                     fixture.detectChanges();
 
-                    expect(dateRangeTwoInputs.toggleDirective.collapsed).toBeTruthy();
+                    expect(dateRangeTwoInputs.collapsed).toBeTruthy();
                 }));
             });
         });
