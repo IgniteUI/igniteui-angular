@@ -132,7 +132,7 @@ export class IgxGridStateDirective {
      * @hidden
      */
     constructor(
-        @Host() @Optional() private grid: IgxGridBaseDirective,
+        @Host() @Optional() public grid: IgxGridBaseDirective,
         private resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef) { }
 
@@ -197,8 +197,9 @@ export class IgxGridStateDirective {
      */
     private restoreGridState() {
         for (const key of Object.keys(this.state)) {
-            if (this.state[key]) {
-                this.restoreFeature(key, this.state[key]);
+            const state = this.state[key];
+            if (state) {
+                this.restoreFeature(key, state);
             }
         }
     }

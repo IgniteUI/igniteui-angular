@@ -1,127 +1,59 @@
+<!-- IgxGrid -->
 <div class="grid__wrapper">
-    <div class="controls-holder">
-        <div class="control-item">
-            <ul>
-                <li>Navigate away to visit the <a [routerLink]="['../gridAbout']"><strong>ABOUT</strong></a> page and then return to see the igxGrid restored its state.</li>
-                <li>Use the switch buttons to clear currently stored state and stop saving state for the corresponding feature.</li>
-                <li>Use the <strong>delete</strong> and <strong>reload</strong> buttons to clear the localStorage content and reload the page with clear state.</li>
-            </ul>
-        </div>
-        <div class="switches" style="min-width: inherit">
-            <igx-buttongroup [values]="selectionModes" (onSelect)="selectCellSelectionMode($event)"></igx-buttongroup>
-        </div>
-        <div class="switches">
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.rowSelection" (change)="onChange($event, 'rowSelection')">Row Selection</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.cellSelection" (change)="onChange($event, 'cellSelection')">Cell Selection</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.columnSelection" (change)="onChange($event, 'columnSelection')">Column Selection</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.filtering" (change)="onChange($event, 'filtering')">Filtering</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.advancedFiltering" (change)="onChange($event, 'advancedFiltering')">Advanced Filtering</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.paging" (change)="onChange($event, 'paging')">Paging</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.sorting" (change)="onChange($event, 'sorting')">Sorting</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.groupBy" (change)="onChange($event, 'groupBy')">Grouping</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="options.columns" (change)="onChange($event, 'columns')">Columns</igx-switch>
-            </div>
-            <div class="control-item">
-                <igx-switch [(ngModel)]="serialize">Serialize</igx-switch>
-            </div>
-        </div>
-        <div class="switches" style="min-width: inherit">
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreGridState()">Restore All</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreColumns()">Columns</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreFiltering()">Filtering</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreAdvancedFiltering()">Adv Filtering</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreSorting()">Sorting</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreGroupby()">GroupBy</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreRowSelection()">Row Selection</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restoreCellSelection()">Cell Selection</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="restorePaging()">Paging</button>
-            </div>
-            <div class="control-item">
-                <button igxButton="raised" (click)="resetGridState()">Reset</button>
-            </div>
-            <div class="control-item">
-                <span class="clear-button" (click)="clearStorage()" #target="tooltipTarget" [igxTooltipTarget]="clear"><igx-icon>delete</igx-icon></span>
-            </div>
-            <div class="control-item">
-                <span class="clear-button" (click)="reloadPage()" #target="tooltipTarget" [igxTooltipTarget]="reload"><igx-icon>refresh</igx-icon></span>
-            </div>
-        </div>
-    </div>
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Flat Grid</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div style='width: 100%; height: 100%'>
+                <ng-container *ngTemplateOutlet="controls; context: getContext(grid)"></ng-container>
+                <igx-grid [id]="gridId" #grid [igxGridState]="options" [columnPinning]="true"
+                    width="1200px" height="550px" [autoGenerate]="false"
+                    [data]="localData"
+                    [primaryKey]="'EmployeeID'"
+                    [rowEditable]="false"
+                    [allowFiltering]="true" [allowAdvancedFiltering]="true" [filterMode]="'excelStyleFilter'"
+                    [paging]="true"
+                    [showToolbar]="true"
+                    [columnPinning]="true"
+                    [columnHiding]="true"
+                    [displayDensity]="'cosy'"
+                    [cellSelection]="'multiple'"
+                    [rowSelection]="'multiple'">
+                        <igx-column *ngFor="let c of initialColumns"
+                            [sortable]="c.sortable"
+                            [movable]="c.movable"
+                            [editable]="true"
+                            [hasSummary]="c.hasSummary"
+                            [filterable]="c.filterable"
+                            [groupable]="c.groupable"
+                            [field]="c.field"
+                            [header]="c.header"
+                            [dataType]="c.dataType"
+                            [pinned]="c.pinned"
+                            [hidden]="c.hidden">
+                        </igx-column>
 
-    <igx-grid [id]="gridId" #grid1 [igxGridState]="options"
-        width="1200px" height="550px" [autoGenerate]="false"
-        [data]="localData"
-        [primaryKey]="'EmployeeID'"
-        [rowEditable]="false"
-        [allowFiltering]="true" [allowAdvancedFiltering]="true" [filterMode]="'excelStyleFilter'"
-        [paging]="true"
-        [showToolbar]="true"
-        [columnPinning]="true"
-        [columnHiding]="true"
-        [displayDensity]="'cosy'"
-        [cellSelection]="selectionMode"
-        [rowSelection]="'none'">
-            <igx-column *ngFor="let c of columns"
-                [sortable]="c.sortable"
-                [movable]="c.movable"
-                [editable]="true"
-                [hasSummary]="c.hasSummary"
-                [filterable]="c.filterable"
-                [groupable]="c.groupable"
-                [field]="c.field"
-                [header]="c.header"
-                [dataType]="c.dataType"
-                [pinned]="c.pinned"
-                [hidden]="c.hidden">
-            </igx-column>
-
-            <!-- Grid Detail View Template -->
-            <ng-template igxGridDetail let-dataItem>
-                <span>Detail view</span>
-            </ng-template>
-        </igx-grid>
+                        <!-- Grid Detail View Template -->
+                        <ng-template igxGridDetail let-dataItem>
+                            <span>Detail view</span>
+                        </ng-template>
+                
+                </igx-grid>
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
 
     <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
     <div #reload="tooltip" igxTooltip>Reload the page.</div>
 </div>
 
-<br />
+<!-- IgxHierarchicalGrid -->
 <div class="grid__wrapper">
-    <igx-expansion-panel #collapsibleComponent [collapsed]="false">
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
         <igx-expansion-panel-header [disabled]="false">
             <igx-expansion-panel-title>Hierarchical Grid</igx-expansion-panel-title>
             <igx-expansion-panel-icon *ngIf="templatedIcon">
@@ -130,7 +62,8 @@
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
-                <igx-hierarchical-grid #grid1 [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
+                <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
+                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
                     [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
                     [height]="'600px'" [width]="'100%'" #hGrid>
                     <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
@@ -150,7 +83,7 @@
                     <ng-template igxRowCollapsedIndicator>
                         <igx-icon role="button" fontSet="material">add</igx-icon>
                     </ng-template>
-                    <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelectable='true' #layout1 >
+                    <igx-row-island [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelectable='true' #layout1>
                             <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
                             <igx-column-group header="Information2">
                                 <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
@@ -182,18 +115,60 @@
             
                         </igx-row-island>
                     </igx-row-island>
-                    <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
-                            <igx-column field="ChildLevels" [groupable]='true'></igx-column>
-                            <igx-column field="ProductName" [groupable]='true'></igx-column>
-                    </igx-row-island>  -->
-                    <ng-template let-data igxRowDragGhost>
-                        <div class="dragGhost">
-                                <igx-icon fontSet="material"></igx-icon> 
-                                Moving parent {{data.ProductName}}!
-                            </div>
-                    </ng-template>
                 </igx-hierarchical-grid>
             </div>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
 </div>
+
+<!-- IgxTreeGrid -->
+<div class="grid__wrapper">
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Tree Grid</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div style='width: 100%; height: 100%'>
+                <ng-container *ngTemplateOutlet="controls; context: getContext(treeGrid)"></ng-container>
+                <igx-tree-grid [id]="treeGridId" igxGridState #treeGrid [allowFiltering]='true' [data]="treeGridData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+                    [paging]="false" [width]="'900px'" [height]="'800px'" [columnHiding]="true" [columnPinning]="true" exportExcelText="Export to Excel" exportCsvText="Export to CSV">
+                    <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
+                        [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+                        [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
+                        [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+                    </igx-column>
+
+                    <ng-template igxToolbarCustomContent>
+                        <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+                    </ng-template>
+                </igx-tree-grid>
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+</div>
+
+<ng-template #controls let-grid let-state="stateDirective">
+    <ul>
+        <li>Navigate away to visit the <a [routerLink]="['../gridAbout']"><strong>ABOUT</strong></a> page to save grid state into local storage.</li>
+        <li>Use the switch buttons to turn on/off saving state for the corresponding feature.</li>
+        <li>Use the <span class="clear-button" (click)="clearStorage(grid)" #target="tooltipTarget" [igxTooltipTarget]="clear"><igx-icon>delete</igx-icon></span> and <span class="clear-button" (click)="reloadPage()" #target="tooltipTarget" [igxTooltipTarget]="reload"><igx-icon>refresh</igx-icon></span> buttons to clear the localStorage content and reload the page with clear state.</li>
+    </ul>
+    <div class="controls-holder">
+        <div class="switches">
+            <div class="control-item" *ngFor="let f of features">
+                <igx-switch [(ngModel)]="options[f.key]" (change)="onChange($event, f.key, state)">{{ f.shortName }}</igx-switch>
+            </div>
+        </div>
+        <div class="switches" style="min-width: inherit">
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreGridState(state)">Restore All</button>
+            </div>
+            <div class="control-item" *ngFor="let f of features">
+                <button igxButton="raised" (click)="restoreFeature(state, f.key)">{{ f.shortName }}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
