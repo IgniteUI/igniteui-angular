@@ -187,7 +187,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * ```
      */
     @Input()
-    public metadata: Map<string, any> = new Map<string, any>();
+    public metadata: Map<string, any>;
 
     /**
      * @hidden
@@ -343,11 +343,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
 
-        let metadataMatch = true;
-        if (group.metadata) {
-            metadataMatch = compareMaps(this.metadata, group.metadata);
-        }
-        if (group.column === this.column && group.row === this.row && metadataMatch) {
+        if (group.column === this.column && group.row === this.row && compareMaps(this.metadata, group.metadata)) {
             this.activate(group.index);
         }
     }
