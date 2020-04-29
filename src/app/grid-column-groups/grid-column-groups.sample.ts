@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent, IgxColumnGroupComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxColumnGroupComponent, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -14,7 +14,7 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     wid = '250px';
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
     s = true;
-
+    selectionMode;
     data: any[] = [
         // tslint:disable:max-line-length
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -52,6 +52,7 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         for (const item of this.data) {
             item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
         }
+        this.selectionMode = GridSelectionMode.none;
     }
 
     pinGroup() {

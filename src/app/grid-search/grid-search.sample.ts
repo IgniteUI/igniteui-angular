@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -15,10 +15,12 @@ export class GridSearchComponent implements OnInit {
     public columns: Array<any>;
     public displayDensities;
     public density = 'comfortable';
+    public selectionMode;
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public ngOnInit(): void {
+        this.selectionMode = GridSelectionMode.multiple;
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },

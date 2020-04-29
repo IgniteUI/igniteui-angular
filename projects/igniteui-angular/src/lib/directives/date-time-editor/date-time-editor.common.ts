@@ -1,11 +1,11 @@
 export interface IgxDateTimeEditorEventArgs {
-    oldValue: Date;
-    newValue: Date;
-    userInput: string;
+    readonly oldValue?: Date;
+    newValue?: Date;
+    readonly userInput: string;
 }
 
 /**
- * An @Enum that allows you to specify a particular date, time or AmPm part.
+ * Specify a particular date, time or AmPm part.
  */
 export enum DatePart {
     Date = 'date',
@@ -18,6 +18,7 @@ export enum DatePart {
     Literal = 'literal'
 }
 
+/** @hidden @internal */
 export interface DatePartInfo {
     type: DatePart;
     start: number;

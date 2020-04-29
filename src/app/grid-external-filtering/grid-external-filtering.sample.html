@@ -8,7 +8,7 @@
             <div class="density-chooser">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
-         
+
             <div style="display: flex;">
                 <div style="display: flex; flex-flow: column;">
                     <igx-select #columnSelect value="ID">
@@ -29,19 +29,19 @@
                         [allowFiltering]="false"
                         [filterMode]="'excelStyleFilter'"
                         [allowAdvancedFiltering]="false"
-                        [rowSelectable]="true"
+                        [rowSelection]="selectionMode"
                         [paging]="false"
                         [width]="'980px'"
-                        [height]="'450px'" 
+                        [height]="'450px'"
                         [showToolbar]="true"
-                        [columnHiding]="true" 
+                        [columnHiding]="true"
                         [columnPinning]="true"
-                        [exportExcel]="true" 
-                        [exportCsv]="true" 
+                        [exportExcel]="true"
+                        [exportCsv]="true"
                         exportText="Export"
-                        exportExcelText="Export to Excel" 
+                        exportExcelText="Export to Excel"
                         exportCsvText="Export to CSV">
-                        <igx-column *ngFor="let c of columns" 
+                        <igx-column *ngFor="let c of columns"
                             [field]="c.field"
                             [header]="c.field"
                             [movable]="c.movable"
