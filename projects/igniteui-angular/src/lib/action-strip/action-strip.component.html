@@ -2,7 +2,7 @@
     <ng-content #content></ng-content>
     <ng-container *ngIf="menuItems.length > 0">
         <button igxButton="icon" igxRipple [igxToggleAction]="dropdown"
-            [overlaySettings]="menuOverlaySettings"
+            [overlaySettings]="menuOverlaySettings" (click)="$event.stopPropagation()"
             [igxDropDownItemNavigation]="dropdown">
             <igx-icon>more_vert</igx-icon>
         </button>

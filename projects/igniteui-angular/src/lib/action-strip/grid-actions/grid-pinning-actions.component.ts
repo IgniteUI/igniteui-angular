@@ -42,7 +42,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridPinningActions.pin();
      * ```
      */
-    public pin(): void {
+    public pin(event?): void {
+        if (event) {
+            event.stopPropagation();
+        }
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -58,7 +61,10 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridPinningActions.unpin();
      * ```
      */
-    public unpin(): void {
+    public unpin(event?): void {
+        if (event) {
+            event.stopPropagation();
+        }
         if (!this.isRow(this.strip.context)) {
             return;
         }

@@ -23,7 +23,10 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridEditingActions.startEdit();
      * ```
      */
-    public startEdit(): void {
+    public startEdit(event?): void {
+        if (event) {
+            event.stopPropagation();
+        }
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -43,7 +46,10 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      * this.gridEditingActions.deleteRow();
      * ```
      */
-    public deleteRow(): void {
+    public deleteRow(event?): void {
+        if (event) {
+            event.stopPropagation();
+        }
         if (!this.isRow(this.strip.context)) {
             return;
         }
