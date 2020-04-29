@@ -297,26 +297,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * @deprecated
-     * Use `cell.editMode` as a getter and
-     * `cell.setEditMode(true | false)` to start/exit edit mode.
-     *
-     * Gets/sets whether the cell is in edit mode.
-     * ```typescript
-     * let isCellInEditMode = this.cell.inEditMode;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateProperty(`'inEditMode' is deprecated\nUse 'editMode' to get the current state and 'setEditMode(boolean)' as a setter`)
-    get inEditMode(): boolean {
-        return this.editMode;
-    }
-
-    set inEditMode(value: boolean) {
-        this.setEditMode(value);
-    }
-
-    /**
      * @hidden
      * @internal
      */

@@ -153,23 +153,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * @hidden @internal
-     */
-    @Input()
-    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isSelected\` property is deprecated.\n` +
-        `Use \`selected\` instead.`)
-    get isSelected(): boolean {
-        return this.selected;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    set isSelected(value: boolean) {
-        this.selected = value;
-    }
-
-    /**
      * Sets/gets if the given item is focused
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
@@ -192,21 +175,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      */
     set focused(value: boolean) {
         this._focused = value;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isFocused\` property is depracated.\n` +
-        `Use \`focused\` instead.`)
-    get isFocused(): boolean {
-        return this.focused;
-    }
-    /**
-     * @hidden @internal
-     */
-    set isFocused(value: boolean) {
-        this.focused = value;
     }
 
     /**
