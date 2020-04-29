@@ -52,6 +52,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const grid = row.grid;
         grid.pinRow(row.rowID);
+        this.strip.hide();
     }
 
     /**
@@ -71,6 +72,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const grid = row.grid;
         grid.unpinRow(row.rowID);
+        this.strip.hide();
     }
 
     private renderIcons(): void {

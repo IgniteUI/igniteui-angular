@@ -37,6 +37,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.crudService.begin(firstEditable);
         }
+        this.strip.hide();
     }
 
     /**
@@ -56,6 +57,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const context = this.strip.context;
         const grid = context.grid;
         grid.deleteRow(context.rowID);
+        this.strip.hide();
     }
 
     /**

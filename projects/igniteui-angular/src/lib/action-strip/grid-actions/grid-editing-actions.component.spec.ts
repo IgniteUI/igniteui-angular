@@ -48,6 +48,8 @@ describe('igxGridEditingActions #grid ', () => {
 
         expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
         const dataLenght = grid.dataLength;
+        actionStrip.show(grid.rowList.first);
+        fixture.detectChanges();
         deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
         expect(deleteIcon.nativeElement.innerText).toBe('delete');
         deleteIcon.parent.triggerEventHandler('click', new Event('click'));
