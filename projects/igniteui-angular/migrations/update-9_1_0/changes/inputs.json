@@ -13,8 +13,8 @@
             "name": "message",
             "moveBetweenElementTags": true,
             "owner": {
-            "selector": "igx-toast",
-            "type": "component"
+                "selector": "igx-toast",
+                "type": "component"
            }
         }
     ]
