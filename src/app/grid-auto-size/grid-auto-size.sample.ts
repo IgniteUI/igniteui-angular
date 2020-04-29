@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -20,6 +20,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
     public height = '100%';
     public gridContainerHidden = false;
     public containerHeight;
+    public selectionMode;
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -45,6 +46,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
             { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: false, type: 'date' },
             { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true, summary: true, type: 'boolean' }
         ];
+        this.selectionMode = GridSelectionMode.multiple;
     }
 
     public selectDensity(event) {

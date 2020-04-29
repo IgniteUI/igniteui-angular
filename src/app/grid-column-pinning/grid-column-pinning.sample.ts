@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, IgxGridCellComponent, IgxGridRowComponent } from 'igniteui-angular';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode, IgxGridRowComponent } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 
 @Component({
@@ -21,6 +21,8 @@ export class GridColumnPinningSampleComponent implements OnInit {
             this.pinningConfig.columns = ColumnPinningPosition.End;
         }
     }
+
+    public selectionMode;
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
@@ -88,6 +90,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
             { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
+        this.selectionMode = GridSelectionMode.none;
         // tslint:enable:max-line-length
     }
 
@@ -105,7 +108,11 @@ export class GridColumnPinningSampleComponent implements OnInit {
         const rec = this.data[index];
         !this.grid1.isRecordPinned(rec) ?
          this.grid1.pinRow(rec) :
-         this.grid1.unpinRow(rec)
+         this.grid1.unpinRow(rec);
+    }
+
+    onSelectionModeChange() {
+        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     doSomeAction(row?: IgxGridRowComponent) {

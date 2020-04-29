@@ -3,7 +3,8 @@ import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IGridCreatedEventArgs,
-    IgxHierarchicalTransactionServiceFactory
+    IgxHierarchicalTransactionServiceFactory,
+    GridSelectionMode
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -16,7 +17,7 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     public lastChildGrid: IgxHierarchicalGridComponent;
     public lastIdx = 1000;
-    public isRowSelectable = false;
+    public selectionMode;
     public remoteData = [];
     public primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
@@ -38,6 +39,7 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
 
         this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);
+        this.selectionMode = GridSelectionMode.none;
     }
 
     public buildUrl(dataState) {

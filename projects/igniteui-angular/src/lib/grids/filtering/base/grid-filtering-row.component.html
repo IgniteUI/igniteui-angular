@@ -47,7 +47,7 @@
         [outlet]="filteringService.grid.outletDirective"
         [locale]="filteringService.grid.locale"
         (onSelection)="onDateSelected($event)"
-        (onClose)="datePickerClose()">
+        (onClosed)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
             <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
