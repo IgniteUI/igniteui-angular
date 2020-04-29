@@ -363,8 +363,8 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
  * Compares two maps.
  */
 export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
-    if (!(map1 && map2)) {
-        return false;
+    if (!map2) {
+        return !map1 ? true : false;
     }
     if (map1.size !== map2.size) {
         return false;
