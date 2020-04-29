@@ -4346,7 +4346,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
-                        compareMetadata(match.metadata, activeInfo)) {
+                        compareMetadata(match.metadata, activeInfo.metadata)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });

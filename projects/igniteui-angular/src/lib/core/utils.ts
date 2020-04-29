@@ -357,22 +357,27 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
     });
 }
 
-export function compareMetadata(match: any, activeInfo: IActiveHighlightInfo) {
+/**
+ * @hidden
+ * @internal
+ *
+ * Compares two metadata maps.
+ */
+export function compareMetadata(map1: Map<any, any>, map2: Map<any, any>) {
     let metadataMatch = true;
-    if (activeInfo.metadata) {
-        if (activeInfo.metadata.size !== match.size) {
+    if (map1 && map2) {
+        if (map1.size !== map2.size) {
             return false;
         } else {
-            activeInfo.metadata.forEach((value, key) => {
+            const keys = Array.from(map2.keys());
+            for (const key of keys) {
+                if (map1.has(key)) {
+                    metadataMatch = map1.get(key) === map2.get(key);
+                }
                 if (!metadataMatch) {
-                    return false;
+                    break;
                 }
-                if (match.has(key)) {
-                    metadataMatch = match.get(key) === value;
-                } else {
-                    return false;
-                }
-            });
+            }
         }
     }
     return metadataMatch;

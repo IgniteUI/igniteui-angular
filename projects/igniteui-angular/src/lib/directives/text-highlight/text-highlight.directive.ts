@@ -361,7 +361,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         const column = group.columnIndex === undefined ? group.column : group.columnIndex;
         const row = group.rowIndex === undefined ? group.row : group.rowIndex;
 
-        if (column === this.column && row === this.row && group.page === this.page && compareMetadata(this.metadata, group)) {
+        if (column === this.column && row === this.row && group.page === this.page && compareMetadata(this.metadata, group.metadata)) {
             this.activate(group.index);
         }
     }
