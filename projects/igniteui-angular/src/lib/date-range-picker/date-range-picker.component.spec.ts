@@ -36,7 +36,7 @@ describe('IgxDateRangePicker', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -54,7 +54,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should set range dates correctly through selectToday method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             const today = new Date();
 
@@ -64,7 +64,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit rangeSelected on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             spyOn(dateRange.rangeSelected, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -87,7 +87,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit rangeSelected on selectToday()', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             spyOn(dateRange.rangeSelected, 'emit');
             const today = new Date();
@@ -662,7 +662,7 @@ describe('IgxDateRangePicker', () => {
                 const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25)};
 
                 // init
-                dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null);
+                dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
                 dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
                 dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
                 spyOn(dateRangePicker, 'handleSelection');
@@ -685,14 +685,14 @@ describe('IgxDateRangePicker', () => {
                 // awaiting implementation - OnTouched callback
                 // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
                 // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-                // dateRangePicker.handleSelection([range.start]);
-                // expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+                dateRangePicker.handleSelection([range.start]);
+                expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
                 // awaiting implementation - setDisabledState
-                // dateRangePicker.setDisabledState(true);
-                // expect(dateRangePicker.disabled).toBe(true);
-                // dateRangePicker.setDisabledState(false);
-                // expect(dateRangePicker.disabled).toBe(false);
+                dateRangePicker.setDisabledState(true);
+                expect(dateRangePicker.disabled).toBe(true);
+                dateRangePicker.setDisabledState(false);
+                expect(dateRangePicker.disabled).toBe(false);
             });
         });
 

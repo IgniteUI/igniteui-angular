@@ -4,6 +4,7 @@ import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { formatDate } from '@angular/common';
+import { IgxInputDirective } from '../input-group';
 
 /**
  * Represents a range between two dates.
@@ -41,14 +42,17 @@ export class DateRangePickerFormatPipe implements PipeTransform {
 @Component({
     template: ``,
     selector: `igx-date-range-base`,
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeBaseComponent }]
+    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeInputsBaseComponent }]
 })
-class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
+export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     @ContentChild(NgControl)
     protected ngControl: NgControl;
 
     @ContentChild(IgxDateTimeEditorDirective)
     public dateTimeEditor: IgxDateTimeEditorDirective;
+
+    @ContentChild(IgxInputDirective)
+    public inputDirective: IgxInputDirective;
 
     /** @hidden @internal */
     public get nativeElement() {
@@ -131,7 +135,7 @@ export class IgxPickerToggleComponent {
     templateUrl: '../input-group/input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent }]
 })
-export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
+export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
 /**
  * Defines the end input for a date range picker
@@ -162,7 +166,7 @@ export class IgxDateRangeStartComponent extends IgxDateRangeBaseComponent { }
     templateUrl: '../input-group/input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent }]
 })
-export class IgxDateRangeEndComponent extends IgxDateRangeBaseComponent { }
+export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 
 @Directive({
     selector: '[igxDateRangeSeparator]'
