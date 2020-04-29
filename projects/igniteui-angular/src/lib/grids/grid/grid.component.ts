@@ -480,16 +480,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public preventContainerScroll(evt) {
-        if (evt.target.scrollTop !== 0) {
-            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
-            evt.target.scrollTop = 0;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public trackChanges(index, rec) {
         if (rec.detailsData !== undefined) {
             return rec.detailsData;
