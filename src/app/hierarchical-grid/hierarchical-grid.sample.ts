@@ -3,7 +3,8 @@ import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IPathSegment,
-    IGridCellEventArgs
+    IGridCellEventArgs,
+    GridSelectionMode
 } from 'igniteui-angular';
 
 @Component({
@@ -16,7 +17,7 @@ export class HierarchicalGridSampleComponent {
     localData1 = [];
     data1 = [];
     data2 = [];
-    isRowSelectable = false;
+    selectionMode;
     firstLevelExpanded = false;
     rootExpanded = false;
     density = 'comfortable';
@@ -61,6 +62,7 @@ export class HierarchicalGridSampleComponent {
         this.localData[1].hasChild = false;
         this.localData[2].childData[0].hasChild = false;
         this.localData[2].childData[1].hasChild = false;
+        this.selectionMode = GridSelectionMode.none;
     }
 
     public enableSummary() {
@@ -127,11 +129,12 @@ export class HierarchicalGridSampleComponent {
     }
 
     setterChange() {
-        this.layout1.rowSelectable = !this.layout1.rowSelectable;
+        this.layout1.rowSelection = this.layout1.rowSelection === GridSelectionMode.multiple
+         ? GridSelectionMode.none : GridSelectionMode.multiple;
     }
 
     setterBindingChange() {
-        this.isRowSelectable = !this.isRowSelectable;
+        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     toggleRootLevel() {

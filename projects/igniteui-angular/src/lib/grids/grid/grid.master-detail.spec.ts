@@ -13,7 +13,7 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxInputGroupComponent } from '../../input-group';
-import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
+import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
 const DEBOUNCETIME = 30;
@@ -374,7 +374,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
-            const row = grid.getRowByIndex(4) as IgxGridRowComponent;
+            let row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -383,6 +383,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
+            row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
@@ -395,7 +396,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(6) as IgxGridRowComponent;
+            let row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -407,6 +408,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
+            row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
@@ -455,15 +457,16 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(2);
+            let row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
+            row = grid.getRowByIndex(2);
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
@@ -1165,7 +1168,7 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
         <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
-        [paging]="paging" [perPage]="perPage" [rowSelectable]="rowSelectable">
+        [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
                 [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
                 [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
@@ -1197,7 +1200,7 @@ export class DefaultGridMasterDetailComponent {
     ];
     public paging = false;
     public perPage = 15;
-    public rowSelectable = false;
+    public rowSelectable = GridSelectionMode.none;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
@@ -1206,7 +1209,7 @@ export class DefaultGridMasterDetailComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
                 [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
                 [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
@@ -1239,7 +1242,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
 @Component({
     template: `
         <igx-grid [data]="data"
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
         <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>
