@@ -8,6 +8,14 @@
                 "selector": "igx-input-group",
                 "type": "component"
             }
+        },
+        {
+            "name": "message",
+            "moveBetweenElementTags": true,
+            "owner": {
+            "selector": "igx-toast",
+            "type": "component"
+           }
         }
     ]
 }
