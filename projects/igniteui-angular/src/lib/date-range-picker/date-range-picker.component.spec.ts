@@ -6,7 +6,7 @@ import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { IgxCalendarComponent } from '../calendar/index';
-import { IgxDateRangePickerModule } from './igx-date-range-picker.module';
+import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -385,7 +385,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.value.start).toEqual(startDate);
                     expect(dateRange.value.end).toEqual(endDate);
                     expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                    const expectedEndDate = endDate ? formatFullDate(endDate) : '__/__/____';
+                    const expectedEndDate = endDate ? formatFullDate(endDate) : '';
                     expect(endInput.nativeElement.value).toEqual(expectedEndDate);
                 }
 
