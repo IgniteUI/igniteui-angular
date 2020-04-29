@@ -1895,6 +1895,37 @@ export class CollapsibleGroupsDynamicColComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+
+        <igx-column-group header="General Information">
+            <igx-column  field="CompanyName" ></igx-column>
+            <igx-column-group header="Person Details">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="Address Information" >
+            <igx-column field="Region"></igx-column>
+            <igx-column-group header="Country Information">
+                <igx-column  field="Country"></igx-column>
+                <igx-column-group header="City Information">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class ColumnGroupsNavigationTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
     <igx-grid [data]="data" height="500px" [allowFiltering]='true' [(filteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
         </igx-column>
@@ -2005,4 +2036,48 @@ export class SortByParityComponent extends GridDeclaredColumnsComponent implemen
         const b = obj2[key];
         return reverse * this.sortByParity(a, b);
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [height]="'500px'" [width]="'500px'">
+        <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
+            <igx-column *ngFor='let col of group.columns'
+            [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
+            [colEnd]="col.colEnd" [rowEnd]="col.rowEnd" [field]='col.field' [editable]='col.editable'></igx-column>
+        </igx-column-layout>
+    </igx-grid>
+    `
+})
+export class MRLTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    colGroups: Array<any> =  [
+        {
+            group: 'group1',
+            columns: [
+                { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, editable: true },
+                { field: 'ContactName', rowStart: 2, colStart: 1, editable: false, width: '100px' },
+                { field: 'ContactTitle', rowStart: 2, colStart: 2, editable: true, width: '100px' },
+                { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, editable: true, width: '100px' }
+            ]
+        },
+        {
+            group: 'group2',
+            columns: [
+                { field: 'City', rowStart: 1, colStart: 1, colEnd: 3, rowEnd: 3, width: '400px', editable: true },
+                { field: 'Region', rowStart: 3, colStart: 1, editable: true },
+                { field: 'PostalCode', rowStart: 3, colStart: 2, editable: true }
+            ]
+        },
+        {
+            group: 'group3',
+            columns:  [
+                { field: 'Country', rowStart: 1, colStart: 1 },
+                { field: 'Phone', rowStart: 1, colStart: 2 },
+                { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
+            ]
+        }
+    ];
+    data = SampleTestData.contactInfoDataFull();
 }

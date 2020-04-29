@@ -437,50 +437,10 @@ export class IgxTimePickerComponent implements
     public onValidationFailed = new EventEmitter<IgxTimePickerValidationFailedEventArgs>();
 
     /**
-     * @deprecated Use 'onOpened' instead.
-     * Emitted when a timePicker is being opened.
-     * ```html
-     * @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public onOpen(timepicker){
-     *    this.toast.show();
-     * }
-     * //...
-     * ```
-     * ```html
-     * <igx-time-picker [minValue]="min" [maxValue]="max" (onOpen)="onOpen($event)"></igx-time-picker>
-     * <igx-toast #toast message="The time picker has been opened!"></igx-toast>
-     * ```
-     */
-    @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
-    @Output()
-    public get onOpen(): EventEmitter<IgxTimePickerComponent> {
-        return this._onOpen;
-    }
-
-    public set onOpen(val: EventEmitter<IgxTimePickerComponent>) {
-        this._onOpen = val;
-    }
-
-    /**
      * Emitted when a timePicker is opened.
      */
     @Output()
     public onOpened = new EventEmitter<IgxTimePickerComponent>();
-
-    /**
-     * @deprecated Use 'onClosed' instead.
-     * Emitted when a timePicker is being closed.
-     */
-    @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
-    @Output()
-    public get onClose(): EventEmitter<IgxTimePickerComponent> {
-        return this._onClose;
-    }
-
-    public set onClose(val: EventEmitter<IgxTimePickerComponent>) {
-        this._onClose = val;
-    }
 
     /**
      * Emitted when a timePicker is closed.
@@ -916,16 +876,10 @@ export class IgxTimePickerComponent implements
                 }
 
                 this.onClosed.emit(this);
-
-                // TODO: remove this line after deprecating 'onClose'
-                this._onClose.emit(this);
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.onOpened.emit(this);
-
-                // TODO: remove this line after deprecating 'onOpen'
-                this._onOpen.emit(this);
             });
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
@@ -1626,7 +1580,7 @@ export class IgxTimePickerComponent implements
      * }
      *  ```
      * ```html
-     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrhintoView(picker)"></igx-time-picker>
+     * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrhintoView(picker)"></igx-time-picker>
      * ```
      * @param item to be scrolled in view.
      */
@@ -1649,7 +1603,7 @@ export class IgxTimePickerComponent implements
      * }
      *  ```
      * ```html
-     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
+     * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrMintoView(picker)"></igx-time-picker>
      * ```
      * @param item to be scrolled in view.
      */
@@ -1672,7 +1626,7 @@ export class IgxTimePickerComponent implements
      * }
      *  ```
      * ```html
-     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrMintoView(picker)"></igx-time-picker>
+     * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrMintoView(picker)"></igx-time-picker>
      * ```
      * @param item to be scrolled in view.
      */
@@ -1696,7 +1650,7 @@ export class IgxTimePickerComponent implements
      * }
      *  ```
      * ```html
-     * <igx-time-picker #picker format="h:mm tt" (onOpen)="scrAmPmIntoView(picker)"></igx-time-picker>
+     * <igx-time-picker #picker format="h:mm tt" (onOpened)="scrAmPmIntoView(picker)"></igx-time-picker>
      * ```
      * @param item to be scrolled in view.
      */

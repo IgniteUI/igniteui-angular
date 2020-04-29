@@ -732,6 +732,7 @@
         background: --var($theme, 'header-background');
         color: --var($theme, 'header-text-color');
         overflow: hidden;
+        outline-style: none;
 
         %grid-row {
             position: relative;
@@ -918,6 +919,7 @@
         color: --var($theme, 'content-text-color');
         overflow: hidden;
         z-index: 1;
+        outline-style: none;
     }
 
     %grid-tbody-container {
@@ -1322,8 +1324,6 @@
         // border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
-            color: --var($theme, 'cell-selected-text-color');
-
             &:hover {
                 color: --var($theme, 'cell-selected-text-color');
             }
@@ -1541,6 +1541,19 @@
     %igx-grid__th--selected {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
+    }
+
+    %igx-grid__th--active {
+        @extend %grid-cell--active;
+
+        %igx-grid__th--selected,
+        %igx-grid__th--selectable {
+            @extend %grid-cell--active
+        }
+    }
+
+    %igx-grid-summary--active {
+        @extend %grid-cell--active
     }
 
     %igx-grid__th--sortable {
@@ -1842,6 +1855,7 @@
 
     %igx-grid__group-row--active {
         background: --var($theme, 'group-row-selected-background');
+        @extend %grid-cell--active;
 
         %igx-grid__grouping-indicator {
             color: --var($theme, 'expand-icon-color');
@@ -2092,7 +2106,6 @@
         user-select: none;
         justify-content: center;
         align-items: center;
-        background: inherit;
         z-index: 1;
         cursor: pointer;
         padding-#{$left}: map-get($grid-grouping-indicator-padding, 'comfortable');
@@ -2482,6 +2495,10 @@
 
     %igx-grid__tr-container {
         border-bottom: 1px solid --var($theme, 'row-border-color');
+    }
+
+    %igx-grid__tr-container--active {
+        @extend %grid-cell--active;
     }
 
     %igx-grid__hierarchical-expander {

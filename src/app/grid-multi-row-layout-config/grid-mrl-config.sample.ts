@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs} from 'igniteui-angular';
+import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs, GridSelectionMode} from 'igniteui-angular';
 
 class ColumnConfig {
     key: string;
@@ -59,6 +59,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public resizeInitialHeight = 0;
     public resizeWidth = 0;
     public resizeHeight = 0;
+    public selectionMode;
 
     public columnsList = [
         { key: 'ContactName', field: 'Contact name'},
@@ -105,6 +106,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
 
     constructor(public cdr: ChangeDetectorRef) {
         this.updateCollectionSize();
+        this.selectionMode = GridSelectionMode.none;
     }
 
     public ngAfterViewInit() {

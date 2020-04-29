@@ -1405,6 +1405,15 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.getRowByKey(711).unpin();
             fix.detectChanges();
             expect(treeGrid.pinnedRecordsCount).toBe(0);
+
+
+            treeGrid.getRowByKey(711).pinned = true;
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(1);
+
+            treeGrid.getRowByKey(711).pinned = false;
+            fix.detectChanges();
+            expect(treeGrid.pinnedRecordsCount).toBe(0);
         });
 
         it('should pin/unpin a row at the bottom', () => {
@@ -1463,6 +1472,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const primaryKey = treeGrid.primaryKey;
 
             treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            fix.detectChanges();
             fix.detectChanges();
 
             const firstColumnField = treeGrid.columns[0].field;
@@ -1565,12 +1575,12 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.perPage = 5;
             fix.detectChanges();
 
-            expect(treeGrid.dataView.length).toBe(5);
+            expect(treeGrid.dataView.length).toBe(6);
 
             treeGrid.perPage = 10;
             fix.detectChanges();
 
-            expect(treeGrid.dataView.length).toBe(10);
+            expect(treeGrid.dataView.length).toBe(11);
         });
 
         it('should correctly apply paging state for grid and paginator when there are pinned rows.', fakeAsync(() => {

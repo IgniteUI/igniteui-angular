@@ -223,11 +223,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return false;
     }
 
-    @DeprecateProperty('isSelected property is deprecated. Use selected property instead.')
-    public get isSelected() {
-        return this.selectionService.isRowSelected(this.rowID);
-    }
-
     /**
      * @hidden
      */

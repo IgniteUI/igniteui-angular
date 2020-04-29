@@ -100,7 +100,7 @@
                     <div class="toggle-group" *ngFor="let col of grid2.columns">
                         <h4>{{ col.field }}</h4>
                         <div class="switch-group">
-                            <igx-switch [(ngModel)]="col.filtering">Filtering</igx-switch>
+                            <igx-switch [(ngModel)]="col.filterable">Filtering</igx-switch>
                         </div>
                         <div class="switch-group">
                             <igx-switch [(ngModel)]="col.sortable">Sorting</igx-switch>
@@ -186,7 +186,7 @@
                         columnDisplayOrder="Alphabetical"></igx-column-hiding>
                 </div>
             </div>
-            <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelectable]="true">
+            <igx-grid #grid3 displayDensity="compact" [data]="remote | async" [paging]="true" [perPage]="10" (onPagingDone)="process($event)" (onSortingDone)="process($event)" [primaryKey]="'ProductID'" [rowSelection]="selectionMode">
                 <igx-column [sortable]="true" [field]="'ProductID'" ></igx-column>
                 <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
                 <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
