@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from './data';
 
-import { IgxGridComponent, Transaction, IgxToggleDirective } from 'igniteui-angular';
+import { IgxGridComponent, Transaction, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -56,6 +56,7 @@ export class GridRowEditSampleComponent {
     data: any[];
     performanceData: any[] = [];
     columns;
+    public selectionMode;
     @ViewChild('gridRowEdit', { read: IgxGridComponent, static: true }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent, static: true }) public gridRowEditTransaction: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
@@ -76,6 +77,7 @@ export class GridRowEditSampleComponent {
         this.data = [...enhancedData, ...doubleData];
         this.addProductId = this.data.length + 1;
         this.generatePerformanceData(10000, 100);
+        this.selectionMode = GridSelectionMode.multiple;
     }
 
     public addRow(gridID) {

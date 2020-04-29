@@ -11,7 +11,8 @@ import {
     DisplayDensityToken,
     DisplayDensity,
     IgxHierarchicalGridComponent,
-    IDisplayDensityOptions
+    IDisplayDensityOptions,
+    GridSelectionMode
 } from 'igniteui-angular';
 import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 import { IgxIconService } from 'projects/igniteui-angular/src/lib/icon/icon.service';
@@ -44,6 +45,7 @@ export class GridRowPinningSampleComponent implements OnInit {
         rowPinning: true,
         pinningConfig: true
     };
+    public selectionMode;
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
@@ -178,6 +180,7 @@ export class GridRowPinningSampleComponent implements OnInit {
             // sub of ID 20
             { 'Salary': 1500, 'employeeID': 23, 'PID': 20, 'firstName': 'Jeremy', 'lastName': 'Donaldson', 'Title': 'Software Developer' }
         ];
+        this.selectionMode = GridSelectionMode.multiple;
         // tslint:enable:max-line-length
     }
 

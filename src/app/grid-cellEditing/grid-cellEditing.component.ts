@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { data, dataWithoutPK } from './data';
 
 import {
-    IgxGridComponent, IgxButtonGroupComponent
+    IgxGridComponent, IgxButtonGroupComponent, GridSelectionMode
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -24,6 +24,7 @@ export class GridCellEditingComponent {
     kk = false;
     pname = 'ProductName';
     private subscribtion;
+    public selectionMode;
 
     constructor() {
         const date = new Date();
@@ -34,6 +35,7 @@ export class GridCellEditingComponent {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
+        this.selectionMode = GridSelectionMode.multiple;
     }
 
     public addRow() {

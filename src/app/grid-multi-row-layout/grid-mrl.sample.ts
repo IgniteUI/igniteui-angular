@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-sample',
@@ -24,6 +24,7 @@ export class GridMRLSampleComponent {
 
     public density = 'compact';
     public displayDensities;
+    public selectionMode;
     data = [
         // tslint:disable:max-line-length
         { 'ID': 'ALFKI', 'CompanyName': 'Alfreds Futterkiste', 'ContactName': 'Maria Anders', 'ContactTitle': 'Sales Representative', 'Address': 'Obere Str. 57', 'City': 'Berlin', 'Region': null, 'PostalCode': '12209', 'Country': 'Germany', 'Phone': '030-0074321', 'Fax': '030-0076545' },
@@ -61,6 +62,7 @@ export class GridMRLSampleComponent {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
+        this.selectionMode = GridSelectionMode.none;
     }
 
     public selectDensity(event) {

@@ -14,7 +14,8 @@ import {
     IgxExporterOptionsBase,
     IgxExcelExporterService,
     IgxStringFilteringOperand,
-    DefaultSortingStrategy
+    DefaultSortingStrategy,
+    GridSelectionMode
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
@@ -50,6 +51,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     editCell;
     exportFormat = 'XLSX';
     customFilter = CustomStringFilter.instance();
+    selectionMode;
 
     constructor(private localService: LocalService,
                 private remoteService: RemoteService,
@@ -99,7 +101,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
             strategy: DefaultSortingStrategy.instance() }];
         this.grid3.paging = true;
 
-
+        this.selectionMode = GridSelectionMode.multiple;
     }
 
     ngAfterViewInit() {
