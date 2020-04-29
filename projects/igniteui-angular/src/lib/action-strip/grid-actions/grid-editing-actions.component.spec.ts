@@ -67,11 +67,12 @@ describe('igxGridEditingActions #grid ', () => {
         it('should allow editing actions on disabled rows', () => {
             grid.rowList.first.pin();
             fixture.detectChanges();
-            actionStrip.show(grid.rowList[1]);
+            actionStrip.show(grid.rowList.toArray()[1]);
+            fixture.detectChanges();
             const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
             const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`));
             expect(editingIcons.length).toBe(0);
-            expect(pinningIcons.length).toBe(0);
+            expect(pinningIcons.length).toBe(1);
         });
     });
 });
@@ -158,7 +159,7 @@ class IgxActionStripTestingComponent implements OnInit {
     </igx-column>
 
     <igx-action-strip #actionStrip>
-        <igx-grid-pinnig-actions></igx-grid-pinnig-actions>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
         <igx-grid-editing-actions></igx-grid-editing-actions>
     </igx-action-strip>
 </igx-grid>
