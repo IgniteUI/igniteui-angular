@@ -4332,10 +4332,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (updateActiveInfo) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
+                    let metadataMatch = true;
+                    if (activeInfo.metadata) {
+                        metadataMatch = compareMaps(match.metadata, activeInfo.metadata);
+                    }
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
                         match.index === activeInfo.index &&
-                        compareMaps(match.metadata, activeInfo.metadata)) {
+                        metadataMatch) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
