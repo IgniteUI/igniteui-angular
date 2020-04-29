@@ -3,6 +3,7 @@
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+@import './action-strip';
 @import './avatar';
 @import './badge';
 @import './banner';
@@ -91,6 +92,7 @@
 /// @property {Map} igx-tooltip [$_dark-tooltip]
 $dark-schema: (
     igx-avatar: $_dark-avatar,
+    igx-action-strip: $_dark-action-strip,
     igx-badge: $_dark-badge,
     igx-banner: $_dark-banner,
     igx-bottom-nav: $_dark-bottom-nav,
@@ -180,6 +182,7 @@ $dark-schema: (
 /// @property {map} igx-tooltip [$_dark-fluent-tooltip]
 $dark-fluent-schema: (
     igx-avatar: $_dark-fluent-avatar,
+    igx-action-strip: $_dark-fluent-action-strip,
     igx-badge: $_dark-fluent-badge,
     igx-banner: $_dark-fluent-banner,
     igx-bottom-nav: $_dark-fluent-bottom-nav,
@@ -269,6 +272,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-tooltip [$_dark-bootstrap-tooltip]
 $dark-bootstrap-schema: (
     igx-avatar: $_dark-bootstrap-avatar,
+    igx-action-strip: $_dark-bootstrap-action-strip,
     igx-badge: $_dark-bootstrap-badge,
     igx-banner: $_dark-bootstrap-banner,
     igx-bottom-nav: $_dark-bootstrap-bottom-nav,
