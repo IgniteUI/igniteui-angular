@@ -123,9 +123,9 @@ export class IgxPickerToggleComponent {
  * @example
  * ```html
  * <igx-date-range-picker mode="dropdown">
- *      <igx-date-range-picker-start>
+ *      <igx-date-range-start>
  *          <input igxInput igxDateTimeEditor type="text">
- *      </igx-date-range-picker-start>
+ *      </igx-date-range-start>
  *      ...
  * </igx-date-range-picker>
  * ```
@@ -154,9 +154,9 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
  * @example
  * ```html
  * <igx-date-range-picker mode="dropdown">
- *      <igx-date-range-picker-end>
+ *      <igx-date-range-end>
  *          <input igxInput igxDateTimeEditor type="text">
- *      </igx-date-range-picker-end>
+ *      </igx-date-range-end>
  *      ...
  * </igx-date-range-picker>
  * ```
