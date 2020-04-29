@@ -64,15 +64,18 @@ describe('igxGridEditingActions #grid ', () => {
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
         });
-        it('should allow editing actions on disabled rows', () => {
+        it('should disable editing actions on disabled rows', () => {
             grid.rowList.first.pin();
             fixture.detectChanges();
             actionStrip.show(grid.rowList.toArray()[1]);
             fixture.detectChanges();
-            const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`));
-            const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions igx-icon`));
-            expect(editingIcons.length).toBe(0);
+            const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions button`));
+            const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+            expect(editingIcons.length).toBe(2);
+            expect(editingIcons[0].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
+            expect(editingIcons[1].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
             expect(pinningIcons.length).toBe(1);
+            expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
         });
     });
 });

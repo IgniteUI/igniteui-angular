@@ -34,7 +34,7 @@
         <article>
             <div class="sample-column">
                 <h5>Grid Pinning Action</h5>
-                <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                <igx-grid #grid1 [data]="data" [width]="'800px'" [height]="'500px'"
                     [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity"
                     (mouseleave)="onMouseLeave(actionstrip1)" (mouseover)="onMouseOver($event, grid1, actionstrip1)">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -51,7 +51,7 @@
         <article>
             <div class="sample-column">
                 <h5>Grid Pinning and Editing Actions</h5>
-                <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                <igx-grid #grid2 [data]="data" [width]="'800px'" [height]="'500px'"
                     [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity"
                     (mouseleave)="onMouseLeave(actionstrip2)">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -74,7 +74,7 @@
         <article>
             <div class="sample-column">
                 <h5>Actions in menu</h5>
-                <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'" [rowSelectable]="false"
+                <igx-grid #grid3 [data]="data" [width]="'800px'" [height]="'500px'"
                     [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity"
                     (mouseleave)="onMouseLeave(actionstrip3, $event)"
                     (mouseover)="onMouseOver($event, grid3, actionstrip3)">
