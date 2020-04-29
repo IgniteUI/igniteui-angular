@@ -360,26 +360,26 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
  * @hidden
  * @internal
  *
- * Compares two metadata maps.
+ * Compares two maps.
  */
-export function compareMetadata(map1: Map<any, any>, map2: Map<any, any>) {
+export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
     if (!(map1 && map2)) {
         return false;
     }
     if (map1.size !== map2.size) {
         return false;
     }
-    let metadataMatch = true;
+    let match = true;
     const keys = Array.from(map2.keys());
     for (const key of keys) {
         if (map1.has(key)) {
-            metadataMatch = map1.get(key) === map2.get(key);
+            match = map1.get(key) === map2.get(key);
         } else {
-            metadataMatch = false;
+            match = false;
         }
-        if (!metadataMatch) {
+        if (!match) {
             break;
         }
     }
-    return metadataMatch;
+    return match;
 }

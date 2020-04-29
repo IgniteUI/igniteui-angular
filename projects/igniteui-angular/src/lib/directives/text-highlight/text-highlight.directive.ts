@@ -14,7 +14,7 @@ import {
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
-import { compareMetadata } from '../../core/utils';
+import { compareMaps } from '../../core/utils';
 
 interface ISearchInfo {
     searchedText: string;
@@ -363,7 +363,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
         let metadataMatch = true;
         if (group.metadata) {
-            metadataMatch = compareMetadata(this.metadata, group.metadata);
+            metadataMatch = compareMaps(this.metadata, group.metadata);
         }
 
         if (column === this.column && row === this.row && group.page === this.page && metadataMatch) {

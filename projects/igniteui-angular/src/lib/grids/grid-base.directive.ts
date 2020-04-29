@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE, compareMetadata } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMaps } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -4345,7 +4345,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     let metadataMatch = true;
                     if (activeInfo.metadata) {
-                        metadataMatch = compareMetadata(match.metadata, activeInfo.metadata);
+                        metadataMatch = compareMaps(match.metadata, activeInfo.metadata);
                     }
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
