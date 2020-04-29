@@ -192,13 +192,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @example
      * ```typescript
      *  // Set a property, which would disable the highlight for a given element on a cetain condition
-     *
      *  const metadata = new Map<string, any>();
      *  metadata.set('highlightElement', false);
-     *
-     *  const metadataMap = new Map<string, any>();
-     *  metadataMap.set('highlightElement') = true;
-     *  IgxTextHighlightDirective.setActiveHighlight(id, {index: index, metadata: metadataMap});
      * ```
      * ```html
      * <div
