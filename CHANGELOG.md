@@ -87,6 +87,24 @@ All notable changes for each version of this project will be documented in this 
     - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
     - New `dragDirection` input that can specify only one direction of dragging or both.
 
+- `IgxDateTimeEditor` directive added.
+    - Allows the user to set and edit `date` and `time` in a chosen input element.
+    - Can edit `date` or `time` portion, using an editable masked input.
+    - Additionally, can specify a desired `display` and `input` `format`, as well as `min` and `max` values.
+
+    - A basic configuration scenario setting a Date object as a `value`:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [value]="date"/>
+    </igx-input-group>
+    ```
+    - Two-way data-binding via an ngModel:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [(ngModel)]="date"/>
+    </igx-input-group>
+    ```
+
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
 
