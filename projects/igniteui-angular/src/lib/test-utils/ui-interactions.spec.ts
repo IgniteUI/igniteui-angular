@@ -9,23 +9,59 @@ declare var Touch: {
     new(prop): Touch;
 };
 export class UIInteractions {
-    public static escapeEvent = { key: 'Escape', stopPropagation: () => { }, preventDefault: () => { } };
-    public static clickEvent = new MouseEvent('click');
-
-
-    public static getClickEvent(eventType: string, altKey = false, shift = false, ctrl = false) {
-        const event = {
-            altKey: altKey,
-            shiftKey: shift,
-            ctrlKey: ctrl,
-            stopPropagation: () => { },
-            stopImmediatePropagation: () => { },
-            preventDefault: () => { }
-        };
-        return new MouseEvent(eventType, event);
+    /**
+     * Clears all opened overlays and resets document scrollTop and scrollLeft
+     */
+    public static clearOverlay() {
+        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
+        Array.from(overlays).forEach(element => {
+            element.remove();
+        });
+        document.documentElement.scrollTop = 0;
+        document.documentElement.scrollLeft = 0;
     }
 
-    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false) {
+    /**
+     * Clicks an element - native or debug, by dispatching pointerdown, pointerup and click events.
+     * @param element - Native or debug element.
+     * @param shift - if the shift key is pressed.
+     * @param ctrl - if the ctrl key is pressed.
+     */
+    public static simulateClickAndSelectEvent(element, shift = false, ctrl = false) {
+        const nativeElement = element.nativeElement ?? element;
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
+        nativeElement.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+
+    /**
+     * Double click an element - native or debug, by dispatching pointerdown, pointerup and dblclick events.
+     * @param element - Native or debug element.
+     */
+    public static simulateDoubleClickAndSelectEvent(element) {
+        const nativeElement = element.nativeElement ?? element;
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', nativeElement);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', nativeElement);
+        nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+    }
+
+    /**
+     * click with non primary button on an element - native or debug, by dispatching pointerdown, pointerup and click events.
+     * @param element - Native or debug element.
+     */
+    public static simulateNonPrimaryClick(element) {
+        const nativeElement = element.nativeElement ?? element;
+        nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+        nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
+        nativeElement.dispatchEvent(new Event('click'));
+    }
+
+    /**
+     * gets a keyboard event
+     * @param eventType - name of the event
+     * @param keyPressed- pressed key
+     */
+    public static getKeyboardEvent(eventType: string, keyPressed: string, altKey = false, shift = false, ctrl = false): KeyboardEvent {
         const keyboardEvent = {
             key: keyPressed,
             altKey: altKey,
@@ -38,7 +74,11 @@ export class UIInteractions {
         return new KeyboardEvent(eventType, keyboardEvent);
     }
 
-    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false) {
+    /**
+     * gets a mouse event
+     * @param eventType - name of the event
+     */
+    public static getMouseEvent(eventType, altKey = false, shift = false, ctrl = false): MouseEvent {
         const clickEvent = {
             altKey: altKey,
             shiftKey: shift,
@@ -50,6 +90,11 @@ export class UIInteractions {
         return new MouseEvent(eventType, clickEvent);
     }
 
+    /**
+     * Press a key on an element - debug, by triggerEventHandler.
+     * @param keyPressed - pressed key
+     * @param elem - debug element
+     */
     public static triggerEventHandlerKeyDown(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
             target: elem.nativeElement,
@@ -64,6 +109,11 @@ export class UIInteractions {
         elem.triggerEventHandler('keydown', event);
     }
 
+    /**
+     * Trigger key up on an element - debug, by triggerEventHandler.
+     * @param keyPressed - pressed key
+     * @param elem - debug element
+     */
     public static triggerEventHandlerKeyUp(keyPressed: string, elem: DebugElement, altKey = false, shift = false, ctrl = false) {
         const event = {
             key: keyPressed,
@@ -77,14 +127,43 @@ export class UIInteractions {
         elem.triggerEventHandler('keyup', event);
     }
 
-    public static sendInput(element, text, fix?) {
-        element.nativeElement.value = text;
-        element.nativeElement.dispatchEvent(new Event('input'));
+    /**
+     * Sets an input value- native or debug, by dispatching keydown, input and keyup events.
+     * @param element - Native or debug element.
+     * @param text - text to be set.
+     * @param fix - if fixture is set it will detect changes on it.
+     */
+    public static clickAndSendInputElementValue(element, text, fix = null) {
+        const nativeElement = element.nativeElement ?? element;
+        nativeElement.value = text;
+        nativeElement.dispatchEvent(new Event('keydown'));
+        nativeElement.dispatchEvent(new Event('input'));
+        nativeElement.dispatchEvent(new Event('keyup'));
         if (fix) {
-            return fix.whenStable();
+            fix.detectChanges();
         }
     }
 
+    /**
+     * Sets an input value- native or debug, by dispatching only input events.
+     * @param element - Native or debug element.
+     * @param text - text to be set.
+     * @param fix - if fixture is set it will detect changes on it.
+     */
+    public static setInputElementValue(element, text, fix = null) {
+        const nativeElement = element.nativeElement ?? element;
+        nativeElement.value = text;
+        nativeElement.dispatchEvent(new Event('input'));
+        if (fix) {
+            fix.detectChanges();
+        }
+    }
+
+    /**
+     * Sets an input value- debug element.
+     * @param inputElement - debug element.
+     * @param inputValue - text to be set.
+     */
     public static triggerInputEvent(inputElement: DebugElement, inputValue: string) {
         inputElement.nativeElement.value = inputValue;
         inputElement.triggerEventHandler('input', { target: inputElement.nativeElement });
@@ -142,22 +221,7 @@ export class UIInteractions {
         inputElement.triggerEventHandler('paste', event);
     }
 
-    public static sendInputElementValue(element: HTMLInputElement, text, fix?) {
-        element.value = text;
-        element.dispatchEvent(new Event('keydown'));
-        element.dispatchEvent(new Event('input'));
-        element.dispatchEvent(new Event('keyup'));
-        if (fix) {
-            fix.detectChanges();
-        }
-    }
-
-    public static triggerKeyEvtUponElem(evtName, elem) {
-        const evtArgs: KeyboardEventInit = { key: evtName, bubbles: true };
-        elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
-    }
-
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles = true, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyPressed,
             bubbles: bubbles,
@@ -168,33 +232,13 @@ export class UIInteractions {
         elem.dispatchEvent(keyboardEvent);
     }
 
-    public static findCellByInputElem(elem, focusedElem) {
-        if (!focusedElem.parentElement) {
-            return null;
-        }
-
-        if (elem === focusedElem) {
-            return elem;
-        }
-
-        return this.findCellByInputElem(elem, focusedElem.parentElement);
-    }
-
-    public static clickCurrentRow(row) {
-        return row.triggerEventHandler('click', new Event('click'));
-    }
-
-    /**
-     * Clicks an element - native or debug, by dispatching pointerdown, focus, pointerup and click events.
-     * @param element - Native or debug element.
-     */
-    public static clickElement(element) {
-        const nativeElement = element.nativeElement ? element.nativeElement : element;
-        const elementRect = nativeElement.getBoundingClientRect();
-        UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('focus'));
-        UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+    public static simulateClickEvent(element, shift = false, ctrl = false) {
+        const event = new MouseEvent('click', {
+            bubbles: true,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        });
+        element.dispatchEvent(event);
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
@@ -208,20 +252,6 @@ export class UIInteractions {
 
         return new Promise((resolve, reject) => {
             element.dispatchEvent(new MouseEvent(eventName, options));
-            resolve();
-        });
-    }
-
-    public static simulateKeyDownEvent(element, key) {
-        const keyOptions: KeyboardEventInit = {
-            key,
-            bubbles: true
-        };
-
-        const keypressEvent = new KeyboardEvent('keydown', keyOptions);
-
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(keypressEvent);
             resolve();
         });
     }
@@ -253,7 +283,7 @@ export class UIInteractions {
         return pointerEvent;
     }
 
-    public static simulatePointerOverCellEvent(eventName: string, element, shift = false, ctrl = false) {
+    public static simulatePointerOverElementEvent(eventName: string, element, shift = false, ctrl = false) {
         const options: PointerEventInit = {
             view: window,
             bubbles: true,
@@ -267,68 +297,11 @@ export class UIInteractions {
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
-    public static simulateClickEvent(element, shift = false, ctrl = false) {
-        const event = new MouseEvent('click', {
-            bubbles: true,
-            shiftKey: shift,
-            ctrlKey: ctrl
-        });
-        element.dispatchEvent(event);
-    }
-
-    public static simulateDragScrollOverCellEvent(eventName: string, element, clientX, clientY, shift = false, ctrl = false) {
-        const options: PointerEventInit = {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-            pointerId: 1,
-            buttons: 1,
-            shiftKey: shift,
-            ctrlKey: ctrl,
-            clientX: clientX,
-            clientY: clientY
-        };
-        element.dispatchEvent(new PointerEvent(eventName, options));
-    }
-
-    public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
-        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
-        element.nativeElement.dispatchEvent(new MouseEvent('click'));
-    }
-
-    public static simulateClickAndSelectHTMLElement(element: HTMLElement, shift = false, ctrl = false) {
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', element, shift, ctrl);
-        UIInteractions.simulatePointerOverCellEvent('pointerup', element);
-        element.dispatchEvent(new MouseEvent('click'));
-    }
-
-    public static simulateDoubleClickAndSelectCellEvent(element) {
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement);
-        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
-        element.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
-    }
-
-    public static simulateNonPrimaryClick(cell) {
-        cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
-        cell.nativeElement.dispatchEvent(new Event('click'));
-        cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
-    }
-
     public static simulateDropEvent(nativeElement: HTMLElement, data: any, format: string) {
         const dataTransfer = new DataTransfer();
         dataTransfer.setData(format, data);
 
         nativeElement.dispatchEvent(new DragEvent('drop', { dataTransfer: dataTransfer }));
-    }
-
-    public static clearOverlay() {
-        const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
-        Array.from(overlays).forEach(element => {
-            element.remove();
-        });
-        document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = 0;
     }
 
     public static simulateWheelEvent(element, deltaX, deltaY) {
@@ -356,6 +329,7 @@ export class UIInteractions {
             resolve();
         });
     }
+
     public static simulateTouchMoveEvent(element, movedX, movedY) {
         const touchInit = {
             identifier: 0,

@@ -212,6 +212,10 @@
         @extend %igx-grid__tr-container !optional;
     }
 
+    @include e(tr-container, $m: active) {
+        @extend %igx-grid__tr-container--active !optional;
+    }
+
     @include e(th) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
@@ -251,6 +255,10 @@
 
     @include e(th, $m: selected) {
         @extend %igx-grid__th--selected !optional;
+    }
+
+    @include e(th, $m: active) {
+        @extend %igx-grid__th--active !optional;
     }
 
     @include e(th, $m: number) {
@@ -798,7 +806,7 @@
         @include e(hierarchical-expander) {
             @extend %igx-grid__hierarchical-expander--compact !optional;
         }
-        
+
         @include e(hierarchical-expander, $m: empty) {
             @extend %igx-grid__hierarchical-expander--compact !optional;
             @extend %igx-grid__hierarchical-expander--empty !optional;
@@ -872,5 +880,11 @@
 
     @include e(count-badge) {
         @extend %igx-group-label__count-badge !optional;
+    }
+}
+
+@include b(igx-grid-summary) {
+    @include m(active) {
+        @extend %igx-grid-summary--active !optional;
     }
 }

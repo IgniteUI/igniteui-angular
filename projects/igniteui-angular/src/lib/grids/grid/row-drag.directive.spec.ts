@@ -168,7 +168,7 @@ describe('Row Drag Tests #grid', () => {
                 expect(grid.rowDragging).toBeTruthy();
                 expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(1);
 
-                UIInteractions.simulateKeyDownEvent(dragIndicatorElement, 'Escape');
+                UIInteractions.triggerKeyDownEvtUponElem('Escape', dragIndicatorElement);
                 await wait(DEBOUNCE_TIME);
                 fixture.detectChanges();
                 expect(row.dragging).toBeFalsy();

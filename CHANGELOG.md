@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
+- `igx-paginator` -  The following inputs have been deprecated for the `paginator` component and will be removed in future versions
+    - `selectLabel` and `prepositionPage` Use 'resourceStrings' to set/get values.
 
 - `IgxInputGroup`
   - **Renamed** `supressInputAutofocus` input to `suppressInputAutofocus`
@@ -62,6 +64,18 @@ All notable changes for each version of this project will be documented in this 
     - `deselectColumns` API method is added for the `IgxGrid`. It allows to deselect columns by passing array of IgxColumnComponent or column fields.
     - `deselectAllColumns` API method is added for the `IgxGrid`. It allows to deselect all columns.
     - `getSelectedColumnsData` API method is added for the `IgxGrid`. It allows to get the selected columns data.
+    Added keyBoard navigation support in the IgxGrid headers. Now is possible to navigate with the arrows keys through grid headers. Also we provide a number of key combinations that trigger a different column functionality like filtering, sorting, grouping and etc. You can read more information in the [Grid Specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
+    - **Behavioral Change**
+        - *you can not use* `tab` key to navigate between the cell in the Igx Grid. The navigation is performed only with arrow keys.
+        - when you are in edit mode with `tab` key you can navigate to the next editable cell.
+        - `page up` and `page down` keys will perform action only if the focused element is the tbody of the grid.
+        - The grid introduces the following basic `tab stops`:
+            - Toolbar / Group by Area if existing;
+            - The first cell in the header row;
+            - The first cell in the first body row;
+            - The first cell in column summary if exists;
+            - Pager UI;
+    - `onGridKeydown` event is deprecated. Now you can directly bind to keydown on the IgxGrid component in order to perform custom keyboard navigation.
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.

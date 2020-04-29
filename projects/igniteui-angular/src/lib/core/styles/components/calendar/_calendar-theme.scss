@@ -35,11 +35,14 @@
 /// @param {Color} $weekend-text-color [null] - The text color for weekend days.
 ///
 /// @param {Color} $year-current-text-color [null] - The text color for the current/selected year.
-/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
 ///
-/// @param {Color} $year-hover-text-color [null] - The year hover text color.
+/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
+/// @param {Color} $month-hover-current-text-color [null]- The text color for the current/selected month on hover.
 /// @param {Color} $month-hover-text-color [null] - The month hover text color.
 /// @param {Color} $month-hover-background [null] - The month hover background color.
+/// @param {border-radius} $month-border-radius [null] - The border radius used for the outline outline of the month.
+///
+/// @param {Color} $year-hover-text-color [null] - The year hover text color.
 ///
 /// @param {Color} $date-selected-background [null] - The background color for the selected date.
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
@@ -56,7 +59,6 @@
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the outline of the calendar.
 /// @param {border-radius} $date-border-radius [null] - The border radius used for the outline outline of the date.
-/// @param {border-radius} $month-border-radius [null] - The border radius used for the outline outline of the month.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -100,6 +102,7 @@
 
     $year-hover-text-color: null,
     $month-hover-text-color: null,
+    $month-hover-current-text-color: null,
     $month-hover-background: null,
 
     $date-selected-background: null,
@@ -239,17 +242,15 @@
         $date-special-text-color: text-contrast($date-special-background);
     }
 
-    @if $not-bootstrap-theme {
-        @if not($month-hover-text-color) and $content-background{
-            @if type-of($content-background) == 'color' {
-                $month-hover-text-color: text-contrast($content-background);
-            }
+    @if not($month-hover-text-color) and $month-hover-background {
+        @if type-of($month-hover-background) == 'color' {
+            $month-hover-text-color: text-contrast($month-hover-background);
         }
     }
 
-    @if not($month-hover-text-color) and $month-hover-background {
-        @if type-of($month-hover-text-color) == 'color' {
-            $month-hover-text-color: text-contrast($month-hover-background);
+    @if not($month-hover-current-text-color) and $month-hover-background {
+        @if type-of($month-hover-background) == 'color' {
+            $month-hover-current-text-color: text-contrast($month-hover-background);
         }
     }
 
@@ -289,6 +290,7 @@
 
         year-hover-text-color: $year-hover-text-color,
         month-hover-text-color: $month-hover-text-color,
+        month-hover-current-text-color: $month-hover-current-text-color,
         month-hover-background: $month-hover-background,
 
         date-selected-background: $date-selected-background,
@@ -744,6 +746,10 @@
 
     %cal-value--month-current {
         color: --var($theme, 'month-current-text-color');
+    }
+
+    %cal-value--month-current-hover {
+        color: --var($theme, 'month-hover-current-text-color');
     }
 
     %cal-value--inactive {

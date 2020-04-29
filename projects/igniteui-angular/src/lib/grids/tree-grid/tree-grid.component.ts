@@ -610,9 +610,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         return {
             $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
-            index: this.getRowIndex(rowIndex, pinned),
+            index: this.getDataViewIndex(rowIndex, pinned),
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-            disabled: this.isGhostRecord(rowData)
+            disabled: this.isGhostRecord(rowData) ? rowData.recordRef.isFilteredOutParent === undefined : false
         };
     }
 
@@ -640,7 +640,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             source.push(record.data);
         };
 
-        this.dataView.forEach(process);
+        this.unpinnedDataView.forEach(process);
         source = this.isRowPinningToTop ? [...this.pinnedDataView, ...source] : [...source, ...this.pinnedDataView];
         return this.extractDataFromSelection(source, formatters, headers);
     }

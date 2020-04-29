@@ -9,9 +9,9 @@ import {
     QueryList,
     ElementRef,
     HostBinding,
-    HostListener,
     ChangeDetectionStrategy,
-    ViewRef
+    ViewRef,
+    HostListener
 } from '@angular/core';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -105,7 +105,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.addExpression(true);
             }
         }
-
         this.filter();
     }
 
@@ -159,6 +158,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
+    @HostListener('keydown.esc', ['$event'])
+    public onEscHandler(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.close();
+    }
+
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -167,7 +173,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.column.dataType === DataType.Date) {
             return this.defaultDateUI;
         }
-
         return this.defaultFilterUI;
     }
 
@@ -212,10 +217,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB) {
-            if (!this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-            }
+        } else if (event.key === KEYS.TAB && !this.dropDownConditions.collapsed) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
 
@@ -224,16 +227,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onInputKeyDown(event: KeyboardEvent) {
         this.isKeyPressed = true;
-
+        event.stopPropagation();
         if (this.column.dataType === DataType.Boolean) {
             if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
                 this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
                 return;
             }
         }
-
         if (event.key === KEYS.ENTER) {
             if (this.isComposing) {
                 return;
@@ -243,10 +244,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
-            event.preventDefault();
             this.close();
         }
-        event.stopPropagation();
     }
 
     /**
@@ -458,12 +457,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         this.filteringService.isFilterRowVisible = false;
-
         this.filteringService.updateFilteringCell(this.column);
-        this.filteringService.focusFilterCellChip(this.column, true);
-
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
+        this.filteringService.grid.theadRow.nativeElement.focus();
 
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);
