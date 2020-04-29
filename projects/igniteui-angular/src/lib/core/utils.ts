@@ -2,7 +2,6 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
-import { IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 
 /**
  * @hidden
@@ -364,20 +363,22 @@ export function resizeObservable(target: HTMLElement): Observable<ResizeObserver
  * Compares two metadata maps.
  */
 export function compareMetadata(map1: Map<any, any>, map2: Map<any, any>) {
+    if (!(map1 && map2)) {
+        return false;
+    }
+    if (map1.size !== map2.size) {
+        return false;
+    }
     let metadataMatch = true;
-    if (map1 && map2) {
-        if (map1.size !== map2.size) {
-            return false;
+    const keys = Array.from(map2.keys());
+    for (const key of keys) {
+        if (map1.has(key)) {
+            metadataMatch = map1.get(key) === map2.get(key);
         } else {
-            const keys = Array.from(map2.keys());
-            for (const key of keys) {
-                if (map1.has(key)) {
-                    metadataMatch = map1.get(key) === map2.get(key);
-                }
-                if (!metadataMatch) {
-                    break;
-                }
-            }
+            metadataMatch = false;
+        }
+        if (!metadataMatch) {
+            break;
         }
     }
     return metadataMatch;
