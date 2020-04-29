@@ -181,10 +181,10 @@ describe('IgxCalendar - ', () => {
             let fixture, calendar, dom;
             beforeEach(
                 async(() => {
-                            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-                            fixture.detectChanges();
-                            calendar = fixture.componentInstance.calendar;
-                            dom = fixture.debugElement;
+                    fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                    fixture.detectChanges();
+                    calendar = fixture.componentInstance.calendar;
+                    dom = fixture.debugElement;
                 })
             );
 
@@ -708,13 +708,13 @@ describe('IgxCalendar - ', () => {
             it('Calendar keyboard navigation - PageUp/PageDown', () => {
                 const component = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS));
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'PageUp');
+                UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 calendar.viewDate = new Date(2017, 5, 13);
                 fixture.detectChanges();
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'PageDown');
+                UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement);
                 fixture.detectChanges();
 
                 expect(calendar.viewDate.getMonth()).toEqual(6);
@@ -739,19 +739,19 @@ describe('IgxCalendar - ', () => {
                 const firstDay = days[0];
                 const lastDay = days[days.length - 1];
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
                 expect(document.activeElement.textContent.trim()).toMatch('1');
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'End');
+                UIInteractions.triggerKeyDownEvtUponElem('End', component.nativeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent).toMatch(lastDay.nativeElement.textContent);
                 expect(document.activeElement.textContent.trim()).toMatch('30');
 
-                UIInteractions.simulateKeyDownEvent(firstDay.nativeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', firstDay.nativeElement);
                 fixture.detectChanges();
 
                 expect((calendar.value as Date).toDateString()).toMatch(new Date(2017, 5, 1).toDateString());
@@ -763,34 +763,35 @@ describe('IgxCalendar - ', () => {
                 const days = calendar.daysView.dates.filter((day) => day.isCurrentMonth);
                 const firstDay = days[0];
 
-                UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent).toMatch(firstDay.nativeElement.textContent);
                 expect(document.activeElement.textContent.trim()).toMatch('1');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('8');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
+
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('7');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('8');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('1');
             });
 
-            it('Calendar date should persist the focus when select date in the (next/prev) month.', fakeAsync (() => {
+            it('Calendar date should persist the focus when select date in the (next/prev) month.', fakeAsync(() => {
                 const component = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS));
                 const calendarMonth = calendar.daysView.getCalendarMonth;
                 let value = calendarMonth[0][4];
@@ -798,7 +799,7 @@ describe('IgxCalendar - ', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('Home', component.nativeElement, true);
 
                 let date = calendar.daysView.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
-                UIInteractions.simulateKeyDownEvent(date, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', date);
                 fixture.detectChanges();
                 flush();
 
@@ -807,7 +808,7 @@ describe('IgxCalendar - ', () => {
                 value = calendarMonth[4][6];
                 date = calendar.daysView.dates.find((d) => d.date.date.toString() === value.date.toString()).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(date, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', date);
                 fixture.detectChanges();
                 flush();
 
@@ -818,7 +819,7 @@ describe('IgxCalendar - ', () => {
                 expect(document.activeElement.textContent.trim()).toMatch('2');
             }));
 
-            it('Should navigate to first enabled date when using "home" key.', fakeAsync (() => {
+            it('Should navigate to first enabled date when using "home" key.', fakeAsync(() => {
                 const dateRangeDescriptors: DateRangeDescriptor[] = [];
                 const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
                 dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
@@ -828,7 +829,7 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -846,7 +847,7 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+                UIInteractions.triggerKeyDownEvtUponElem('End', calendarNativeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -864,10 +865,10 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+                UIInteractions.triggerKeyDownEvtUponElem('End', calendarNativeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -885,10 +886,10 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -905,10 +906,10 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+                UIInteractions.triggerKeyDownEvtUponElem('End', calendarNativeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -925,10 +926,10 @@ describe('IgxCalendar - ', () => {
                 flush();
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
                 fixture.detectChanges();
 
                 const date = calendar.daysView.dates.filter(
@@ -1160,9 +1161,9 @@ describe('IgxCalendar - ', () => {
 
             it('Should be able to set disabled and active dates as @Input', () => {
                 expect(calendar.specialDates).toEqual(
-                    [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}]);
+                    [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }]);
                 expect(calendar.disabledDates).toEqual(
-                    [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}]);
+                    [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
                 let specialDates = calendar.daysView.dates.toArray().filter(d => {
                     const dateTime = getDate(d).getTime();
                     return (dateTime >= new Date(2017, 5, 1).getTime() &&
@@ -1185,12 +1186,12 @@ describe('IgxCalendar - ', () => {
                 });
 
                 // change Inputs
-                fixture.componentInstance.disabledDates = [{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}];
-                fixture.componentInstance.specialDates = [{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}];
+                fixture.componentInstance.disabledDates = [{ type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)] }];
+                fixture.componentInstance.specialDates = [{ type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)] }];
                 fixture.detectChanges();
 
-                expect(calendar.disabledDates).toEqual([{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}]);
-                expect(calendar.specialDates).toEqual([{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}]);
+                expect(calendar.disabledDates).toEqual([{ type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)] }]);
+                expect(calendar.specialDates).toEqual([{ type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)] }]);
                 specialDates = calendar.daysView.dates.toArray().filter(d => {
                     const dateTime = getDate(d).getTime();
                     return (dateTime >= new Date(2017, 5, 20).getTime());
@@ -1228,10 +1229,10 @@ describe('IgxCalendar - ', () => {
             let fixture, calendar, ci;
             beforeEach(
                 async(() => {
-                            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-                            fixture.detectChanges();
-                            ci = fixture.componentInstance;
-                            calendar = ci.calendar;
+                    fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                    fixture.detectChanges();
+                    ci = fixture.componentInstance;
+                    calendar = ci.calendar;
                 })
             );
 
@@ -1559,7 +1560,7 @@ describe('IgxCalendar - ', () => {
 
                 expect(prev.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', prev.nativeElement);
                 tick(100);
                 fixture.detectChanges();
 
@@ -1569,11 +1570,11 @@ describe('IgxCalendar - ', () => {
                 next.nativeElement.focus();
                 expect(next.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
                 tick(100);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', next.nativeElement);
                 tick(100);
                 fixture.detectChanges();
 
@@ -1586,7 +1587,7 @@ describe('IgxCalendar - ', () => {
 
                 expect(year.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
 
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
@@ -1595,20 +1596,20 @@ describe('IgxCalendar - ', () => {
                 expect(years.length).toEqual(6);
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2017');
 
-                UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', currentYear.nativeElement);
                 fixture.detectChanges();
 
                 currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2018');
 
-                UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
-                UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', currentYear.nativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', currentYear.nativeElement);
                 fixture.detectChanges();
 
                 currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2016');
 
-                UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', currentYear.nativeElement);
                 fixture.detectChanges();
 
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
@@ -1620,7 +1621,7 @@ describe('IgxCalendar - ', () => {
 
                 expect(month.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
 
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
@@ -1629,28 +1630,28 @@ describe('IgxCalendar - ', () => {
                 expect(months.length).toEqual(11);
                 expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
 
-                UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', currentMonth.nativeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('Jan');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'End');
+                UIInteractions.triggerKeyDownEvtUponElem('End', document.activeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('Dec');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
                 fixture.detectChanges();
 
                 expect(document.activeElement.textContent.trim()).toMatch('Sep');
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', document.activeElement);
                 fixture.detectChanges();
 
                 expect(calendar.viewDate.getMonth()).toEqual(8);
@@ -1671,18 +1672,18 @@ describe('IgxCalendar - ', () => {
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
                 fixture.detectChanges();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
                 let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 18).getTime());
                 expect(date.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1705,25 +1706,25 @@ describe('IgxCalendar - ', () => {
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
                 flush();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
                 let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 26).getTime());
                 expect(date.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
                 flush();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1745,21 +1746,21 @@ describe('IgxCalendar - ', () => {
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('End', calendarNativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
                 let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 6, 21).getTime());
                 expect(date.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1780,12 +1781,12 @@ describe('IgxCalendar - ', () => {
 
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+                UIInteractions.triggerKeyDownEvtUponElem('End', calendarNativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1795,7 +1796,7 @@ describe('IgxCalendar - ', () => {
                 date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 5).getTime());
                 date.nativeElement.focus();
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1806,19 +1807,19 @@ describe('IgxCalendar - ', () => {
             it('Should preserve the active date on (shift) pageup and pagedown.', fakeAsync(() => {
                 const calendarNativeElement = dom.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
 
-                UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+                UIInteractions.triggerKeyDownEvtUponElem('Home', calendarNativeElement);
 
                 let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
                 expect(date.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageUp');
+                UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
                 date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 1).getTime());
                 expect(date.nativeElement).toBe(document.activeElement);
 
-                UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageDown');
+                UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement);
                 fixture.detectChanges();
                 flush();
 
@@ -1877,13 +1878,13 @@ describe('IgxCalendar - ', () => {
                 expect(calendar.viewDate.getMonth()).toEqual(5);
 
                 prevMonthBtn.focus();
-                UIInteractions.simulateKeyDownEvent(prevMonthBtn, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', prevMonthBtn);
                 tick(800);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 nextMonthBtn.focus();
-                UIInteractions.simulateKeyDownEvent(nextMonthBtn, 'Enter');
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', nextMonthBtn);
                 tick(800);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
@@ -1922,8 +1923,8 @@ export class IgxCalendarRangeComponent {
 export class IgxCalendarDisabledSpecialDatesComponent {
     public model: Date | Date[] = new Date(2017, 5, 23);
     public viewDate = new Date(2017, 5, 13);
-    public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
-    public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];
+    public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
+    public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
@@ -2167,7 +2168,7 @@ class DateRangesPropertiesTester {
         fixture.detectChanges();
         const debugEl = fixture.debugElement;
         const calendarNativeElement = debugEl.query(By.css(HelperTestFunctions.CALENDAR_CSSCLASS)).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'PageUp');
+        UIInteractions.triggerKeyDownEvtUponElem('PageUp', calendarNativeElement);
         fixture.detectChanges();
         testRangesFunc(calendar.daysView.dates.toArray(), []);
     }

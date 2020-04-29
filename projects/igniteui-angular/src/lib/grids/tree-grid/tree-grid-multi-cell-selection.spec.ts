@@ -108,12 +108,12 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             // Try to select a range
             // Try to select a range
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', endCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', endCell.nativeElement);
             endCell.nativeElement.dispatchEvent(new MouseEvent('click'));
             fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', startCell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', startCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', startCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', startCell.nativeElement);
             fix.detectChanges();
             detect();
             GridSelectionFunctions.verifyCellSelected(startCell, false);
@@ -168,7 +168,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         it('Should be able to select a range with holding Shift key', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             const firstCell = treeGrid.getCellByColumn(6, 'Age');
-            UIInteractions.simulateClickAndSelectCellEvent(firstCell);
+            UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(firstCell);
@@ -182,7 +182,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const secondCell = treeGrid.getCellByColumn(16, 'HireDate');
-            UIInteractions.simulateClickAndSelectCellEvent(secondCell, true);
+            UIInteractions.simulateClickAndSelectEvent(secondCell, true);
             fix.detectChanges();
 
             let range = { rowStart: 6, rowEnd: 16, columnStart: 2, columnEnd: 4 };
@@ -200,7 +200,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const thirdCell = treeGrid.getCellByColumn(4, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(thirdCell, true);
+            UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             fix.detectChanges();
 
             range = { rowStart: 4, rowEnd: 6, columnStart: 0, columnEnd: 2 };
@@ -214,7 +214,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(9, 'Age');
 
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
@@ -287,7 +287,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
 
-            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
             startCell.nativeElement.dispatchEvent(new MouseEvent('click'));
             detect();
 
@@ -299,20 +299,20 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                     const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, i);
                     cell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
                 }
-                UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
                 detect();
                 GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, i, 0, 0);
             }
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
 
             let newCell = treeGrid.getCellByColumn(10, 'Name');
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', newCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', newCell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 1);
 
             newCell = treeGrid.getCellByColumn(10, 'Age');
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', newCell.nativeElement);
-            UIInteractions.simulatePointerOverCellEvent('pointerup', newCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', newCell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerup', newCell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -369,45 +369,38 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
+            await wait(30);
             fix.detectChanges();
 
+            const gridContent = GridFunctions.getGridContent(fix);
             const cell = treeGrid.getCellByColumn(8, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
 
-            for (let i = 8; i < 16; i++) {
-                let cellObj = treeGrid.getCellByColumn(i, 'Name');
-                if (!cellObj) {
-                    cellObj = treeGrid.summariesRowList.find(row => row.index === i)
-                        .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
-                }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cellObj.nativeElement, true, false, true);
+            for (let i = 8; i < 12; i++) {
+                UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
                 await wait(30);
                 fix.detectChanges();
             }
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 11, 1, 1);
 
             for (let i = 1; i < 3; i++) {
-                const cellObject = treeGrid.summariesRowList.find(row => row.index === 16)
-                    .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
-                UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellObject.nativeElement, true, false, true);
+                UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, true);
                 await wait(30);
                 fix.detectChanges();
             }
 
-            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 11, 1, 1);
 
-            const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
-                .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', summaryCell.nativeElement, true, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent, false, true);
             await wait(30);
             fix.detectChanges();
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 15, 1, 3);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 8, 11, 1, 3);
         }));
 
         it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
@@ -417,14 +410,14 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             fix.detectChanges();
 
             const cell = treeGrid.getCellByColumn(8, 'Name');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             GridSelectionFunctions.verifyCellSelected(cell);
             const gridContent = GridFunctions.getGridContent(fix);
             for (let i = 8; i < 16; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
-                await wait(30);
+                await wait(60);
                 fix.detectChanges();
             }
 
@@ -432,7 +425,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(30);
+            await wait(60);
             fix.detectChanges();
 
             GridSelectionFunctions.verifySelectedRange(treeGrid, 17, 17, 1, 1);
@@ -1051,7 +1044,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         treeGrid.toggleRow(treeGrid.getRowByIndex(4).rowID);
         fix.detectChanges();
 
-        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+        UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
         startCell.nativeElement.dispatchEvent(new Event('focus'));
         detect();
 
@@ -1059,40 +1052,40 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         for (let i = 5; i < 7; i++) {
             const cell = treeGrid.getCellByColumn(i, treeGrid.columns[i - 3].field);
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
         }
 
         for (let i = 5; i > 0; i--) {
             const cell = treeGrid.getCellByColumn(i, 'OnPTO');
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 3);
         }
 
         for (let i = 2; i >= 0; i--) {
             const cell = treeGrid.getCellByColumn(1, treeGrid.columns[i].field);
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
         }
 
         for (let i = 2; i < 10; i++) {
             const cell = treeGrid.getCellByColumn(i, 'ID');
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 0);
         }
 
         for (let i = 8; i > 6; i--) {
             const cell = treeGrid.getCellByColumn(i, treeGrid.columns[9 - i].field);
-            UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+            UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);
         }
 
-        UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+        UIInteractions.simulatePointerOverElementEvent('pointerup', endCell.nativeElement);
         detect();
 
         expect(startCell.active).toBe(true);

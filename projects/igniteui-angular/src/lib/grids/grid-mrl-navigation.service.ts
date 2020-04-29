@@ -75,6 +75,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
         if (!super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex)) { return false; }
+        if (!this.isDataRow(targetRowIndex)) { return super.shouldPerformVerticalScroll(targetRowIndex, visibleColIndex); }
 
         const targetRow = super.getRowElementByIndex(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
@@ -141,8 +142,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex: number, cb?: () => void) {
-        const children = this.parentByChildIndex(visibleColIndex || 0).children;
-        if (!super.isDataRow(rowIndex) || children.length < 2) { return super.performVerticalScrollToCell(rowIndex, visibleColIndex, cb); }
+        const children = this.parentByChildIndex(visibleColIndex || 0)?.children;
+        if (!super.isDataRow(rowIndex) || (children && children.length < 2)) {
+            return super.performVerticalScrollToCell(rowIndex, visibleColIndex, cb);
+        }
 
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const pos = this.getVerticalScrollPositions(rowIndex, visibleColIndex);
@@ -285,7 +288,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private parentByChildIndex(visibleIndex) {
-        return this.grid.getColumnByVisibleIndex(visibleIndex).parent;
+        return this.grid.getColumnByVisibleIndex(visibleIndex)?.parent;
 
     }
 

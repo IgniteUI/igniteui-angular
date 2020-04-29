@@ -229,13 +229,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.rowList.length).toEqual(3);
             verifyFilterRowUI(input, close, reset, false);
-
-            // greater than or equal to with invalid value should not reset filter
-            GridFunctions.openFilterDDAndSelectCondition(fix, 4);
-            GridFunctions.typeValueInFilterRowInput('254..', fix, input);
-
-            expect(grid.rowList.length).toEqual(3);
-            verifyFilterRowUI(input, close, reset, false);
         }));
 
         // UI tests boolean column
@@ -1116,13 +1109,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should close FilterRow when Escape is pressed.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
-            // To Do update to exit row correct
-            // grid.filteringRow.onEscKeydown(UIInteractions.escapeEvent);
+            UIInteractions.triggerKeyDownEvtUponElem('Escape', filteringRow.nativeElement, true);
             tick(100);
             fix.detectChanges();
 
@@ -1140,7 +1131,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const reset = editingBtns.queryAll(By.css('button'))[0];
             const close = editingBtns.queryAll(By.css('button'))[1];
 
-            expect(close.nativeElement.innerText).toBe('Close');
             expect(reset.nativeElement.innerText).toBe('Reset');
         }));
 
@@ -1375,11 +1365,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should navigate keyboard focus correctly between the filter row and the grid cells.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
+            pending(`The test needs refactoring. The dispatchEvent doesn't focus elements with tabindex over them.
+                Also, the focus is now persistent over the tbody element`);
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             const cell = grid.getCellByColumn(0, 'ID');
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
@@ -1465,7 +1456,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Verify filter cell chip is scrolled into view on click.', async () => {
             grid.width = '470px';
-            await wait(DEBOUNCETIME);
+            await wait(100);
+            fix.detectChanges();
+            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is not fully visible.
@@ -1476,7 +1469,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 'chip should not be fully visible and thus not within grid');
 
             GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fix.detectChanges();
 
             grid.filteringRow.close();
@@ -1649,13 +1642,15 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        it('Should open filterRow for respective column when pressing \'Enter\' on its filterCell chip.', fakeAsync(() => {
-            pending('Should be fixed with headers navigation');
+        it('Should open filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.', fakeAsync(() => {
             // Verify filterRow is not opened.
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
 
-            const filterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
-            UIInteractions.triggerEventHandlerKeyDown('Enter', filterCellChip);
+            const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
+            UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('l', releaseDateColumn.nativeElement, true, false, true, true);
             tick(200);
             fix.detectChanges();
 
@@ -1675,8 +1670,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const firstRow = GridFunctions.getGridDataRows(fix)[0];
-            const firstCell: any = Array.from(firstRow.querySelectorAll('igx-grid-cell'))[0];
+            const firstCell: any = GridFunctions.getRowCells(fix, 0)[0].nativeElement;
             expect(document.activeElement).toBe(firstCell);
         }));
 
@@ -1705,15 +1699,17 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             ControlsFunction.clickChipRemoveButton(filterCellChip.nativeElement);
             tick(50);
             fix.detectChanges();
-            const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
-            expect(document.activeElement).toBe(moreIcon[0].nativeElement);
+
+            const header = GridFunctions.getGridHeader(fix);
+            // const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
+            expect(document.activeElement).toBe(header.nativeElement);
 
             // Verify new chip text.
             filterCellChip = GridFunctions.getFilterChipsForColumn('ProductName', fix)[0];
             expect(GridFunctions.getChipText(filterCellChip)).toBe('e');
         }));
 
-        it('Should focus \'more\' icon when close filter row.', fakeAsync(() => {
+        it('Should focus \'grid header\' when close filter row.', fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '80px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
@@ -1731,7 +1727,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Click more icon
-            let moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
+            const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
             moreIcon.triggerEventHandler('click', null);
             tick(100);
             fix.detectChanges();
@@ -1746,11 +1742,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.closeFilterRow(fix);
             tick(DEBOUNCETIME);
 
-            moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix)[0];
-            expect(document.activeElement).toBe(moreIcon.nativeElement);
+            const header = GridFunctions.getGridHeader(fix);
+            expect(document.activeElement).toEqual(header.nativeElement);
         }));
 
         it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', fakeAsync(() => {
+            pending('This this is not valid anymore, so we should probably dellete it.');
             grid.getColumnByName('ProductName').width = '350px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
@@ -2146,11 +2143,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should close filter row when hide the current column', fakeAsync(() => {
-            pending('This issue is failing because of bug #');
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
             // Check that the filterRow is opened
-            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             expect(filterUIRow).not.toBeNull();
 
             // Add first chip.
@@ -2158,12 +2154,13 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
 
             grid.getColumnByName('ProductName').hidden = true;
-            fix.detectChanges();
             tick(100);
+            fix.detectChanges();
 
             // Check that the filterRow is closed
-            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
-            expect(grid.rowList.length).toBe(8);
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull();
+            expect(grid.rowList.length).toBe(3, 'filter is not applied');
         }));
 
         it('Should keep existing column filter after hiding another column.', fakeAsync(() => {
@@ -3215,7 +3212,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'ignite', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3496,7 +3493,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type string in search box.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'false', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'false', fix);
             tick(100);
             fix.detectChanges();
 
@@ -3580,7 +3577,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Type string in search box
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
-            UIInteractions.sendInputElementValue(inputNativeElement, 'sale', fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'sale', fix);
             await wait(200);
             fix.detectChanges();
 
@@ -3601,12 +3598,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(6);
 
-            UIInteractions.sendInputElementValue(input, 'a', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4);
 
-            UIInteractions.sendInputElementValue(input, 'al', fix);
+            UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
             tick(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0);
@@ -4278,14 +4275,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const todayDate = todayDateFull.getDate().toString();
             const dayOfWeek = todayDateFull.toString().substring(0, 3);
 
-            UIInteractions.sendInputElementValue(inputNativeElement, todayDate, fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, todayDate, fix);
             tick(100);
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4, 'incorrect rendered list items count');
 
-            UIInteractions.sendInputElementValue(inputNativeElement, dayOfWeek, fix);
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
             tick(100);
             fix.detectChanges();
 

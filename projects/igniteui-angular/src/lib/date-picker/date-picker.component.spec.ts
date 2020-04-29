@@ -81,7 +81,7 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onOpened, 'emit');
             spyOn(datePicker.onClosed, 'emit');
 
-            UIInteractions.clickElement(target);
+            UIInteractions.simulateClickAndSelectEvent(target);
             fixture.detectChanges();
             await wait();
 
@@ -221,7 +221,7 @@ describe('IgxDatePicker', () => {
                 expect(overlayToggle[0]).not.toBeNull();
                 expect(overlayToggle[0]).not.toBeUndefined();
 
-                UIInteractions.clickElement(overlayToggle[0]);
+                UIInteractions.simulateClickAndSelectEvent(overlayToggle[0]);
                 flush();
                 fixture.detectChanges();
 
@@ -247,7 +247,7 @@ describe('IgxDatePicker', () => {
 
                 // select a date
                 const dateElemToSelect = document.getElementsByClassName('igx-calendar__date-content')[10];
-                UIInteractions.clickElement(dateElemToSelect);
+                UIInteractions.simulateClickAndSelectEvent(dateElemToSelect);
                 flush();
                 fixture.detectChanges();
 
@@ -401,7 +401,7 @@ describe('IgxDatePicker', () => {
         const dom = fixture.debugElement;
         const datePickerTarget = dom.query(By.css('.igx-date-picker__input-date'));
 
-        UIInteractions.clickElement(datePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(datePickerTarget);
         fixture.detectChanges();
 
         const firstDayValue = (document.getElementsByClassName('igx-calendar__label')[0] as HTMLElement).innerText.trim();
@@ -417,7 +417,7 @@ describe('IgxDatePicker', () => {
         const dom = fixture.debugElement;
         const datePickerTarget = dom.query(By.css('.igx-date-picker__input-date'));
 
-        UIInteractions.clickElement(datePickerTarget);
+        UIInteractions.simulateClickAndSelectEvent(datePickerTarget);
         fixture.detectChanges();
 
         const formattedHeaderDate = document.getElementsByClassName('igx-calendar__header-date')[0];
@@ -444,7 +444,7 @@ describe('IgxDatePicker', () => {
         const iconDate = dom.query(By.css('.igx-icon'));
         expect(iconDate).toBeDefined();
 
-        UIInteractions.clickElement(iconDate);
+        UIInteractions.simulateClickAndSelectEvent(iconDate);
         fixture.detectChanges();
 
         const picker = document.getElementsByClassName('igx-calendar-picker');
@@ -561,7 +561,7 @@ describe('IgxDatePicker', () => {
         const dom = fixture.debugElement;
 
         const target = dom.query(By.css('.igx-date-picker__input-date'));
-        UIInteractions.clickElement(target);
+        UIInteractions.simulateClickAndSelectEvent(target);
         fixture.detectChanges();
         tick(200);
 
@@ -577,7 +577,7 @@ describe('IgxDatePicker', () => {
         const dom = fixture.debugElement;
         const target = dom.query(By.css('.igx-date-picker__input-date'));
 
-        UIInteractions.clickElement(target);
+        UIInteractions.simulateClickAndSelectEvent(target);
         fixture.detectChanges();
 
         let year = document.getElementsByClassName('igx-calendar-picker__date')[1];
@@ -603,7 +603,7 @@ describe('IgxDatePicker', () => {
 
         const dom = fixture.debugElement;
         const target = dom.query(By.css('.igx-date-picker__input-date'));
-        UIInteractions.clickElement(target);
+        UIInteractions.simulateClickAndSelectEvent(target);
         tick(200);
         fixture.detectChanges();
 
@@ -642,7 +642,7 @@ describe('IgxDatePicker', () => {
             const inputGroupTop = inputGroupRect.top;
 
             const iconDate = dom.query(By.css('.igx-icon'));
-            UIInteractions.clickElement(iconDate);
+            UIInteractions.simulateClickAndSelectEvent(iconDate);
             fixture.detectChanges();
             tick();
 
@@ -666,7 +666,7 @@ describe('IgxDatePicker', () => {
             const inputGroupTop = inputGroupRect.top;
 
             const iconDate = dom.query(By.css('.igx-icon'));
-            UIInteractions.clickElement(iconDate);
+            UIInteractions.simulateClickAndSelectEvent(iconDate);
             fixture.detectChanges();
             tick();
 
@@ -697,7 +697,7 @@ describe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('10/20/2020');
 
             const button = dom.query(By.css('.igx-button--flat'));
-            UIInteractions.clickElement(button);
+            UIInteractions.simulateClickAndSelectEvent(button);
             fixture.detectChanges();
 
             const dropdown = document.getElementsByClassName('igx-date-picker--dropdown');
@@ -713,7 +713,7 @@ describe('IgxDatePicker', () => {
             const inputTop = inputRect.top;
 
             const button = dom.query(By.css('.igx-button--flat'));
-            UIInteractions.clickElement(button);
+            UIInteractions.simulateClickAndSelectEvent(button);
             fixture.detectChanges();
 
             const calendar = document.getElementsByTagName('igx-calendar-container');
@@ -735,7 +735,7 @@ describe('IgxDatePicker', () => {
             const inputTop = inputRect.top;
 
             const button = dom.query(By.css('.igx-button--flat'));
-            UIInteractions.clickElement(button);
+            UIInteractions.simulateClickAndSelectEvent(button);
             fixture.detectChanges();
 
             const calendar = document.getElementsByTagName('igx-calendar-container');
@@ -765,7 +765,7 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onOpened, 'emit');
             spyOn(datePicker.onClosed, 'emit');
 
-            UIInteractions.clickElement(iconDate);
+            UIInteractions.simulateClickAndSelectEvent(iconDate);
             fixture.detectChanges();
             await wait();
 
@@ -852,7 +852,7 @@ describe('IgxDatePicker', () => {
             const iconDate = dom.query(By.css('.igx-icon'));
             expect(iconDate).toBeDefined();
 
-            UIInteractions.clickElement(iconDate);
+            UIInteractions.simulateClickAndSelectEvent(iconDate);
             fixture.detectChanges();
 
             const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
@@ -866,7 +866,7 @@ describe('IgxDatePicker', () => {
             const iconDate = dom.query(By.css('.igx-icon'));
             expect(iconDate).toBeDefined();
 
-            UIInteractions.clickElement(iconDate);
+            UIInteractions.simulateClickAndSelectEvent(iconDate);
             fixture.detectChanges();
 
             const dropDown = dom.query(By.css('.igx-date-picker--dropdown'));
@@ -1078,7 +1078,7 @@ describe('IgxDatePicker', () => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             const dom = fixture.debugElement;
             const clear = dom.queryAll(By.css('.igx-icon'))[1];
-            UIInteractions.clickElement(clear);
+            UIInteractions.simulateClickAndSelectEvent(clear);
             fixture.detectChanges();
 
             expect(datePicker.valueChange.emit).toHaveBeenCalled();
@@ -1100,10 +1100,10 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('20-10-11');
 
-            UIInteractions.sendInput(input, '28-02-19');
+            UIInteractions.clickAndSendInputElementValue(input, '28-02-19');
             fixture.detectChanges();
 
-            UIInteractions.sendInput(input, '29-02-19');
+            UIInteractions.clickAndSendInputElementValue(input, '29-02-19');
             fixture.detectChanges();
 
             // invalid date
@@ -1126,15 +1126,15 @@ describe('IgxDatePicker', () => {
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('20-10-11');
 
-            UIInteractions.sendInput(input, '03-05-19');
+            UIInteractions.clickAndSendInputElementValue(input, '03-05-19');
             fixture.detectChanges();
 
             // disabled date
-            UIInteractions.sendInput(input, '03-09-18');
+            UIInteractions.clickAndSendInputElementValue(input, '03-09-18');
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('03-09-18');
 
-            UIInteractions.sendInput(input, '07-09-18');
+            UIInteractions.clickAndSendInputElementValue(input, '07-09-18');
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('07-09-18');
 
@@ -1149,7 +1149,7 @@ describe('IgxDatePicker', () => {
 
             input.triggerEventHandler('focus', {});
             fixture.detectChanges(); // bound transformedDate assign
-            UIInteractions.sendInput(input, '31-03-19');
+            UIInteractions.clickAndSendInputElementValue(input, '31-03-19');
             expect(input.nativeElement.value).toBe('31-03-19');
 
             input.nativeElement.focus();
@@ -1163,7 +1163,7 @@ describe('IgxDatePicker', () => {
             expect(input.nativeElement.value).toBe('31-03-19');
 
             input.nativeElement.focus();
-            UIInteractions.sendInput(input, '01-03-19');
+            UIInteractions.clickAndSendInputElementValue(input, '01-03-19');
             expect(input.nativeElement.value).toBe('01-03-19');
 
             input.nativeElement.focus();
@@ -1178,7 +1178,7 @@ describe('IgxDatePicker', () => {
 
             // check min month
             input.nativeElement.focus();
-            UIInteractions.sendInput(input, '15-01-19');
+            UIInteractions.clickAndSendInputElementValue(input, '15-01-19');
             expect(input.nativeElement.value).toBe('15-01-19');
 
             input.nativeElement.setSelectionRange(3, 3);
@@ -1190,7 +1190,7 @@ describe('IgxDatePicker', () => {
 
             // check max month
             input.nativeElement.focus();
-            UIInteractions.sendInput(input, '31-12-19');
+            UIInteractions.clickAndSendInputElementValue(input, '31-12-19');
             expect(input.nativeElement.value).toBe('31-12-19');
 
             input.nativeElement.setSelectionRange(3, 3);

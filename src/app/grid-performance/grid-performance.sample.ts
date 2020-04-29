@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-performance-sample',
@@ -13,9 +13,9 @@ export class GridPerformanceSampleComponent implements OnInit {
 
     localData: any[] = [];
     columns;
-
+    public selectionMode;
     ngOnInit() {
-
+        this.selectionMode = GridSelectionMode.none;
         const cols = [];
         cols.push({
             field: 'ID',

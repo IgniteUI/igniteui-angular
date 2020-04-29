@@ -502,7 +502,7 @@ describe('IgxDropDown ', () => {
                 fixture.detectChanges();
 
                 let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[3];
-                selectedItem.triggerEventHandler('click', UIInteractions.clickEvent);
+                selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 const selectionArgs: ISelectionEventArgs = {
                     oldSelection: null,
@@ -513,7 +513,7 @@ describe('IgxDropDown ', () => {
 
                 dropdown.onSelection.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
                 selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[1];
-                selectedItem.triggerEventHandler('click', UIInteractions.clickEvent);
+                selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 const canceledSelectionArgs: ISelectionEventArgs = {
                     oldSelection: dropdown.items[3],
@@ -597,11 +597,11 @@ describe('IgxDropDown ', () => {
                 expect(currentItem.componentInstance.itemIndex).toEqual(4);
                 expect(headerItem.componentInstance).toEqual(dropdown.headers[0]);
 
-                currentItem.triggerEventHandler('click', UIInteractions.clickEvent);
+                currentItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(dropdown.selectedItem).toBeNull();
 
-                headerItem.triggerEventHandler('click', UIInteractions.clickEvent);
+                headerItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(dropdown.selectedItem).toBeNull();
 
@@ -730,7 +730,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.items[11].focused).toEqual(true);
 
                 const firstItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_ITEM}`));
-                firstItem.triggerEventHandler('click', UIInteractions.clickEvent);
+                firstItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(dropdown.items[11].focused).toEqual(true);
 
@@ -769,7 +769,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.selectItem).toHaveBeenCalledTimes(0);
                 expect(dropdown.collapsed).toEqual(true);
 
-                input.triggerEventHandler('click', UIInteractions.clickEvent);
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.collapsed).toEqual(true);
@@ -1171,37 +1171,37 @@ describe('IgxDropDown ', () => {
                 spyOn(dropdown.onOpened, 'emit').and.callThrough();
                 spyOn(dropdown.onClosing, 'emit').and.callThrough();
                 spyOn(dropdown.onClosed, 'emit').and.callThrough();
-                tabs.triggerEventHandler('click', UIInteractions.clickEvent);
+                tabs.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
                 expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
                 let dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`));
-                dropdownItems[2].triggerEventHandler('click', UIInteractions.clickEvent);
+                dropdownItems[2].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);
                 expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(1);
 
-                input.triggerEventHandler('click', UIInteractions.clickEvent);
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(2);
                 expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(2);
                 dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`));
-                dropdownItems[1].triggerEventHandler('click', UIInteractions.clickEvent);
+                dropdownItems[1].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(2);
                 expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(2);
 
-                img.triggerEventHandler('click', UIInteractions.clickEvent);
+                img.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(3);
                 expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(3);
                 dropdownItems = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`));
-                dropdownItems[0].triggerEventHandler('click', UIInteractions.clickEvent);
+                dropdownItems[0].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(3);

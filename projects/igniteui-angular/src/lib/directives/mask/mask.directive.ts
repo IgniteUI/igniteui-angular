@@ -105,19 +105,32 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return { format, promptChar };
     }
 
-    private get selectionStart(): number {
+    /** @hidden */
+    protected get nativeElement(): HTMLInputElement {
+        return this.elementRef.nativeElement;
+    }
+
+    /** @hidden */
+    protected get selectionStart(): number {
         // Edge(classic) and FF don't select text on drop
         return this.nativeElement.selectionStart === this.nativeElement.selectionEnd && this._hasDropAction ?
             this.nativeElement.selectionEnd - this._droppedData.length :
             this.nativeElement.selectionStart;
     }
 
-    private get selectionEnd(): number {
+    /** @hidden */
+    protected get selectionEnd(): number {
         return this.nativeElement.selectionEnd;
     }
 
-    private get nativeElement(): HTMLInputElement {
-        return this.elementRef.nativeElement;
+    /** @hidden */
+    protected get start(): number {
+        return this._start;
+    }
+
+    /** @hidden */
+    protected get end(): number {
+        return this._end;
     }
 
     private _end = 0;
@@ -179,7 +192,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        let valueToParse = '';
         if (this._hasDropAction) {
             this._start = this.selectionStart;
         }
@@ -188,6 +200,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             this._key = KEYCODES.BACKSPACE;
         }
 
+        let valueToParse = '';
         switch (this._key) {
             case KEYCODES.DELETE:
                 this._end = this._start === this._end ? ++this._end : this._end;
@@ -210,6 +223,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._onChangeCallback(this._dataValue);
 
         this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+
         this.afterInput();
     }
 
@@ -273,24 +287,26 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._oldText = this.inputValue;
     }
 
+    /** @hidden */
+    protected setSelectionRange(start: number, end: number = start): void {
+        this.nativeElement.setSelectionRange(start, end);
+    }
+
+    /** @hidden */
+    protected afterInput() {
+        this._oldText = this.inputValue;
+        this._hasDropAction = false;
+        this._start = 0;
+        this._end = 0;
+        this._key = null;
+    }
+
     private showDisplayValue(value: string) {
         if (this.displayValuePipe) {
             this.inputValue = this.displayValuePipe.transform(value);
         } else if (value === this.maskParser.applyMask(null, this.maskOptions)) {
             this.inputValue = '';
         }
-    }
-
-    private setSelectionRange(start: number, end: number = start): void {
-        this.nativeElement.setSelectionRange(start, end);
-    }
-
-    private afterInput() {
-        this._oldText = this.inputValue;
-        this._hasDropAction = false;
-        this._start = 0;
-        this._end = 0;
-        this._key = null;
     }
 
     /** @hidden */
