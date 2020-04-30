@@ -5,6 +5,7 @@
 ////
 
 @import './avatar';
+@import './action-strip';
 @import './badge';
 @import './banner';
 @import './bottom-nav';
@@ -50,6 +51,7 @@
 /// The default light schema for all components.
 /// @type {Map}
 /// @property {Map} igx-avatar [$_light-avatar]
+/// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-badge [$_light-badge]
 /// @property {Map} igx-banner [$_light-banner]
 /// @property {Map} igx-bottom-nav [$_light-bottom-nav]
@@ -93,6 +95,7 @@
 /// @property {Map} igx-tooltip [$_light-tooltip]
 $light-schema: (
     igx-avatar: $_light-avatar,
+    igx-action-strip: $_light-action-strip,
     igx-badge: $_light-badge,
     igx-banner: $_light-banner,
     igx-bottom-nav: $_light-bottom-nav,
@@ -139,6 +142,7 @@ $light-schema: (
 
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,
+    igx-action-strip: $_fluent-action-strip,
     igx-badge: $_fluent-badge,
     igx-banner: $_fluent-banner,
     igx-bottom-nav: $_fluent-bottom-nav,
@@ -185,6 +189,7 @@ $light-fluent-schema: (
 
 $light-bootstrap-schema: (
     igx-avatar: $_bootstrap-avatar,
+    igx-action-strip: $_bootstrap-action-strip,
     igx-badge: $_bootstrap-badge,
     igx-banner: $_bootstrap-banner,
     igx-bottom-nav: $_bootstrap-bottom-nav,
