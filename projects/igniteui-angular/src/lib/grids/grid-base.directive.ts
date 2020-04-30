@@ -5992,7 +5992,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
-        data.forEach((dataRow, viewIndex) => {
+        data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
                     c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
@@ -6004,7 +6004,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(viewIndex));
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
@@ -6018,7 +6018,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(viewIndex));
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,

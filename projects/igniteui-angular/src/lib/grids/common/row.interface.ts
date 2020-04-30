@@ -16,5 +16,4 @@ export interface RowType {
     focused: boolean;
     expanded?: boolean;
     treeRow?: any;
-    viewIndex?: number;
 }

@@ -906,7 +906,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public get searchMetadata() {
         const meta = new Map<string, any>();
-        meta.set('pinned', this.grid.isRecordPinnedByIndex(this.row.viewIndex));
+        meta.set('pinned', this.grid.isRecordPinnedByIndex(this.row.index));
         return meta;
     }
 }
