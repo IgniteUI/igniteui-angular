@@ -57,7 +57,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
         });
 
-        it('should have checkbox on each row if rowSelectable is true', () => {
+        it('should have checkbox on each row if rowSelection is not none', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
 
             expect(rows.length).toBe(10);

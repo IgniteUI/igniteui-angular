@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
-    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode } from 'igniteui-angular';
+    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -15,6 +15,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     public displayDensities;
     public filterModes;
     public density = 'comfortable';
+    public selectionMode;
 
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
@@ -527,6 +528,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
                 'Contract': false
             }
         ];
+        this.selectionMode = GridSelectionMode.multiple;
     }
 
     public selectDensity(event) {
