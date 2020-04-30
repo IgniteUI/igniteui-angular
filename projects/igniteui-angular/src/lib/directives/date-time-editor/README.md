@@ -114,6 +114,6 @@ public datePart: typeof DatePart = DatePart;
 | Name | Type | Description |
 |:-----|:----|:------------|
 | `valueChanged` | custom | Fired when the editor's value has changed. |
-| `validationFailed` | custom | Fired when the editor is not within a specified range. |
+| `validationFailed` | custom | Fired when the editor is not within a specified range. Can revert back to a previously valid state by changing the `newValue` property of the `args` parameter. |
 
 
