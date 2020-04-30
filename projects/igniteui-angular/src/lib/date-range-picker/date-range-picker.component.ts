@@ -394,7 +394,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
+            return (error && error.required) ? true : false;
         }
 
         return false;
@@ -609,7 +609,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         subsToClicked();
 
         this.setRequiredToInputs();
-        // detect changes?
 
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
@@ -716,8 +715,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private setRequiredToInputs(): void {
         if (this.inputGroup && this.inputGroup.isRequired !== this.required) {
             this.inputGroup.isRequired = this.required;
-        } else if (this.hasProjectedInputs) {
-            this.projectedInputs.map(i => i.isRequired = this.required);
+        } else if (this.hasProjectedInputs && this._ngControl) {
+            // workaround for igxInput setting required
+            Promise.resolve().then(() => {
+                this.projectedInputs.map(i => i.isRequired = this.required);
+            });
         }
     }
 

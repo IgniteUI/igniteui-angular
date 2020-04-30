@@ -775,12 +775,12 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [(ngModel)]="range">
+    <igx-date-range-picker [mode]="mode" [(ngModel)]="range" required>
             <igx-date-range-start>
-                <input igxInput igxDateTimeEditor type="text" required>
+                <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-start>
             <igx-date-range-end>
-                <input igxInput igxDateTimeEditor type="text" required>
+                <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-end>
         </igx-date-range-picker>
 `
@@ -788,6 +788,7 @@ export class DateRangeTestComponent implements OnInit {
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     startDate = new Date(2020, 1, 1);
     endDate = new Date(2020, 1, 4);
+    range;
 }
 
 @Component({
