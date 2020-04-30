@@ -18,7 +18,7 @@
                 <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
                 <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
             </div>
-            <igx-grid [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
+            <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
                 [columnHiding]='true' [showToolbar]='true' [columnPinning]='true' #grid1 [data]="data" [width]="'800px'"
                 [height]="'600px'" [rowSelection]="true">
 
