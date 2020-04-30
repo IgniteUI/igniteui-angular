@@ -97,7 +97,7 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null, null);
+            const dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
             spyOn(dateRangePicker, 'handleSelection');
