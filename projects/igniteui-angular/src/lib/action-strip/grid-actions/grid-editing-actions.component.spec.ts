@@ -1,52 +1,113 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode, IgxGridRowComponent } from 'igniteui-angular';
-import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { IgxActionStripComponent } from '../action-strip.component';
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { TestBed, async } from '@angular/core/testing';
+import { IgxIconModule } from '../../icon';
+import { IgxGridModule, IgxGridComponent } from '../../grids/grid';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
+import { IgxActionStripModule } from '../action-strip.module';
+
+
+describe('igxGridEditingActions #grid ', () => {
+    let fixture;
+    let actionStrip: IgxActionStripComponent;
+    let grid: IgxGridComponent;
+    configureTestSuite();
+    beforeAll(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxActionStripTestingComponent,
+                IgxActionStripPinEditComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxActionStripModule,
+                IgxGridModule,
+                IgxIconModule
+            ]
+        }).compileComponents();
+    }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(IgxActionStripTestingComponent);
+        fixture.detectChanges();
+        actionStrip = fixture.componentInstance.actionStrip;
+        grid = fixture.componentInstance.grid;
+    });
+
+    it('should allow editing and deleting row', () => {
+        let editIcon, deleteIcon;
+        actionStrip.show(grid.rowList.first);
+        fixture.detectChanges();
+        editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
+        expect(editIcon.nativeElement.innerText).toBe('edit');
+        editIcon.parent.triggerEventHandler('click', new Event('click'));
+        fixture.detectChanges();
+        expect(grid.rowInEditMode).not.toBeNull();
+        expect(grid.rowList.first.inEditMode).toBe(true);
+
+        expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
+        const dataLenght = grid.dataLength;
+        actionStrip.show(grid.rowList.first);
+        fixture.detectChanges();
+        deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
+        expect(deleteIcon.nativeElement.innerText).toBe('delete');
+        deleteIcon.parent.triggerEventHandler('click', new Event('click'));
+        actionStrip.hide();
+        fixture.detectChanges();
+        expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
+        expect(dataLenght - 1).toBe(grid.dataLength);
+    });
+
+    describe('integration with pinning actions ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        });
+        it('should disable editing actions on disabled rows', () => {
+            grid.rowList.first.pin();
+            fixture.detectChanges();
+            actionStrip.show(grid.rowList.toArray()[1]);
+            fixture.detectChanges();
+            const editingIcons = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions button`));
+            const pinningIcons = fixture.debugElement.queryAll(By.css(`igx-grid-pinning-actions button`));
+            expect(editingIcons.length).toBe(2);
+            expect(editingIcons[0].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
+            expect(editingIcons[1].nativeElement.className.indexOf('igx-button--disabled') !== -1).toBeTruthy();
+            expect(pinningIcons.length).toBe(1);
+            expect(pinningIcons[0].nativeElement.className.indexOf('igx-button--disabled') === -1).toBeTruthy();
+        });
+    });
+});
 
 @Component({
-    providers: [],
-    selector: 'app-grid-column-pinning-sample',
-    styleUrls: ['grid-column-pinning.sample.css'],
-    templateUrl: 'grid-column-pinning.sample.html'
+    template: `
+<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
+
+    <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
 })
+class IgxActionStripTestingComponent implements OnInit {
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
 
-export class GridColumnPinningSampleComponent implements OnInit {
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
-    public get rightPinning() {
-        return (this.pinningConfig.columns === ColumnPinningPosition.End);
-    }
-    public set rightPinning(rightPinning) {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig.columns = ColumnPinningPosition.Start;
-        } else {
-            this.pinningConfig.columns = ColumnPinningPosition.End;
-        }
-    }
-
-    public selectionMode;
-
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
-
-    onChange() {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
-        } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
-        }
-    }
-
-    onRowChange() {
-        if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
-            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Top };
-        } else {
-            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Bottom };
-        }
-    }
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 
     data: any[];
     columns: any[];
 
-    ngOnInit(): void {
+    ngOnInit() {
+
         this.columns = [
             { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', width: '200px' },
@@ -90,35 +151,24 @@ export class GridColumnPinningSampleComponent implements OnInit {
             { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
-        this.selectionMode = GridSelectionMode.none;
         // tslint:enable:max-line-length
     }
+}
 
-    toggleColumn(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.pinned = !col.pinned;
-    }
+@Component({
+    template: `
+<igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
+    [rowEditable]="true" [primaryKey]="'ID'">
+    <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
+        [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
+    </igx-column>
 
-    toggleVisibility(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.hidden = !col.hidden;
-    }
-
-    togglePinRow(index) {
-        const rec = this.data[index];
-        !this.grid1.isRecordPinned(rec) ?
-         this.grid1.pinRow(rec) :
-         this.grid1.unpinRow(rec);
-    }
-
-    onSelectionModeChange() {
-        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
-    }
-
-    doSomeAction(row?: IgxGridRowComponent) {
-        !this.grid1.isRecordPinned(row.rowData) ?
-         this.grid1.pinRow(row.rowData) :
-         this.grid1.unpinRow(row.rowData)
-    }
-
+    <igx-action-strip #actionStrip>
+        <igx-grid-pinning-actions></igx-grid-pinning-actions>
+        <igx-grid-editing-actions></igx-grid-editing-actions>
+    </igx-action-strip>
+</igx-grid>
+`
+})
+class IgxActionStripPinEditComponent extends IgxActionStripTestingComponent {
 }
