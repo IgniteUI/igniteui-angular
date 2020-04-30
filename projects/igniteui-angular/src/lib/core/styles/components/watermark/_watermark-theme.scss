@@ -98,6 +98,8 @@
         z-index: 10001;
         pointer-events: none;
         background-image: --var($theme, 'background-image');
+        background-repeat: repeat;
+        background-position: rem(16px) rem(16px);
         // Target only IE 10,11.
         @media all and (-ms-high-contrast:none)
         {
