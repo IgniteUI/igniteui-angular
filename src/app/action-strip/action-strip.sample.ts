@@ -1,46 +1,51 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode, IgxGridRowComponent } from 'igniteui-angular';
-import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
+import {Component, ViewChild} from '@angular/core';
+import {IgxActionStripComponent, IgxGridComponent, DisplayDensity} from 'igniteui-angular';
 
 @Component({
-    providers: [],
-    selector: 'app-grid-column-pinning-sample',
-    styleUrls: ['grid-column-pinning.sample.css'],
-    templateUrl: 'grid-column-pinning.sample.html'
+    selector: 'app-action-strip-sample',
+    styleUrls: ['action-strip.sample.scss'],
+    templateUrl: `action-strip.sample.html`
 })
+export class ActionStripSampleComponent {
+    @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
+    @ViewChild('actionstrip1') actionStrip1: IgxActionStripComponent;
+    @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
+    public result: string;
+    public isVisible = false;
+    private counter = 0;
+    public comfortable = DisplayDensity.comfortable;
+    public cosy = DisplayDensity.cosy;
+    public compact = DisplayDensity.compact;
+    public displayDensity = this.comfortable;
 
-export class GridColumnPinningSampleComponent implements OnInit {
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
-    public get rightPinning() {
-        return (this.pinningConfig.columns === ColumnPinningPosition.End);
+    doSomeAction() {
+        this.result = `Clicked ${this.counter++} times`;
     }
-    public set rightPinning(rightPinning) {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig.columns = ColumnPinningPosition.Start;
-        } else {
-            this.pinningConfig.columns = ColumnPinningPosition.End;
+
+    showActions() {
+        this.isVisible = true;
+    }
+
+    hideActions() {
+        this.isVisible = false;
+    }
+
+    onMouseOver(event, grid, actionStrip) {
+        if (event.target.nodeName.toLowerCase() === "igx-grid-cell") {
+            const rowIndex = parseInt(event.target.attributes["data-rowindex"].value, 10);
+            const row = grid.getRowByIndex(rowIndex);
+            actionStrip.show(row);
         }
     }
 
-    public selectionMode;
-
-    @ViewChild('grid1', { static: true })
-    grid1: IgxGridComponent;
-
-    onChange() {
-        if (this.pinningConfig.columns === ColumnPinningPosition.End) {
-            this.pinningConfig = { columns: ColumnPinningPosition.Start, rows: this.pinningConfig.rows };
-        } else {
-            this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows  };
+    onMouseLeave(actionstrip, event?) {
+        if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
+            actionstrip.hide();
         }
     }
 
-    onRowChange() {
-        if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
-            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Top };
-        } else {
-            this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Bottom };
-        }
+    setDensity(density: DisplayDensity) {
+        this.displayDensity = density;
     }
 
     data: any[];
@@ -90,35 +95,6 @@ export class GridColumnPinningSampleComponent implements OnInit {
             { 'ID': 'FRANR', 'CompanyName': 'France restauration', 'ContactName': 'Carine Schmitt', 'ContactTitle': 'Marketing Manager', 'Address': '54, rue Royale', 'City': 'Nantes', 'Region': null, 'PostalCode': '44000', 'Country': 'France', 'Phone': '40.32.21.21', 'Fax': '40.32.21.20' },
             { 'ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
-        this.selectionMode = GridSelectionMode.none;
         // tslint:enable:max-line-length
     }
-
-    toggleColumn(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.pinned = !col.pinned;
-    }
-
-    toggleVisibility(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.hidden = !col.hidden;
-    }
-
-    togglePinRow(index) {
-        const rec = this.data[index];
-        !this.grid1.isRecordPinned(rec) ?
-         this.grid1.pinRow(rec) :
-         this.grid1.unpinRow(rec);
-    }
-
-    onSelectionModeChange() {
-        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
-    }
-
-    doSomeAction(row?: IgxGridRowComponent) {
-        !this.grid1.isRecordPinned(row.rowData) ?
-         this.grid1.pinRow(row.rowData) :
-         this.grid1.unpinRow(row.rowData)
-    }
-
 }

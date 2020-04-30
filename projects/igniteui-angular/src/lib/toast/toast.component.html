@@ -1,5 +1,3 @@
-<div #content>
-    <ng-content></ng-content>
-</div>
-<span *ngIf="content.childNodes.length == 0">{{ message }}</span>
+<ng-content></ng-content>
+<span>{{ message }}</span>
 
