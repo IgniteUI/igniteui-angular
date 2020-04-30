@@ -23,16 +23,6 @@
     </div>
 </ng-template>
 
-<ng-template #defPrefix>
-    <ng-container ngProjectAs="igx-prefix">
-        <igx-prefix (click)="open()">
-            <igx-icon>
-                calendar_today
-            </igx-icon>
-        </igx-prefix>
-    </ng-container>
-</ng-template>
-
 <ng-template #startEndTemplate>
     <ng-content select="igx-date-range-start"></ng-content>
     <div [className]="separatorClass">

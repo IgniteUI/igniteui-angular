@@ -28,7 +28,7 @@ describe('IgxDateRangePicker', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -46,7 +46,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should set range dates correctly through selectToday method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             const today = new Date();
 
@@ -56,7 +56,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit rangeSelected on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             spyOn(dateRange.rangeSelected, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -79,7 +79,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit rangeSelected on selectToday()', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
             spyOn(dateRange.rangeSelected, 'emit');
             const today = new Date();
