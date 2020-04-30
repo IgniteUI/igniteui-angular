@@ -1,4 +1,4 @@
-import { FilterMode, ColumnPinningPosition, RowPinningPosition } from './enums';
+import { FilterMode } from './enums';
 import { DisplayDensity } from '../../core/displayDensity';
 import { EventEmitter } from '@angular/core';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
