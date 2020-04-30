@@ -67,8 +67,3 @@ export interface GridType extends IGridDataBindable {
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
 }
-
-export interface IPinningConfig {
-    columns?: ColumnPinningPosition;
-    rows?: RowPinningPosition;
-}
