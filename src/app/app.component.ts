@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
 
     componentLinks = [
         {
+            link: '/action-strip',
+            icon: 'view_list',
+            name: 'Action Strip'
+        },
+        {
             link: '/autocomplete',
             icon: 'view_list',
             name: 'Autocomplete'

@@ -6,12 +6,14 @@ import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
-    IgxIconService, DisplayDensityToken, DisplayDensity, IgxDateTimeEditorModule, IgxButtonModule, IgxDateRangePickerModule
+    IgxIconService, DisplayDensityToken, DisplayDensity,
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
 import { routing } from './routing';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import { AppComponent } from './app.component';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { PageHeaderComponent } from './pageHeading/pageHeading.component';
@@ -125,6 +127,7 @@ import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinni
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 
 const components = [
+    ActionStripSampleComponent,
     AppComponent,
     AutocompletePipeContains,
     AutocompleteGroupPipeContains,
@@ -249,6 +252,7 @@ const components = [
         HttpClientModule,
         IgxIconModule,
         IgxInputGroupModule,
+        IgxActionStripModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,

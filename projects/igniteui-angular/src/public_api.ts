@@ -52,6 +52,7 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
+export * from './lib/action-strip/index';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/banner.component';
@@ -92,6 +93,8 @@ export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/index';
+export * from './lib/splitter/splitter-pane/splitter-pane.component';
+export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
 export * from './lib/date-range-picker/index';
 
