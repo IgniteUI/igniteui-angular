@@ -111,54 +111,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._data;
     }
 
-    /**
-     * Gets an array of the pinned `IgxRowComponent`s.
-     * @example
-     * ```typescript
-     * const pinnedRow = this.grid.pinnedRows;
-     * ```
-     * @memberof IgxHierarchicalGridComponent
-     */
-    get pinnedRows() {
-        return this.rowList.filter(x => x.pinned && !x.disabled);
-    }
-
-    /**
-     * @hidden
-     * @deprecated
-     * Sets the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
-     */
-    @Input()
-    @DeprecateProperty(`'hierarchicalState' property is deprecated. Use 'expansionStates' instead.`)
-    public get hierarchicalState() {
-        const res = Array.from(this.expansionStates.entries()).filter(({1: v}) => v === true).map(([k]) => k);
-        return res;
-    }
-    public set hierarchicalState(val) {
-        if (this.hasChildrenKey) {
-            val = val.filter(item => {
-                const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
-                return rec[this.hasChildrenKey];
-            });
-        }
-        const expansionStates = new Map<any, boolean>();
-        val.forEach(item => {
-            const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
-            expansionStates.set(rec, true);
-        });
-        this.expansionStates = expansionStates;
-        if (this.parent) {
-            this.notifyChanges(true);
-        }
-    }
-
-    /**
-     * @hidden
-     * @deprecated
-     */
-    @Output()
-    @DeprecateProperty(`'hierarchicalStateChange' @Output property is deprecated. Use 'expansionStates' instead.`)
-    public hierarchicalStateChange = new EventEmitter<any>();
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
@@ -305,7 +257,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
         this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
             const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
-            this.hierarchicalStateChange.emit(res);
         });
         super.ngOnInit();
     }
@@ -520,10 +471,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return record.childGridsData !== undefined;
     }
 
-    public isGhostRecord(record: any): boolean {
-        return record.ghostRecord !== undefined;
-    }
-
     /**
      * @hidden
      */
@@ -563,22 +510,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return {
                 $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
-                index: this.getRowIndex(rowIndex, pinned),
+                index: this.getDataViewIndex(rowIndex, pinned),
                 disabled: this.isGhostRecord(rowData)
             };
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public getRowIndex(rowIndex, pinned) {
-        if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
-        } else if (!pinned && this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.pinnedRecordsCount;
-        }
-        return rowIndex;
     }
 
     /**

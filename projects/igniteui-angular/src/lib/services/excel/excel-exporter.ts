@@ -1,4 +1,4 @@
-import * as JSZip from 'jszip/dist/jszip';
+import * as JSZip from 'jszip';
 
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
@@ -38,7 +38,7 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
 @Injectable()
 export class IgxExcelExporterService extends IgxBaseExporter {
 
-    private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' };
+    private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
     private _xlsx: JSZip;
 
     /**
@@ -77,8 +77,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             }
         }
 
-        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn,
-             this._indexOfLastPinnedRow, this._sort, this._isTreeGrid);
+        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);

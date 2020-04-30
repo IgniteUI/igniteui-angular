@@ -859,7 +859,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // collapse last group row
         let groupRow = grid.getRowByIndex(11);
-        UIInteractions.simulateClickAndSelectCellEvent(groupRow);
+        UIInteractions.simulateClickAndSelectEvent(groupRow);
         fix.detectChanges();
         GridFunctions.verifyGroupRowIsFocused(groupRow);
         GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', true);
@@ -1215,7 +1215,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         await wait();
         fix.detectChanges();
 
@@ -1224,7 +1224,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
         const input = editCellDom.query(By.css('input'));
 
-        sendInput(input, 'NetAdvantage', fix);
+        clickAndSendInputElementValue(input, 'NetAdvantage', fix);
         await wait();
         GridFunctions.simulateGridContentKeydown(fix, 'Enter');
         await wait(30);
@@ -2604,7 +2604,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     });
 
-    function sendInput(element, text, fix) {
+    function clickAndSendInputElementValue(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
         fix.detectChanges();

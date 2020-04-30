@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
+<igx-grid-toolbar role="toolbar" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
     [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
@@ -97,14 +97,14 @@
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
-            | gridHierarchicalRowPinning:true:pipeTrigger
+            | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData">
+            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                     [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
                     <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">        
-                        <ng-container *ngTemplateOutlet="hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
+                        <ng-container *ngTemplateOutlet="pinned_hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
                     </ng-container>
                 </div>
@@ -119,7 +119,7 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
-        | gridHierarchicalRowPinning:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -134,13 +134,18 @@
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
+
+        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row #pinnedRow>
+            </igx-hierarchical-grid-row>
+        </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
             <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
             }">
-                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="getRowIndex(rowIndex, false)"
+                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
                     [rowData]="rowData" [layout]='layout' #row>
                 </igx-child-grid-row>
             </div>
@@ -168,7 +173,7 @@
 <div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
  (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
-        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
+        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>

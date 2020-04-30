@@ -168,6 +168,7 @@ export const enum KEYS {
     DOWN_ARROW_IE = 'Down',
     F2 = 'F2',
     TAB = 'Tab',
+    SEMICOLON = ';',
     HOME = 'Home',
     END = 'End'
 }
@@ -334,6 +335,7 @@ export const NAVIGATION_KEYS = new Set([
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
+export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc' , 'l']);
 
 /**
  * @hidden

@@ -37,6 +37,31 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     }
 
     /**
+     * Gets whether the row is pinned.
+     * ```typescript
+     * let isPinned = row.pinned;
+     * ```
+     */
+    public get pinned() {
+        return this.grid.isRecordPinned(this._treeRow);
+    }
+
+    /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * this.grid.selectedRows[0].pinned = true;
+     * ```
+     */
+    public set pinned(value: boolean) {
+        if (value) {
+            this.grid.pinRow(this.rowID);
+        } else {
+            this.grid.unpinRow(this.rowID);
+        }
+    }
+
+    /**
      * Returns a value indicating whether the row component is expanded.
      *
      * ```typescript

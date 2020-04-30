@@ -10,7 +10,7 @@ import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridCellComponent, IGridCellEventArgs } from '../grid';
+import { IGridCellEventArgs } from '../grid';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 const DEBOUNCE_TIME = 60;
@@ -50,7 +50,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // expand row
         const row1 = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
-        UIInteractions.clickElement(row1.expander);
+        UIInteractions.simulateClickAndSelectEvent(row1.expander);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
 
@@ -581,7 +581,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         const cell = hierarchicalGrid.getCellByColumn(0, 'childData2');
-        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
@@ -610,17 +610,14 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         hierarchicalGrid.getColumnByName('ID').hidden = true;
         await wait(50);
         fixture.detectChanges();
-        hierarchicalGrid.navigateTo(2);
+
+        const cell = hierarchicalGrid.getCellByColumn(0, 'ChildLevels');
+        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
 
-        const cell = hierarchicalGrid.getCellByColumn(2, 'ChildLevels');
-        UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
-        fixture.detectChanges();
-        await wait(DEBOUNCE_TIME);
-        fixture.detectChanges();
-
-        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
+        UIInteractions.triggerEventHandlerKeyDown('tab', baseHGridContent, false, true, false);
         await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         const activeEl = document.activeElement;

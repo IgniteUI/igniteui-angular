@@ -26,9 +26,11 @@
 /// @prop {Map} year-current-text-color [igx-color: ('secondary', 500)] - The text color for the current/selected year.
 /// @prop {Map} year-hover-text-color [igx-color: ('secondary', 500)] - The year hover text color.
 ///
-/// @prop {Map} month-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month.
 /// @prop {Map} month-hover-text-color [igx-color: 'surface', text-contrast: ()] - The month hover text color.
 /// @prop {Map} month-hover-background [igx-color: ('grays', 200)] - The month hover text color.
+/// @prop {Map} month-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month.
+/// @prop {Map} month-hover-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month on hover.
+/// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 ///
 /// @prop {Map} date-selected-background [igx-color: ('secondary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-contrast-color: ('secondary', 500)] - The text color for the selected date.
@@ -49,7 +51,6 @@
 ///
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
-/// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @requires {function} extend
 /// @requires {map} $_default-shape-calendar
 /// @see $default-palette
@@ -127,6 +128,10 @@ $_light-calendar: extend(
         ),
 
         month-current-text-color: (
+            igx-color: ('secondary', 500)
+        ),
+
+        month-hover-current-text-color: (
             igx-color: ('secondary', 500)
         ),
 
@@ -223,6 +228,7 @@ $_fluent-calendar: extend(
 /// @prop {Map} date-special-background [igx-color: ('warn'), rgba:.5] - The background color used for special dates.
 ///
 /// @prop {Map} month-hover-text-color [igx-color: ('primary', 500)] - The month hover text color.
+/// @prop {Map} month-hover-current-text-color [igx-color: ('primary', 500)] - The current month hover text color.
 /// @prop {Map} month-hover-background [igx-color: ('grays', 100)] - The month hover text color.
 ///
 /// @prop {Map} picker-text-hover-color [igx-color: ('primary', 500)]-  The hover picker month/year color.
@@ -269,6 +275,10 @@ $_bootstrap-calendar: extend(
         ),
 
         month-hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        month-hover-current-text-color: (
             igx-color: ('primary', 500)
         ),
 

@@ -9,9 +9,9 @@ import {
     QueryList,
     ElementRef,
     HostBinding,
-    HostListener,
     ChangeDetectionStrategy,
-    ViewRef
+    ViewRef,
+    HostListener
 } from '@angular/core';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -105,7 +105,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.addExpression(true);
             }
         }
-
         this.filter();
     }
 
@@ -159,6 +158,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.input.nativeElement.focus();
     }
 
+    @HostListener('keydown.esc', ['$event'])
+    public onEscHandler(evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.close();
+    }
+
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -167,7 +173,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.column.dataType === DataType.Date) {
             return this.defaultDateUI;
         }
-
         return this.defaultFilterUI;
     }
 
@@ -212,10 +217,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB) {
-            if (!this.dropDownConditions.collapsed) {
-                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-            }
+        } else if (event.key === KEYS.TAB && !this.dropDownConditions.collapsed) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
 
@@ -224,16 +227,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onInputKeyDown(event: KeyboardEvent) {
         this.isKeyPressed = true;
-
+        event.stopPropagation();
         if (this.column.dataType === DataType.Boolean) {
             if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
                 this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-                event.stopPropagation();
                 return;
             }
         }
-
         if (event.key === KEYS.ENTER) {
             if (this.isComposing) {
                 return;
@@ -243,10 +244,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
-            event.preventDefault();
             this.close();
         }
-        event.stopPropagation();
     }
 
     /**
@@ -262,11 +261,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        // There is no need to reset the value on every invalid number input.
-        // The invalid value is converted to empty string input type="number"
         const target = eventArgs.target;
-        if (isEdge() && target.type !== 'number' || this.isKeyPressed && isIE() || target.value) {
-             this.value = target.value;
+
+        if (isEdge() && target.type !== 'number' || this.isKeyPressed && isIE() || target.value || target.checkValidity()) {
+            this.value = target.value;
         }
     }
 
@@ -459,12 +457,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         this.filteringService.isFilterRowVisible = false;
-
         this.filteringService.updateFilteringCell(this.column);
-        this.filteringService.focusFilterCellChip(this.column, true);
-
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
+        this.filteringService.grid.theadRow.nativeElement.focus();
 
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);
@@ -480,6 +476,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onDateSelected(value: Date) {
         this.value = value;
+    }
+
+    /** @hidden @internal */
+    public inputGroupPrefixClick(event: MouseEvent) {
+        event.stopPropagation();
+        (event.currentTarget as HTMLElement).focus();
+        this.toggleConditionsDropDown(event.currentTarget);
     }
 
     /**

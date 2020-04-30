@@ -94,14 +94,20 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'action-strip',
+        component: ActionStripSampleComponent
     },
     {
         path: 'autocomplete',
@@ -214,6 +220,10 @@ const appRoutes = [
     {
         path: 'mask',
         component: MaskSampleComponent
+    },
+    {
+        path: 'date-time-editor',
+        component: DateTimeEditorSampleComponent
     },
     {
         path: 'navbar',

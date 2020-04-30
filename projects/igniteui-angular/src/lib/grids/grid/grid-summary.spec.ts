@@ -395,7 +395,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const footerRow = GridSummaryFunctions.getRootSummaryRow(fix).nativeElement.getBoundingClientRect().height;
                 const tfootSize = +footerRow;
 
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
+                const expectedHeight = GridSummaryFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
 
                 expect(tfootSize).toBe(expectedHeight);
             });
@@ -415,7 +415,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaries = fix.debugElement.queryAll(By.css(SUMMARY_CELL)).filter((el) =>
                     el.nativeElement.classList.contains(EMPTY_SUMMARY_CLASS) === false);
                 const tfootSize = GridSummaryFunctions.getRootSummaryRow(fix).nativeElement.getBoundingClientRect().height;
-                const expectedHeight = GridFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
+                const expectedHeight = GridSummaryFunctions.calcMaxSummaryHeight(grid.columnList, summaries, grid.defaultSummaryHeight);
                 expect(tfootSize).toBe(expectedHeight);
 
                 grid.getColumnByName('ProductName').hasSummary = false;
@@ -935,19 +935,22 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('Grouping: should navigate with arrow keys from cell to summary row ', () => {
+            grid.tbody.nativeElement.focus();
+            fix.detectChanges();
+
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ID');
-            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', cell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(2, 'ID');
@@ -967,7 +970,7 @@ describe('IgxGrid - Summaries #grid', () => {
             const row = grid.getRowByIndex(4);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', row.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
@@ -1421,12 +1424,12 @@ describe('IgxGrid - Summaries #grid', () => {
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['27', '50']);
 
-            UIInteractions.simulateDoubleClickAndSelectCellEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             flush();
             fix.detectChanges();
 
             const editTemplate = fix.debugElement.query(By.css('input[type=\'number\']'));
-            UIInteractions.sendInput(editTemplate, 87);
+            UIInteractions.clickAndSendInputElementValue(editTemplate, 87);
             flush();
             fix.detectChanges();
 

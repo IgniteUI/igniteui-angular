@@ -1,0 +1,38 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+@include b(igx-action-strip) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-action-strip-display !optional;
+
+    @include m(cosy) {
+        @extend %igx-action-strip--cosy !optional;
+    }
+
+    @include m(compact) {
+        @extend %igx-action-strip--compact !optional;
+    }
+
+    @include e(actions) {
+        @extend %igx-action-strip__actions !optional;
+    }
+
+    @include e(delete) {
+        @extend %igx-action-strip__delete !optional;
+    }
+
+    @include e(editing-actions) {
+        @extend %igx-action-strip__editing-actions !optional;
+    }
+
+    @include e(pining-actions) {
+        @extend %igx-action-strip__pining-actions !optional;
+    }
+}

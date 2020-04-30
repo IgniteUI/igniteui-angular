@@ -1,7 +1,6 @@
 <!-- Have to apply styles inline because of the overlay outlet ... -->
 <igx-drop-down #inputGroupConditions [height]="'200px'" (onSelection)="onConditionsChanged($event)">
-    <igx-drop-down-item
-        *ngFor="let condition of conditions"
+    <igx-drop-down-item *ngFor="let condition of conditions"
         [value]="condition"
         [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
@@ -10,9 +9,9 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
         <igx-prefix #inputGroupPrefix
-                    (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                    (click)="inputGroupPrefixClick($event)"
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
@@ -48,12 +47,12 @@
         [outlet]="filteringService.grid.outletDirective"
         [locale]="filteringService.grid.locale"
         (onSelection)="onDateSelected($event)"
-        (onClose)="datePickerClose()">
+        (onClosed)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [suppressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
-                            (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                            (click)="inputGroupPrefixClick($event)"
                             (keydown)="onPrefixKeyDown($event)"
                             [igxDropDownItemNavigation]="inputGroupConditions">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>

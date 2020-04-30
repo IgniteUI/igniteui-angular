@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService, IgxGridTransaction, IgxHierarchicalTransactionService,
-         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
+         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult, GridSelectionMode } from 'igniteui-angular';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = []): IgxSummaryResult[] {
@@ -29,6 +29,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     private nextRow = 1;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
+    public selectionMode;
 
     @ViewChild('grid1', { static: true }) public grid1: IgxTreeGridComponent;
 
@@ -40,6 +41,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.selectionMode = GridSelectionMode.multiple;
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
@@ -158,5 +160,9 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public exportToCSV() {
         this.csvExporterService.export(this.grid1, new IgxCsvExporterOptions('TreeGrid', CsvFileTypes.CSV));
+    }
+
+    public pinRow() {
+        this.grid1.pinRow(4);
     }
 }

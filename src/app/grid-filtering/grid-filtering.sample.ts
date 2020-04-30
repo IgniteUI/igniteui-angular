@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
-    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode } from 'igniteui-angular';
+    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -16,6 +16,7 @@ export class GridFilteringComponent implements OnInit {
     public filterModes;
     public density = 'comfortable';
     public advancedFilteringTree: FilteringExpressionsTree;
+    public selectionMode;
 
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
@@ -43,7 +44,7 @@ export class GridFilteringComponent implements OnInit {
                 togglable: true
             }
         ];
-
+        this.selectionMode = GridSelectionMode.multiple;
         this.columns = [
             { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
             { field: 'CompanyName', header: 'Company Name', width: 175, resizable: true, movable: true, type: 'string'},

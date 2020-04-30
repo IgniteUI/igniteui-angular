@@ -1216,19 +1216,21 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                 let lastItem = items[items.length - 1].componentInstance;
+                let lastItemIndex = lastItem.index;
                 expect(lastItem).toBeDefined();
                 lastItem.clicked(mockClick);
                 await wait(30);
                 fixture.detectChanges();
-                expect(dropdown.focusedItem).toEqual(lastItem);
+                expect(dropdown.focusedItem.index).toEqual(lastItemIndex);
                 dropdown.navigateItem(-1);
                 await wait(30);
                 fixture.detectChanges();
                 expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
+                lastItemIndex = lastItem.index;
                 lastItem.clicked(mockClick);
                 await wait(30);
                 fixture.detectChanges();
-                expect(dropdown.focusedItem).toEqual(lastItem);
+                expect(dropdown.focusedItem.index).toEqual(lastItemIndex);
                 dropdown.navigateNext();
                 await wait(30);
                 fixture.detectChanges();
@@ -1334,14 +1336,14 @@ describe('igxCombo', () => {
             }));
             it('should toggle combo dropdown on toggle button click', fakeAsync(() => {
                 spyOn(combo, 'toggle').and.callThrough();
-                input.triggerEventHandler('click', UIInteractions.clickEvent);
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(false);
                 expect(combo.toggle).toHaveBeenCalledTimes(1);
                 expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
 
-                input.triggerEventHandler('click', UIInteractions.clickEvent);
+                input.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
                 expect(combo.collapsed).toEqual(true);
@@ -1612,7 +1614,7 @@ describe('igxCombo', () => {
             await wait(30);
             fixture.detectChanges();
             let selectedItem = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`))[1];
-            selectedItem.triggerEventHandler('click', UIInteractions.clickEvent);
+            selectedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(selectedItem.classes[CSS_CLASS_SELECTED]).toEqual(true);
             const selectedItemText = selectedItem.nativeElement.textContent;
@@ -1667,7 +1669,7 @@ describe('igxCombo', () => {
         function simulateComboItemCheckboxClick(itemIndex: number, isHeader = false) {
             const itemClass = isHeader ? CSS_CLASS_HEADERITEM : CSS_CLASS_DROPDOWNLISTITEM;
             const dropdownItem = fixture.debugElement.queryAll(By.css('.' + itemClass))[itemIndex];
-            dropdownItem.triggerEventHandler('click', UIInteractions.clickEvent);
+            dropdownItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
         }
         it('should append/remove selected items to the input in their selection order', () => {
@@ -1718,7 +1720,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items[6].selected).toBeTruthy();
 
             const clearBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-            clearBtn.triggerEventHandler('click', UIInteractions.clickEvent);
+            clearBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toEqual('');
@@ -1752,7 +1754,8 @@ describe('igxCombo', () => {
             expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toEqual(1);
 
             // Clear selected items
-            fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).triggerEventHandler('click', UIInteractions.clickEvent);
+            const clearButton =  fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
+            clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             fixture.detectChanges();
             expect(fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_CLEARBUTTON}`)).length).toBeFalsy();
@@ -1775,7 +1778,7 @@ describe('igxCombo', () => {
                     oldSelection: [],
                     added: [selectedItem_1.value[combo.valueKey]],
                     removed: [],
-                    event: UIInteractions.clickEvent,
+                    event: UIInteractions.getMouseEvent('click'),
                     displayText: selectedItem_1.value[combo.valueKey],
                     cancel: false
                 });
@@ -1792,7 +1795,7 @@ describe('igxCombo', () => {
                     oldSelection: [selectedItem_1.value[combo.valueKey]],
                     added: [selectedItem_2.value[combo.valueKey]],
                     removed: [],
-                    event: UIInteractions.clickEvent,
+                    event: UIInteractions.getMouseEvent('click'),
                     displayText: selectedItem_1.value[combo.valueKey] + ', ' + selectedItem_2.value[combo.valueKey],
                     cancel: false
                 });
@@ -1810,7 +1813,7 @@ describe('igxCombo', () => {
                     oldSelection: [selectedItem_1.value[combo.valueKey], selectedItem_2.value[combo.valueKey]],
                     added: [],
                     removed: [unselectedItem.value[combo.valueKey]],
-                    event: UIInteractions.clickEvent,
+                    event: UIInteractions.getMouseEvent('click'),
                     displayText: selectedItem_2.value[combo.valueKey],
                     cancel: false
                 });
@@ -2217,13 +2220,13 @@ describe('igxCombo', () => {
             const addItemButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
             expect(addItemButton.nativeElement).toBeDefined();
 
-            addItemButton.triggerEventHandler('click', UIInteractions.clickEvent);
+            addItemButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.selectedItems()).toEqual(['New']);
             expect(combo.comboInput.nativeElement.value).toEqual('New');
 
             const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-            clearButton.triggerEventHandler('click', UIInteractions.clickEvent);
+            clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.selectedItems()).toEqual([]);
             expect(combo.comboInput.nativeElement.value).toEqual('');
@@ -2298,7 +2301,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('');
 
             const focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
-            focusedItem.triggerEventHandler('click', UIInteractions.clickEvent);
+            focusedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
             fixture.detectChanges();
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('My New Custom Item');
@@ -2387,7 +2390,7 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                clearButton.triggerEventHandler('click', UIInteractions.clickEvent);
+                clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
@@ -2418,7 +2421,7 @@ describe('igxCombo', () => {
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
                 const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                clearButton.triggerEventHandler('click', UIInteractions.clickEvent);
+                clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
@@ -2499,7 +2502,7 @@ describe('igxCombo', () => {
                 spyOn(console, 'log');
                 fixture.detectChanges();
                 expect(form.status).toEqual('VALID');
-                fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.clickElement);
+                fixture.debugElement.query(By.css('button')).triggerEventHandler('click', UIInteractions.simulateClickAndSelectEvent);
             });
         });
         describe('Template form tests: ', () => {
@@ -2541,7 +2544,7 @@ describe('igxCombo', () => {
                 expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
                 const clearButton = fixture.debugElement.query(By.css(`.${CSS_CLASS_CLEARBUTTON}`));
-                clearButton.triggerEventHandler('click', UIInteractions.clickEvent);
+                clearButton.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.valid).toEqual(IgxComboState.INVALID);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);

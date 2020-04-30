@@ -6,12 +6,12 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './grid.module';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
-import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     configureTestSuite();
@@ -60,9 +60,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = grid.headerGroups.first.children.toArray();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1, 2));
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1, 2));
 
             // show group
             fixture.componentInstance.colGroups[0].hidden = false;
@@ -82,9 +82,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').hidden).toBeFalsy();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
             // hide the other group
             fixture.componentInstance.colGroups[1].hidden = true;
@@ -102,9 +102,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').hidden).toBeTruthy();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(0, 1));
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(0, 1));
         });
 
         it('should hide/show whole group if a single child column is hidden/shown.', () => {
@@ -195,8 +195,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
             // check virtualization state
             // 4 groups in total - 1 is hidden
@@ -308,9 +308,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const hidingButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
             hidingButton.nativeElement.click();
             fixture.detectChanges();
-            const verifyCheckbox = HelperUtils.verifyCheckbox;
+            const verifyCheckbox = ControlsFunction.verifyCheckbox;
             const columnChooserElement = fixture.debugElement.query(By.css('igx-column-hiding'));
-            const checkbox = HelperUtils.getCheckboxInput('group1', columnChooserElement, fixture);
+            const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
             verifyCheckbox('group1', true, false, columnChooserElement, fixture);
 
             const column = grid.getColumnByName('group1');
@@ -319,8 +319,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
             checkbox.click();
             fixture.detectChanges();
@@ -328,8 +328,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(checkbox.checked).toBe(false);
             expect(column.hidden).toBeFalsy();
 
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
             checkbox.click();
             fixture.detectChanges();
@@ -354,7 +354,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             });
 
             const columnChooserElement = fixture.debugElement.query(By.css('igx-column-hiding'));
-            const checkbox = HelperUtils.getCheckboxInput('group1', columnChooserElement, fixture);
+            const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
             checkbox.click();
             fixture.detectChanges();
 
@@ -390,9 +390,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const headerCells = grid.headerGroups.first.children.toArray();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
             // unpin group
             fixture.componentInstance.colGroups[0].pinned = false;
@@ -409,9 +409,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').pinned).toBeFalsy();
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
             // pin the other group
             fixture.componentInstance.colGroups[1].pinned = true;
@@ -577,9 +577,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
              // headers are aligned to cells
-             verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
             // check virtualization state
             // 4 groups in total - 1 is pinned
@@ -606,7 +606,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const lastCell = grid.rowList.first.cells.toArray()[6];
+            const lastCell = grid.rowList.first.cells.toArray()[5];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
             expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) -
@@ -692,8 +692,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
             const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
 
-            const verifyCheckbox = HelperUtils.verifyCheckbox;
-            const checkbox = HelperUtils.getCheckboxInput('group1', columnChooserElement, fixture);
+            const verifyCheckbox = ControlsFunction.verifyCheckbox;
+            const checkbox = ControlsFunction.getCheckboxInput('group1', columnChooserElement, fixture);
             verifyCheckbox('group1', false, false, columnChooserElement, fixture);
 
             const column = grid.getColumnByName('group1');
@@ -750,9 +750,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             const firstRowCells = gridFirstRow.cells.toArray();
             const headerCells = grid.headerGroups.first.children.toArray();
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
              // headers are aligned to cells
-             verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
             // check virtualization state
             const horizontalVirtualization = grid.rowList.first.virtDirRow;
@@ -791,9 +791,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(filterIcons.length).toBe(gridFirstRow.cells.length);
 
             // headers are aligned to cells
-            verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+            GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
+            GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
         });
 
         it('should render unpin and hide column buttons into the excel style filter', () => {
@@ -1161,13 +1161,13 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 Address: 'Avda. de la Constitución 2222'
             }];
             let cell = grid.getCellByColumn(0, 'CompanyName');
-            UIInteractions.clickElement(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             expect(grid.getSelectedData()).toEqual(selectedData1);
 
             cell = grid.getCellByColumn(1, 'City');
-            UIInteractions.clickElement(cell);
+            UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             expect(grid.getSelectedData()).toEqual(selectedData2);
