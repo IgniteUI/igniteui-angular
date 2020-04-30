@@ -377,10 +377,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @internal
      */
     @HostBinding('attr.tabIndex')
-    get hostTabIndex() {
-        this.updateChipTabIndex();
-        return null;
-    }
+    public hostTabIndex = null;
 
     /**
      * @hidden
@@ -477,17 +474,6 @@ export class IgxChipComponent extends DisplayDensityBase {
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected updateChipTabIndex() {
-        const tabIndexAttr = this.elementRef.nativeElement.getAttribute('tabindex');
-        if (tabIndexAttr !== null && tabIndexAttr !== '') {
-            this._tabIndex = parseInt(this.elementRef.nativeElement.getAttribute('tabindex'), 10);
-        }
-    }
 
     /**
      * @hidden
