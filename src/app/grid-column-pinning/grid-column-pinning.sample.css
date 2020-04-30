@@ -6,3 +6,17 @@
 [igxButton]+[igxButton] {
     margin-left: 8px;
 }
+
+.pin-icon {
+    text-align: center;
+}
+
+.igx-action-strip {
+    background-color: #00000080;
+}
+
+.actions {
+    margin: auto;
+    width: fit-content;
+    padding: 8px;
+}
