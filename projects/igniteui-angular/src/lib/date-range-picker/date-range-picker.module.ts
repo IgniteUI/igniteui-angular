@@ -10,7 +10,8 @@ import {
     IgxDateRangeStartComponent, IgxDateRangeEndComponent,
     DateRangePickerFormatPipe,
     IgxPickerToggleComponent,
-    IgxDateRangeSeparatorDirective
+    IgxDateRangeSeparatorDirective,
+    IgxDateRangeInputsBaseComponent
 } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 
@@ -22,6 +23,7 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
         IgxDateRangePickerComponent,
         IgxDateRangeStartComponent,
         IgxDateRangeEndComponent,
+        IgxDateRangeInputsBaseComponent,
         DateRangePickerFormatPipe,
         IgxPickerToggleComponent,
         IgxDateRangeSeparatorDirective
