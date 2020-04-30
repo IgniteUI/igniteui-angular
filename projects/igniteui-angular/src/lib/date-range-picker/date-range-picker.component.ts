@@ -474,7 +474,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * ```
      */
     public toggle(overlaySettings?: OverlaySettings): void {
-        if (!this.toggleDirective.collapsed) {
+        if (!this.collapsed) {
             this.close();
         } else {
             this.open(overlaySettings);
