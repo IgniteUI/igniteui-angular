@@ -12,9 +12,9 @@ import {
     DisplayDensity,
     IgxHierarchicalGridComponent,
     IDisplayDensityOptions,
-    GridSelectionMode
+    GridSelectionMode,
+    IPinningConfig
 } from 'igniteui-angular';
-import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
 import { IgxIconService } from 'projects/igniteui-angular/src/lib/icon/icon.service';
 import icons from 'projects/igniteui-angular/src/lib/grids/filtering/svgIcons';
 
