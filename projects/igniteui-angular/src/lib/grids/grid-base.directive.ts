@@ -6125,7 +6125,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
         this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
-        const targetRow = this.gridAPI.get_row_by_key(rowID);
+        const pinned =  this._pinnedRecordIDs.indexOf(rowID) !== -1;
+        const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
         if (!targetRow) {
             return;
         }
