@@ -3054,7 +3054,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._zoneBegoneListeners();
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
-        vertScrDC.addEventListener('scroll', this.scrollHandler);
+        vertScrDC.addEventListener('scroll', this.preventContainerScroll);
 
         this._pinnedRowList.changes
         .pipe(takeUntil(this.destroy$))
@@ -3132,7 +3132,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.scrollHandler);
+            vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
         });
     }
 
@@ -5584,11 +5584,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public scrollHandler = (event) => {
-        this.headerContainer.scrollPosition += event.target.scrollLeft;
-        this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
-        event.target.scrollLeft = 0;
-        event.target.scrollTop = 0;
+    public preventContainerScroll = (evt) => {
+        if (evt.target.scrollTop !== 0) {
+            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
+            evt.target.scrollTop = 0;
+        }
+        if (evt.target.scrollLeft !== 0) {
+            this.headerContainer.scrollPosition += evt.target.scrollLeft;
+            evt.target.scrollLeft = 0;
+        }
     }
 
     /**

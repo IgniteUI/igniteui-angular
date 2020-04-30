@@ -19,6 +19,16 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxActionStrip` component added.
+    - Provides a template area for one or more actions. In its simplest form the Action Strip
+        is an overlay of any container and shows additional content over that container.
+
+    ```html
+    <igx-action-strip #actionstrip>
+        <igx-icon (click)="doSomeAction()"></igx-icon>
+    </igx-action-strip>
+    ```
+
 - `igxSplitter` component added.
     - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
         Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
@@ -89,6 +99,24 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
+
+- `IgxDateTimeEditor` directive added.
+    - Allows the user to set and edit `date` and `time` in a chosen input element.
+    - Can edit `date` or `time` portion, using an editable masked input.
+    - Additionally, can specify a desired `display` and `input` `format`, as well as `min` and `max` values.
+
+    - A basic configuration scenario setting a Date object as a `value`:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [value]="date"/>
+    </igx-input-group>
+    ```
+    - Two-way data-binding via an ngModel:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [(ngModel)]="date"/>
+    </igx-input-group>
+    ```
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.

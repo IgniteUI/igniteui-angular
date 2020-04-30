@@ -97,12 +97,17 @@ import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-maste
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'action-strip',
+        component: ActionStripSampleComponent
     },
     {
         path: 'autocomplete',
