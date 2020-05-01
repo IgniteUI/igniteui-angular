@@ -1,0 +1,29 @@
+$range-sample-space: 16px;
+
+.range-holder {
+    display: flex;
+}
+
+.range-sample-column {
+    display: flex;
+    flex-direction: column;
+    padding: $range-sample-space;
+    border-right: 1px solid #ddd;
+
+    > * {
+        margin-bottom: 16px;
+
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.sample-ul {
+    flex: 1;
+}
+
+.sample-row {
+    display: flex;
+    max-width: 1200px;
+}
