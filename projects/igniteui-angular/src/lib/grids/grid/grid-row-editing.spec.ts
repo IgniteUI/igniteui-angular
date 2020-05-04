@@ -1,9 +1,7 @@
 import { IgxGridBaseDirective } from 'igniteui-angular';
-import { IgxGridTopLevelColumns } from './../common/pipes';
 import { IgxRowDirective } from './../row.directive';
-import { FilteringExpressionsTree } from './../../data-operations/filtering-expressions-tree';
 import { DebugElement } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, flush, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
@@ -32,7 +30,6 @@ import {
     VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridTestComponent } from './grid.component.spec';
-import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -348,7 +345,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         }));
 
-        it(`Should jump from first editable columns to overlay buttons`, (async () => {
+        it(`Should jump from first editable columns to overlay buttons`, () => {
             targetCell = grid.getCellByColumn(0, 'Downloads');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -368,7 +365,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(targetCell.editMode).toBeTruthy();
-        }));
+        });
 
         it(`Should jump from last editable columns to overlay buttons`, (async () => {
             grid.tbody.nativeElement.focus();
@@ -732,6 +729,31 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(targetCell.active).toBeTruthy();
         }));
+
+        it(`Default column editable value is correct, when row editing is disabled`, () => {
+            fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent );
+            fix.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
+            fix.componentInstance.data = [
+                { ID: 0, index: 0, value: 0 },
+                { ID: 1, index: 1, value: 1 },
+                { ID: 2, index: 2, value: 2 },
+            ];
+            grid = fix.componentInstance.grid;
+            grid.primaryKey = 'ID';
+
+            fix.detectChanges();
+
+            let columns: IgxColumnComponent[] = grid.columnList.toArray();
+            expect(columns[0].editable).toBeFalsy(); // column.editable not set
+            expect(columns[1].editable).toBeFalsy(); // column.editable not set
+            expect(columns[2].editable).toBeFalsy(); // column.editable not set. Primary column
+
+            grid.rowEditable = true;
+            columns = grid.columnList.toArray();
+            expect(columns[0].editable).toBeTruthy(); // column.editable not set
+            expect(columns[1].editable).toBeTruthy(); // column.editable not set
+            expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
+        });
     });
 
     describe('Exit row editing', () => {
@@ -1415,6 +1437,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it(`Hiding: Should show correct value when showing the column again`, () => {
             grid.showToolbar = true;
             grid.columnHiding = true;
+            const columnChooser = GridFunctions.getColumnHidingElement(fix);
 
             fix.detectChanges();
 
@@ -1426,13 +1449,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             // hide column
             grid.toolbar.columnHidingButton.nativeElement.click();
 
-            const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
-            const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
-            const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
-            targetCheckbox.nativeElement.click();
+            GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
 
             // show column
-            targetCheckbox.nativeElement.click();
+            GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
 
             grid.toolbar.toggleColumnHidingUI();
 
@@ -1442,6 +1462,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Hiding: Should be possible to update a cell that is hidden programmatically`, () => {
             pending('This is NOT possible');
+            const columnChooser = GridFunctions.getColumnHidingElement(fix);
             const targetCbText = 'Product Name';
             const newValue = 'Tea';
             cell.setEditMode(true);
@@ -1451,10 +1472,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // show column
             grid.toolbar.columnHidingButton.nativeElement.click();
-            const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
-            const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
-            const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
-            targetCheckbox.nativeElement.click();
+            GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
 
             fix.detectChanges();
 
@@ -1465,7 +1483,6 @@ describe('IgxGrid - Row Editing #grid', () => {
     describe('Events', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridContent: DebugElement;
         let cell: IgxGridCellComponent;
         let initialRow: IgxRowDirective<IgxGridBaseDirective>;
         let initialData: any;
@@ -1474,7 +1491,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(0, 'ProductName');
             initialRow = grid.getRowByIndex(0);
             initialData = Object.assign({}, initialRow.rowData);
@@ -1806,31 +1822,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(columns[2].editable).toBeTruthy(); // column.editable set to true
             expect(columns[3].editable).toBeTruthy(); // column.editable not set
             expect(columns[4].editable).toBeFalsy();  // column.editable set to false
-        });
-
-        it(`Default column editable value is correct, when row editing is disabled`, () => {
-            fix = TestBed.createComponent(IgxGridTestComponent);
-            fix.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
-            fix.componentInstance.data = [
-                { ID: 0, index: 0, value: 0 },
-                { ID: 1, index: 1, value: 1 },
-                { ID: 2, index: 2, value: 2 },
-            ];
-            grid = fix.componentInstance.grid;
-            grid.primaryKey = 'ID';
-
-            fix.detectChanges();
-
-            let columns: IgxColumnComponent[] = grid.columnList.toArray();
-            expect(columns[0].editable).toBeFalsy(); // column.editable not set
-            expect(columns[1].editable).toBeFalsy(); // column.editable not set
-            expect(columns[2].editable).toBeFalsy(); // column.editable not set. Primary column
-
-            grid.rowEditable = true;
-            columns = grid.columnList.toArray();
-            expect(columns[0].editable).toBeTruthy(); // column.editable not set
-            expect(columns[1].editable).toBeTruthy(); // column.editable not set
-            expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
         });
 
         it('should scroll into view not visible cell when in row edit and move from pinned to unpinned column', (async () => {
@@ -2366,7 +2357,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let groupRows;
 
         it('Hide row editing dialog with group collapsing/expanding', () => {
-            fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             grid.primaryKey = 'ID';
@@ -2448,7 +2439,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Hide row editing dialog when hierarchical group is collapsed/expanded',
             () => {
-                fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
+                fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 grid.primaryKey = 'ID';
