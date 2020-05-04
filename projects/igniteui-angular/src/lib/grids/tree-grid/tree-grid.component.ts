@@ -630,6 +630,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
+    public getPinedRecordIndex(rec) {
+        const id = rec.rowID;
+        return this._pinnedRecordMetadata.findIndex(row => row.rowID === id);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public setPinnedRecordGhostIndex(rec, ghostIndex) {
         super.setPinnedRecordGhostIndex(rec.data, ghostIndex);
     }
