@@ -199,7 +199,7 @@ export class IgxGridStateDirective {
      * Builds an IGridState object.
      */
     private buildState(features?: string | string[]): IGridState {
-        this.features = features ? [...features] : this.getAllFeatures();
+        this.applyFeatures(features);
         let gridState = {} as IGridState;
         this.features.forEach(f => {
             if (this.options[f]) {
@@ -216,7 +216,7 @@ export class IgxGridStateDirective {
      * The method that calls corresponding methods to restore features from the passed IGridState object.
      */
     private restoreGridState(state: IGridState, features?: string | string[]) {
-        this.features = features ? [...features] : this.getAllFeatures();
+        this.applyFeatures(features);
         this.features.forEach(f => {
             if (this.options[f]) {
                 f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
@@ -582,12 +582,16 @@ export class IgxGridStateDirective {
     /**
      * Returns a collection of all grid features.
      */
-    private getAllFeatures(): string[] {
-        const allfeatures = [];
-        for (const feature of Object.keys(this.options)) {
-            allfeatures.push(feature);
+    private applyFeatures(features?: string | string[]) {
+        if (!features) {
+            for (const feature of Object.keys(this.options)) {
+                this.features.push(feature);
+            }
+        } else if (Array.isArray(features)) {
+            this.features = [...features as string[]];
+        } else {
+            this.features.push(features);
         }
-        return allfeatures;
     }
 
     private sortByVisibleIndex(colA: IgxColumnComponent, colB: IgxColumnComponent) {
