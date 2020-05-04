@@ -4211,7 +4211,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID: any, index?: number): boolean {
-        if (this._pinnedRecordMetadata.findIndex(row => row.rowID === rowID) !== -1) {
+        if (this._pinnedRecordMetadata.findIndex(pinnedRow => pinnedRow.rowID === rowID) !== -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4245,7 +4245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public unpinRow(rowID: any) {
-        const index =  this._pinnedRecordMetadata.findIndex(row => row.rowID === rowID);
+        const index =  this._pinnedRecordMetadata.findIndex(pinnedRow => pinnedRow.rowID === rowID);
         if (index === -1) {
             return false;
         }
