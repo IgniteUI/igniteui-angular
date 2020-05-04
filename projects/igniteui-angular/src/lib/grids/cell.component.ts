@@ -526,10 +526,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * @hidden
      */
+    @Input()
     @HostBinding('class.igx-grid__td--row-pinned-first')
-    public get displayPinnedChip() {
-        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0;
-    }
+    public displayPinnedChip = false;
+
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;

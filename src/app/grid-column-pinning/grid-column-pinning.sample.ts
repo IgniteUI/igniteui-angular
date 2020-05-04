@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode } from 'igniteui-angular';
-import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
+import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode, IgxGridRowComponent, IPinningConfig } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -113,6 +112,12 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     onSelectionModeChange() {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
+    }
+
+    doSomeAction(row?: IgxGridRowComponent) {
+        !this.grid1.isRecordPinned(row.rowData) ?
+         this.grid1.pinRow(row.rowData) :
+         this.grid1.unpinRow(row.rowData)
     }
 
 }

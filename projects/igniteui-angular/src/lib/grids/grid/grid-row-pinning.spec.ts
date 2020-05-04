@@ -6,7 +6,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
-import { IPinningConfig } from '../common/grid.interface';
+import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';

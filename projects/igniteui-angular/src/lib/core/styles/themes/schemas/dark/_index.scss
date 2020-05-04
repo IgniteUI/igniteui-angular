@@ -3,6 +3,7 @@
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+@import './action-strip';
 @import './avatar';
 @import './badge';
 @import './banner';
@@ -17,6 +18,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './date-range-picker';
 @import './divider';
 @import './drop-down';
 @import './expansion-panel';
@@ -61,6 +63,7 @@
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
 /// @property {Map} igx-combo [$_dark-combo]
 /// @property {Map} igx-dialog [$_dark-dialog]
+/// @property {Map} igx-date-range-picker [$_dark-date-range-picker]
 /// @property {Map} igx-divider [$_dark-divider]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
@@ -91,6 +94,7 @@
 /// @property {Map} igx-tooltip [$_dark-tooltip]
 $dark-schema: (
     igx-avatar: $_dark-avatar,
+    igx-action-strip: $_dark-action-strip,
     igx-badge: $_dark-badge,
     igx-banner: $_dark-banner,
     igx-bottom-nav: $_dark-bottom-nav,
@@ -104,6 +108,7 @@ $dark-schema: (
     igx-column-hiding: $_dark-column-hiding,
     igx-combo: $_dark-combo,
     igx-dialog: $_dark-dialog,
+    igx-date-range: $_dark-date-range-picker,
     igx-divider: $_dark-divider,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
@@ -150,6 +155,7 @@ $dark-schema: (
 /// @property {map} igx-column-hiding [$_dark-fluent-column-hiding],
 /// @property {map} igx-combo [$_dark-fluent-combo],
 /// @property {map} igx-dialog [$_dark-fluent-dialog],
+/// @property {map} igx-date-range-picker [$_dark-fluent-date-range-picker],
 /// @property {map} igx-divider [$_dark-fluent-divider],
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-fluent-expansion-panel],
@@ -180,6 +186,7 @@ $dark-schema: (
 /// @property {map} igx-tooltip [$_dark-fluent-tooltip]
 $dark-fluent-schema: (
     igx-avatar: $_dark-fluent-avatar,
+    igx-action-strip: $_dark-fluent-action-strip,
     igx-badge: $_dark-fluent-badge,
     igx-banner: $_dark-fluent-banner,
     igx-bottom-nav: $_dark-fluent-bottom-nav,
@@ -193,6 +200,7 @@ $dark-fluent-schema: (
     igx-column-hiding: $_dark-fluent-column-hiding,
     igx-combo: $_dark-fluent-combo,
     igx-dialog: $_dark-fluent-dialog,
+    igx-date-range: $_dark-fluent-date-range-picker,
     igx-divider: $_dark-fluent-divider,
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
@@ -239,6 +247,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-column-hiding [$_dark-bootstrap-column-hiding],
 /// @property {map} igx-combo [$_dark-bootstrap-combo],
 /// @property {map} igx-dialog [$_dark-bootstrap-dialog],
+/// @property {map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
 /// @property {map} igx-divider [$_dark-bootstrap-divider],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
@@ -269,6 +278,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-tooltip [$_dark-bootstrap-tooltip]
 $dark-bootstrap-schema: (
     igx-avatar: $_dark-bootstrap-avatar,
+    igx-action-strip: $_dark-bootstrap-action-strip,
     igx-badge: $_dark-bootstrap-badge,
     igx-banner: $_dark-bootstrap-banner,
     igx-bottom-nav: $_dark-bootstrap-bottom-nav,
@@ -282,6 +292,7 @@ $dark-bootstrap-schema: (
     igx-column-hiding: $_dark-bootstrap-column-hiding,
     igx-combo: $_dark-bootstrap-combo,
     igx-dialog: $_dark-bootstrap-dialog,
+    igx-date-range: $_dark-bootstrap-date-range-picker,
     igx-divider: $_dark-bootstrap-divider,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
