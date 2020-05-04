@@ -39,7 +39,8 @@ import {
     IgxToastModule,
     IgxToggleModule,
     IgxTooltipModule,
-    IgxSelectModule
+    IgxSelectModule,
+    IgxDateRangePickerModule
 } from 'igniteui-angular';
 
 
@@ -83,7 +84,8 @@ const igniteModules = [
     IgxToastModule,
     IgxToggleModule,
     IgxTooltipModule,
-    IgxSelectModule
+    IgxSelectModule,
+    IgxDateRangePickerModule
 ];
 
 @NgModule({

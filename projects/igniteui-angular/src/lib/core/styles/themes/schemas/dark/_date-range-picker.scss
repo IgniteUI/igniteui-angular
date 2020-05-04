@@ -1,0 +1,24 @@
+@import '../light/date-range-picker';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+/// Generates a dark date-range-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-date-range-picker
+/// @see $default-palette
+$_dark-date-range-picker: extend($_light-date-range-picker);
+
+/// Generates a dark fluent date-range-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-date-range-picker
+$_dark-fluent-date-range-picker: extend($_fluent-date-range-picker);
+
+/// Generates a dark bootstrap date-range-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-date-range-picker
+$_dark-bootstrap-date-range-picker: extend($_bootstrap-date-range-picker);

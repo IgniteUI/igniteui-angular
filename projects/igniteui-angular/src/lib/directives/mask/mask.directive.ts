@@ -88,6 +88,11 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     @Output()
     public onValueChange = new EventEmitter<IMaskEventArgs>();
 
+    /** @hidden */
+    public get nativeElement(): HTMLInputElement {
+        return this.elementRef.nativeElement;
+    }
+
     /** @hidden @internal; */
     protected get inputValue(): string {
         return this.nativeElement.value;
@@ -103,11 +108,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const format = this.mask || 'CCCCCCCCCC';
         const promptChar = this.promptChar && this.promptChar.substring(0, 1);
         return { format, promptChar };
-    }
-
-    /** @hidden */
-    protected get nativeElement(): HTMLInputElement {
-        return this.elementRef.nativeElement;
     }
 
     /** @hidden */
