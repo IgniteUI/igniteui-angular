@@ -228,5 +228,11 @@ export default [
           <rect x="7.5" y="7.5" width="3.75" height="3.75"/>
           <rect x="12.75" y="7.5" width="3.75" height="3.75"/>
         </svg>`
+    },
+    {
+        name: 'jump_down',
+        value: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 19v2H5v-2h16zM13 4c1.57 0 3.03.46 4.26 1.24L15.8 6.7A5.87 5.87 0 0013 6c-3.31 0-6 2.69-6 6h3l-4 4-4-4h3c0-4.42 3.58-8 8-8z"/>
+        </svg>`
     }
 ];

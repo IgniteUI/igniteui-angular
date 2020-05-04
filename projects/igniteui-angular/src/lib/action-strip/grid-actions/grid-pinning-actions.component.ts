@@ -36,6 +36,19 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter to know if the row is in pinned and ghost
+     * @hidden
+     * @internal
+     */
+    get pinnedInArea(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        const context = this.strip.context;
+        return this.pinned && !context.disabled;
+    }
+
+    /**
      * Pin the row according to the context.
      * @example
      * ```typescript
@@ -72,6 +85,17 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const grid = row.grid;
         grid.unpinRow(row.rowID);
+        this.strip.hide();
+    }
+
+    public jumpToGhost(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        const context = this.strip.context;
+        const grid = context.grid;
+        const ghostIndex = grid.getPinnedRowGhostIndex(context.rowID);
+        grid.scrollTo(ghostIndex, 0);
         this.strip.hide();
     }
 

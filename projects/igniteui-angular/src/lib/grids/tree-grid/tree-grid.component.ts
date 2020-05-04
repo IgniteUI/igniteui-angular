@@ -623,7 +623,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public isRecordPinned(rec) {
         const id = rec.rowID;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
+        return this._pinnedRecordMetadata.findIndex(row => row.rowID === id) !== -1;
     }
 
     /**

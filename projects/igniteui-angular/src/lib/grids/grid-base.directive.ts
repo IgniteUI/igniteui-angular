@@ -2529,7 +2529,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _columnPinning = false;
 
-    protected _pinnedRecordIDs = [];
+    protected _pinnedRecordMetadata = [];
 
     /**
      * @hidden
@@ -2717,16 +2717,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public isRecordPinned(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRowPinnedByIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
             (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
     }
@@ -2735,9 +2726,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public pinRecordIndex(rec) {
+    public isRecordPinned(rec) {
+        return this.getPinedRecordIndex(rec) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getPinedRecordIndex(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id);
+        return this._pinnedRecordMetadata.findIndex(row => row.rowID === id);
+    }
+
+    public getPinnedRowGhostIndex(rowID) {
+        return this._pinnedRecordMetadata.find(row => row.rowID === rowID).ghostIndex;
     }
 
     /**
@@ -2745,7 +2748,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get hasPinnedRecords() {
-        return this._pinnedRecordIDs.length > 0;
+        return this._pinnedRecordMetadata.length > 0;
     }
 
     /**
@@ -2753,7 +2756,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get pinnedRecordsCount() {
-        return this._pinnedRecordIDs.length;
+        return this._pinnedRecordMetadata.length;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setPinnedRecordGhostIndex(rec, ghostIndex) {
+        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        this._pinnedRecordMetadata.find(row => row.rowID === id).ghostIndex = ghostIndex;
     }
 
     constructor(
@@ -2999,12 +3011,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public setFilteredSortedData(data, pinned: boolean) {
         data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
-        if (this._pinnedRecordIDs.length > 0 && pinned) {
+        if (this.pinnedRecordsCount > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
-        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+        } else if (this.pinnedRecordsCount > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
             this.filteredSortedData = data;
@@ -4199,7 +4211,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index The index at which to insert the row in the pinned collection.
      */
     public pinRow(rowID: any, index?: number): boolean {
-        if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
+        if (this._pinnedRecordMetadata.findIndex(row => row.rowID === rowID) !== -1) {
             return false;
         }
         const row = this.gridAPI.get_row_by_key(rowID);
@@ -4214,8 +4226,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
-        this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
+        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordMetadata.length;
+        this._pinnedRecordMetadata.splice(insertIndex, 0, { rowID: rowID, ghostIndex: -1 });
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges();
@@ -4233,7 +4245,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
      */
     public unpinRow(rowID: any) {
-        const index =  this._pinnedRecordIDs.indexOf(rowID);
+        const index =  this._pinnedRecordMetadata.findIndex(row => row.rowID === rowID);
         if (index === -1) {
             return false;
         }
@@ -4245,7 +4257,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
         this.endEdit(true);
-        this._pinnedRecordIDs.splice(index, 1);
+        this._pinnedRecordMetadata.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
