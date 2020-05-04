@@ -19,6 +19,76 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxDateTimeEditor` directive added.
+    - Allows the user to set and edit `date` and `time` in a chosen input element.
+    - Can edit `date` or `time` portion, using an editable masked input.
+    - Additionally, can specify a desired `display` and `input` `format`, as well as `min` and `max` values.
+
+    - A basic configuration scenario setting a Date object as a `value`:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [value]="date"/>
+    </igx-input-group>
+    ```
+    - Two-way data-binding via an ngModel:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [(ngModel)]="date"/>
+    </igx-input-group>
+    ```
+- `IgxDateRangePicker` component added.
+    - Allows the selection of a range of dates from a calendar UI or input fields. Supports `dialog` and `dropdown` modes.
+    - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
+    - The default template consists of a single *readonly* field:
+    ```html
+    <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
+    ```
+    - Projection of input fields using `igxDateTimeEditor`
+        ```html
+        <igx-date-range-picker>
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.start">
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.end">
+            </igx-date-range-end>
+        </igx-date-range-picker>
+        ```
+    - Added `IgxPickerToggleComponent` which allows templating of the default icon in the input through `igxPrefix` and `igxSuffix`.
+        - default template:
+        ```html
+        <igx-date-range-picker>
+            <igx-picker-toggle igxSuffix>
+                <igx-icon>calendar_view_day</igx-icon>
+            </igx-picker-toggle>
+        </igx-date-range-picker>
+        ```
+        - with projections:
+        ```html
+        <igx-date-range-picker>
+            <igx-date-range-start>
+                ...
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
+                ...
+            </igx-date-range-start>
+            <igx-date-range-end>
+                ...
+            </igx-date-range-end>
+        </igx-date-range-picker>
+        ```
+
+- `IgxActionStrip` component added.
+    - Provides a template area for one or more actions. In its simplest form the Action Strip
+        is an overlay of any container and shows additional content over that container.
+
+    ```html
+    <igx-action-strip #actionstrip>
+        <igx-icon (click)="doSomeAction()"></igx-icon>
+    </igx-action-strip>
+    ```
+
 - `igxSplitter` component added.
     - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
         Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.

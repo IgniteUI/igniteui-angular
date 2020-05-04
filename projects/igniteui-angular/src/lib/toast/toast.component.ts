@@ -192,17 +192,8 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public isVisibleChange = new EventEmitter<boolean>();
 
     /**
-     * @deprecated Place your message in the toast content instead.
-     * Sets/gets the message that will be shown by the toast.
-     * ```html
-     * <igx-toast [message] = "Notification"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastMessage = this.toast.message;
-     * ```
-     * @memberof IgxToastComponent
+     * @hidden
      */
-    @DeprecateProperty(`'message' @Input property is deprecated. Place your message in the toast content instead.`)
     @Input()
     public message = '';
 

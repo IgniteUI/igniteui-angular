@@ -2,7 +2,8 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
-    IGridCreatedEventArgs
+    IGridCreatedEventArgs,
+    GridSelectionMode
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -13,7 +14,7 @@ import { RemoteService } from '../shared/remote.service';
 })
 export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
 
-    isRowSelectable = false;
+    public selectionMode;
     remoteData = [];
     primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
@@ -32,6 +33,7 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
 
         this.remoteService.urlBuilder = (dataState) => this.buildUrl(dataState);
+        this.selectionMode = GridSelectionMode.none;
     }
 
     public buildUrl(dataState) {
@@ -62,11 +64,12 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     }
 
     setterChange() {
-        this.rowIsland1.rowSelectable = !this.rowIsland1.rowSelectable;
+        this.rowIsland1.rowSelection = this.rowIsland1.rowSelection === GridSelectionMode.multiple
+        ? GridSelectionMode.none : GridSelectionMode.multiple;
     }
 
     setterBindingChange() {
-        this.isRowSelectable = !this.isRowSelectable;
+        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {

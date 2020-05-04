@@ -4,10 +4,9 @@ import {
     IgxGridComponent,
     IgxNumberSummaryOperand,
     IgxSummaryResult,
-    ColumnPinningPosition
+    ColumnPinningPosition,
+    IPinningConfig
 } from 'igniteui-angular';
-import { IPinningConfig } from 'projects/igniteui-angular/src/lib/grids/common/grid.interface';
-
 
 class MySummary extends IgxNumberSummaryOperand {
 

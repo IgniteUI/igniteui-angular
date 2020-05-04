@@ -297,26 +297,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * @deprecated
-     * Use `cell.editMode` as a getter and
-     * `cell.setEditMode(true | false)` to start/exit edit mode.
-     *
-     * Gets/sets whether the cell is in edit mode.
-     * ```typescript
-     * let isCellInEditMode = this.cell.inEditMode;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @DeprecateProperty(`'inEditMode' is deprecated\nUse 'editMode' to get the current state and 'setEditMode(boolean)' as a setter`)
-    get inEditMode(): boolean {
-        return this.editMode;
-    }
-
-    set inEditMode(value: boolean) {
-        this.setEditMode(value);
-    }
-
-    /**
      * @hidden
      * @internal
      */
@@ -546,10 +526,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * @hidden
      */
+    @Input()
     @HostBinding('class.igx-grid__td--row-pinned-first')
-    public get displayPinnedChip() {
-        return this.row.pinned && this.row.disabled && this.visibleColumnIndex === 0;
-    }
+    public displayPinnedChip = false;
+
 
     @ViewChild('defaultCell', { read: TemplateRef, static: true })
     protected defaultCellTemplate: TemplateRef<any>;
