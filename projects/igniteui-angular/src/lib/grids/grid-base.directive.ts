@@ -2998,6 +2998,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
+        if (data === undefined) { data = []; }
         data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
@@ -5195,7 +5196,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get unpinnedDataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
+        return this.unpinnedRecords ? this.unpinnedRecords :
+                this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf : [];
     }
 
     /**
