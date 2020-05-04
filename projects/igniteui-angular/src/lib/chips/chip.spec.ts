@@ -249,12 +249,12 @@ describe('IgxChip', () => {
             // tabIndex attribute has higher priority than tabIndex.
             const fourthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[7];
             expect(fourthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(fourthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('4');
+            expect(fourthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
 
             // tabIndex attribute has higher priority than tabIndex input and chip being disabled.
             const fifthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[8];
             expect(fifthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
-            expect(fifthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('5');
+            expect(fifthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
         });
     });
 
