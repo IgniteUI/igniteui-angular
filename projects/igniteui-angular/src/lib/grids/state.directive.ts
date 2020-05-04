@@ -452,11 +452,9 @@ export class IgxGridStateDirective {
         const rowIslands = (this.currGrid as any).allLayoutList;
         if (rowIslands) {
             rowIslands.forEach(rowIslandComponent => {
-                // this.currGrid = rowIslandComponent.getGridsForIsland(rowIslandComponent.id)[0];
                 this.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
-                const features = this.getAllFeatures();
                 if (this.currGrid) {
-                    const rowIslandState = this.buildState(features) as IGridState;
+                    const rowIslandState = this.buildState(this.features) as IGridState;
                     childGridStates.push({ id: `${rowIslandComponent.id}`, state: rowIslandState });
                 }
             });
