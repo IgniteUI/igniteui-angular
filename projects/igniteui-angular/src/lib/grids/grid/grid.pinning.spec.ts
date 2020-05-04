@@ -6,7 +6,7 @@ import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
-import { IPinningConfig } from '../common/grid.interface';
+import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions,
          GridSelectionFunctions,

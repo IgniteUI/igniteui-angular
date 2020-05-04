@@ -1,4 +1,4 @@
-import { FilterMode, ColumnPinningPosition, RowPinningPosition } from './enums';
+import { FilterMode } from './enums';
 import { DisplayDensity } from '../../core/displayDensity';
 import { EventEmitter } from '@angular/core';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -66,9 +66,4 @@ export interface GridType extends IGridDataBindable {
     isColumnGrouped(fieldName: string): boolean;
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
-}
-
-export interface IPinningConfig {
-    columns?: ColumnPinningPosition;
-    rows?: RowPinningPosition;
 }

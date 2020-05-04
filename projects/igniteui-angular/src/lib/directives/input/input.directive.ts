@@ -72,13 +72,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * </input-group>
      * ```
      */
-    @Input('value')
+    @Input()
     set value(value: any) {
         this.nativeElement.value = value;
         this.checkValidity();
     }
     /**
-     * Gets the `value` propery.
+     * Gets the `value` property.
      *
      * @example
      * ```typescript

@@ -36,7 +36,9 @@
             [cellTemplate]="col.bodyTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [active]="isCellActive(col.visibleIndex)"
-            [cellSelectionMode]="grid.cellSelection"  #treeCell>
+            [cellSelectionMode]="grid.cellSelection"
+            [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+            #treeCell>
         </igx-grid-cell>
     </ng-template>
     <ng-template #treeCellTemplate>
@@ -64,7 +66,9 @@
             [cellTemplate]="col.bodyTemplate"
             [lastSearchInfo]="grid.lastSearchInfo"
             [active]="isCellActive(col.visibleIndex)"
-            [cellSelectionMode]="grid.cellSelection"  #treeCell>
+            [cellSelectionMode]="grid.cellSelection"
+            [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+            #treeCell>
         </igx-tree-grid-cell>
     </ng-template>
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
@@ -112,7 +116,9 @@
                 [cellTemplate]="col.bodyTemplate"
                 [lastSearchInfo]="grid.lastSearchInfo"
                 [active]="isCellActive(col.visibleIndex)"
-                [cellSelectionMode]="grid.cellSelection" #treeCell>
+                [cellSelectionMode]="grid.cellSelection"
+                [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+                #treeCell>
             </igx-grid-cell>
             </ng-template>
         <ng-template #treeCellTemplate>
@@ -142,7 +148,9 @@
                 [cellTemplate]="col.bodyTemplate"
                 [lastSearchInfo]="grid.lastSearchInfo"
                 [active]="isCellActive(col.visibleIndex)"
-                [cellSelectionMode]="grid.cellSelection"  #treeCell>
+                [cellSelectionMode]="grid.cellSelection"
+                [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+                #treeCell>
             </igx-tree-grid-cell>
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>

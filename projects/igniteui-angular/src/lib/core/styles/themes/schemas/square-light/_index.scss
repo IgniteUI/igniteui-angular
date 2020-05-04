@@ -4,6 +4,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+@import '../light/action-strip';
 @import '../light/avatar';
 @import '../light/badge';
 @import '../light/banner';
@@ -46,6 +47,7 @@
 
 /// The default light schema for all components.
 /// @type {Map}
+/// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-avatar [$_light-avatar]
 /// @property {Map} igx-badge [$_light-badge]
 /// @property {Map} igx-banner [$_light-banner]
@@ -87,6 +89,7 @@
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
 $light-square-schema: (
+    igx-action-strip: extend($_light-action-strip, $_square-shape-action-strip),
     igx-avatar: extend($_light-avatar, $_square-shape-avatar),
     igx-badge: extend($_light-badge, $_square-shape-badge),
     igx-banner: extend($_light-banner, $_square-shape-banner),
