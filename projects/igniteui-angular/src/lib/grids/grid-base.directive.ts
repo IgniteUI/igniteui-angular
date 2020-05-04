@@ -28,9 +28,9 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, pipe } from 'rxjs';
+import { Subject, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -100,7 +100,6 @@ import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
@@ -1342,7 +1341,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
-    @DeprecateProperty('onGridKeydown event is deprecated. Now you can directly bind to keydown on the IgxGrid component.')
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
@@ -2789,6 +2787,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent(this.tbody.nativeElement, 'keydown')
+        .pipe(destructor).subscribe((args: KeyboardEvent) => {
+            if (args.repeat && SUPPORTED_KEYS.has(args.key)) { args.preventDefault(); }
+            args.repeat ? setTimeout(() => this.navigation.dispatchEvent(args), 1) : this.navigation.dispatchEvent(args);
+        });
 
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
@@ -5663,10 +5666,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () => {
+                if (shouldScrollHorizontally) {
+                    this.navigation.performHorizontalScrollToCell(visibleColIndex, () =>
+                     this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => {
+                if (shouldScrollVertically) {
+                    this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () =>
+                        this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }
