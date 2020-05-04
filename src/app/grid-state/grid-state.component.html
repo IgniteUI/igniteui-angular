@@ -63,8 +63,8 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
-                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState
-                    [rowSelectable]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
+                <igx-hierarchical-grid #hierGrid id="hGridId" [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState displayDensity="cosy"
+                    [rowSelection]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
                     [height]="'600px'" [width]="'100%'" #hGrid>
                     <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
                     <igx-column-group header="Information">
@@ -83,36 +83,32 @@
                     <ng-template igxRowCollapsedIndicator>
                         <igx-icon role="button" fontSet="material">add</igx-icon>
                     </ng-template>
-                    <igx-row-island [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelectable='true' #layout1>
+
+                    <igx-row-island primaryKey="ID" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' rowSelection='true' #layout1>
                             <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
                             <igx-column-group header="Information2">
                                 <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
                                 <igx-column field="ProductName" [resizable]="true" [groupable]='true'></igx-column>
                             </igx-column-group>
-                            <ng-template let-data igxRowDragGhost>
-                                <div class="dragGhost">
-                                        <igx-icon fontSet="material"></igx-icon> 
-                                        Moving child {{data.ProductName}}!
-                                    </div>
-                            </ng-template>
-                        <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true' [allowFiltering]='true' >
+
+                        <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false" rowSelection='true' [allowFiltering]='true' >
                                 <igx-column field="ID" [hasSummary]='true'></igx-column>
                                 <igx-column-group header="Information3">
                                     <igx-column [resizable]="true" field="ChildLevels"></igx-column>
                                     <igx-column field="ProductName"></igx-column>
                                 </igx-column-group>
-                                <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelectable='true'>
+
+                                <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false" rowSelection='true'>
                                     <igx-column field="ID" [hasSummary]='true'></igx-column>
                                     <igx-column-group header="Information4">
                                         <igx-column field="ChildLevels"></igx-column>
                                         <igx-column field="ProductName"></igx-column>
                                     </igx-column-group>
                                 </igx-row-island>
-                                <igx-row-island [key]="'childData2'" [autoGenerate]="false">
+                                <igx-row-island primaryKey="ProductName" [key]="'childData2'" [autoGenerate]="false">
                                     <igx-column field="ChildLevels" [groupable]='true' [hasSummary]='true'></igx-column>
                                     <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
-                            </igx-row-island>
-            
+                                </igx-row-island>
                         </igx-row-island>
                     </igx-row-island>
                 </igx-hierarchical-grid>
@@ -125,7 +121,7 @@
 <div class="grid__wrapper">
     <igx-expansion-panel #collapsibleComponent [collapsed]="true">
         <igx-expansion-panel-header [disabled]="false">
-            <igx-expansion-panel-title>Tree Grid</igx-expansion-panel-title>
+            <igx-expansion-panel-title>Tree Grid Flat data using PK and FK</igx-expansion-panel-title>
             <igx-expansion-panel-icon *ngIf="templatedIcon">
                 {{collapsed() ? 'Expand':'Collapse'}}
             </igx-expansion-panel-icon>
@@ -133,17 +129,38 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(treeGrid)"></ng-container>
-                <igx-tree-grid [id]="treeGridId" igxGridState #treeGrid [allowFiltering]='true' [data]="treeGridData" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true"
+                <igx-tree-grid [id]="treeGridId" igxGridState #treeGrid [allowFiltering]='true' [data]="treeGridFlatData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'"
                     [paging]="false" [width]="'900px'" [height]="'800px'" [columnHiding]="true" [columnPinning]="true" exportExcelText="Export to Excel" exportCsvText="Export to CSV">
                     <igx-column *ngFor="let c of treeGridColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
                         [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
                         [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
                         [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
                     </igx-column>
+                </igx-tree-grid>
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+</div>
 
-                    <ng-template igxToolbarCustomContent>
-                        <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
-                    </ng-template>
+<!-- IgxTreeGrid Child Collection -->
+<div class="grid__wrapper">
+    <igx-expansion-panel #collapsibleComponent [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>Tree Grid Flat Child Collection</igx-expansion-panel-title>
+            <igx-expansion-panel-icon *ngIf="templatedIcon">
+                {{collapsed() ? 'Expand':'Collapse'}}
+            </igx-expansion-panel-icon>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div style='width: 100%; height: 100%'>
+                <ng-container *ngTemplateOutlet="controls; context: getContext(treeGridHier)"></ng-container>
+                <igx-tree-grid #treeGridHier [id]="treeGridHierId" igxGridState [data]="employees" childDataKey="Employees" width="100%" height="800px" primaryKey="Name"
+                                [autoGenerate]="false" [rowSelection]="'multiple'" [paging]="true" [allowFiltering]="true"
+                                [showToolbar]="true" toolbarTitle="Employees" [columnHiding]="true" [columnPinning]="true"
+                                [exportExcel]="true" [exportCsv]="true" exportExcelText="To Excel" exportCsvText="To CSV">
+                    <igx-column field="Name" dataType="string" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true" [hasSummary]="true"></igx-column>
+                    <igx-column field="HireDate" dataType="date" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true"></igx-column>
+                    <igx-column field="Age" dataType="number" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true"></igx-column>
                 </igx-tree-grid>
             </div>
         </igx-expansion-panel-body>
