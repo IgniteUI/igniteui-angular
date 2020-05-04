@@ -41,7 +41,7 @@
     $theme: apply-palette($watermark-schema, $palette);
 
     $border-radius: round-borders(
-            if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
+        if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
     );
 
     @return extend($theme, (
