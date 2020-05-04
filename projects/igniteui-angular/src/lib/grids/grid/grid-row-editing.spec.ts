@@ -1531,7 +1531,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.onRowEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
-
+            const gridContent = GridFunctions.getGridContent(fix);
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -1614,6 +1614,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 e.cancel = true;
             });
 
+            const gridContent = GridFunctions.getGridContent(fix);
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
@@ -1714,6 +1715,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
 
+            const gridContent = GridFunctions.getGridContent(fix);
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
