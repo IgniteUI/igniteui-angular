@@ -437,6 +437,13 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
+    public shouldDisplayPinnedChip(visibleColumnIndex: number): boolean {
+        return this.pinned && this.disabled && visibleColumnIndex === 0;
+    }
+
+    /**
+     * @hidden
+     */
     protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.selected ? 'igx-grid__tr--selected' : '';
