@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable, Output, OnInit, OnDestroy } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
@@ -9,6 +9,7 @@ import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
+import { SaveUtilities } from '../exporter-common/save-utilities';
 
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx: JSZip;
@@ -40,6 +41,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
     private _xlsx: JSZip;
+    private exporterWorker: Worker;
 
     /**
      * This event is emitted when the export process finishes.
@@ -55,9 +57,9 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     private static populateFolder(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData): any {
         for (const childFolder of folder.childFolders(worksheetData)) {
-            const folderIntance = ExcelElementsFactory.getExcelFolder(childFolder);
-            const zipFolder = zip.folder(folderIntance.folderName);
-            IgxExcelExporterService.populateFolder(folderIntance, zipFolder, worksheetData);
+            const folderInstance = ExcelElementsFactory.getExcelFolder(childFolder);
+            const zipFolder = zip.folder(folderInstance.folderName);
+            IgxExcelExporterService.populateFolder(folderInstance, zipFolder, worksheetData);
         }
 
         for (const childFile of folder.childFiles(worksheetData)) {
@@ -83,6 +85,19 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
         IgxExcelExporterService.populateFolder(rootFolder, this._xlsx, worksheetData);
 
+        // if (this.exporterWorker) {
+        //     this.exporterWorker.postMessage({ folder: rootFolder, zip: this._xlsx, worksheetData: worksheetData });
+        //     this.exporterWorker.onmessage = ({ data }) => {
+        //         console.log('generating async');
+        //         this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
+        //             this.saveFile(result, options.fileName);
+        //             this.onExportEnded.emit({ xlsx: this._xlsx });
+        //         });
+        //     };
+        // } else {
+        //     // Web workers are not supported in this environment. Add a fallback
+        // }
+
         this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
             this.saveFile(result, options.fileName);
 
@@ -95,6 +110,20 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             type: ''
         });
 
-        ExportUtilities.saveBlobToFile(blob, fileName);
+        SaveUtilities.saveBlobToFile(blob, fileName);
     }
+
+    // ngOnInit() {
+    //     if (typeof Worker !== 'undefined') {
+    //         this.exporterWorker = new Worker('./excel-exporter.worker', { type: 'module' });
+    //         console.log('worker created');
+    //     }
+    // }
+
+    // ngOnDestroy() {
+    //     if (this.exporterWorker) {
+    //         this.exporterWorker.terminate();
+    //         console.log('worker destroyed');
+    //     }
+    // }
 }
