@@ -110,7 +110,9 @@
         [cellTemplate]="col.bodyTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
-        [cellSelectionMode]="grid.cellSelection" #cell>
+        [cellSelectionMode]="grid.cellSelection"
+        [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        #cell>
     </igx-grid-cell>
 </ng-template>
 
@@ -138,7 +140,9 @@
         [cellTemplate]="col.bodyTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
-        [cellSelectionMode]="grid.cellSelection" #cell>
+        [cellSelectionMode]="grid.cellSelection"
+        [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        #cell>
     </igx-expandable-grid-cell>
 </ng-template>
 
@@ -170,7 +174,9 @@
         [cellTemplate]="col.bodyTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
-        [cellSelectionMode]="grid.cellSelection" #cell>
+        [cellSelectionMode]="grid.cellSelection"
+        [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        #cell>
     </igx-grid-cell>
 </ng-template>
 
@@ -202,6 +208,8 @@
         [cellTemplate]="col.bodyTemplate"
         [lastSearchInfo]="grid.lastSearchInfo"
         [active]="isCellActive(col.visibleIndex)"
-        [cellSelectionMode]="grid.cellSelection" #cell>
+        [cellSelectionMode]="grid.cellSelection"
+        [displayPinnedChip]="shouldDisplayPinnedChip(col.visibleIndex)"
+        #cell>
     </igx-expandable-grid-cell>
 </ng-template>
