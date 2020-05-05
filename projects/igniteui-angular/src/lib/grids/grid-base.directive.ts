@@ -2912,7 +2912,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                Promise.resolve().then(() => {
+                    this.onColumnsChanged(change);
+                });
+            });
     }
 
     /**
