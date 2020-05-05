@@ -27,8 +27,8 @@ jobs:
     - run: npm ci
     - run: npm run lint:lib
     - run: npm run build:lib
-    - run: npm run test:lib:azure:others
-    - run: npm run test:lib:azure:grid
-    - run: npm run test:lib:azure:tgrid
-    - run: npm run test:lib:azure:hgrid
+    - run: npm run test:lib:azure:others --max_old_space_size=4096
+    - run: npm run test:lib:azure:grid --max_old_space_size=4096
+    - run: npm run test:lib:azure:tgrid --max_old_space_size=4096
+    - run: npm run test:lib:azure:hgrid --max_old_space_size=4096
     - run: npm run test:schematics
