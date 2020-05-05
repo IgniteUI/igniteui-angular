@@ -20,6 +20,12 @@ body {
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
 
+$chart-theme: igx-data-chart-theme(
+    $brushes: (orange, red, blue)
+);
+
+@include igx-css-vars($chart-theme);
+
 .nav-header {
     @if luminance($igx-background-color) < .5 {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);

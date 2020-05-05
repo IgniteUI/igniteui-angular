@@ -1,0 +1,38 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light base chart schema.
+/// @type {Map}
+/// @property {Map} width [] - The width of the chart.
+/// @property {Map} height [] - The height of the chart.
+/// @property {List} margin [] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @property {Color} title-text-color [] - Sets the color of the chart title.
+/// @property {Color} title-text-style [] - Sets the CSS font property of the chart title.
+/// @property {Color} title-margin [] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @property {Color} subtitle-text-color [] - Sets the color of the chart subtitle.
+/// @property {Color} subtitle-text-style [] - Sets the CSS font property of the chart subtitle.
+/// @property {Color} subtitle-margin [] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @property {List} brushes - Defines the palette from which automatically assigned series colors are selected.
+/// @property {List} outlines - Defines the palette from which automatically assigned series outline colors are selected.
+/// @see $default-palette
+$_light-chart: extend(
+    (
+        'width': null,
+        'height': null,
+        'margin': null,
+        'title-text-color': null,
+        'title-text-style': null,
+        'title-margin': null,
+        'subtitle-text-color': null,
+        'subtitle-text-style': null,
+        'subtitle-margin': null,
+        'brushes': null,
+        'outlines': null
+    )
+);
+

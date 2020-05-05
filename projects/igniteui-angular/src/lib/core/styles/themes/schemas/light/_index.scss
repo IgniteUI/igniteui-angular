@@ -14,6 +14,7 @@
 @import './calendar';
 @import './card';
 @import './carousel';
+@import './chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
@@ -60,6 +61,7 @@
 /// @property {Map} igx-calendar [$_light-calendar]
 /// @property {Map} igx-card [$_light-card]
 /// @property {Map} igx-carousel [$_light-carousel]
+/// @property {Map} data-chart [$_light-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
@@ -105,6 +107,7 @@ $light-schema: (
     igx-calendar: $_light-calendar,
     igx-card: $_light-card,
     igx-carousel: $_light-carousel,
+    data-chart: $_light-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
     igx-column-hiding: $_light-column-hiding,
