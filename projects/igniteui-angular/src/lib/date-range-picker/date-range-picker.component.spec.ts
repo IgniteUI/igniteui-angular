@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl, Validators } from '@angular/forms';
 import { IgxCalendarComponent } from '../calendar/index';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
@@ -12,21 +12,30 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+import { IgxIconModule } from '../icon';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const DEBOUNCE_TIME = 16;
-
+const defaultIconText = 'calendar_today';
+const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle'; // TODO Implementation -> maybe add class for the div container ('igx-date-picker')
-const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
+const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
+        const mockNgControl = jasmine.createSpyObj('NgControl',
+                                                    ['registerOnChangeCb',
+                                                    'registerOnTouchedCb',
+                                                    'registerOnValidatorChangeCb']);
+        const mockInjector = jasmine.createSpyObj('Injector', {
+            'get': mockNgControl
+        });
         it('should set range dates correctly through selectRange method', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
@@ -43,16 +52,6 @@ describe('IgxDateRangePicker', () => {
             dateRange.selectRange(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
-        });
-
-        it('should set range dates correctly through selectToday method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
-            const today = new Date();
-
-            dateRange.selectRange(new Date());
-            expect(dateRange.value.start).toEqual(today);
-            expect(dateRange.value.end).toEqual(today);
         });
 
         it('should emit rangeSelected on selection', () => {
@@ -78,21 +77,7 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
-        it('should emit rangeSelected on selectToday()', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
-            spyOn(dateRange.rangeSelected, 'emit');
-            const today = new Date();
-
-            dateRange.selectRange(new Date());
-            expect(dateRange.value.start).toEqual(today);
-            expect(dateRange.value.end).toEqual(today);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(1);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: today, end: today });
-        });
-
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
-            const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
             const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28) };
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
@@ -123,11 +108,35 @@ describe('IgxDateRangePicker', () => {
             // dateRangePicker.handleSelection([range.start]);
             // expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
-            // awaiting implementation - setDisabledState
-            // dateRangePicker.setDisabledState(true);
-            // expect(dateRangePicker.disabled).toBe(true);
-            // dateRangePicker.setDisabledState(false);
-            // expect(dateRangePicker.disabled).toBe(false);
+            dateRangePicker.setDisabledState(true);
+            expect(dateRangePicker.disabled).toBe(true);
+            dateRangePicker.setDisabledState(false);
+            expect(dateRangePicker.disabled).toBe(false);
+        });
+
+        it('should validate correctly minValue and maxValue ', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            dateRange.ngOnInit();
+
+            dateRange.calendar = calendar;
+            dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
+            dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
+
+            dateRange.minValue = new Date(2020, 4, 7);
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(1);
+            dateRange.maxValue = new Date(2020, 8, 7);
+            expect(mockNgControl.registerOnValidatorChangeCb).toHaveBeenCalledTimes(2);
+
+            const range = { start: new Date(2020, 4, 18), end: new Date(2020, 6, 28) };
+            dateRange.writeValue(range);
+            const mockFormControl = new FormControl(dateRange.value);
+            expect(dateRange.validate(mockFormControl)).toBeNull();
+
+            range.start.setMonth(2);
+            expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true });
+
+            range.end.setMonth(12);
+            // expect(dateRange.validate(mockFormControl)).toEqual({ maxValue: true });
         });
     });
 
@@ -149,6 +158,12 @@ describe('IgxDateRangePicker', () => {
             const day = `${date.getDate()}`.padStart(2, '0');
             const fullDate = [month, day, year].join('/');
             return fullDate;
+        }
+
+        function formatLongDate(date: Date): string {
+            const result = date.toLocaleString('en-US', { month: 'long', day: 'numeric' });
+            const year = date.getFullYear();
+            return `${result}, ${year}`;
         }
 
         function selectDateRangeFromCalendar(startDateDay: number, dayRange: number) {
@@ -176,6 +191,7 @@ describe('IgxDateRangePicker', () => {
                     imports: [IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
                         IgxInputGroupModule,
+                        IgxIconModule,
                         FormsModule,
                         NoopAnimationsModule]
                 })
@@ -262,6 +278,55 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Properties & events tests', () => {
+                it('should support different input formats', () => {
+                    dateRange.inputFormat = 'longDate';
+                    fixture.detectChanges();
+
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    expect(singleInputElement.nativeElement.value).toEqual(`${formatLongDate(startDate)} - ${formatLongDate(endDate)}`);
+
+                    dateRange.inputFormat = 'shortDate';
+                    fixture.detectChanges();
+
+                    startDate.setDate(2);
+                    endDate.setDate(19);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
+
+                    dateRange.inputFormat = 'fullDate';
+                    fixture.detectChanges();
+
+                    startDate.setDate(12);
+                    endDate.setDate(23);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    inputStartDate = startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
+
+                    dateRange.inputFormat = 'dd-MM-yy';
+                    fixture.detectChanges();
+
+                    startDate.setDate(9);
+                    endDate.setDate(13);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                                    replace(/\//g, '-');
+                    inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                                    replace(/\//g, '-');
+                    expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
+                });
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
@@ -465,7 +530,8 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTestComponent,
                         DateRangeTwoInputsTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxIconModule,
+                        IgxInputGroupModule, FormsModule, NoopAnimationsModule]
                 })
                     .compileComponents();
             }));
@@ -554,6 +620,58 @@ describe('IgxDateRangePicker', () => {
                     dateRange.selectRange(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRange();
+                });
+                xit('should support different input formats', () => {
+                    // dateRange.inputFormat = 'longDate';
+                    // fixture.detectChanges();
+
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                    // dateRange.selectRange(startDate, endDate);
+                    // fixture.detectChanges();
+                    // expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
+                    // expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
+
+                    // dateRange.inputFormat = 'shortDate';
+                    // fixture.detectChanges();
+
+                    // startDate.setDate(2);
+                    // endDate.setDate(19);
+                    // dateRange.selectRange(startDate, endDate);
+                    // fixture.detectChanges();
+
+                    // let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    // let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    // expect(startInput.nativeElement.value).toEqual(formatFullDate(inputStartDate));
+                    // expect(endInput.nativeElement.value).toEqual(formatFullDate(inputEndDate));
+
+                    dateRange.inputFormat = 'fullDate';
+                    fixture.detectChanges();
+
+                    startDate.setDate(12);
+                    endDate.setDate(23);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    // inputStartDate = startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    // inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    // expect(startInput.nativeElement.value).toEqual(inputStartDate);
+                    // expect(endInput.nativeElement.value).toEqual(inputEndDate);
+
+                    // dateRange.inputFormat = 'dd-MM-yy';
+                    // fixture.detectChanges();
+
+                    // startDate.setDate(9);
+                    // endDate.setDate(13);
+                    // dateRange.selectRange(startDate, endDate);
+                    // fixture.detectChanges();
+
+                    // inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                    //                 replace(/\//g, '-');
+                    // inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                    //                 replace(/\//g, '-');
+                    // expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
             });
             describe('Keyboard navigation', () => {
@@ -689,35 +807,73 @@ describe('IgxDateRangePicker', () => {
             }));
         });
 
-        describe('Templating', () => {
-        });
-
-        describe('ARIA', () => {
-            let singleInputElement: DebugElement;
-            let calendarElement: DebugElement;
-            let calendarWrapper: DebugElement;
-            let toggleBtn: DebugElement;
+        describe('Rendering', () => {
             configureTestSuite();
             beforeAll(async(() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
-                        DateRangeDefaultCustomLabelComponent
+                        DateRangeDefaultComponent,
+                        DateRangeDefaultCustomLabelComponent,
+                        DateRangeTemplatesComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule,
+                        IgxDateTimeEditorModule,
+                        IgxInputGroupModule,
+                        IgxIconModule,
+                        FormsModule,
+                        NoopAnimationsModule]
                 })
                     .compileComponents();
             }));
-            beforeEach(fakeAsync(() => {
+            it('should render default toggle icon', () => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.detectChanges();
+
+                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
+                expect(inputGroup.children[0].nativeElement.innerText).toBe(defaultIconText);
+                expect(inputGroup.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+            });
+            it('should be able to set toggle icon', () => {
+                const prefixIconText = 'flight_takeoff';
+                const suffixIconText = 'flight_land';
+                const additionalIconText = 'calendar_view_day';
+                fixture = TestBed.createComponent(DateRangeTemplatesComponent);
+                fixture.detectChanges();
+
+                const inputGroups = fixture.debugElement.queryAll(By.css(CSS_CLASS_INPUT_GROUP));
+                const prefixSingleRangeInput = inputGroups[0];
+                expect(prefixSingleRangeInput.children[0].nativeElement.innerText).toBe(prefixIconText);
+                expect(prefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                const suffixSingleRangeInput = inputGroups[1];
+                expect(suffixSingleRangeInput.children[1].nativeElement.innerText).toBe(suffixIconText);
+                expect(suffixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                const addPrefixSingleRangeInput = inputGroups[2];
+                expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(defaultIconText);
+                expect(addPrefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+                expect(addPrefixSingleRangeInput.children[1].nativeElement.innerText).toBe(additionalIconText);
+                expect(addPrefixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                const prefixRangeInput = inputGroups[3];
+                expect(prefixRangeInput.children[0].nativeElement.innerText).toBe(prefixIconText);
+                expect(prefixRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+
+                const suffixRangeInput = inputGroups[4];
+                expect(suffixRangeInput.children[1].nativeElement.innerText).toBe(suffixIconText);
+                expect(suffixRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+                expect(suffixRangeInput.children[2].nativeElement.innerText).toBe(additionalIconText);
+                expect(suffixRangeInput.children[2].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
+            });
+
+            it('should render aria attributes properly', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-
-            }));
-            it('should render aria attributes properly', fakeAsync(() => {
-                toggleBtn = fixture.debugElement.query(By.css(`.${ CSS_CLASS_TOGGLE_BUTTON}`));
-                calendarElement = fixture.debugElement.query(By.css(`.${ CSS_CLASS_CALENDAR}`));
-                singleInputElement = fixture.debugElement.query(By.css(`.${ CSS_CLASS_INPUT}`));
+                const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_ICON}`));
+                const calendarElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR}`));
+                const singleInputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
                 startDate = new Date(2020, 1, 1);
                 endDate = new Date(2020, 1, 4);
                 const expectedLabelID = dateRange.label.id;
@@ -735,7 +891,7 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                calendarWrapper = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR_TOGGLE}`));
+                const calendarWrapper = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR_TOGGLE}`));
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
                 expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
@@ -759,6 +915,7 @@ describe('IgxDateRangePicker', () => {
     template: ''
 })
 export class DateRangeTestComponent implements OnInit {
+    [x: string]: any;
     public todayButtonText: string;
     public doneButtonText: string;
     public mode: InteractionMode;
@@ -786,8 +943,6 @@ export class DateRangeTestComponent implements OnInit {
 `
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
-    startDate = new Date(2020, 1, 1);
-    endDate = new Date(2020, 1, 4);
     range;
 }
 
@@ -810,3 +965,46 @@ export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent
     `
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent { }
+
+@Component({
+    selector: 'igx-date-range-templates-test',
+    template: `
+    <igx-date-range-picker #prefixSingleRange>
+        <igx-picker-toggle igxPrefix>
+            <igx-icon>flight_takeoff</igx-icon>
+        </igx-picker-toggle>
+    </igx-date-range-picker>
+    <igx-date-range-picker #suffixSingleRange>
+        <igx-picker-toggle igxSuffix>
+            <igx-icon>flight_land</igx-icon>
+        </igx-picker-toggle>
+    </igx-date-range-picker>
+    <igx-date-range-picker>
+        <igx-prefix>
+            <igx-icon>
+                calendar_view_day
+            </igx-icon>
+        </igx-prefix>
+    </igx-date-range-picker>
+    <igx-date-range-picker [(ngModel)]="range" required>
+        <igx-date-range-start>
+            <igx-picker-toggle igxPrefix>
+                <igx-icon>flight_takeoff</igx-icon>
+            </igx-picker-toggle>
+            <input igxInput igxDateTimeEditor type="text">
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput igxDateTimeEditor type="text">
+            <igx-picker-toggle igxSuffix>
+                <igx-icon>flight_land</igx-icon>
+            </igx-picker-toggle>
+            <igx-suffix>
+            <igx-icon>
+                calendar_view_day
+            </igx-icon>
+        </igx-suffix>
+        </igx-date-range-end>
+    </igx-date-range-picker>
+    `
+})
+export class DateRangeTemplatesComponent extends DateRangeTestComponent {}
