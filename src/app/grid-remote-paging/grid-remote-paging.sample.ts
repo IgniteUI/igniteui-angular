@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { IgxGridComponent, IgxPaginatorComponent } from 'igniteui-angular';
+import { IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { Observable } from 'rxjs';
-import { IgxGridPaginatorOptionsPipe } from 'projects/igniteui-angular/src/lib/grids/common/pipes';
 
 @Component({
     selector: 'app-grid-remote-paging-sample',
@@ -63,7 +62,6 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     }
 
     public perPageChange(perPage: number) {
-        debugger;
         const skip = this.page * perPage;
         const top = perPage;
 
