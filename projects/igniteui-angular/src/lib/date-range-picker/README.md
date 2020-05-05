@@ -108,14 +108,15 @@ With projected inputs:
 ### Inputs
 | Name             | Type               | Description |
 |:-----------------|:-------------------|:------------|
+| doneButtonText   | string             | Changes the default text of the `done` button. It will show up only in `dialog` mode. Default value is `Done`. |
+| formatter        | function => string | Applies a custom formatter function on the selected or passed date. |
+| hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
+| locale           | string             | Gets the `locale` of the calendar. Default value is `"en"`. |
+| overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 | mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
 | monthsViewNumber | number             | Sets the number displayed month views. Default is `2`. |
-| hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
+| placeholder      | string             | Sets the `placeholder` for single-input `IgxDateRangePickerComponent`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
-| locale           | string             | Gets the `locale` of the calendar. Default value is `"en"`. |
-| formatter        | function => string | Applies a custom formatter function on the selected or passed date. |
-| doneButtonText   | string             | Changes the default text of the `done` button. It will show up only in `dialog` mode. Default value is `Done`. |
-| overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 
 ### Outputs
 | Name             | Type                  | Description |

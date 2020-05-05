@@ -261,7 +261,7 @@ describe('IgxDateRangePicker', () => {
                 });
             });
 
-            fdescribe('Properties & events tests', () => {
+            describe('Properties & events tests', () => {
                 it('should show date picker with placeholder', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.placeholder).toEqual('MM/dd/yyyy - MM/dd/yyyy');
