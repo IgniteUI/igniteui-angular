@@ -28,9 +28,9 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, pipe, fromEvent } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE, SUPPORTED_KEYS } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -2787,12 +2787,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent(this.tbody.nativeElement, 'keydown')
-        .pipe(destructor).subscribe((args: KeyboardEvent) => {
-            if (args.repeat && SUPPORTED_KEYS.has(args.key)) { args.preventDefault(); }
-            args.repeat ? setTimeout(() => this.navigation.dispatchEvent(args), 1) : this.navigation.dispatchEvent(args);
-        });
-
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;

@@ -99,7 +99,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusTbody($event)"
+    <div class="igx-grid__tbody-content" tabindex="0" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.handleNavigation($event)" (focus)="navigation.focusTbody($event)"
         role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth || null' #tbody>

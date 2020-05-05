@@ -65,7 +65,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.handleNavigation($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"

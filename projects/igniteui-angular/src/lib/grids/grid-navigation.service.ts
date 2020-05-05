@@ -28,6 +28,11 @@ export class IgxGridNavigationService {
     public activeNode: IActiveNode;
     protected pendingNavigation = false;
 
+    handleNavigation(event: KeyboardEvent) {
+        if (event.repeat && SUPPORTED_KEYS.has(event.key)) { event.preventDefault(); }
+        event.repeat ? setTimeout(() => this.dispatchEvent(event), 1) : this.dispatchEvent(event);
+    }
+
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
