@@ -29,7 +29,9 @@ export class IgxGridNavigationService {
     protected pendingNavigation = false;
 
     handleNavigation(event: KeyboardEvent) {
-        if (event.repeat && SUPPORTED_KEYS.has(event.key)) { event.preventDefault(); }
+        if (event.repeat && SUPPORTED_KEYS.has(event.key.toLowerCase())) {
+            event.preventDefault();
+        }
         event.repeat ? setTimeout(() => this.dispatchEvent(event), 1) : this.dispatchEvent(event);
     }
 
@@ -433,11 +435,11 @@ export class IgxGridNavigationService {
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
             this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
         }
-        if (key.includes('up') && this.activeNode.level > 0) {
+        if (!ctrl && key.includes('up') && this.activeNode.level > 0) {
             nextCol = activeCol.parent;
             this.activeNode.mchCache.level = nextCol.level;
         }
-        if (key.includes('down') && activeCol.children) {
+        if (!ctrl && key.includes('down') && activeCol.children) {
             nextCol = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
             .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
