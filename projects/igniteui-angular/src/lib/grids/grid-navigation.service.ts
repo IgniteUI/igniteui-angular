@@ -200,7 +200,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnFullyVisible(columnIndex: number) {
-        if (this.isColumnPinned(columnIndex, this.forOfDir())) {
+        if (columnIndex < 0 || this.isColumnPinned(columnIndex, this.forOfDir())) {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(columnIndex);
@@ -286,8 +286,6 @@ export class IgxGridNavigationService {
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(scrollRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
-/*         console.log('topOfset', targetRow.offsetTop, ' containerTopOfset: ', Math.abs(this.containerTopOffset));
-        console.log('containerHeight: ', containerHeight, ' endTopOfset', endTopOffset); */
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
         || containerHeight && containerHeight < endTopOffset;
     }
