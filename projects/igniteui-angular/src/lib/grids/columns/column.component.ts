@@ -655,19 +655,6 @@ export class IgxColumnComponent implements AfterContentInit {
     public pinnedChange = new EventEmitter<boolean>();
 
     /**
-     * @deprecated
-     * Gets/Sets the `id` of the `igx-grid`.
-     * ```typescript
-     * let columnGridId = this.column.gridID;
-     * ```
-     * ```typescript
-     * this.column.gridID = 'grid-1';
-     * ```
-     * @memberof IgxColumnComponent
-     */
-    @DeprecateProperty(`The property is deprecated. Please, use \`column.grid.id\` instead.`)
-    public gridID: string;
-    /**
      * Gets the column `summaries`.
      * ```typescript
      * let columnSummaries = this.column.summaries;
@@ -966,7 +953,7 @@ export class IgxColumnComponent implements AfterContentInit {
         let vIndex = -1;
 
         if (this.columnGroup) {
-            col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
+            col = this.allChildren.filter(c => !c.columnGroup && !c.hidden)[0] as any;
         }
         if (this.columnLayoutChild) {
             return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;

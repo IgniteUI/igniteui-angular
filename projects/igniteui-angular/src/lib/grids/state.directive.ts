@@ -12,7 +12,7 @@ import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridComponent } from './grid/grid.component';
-import { IPinningConfig } from './common/grid.interface';
+import { IPinningConfig } from './grid.common';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -478,6 +478,8 @@ export class IgxGridStateDirective {
     }
 
     private restoreRowPinning(state: any[]) {
+        // clear current state.
+        this.grid.pinnedRows.forEach(row => row.unpin());
         state.forEach(rowID => this.grid.pinRow(rowID));
     }
 

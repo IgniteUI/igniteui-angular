@@ -361,7 +361,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should size summaries with row selectors for parent and child grids correctly.', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             // expand first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
@@ -796,6 +796,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('1');
             expect(hierarchicalGrid.getRowByIndex(4).rowID).toBe('2');
 
+            fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
             const expectedHeight = parseInt(hierarchicalGrid.height, 10) -
                 hierarchicalGrid.pinnedRowHeight - 18 - hierarchicalGrid.theadRow.nativeElement.offsetHeight;
@@ -838,6 +839,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
 
+            fixture.detectChanges();
             // Check last pinned is fully in view
             const last = pinRowContainer[0].children[1].context.nativeElement;
             expect(last.getBoundingClientRect().bottom - hierarchicalGrid.tbody.nativeElement.getBoundingClientRect().bottom).toBe(0);

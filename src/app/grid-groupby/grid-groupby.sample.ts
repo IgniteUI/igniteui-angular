@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSelectionMode
 } from 'igniteui-angular';
 
 @Component({
@@ -20,6 +20,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public groupingExpressions: Array<ISortingExpression>;
     public summaryMode = 'rootLevelOnly';
     public summaryModes = [];
+    public selectionMode;
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
@@ -35,6 +36,7 @@ export class GridGroupBySampleComponent implements OnInit {
             { dataType: 'string', field: 'Phone', width: 150, groupable: true  },
             { dataType: 'string', field: 'Fax', width: 150, groupable: true  }
         ];
+        this.selectionMode = GridSelectionMode.multiple;
         this.hideGroupedColumns = true;
         this.summaryModes = [
             { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },

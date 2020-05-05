@@ -5,6 +5,7 @@
 ////
 
 @import './avatar';
+@import './action-strip';
 @import './badge';
 @import './banner';
 @import './bottom-nav';
@@ -18,6 +19,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './date-range-picker';
 @import './divider';
 @import './drop-down';
 @import './expansion-panel';
@@ -49,6 +51,7 @@
 /// The default light schema for all components.
 /// @type {Map}
 /// @property {Map} igx-avatar [$_light-avatar]
+/// @property {Map} igx-action-strip [$_light-action-strip]
 /// @property {Map} igx-badge [$_light-badge]
 /// @property {Map} igx-banner [$_light-banner]
 /// @property {Map} igx-bottom-nav [$_light-bottom-nav]
@@ -62,6 +65,7 @@
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
+/// @property {Map} igx-date-range-picker [$_light-date-range-picker ]
 /// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
@@ -92,6 +96,7 @@
 /// @property {Map} igx-tooltip [$_light-tooltip]
 $light-schema: (
     igx-avatar: $_light-avatar,
+    igx-action-strip: $_light-action-strip,
     igx-badge: $_light-badge,
     igx-banner: $_light-banner,
     igx-bottom-nav: $_light-bottom-nav,
@@ -105,6 +110,7 @@ $light-schema: (
     igx-column-hiding: $_light-column-hiding,
     igx-combo: $_light-combo,
     igx-dialog: $_light-dialog,
+    igx-date-range: $_light-date-range-picker,
     igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
@@ -137,6 +143,7 @@ $light-schema: (
 
 $light-fluent-schema: (
     igx-avatar: $_fluent-avatar,
+    igx-action-strip: $_fluent-action-strip,
     igx-badge: $_fluent-badge,
     igx-banner: $_fluent-banner,
     igx-bottom-nav: $_fluent-bottom-nav,
@@ -150,6 +157,7 @@ $light-fluent-schema: (
     igx-column-hiding: $_fluent-column-hiding,
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
+    igx-date-range: $_fluent-date-range-picker,
     igx-divider: $_fluent-divider,
     igx-drop-down: $_fluent-drop-down,
     igx-expansion-panel: $_fluent-expansion-panel,
@@ -182,6 +190,7 @@ $light-fluent-schema: (
 
 $light-bootstrap-schema: (
     igx-avatar: $_bootstrap-avatar,
+    igx-action-strip: $_bootstrap-action-strip,
     igx-badge: $_bootstrap-badge,
     igx-banner: $_bootstrap-banner,
     igx-bottom-nav: $_bootstrap-bottom-nav,
@@ -195,6 +204,7 @@ $light-bootstrap-schema: (
     igx-column-hiding: $_bootstrap-column-hiding,
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,
+    igx-date-range: $_bootstrap-date-range-picker,
     igx-divider: $_bootstrap-divider,
     igx-drop-down: $_bootstrap-drop-down,
     igx-expansion-panel: $_bootstrap-expansion-panel,

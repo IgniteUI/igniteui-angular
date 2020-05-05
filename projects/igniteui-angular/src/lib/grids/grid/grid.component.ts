@@ -480,16 +480,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public preventContainerScroll(evt) {
-        if (evt.target.scrollTop !== 0) {
-            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
-            evt.target.scrollTop = 0;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public trackChanges(index, rec) {
         if (rec.detailsData !== undefined) {
             return rec.detailsData;
@@ -769,10 +759,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
-        if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
-        }
-        rowIndex = !pinned && this.isRowPinningToTop ? rowIndex + this._pinnedRecordIDs.length : rowIndex;
         if (this.isDetailRecord(rowData)) {
             const cachedData = this.childDetailTemplates.get(rowData.detailsData);
             const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
@@ -797,7 +783,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         return {
             $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
-            index: rowIndex,
+            index: this.getDataViewIndex(rowIndex, pinned),
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
             disabled: this.isGhostRecord(rowData)
         };

@@ -5,8 +5,8 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { ColumnPinningPosition } from '../common/enums';
-import { IPinningConfig } from '../common/grid.interface';
+import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
+import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridSummaryFunctions,
          GridSelectionFunctions,
@@ -553,7 +553,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             });
 
             it('should correctly pin column to right when row selectors are enabled.', () => {
-                grid.rowSelectable = true;
+                grid.rowSelection =  GridSelectionMode.multiple;
                 fix.detectChanges();
 
                 // check row DOM

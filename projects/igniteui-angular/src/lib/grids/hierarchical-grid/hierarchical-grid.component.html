@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
+<igx-grid-toolbar role="toolbar" [style.max-width.px]='outerWidth' [style.flex-basis.px]="outerWidth" *ngIf="showToolbar" [gridID]="id"
     [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
@@ -86,7 +86,7 @@
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant"
      (keydown)="navigation.dispatchEvent($event)" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
-        [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
+        [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>
@@ -99,12 +99,12 @@
             | visibleColumns:hasVisibleColumns
             | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger as pinnedData">
+            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                     [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
                     <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">        
-                        <ng-container *ngTemplateOutlet="hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
+                        <ng-container *ngTemplateOutlet="pinned_hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
                     </ng-container>
                 </div>
@@ -134,13 +134,18 @@
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [disabled]="disabledRow" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
+
+        <ng-template #pinned_hierarchical_record_template let-rowIndex="index" let-rowData>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row #pinnedRow>
+            </igx-hierarchical-grid-row>
+        </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
             <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
                 [ngClass]="{
                 'igx-grid__tr-container': true,
                 'igx-grid__tr--highlighted':isRowHighlighted(rowData)
             }">
-                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="getRowIndex(rowIndex, false)"
+                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
                     [rowData]="rowData" [layout]='layout' #row>
                 </igx-child-grid-row>
             </div>

@@ -1,7 +1,7 @@
 import { IgxExcelExporterOptions } from './../../../projects/igniteui-angular/src/lib/services/excel/excel-exporter-options';
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
-    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, IgxCsvExporterService, IgxExcelExporterService } from 'igniteui-angular';
+    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, IgxCsvExporterService, IgxExcelExporterService, GridSelectionMode } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -17,6 +17,7 @@ export class GridFilteringComponent implements OnInit {
     public filterModes;
     public density = 'comfortable';
     public advancedFilteringTree: FilteringExpressionsTree;
+    public selectionMode;
 
     @ViewChild('grid1', { static: true })
     public grid1: IgxGridComponent;
@@ -54,7 +55,7 @@ export class GridFilteringComponent implements OnInit {
                 togglable: true
             }
         ];
-
+        this.selectionMode = GridSelectionMode.multiple;
         this.columns = [
             { field: 'Region', width: 150, resizable: true, movable: true, type: 'number' },
             { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },

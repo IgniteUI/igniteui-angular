@@ -9,9 +9,7 @@ import {
     Input,
     NgZone,
     OnInit,
-    Inject,
-    OnDestroy,
-    NgModuleRef
+    OnDestroy
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -19,17 +17,10 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { IgxOverlayService } from '../../services/overlay/overlay';
-import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
-import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
-import { useAnimation } from '@angular/animations';
-import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { fadeIn, fadeOut } from '../../animations/main';
-import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { GridType } from '../common/grid.interface';
-import { ExcelStylePositionStrategy } from '../filtering/excel-style/excel-style-position-strategy';
 import { GridSelectionMode } from '../common/enums';
+import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -42,9 +33,6 @@ import { GridSelectionMode } from '../common/enums';
 })
 export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
-    private _componentOverlayId: string;
-    private _filterMenuPositionSettings: PositionSettings;
-    private _filterMenuOverlaySettings: OverlaySettings;
     private _destroy$ = new Subject<boolean>();
 
     @Input()
@@ -153,13 +141,11 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
-        public zone: NgZone,
-        private _moduleRef: NgModuleRef<any>,
-        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService
+        public zone: NgZone
     ) { }
 
     public ngOnInit() {
-        this.initFilteringSettings();
+        this.grid.filteringService.initFilteringSettings();
     }
 
     public ngDoCheck() {
@@ -170,10 +156,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     ngOnDestroy(): void {
         this._destroy$.next(true);
         this._destroy$.complete();
-
-        if (this._componentOverlayId) {
-            this._overlayService.hide(this._componentOverlayId);
-        }
+        this.grid.filteringService.hideExcelFiltering();
     }
 
     @HostListener('click', ['$event'])
@@ -200,7 +183,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
 
     public onFilteringIconClick(event) {
-        this.toggleFilterDropdown();
+        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
     }
 
     get grid(): any {
@@ -228,66 +211,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
             fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
             strategy: this.column.sortStrategy
         });
-    }
-
-    private toggleFilterDropdown() {
-        if (!this._componentOverlayId) {
-            const headerTarget = this.elementRef.nativeElement;
-            const filterIconTarget = headerTarget.querySelector('.' + this.filterIconClassName);
-
-            this._filterMenuOverlaySettings.positionStrategy.settings.target = filterIconTarget;
-            this._filterMenuOverlaySettings.outlet = this.grid.outlet;
-
-            this._componentOverlayId =
-                this._overlayService.attach(IgxGridExcelStyleFilteringComponent, this._filterMenuOverlaySettings, this._moduleRef);
-            this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
-        }
-    }
-
-    private initFilteringSettings() {
-        this._filterMenuPositionSettings = {
-            verticalStartPoint: VerticalAlignment.Bottom,
-            openAnimation: useAnimation(fadeIn, {
-                params: {
-                    duration: '250ms'
-                }
-            }),
-            closeAnimation: useAnimation(fadeOut, {
-                params: {
-                    duration: '200ms'
-                }
-            })
-        };
-
-        this._filterMenuOverlaySettings = {
-            closeOnOutsideClick: true,
-            modal: false,
-            positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
-            scrollStrategy: new AbsoluteScrollStrategy()
-        };
-
-        this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this._destroy$)).subscribe((eventArgs) => {
-                this.onOverlayOpening(eventArgs);
-            });
-
-        this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
-            takeUntil(this._destroy$)).subscribe(() => {
-                this.onOverlayClosed();
-            });
-    }
-
-    private onOverlayOpening(eventArgs) {
-        const instance = eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
-        if (instance) {
-            instance.initialize(this.column, this._overlayService, eventArgs.id);
-        }
-    }
-
-    private onOverlayClosed() {
-        this._componentOverlayId = null;
     }
 
     /**

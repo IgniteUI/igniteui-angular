@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
 
     componentLinks = [
         {
+            link: '/action-strip',
+            icon: 'view_list',
+            name: 'Action Strip'
+        },
+        {
             link: '/autocomplete',
             icon: 'view_list',
             name: 'Autocomplete'
@@ -413,6 +418,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridLoadOnDemand',
             icon: 'view_column',
             name: 'Tree Grid Load On Demand'
+        },
+        {
+            link: '/dateRange',
+            icon: 'date_range',
+            name: 'DateRange'
         }
     ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 

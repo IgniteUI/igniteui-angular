@@ -51,7 +51,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { RowEditPositionStrategy } from './grid.common';
+import { RowEditPositionStrategy, IPinningConfig } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowDirective } from './row.directive';
 import { IgxGridHeaderComponent } from './headers/grid-header.component';
@@ -138,7 +138,7 @@ import {
     IPinRowEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { GridType, IPinningConfig } from './common/grid.interface';
+import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
@@ -524,17 +524,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.notifyChanges(true);
             }
         }
-    }
-
-    @DeprecateProperty('rowSelectable property is deprecated. Use rowSelection property instead.')
-    @WatchChanges()
-    @Input()
-    get rowSelectable(): boolean {
-        return this.isRowSelectable;
-    }
-
-    set rowSelectable(val: boolean) {
-        this.rowSelection = val ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     /**
@@ -1509,6 +1498,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChildren('row')
     private _rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChildren('pinnedRow')
+    private _pinnedRowList: QueryList<IgxGridRowComponent>;
+
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
@@ -1754,8 +1746,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    @ViewChildren('pinContainer', { read: ElementRef })
-    public pinContainers: QueryList<ElementRef>;
+    @ViewChild('pinContainer', { read: ElementRef })
+    public pinContainer: ElementRef;
 
     /**
      * @hidden @internal
@@ -2444,6 +2436,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public pinnedRecords: any[];
+
+    /**
+     * @hidden @internal
+     */
     public unpinnedRecords: any[];
 
     data: any[];
@@ -2457,7 +2454,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _filteredSortedPinnedData;
     protected _filteredSortedUnpinnedData;
     protected _filteredPinnedData;
-    protected _filteredUnpinnedData;
+
+    /**
+     * @hidden
+     */
+    public _filteredUnpinnedData;
 
     /**
      * @hidden
@@ -2544,6 +2545,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     private columnListDiffer;
+    private rowListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
     private _height = '100%';
@@ -2657,12 +2659,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Returns the row index of a row that takes into account the full view data like pinning.
      */
-    public getRowIndex(rowIndex, pinned) {
+    public getDataViewIndex(rowIndex, pinned) {
         if (pinned && !this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.dataView.length;
+            rowIndex = rowIndex + this.unpinnedDataView.length;
         } else if (!pinned && this.isRowPinningToTop) {
-            rowIndex = rowIndex + this.pinnedRecordsCount;
+            rowIndex = rowIndex + this.pinnedDataView.length;
         }
         return rowIndex;
     }
@@ -2717,6 +2720,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public isRecordPinned(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordPinnedByIndex(rowIndex: number) {
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
     }
 
     /**
@@ -2875,10 +2887,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
-
-        this.onRowPinning.subscribe(() => {
-            this.summaryService.clearSummaryCache();
-        });
     }
 
     /**
@@ -2888,6 +2896,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         super.ngOnInit();
         this._setupServices();
         this._setupListeners();
+        this.rowListDiffer = this.differs.find([]).create(null);
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
@@ -2932,7 +2941,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasPinnedRecords && pinned) {
             this._filteredPinnedData = data || [];
             const filteredUnpinned =  this._filteredUnpinnedData || [];
-            this.filteredData = [... this._filteredPinnedData, ... filteredUnpinned];
+            const filteredData =  [... this._filteredPinnedData, ... filteredUnpinned];
+            this.filteredData =  filteredData.length > 0 ? filteredData : this._filteredUnpinnedData;
         } else if (this.hasPinnedRecords && !pinned) {
             this._filteredUnpinnedData = data;
         } else {
@@ -2991,6 +3001,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
+            this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
         } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
@@ -3043,12 +3054,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._zoneBegoneListeners();
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
-        vertScrDC.addEventListener('scroll', this.scrollHandler);
-        this.pinContainers.changes.subscribe((c) => {
-            if (this.hasPinnedRecords) {
-                // on row pin containers change grid sizes should be recalculated.
-                this.calculateGridSizes();
-            }
+        vertScrDC.addEventListener('scroll', this.preventContainerScroll);
+
+        this._pinnedRowList.changes
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((change: QueryList<IgxGridRowComponent>) => {
+            this.onPinnedRowsChanged(change);
         });
     }
 
@@ -3121,7 +3132,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.scrollHandler);
+            vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
         });
     }
 
@@ -3429,7 +3440,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get pinnedRows(): IgxGridRowComponent[] {
-        return this.rowList.filter(x => x.pinned && !x.disabled);
+        return this._pinnedRowList.toArray().sort((a, b) => {
+            return a.index - b.index;
+        });
     }
 
     /**
@@ -4205,7 +4218,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
-            this.notifyChanges(true);
+            this.notifyChanges();
         }
     }
 
@@ -4236,14 +4249,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
-            this.notifyChanges(true);
         }
         return true;
     }
 
     get pinnedRowHeight() {
-        const pinContainer = this.pinContainers && this.pinContainers.length > 0 ? this.pinContainers.first : null;
-        const containerHeight = pinContainer ? pinContainer.nativeElement.offsetHeight : 0;
+        const containerHeight = this.pinContainer ? this.pinContainer.nativeElement.offsetHeight : 0;
         return this.hasPinnedRecords ? containerHeight : 0;
     }
 
@@ -4818,6 +4829,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden @internal
+     */
+    protected onPinnedRowsChanged(change: QueryList<IgxGridRowComponent>) {
+        const diff = this.rowListDiffer.diff(change);
+        if (diff) {
+            this.notifyChanges(true);
+         }
+    }
+
+    /**
      * @hidden
      */
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
@@ -5156,25 +5177,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid.
+     * Returns the currently transformed paged/filtered/sorted/grouped pinned row data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get pinnedDataView(): any[] {
+        return this.pinnedRecords ? this.pinnedRecords : [];
+    }
+
+    /**
+     * Returns currently transformed paged/filtered/sorted/grouped unpinned row data, displayed in the grid.
+     * @example
+     * ```typescript
+     *      const pinnedDataView = this.grid.pinnedDataView;
+     * ```
+     */
+    get unpinnedDataView(): any[] {
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
+    }
+
+    /**
+     * Returns the currently transformed paged/filtered/sorted/grouped/pinned/unpinned row data, displayed in the grid.
      * @example
      * ```typescript
      *      const dataView = this.grid.dataView;
      * ```
      */
     get dataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
-    }
-
-     /**
-      * Returns the currently transformed paged/filtered/sorted/grouped pinned data, displayed in the grid.
-      * @example
-      * ```typescript
-      *      const pinnedDataView = this.grid.pinnedDataView;
-      * ```
-      */
-    get pinnedDataView(): any[] {
-        return this.pinnedRows.map(row => row.rowData);
+        return this.isRowPinningToTop ?
+            [...this.pinnedDataView, ...this.unpinnedDataView] :
+            [...this.unpinnedDataView, ...this.pinnedDataView];
     }
 
     /**
@@ -5417,7 +5451,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     public getSelectedData(formatters = false, headers = false) {
-        const source = this.isRowPinningToTop ? [...this.pinnedDataView, ...this.dataView] : [...this.dataView, ...this.pinnedDataView];
+        const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
@@ -5549,11 +5583,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public scrollHandler = (event) => {
-        this.headerContainer.scrollPosition += event.target.scrollLeft;
-        this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
-        event.target.scrollLeft = 0;
-        event.target.scrollTop = 0;
+    public preventContainerScroll = (evt) => {
+        if (evt.target.scrollTop !== 0) {
+            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
+            evt.target.scrollTop = 0;
+        }
+        if (evt.target.scrollLeft !== 0) {
+            this.headerContainer.scrollPosition += evt.target.scrollLeft;
+            evt.target.scrollLeft = 0;
+        }
     }
 
     /**
@@ -5621,6 +5659,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
+        // If the target row is pinned no need to scroll as well.
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
@@ -5907,11 +5946,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof (row) === 'number' ? row : this.dataView.indexOf(row));
+                    typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof (row) === 'number' ? row : this.dataView.indexOf(row));
+                typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
@@ -6086,7 +6125,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
         this.rowEditSettings.outlet = useOuter ? this.parentRowOutletDirective : this.rowOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
-        const targetRow = this.gridAPI.get_row_by_key(rowID);
+        const pinned =  this._pinnedRecordIDs.indexOf(rowID) !== -1;
+        const targetRow = !pinned ? this.gridAPI.get_row_by_key(rowID) : this.pinnedRows.find(x => x.rowID === rowID);
         if (!targetRow) {
             return;
         }

@@ -19,6 +19,76 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxDateTimeEditor` directive added.
+    - Allows the user to set and edit `date` and `time` in a chosen input element.
+    - Can edit `date` or `time` portion, using an editable masked input.
+    - Additionally, can specify a desired `display` and `input` `format`, as well as `min` and `max` values.
+
+    - A basic configuration scenario setting a Date object as a `value`:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [value]="date"/>
+    </igx-input-group>
+    ```
+    - Two-way data-binding via an ngModel:
+    ```html
+    <igx-input-group>
+        <input type="text" igxInput igxDateTimeEditor [(ngModel)]="date"/>
+    </igx-input-group>
+    ```
+- `IgxDateRangePicker` component added.
+    - Allows the selection of a range of dates from a calendar UI or input fields. Supports `dialog` and `dropdown` modes.
+    - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
+    - The default template consists of a single *readonly* field:
+    ```html
+    <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
+    ```
+    - Projection of input fields using `igxDateTimeEditor`
+        ```html
+        <igx-date-range-picker>
+            <igx-date-range-start>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.start">
+            </igx-date-range-start>
+            <igx-date-range-end>
+                <input igxInput igxDateTimeEditor [(ngModel)]="range.end">
+            </igx-date-range-end>
+        </igx-date-range-picker>
+        ```
+    - Added `IgxPickerToggleComponent` which allows templating of the default icon in the input through `igxPrefix` and `igxSuffix`.
+        - default template:
+        ```html
+        <igx-date-range-picker>
+            <igx-picker-toggle igxSuffix>
+                <igx-icon>calendar_view_day</igx-icon>
+            </igx-picker-toggle>
+        </igx-date-range-picker>
+        ```
+        - with projections:
+        ```html
+        <igx-date-range-picker>
+            <igx-date-range-start>
+                ...
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
+                ...
+            </igx-date-range-start>
+            <igx-date-range-end>
+                ...
+            </igx-date-range-end>
+        </igx-date-range-picker>
+        ```
+
+- `IgxActionStrip` component added.
+    - Provides a template area for one or more actions. In its simplest form the Action Strip
+        is an overlay of any container and shows additional content over that container.
+
+    ```html
+    <igx-action-strip #actionstrip>
+        <igx-icon (click)="doSomeAction()"></igx-icon>
+    </igx-action-strip>
+    ```
+
 - `igxSplitter` component added.
     - Allows rendering a vertical or horizontal splitter with multiple splitter panes with templatable content.
         Panes can be resized or collapsed/expanded via the UI. Splitter orientation is defined via the `type` input.
@@ -64,6 +134,18 @@ All notable changes for each version of this project will be documented in this 
     - `deselectColumns` API method is added for the `IgxGrid`. It allows to deselect columns by passing array of IgxColumnComponent or column fields.
     - `deselectAllColumns` API method is added for the `IgxGrid`. It allows to deselect all columns.
     - `getSelectedColumnsData` API method is added for the `IgxGrid`. It allows to get the selected columns data.
+    Added keyBoard navigation support in the IgxGrid headers. Now is possible to navigate with the arrows keys through grid headers. Also we provide a number of key combinations that trigger a different column functionality like filtering, sorting, grouping and etc. You can read more information in the [Grid Specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
+    - **Behavioral Change**
+        - *you can not use* `tab` key to navigate between the cell in the Igx Grid. The navigation is performed only with arrow keys.
+        - when you are in edit mode with `tab` key you can navigate to the next editable cell.
+        - `page up` and `page down` keys will perform action only if the focused element is the tbody of the grid.
+        - The grid introduces the following basic `tab stops`:
+            - Toolbar / Group by Area if existing;
+            - The first cell in the header row;
+            - The first cell in the first body row;
+            - The first cell in column summary if exists;
+            - Pager UI;
+    - `onGridKeydown` event is deprecated. Now you can directly bind to keydown on the IgxGrid component in order to perform custom keyboard navigation.
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
@@ -72,8 +154,13 @@ All notable changes for each version of this project will be documented in this 
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
 - `IgxDrag`
-    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
-    - New `dragDirection` input that can specify only one direction of dragging or both.
+    - Added `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - Added `dragDirection` input that can specify only one direction of dragging or both.
+
+- `IgxChip`
+    - Added support for tabIndex attribute applied to the main chip element.
+    - Added `tabIndex` input so it can support change detection as well.
+
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
