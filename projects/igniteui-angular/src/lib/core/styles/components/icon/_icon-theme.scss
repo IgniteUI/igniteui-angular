@@ -55,8 +55,6 @@
 @mixin igx-icon($theme) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
-
     $igx-icon-font-size: --var($theme, 'size');
 
     %igx-icon-display {
