@@ -261,7 +261,16 @@ describe('IgxDateRangePicker', () => {
                 });
             });
 
-            describe('Properties & events tests', () => {
+            fdescribe('Properties & events tests', () => {
+                it('should show date picker with placeholder', () => {
+                    fixture.detectChanges();
+                    expect(singleInputElement.nativeElement.placeholder).toEqual('MM/dd/yyyy - MM/dd/yyyy');
+
+                    const placeholder = 'Some placeholder';
+                    fixture.componentInstance.dateRange.placeholder = placeholder;
+                    fixture.detectChanges();
+                    expect(singleInputElement.nativeElement.placeholder).toEqual(placeholder);
+                });
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
@@ -809,4 +818,7 @@ export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent
     </igx-date-range-picker>
     `
 })
-export class DateRangeDefaultComponent extends DateRangeTestComponent { }
+export class DateRangeDefaultComponent extends DateRangeTestComponent {
+    @ViewChild(IgxDateRangePickerComponent)
+    public dateRange: IgxDateRangePickerComponent;
+ }
