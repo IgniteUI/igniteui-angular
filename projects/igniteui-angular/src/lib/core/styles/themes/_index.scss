@@ -215,6 +215,13 @@
         ));
     }
 
+    @if not(index($exclude, 'data-chart')) {
+        @include igx-css-vars(igx-data-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
     @if not(index($exclude, 'igx-checkbox')) {
         @include igx-checkbox(igx-checkbox-theme(
             $palette,

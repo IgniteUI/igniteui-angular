@@ -423,6 +423,21 @@
     @return hsl(random(360), 100%, 50%);
 }
 
+@function igx-generate-series-colors($palette) {
+    @return (
+        igx-color($palette, 'primary'),
+        igx-color($palette, 'secondary'),
+        rgb(249, 98, 50),
+        rgb(60, 189, 201),
+        rgb(220, 63, 118),
+        rgb(255, 152, 0),
+        rgb(78, 98, 207),
+        rgb(84, 194, 90),
+        rgb(121, 85, 72),
+        rgb(154, 154, 154)
+    );
+}
+
 /// Applies an `igx-palette` to a given theme schema.
 /// @access private
 /// @param {Map} $schema - A theme schema.
@@ -447,6 +462,12 @@
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
             $result: extend($result, (#{$key}: $value));
+        }
+
+        @if $value == 'series' {
+            $result: extend($result, (
+                #{$key}: #{igx-generate-series-colors($palette)}
+            ));
         }
     }
     @return $result;
@@ -567,3 +588,4 @@
 @function if-rtl($if, $else: null) {
     @return if-ltr($else, $if);
 }
+

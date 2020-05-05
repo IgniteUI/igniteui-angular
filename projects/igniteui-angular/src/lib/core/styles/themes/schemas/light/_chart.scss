@@ -12,7 +12,6 @@
 /// @property {Map} height [] - The height of the chart.
 /// @property {List} margin [] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @property {Color} title-text-color [] - Sets the color of the chart title.
-/// @property {Color} title-text-style [] - Sets the CSS font property of the chart title.
 /// @property {Color} title-margin [] - Sets the margin (top, right, bottom, left) of the chart title.
 /// @property {Color} subtitle-text-color [] - Sets the color of the chart subtitle.
 /// @property {Color} subtitle-text-style [] - Sets the CSS font property of the chart subtitle.
@@ -23,16 +22,26 @@
 $_light-chart: extend(
     (
         'width': null,
+
         'height': null,
+
         'margin': null,
-        'title-text-color': null,
-        'title-text-style': null,
+
+        'title-text-color': (
+            igx-color: ('grays', 900)
+        ),
+
         'title-margin': null,
-        'subtitle-text-color': null,
-        'subtitle-text-style': null,
+
+        'subtitle-text-color': (
+            igx-color: ('grays', 600)
+        ),
+
         'subtitle-margin': null,
-        'brushes': null,
-        'outlines': null
+
+        'brushes': series,
+
+        'outlines': series
     )
 );
 
