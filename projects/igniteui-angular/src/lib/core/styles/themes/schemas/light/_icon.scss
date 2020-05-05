@@ -9,16 +9,16 @@
 /// Generates a light icon schema.
 /// @type {Map}
 ///
-/// @property {Color} color [currentColor] - The icon color.
+/// @property {Color} color ["'currentColor'"] - The icon color.
 /// @property {String} size [rem(24px)] - The icon size.
-/// @property {Color} disabled-color [currentColor] - The disabled icon color.
+/// @property {Color} disabled-color ["'currentColor'"] - The disabled icon color.
 ///
 /// @see $default-palette
 
 $_light-icon: (
-    color: currentColor,
+    color: "'"'currentColor'"'",
     size: rem(24px),
-    disabled-color: currentColor
+    disabled-color: "'currentColor'"
 );
 
 /// Generates a fluent icon schema.
