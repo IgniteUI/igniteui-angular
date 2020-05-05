@@ -455,15 +455,16 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(2);
+            let row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            fix.detectChanges();
             await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
+            row = grid.getRowByIndex(2);
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
