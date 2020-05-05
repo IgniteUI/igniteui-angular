@@ -286,8 +286,10 @@ export class IgxGridNavigationService {
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(scrollRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
+        // this is workaround: endTopOffset - containerHeight > 5 and should be replaced with: containerHeight < endTopOffset
+        // when the page is zoomed the grid does not scroll the row completely in the view
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
-        || containerHeight && containerHeight < endTopOffset;
+        || containerHeight && endTopOffset - containerHeight > 5;
     }
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
