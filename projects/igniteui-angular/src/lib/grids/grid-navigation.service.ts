@@ -170,12 +170,13 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        this.activeNode = !this.activeNode || this.activeNode.row < 0 ? { row: 0, column: 0 } : this.activeNode;
-        if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateInBody(0, 0, (obj) => {
-            this.grid.clearCellSelection();
-            obj.target.activate(event);
-        });
+        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1) {
+            this.activeNode = { row: 0, column: 0 };
+            this.grid.navigateTo(0, 0, (obj) => {
+                this.grid.clearCellSelection();
+                obj.target.activate(event);
+            });
+        }
     }
 
     focusFirstCell(header = true) {
