@@ -49,6 +49,18 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter to know if the row pinning is set to top or bottom
+     * @hidden
+     * @internal
+     */
+    get pinnedTop(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        return this.strip.context.grid.isRowPinningToTop;
+    }
+
+    /**
      * Pin the row according to the context.
      * @example
      * ```typescript

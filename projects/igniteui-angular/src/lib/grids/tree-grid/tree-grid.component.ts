@@ -594,11 +594,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                    typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
