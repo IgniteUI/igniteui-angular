@@ -170,7 +170,7 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
+        this.activeNode = !this.activeNode || this.activeNode.row < 0 ? { row: 0, column: 0 } : this.activeNode;
         if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
         this.navigateInBody(0, 0, (obj) => {
             this.grid.clearCellSelection();
@@ -422,7 +422,7 @@ export class IgxGridNavigationService {
     private handleMCHeaderNav(key: string, ctrl: boolean) {
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
-                filter(c => c.level === this.activeNode.level).map(col => col.visibleIndex));
+                filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
         let nextCol = activeCol;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
