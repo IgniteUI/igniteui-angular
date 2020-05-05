@@ -374,7 +374,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
-            let row = grid.getRowByIndex(4) as IgxGridRowComponent;
+            const row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -383,7 +383,6 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
@@ -396,7 +395,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let row = grid.getRowByIndex(6) as IgxGridRowComponent;
+            const row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -408,7 +407,6 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(6) as IgxGridRowComponent;
             const detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
@@ -457,16 +455,15 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let row = grid.getRowByIndex(2);
+            const row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
-            row = grid.getRowByIndex(2);
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
