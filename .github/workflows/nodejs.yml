@@ -24,11 +24,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - env:
+        NODE_OPTIONS: --max_old_space_size=4096
     - run: npm ci
     - run: npm run lint:lib
     - run: npm run build:lib
-    - run: npm run test:lib:azure:others --max_old_space_size=4096
-    - run: npm run test:lib:azure:grid --max_old_space_size=4096
-    - run: npm run test:lib:azure:tgrid --max_old_space_size=4096
-    - run: npm run test:lib:azure:hgrid --max_old_space_size=4096
+    - run: npm run test:lib:perf
+    - run: npm run test:lib:others
+    - run: npm run test:lib:grid
+    - run: npm run test:lib:tgrid
+    - run: npm run test:lib:hgrid
     - run: npm run test:schematics
