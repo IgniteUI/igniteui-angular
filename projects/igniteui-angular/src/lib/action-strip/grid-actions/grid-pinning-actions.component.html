@@ -1,5 +1,5 @@
 <ng-container *ngIf="isRowContext">
-    <button *ngIf="pinnedInArea" igxRipple igxButton="icon" (click)="jumpToGhost($event)">
+    <button *ngIf="inPinnedArea" igxRipple igxButton="icon" (click)="scrollToRow($event)">
         <igx-icon fontSet="filtering-icons" name="jump_down"></igx-icon>
     </button>
     <button *ngIf="!pinned" igxRipple igxButton="icon" (click)="pin($event)">

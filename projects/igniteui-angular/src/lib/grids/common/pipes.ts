@@ -239,7 +239,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
             return isPinned ? [] : collection;
         }
 
-        return collection.map((rec, index) => {
+        return collection.map((rec) => {
             return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
         });
     }

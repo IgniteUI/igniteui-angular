@@ -40,7 +40,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
      * @hidden
      * @internal
      */
-    get pinnedInArea(): boolean {
+    get inPinnedArea(): boolean {
         if (!this.isRow(this.strip.context)) {
             return;
         }
@@ -88,7 +88,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         this.strip.hide();
     }
 
-    public jumpToGhost(event) {
+    public scrollToRow(event) {
         if (event) {
             event.stopPropagation();
         }

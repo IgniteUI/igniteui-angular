@@ -2736,7 +2736,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the record index in order of pinning by the user. Does not consider sorting/filtering.
      */
     public getPinnedRecordIndex(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+        const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
     }
 
