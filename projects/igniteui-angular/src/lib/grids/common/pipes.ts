@@ -229,7 +229,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
         if (grid.hasPinnedRecords && isPinned) {
             const result = collection.filter(rec => grid.isRecordPinned(rec));
-            result.sort((rec1, rec2) => grid.getPinedRecordIndex(rec1) - grid.getPinedRecordIndex(rec2));
+            result.sort((rec1, rec2) => grid.getPinnedRecordIndex(rec1) - grid.getPinnedRecordIndex(rec2));
             return result;
         }
 
@@ -240,11 +240,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         }
 
         return collection.map((rec, index) => {
-            if (grid.isRecordPinned(rec)) {
-                grid.setPinnedRecordGhostIndex(rec, index);
-                return { recordRef: rec, ghostRecord: true};
-            }
-            return rec;
+            return grid.isRecordPinned(rec) ? { recordRef: rec, ghostRecord: true} : rec;
         });
     }
 }

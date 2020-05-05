@@ -94,8 +94,7 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        const ghostIndex = grid.getPinnedRowGhostIndex(context.rowID);
-        grid.scrollTo(ghostIndex, 0);
+        grid.scrollTo(context.rowData, 0);
         this.strip.hide();
     }
 
