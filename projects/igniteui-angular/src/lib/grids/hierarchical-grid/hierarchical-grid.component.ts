@@ -378,12 +378,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
-        this.updateColumnList();
-        const cols = change.filter(c => c.gridAPI.grid === this);
-        if (cols.length > 0 || this.autoGenerate) {
-            this.columnList.reset(cols);
-            super.onColumnsChanged(this.columnList);
-        }
+        Promise.resolve().then(() => {
+            this.updateColumnList();
+            const cols = change.filter(c => c.gridAPI.grid === this);
+            if (cols.length > 0 || this.autoGenerate) {
+                this.columnList.reset(cols);
+                super.onColumnsChanged(this.columnList);
+            }
+        });
     }
 
     private updateColumnList(recalcColSizes = true) {
