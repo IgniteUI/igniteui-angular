@@ -33,13 +33,15 @@ import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-r
 import {
     BottomNavRoutingView1Component,
     BottomNavRoutingView2Component,
-    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
+    BottomNavRoutingView3Component
+} from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
 import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
 import {
     TabsRoutingView1Component,
     TabsRoutingView2Component,
-    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
+    TabsRoutingView3Component
+} from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
@@ -52,6 +54,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
+import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
@@ -97,12 +100,18 @@ import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-maste
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
+import { DateRangeSampleComponent } from './date-range/date-range.sample';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'action-strip',
+        component: ActionStripSampleComponent
     },
     {
         path: 'autocomplete',
@@ -358,6 +367,10 @@ const appRoutes = [
         component: GridRowPinningSampleComponent
     },
     {
+        path: 'gridRemotePaging',
+        component: GridRemotePagingSampleComponent
+    },
+    {
         path: 'gridColumnResizing',
         component: GridColumnResizingSampleComponent
     },
@@ -477,6 +490,10 @@ const appRoutes = [
     {
         path: 'gridAbout',
         component: AboutComponent
+    },
+    {
+        path: 'dateRange',
+        component: DateRangeSampleComponent
     }
 ];
 

@@ -1,0 +1,28 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+$_default-shape-action-strip: (
+    actions-border-radius: 1
+);
+
+/// @type Map
+$_round-shape-action-strip: (
+    actions-border-radius: 1
+);
+
+/// @type Map
+$_square-shape-action-strip: (
+    actions-border-radius: 0
+);
+
+/// @type Map
+$_fluent-shape-action-strip: (
+    actions-border-radius: 1
+);
+
+/// @type Map
+$_bootstrap-shape-action-strip: (
+    actions-border-radius: 4px
+);

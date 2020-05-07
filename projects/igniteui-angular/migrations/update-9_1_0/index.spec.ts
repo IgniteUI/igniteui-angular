@@ -41,4 +41,18 @@ describe('Update 9.1.0', () => {
 
         done();
     });
+
+    it('should move igx-toast message property between element tags', done => {
+        appTree.create(
+            `/testSrc/appPrefix/component/input.component.html`,
+            '<igx-toast message="test message"></igx-toast>'
+        );
+
+        const tree = schematicRunner.runSchematic('migration-15', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
+        .toEqual('<igx-toast>test message</igx-toast>');
+
+        done();
+    });
 });

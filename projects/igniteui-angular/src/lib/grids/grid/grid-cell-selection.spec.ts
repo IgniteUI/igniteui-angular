@@ -1373,7 +1373,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            const row = grid.getRowByIndex(3);
+            let row = grid.getRowByIndex(3);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
@@ -1399,6 +1399,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             await wait(100);
             fix.detectChanges();
 
+            row = grid.getRowByIndex(3);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(grid.selectedCells.length).toBe(4);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);

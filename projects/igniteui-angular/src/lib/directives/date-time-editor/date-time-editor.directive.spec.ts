@@ -386,7 +386,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('33/33/33');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/__');
+                expect(inputElement.nativeElement.value).toEqual('');
             });
             it('should autofill missing date/time segments on blur.', () => {
                 inputElement.triggerEventHandler('focus', {});
@@ -427,14 +427,14 @@ describe('IgxDateTimeEditor', () => {
                 result = formatFullDateTime(date);
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
-            it('should convert to empty mask on invalid dates input.', () => {
+            it('should not accept invalid date and time parts.', () => {
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('63', inputElement);
                 expect(inputElement.nativeElement.value).toEqual('63/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
 
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -442,7 +442,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/63/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
 
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -450,7 +450,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 25:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
 
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -458,7 +458,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ __:78:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
 
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -466,7 +466,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:78');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
             });
             it('should correctly show year based on century threshold.', () => {
                 inputElement.triggerEventHandler('focus', {});
@@ -521,6 +521,8 @@ describe('IgxDateTimeEditor', () => {
             it('should support different display and input formats.', () => {
                 fixture.componentInstance.displayFormat = 'longDate';
                 fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
                 UIInteractions.simulateTyping('9', inputElement);
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
@@ -550,6 +552,8 @@ describe('IgxDateTimeEditor', () => {
             it('should support long and short date formats', () => {
                 fixture.componentInstance.displayFormat = 'longDate';
                 fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
                 UIInteractions.simulateTyping('9', inputElement);
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
@@ -563,6 +567,8 @@ describe('IgxDateTimeEditor', () => {
 
                 fixture.componentInstance.displayFormat = 'shortDate';
                 fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
                 UIInteractions.simulateTyping('9', inputElement);
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
@@ -574,6 +580,8 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
 
                 fixture.componentInstance.displayFormat = 'fullDate';
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('9', inputElement);
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
@@ -587,6 +595,8 @@ describe('IgxDateTimeEditor', () => {
 
                 fixture.componentInstance.displayFormat = 'shortTime';
                 fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
                 UIInteractions.simulateTyping('1', inputElement, 11, 11);
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 1_:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
@@ -599,6 +609,8 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
 
                 fixture.componentInstance.displayFormat = 'longTime';
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('2', inputElement, 11, 11);
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 2_:__:__');
@@ -665,7 +677,7 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
 
                 fixture.componentInstance.dateTimeFormat = 'd/M/yy';
                 fixture.detectChanges();
@@ -693,7 +705,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = [date.getDate(), month, date.getFullYear()].join('/');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
-            it('should revert to empty mask on clear()', fakeAsync(() => {
+            it('should clear input date on clear()', fakeAsync(() => {
                 const date = new Date(2003, 4, 5);
                 fixture.componentInstance.date = new Date(2003, 3, 5);
                 fixture.detectChanges();
@@ -702,7 +714,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
-                expect(inputElement.nativeElement.value).toEqual('__/__/____ __:__:__');
+                expect(inputElement.nativeElement.value).toEqual('');
             }));
             it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
                 const date = new Date(2003, 4, 5);
@@ -908,7 +920,7 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 10);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual('__-__-____');
+                expect(inputElement.nativeElement.value).toEqual('');
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
@@ -941,7 +953,6 @@ describe('IgxDateTimeEditor', () => {
             it('should validate properly when used as form control.', () => {
                 spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
                 const dateEditor = form.controls['dateEditor'];
-                // const newDate = (dateTimeEditorDirective as any).parseDate('99-99-9999').value;
                 const args = { oldValue: '', newValue: null };
                 const inputDate = '99-99-9999';
 
@@ -952,7 +963,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
 
-                expect(inputElement.nativeElement.value).toEqual('__-__-____');
+                expect(inputElement.nativeElement.value).toEqual('');
                 expect(form.valid).toBeFalsy();
                 expect(dateEditor.valid).toBeFalsy();
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);

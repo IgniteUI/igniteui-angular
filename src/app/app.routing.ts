@@ -44,6 +44,7 @@ import { GridColumnPinningSampleComponent } from './grid-column-pinning/grid-col
 import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-column-resizing.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
+import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -70,12 +71,17 @@ import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
+import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'action-strip',
+        component: ActionStripSampleComponent
     },
     {
         path: 'autocomplete',
@@ -270,6 +276,10 @@ const appRoutes = [
     {
         path: 'gridPerformance',
         component: GridPerformanceSampleComponent
+    },
+    {
+        path: 'gridRemotePaging',
+        component: GridRemotePagingSampleComponent
     },
     {
         path: 'gridSelection',
