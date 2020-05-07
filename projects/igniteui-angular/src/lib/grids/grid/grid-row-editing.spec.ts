@@ -1438,7 +1438,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         // V.A. This test is failing.
-        fit(`Hiding: Should show correct value when showing the column again`, () => {
+        it(`Hiding: Should show correct value when showing the column again`, () => {
             grid.showToolbar = true;
             grid.columnHiding = true;
             const columnChooser = GridFunctions.getColumnHidingElement(fix);
@@ -2364,7 +2364,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
          // V.A. This test is failing.
         it('Hide row editing dialog with group collapsing/expanding', () => {
-            fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+            // fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+            fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             grid.primaryKey = 'ID';
