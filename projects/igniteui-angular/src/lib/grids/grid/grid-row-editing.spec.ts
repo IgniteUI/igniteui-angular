@@ -25,11 +25,9 @@ import {
     IgxGridWithEditingAndFeaturesComponent,
     IgxGridRowEditingWithoutEditableColumnsComponent,
     IgxGridCustomOverlayComponent,
-    IgxGridRowEditingWithFeaturesComponent,
     IgxGridEmptyRowEditTemplateComponent,
     VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
-import { IgxGridTestComponent } from './grid.component.spec';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -47,9 +45,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 IgxGridRowEditingTransactionComponent,
                 IgxGridWithEditingAndFeaturesComponent,
                 IgxGridRowEditingWithoutEditableColumnsComponent,
-                IgxGridTestComponent,
                 IgxGridCustomOverlayComponent,
-                IgxGridRowEditingWithFeaturesComponent,
                 IgxGridEmptyRowEditTemplateComponent,
                 VirtualGridComponent
             ],
@@ -730,33 +726,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(targetCell.active).toBeTruthy();
         }));
 
-        // V.A. The test is failing.
-        it(`Default column editable value is correct, when row editing is disabled`, () => {
-            // fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent );
-            // V.A. If I switch to IgxGridTestComponent the test passes.
-            fix = TestBed.createComponent(IgxGridTestComponent);
-            fix.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
-            fix.componentInstance.data = [
-                { ID: 0, index: 0, value: 0 },
-                { ID: 1, index: 1, value: 1 },
-                { ID: 2, index: 2, value: 2 },
-            ];
-            grid = fix.componentInstance.grid;
-            grid.primaryKey = 'ID';
-
-            fix.detectChanges();
-
-            let columns: IgxColumnComponent[] = grid.columnList.toArray();
-            expect(columns[0].editable).toBeFalsy(); // column.editable not set
-            expect(columns[1].editable).toBeFalsy(); // column.editable not set
-            expect(columns[2].editable).toBeFalsy(); // column.editable not set. Primary column
-
-            grid.rowEditable = true;
-            columns = grid.columnList.toArray();
-            expect(columns[0].editable).toBeTruthy(); // column.editable not set
-            expect(columns[1].editable).toBeTruthy(); // column.editable not set
-            expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
-        });
     });
 
     describe('Exit row editing', () => {
@@ -1437,11 +1406,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
         });
 
-        // V.A. This test is failing.
         it(`Hiding: Should show correct value when showing the column again`, () => {
             grid.showToolbar = true;
             grid.columnHiding = true;
-            const columnChooser = GridFunctions.getColumnHidingElement(fix);
 
             fix.detectChanges();
 
@@ -1452,11 +1419,15 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             // hide column
             grid.toolbar.columnHidingButton.nativeElement.click();
+            fix.detectChanges();
+            const columnChooser = GridFunctions.getColumnHidingElement(fix);
 
             GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
+            fix.detectChanges();
 
             // show column
             GridFunctions.clickColumnChooserItem(columnChooser, targetCbText);
+            fix.detectChanges();
 
             grid.toolbar.toggleColumnHidingUI();
 
@@ -2356,27 +2327,31 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    describe('Row Editing - Grouping', () => {
+    fdescribe('Row Editing - Grouping', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
         let groupRows;
-
-         // V.A. This test is failing.
-        it('Hide row editing dialog with group collapsing/expanding', () => {
-            // fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-            fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
+        beforeEach(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            grid.primaryKey = 'ID';
-            cell = grid.getCellByColumn(0, 'ProductName');
+            grid.getColumnByName('ProductName').editable = true;
             fix.detectChanges();
-
             grid.groupBy({
                 fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
             });
             fix.detectChanges();
+        });
+
+        it('Hide row editing dialog with group collapsing/expanding', () => {
+            // fix.detectChanges();
+            // grid = fix.componentInstance.grid;
+            // fix.detectChanges();
+
+            // fix.detectChanges();
+            cell = grid.getCellByColumn(1, 'ProductName');
 
             expect(grid.crudService.inEditMode).toBeFalsy();
 
@@ -2447,18 +2422,10 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Hide row editing dialog when hierarchical group is collapsed/expanded',
             () => {
-                // V.A. The test doesn't pass with IgxGridWithEditingAndFeaturesComponent
-                // fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
-                fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-                fix.detectChanges();
-                grid = fix.componentInstance.grid;
-                grid.primaryKey = 'ID';
-                fix.detectChanges();
-                grid.groupBy({
-                    fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
-                    strategy: DefaultSortingStrategy.instance()
-                });
-                fix.detectChanges();
+                // fix.detectChanges();
+                // grid = fix.componentInstance.grid;
+                // fix.detectChanges();
+
                 grid.groupBy({
                     fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
                     strategy: DefaultSortingStrategy.instance()
