@@ -154,8 +154,13 @@ All notable changes for each version of this project will be documented in this 
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
 - `IgxDrag`
-    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
-    - New `dragDirection` input that can specify only one direction of dragging or both.
+    - Added `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - Added `dragDirection` input that can specify only one direction of dragging or both.
+
+- `IgxChip`
+    - Added support for tabIndex attribute applied to the main chip element.
+    - Added `tabIndex` input so it can support change detection as well.
+
 
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
