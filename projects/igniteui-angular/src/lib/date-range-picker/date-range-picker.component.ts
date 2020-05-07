@@ -271,6 +271,16 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public disabled: boolean;
 
     /**
+     * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
+     *   @example
+     * ```html
+     * <igx-date-range-picker [placeholder]="'Choose your dates'"></igx-date-range-picker>
+     * ```
+     */
+    @Input()
+    public placeholder = '';
+
+    /**
      * Emitted when a range is selected.
      *
      * @example
@@ -369,6 +379,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             return this.formatter(this.value);
         }
         if (!this.hasProjectedInputs) {
+            if (this.placeholder !== '') {
+                return this.placeholder;
+            }
             // TODO: use displayFormat - see how shortDate, longDate can be defined
             return this.inputFormat
                 ? `${this.inputFormat} - ${this.inputFormat}`
