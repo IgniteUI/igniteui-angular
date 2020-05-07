@@ -3010,6 +3010,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         data = data || [];
         if (this._pinnedRecordIDs.length > 0 && pinned) {
             this._filteredSortedPinnedData = data;
+            this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
         } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
