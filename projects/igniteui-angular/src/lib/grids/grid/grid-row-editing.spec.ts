@@ -2327,7 +2327,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
     });
 
-    fdescribe('Row Editing - Grouping', () => {
+    describe('Row Editing - Grouping', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
