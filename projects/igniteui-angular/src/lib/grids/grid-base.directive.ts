@@ -2735,6 +2735,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
+    public isFilteredSortedDataRecordPinnedByIndex(rowIndex: number) {
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
     public pinRecordIndex(rec) {
         const id = this.primaryKey ? rec[this.primaryKey] : rec;
         return this._pinnedRecordIDs.indexOf(id);
@@ -6007,7 +6016,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(this.dataView.indexOf(dataRow)));
+                            metadata.set('pinned', this.isFilteredSortedDataRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
@@ -6021,7 +6030,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isRecordPinnedByIndex(this.dataView.indexOf(dataRow)));
+                            metadata.set('pinned', this.isFilteredSortedDataRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
