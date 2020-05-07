@@ -2723,19 +2723,27 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `dataView` collection.
+     *
      * @hidden
      * @internal
      */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByViewIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
             (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
     }
 
     /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `filteredSortedData` collection.
+     *
      * @hidden
      * @internal
      */
-    public isFilteredSortedDataRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
             (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
     }
@@ -6017,7 +6025,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     if (exactMatch) {
                         if (searchValue === searchText) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isFilteredSortedDataRecordPinnedByIndex(rowIndex));
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
@@ -6031,7 +6039,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                         while (searchIndex !== -1) {
                             const metadata = new Map<string, any>();
-                            metadata.set('pinned', this.isFilteredSortedDataRecordPinnedByIndex(rowIndex));
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
