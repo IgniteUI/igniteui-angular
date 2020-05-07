@@ -301,7 +301,7 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformHorizontalScroll(visibleColIndex: number, rowIndex = -1) {
-        if (visibleColIndex < 0 || visibleColIndex > this.grid.columnList.length - 1) { return false; }
+        if (visibleColIndex < 0 || visibleColIndex > this.grid.visibleColumns.length - 1) { return false; }
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             return !this.isColumnFullyVisible(visibleColIndex);
         }

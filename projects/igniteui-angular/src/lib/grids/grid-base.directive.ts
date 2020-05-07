@@ -5642,7 +5642,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
+     * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
