@@ -560,14 +560,15 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(childGrid.dataRowList.toArray());
         });
 
-        it('should not be able to select deleted row', fakeAsync(() => {
+        it('should not be able to select deleted row', (async() => {
             // Expand first row
             const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
+            await wait(30);
             fix.detectChanges();
 
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
+            await wait();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -583,7 +584,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             // Click on deleted row
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
+            await wait();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
@@ -612,7 +613,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             const childGridFirstRow = childGrid.getRowByIndex(0);
             childGridFirstRow.onClick(UIInteractions.getMouseEvent('click', false, false, true));
-            tick();
+            await wait();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);

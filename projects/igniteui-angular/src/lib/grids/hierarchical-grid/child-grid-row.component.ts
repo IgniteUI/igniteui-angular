@@ -161,9 +161,6 @@ private resolver;
      */
     ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;
-        if (this.layout.childColumns.length > 0 && !this.hGrid.autoGenerate) {
-            this.hGrid.createColumnsList(this.layout.childColumns.toArray());
-        }
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
