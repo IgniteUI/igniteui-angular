@@ -309,7 +309,7 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
-        if (this.grid.isRecordPinnedByIndex(targetRowIndex)) { return false; }
+        if (this.grid.isRecordPinnedByViewIndex(targetRowIndex)) { return false; }
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             targetRowIndex - this.grid.pinnedDataView.length : targetRowIndex;
         const targetRow = this.getRowElementByIndex(targetRowIndex);

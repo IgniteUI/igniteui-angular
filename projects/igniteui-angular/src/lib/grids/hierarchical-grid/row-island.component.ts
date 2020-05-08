@@ -255,7 +255,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             return colsArray.indexOf(item) === -1;
         });
         this.childColumns.reset(topCols);
-        this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => { this.updateColumnList(); });
+        this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            Promise.resolve().then(() => {
+                this.updateColumnList();
+            });
+         });
     }
 
     protected updateChildren() {
