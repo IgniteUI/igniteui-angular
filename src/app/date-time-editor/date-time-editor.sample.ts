@@ -11,7 +11,7 @@ export class DateTimeEditorSampleComponent {
   public date1 = new Date(2021, 3, 24);
   public format = 'dd/M/yyyy';
 
-  public minDate = new Date(2020, 2, 20);
+  public minDate = new Date(2020, 2, 20, 11, 15);
   public maxDate = new Date(2020, 2, 25);
 
   public onValueChanged(event: IgxDateTimeEditorEventArgs) {
