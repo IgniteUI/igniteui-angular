@@ -695,7 +695,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         await wait(16);
     });
 
-    fit('should autosize column when minWidth is set.', async() => {
+    it('should autosize column when minWidth is set.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();
 
