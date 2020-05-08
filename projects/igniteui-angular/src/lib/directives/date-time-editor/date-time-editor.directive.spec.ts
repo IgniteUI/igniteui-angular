@@ -311,6 +311,22 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditor.decrement(DatePart.Seconds);
                 expect(dateTimeEditor.value.getSeconds()).toEqual(59);
             });
+
+            it('should properly parse AM/PM no matter where it is in the format', () => {
+                inputFormat = 'dd tt yyyy-MM mm-ss-hh';
+                inputDate = '12 AM 2020-06 14-15-11';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                dateTimeEditor.inputFormat = inputFormat;
+                expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
+
+                dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
+                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+
+                dateTimeEditor.increment(DatePart.AmPm);
+                expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
+            });
         });
     });
 

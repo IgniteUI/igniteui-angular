@@ -50,6 +50,14 @@ export abstract class DatePickerUtil {
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
 
+
+
+    /**
+     *  TODO: Unit tests for all public methods.
+     */
+
+
+
     /**
      * Parse a Date value from masked string input based on determined date parts
      * @param inputData masked value to parse
@@ -90,20 +98,6 @@ export abstract class DatePickerUtil {
             parts[DatePart.Minutes] || 0,
             parts[DatePart.Seconds] || 0
         );
-    }
-
-    private static ensureLeadingZero(part: DatePartInfo) {
-        switch (part.type) {
-            case DatePart.Date:
-            case DatePart.Month:
-            case DatePart.Hours:
-            case DatePart.Minutes:
-            case DatePart.Seconds:
-                if (part.format.length === 1) {
-                    part.format = part.format.repeat(2);
-                }
-                break;
-        }
     }
 
     /**
@@ -254,6 +248,72 @@ export abstract class DatePickerUtil {
         }
 
         return newDate;
+    }
+
+    /**
+     * Determines whether the provided value is less than the provided min value.
+     * @param includeTime set to false if you want to exclude time portion of the two dates
+     * @param includeDate set to false if you want to exclude the date portion of the two dates
+     */
+    public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
+        if (includeTime && includeDate) {
+            return value.getTime() > maxValue.getTime();
+        }
+
+        let _value = new Date(value.getTime());
+        let _maxValue = new Date(maxValue.getTime());
+        if (includeTime) {
+            _value.setHours(0, 0, 0, 0);
+            _maxValue.setHours(0, 0, 0, 0);
+            return _value.getTime() > maxValue.getTime();
+        }
+        if (includeDate) {
+            _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
+            _maxValue = new Date(0, 0, 0, _maxValue.getHours(), _maxValue.getMinutes(), _maxValue.getSeconds());
+            return _value.getTime() > _maxValue.getTime();
+        }
+
+        // throw?
+    }
+
+    /**
+     * Determines whether the provided value is greater than the provided min value.
+     * @param includeTime set to false if you want to exclude time portion of the two dates
+     * @param includeDate set to false if you want to exclude the date portion of the two dates
+     */
+    public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
+        if (includeTime && includeDate) {
+            return value.getTime() < minValue.getTime();
+        }
+
+        let _value = new Date(value.getTime());
+        let _minValue = new Date(minValue.getTime());
+        if (includeTime) {
+            _value.setHours(0, 0, 0, 0);
+            _minValue.setHours(0, 0, 0, 0);
+            return _value.getTime() < _minValue.getTime();
+        }
+        if (includeDate) {
+            _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
+            _minValue = new Date(0, 0, 0, _minValue.getHours(), _minValue.getMinutes(), _minValue.getSeconds());
+            return _value.getTime() > _minValue.getTime();
+        }
+
+        // throw?
+    }
+
+    private static ensureLeadingZero(part: DatePartInfo) {
+        switch (part.type) {
+            case DatePart.Date:
+            case DatePart.Month:
+            case DatePart.Hours:
+            case DatePart.Minutes:
+            case DatePart.Seconds:
+                if (part.format.length === 1) {
+                    part.format = part.format.repeat(2);
+                }
+                break;
+        }
     }
 
     private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
