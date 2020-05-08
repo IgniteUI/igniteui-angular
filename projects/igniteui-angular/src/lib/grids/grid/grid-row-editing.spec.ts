@@ -1,4 +1,3 @@
-import { IgxGridBaseDirective } from 'igniteui-angular';
 import { IgxRowDirective } from './../row.directive';
 import { DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
@@ -8,7 +7,7 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxGridBaseDirective } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
