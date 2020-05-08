@@ -594,11 +594,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                    typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -624,6 +624,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public isRecordPinned(rec) {
         const id = rec.rowID;
         return this._pinnedRecordIDs.indexOf(id) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public pinRecordIndex(rec) {
+        return super.pinRecordIndex(rec.data);
     }
 
     /**
