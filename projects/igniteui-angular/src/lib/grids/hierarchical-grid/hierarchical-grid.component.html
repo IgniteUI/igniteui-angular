@@ -156,7 +156,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
             id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
-        <igx-watermark *ngIf="!this.parent"></igx-watermark>
+        <igc-trial-watermark *ngIf="!this.parent"></igc-trial-watermark>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
