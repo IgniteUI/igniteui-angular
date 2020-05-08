@@ -88,7 +88,7 @@ export class IgxColumnResizingService {
         if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
             this.column.width = parseFloat(this.column.maxWidth) + 'px';
         } else if (parseFloat(size) < parseFloat(this.column.minWidth)) {
-            this.column.width = this.column.minWidth + 'px';
+            this.column.width = parseFloat(this.column.minWidth) + 'px';
         } else {
             this.column.width = size;
         }
