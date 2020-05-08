@@ -620,7 +620,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
-    public getPinnedRecordIndex(rec) {
+    public getInitialPinnedIndex(rec) {
         return this._pinnedRecordIDs.indexOf(rec.rowID);
     }
 
