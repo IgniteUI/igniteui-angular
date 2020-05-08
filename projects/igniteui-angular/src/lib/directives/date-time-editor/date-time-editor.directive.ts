@@ -141,7 +141,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     if (value) {
       this._format = value;
     }
-    const mask = this.inputFormat?.replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
+    const mask = (this.inputFormat || DatePickerUtil.DEFAULT_INPUT_FORMAT)
+      .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
     this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
   }
 

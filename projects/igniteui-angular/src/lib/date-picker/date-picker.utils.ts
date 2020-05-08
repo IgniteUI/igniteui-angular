@@ -11,17 +11,13 @@ export const enum DateState {
     Invalid = 'invalid',
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum FormatDesc {
     Numeric = 'numeric',
     TwoDigits = '2-digit'
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum DateChars {
     YearChar = 'y',
     MonthChar = 'M',
@@ -31,19 +27,18 @@ const enum DateChars {
 const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
 const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum DateParts {
     Day = 'day',
     Month = 'month',
     Year = 'year'
 }
 
-/**
- * @hidden
- */
+
+/** @hidden */
 export abstract class DatePickerUtil {
+    public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
+    // TODO: this is the def mask for the date-picker, should remove it during refactoring
     private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
     private static readonly SEPARATOR = 'literal';
     private static readonly NUMBER_OF_MONTHS = 12;
@@ -262,12 +257,12 @@ export abstract class DatePickerUtil {
 
         let _value = new Date(value.getTime());
         let _maxValue = new Date(maxValue.getTime());
-        if (includeTime) {
+        if (includeDate) {
             _value.setHours(0, 0, 0, 0);
             _maxValue.setHours(0, 0, 0, 0);
             return _value.getTime() > maxValue.getTime();
         }
-        if (includeDate) {
+        if (includeTime) {
             _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
             _maxValue = new Date(0, 0, 0, _maxValue.getHours(), _maxValue.getMinutes(), _maxValue.getSeconds());
             return _value.getTime() > _maxValue.getTime();
@@ -288,12 +283,12 @@ export abstract class DatePickerUtil {
 
         let _value = new Date(value.getTime());
         let _minValue = new Date(minValue.getTime());
-        if (includeTime) {
+        if (includeDate) {
             _value.setHours(0, 0, 0, 0);
             _minValue.setHours(0, 0, 0, 0);
             return _value.getTime() < _minValue.getTime();
         }
-        if (includeDate) {
+        if (includeTime) {
             _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
             _minValue = new Date(0, 0, 0, _minValue.getHours(), _minValue.getMinutes(), _minValue.getSeconds());
             return _value.getTime() > _minValue.getTime();
