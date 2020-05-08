@@ -30,13 +30,13 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMaps } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
@@ -2723,12 +2723,29 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `dataView` collection.
+     *
+     * @hidden
+     * @internal
+     */
+    public isRecordPinnedByViewIndex(rowIndex: number) {
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
+    }
+
+    /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `filteredSortedData` collection.
+     *
      * @hidden
      * @internal
      */
     public isRecordPinnedByIndex(rowIndex: number) {
-        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
-            (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
     }
 
     /**
@@ -4336,7 +4353,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
-                        match.index === activeInfo.index) {
+                        match.index === activeInfo.index &&
+                        compareMaps(match.metadata, activeInfo.metadata)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
@@ -5858,6 +5876,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 column: matchInfo.column,
                 row: matchInfo.row,
                 index: matchInfo.index,
+                metadata: matchInfo.metadata,
             });
 
         } else {
@@ -5996,7 +6015,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
-        data.forEach((dataRow) => {
+        data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
                     c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
@@ -6007,10 +6026,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
+                                metadata: metadata,
                             });
                         }
                     } else {
@@ -6018,10 +6040,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         let searchIndex = searchValue.indexOf(searchText);
 
                         while (searchIndex !== -1) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
+                                metadata: metadata,
                             });
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);

@@ -13,6 +13,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 
 describe('IgxGrid - search API #grid - ', () => {
     configureTestSuite();
@@ -1128,6 +1129,37 @@ describe('IgxGrid - search API #grid - ', () => {
             verifyActiveSpan(0);
             expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
             expect(grid.page).toBe(0);
+        });
+
+        it('Should highlight search results in pinned and unpinned row areas separately', () => {
+            grid.getRowByIndex(2).pin();
+            fix.detectChanges();
+
+            grid.findNext('Tanya Bennett');
+            fix.detectChanges();
+
+            const spans = getSpans();
+            expect(spans.length).toBe(2);
+            verifyActiveSpan(0);
+
+            grid.findNext('Tanya Bennett');
+            fix.detectChanges();
+            verifyActiveSpan(1);
+        });
+
+        it('Should differentiate IgxHighlightDirective\'s metadata of pinned and unpinned rows', () => {
+            grid.getRowByIndex(2).pin();
+            fix.detectChanges();
+
+            grid.findNext('Tanya Bennett');
+            fix.detectChanges();
+
+            const highlightDirectives = fix.debugElement.queryAll(By.css('div[ng-reflect-value="Tanya Bennett"]'));
+            const firstHighlight = highlightDirectives[0].injector.get(IgxTextHighlightDirective);
+            const secondHighlight = highlightDirectives[1].injector.get(IgxTextHighlightDirective);
+
+            expect(firstHighlight.metadata.get('pinned')).toBe(true);
+            expect(secondHighlight.metadata.get('pinned')).toBe(false);
         });
     });
 
