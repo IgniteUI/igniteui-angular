@@ -2724,7 +2724,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public isRecordPinnedByViewIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
             (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
-	}
+    }
 
     /**
      * Returns whether the record is pinned or not.
