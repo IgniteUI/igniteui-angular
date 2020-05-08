@@ -832,7 +832,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // need to adjust the offsets so that item is last in view.
                     const updatesToIndex = this._adjustToIndex - this.state.startIndex + 1;
                     const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer);
-                    this.addScrollTop(sumDiffs)
+                    this.addScrollTop(sumDiffs);
                     this._adjustToIndex = null;
                 }
             }
