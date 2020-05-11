@@ -67,10 +67,6 @@
 
 @include b(igx-card-content) {
     @extend %igx-card-content !optional;
-
-    @include e(text) {
-        @extend %igx-card-content-text !optional;
-    }
 }
 
 @include b(igx-card-actions) {
