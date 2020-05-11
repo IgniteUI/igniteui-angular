@@ -44,6 +44,10 @@
         if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
     );
 
+    @if not($color) and $link-background {
+        $color: text-contrast($link-background);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $default-palette,
@@ -84,7 +88,7 @@
         border: 1px solid --var($theme, 'border-color');
         color: --var($theme, 'color');
         z-index: 10002;
-        background: --var($theme, 'link-background');
+        background-color: --var($theme, 'link-background');
         pointer-events: all;
         text-decoration: none;
     }
