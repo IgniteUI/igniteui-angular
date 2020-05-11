@@ -3,7 +3,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { HORIZONTAL_NAV_KEYS } from '../core/utils';
+import { HORIZONTAL_NAV_KEYS, HEADER_KEYS } from '../core/utils';
 
 /** @hidden */
 @Injectable()
@@ -214,6 +214,8 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     headerNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (!HEADER_KEYS.has(key)) { return; }
+        event.preventDefault();
         if (!this.activeNode.layout) {
             this.activeNode.layout = this.layout(this.activeNode.column || 0);
         }
@@ -221,7 +223,6 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const ctrl = event.ctrlKey;
         this.performHeaderKeyCombination(this.grid.getColumnByVisibleIndex(this.activeNode.column), key, event.shiftKey, ctrl, alt);
         if (!ctrl && !alt && (key.includes('down') || key.includes('up'))) {
-            event.preventDefault();
             const children = this.parentByChildIndex(this.activeNode.column).children;
             const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
             if (!col) { return; }
@@ -236,7 +237,6 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     protected horizontalNav(event: KeyboardEvent, key: string, rowIndex: number) {
         const ctrl = event.ctrlKey;
         if (!HORIZONTAL_NAV_KEYS.has(key) || event.altKey) { return; }
-        event.preventDefault();
         this.activeNode.row = rowIndex;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             this.activeNode.column = ctrl || key === 'home' ? this.firstIndexPerRow : this.getNextHorizontalCellPosition(true).column;
