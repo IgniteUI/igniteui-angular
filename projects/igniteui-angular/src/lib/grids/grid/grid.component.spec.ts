@@ -1571,6 +1571,32 @@ describe('IgxGrid Component Tests #grid', () => {
             prevCellCoords = grid.getPreviousCell(99, 0, (col) => col.editable);
             expect(prevCellCoords).toEqual({ rowIndex: 99, visibleColumnIndex: 0 });
         });
+
+        it('should not reset vertical scroll position when calling navigateTo with only rowIndex specified', async() => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(15, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            grid.height = '300px';
+            grid.width = '500px';
+            fix.detectChanges();
+
+            grid.navigateTo(0);
+            await wait();
+            fix.detectChanges();
+
+            grid.verticalScrollContainer.getScroll().scrollTop = 200;
+            await wait();
+            fix.detectChanges();
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(200);
+
+            grid.headerContainer.getScroll().scrollLeft = 100;
+            await wait();
+            fix.detectChanges();
+
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(200);
+        });
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {
