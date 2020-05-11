@@ -861,23 +861,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (diff) {
             this.onChunkPreload.emit(this.state);
             if (!this.isRemote) {
-                const container = this.dc.instance._viewContainer.element.nativeElement as HTMLElement;
-                const activeElement = document.activeElement as HTMLElement;
 
-                // Remove focus in case the the active element is inside the view container.
-                // Otherwise we hit an exception while doing the 'small' scrolls swapping.
-                // For more information:
-                //
-                // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
-                // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
-                if (container.contains(document.activeElement)) {
-                    activeElement.blur();
-                }
-                /*recalculate and apply page size.*/
-                if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
-                    this.moveApplyScrollNext(prevStart);
-                } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
-                    this.moveApplyScrollPrev(prevStart);
+                // recalculate and apply page size.
+                if (diff && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+                    this.scrollFocus();
+                    diff > 0 ? this.moveApplyScrollNext(prevStart) : this.moveApplyScrollPrev(prevStart);
                 } else {
                     this.fixedApplyScroll();
                 }
@@ -951,6 +939,27 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         for (let i = this.state.startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
             const embView = this._embeddedViews[j++];
             this.updateTemplateContext(embView.context, i);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     *
+     * Clears focus inside the virtualized container on small scroll swaps.
+     */
+    protected scrollFocus(): void {
+        const container = this.dc.instance._viewContainer.element.nativeElement as HTMLElement;
+        const activeElement = document.activeElement as HTMLElement;
+
+        // Remove focus in case the the active element is inside the view container.
+        // Otherwise we hit an exception while doing the 'small' scrolls swapping.
+        // For more information:
+        //
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
+        if (container.contains(document.activeElement)) {
+            activeElement.blur();
         }
     }
 
