@@ -49,9 +49,6 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { DateRangeType } from '../core/dates';
-import { TreeGridFilteringStrategy } from '../grids/tree-grid/tree-grid.filtering.pipe';
-
-const DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
 
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
@@ -385,9 +382,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             // TODO: use displayFormat - see how shortDate, longDate can be defined
             return this.inputFormat
                 ? `${this.inputFormat} - ${this.inputFormat}`
-                : `${DEFAULT_INPUT_FORMAT} - ${DEFAULT_INPUT_FORMAT}`;
+                : `${DatePickerUtil.DEFAULT_INPUT_FORMAT} - ${DatePickerUtil.DEFAULT_INPUT_FORMAT}`;
         } else {
-            return this.inputFormat || DEFAULT_INPUT_FORMAT;
+            return this.inputFormat || DatePickerUtil.DEFAULT_INPUT_FORMAT;
         }
     }
 
@@ -632,7 +629,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale']) {
-            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DEFAULT_INPUT_FORMAT;
+            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
         }
     }
 
