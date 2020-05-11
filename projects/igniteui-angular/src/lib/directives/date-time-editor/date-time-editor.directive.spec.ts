@@ -1,9 +1,9 @@
 import { IgxDateTimeEditorDirective, IgxDateTimeEditorModule } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
 import { DOCUMENT } from '@angular/common';
-import { Component, ViewChild, DebugElement, LOCALE_ID, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule, NgModel, Validators } from '@angular/forms';
+import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { async, fakeAsync, TestBed, tick, } from '@angular/core/testing';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group';
@@ -17,11 +17,17 @@ describe('IgxDateTimeEditor', () => {
             ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
+        const ngControl = {
+            control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
+            valid: false,
+            statusChanges: new EventEmitter(),
+        };
         let elementRef = { nativeElement: null };
         let inputFormat: string;
         let inputDate: string;
-        function initializeDateTimeEditor() {
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
+        function initializeDateTimeEditor(control?: NgControl) {
+            const injector = { get: () => control };
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale, injector);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -30,7 +36,7 @@ describe('IgxDateTimeEditor', () => {
             dateTimeEditor.ngOnChanges(changes);
         }
         describe('Properties & Events', () => {
-            it('should emit valueChanged event on clear()', () => {
+            it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';
                 inputDate = '6/6/2000';
                 elementRef = { nativeElement: { value: inputDate } };
@@ -304,6 +310,22 @@ describe('IgxDateTimeEditor', () => {
 
                 dateTimeEditor.decrement(DatePart.Seconds);
                 expect(dateTimeEditor.value.getSeconds()).toEqual(59);
+            });
+
+            it('should properly parse AM/PM no matter where it is in the format', () => {
+                inputFormat = 'dd tt yyyy-MM mm-ss-hh';
+                inputDate = '12 AM 2020-06 14-15-11';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                dateTimeEditor.inputFormat = inputFormat;
+                expect(dateTimeEditor.mask).toEqual('00 LL 0000-00 00-00-00');
+
+                dateTimeEditor.value = new Date(2020, 5, 12, 11, 15, 14);
+                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+
+                dateTimeEditor.increment(DatePart.AmPm);
+                expect(dateTimeEditor.value).toEqual(new Date(2020, 5, 12, 23, 15, 14));
             });
         });
     });
@@ -831,7 +853,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledTimes(2);
                 expect(dateTimeEditorDirective.setDisabledState).toHaveBeenCalledWith(false);
             }));
-            it('should emit valueChanged event on blur', () => {
+            it('should emit valueChange event on blur', () => {
                 const newDate = new Date(2004, 11, 18);
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
@@ -846,6 +868,18 @@ describe('IgxDateTimeEditor', () => {
                 const year = (newDate.getFullYear().toString()).slice(-2);
                 const result = [newDate.getDate(), newDate.getMonth() + 1, year].join('/');
                 expect(inputElement.nativeElement.value).toEqual(result);
+                expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
+                expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(newDate);
+            });
+            it('should emit valueChange event after input is complete', () => {
+                const newDate = new Date(2012, 11, 12);
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.detectChanges();
+                spyOn(dateTimeEditorDirective.valueChange, 'emit');
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                UIInteractions.simulateTyping('121212', inputElement);
+                fixture.detectChanges();
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(newDate);
             });

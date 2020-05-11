@@ -45,16 +45,6 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.value.end).toEqual(startDate);
         });
 
-        it('should set range dates correctly through selectToday method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
-            const today = new Date();
-
-            dateRange.selectRange(new Date());
-            expect(dateRange.value.start).toEqual(today);
-            expect(dateRange.value.end).toEqual(today);
-        });
-
         it('should emit rangeSelected on selection', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
             dateRange.calendar = calendar;
@@ -76,19 +66,6 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.value.end).toEqual(startDate);
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(2);
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
-        });
-
-        it('should emit rangeSelected on selectToday()', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
-            spyOn(dateRange.rangeSelected, 'emit');
-            const today = new Date();
-
-            dateRange.selectRange(new Date());
-            expect(dateRange.value.start).toEqual(today);
-            expect(dateRange.value.end).toEqual(today);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(1);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: today, end: today });
         });
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
@@ -262,6 +239,15 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Properties & events tests', () => {
+                it('should show date picker with placeholder', () => {
+                    fixture.detectChanges();
+                    expect(singleInputElement.nativeElement.placeholder).toEqual('MM/dd/yyyy - MM/dd/yyyy');
+
+                    const placeholder = 'Some placeholder';
+                    fixture.componentInstance.dateRange.placeholder = placeholder;
+                    fixture.detectChanges();
+                    expect(singleInputElement.nativeElement.placeholder).toEqual(placeholder);
+                });
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
@@ -809,4 +795,7 @@ export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent
     </igx-date-range-picker>
     `
 })
-export class DateRangeDefaultComponent extends DateRangeTestComponent { }
+export class DateRangeDefaultComponent extends DateRangeTestComponent {
+    @ViewChild(IgxDateRangePickerComponent)
+    public dateRange: IgxDateRangePickerComponent;
+ }
