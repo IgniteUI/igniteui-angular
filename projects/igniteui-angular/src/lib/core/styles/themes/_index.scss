@@ -50,7 +50,6 @@
 @import '../components/input/input-group-theme';
 @import '../components/icon/icon-theme';
 @import '../components/time-picker/time-picker-theme';
-@import '../components/watermark/watermark-theme';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -93,7 +92,6 @@
 /// @requires {mixin} igx-tabs
 /// @requires {mixin} igx-bottom-nav
 /// @requires {mixin} igx-toast
-/// @requires {mixin} igx-watermark
 @mixin igx-theme(
     $palette,
     $schema: $light-schema,
@@ -376,10 +374,6 @@
 
     @if not(index($exclude, 'igx-slider')) {
         @include igx-slider(igx-slider-theme($palette, $schema));
-    }
-
-    @if not(index($exclude, 'igx-watermark')) {
-        @include igx-watermark(igx-watermark-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-snackbar')) {
