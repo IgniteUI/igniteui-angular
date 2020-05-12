@@ -1306,7 +1306,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._calcVirtualScrollTop(this.scrollPosition);
             currentScrollTop = this._virtScrollTop;
         }
-       
         const vScroll =  this.scrollComponent.nativeElement;
         scrollOffset = vScroll && this.scrollComponent.size ?
         currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
