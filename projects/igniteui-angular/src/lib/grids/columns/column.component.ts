@@ -376,7 +376,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * let columnMaxWidth = this.column.width;
      * ```
      * ```html
-     * <igx-column [maxWidth] = "'75%'"></igx-column>
+     * <igx-column [maxWidth] = "'150px'"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -390,7 +390,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * let columnMinWidth = this.column.minWidth;
      * ```
      * ```html
-     * <igx-column [minWidth] = "'15%'"></igx-column>
+     * <igx-column [minWidth] = "'100px'"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -1669,7 +1669,6 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public autosize() {
         if (!this.columnGroup) {
-
             this.width = this.getLargestCellWidth();
             this.grid.reflow();
         }

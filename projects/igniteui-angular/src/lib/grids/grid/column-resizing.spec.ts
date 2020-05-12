@@ -695,6 +695,23 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         await wait(16);
     });
 
+    it('should autosize column when minWidth is set.', async() => {
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ID')[0];
+        column.minWidth = '70px';
+        expect(column.minWidth).toEqual('70px');
+
+        column.autosize();
+        fixture.detectChanges();
+
+        expect(column.width).toEqual('63px');
+
+        // height/width setter rAF
+        await wait(16);
+    });
+
     it('should size headers correctly when column width is below the allowed minimum.', () => {
         const fixture = TestBed.createComponent(ColGridComponent);
         fixture.detectChanges();
