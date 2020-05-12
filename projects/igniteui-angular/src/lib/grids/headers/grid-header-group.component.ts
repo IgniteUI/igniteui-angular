@@ -313,6 +313,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      */
     public activate() {
         this.grid.navigation.activeNode = this.activeNode;
+        this.grid.theadRow.nativeElement.focus();
     }
 
     public ngDoCheck() {
