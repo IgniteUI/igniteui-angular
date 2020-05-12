@@ -989,6 +989,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
 
+        if (typeof (row) === 'number') {
+            const record = this.groupingFlatResult[row];
+            row = this.dataView.indexOf(record);
+        }
+
         super.scrollTo(row, column, this.groupingFlatResult);
     }
 
