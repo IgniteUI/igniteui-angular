@@ -148,6 +148,7 @@
     }
 
     %igx-dialog-title {
+        display: flex;
         color: --var($theme, 'title-color');
         padding: $dialog-title-padding;
 
