@@ -312,7 +312,7 @@ export interface IBaseEventArgs {
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     /** Browser event */
-    event?: Event;
+    event?: MouseEvent;
 }
 
 export const HORIZONTAL_NAV_KEYS = new Set(['arrowleft', 'left', 'arrowright', 'right', 'home', 'end']);

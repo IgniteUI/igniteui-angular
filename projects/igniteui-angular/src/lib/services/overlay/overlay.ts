@@ -335,7 +335,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private _hide(id: string, event?: Event) {
+    private _hide(id: string, event?: MouseEvent) {
         const info: OverlayInfo = this.getOverlayById(id);
 
         if (!info) {
@@ -683,7 +683,7 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
                     .pipe(takeUntil(this.destroy$))
-                    .subscribe((e: Event) => this._hide(info.id, e));
+                    .subscribe((e: MouseEvent) => this._hide(info.id, e));
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -

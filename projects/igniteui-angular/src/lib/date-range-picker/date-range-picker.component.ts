@@ -569,27 +569,26 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public validate(control: AbstractControl): ValidationErrors {
-        if (this.minValue && !this.valueInRange(control.value)) {
+        const value: DateRange = control.value;
+        if (this.minValue && value && value.start && DatePickerUtil.lessThanMinValue(value.start, this.minValue, false)) {
             return { 'minValue': true };
         }
-        if (this.maxValue && !this.valueInRange(control.value)) {
+        if (this.minValue && value && value.end && DatePickerUtil.lessThanMinValue(value.end, this.minValue, false)) {
+            return { 'minValue': true };
+        }
+        if (this.maxValue && value && value.start && DatePickerUtil.greaterThanMaxValue(value.start, this.maxValue, false)) {
             return { 'maxValue': true };
         }
-
-        // TODO
-        if (this.hasProjectedInputs) {
-            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
-            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
-            // if no start => delete end
-            if (!start.dateTimeEditor.value) {
-                return { 'start': true, 'end': true };
+        if (this.maxValue && value && value.end && DatePickerUtil.greaterThanMaxValue(value.end, this.maxValue, false)) {
+            return { 'maxValue': true };
+        }
+        if (control.validator) {
+            const error = control.validator({} as AbstractControl);
+            if (error && error.required) {
+                if (!value || !value.start || !value.end) {
+                    return { required: true };
+                }
             }
-            // if no end => put start in end and don't validate?
-            if (!end.dateTimeEditor.value) {
-                return { 'end': true };
-            }
-        } else if (!this.inputDirective?.value) {
-            return { 'single': true };
         }
 
         return null;
@@ -680,7 +679,15 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.value = null;
         }
 
+        let outsideClick = true;
         if (event.event) {
+            const elementRect: DOMRect = this.element.nativeElement.getBoundingClientRect();
+            if (elementRect.left < event.event.x && event.event.x < elementRect.right
+                && elementRect.top < event.event.y && event.event.y < elementRect.bottom) {
+                outsideClick = false;
+            }
+        }
+        if (outsideClick) {
             // outside click
             this.updateValidityOnBlur();
         } else {
@@ -712,6 +719,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private focusInput() {
+        // TODO: should we always focus start input?
         (this.projectedInputs
             .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
         if (this.inputDirective) {
@@ -872,6 +880,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         if (this.value && !this.value.start) {
                             this.value = { start: null, end: null };
                         }
+                        // TODO: if we have start and have no end should we fill end
+                        // as we do on calendar close
                     });
             });
         } else {
@@ -908,31 +918,5 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             start.updateInputValue(this.value.start);
             end.updateInputValue(this.value.end);
         }
-    }
-
-    private valueInRange(value: DateRange): boolean {
-        // TODO: refactor using DatePickerUtil.greaterThanMaxValue & DatePickerUtil.lessThanMinValue
-        if (!value) { return false; }
-        if (this.minValue && this.value.start && this.compareDates(value.start, this.minValue)) {
-            return false;
-        } else if (this.maxValue && value.start && this.compareDates(this.maxValue, value.start)) {
-            return false;
-        }
-        if (this.maxValue && value.end && this.compareDates(this.maxValue, value.end)) {
-            return false;
-        } else if (this.minValue && value.end && this.compareDates(value.end, this.minValue)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    // TODO: delete
-    private compareDates(firstDate: Date, secondDate: Date) {
-        const _firstDate = new Date(firstDate.getTime());
-        _firstDate.setHours(0, 0, 0, 0);
-        const _secondDate = new Date(secondDate.getTime());
-        _secondDate.setHours(0, 0, 0, 0);
-        return _firstDate.getTime() < _secondDate.getTime();
     }
 }
