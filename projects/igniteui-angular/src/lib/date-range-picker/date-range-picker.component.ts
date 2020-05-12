@@ -829,7 +829,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private extractRange(selection: Date[]): DateRange {
         return {
             start: selection[0],
-            end: selection.length > 1 ? selection[selection.length - 1] : null
+            end: selection.length > 0 ? selection[selection.length - 1] : null
         };
     }
 
