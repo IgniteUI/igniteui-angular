@@ -2,7 +2,7 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
-- script: npm install
+- script: npm ci
   displayName: 'Install dependencies'
   env:
     AZURE_PIPELINES: "true"

@@ -244,7 +244,7 @@ export class GridFunctions {
     }
 
     public static getGroupedRows(fix): DebugElement[] {
-        return this.sortDebugElementsVertically(fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS)));
+        return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
     }
 
     public static verifyGroupRowIsFocused(groupRow, focused = true) {
@@ -1695,6 +1695,10 @@ export class GridFunctions {
         return fix.nativeElement.querySelector(BANNER_ROW_CLASS);
     }
 
+    public static getRowEditingDebugElement(fix): DebugElement {
+        return fix.debugElement.query(By.css(BANNER_ROW_CLASS));
+    }
+
     public static getRowEditingBanner(fix): HTMLElement {
         return fix.nativeElement.querySelector(BANNER_CLASS);
     }
@@ -1713,6 +1717,14 @@ export class GridFunctions {
 
     public static getRowEditingCancelButton(fix): HTMLElement {
         return GridFunctions.getRowEditingBannerRow(fix).firstElementChild as HTMLElement;
+    }
+
+    public static getRowEditingCancelDebugElement(fix): DebugElement {
+        return GridFunctions.getRowEditingDebugElement(fix).queryAll(By.css('.igx-button--flat'))[0];
+    }
+
+    public static getRowEditingDoneDebugElement(fix): DebugElement {
+        return GridFunctions.getRowEditingDebugElement(fix).queryAll(By.css('.igx-button--flat'))[1];
     }
 
     public static getPagingButtons(parent) {

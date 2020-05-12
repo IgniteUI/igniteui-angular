@@ -301,6 +301,7 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformHorizontalScroll(visibleColIndex: number, rowIndex = -1) {
+        if (visibleColIndex < 0 || visibleColIndex > this.grid.visibleColumns.length - 1) { return false; }
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             return !this.isColumnFullyVisible(visibleColIndex);
         }
@@ -309,7 +310,7 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColIndex: number): boolean {
-        if (this.grid.isRecordPinnedByIndex(targetRowIndex)) { return false; }
+        if (this.grid.isRecordPinnedByViewIndex(targetRowIndex)) { return false; }
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             targetRowIndex - this.grid.pinnedDataView.length : targetRowIndex;
         const targetRow = this.getRowElementByIndex(targetRowIndex);

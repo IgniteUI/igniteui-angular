@@ -666,7 +666,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
             }
             crud.end();
-            this.grid.tbody.nativeElement.focus();
+            this.grid.tbody.nativeElement.focus({ preventScroll: true });
             this.grid.notifyChanges();
             crud.begin(this);
             return;
@@ -898,5 +898,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get searchMetadata() {
+        const meta = new Map<string, any>();
+        meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
+        return meta;
     }
 }
