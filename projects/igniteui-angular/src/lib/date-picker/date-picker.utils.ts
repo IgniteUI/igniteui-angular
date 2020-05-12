@@ -264,7 +264,7 @@ export abstract class DatePickerUtil {
         }
         if (!includeDate) {
             _value.setFullYear(0, 0, 0);
-            _maxValue.setFullYear(0, 0, 0);;
+            _maxValue.setFullYear(0, 0, 0);
         }
 
         return _value.getTime() > _maxValue.getTime();
@@ -289,7 +289,7 @@ export abstract class DatePickerUtil {
         }
         if (!includeDate) {
             _value.setFullYear(0, 0, 0);
-            _minValue.setFullYear(0, 0, 0);;
+            _minValue.setFullYear(0, 0, 0);
         }
 
         return _value.getTime() < _minValue.getTime();
