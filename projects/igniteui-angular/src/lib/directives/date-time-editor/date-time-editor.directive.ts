@@ -290,7 +290,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public writeValue(value: any): void {
-    this.value = value;
+    this._value = value;
+    this.updateMask();
   }
 
   /** @hidden @internal */
