@@ -100,7 +100,6 @@ import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
@@ -1342,7 +1341,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
-    @DeprecateProperty('onGridKeydown event is deprecated. Now you can directly bind to keydown on the IgxGrid component.')
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
@@ -2806,7 +2804,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -5662,7 +5659,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
+     * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
@@ -5683,10 +5680,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () => {
+                if (shouldScrollHorizontally) {
+                    this.navigation.performHorizontalScrollToCell(visibleColIndex, () =>
+                     this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => {
+                if (shouldScrollVertically) {
+                    this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () =>
+                        this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }
