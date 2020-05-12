@@ -864,7 +864,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
                 // recalculate and apply page size.
                 if (diff && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
-                    this.scrollFocus();
                     diff > 0 ? this.moveApplyScrollNext(prevStart) : this.moveApplyScrollPrev(prevStart);
                 } else {
                     this.fixedApplyScroll();
@@ -886,6 +885,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
             const embView = this._embeddedViews.shift();
+            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                || embView.rootNodes[0].nextElementSibling);
             const view = container.detach(0);
 
             this.updateTemplateContext(embView.context, i);
@@ -902,6 +903,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const container = this.dc.instance._vcr as ViewContainerRef;
         for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
             const embView = this._embeddedViews.pop();
+            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                || embView.rootNodes[0].nextElementSibling);
             const view = container.detach(container.length - 1);
 
             this.updateTemplateContext(embView.context, i);
@@ -948,8 +951,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      *
      * Clears focus inside the virtualized container on small scroll swaps.
      */
-    protected scrollFocus(): void {
-        const container = this.dc.instance._viewContainer.element.nativeElement as HTMLElement;
+    protected scrollFocus(node?: HTMLElement): void {
         const activeElement = document.activeElement as HTMLElement;
 
         // Remove focus in case the the active element is inside the view container.
@@ -958,7 +960,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         //
         // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
         // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
-        if (container.contains(document.activeElement)) {
+        if (node && node.contains(document.activeElement)) {
             activeElement.blur();
         }
     }
