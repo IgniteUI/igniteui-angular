@@ -22,7 +22,6 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewContainerRef,
-    ViewRef,
     AfterViewInit
 } from '@angular/core';
 
@@ -832,8 +831,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     // need to adjust the offsets so that item is last in view.
                     const updatesToIndex = this._adjustToIndex - this.state.startIndex + 1;
                     const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer);
-                    const currOffset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-                    this.dc.instance._viewContainer.element.nativeElement.style.top = (currOffset - sumDiffs) + 'px';
+                    if (sumDiffs !== 0) {
+                        this.addScrollTop(sumDiffs);
+                    }
                     this._adjustToIndex = null;
                 }
             }
@@ -850,18 +850,68 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.sizesCache,
             0
         );
+
         if (newStart + this.state.chunkSize > count) {
             newStart = count - this.state.chunkSize;
         }
+
+        const prevStart = this.state.startIndex;
         const diff = newStart - this.state.startIndex;
         this.state.startIndex = newStart;
+
         if (diff) {
             this.onChunkPreload.emit(this.state);
             if (!this.isRemote) {
-                this.fixedApplyScroll();
+
+                // recalculate and apply page size.
+                if (diff && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+                    diff > 0 ? this.moveApplyScrollNext(prevStart) : this.moveApplyScrollPrev(prevStart);
+                } else {
+                    this.fixedApplyScroll();
+                }
             }
         }
+
         return inScrollTop - this.sizesCache[this.state.startIndex];
+    }
+
+    /**
+     * @hidden
+     * The function applies an optimized state change for scrolling down/right employing context change with view rearrangement
+     */
+    protected moveApplyScrollNext(prevIndex: number): void {
+        const start = prevIndex + this.state.chunkSize;
+        const end = start + this.state.startIndex - prevIndex;
+        const container = this.dc.instance._vcr as ViewContainerRef;
+
+        for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
+            const embView = this._embeddedViews.shift();
+            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                || embView.rootNodes[0].nextElementSibling);
+            const view = container.detach(0);
+
+            this.updateTemplateContext(embView.context, i);
+            container.insert(view);
+            this._embeddedViews.push(embView);
+        }
+    }
+
+    /**
+     * @hidden
+     * The function applies an optimized state change for scrolling up/left employing context change with view rearrangement
+     */
+    protected moveApplyScrollPrev(prevIndex: number): void {
+        const container = this.dc.instance._vcr as ViewContainerRef;
+        for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
+            const embView = this._embeddedViews.pop();
+            this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
+                || embView.rootNodes[0].nextElementSibling);
+            const view = container.detach(container.length - 1);
+
+            this.updateTemplateContext(embView.context, i);
+            container.insert(view, 0);
+            this._embeddedViews.unshift(embView);
+        }
     }
 
     /**
@@ -873,18 +923,46 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * @hidden
+     * Function which updates the passed context of an embedded view with the provided index
+     * from the view container.
+     * Often, called while handling a scroll event.
+     */
+    protected updateTemplateContext(context: any, index: number = 0): void {
+        context.$implicit = this.igxForOf[index];
+        context.index = this.getContextIndex(this.igxForOf[index]);
+        context.count = this.igxForOf.length;
+    }
+
+    /**
+     * @hidden
      * The function applies an optimized state change through context change for each view
      */
     protected fixedApplyScroll(): void {
         let j = 0;
         const endIndex = this.state.startIndex + this.state.chunkSize;
         for (let i = this.state.startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-            const input = this.igxForOf[i];
             const embView = this._embeddedViews[j++];
-            const cntx = (embView as EmbeddedViewRef<any>).context;
-            cntx.$implicit = input;
-            cntx.index = this.getContextIndex(input);
-            cntx.count = this.igxForOf.length;
+            this.updateTemplateContext(embView.context, i);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     *
+     * Clears focus inside the virtualized container on small scroll swaps.
+     */
+    protected scrollFocus(node?: HTMLElement): void {
+        const activeElement = document.activeElement as HTMLElement;
+
+        // Remove focus in case the the active element is inside the view container.
+        // Otherwise we hit an exception while doing the 'small' scrolls swapping.
+        // For more information:
+        //
+        // https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=432392
+        if (node && node.contains(document.activeElement)) {
+            activeElement.blur();
         }
     }
 
@@ -950,12 +1028,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 endIndex = this.igxForOf.length;
             }
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-                const input = this.igxForOf[i];
                 const embView = embeddedViewCopy.shift();
-                const cntx = (embView as EmbeddedViewRef<any>).context;
-                cntx.$implicit = input;
-                cntx.index = this.getContextIndex(input);
-                cntx.count = this.igxForOf.length;
+                this.updateTemplateContext(embView.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.onChunkLoad.emit(this.state);
@@ -1612,12 +1686,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
 
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
-                const input = this.igxForOf[i];
                 const embView = embeddedViewCopy.shift();
-                const cntx = (embView as EmbeddedViewRef<any>).context;
-                cntx.$implicit = input;
-                cntx.index = this.getContextIndex(input);
-                cntx.count = this.igxForOf.length;
+                this.updateTemplateContext(embView.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.onChunkLoad.emit(this.state);

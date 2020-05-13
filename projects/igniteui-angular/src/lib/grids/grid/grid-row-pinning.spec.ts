@@ -1123,6 +1123,7 @@ describe('Row Pinning #grid', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.getRowByIndex(5).pin();
             grid.getRowByIndex(1).pin();
+            await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
             grid.navigateTo(26);
