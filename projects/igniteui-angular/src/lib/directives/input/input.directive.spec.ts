@@ -494,6 +494,18 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
     }));
 
+    it('should correctly update enabled/disabled state of igxInput when changed via reactive form', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+        const igxInput = fixture.componentInstance.strIgxInput;
+
+        fixture.componentInstance.form.disable();
+        expect(igxInput.disabled).toBe(true);
+
+        fixture.componentInstance.form.get('str').enable();
+        expect(igxInput.disabled).toBe(false);
+    }));
+
     it('should style input when required is toggled dynamically.', () => {
         const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
         fixture.detectChanges();
