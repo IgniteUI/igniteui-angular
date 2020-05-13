@@ -68,9 +68,9 @@ With `IgxDateStartComponent`, `IgxDateEndComponent` and `IgxDateTimeEditorDirect
 The default template:
 ```html
 <igx-date-range-picker>
-    <igx-pickers-toggle igxPrefix>
+    <igx-picker-toggle igxPrefix>
         <igx-icon>calendar_view_day</igx-icon>
-    </igx-pickers-toggle>
+    </igx-picker-toggle>
 </igx-date-range-picker>
 ```
 
@@ -78,9 +78,9 @@ With projected inputs:
 ```html
 <igx-date-range-picker>
     <igx-date-range-start>
-        <igx-pickers-toggle igxPrefix>
+        <igx-picker-toggle igxPrefix>
             <igx-icon>calendar_view_day</igx-icon>
-        </igx-pickers-toggle>
+        </igx-picker-toggle>
     </igx-date-range-start>
     <igx-date-range-end>
     </igx-date-range-end>
