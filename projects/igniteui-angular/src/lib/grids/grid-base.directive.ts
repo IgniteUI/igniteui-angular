@@ -2449,9 +2449,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
-    protected _filteredSortedPinnedData;
-    protected _filteredSortedUnpinnedData;
-    protected _filteredPinnedData;
+    protected _filteredSortedPinnedData: any[];
+    protected _filteredSortedUnpinnedData: any[];
+    protected _filteredPinnedData: any[];
 
     /**
      * @hidden
@@ -2712,15 +2712,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public isRecordPinned(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
-    }
-
-    /**
      * Returns whether the record is pinned or not.
      *
      * @param rowIndex Index of the record in the `dataView` collection.
@@ -2737,9 +2728,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns whether the record is pinned or not.
      *
      * @param rowIndex Index of the record in the `filteredSortedData` collection.
-     *
-     * @hidden
-     * @internal
      */
     public isRecordPinnedByIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
@@ -2750,8 +2738,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public pinRecordIndex(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+    public isRecordPinned(rec) {
+        return this.getInitialPinnedIndex(rec) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Returns the record index in order of pinning by the user. Does not consider sorting/filtering.
+     */
+    public getInitialPinnedIndex(rec) {
+        const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
     }
 
@@ -3015,12 +3012,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public setFilteredSortedData(data, pinned: boolean) {
         data = data || [];
-        if (this._pinnedRecordIDs.length > 0 && pinned) {
+        if (this.pinnedRecordsCount > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
-        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+        } else if (this.pinnedRecordsCount > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
             this.filteredSortedData = data;
@@ -5959,7 +5956,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollTo(row: any | number, column: any | number, inCollection = this.filteredSortedData): void {
+    protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
         if (this.paging && typeof (row) !== 'number') {
