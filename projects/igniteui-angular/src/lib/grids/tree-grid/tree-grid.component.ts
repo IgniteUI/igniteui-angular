@@ -617,21 +617,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @hidden @internal
-     * This is overwritten because tree grid records have special record format - ITreeGridRecord,
-     * which already has the rowID in the record object.
-     */
-    public isRecordPinned(rec) {
-        const id = rec.rowID;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
-    }
-
-    /**
      * @hidden
      * @internal
      */
-    public pinRecordIndex(rec) {
-        return super.pinRecordIndex(rec.data);
+    public getInitialPinnedIndex(rec) {
+        return this._pinnedRecordIDs.indexOf(rec.rowID);
     }
 
     /**
