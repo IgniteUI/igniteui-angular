@@ -36,6 +36,31 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
     }
 
     /**
+     * Getter to know if the row is in pinned and ghost
+     * @hidden
+     * @internal
+     */
+    get inPinnedArea(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        const context = this.strip.context;
+        return this.pinned && !context.disabled;
+    }
+
+    /**
+     * Getter to know if the row pinning is set to top or bottom
+     * @hidden
+     * @internal
+     */
+    get pinnedTop(): boolean {
+        if (!this.isRow(this.strip.context)) {
+            return;
+        }
+        return this.strip.context.grid.isRowPinningToTop;
+    }
+
+    /**
      * Pin the row according to the context.
      * @example
      * ```typescript
@@ -72,6 +97,16 @@ export class IgxGridPinningActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const grid = row.grid;
         grid.unpinRow(row.rowID);
+        this.strip.hide();
+    }
+
+    public scrollToRow(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        const context = this.strip.context;
+        const grid = context.grid;
+        grid.scrollTo(context.rowData, 0);
         this.strip.hide();
     }
 

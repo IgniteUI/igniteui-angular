@@ -271,20 +271,23 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
-        fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
-        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
         fixture.detectChanges();
+
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
         await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
-
         const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[0];
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[1];
         GridFunctions.focusCell(fixture, childLastRowCell);
         fixture.detectChanges();
         UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, true);
+        await wait(200);
         fixture.detectChanges();
         await wait(200);
         fixture.detectChanges();
