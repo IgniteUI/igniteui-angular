@@ -850,7 +850,6 @@ describe('Row Pinning #grid', () => {
             // enable cell editing for column
             grid = fix.componentInstance.instance;
             grid.getColumnByName('CompanyName').editable = true;
-            
         });
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
@@ -874,7 +873,7 @@ describe('Row Pinning #grid', () => {
             // press tab on edited cell
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
-			
+
             expect(firstEditable.editMode).toBeFalsy();
             expect(secondEditable.editMode).toBeTruthy();
 
