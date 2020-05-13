@@ -115,7 +115,7 @@ export class IgxGridStateDirective {
 
     private state: IGridState;
     private currGrid: IgxGridBaseDirective;
-    private features: string[];
+    private features = [];
 
     /**
      *  An object with options determining if a certain feature state should be saved.
@@ -133,13 +133,13 @@ export class IgxGridStateDirective {
     }
 
     public set options(value: IGridStateOptions) {
-        if (!(this.grid instanceof IgxGridComponent)) {
-            this._options.groupBy = false;
-            this._options.rowPinning = false;
-        } else {
-            this._options.inheritance = false;
-        }
         Object.assign(this._options, value);
+        if (!(this.grid instanceof IgxGridComponent)) {
+            delete this._options.groupBy;
+            delete this._options.rowPinning;
+        } else {
+            delete this._options.inheritance;
+        }
     }
 
     /**
@@ -202,13 +202,13 @@ export class IgxGridStateDirective {
         this.applyFeatures(features);
         let gridState = {} as IGridState;
         this.features.forEach(f => {
-            if (this.options[f]) {
-                f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
-                const featureState: IGridState = this.getFeatureState(f);
-                gridState = Object.assign(gridState, featureState);
+            f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
+            if (!(this.grid instanceof IgxGridComponent) && (f === 'groupBy' || f === 'rowPinning')) {
+                return;
             }
+            const featureState: IGridState = this.getFeatureState(f);
+            gridState = Object.assign(gridState, featureState);
         });
-        gridState =  Object.assign(gridState, { id: this.currGrid.id });
         return gridState;
     }
 
@@ -581,6 +581,7 @@ export class IgxGridStateDirective {
      * Returns a collection of all grid features.
      */
     private applyFeatures(features?: string | string[]) {
+        this.features = [];
         if (!features) {
             for (const feature of Object.keys(this.options)) {
                 this.features.push(feature);

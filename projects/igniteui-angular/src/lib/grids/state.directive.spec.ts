@@ -143,8 +143,8 @@ describe('IgxGridState - input properties #grid', () => {
         const sorting = grid.sortingExpressions;
 
         let gridState = state.getState(false) as IGridState;
-        expect(gridState.filtering).toBeFalsy();
-        expect(gridState.sorting).toBeFalsy();
+        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
+        HelperFunctions.verifySortingExpressions(sorting, gridState);
         HelperFunctions.verifyPaging(pagingState, gridState);
 
         gridState = state.getState(false, ['filtering', 'sorting', 'paging']) as IGridState;
