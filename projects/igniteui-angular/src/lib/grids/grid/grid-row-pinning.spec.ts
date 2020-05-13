@@ -842,6 +842,95 @@ describe('Row Pinning #grid', () => {
         });
     });
 
+    describe(' Cell Editing', () => {
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(GridRowPinningComponent);
+            fix.detectChanges();
+            // enable cell editing for column
+            grid = fix.componentInstance.instance;
+            grid.getColumnByName('CompanyName').editable = true;
+            
+        });
+
+        it('should enter edit mode for the next editable cell when tabbing.', () => {
+            const  gridContent = GridFunctions.getGridContent(fix);
+            grid.getRowByIndex(0).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(3).pin();
+            fix.detectChanges();
+
+            const firstEditable = grid.getCellByColumn(0, 'CompanyName');
+            const secondEditable = grid.getCellByColumn(1, 'CompanyName');
+            const thirdEditable = grid.getCellByColumn(3, 'CompanyName');
+            const fourthEditable = grid.getCellByColumn(5, 'CompanyName');
+
+            // enter edit mode for pinned row
+            UIInteractions.simulateDoubleClickAndSelectEvent(firstEditable);
+            fix.detectChanges();
+
+            expect(firstEditable.editMode).toBeTruthy();
+
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+			
+            expect(firstEditable.editMode).toBeFalsy();
+            expect(secondEditable.editMode).toBeTruthy();
+
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(secondEditable.editMode).toBeFalsy();
+            expect(thirdEditable.editMode).toBeTruthy();
+
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(thirdEditable.editMode).toBeFalsy();
+            expect(fourthEditable.editMode).toBeTruthy();
+        });
+        it('should enter edit mode for the previous editable cell when shift+tabbing.', () => {
+            const  gridContent = GridFunctions.getGridContent(fix);
+            grid.getRowByIndex(0).pin();
+            fix.detectChanges();
+            grid.getRowByIndex(3).pin();
+            fix.detectChanges();
+
+            const firstEditable = grid.getCellByColumn(0, 'CompanyName');
+            const secondEditable = grid.getCellByColumn(1, 'CompanyName');
+            const thirdEditable = grid.getCellByColumn(3, 'CompanyName');
+            const fourthEditable = grid.getCellByColumn(5, 'CompanyName');
+
+            // enter edit mode for unpinned row
+            UIInteractions.simulateDoubleClickAndSelectEvent(fourthEditable);
+            fix.detectChanges();
+
+            expect(fourthEditable.editMode).toBeTruthy();
+            // press shift+tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            fix.detectChanges();
+
+            expect(fourthEditable.editMode).toBeFalsy();
+            expect(thirdEditable.editMode).toBeTruthy();
+
+            // press shift+tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            fix.detectChanges();
+
+            expect(thirdEditable.editMode).toBeFalsy();
+            expect(secondEditable.editMode).toBeTruthy();
+
+            // press shift+tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
+            fix.detectChanges();
+
+            expect(secondEditable.editMode).toBeFalsy();
+            expect(firstEditable.editMode).toBeTruthy();
+        });
+    });
+
     describe(' Navigation', () => {
         let gridContent: DebugElement;
 
