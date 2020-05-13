@@ -408,7 +408,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
+            return (error && error.required) ? true : false;
         }
 
         return false;
@@ -657,7 +657,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public handleOpening(event: CancelableEventArgs): void {
+    public handleOpening(event: CancelableBrowserEventArgs & IBaseEventArgs): void {
         this.onOpening.emit(event);
         this._collapsed = false;
     }
@@ -679,15 +679,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.value = null;
         }
 
-        let outsideClick = true;
-        if (event.event) {
-            const elementRect: DOMRect = this.element.nativeElement.getBoundingClientRect();
-            if (elementRect.left < event.event.x && event.event.x < elementRect.right
-                && elementRect.top < event.event.y && event.event.y < elementRect.bottom) {
-                outsideClick = false;
-            }
-        }
-        if (outsideClick) {
+        if (this.mode === InteractionMode.DropDown && event.event && !this.element.nativeElement.contains(event.event.target)) {
             // outside click
             this.updateValidityOnBlur();
         } else {
@@ -789,7 +781,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             if (this.inputGroup && this.inputGroup.isRequired !== isRequired) {
                 this.inputGroup.isRequired = isRequired;
             } else if (this.hasProjectedInputs && this._ngControl) {
-                this.projectedInputs.map(i => i.isRequired = isRequired);
+                this.projectedInputs.forEach(i => i.isRequired = isRequired);
             }
         });
     }
@@ -878,7 +870,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                             this.updateValidityOnBlur();
                         }
                         if (this.value && !this.value.start) {
-                            this.value = { start: null, end: null };
+                            this.value = null;
                         }
                         // TODO: if we have start and have no end should we fill end
                         // as we do on calendar close
