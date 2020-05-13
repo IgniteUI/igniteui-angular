@@ -421,7 +421,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                cell = treeGrid.getCellByColumn(i, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.getCellByColumn(i + 1, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -432,7 +431,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                cell = treeGrid.getCellByColumn(i, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.getCellByColumn(i - 1, 'ID');
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
