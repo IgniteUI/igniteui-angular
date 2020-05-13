@@ -246,7 +246,7 @@ export abstract class DatePickerUtil {
     }
 
     /**
-     * Determines whether the provided value is greater than the provided min value.
+     * Determines whether the provided value is greater than the provided max value.
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
      * @returns true if provided value is greater than provided maxValue
@@ -845,5 +845,4 @@ export abstract class DatePickerUtil {
         }
     }
 }
-
 
