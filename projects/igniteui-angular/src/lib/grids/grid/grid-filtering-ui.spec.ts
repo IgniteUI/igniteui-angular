@@ -2847,7 +2847,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Verify filter cell chip is scrolled into view on click.', async () => {
             grid.width = '470px';
-            await wait(DEBOUNCETIME);
+            await wait(30);
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is not fully visible.
@@ -2857,8 +2857,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipRect.right > gridRect.right).toBe(true,
                 'chip should not be fully visible and thus not within grid');
 
-            GridFunctions.clickFilterCellChipUI(fix, 'ReleaseDate');
-            await wait(DEBOUNCETIME);
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+            await wait(30);
             fix.detectChanges();
 
             grid.filteringRow.close();
