@@ -235,10 +235,10 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        display: flex;
+        display: inline-flex;
         justify-content: flex-start;
         align-items: center;
-        width: 100%;
+        min-width: 100%;
         white-space: nowrap;
         height: map-get($item-height, 'comfortable');
     }
