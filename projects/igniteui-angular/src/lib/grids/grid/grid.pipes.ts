@@ -108,11 +108,12 @@ export class IgxGridPagingPipe implements PipeTransform {
             index: page,
             recordsPerPage: perPage
         };
-        DataUtil.correctPagingState(state, collection.data.length);
+        const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.data.length;
+        DataUtil.correctPagingState(state, total);
 
         const result = {
-            data: DataUtil.page(cloneArray(collection.data), state),
-            metadata: DataUtil.page(cloneArray(collection.metadata), state)
+            data: DataUtil.page(cloneArray(collection.data), state, total),
+            metadata: DataUtil.page(cloneArray(collection.metadata), state, total)
         };
         if (this.gridAPI.grid.page !== state.index) {
             this.gridAPI.grid.page = state.index;
