@@ -12,6 +12,17 @@ export default function(): Rule {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
         const update = new UpdateChanges(__dirname, host, context);
+        update.addValueTransform('rowSelectable_is_deprecated', function(oldValue: string): string {
+
+            switch (oldValue) {
+                case 'true':
+                    return '\'multiple\'';
+                case 'false':
+                    return '\'none\'';
+                default:
+                    return `${oldValue} ? 'multiple' : 'none' `;
+            }
+        });
         update.applyChanges();
     };
 }

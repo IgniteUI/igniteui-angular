@@ -19,6 +19,7 @@ export class UpdateChanges {
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
+    protected valueTransforms: Map<string, Function> = new Map<string, Function>();
 
     private _templateFiles: string[] = [];
     public get templateFiles(): string[] {
@@ -130,6 +131,10 @@ export class UpdateChanges {
         this.conditionFunctions.set(conditionName, callback);
     }
 
+    public addValueTransform(functionName: string, callback: (oldValue: string) => string) {
+        this.valueTransforms.set(functionName, callback);
+    }
+
     protected updateSelectors(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
@@ -202,8 +207,8 @@ export class UpdateChanges {
                 continue;
             }
 
-            let base;
-            let replace;
+            let base: string;
+            let replace: string;
             let groups = 1;
             let searchPattern;
 
@@ -212,8 +217,8 @@ export class UpdateChanges {
                 replace = `(${change.replaceWith})=$1`;
             } else {
                 // Match both bound - [name] - and regular - name
-                base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])`;
-                replace = String.raw`$1${change.replaceWith}$2$3`;
+                base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
+                replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
                 groups = 3;
             }
 
@@ -242,6 +247,14 @@ export class UpdateChanges {
                 if (change.moveBetweenElementTags) {
                     const moveMatch = match.match(reg);
                     fileContent = this.copyPropertyValueBetweenElementTags(fileContent, match, moveMatch);
+                }
+
+                if (change.valueTransform) {
+                    const oldValue = match.match(reg).groups[3];
+                    const transform = this.valueTransforms.get(change.valueTransform);
+                    const newValue = transform(oldValue);
+                    // Check why the regEx does not return the correct value
+                    replace = replace.replace('$4', newValue);
                 }
 
                 fileContent = fileContent.replace(

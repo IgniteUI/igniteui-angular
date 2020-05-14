@@ -55,4 +55,19 @@ describe('Update 9.1.0', () => {
 
         done();
     });
+
+    // Except for testing for true and false (' and ") check for binded scenarios like "'prop'"
+    fit('should update rowSelectable to rowSelection', done => {
+        appTree.create(
+            `/testSrc/appPrefix/component/input.component.html`,
+            `<igx-grid [rowSelectable]="true"></igx-grid>`
+        );
+
+        const tree = schematicRunner.runSchematic('migration-15', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
+        .toEqual(`<igx-grid [rowSelection]="'multiple'"></igx-grid>`);
+
+        done();
+    });
 });
