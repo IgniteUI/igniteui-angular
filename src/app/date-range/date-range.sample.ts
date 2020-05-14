@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { IgxDateRangePickerComponent, DateRange } from 'igniteui-angular';
+import { IgxDateRangePickerComponent, DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',
@@ -21,6 +21,9 @@ export class DateRangeSampleComponent {
 
     public reactiveForm: FormGroup;
 
+    public updateOnOptions: string[] = ['change', 'blur', 'submit'];
+    public updateOn = 'blur';
+
     constructor(fb: FormBuilder) {
         const today = new Date();
         const in5days = new Date();
@@ -28,11 +31,27 @@ export class DateRangeSampleComponent {
         const r1: DateRange = { start: new Date(today.getTime()), end: new Date(in5days.getTime()) };
         const r2: DateRange = { start: new Date(today.getTime()), end: new Date(in5days.getTime()) };
         this.reactiveForm = fb.group({
-            dp1: [r1, { validators: Validators.required, updateOn: 'blur' }],
-            dp2: ['', { validators: Validators.required, updateOn: 'blur' }],
-            dp3: [r2, { validators:  [Validators.required, minDateValidator(this.minDate)] }],
-            dp4: ['', { validators: Validators.required, updateOn: 'blur' }],
+            dp1: [r1, { validators: Validators.required, updateOn: this.updateOn }],
+            dp2: ['', { validators: Validators.required, updateOn: this.updateOn }],
+            dp3: [r2, { validators: [Validators.required, minDateValidator(this.minDate)] }],
+            dp4: ['', { validators: Validators.required, updateOn: this.updateOn }],
+            start5: [r2.start, { validators: Validators.required, updateOn: this.updateOn }],
+            end5: [r2.end, { validators: Validators.required, updateOn: this.updateOn }],
+            start6: ['', { validators: Validators.required, updateOn: this.updateOn }],
+            end6: ['', { validators: Validators.required, updateOn: this.updateOn }],
         });
+    }
+
+    public updateOnChange(e: IChangeRadioEventArgs) {
+        Object.keys(this.reactiveForm.controls).forEach(name => {
+            const control = this.reactiveForm.controls[name];
+            const value = control.value;
+            const newControl = new FormControl(
+                value,
+                { updateOn: e.value, validators: Validators.required }
+            );
+            this.reactiveForm.setControl(name, newControl);
+        })
     }
 }
 function minDateValidator(minValue: Date): ValidatorFn {

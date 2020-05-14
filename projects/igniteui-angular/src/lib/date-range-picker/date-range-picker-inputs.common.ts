@@ -45,9 +45,8 @@ export class DateRangePickerFormatPipe implements PipeTransform {
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeInputsBaseComponent }]
 })
 export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
-    /** @hidden @internal */
     @ContentChild(NgControl)
-    public ngControl: NgControl;
+    protected ngControl: NgControl;
 
     @ContentChild(IgxDateTimeEditorDirective)
     public dateTimeEditor: IgxDateTimeEditorDirective;
@@ -69,7 +68,6 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     public updateInputValue(value: Date) {
         if (this.ngControl) {
             this.ngControl.control.setValue(value);
-            this.ngControl.control.markAsDirty();
         } else {
             this.dateTimeEditor.value = value;
         }
@@ -108,8 +106,10 @@ export class IgxPickerToggleComponent {
     @Output()
     public clicked = new EventEmitter();
 
-    @HostListener('click')
-    public onClick() {
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        // do not focus input on click
+        event.stopPropagation();
         this.clicked.emit();
     }
 }
@@ -141,7 +141,10 @@ export class IgxPickerToggleComponent {
 @Component({
     selector: 'igx-date-range-start',
     templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent }]
+    providers: [
+        { provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent },
+        { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
+    ]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -172,7 +175,10 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
 @Component({
     selector: 'igx-date-range-end',
     templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent }]
+    providers: [
+        { provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent },
+        { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
+    ]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 

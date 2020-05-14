@@ -164,7 +164,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.updateMask();
   }
 
-  public get value() {
+  public get value(): Date {
     return this._value;
   }
 
@@ -421,7 +421,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return mask;
   }
 
-  private isDate(value: any): value is Date {
+  /** @hidden @internal */
+  public isDate(value: any): value is Date {
     return value instanceof Date && typeof value === 'object';
   }
 
@@ -568,7 +569,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return date && date.getTime && !isNaN(date.getTime());
   }
 
-  private parseDate(val: string): Date | null {
+  /** @hidden @internal */
+  public parseDate(val: string): Date | null {
     if (!val) { return null; }
     return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
