@@ -26,17 +26,26 @@ export interface IActiveNode {
 export class IgxGridNavigationService {
     public grid: IgxGridBaseDirective & GridType;
     public activeNode: IActiveNode;
+    protected pendingNavigation = false;
+
+    handleNavigation(event: KeyboardEvent) {
+        const key = event.key.toLowerCase();
+        if (event.repeat && SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) {
+            event.preventDefault();
+        }
+        event.repeat ? setTimeout(() => this.dispatchEvent(event), 1) : this.dispatchEvent(event);
+    }
 
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell))) { return; }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+        if (NAVIGATION_KEYS.has(key) && this.pendingNavigation) { event.preventDefault(); return; }
 
         const type = this.isDataRow(this.activeNode.row) ? GridKeydownTargetType.dataCell :
             this.isDataRow(this.activeNode.row, true) ? GridKeydownTargetType.summaryCell : GridKeydownTargetType.groupRow;
-        const cancel = this.emitKeyDown(type, this.activeNode.row, event);
-        if (cancel) {
+        if (this.emitKeyDown(type, this.activeNode.row, event)) {
             return;
         }
         if (event.altKey) {
@@ -133,50 +142,11 @@ export class IgxGridNavigationService {
         if (!HEADER_KEYS.has(key)) { return; }
         event.preventDefault();
 
-        const column = this.currentActiveColumn;
         const ctrl = event.ctrlKey;
         const shift = event.shiftKey;
         const alt = event.altKey;
-        let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
 
-        if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
-            direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
-            return;
-        }
-        if (ctrl && key.includes('down') && column.sortable && !column.columnGroup) {
-            direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
-            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
-            return;
-        }
-        if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
-            direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
-            key.includes('right') ? (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false }) :
-                (this.grid as any).clearGrouping(column.field);
-            this.activeNode.column = key.includes('right') && (this.grid as any).hideGroupedColumns &&
-                column.visibleIndex === this.lastColumnIndex ? this.lastColumnIndex - 1 : this.activeNode.column;
-            return;
-        }
-        if (alt && (ROW_EXPAND_KEYS.has(key) || ROW_COLLAPSE_KEYS.has(key))) {
-            this.handleMCHExpandCollapse(key, column);
-            return;
-        }
-        if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
-            this.handleColumnSelection(column, event);
-        }
-        if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
-            this.grid.openAdvancedFilteringDialog();
-        }
-        if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
-            if (this.grid.filterMode === FilterMode.excelStyleFilter) {
-                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
-                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
-            } else {
-                this.performHorizontalScrollToCell(column.visibleIndex);
-                this.grid.filteringService.filteredColumn = column;
-                this.grid.filteringService.isFilterRowVisible = true;
-            }
-        }
+        this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt);
         if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
         !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
     }
@@ -201,12 +171,13 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        this.activeNode = !this.activeNode ? { row: 0, column: 0 } : this.activeNode;
-        if (!(this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1)) { return; }
-        this.navigateInBody(0, 0, (obj) => {
-            this.grid.clearCellSelection();
-            obj.target.activate(event);
-        });
+        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1) {
+            this.activeNode = { row: 0, column: 0 };
+            this.grid.navigateTo(0, 0, (obj) => {
+                this.grid.clearCellSelection();
+                obj.target.activate(event);
+            });
+        }
     }
 
     focusFirstCell(header = true) {
@@ -230,7 +201,7 @@ export class IgxGridNavigationService {
     }
 
     public isColumnFullyVisible(columnIndex: number) {
-        if (this.isColumnPinned(columnIndex, this.forOfDir())) {
+        if (columnIndex < 0 || this.isColumnPinned(columnIndex, this.forOfDir())) {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(columnIndex);
@@ -301,6 +272,7 @@ export class IgxGridNavigationService {
     }
 
     public shouldPerformHorizontalScroll(visibleColIndex: number, rowIndex = -1) {
+        if (visibleColIndex < 0 || visibleColIndex > this.grid.visibleColumns.length - 1) { return false; }
         if (rowIndex < 0 || rowIndex > this.grid.dataView.length - 1) {
             return !this.isColumnFullyVisible(visibleColIndex);
         }
@@ -316,8 +288,10 @@ export class IgxGridNavigationService {
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(scrollRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
         const endTopOffset = targetRow ? targetRow.offsetTop + rowHeight + this.containerTopOffset : containerHeight + rowHeight;
+        // this is workaround: endTopOffset - containerHeight > 5 and should be replaced with: containerHeight < endTopOffset
+        // when the page is zoomed the grid does not scroll the row completely in the view
         return !targetRow || targetRow.offsetTop < Math.abs(this.containerTopOffset)
-        || containerHeight && containerHeight < endTopOffset;
+        || containerHeight && endTopOffset - containerHeight > 5;
     }
 
     protected navigateInBody(rowIndex, visibleColIndex, cb: Function = null): void {
@@ -326,21 +300,26 @@ export class IgxGridNavigationService {
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColIndex = -1, cb?: () => void) {
+        if (!this.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) { return; }
+        this.pendingNavigation = true;
         // Only for top pinning we need to subtract pinned count because virtualization indexing doesn't count pinned rows.
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             rowIndex - this.grid.pinnedDataView.length : rowIndex;
         this.grid.verticalScrollContainer.scrollTo(scrollRowIndex);
         this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {
+                this.pendingNavigation = false;
                 if (cb) { cb(); }
             });
     }
 
     public performHorizontalScrollToCell(visibleColumnIndex: number, cb?: () => void) {
         if (!this.shouldPerformHorizontalScroll(visibleColumnIndex)) { return; }
+        this.pendingNavigation = true;
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
+                this.pendingNavigation = false;
                 if (cb) { cb(); }
             });
         this.forOfDir().scrollTo(this.getColumnUnpinnedIndex(visibleColumnIndex));
@@ -371,8 +350,7 @@ export class IgxGridNavigationService {
 
     protected isColumnPinned(columnIndex: number, forOfDir: IgxForOfDirective<any>): boolean {
         const horizontalScroll = forOfDir.getScroll();
-        const column = this.grid.visibleColumns.filter(c => !c.columnGroup).find(c => c.visibleIndex === columnIndex);
-        return (!horizontalScroll.clientWidth || (column && column.pinned));
+        return (!horizontalScroll.clientWidth || this.grid.getColumnByVisibleIndex(columnIndex)?.pinned);
     }
 
     protected findFirstDataRowIndex(): number {
@@ -402,11 +380,52 @@ export class IgxGridNavigationService {
         }
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
+    protected performHeaderKeyCombination(column, key, shift, ctrl, alt) {
+        let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
+        if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
+            direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;
+            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            return;
+        }
+        if (ctrl && key.includes('down') && column.sortable && !column.columnGroup) {
+            direction = direction === SortingDirection.Desc ? SortingDirection.None : SortingDirection.Desc;
+            this.grid.sort({ fieldName:  column.field, dir: direction, ignoreCase: false });
+            return;
+        }
+        if (shift && alt && this.isToggleKey(key) && !column.columnGroup && column.groupable) {
+            direction = direction ? SortingDirection.Desc : SortingDirection.Asc;
+            key.includes('right') ? (this.grid as any).groupBy({ fieldName: column.field, dir: direction, ignoreCase: false }) :
+                (this.grid as any).clearGrouping(column.field);
+            this.activeNode.column = key.includes('right') && (this.grid as any).hideGroupedColumns &&
+                column.visibleIndex === this.lastColumnIndex ? this.lastColumnIndex - 1 : this.activeNode.column;
+            return;
+        }
+        if (alt && (ROW_EXPAND_KEYS.has(key) || ROW_COLLAPSE_KEYS.has(key))) {
+            this.handleMCHExpandCollapse(key, column);
+            return;
+        }
+        if ([' ', 'spacebar', 'space'].indexOf(key) !== -1) {
+            this.handleColumnSelection(column, event);
+        }
+        if (alt && key === 'l' && this.grid.allowAdvancedFiltering) {
+            this.grid.openAdvancedFilteringDialog();
+        }
+        if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
+            if (this.grid.filterMode === FilterMode.excelStyleFilter) {
+                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
+            } else {
+                this.performHorizontalScrollToCell(column.visibleIndex);
+                this.grid.filteringService.filteredColumn = column;
+                this.grid.filteringService.isFilterRowVisible = true;
+            }
+        }
+    }
 
     private handleMCHeaderNav(key: string, ctrl: boolean) {
         const activeCol = this.currentActiveColumn;
         const lastGroupIndex = Math.max(... this.grid.visibleColumns.
-                filter(c => c.level === this.activeNode.level).map(col => col.visibleIndex));
+                filter(c => c.level <= this.activeNode.level).map(col => col.visibleIndex));
         let nextCol = activeCol;
         if ((key.includes('left') || key === 'home') && this.activeNode.column > 0) {
             const index = ctrl || key === 'home' ? 0 : this.activeNode.column - 1;
@@ -419,11 +438,11 @@ export class IgxGridNavigationService {
             nextCol = ctrl || key === 'end' ? this.getNextColumnMCH(this.lastColumnIndex) : this.getNextColumnMCH(nextVIndex);
             this.activeNode.mchCache.visibleIndex = nextCol.visibleIndex;
         }
-        if (key.includes('up') && this.activeNode.level > 0) {
+        if (!ctrl && key.includes('up') && this.activeNode.level > 0) {
             nextCol = activeCol.parent;
             this.activeNode.mchCache.level = nextCol.level;
         }
-        if (key.includes('down') && activeCol.children) {
+        if (!ctrl && key.includes('down') && activeCol.children) {
             nextCol = activeCol.children.find(c => c.visibleIndex === this.activeNode.mchCache.visibleIndex) ||
             activeCol.children.toArray().sort((a, b) => b.visibleIndex - a.visibleIndex)
             .filter(col => col.visibleIndex < this.activeNode.mchCache.visibleIndex)[0];
