@@ -116,7 +116,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.focusTbody(event);
         }
-        
     }
 
     protected nextSiblingIndex(isNext) {
