@@ -638,6 +638,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
+        this.initialSetValue();
         this.updateInputs();
     }
 
@@ -913,6 +914,17 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this.overlaySettings !== null) {
             this._dropDownOverlaySettings = Object.assign({}, this._dropDownOverlaySettings, this.overlaySettings);
             this._dialogOverlaySettings = Object.assign({}, this._dialogOverlaySettings, this.overlaySettings);
+        }
+    }
+
+    private initialSetValue() {
+        // if there is no value, no ngControl but we have inputs we may have value set trough
+        // inputs' ngModels - we should generate our initial control value
+        if (!this.value && this.hasProjectedInputs && !this._ngControl) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent).dateTimeEditor.value;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent).dateTimeEditor.value;
+            this.updateValue({ start, end });
+
         }
     }
 
