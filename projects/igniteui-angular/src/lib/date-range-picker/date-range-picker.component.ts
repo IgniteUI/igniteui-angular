@@ -529,7 +529,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private updateValue(value: DateRange) {
-        this._value = value;
+        this._value = value ? value : null;
         this.updateInputs();
     }
 
@@ -853,13 +853,21 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                 start.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
                     .subscribe(value => {
-                        this.value.start = value;
+                        if (this.value) {
+                            this.value = { start: value, end: this.value.end };
+                        } else {
+                            this.value = { start: value, end: null };
+                        }
                         // TODO: should we check start and reset end value
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
                     .subscribe(value => {
-                        this.value.end = value;
+                        if (this.value) {
+                            this.value = { start: this.value.start, end: value };
+                        } else {
+                            this.value = { start: null, end: value };
+                        }
                     });
             }
         }
