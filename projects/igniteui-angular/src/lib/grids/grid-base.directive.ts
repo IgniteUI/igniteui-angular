@@ -3654,7 +3654,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     set totalRecords(total: number) {
-        this._totalRecords = total;
+        if (total >= 0) {
+            this._totalRecords = total;
+            this._pipeTrigger++;
+            this.notifyChanges();
+        }
     }
 
     /**
