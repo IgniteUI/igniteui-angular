@@ -108,9 +108,15 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 column: 0
             };
 
-        }
+            this.grid.navigateTo(0, 0, (obj) => {
+                this.grid.clearCellSelection();
+                obj.target.activate(event);
+            });
 
-        super.focusTbody(event);
+        } else {
+            super.focusTbody(event);
+        }
+        
     }
 
     protected nextSiblingIndex(isNext) {
