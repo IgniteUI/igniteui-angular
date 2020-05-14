@@ -16,12 +16,13 @@ import { IgxHierarchicalGridModule } from './hierarchical-grid/index';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 
+// tslint:disable:max-line-length
 describe('IgxHierarchicalGridState - input properties #grid', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridTestBaseComponent
+                IgxHierarchicalGridTestBaseComponent, IgxHierarchicalGridTestExpandedBaseComponent
             ],
             imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
         }).compileComponents();
@@ -84,8 +85,17 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
 
     it('getState should return corect JSON string', () => {
         const fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
-        // tslint:disable-next-line:max-line-length
         const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}';
+        fix.detectChanges();
+
+        const state = fix.componentInstance.state;
+        const gridState = state.getState();
+        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
+    });
+
+    it('getState should return corect JSON string, when hGrid is initially expanded', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        const initialGridState = '{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"213px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"213px","header":"","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[{"id":"igx-row-island-childData","state":{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ID","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col1","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col2","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col3","width":"136px","header":"","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}}]}';
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
@@ -124,6 +134,192 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
         HelperFunctions.verifyAdvancedFilteringExpressions(advancedFiltering, gridState);
     });
+
+    it('getState should return corect IGridState object when options are not default', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+        const grid = fix.componentInstance.hgrid;
+        const filtering = grid.filteringExpressionsTree;
+        const sorting = grid.sortingExpressions;
+
+        const optionsInput = {
+            filtering: false,
+            advancedFiltering: true,
+            sorting: false
+        };
+
+        state.options = optionsInput;
+
+        let gridState = state.getState(false) as IGridState;
+        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
+        HelperFunctions.verifySortingExpressions(sorting, gridState);
+
+        gridState = state.getState(false, ['filtering', 'sorting']) as IGridState;
+        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
+        HelperFunctions.verifySortingExpressions(sorting, gridState);
+    });
+
+    it('getState should return corect filtering state', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+        const filtering = grid.filteringExpressionsTree;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const emptyFiltering = '"filtering":{"filteringOperands":[],"operator":0}';
+        const initialState = HelperFunctions.buildStateString(emptyFiltering, emptyFiltering, rowIslandId);
+
+        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
+    });
+
+    it('setState should correctly restore grid filtering state from string', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const emptyFiltering = '"filtering":{"filteringOperands":[],"operator":0}';
+        const initialState = HelperFunctions.buildStateString(emptyFiltering, emptyFiltering, rowIslandId);
+        const filtering = '"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filteringState = HelperFunctions.buildStateString(filtering, filtering, rowIslandId);
+
+        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringState);
+        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
+        gridState = state.getState(true, ['filtering', 'inheritance']);
+        expect(gridState).toBe(filteringState);
+    });
+
+    it('setState should correctly restore grid filtering state from object', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const emptyFiltering = '"filtering":{"filteringOperands":[],"operator":0}';
+        const emptyChildFiltering = '"filtering":{"filteringOperands":[],"operator":0,"type":0}';
+        const initialState = HelperFunctions.buildStateString(emptyFiltering, emptyFiltering, rowIslandId);
+        const filtering = '"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
+        const filteringState = HelperFunctions.buildStateString(filtering, emptyChildFiltering, rowIslandId);
+
+        const filteringStateObject = JSON.parse(filteringState) as IGridState;
+        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        state.setState(filteringStateObject);
+        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
+        gridState = state.getState(true, ['filtering', 'inheritance']);
+        expect(gridState).toBe(filteringState);
+    });
+
+    it('setState should correctly restore grid sorting state from string', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const emptySorting = '"sorting":[]';
+        const initialState = HelperFunctions.buildStateString(emptySorting, emptySorting, rowIslandId);
+        const sorting = '"sorting":[{"fieldName":"ID","dir":2,"ignoreCase":true}]';
+        const sortingState = HelperFunctions.buildStateString(sorting, sorting, rowIslandId);
+
+        let gridState = state.getState(true, ['sorting', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        state.setState(sortingState);
+        gridState = state.getState(false, ['sorting', 'inheritance']) as IGridState;
+        HelperFunctions.verifySortingExpressions(grid.sortingExpressions, gridState);
+        gridState = state.getState(true, ['sorting', 'inheritance']);
+        expect(gridState).toBe(sortingState);
+    });
+
+    it('setState should correctly restore grid sorting state from object', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const emptySorting = '"sorting":[]';
+        const initialState = HelperFunctions.buildStateString(emptySorting, emptySorting, rowIslandId);
+        const sorting = '"sorting":[{"fieldName":"ID","dir":2,"ignoreCase":true}]';
+        const sortingState = HelperFunctions.buildStateString(sorting, sorting, rowIslandId);
+        const sortingStateObject = JSON.parse(sortingState) as IGridState;
+
+        let gridState = state.getState(true, ['sorting', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        state.setState(sortingStateObject);
+        gridState = state.getState(false, ['sorting', 'inheritance']);
+        HelperFunctions.verifySortingExpressions(grid.sortingExpressions, gridState as IGridState);
+        gridState = state.getState(true, ['sorting', 'inheritance']);
+        expect(gridState).toBe(sortingState);
+    });
+
+    it('setState should correctly restore grid paging state from string', () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.hgrid;
+        const state = fix.componentInstance.state;
+
+        const rowIslandId = 'igx-row-island-childData';
+        const initialPaging = '"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}}';
+        const initialChiildPaging = '"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}}';
+        const initialState = HelperFunctions.buildStateString(initialPaging, initialChiildPaging, rowIslandId);
+        const paging = '"paging":{"index":0,"recordsPerPage":10,"metadata":{"countPages":2,"countRecords":20,"error":0}}';
+        const childPaging = '"paging":{"index":0,"recordsPerPage":10,"metadata":{"countPages":1,"countRecords":7,"error":0}}';
+        const pagingState = HelperFunctions.buildStateString(paging, childPaging, rowIslandId);
+
+        let gridState = state.getState(true, ['paging', 'inheritance']);
+        expect(gridState).toBe(initialState);
+
+        state.setState(pagingState);
+        gridState = state.getState(false, ['paging', 'inheritance']);
+        HelperFunctions.verifyPaging(grid.pagingState, gridState as IGridState);
+        gridState = state.getState(true, ['paging', 'inheritance']);
+        expect(gridState).toBe(pagingState);
+    });
+
+    // fit('setState should correctly restore grid columns state from string', () => {
+    //     const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+    //     fix.detectChanges();
+    //     const state = fix.componentInstance.state;
+
+    //     const rowIslandId = 'igx-row-island-childData';
+    //     const columns = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+    //     const initialState = HelperFunctions.buildStateString(columns, rowIslandId);
+    //     const newColumns = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+    //     const newColumnsState = HelperFunctions.buildStateString(newColumns, rowIslandId);
+
+    //     // const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+    //     // const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+
+    //     const columnsObject = JSON.parse(initialState).columns;
+
+    //     let gridState = state.getState(true, 'columns');
+    //     expect(gridState).toBe(initialState);
+
+    //     state.setState(newColumnsState);
+    //     gridState = state.getState(false, 'columns') as IGridState;
+    //     HelperFunctions.verifyColumns(columnsObject, gridState);
+    //     gridState = state.getState(true, 'columns');
+    //     expect(gridState).toBe(newColumnsState);
+    // });
 });
 
 class HelperFunctions {
@@ -186,6 +382,11 @@ class HelperFunctions {
             expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
         });
     }
+
+    public static buildStateString(featureString: string, childFeatureString, rowIslandId: string): string {
+        const state = `{${featureString},"rowIslands":[{"id":"${rowIslandId}","state":{${childFeatureString},"rowIslands":[]}}]}`;
+        return state;
+    }
 }
 
 @Component({
@@ -247,31 +448,30 @@ export class IgxHierarchicalGridTestBaseComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #hGrid [data]="data" igxGridState
-     [autoGenerate]="false" [height]="'400px'" [width]="width">
+    <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" [paging]="true" perPage="5"
+     [autoGenerate]="false" [height]="'800px'" [width]="'800px'">
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [paging]="true" perPage="5">
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
             <igx-column field="Col1"></igx-column>
             <igx-column field="Col2"></igx-column>
             <igx-column field="Col3"></igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [paging]="true" perPage="5">
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class IgxHierarchicalGridTestWithOptionsBaseComponent {
+export class IgxHierarchicalGridTestExpandedBaseComponent {
     public data;
-    public width = '500px';
     public options = {
         filtering: false,
         advancedFiltering: true,
         sorting: false,
         groupBy: true
     };
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
