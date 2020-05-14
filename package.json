@@ -58,7 +58,7 @@
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.2",
     "hammerjs": "^2.0.8",
-    "igniteui-trial-watermark": "^1.0.1",
+    "igniteui-trial-watermark": "^1.0.2",
     "jszip": "^3.3.0",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.5.4",
