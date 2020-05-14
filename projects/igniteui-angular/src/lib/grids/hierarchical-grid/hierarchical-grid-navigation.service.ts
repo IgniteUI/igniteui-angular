@@ -39,7 +39,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (rec && this.grid.isChildGridRecord(rec)) {
              // target is child grid
             const virtState = this.grid.verticalScrollContainer.state;
-             const inView = rowIndex >= virtState.startIndex && rowIndex < virtState.startIndex + virtState.chunkSize;
+             const inView = rowIndex >= virtState.startIndex && rowIndex <= virtState.startIndex + virtState.chunkSize;
              const isNext =  this.activeNode.row < rowIndex;
              const targetLayoutIndex = isNext ? null : this.grid.childLayoutKeys.length - 1;
              if (inView) {
@@ -102,11 +102,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     focusTbody(event) {
-        if (!this.activeNode) {
+        if (!this.activeNode || !this.activeNode.row) {
             this.activeNode = {
-                row: null,
-                column: null
+                row: 0,
+                column: 0
             };
+
         }
 
         super.focusTbody(event);

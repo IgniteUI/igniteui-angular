@@ -334,7 +334,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
         expect(childRowComponent.index).toBe(4);
 
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(200);
+        await wait(100);
         fixture.detectChanges();
         childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
         expect(childRowComponent.rowData.rowID).toBe('3');
