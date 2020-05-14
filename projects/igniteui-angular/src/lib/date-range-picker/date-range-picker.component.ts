@@ -852,23 +852,14 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             if (start && end) {
                 start.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
-                    .subscribe(() => {
-                        this.value = { start: start.dateTimeEditor.value, end: end.dateTimeEditor.value };
+                    .subscribe(value => {
+                        this.value.start = value;
+                        // TODO: should we check start and reset end value
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
-                    .subscribe(() => {
-                        this.value = { start: start.dateTimeEditor.value, end: end.dateTimeEditor.value };
-                    });
-                start.dateTimeEditor.validationFailed
-                    .pipe(takeUntil(this.$destroy))
-                    .subscribe(() => {
-                        this.value = { start: start.dateTimeEditor.value, end: end.dateTimeEditor.value };
-                    });
-                end.dateTimeEditor.validationFailed
-                    .pipe(takeUntil(this.$destroy))
-                    .subscribe(() => {
-                        this.value = { start: start.dateTimeEditor.value, end: end.dateTimeEditor.value };
+                    .subscribe(value => {
+                        this.value.end = value;
                     });
             }
         }
