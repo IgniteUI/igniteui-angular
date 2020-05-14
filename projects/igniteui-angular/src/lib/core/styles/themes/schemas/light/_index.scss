@@ -14,12 +14,12 @@
 @import './calendar';
 @import './card';
 @import './carousel';
-@import './chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './data-chart';
 @import './date-range-picker';
 @import './divider';
 @import './drop-down';
@@ -61,7 +61,7 @@
 /// @property {Map} igx-calendar [$_light-calendar]
 /// @property {Map} igx-card [$_light-card]
 /// @property {Map} igx-carousel [$_light-carousel]
-/// @property {Map} data-chart [$_light-chart]
+/// @property {Map} data-chart [$_light-data-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
@@ -107,7 +107,7 @@ $light-schema: (
     igx-calendar: $_light-calendar,
     igx-card: $_light-card,
     igx-carousel: $_light-carousel,
-    data-chart: $_light-chart,
+    data-chart: $_light-data-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
     igx-column-hiding: $_light-column-hiding,
@@ -160,6 +160,7 @@ $light-fluent-schema: (
     igx-column-hiding: $_fluent-column-hiding,
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
+    data-chart: $_fluent-data-chart,
     igx-date-range: $_fluent-date-range-picker,
     igx-divider: $_fluent-divider,
     igx-drop-down: $_fluent-drop-down,
@@ -207,6 +208,7 @@ $light-bootstrap-schema: (
     igx-column-hiding: $_bootstrap-column-hiding,
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,
+    data-chart: $_bootstrap-data-chart,
     igx-date-range: $_bootstrap-date-range-picker,
     igx-divider: $_bootstrap-divider,
     igx-drop-down: $_bootstrap-drop-down,

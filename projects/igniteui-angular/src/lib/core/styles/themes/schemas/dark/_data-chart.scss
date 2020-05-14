@@ -1,4 +1,4 @@
-// @import '../shape/chart';
+@import '../light/data-chart';
 
 ////
 /// @group schemas
@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a light base chart schema.
+/// Generates a dark base chart schema.
 /// @type {Map}
 /// @property {Map} width [] - The width of the chart.
 /// @property {Map} height [] - The height of the chart.
@@ -18,30 +18,19 @@
 /// @property {Color} subtitle-margin [] - Sets the margins (top, right, bottom, left) of the chart subtitle.
 /// @property {List} brushes - Defines the palette from which automatically assigned series colors are selected.
 /// @property {List} outlines - Defines the palette from which automatically assigned series outline colors are selected.
+/// @requires $_light-data-chart
 /// @see $default-palette
-$_light-chart: extend(
-    (
-        'width': null,
+$_dark-data-chart: extend($_light-data-chart);
 
-        'height': null,
+/// Generates a dark fluent data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-data-chart
+$_dark-fluent-data-chart: extend($_fluent-data-chart);
 
-        'margin': null,
-
-        'title-text-color': (
-            igx-color: ('grays', 900)
-        ),
-
-        'title-margin': null,
-
-        'subtitle-text-color': (
-            igx-color: ('grays', 600)
-        ),
-
-        'subtitle-margin': null,
-
-        'brushes': series,
-
-        'outlines': series
-    )
-);
+/// Generates a dark bootstrap data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-data-chart
+$_dark-bootstrap-data-chart: extend($_bootstrap-data-chart);
 

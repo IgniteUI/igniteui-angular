@@ -23,13 +23,14 @@
     $height: null,
     $margin: null,
     $title-text-color: null,
-    $title-text-style: null,
     $title-margin: null,
     $subtitle-text-color: null,
-    $subtitle-text-style: null,
     $subtitle-margin: null,
     $brushes: null,
-    $outlines: null
+    $outlines: null,
+    $marker-brushes: null,
+    $marker-outlines: null,
+    $plot-area-background: null
 ) {
     $name: 'data-chart';
     $chart-schema: ();
@@ -41,25 +42,46 @@
     }
 
     $theme: apply-palette($chart-schema, $palette);
+    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
 
-    @return extend($theme, (
-        name: $name,
-        width: $width,
-        height: $height,
-        title-text-color: $title-text-color,
-        title-text-style: $title-text-style, /* TODO: this should be a typogrpahy mixin */
-        // title-top-margin: nth($title-margin, 1),
-        // title-right-margin: nth($title-margin, 2),
-        // title-bottom-margin: nth($title-margin, 3),
-        // title-left-margin: nth($title-margin, 4),
-        subtitle-text-color: null,
-        subtitle-text-style: null,
-        // subtitle-top-margin: nth($subtitle-margin, 1), /* TODO: this should be a typogrpahy mixin */
-        // subtitle-right-margin: nth($subtitle-margin, 2), /* TODO: this should be a typogrpahy mixin */
-        // subtitle-bottom-margin: nth($subtitle-margin, 3), /* TODO: this should be a typogrpahy mixin */
-        // subtitle-left-margin: nth($subtitle-margin, 4), /* TODO: this should be a typogrpahy mixin */
-        brushes: $brushes,
-        outlines: $outlines
+    @if not($subtitle-margin) {
+        $subtitle-margin: $subtitle-margin-default;
+    } @else {
+        $subtitle-margin: map-keys-prefix(expand-shorthand(($subtitle-margin)), 'subtitle');
+    }
+
+    @return extend(
+        $theme,
+        $margin,
+        $title-margin,
+        $subtitle-margin,
+        (
+            name: $name,
+            width: $width,
+            height: $height,
+            title-text-color: $title-text-color,
+            subtitle-text-color: null,
+            brushes: $brushes,
+            outlines: $outlines
+        )
+    );
+}
+
+@mixin igx-data-chart-typography($type-scale, $categories: (
+    title: 'h6',
+    subtitle: 'subtitle-1',
+)) {
+    $name: 'data-chart';
+    $title: map-get($categories, 'title');
+    $subtitle: map-get($categories, 'subtitle');
+
+    $title-styles: igx-type-scale-category($type-scale, $title);
+    $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
+
+    @include igx-css-vars((
+        'name': $name,
+        'title-text-style': #{map-get($title-styles, 'font-size')} inherit,
+        'subtitle-text-style': #{map-get($subtitle-styles, 'font-size')} inherit
     ));
 }
 
