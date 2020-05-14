@@ -2471,6 +2471,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected _paging = false;
     /**
+     * @hidden @internal
+     */
+    public _totalRecords = -1;
+    /**
      * @hidden
      */
     protected _hideRowSelectors = false;
@@ -3644,10 +3648,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const totalRecords = this.grid.totalRecords;
      * ```
      */
+    @Input()
     get totalRecords(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countRecords;
-        }
+        return this._totalRecords >= 0 ? this._totalRecords : this.pagingState?.metadata.countRecords;
+    }
+
+    set totalRecords(total: number) {
+        this._totalRecords = total;
     }
 
     /**
