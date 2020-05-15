@@ -57,7 +57,7 @@ describe('Update 9.1.0', () => {
     });
 
     // Except for testing for true and false (' and ") check for binded scenarios like "'prop'"
-    fit('should update rowSelectable to rowSelection', done => {
+    it('should update rowSelectable to rowSelection', done => {
         appTree.create(
             `/testSrc/appPrefix/component/input.component.html`,
             `<igx-grid [rowSelectable]="true"></igx-grid>`
@@ -66,7 +66,46 @@ describe('Update 9.1.0', () => {
         const tree = schematicRunner.runSchematic('migration-15', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
-        .toEqual(`<igx-grid [rowSelection]="'multiple'"></igx-grid>`);
+        .toEqual(`<igx-grid rowSelection="multiple"></igx-grid>`);
+
+        done();
+    });
+
+    it('should update rowSelectable to rowSelection when false', done => {
+        appTree.create(
+            `/testSrc/appPrefix/component/input.component.html`,
+            `<h5 style="margin-top: 30px;">[rowSelectable]="true"</h5>
+<igx-grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true"
+    [autoGenerate]="true"
+    [rowSelectable]="true"
+>
+</igx-grid>
+<h5 style="margin-top: 30px;">[rowSelectable]="'false'"</h5>
+<igx-grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true"
+    [autoGenerate]="true"
+    [rowSelectable]="false"
+>
+</igx-grid>
+<h5 style="margin-top: 30px;">rowSelectable="multiple"</h5>
+<igx-grid rowSelectable="true" >`);
+
+        const tree = schematicRunner.runSchematic('migration-15', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/input.component.html'))
+        .toEqual(`<h5 style="margin-top: 30px;">[rowSelectable]="true"</h5>
+<igx-grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true"
+    [autoGenerate]="true"
+    rowSelection="multiple"
+>
+</igx-grid>
+<h5 style="margin-top: 30px;">[rowSelectable]="'false'"</h5>
+<igx-grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true"
+    [autoGenerate]="true"
+    rowSelection="none"
+>
+</igx-grid>
+<h5 style="margin-top: 30px;">rowSelectable="multiple"</h5>
+<igx-grid rowSelection="multiple" >`);
 
         done();
     });
