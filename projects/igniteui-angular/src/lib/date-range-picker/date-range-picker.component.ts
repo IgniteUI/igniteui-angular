@@ -21,38 +21,38 @@ import {
     ViewChild
 } from '@angular/core';
 import {
-    ControlValueAccessor,
-    NG_VALUE_ACCESSOR,
-    Validator,
     AbstractControl,
-    ValidationErrors,
+    ControlValueAccessor,
     NgControl,
-    NG_VALIDATORS
+    NG_VALIDATORS,
+    NG_VALUE_ACCESSOR,
+    ValidationErrors,
+    Validator
 } from '@angular/forms';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { fadeIn, fadeOut } from '../animations/fade';
-import { WEEKDAYS, IgxCalendarComponent } from '../calendar/index';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IToggleView } from '../core/navigation';
-import { IBaseEventArgs, KEYS, CancelableBrowserEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
+import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxLabelDirective, IgxInputGroupComponent, IgxInputDirective, IgxInputState } from '../input-group';
-import { AutoPositionStrategy, PositionSettings, OverlaySettings } from '../services/index';
-
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group';
+import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/index';
 import {
     DateRange,
     IgxDateRangeEndComponent,
-    IgxDateRangeStartComponent,
-    IgxPickerToggleComponent,
+    IgxDateRangeInputsBaseComponent,
     IgxDateRangeSeparatorDirective,
-    IgxDateRangeInputsBaseComponent
+    IgxDateRangeStartComponent,
+    IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
-import { DatePickerUtil } from '../date-picker/date-picker.utils';
+
+
 
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
@@ -582,14 +582,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this.maxValue && value && value.end && DatePickerUtil.greaterThanMaxValue(value.end, this.maxValue, false)) {
             return { 'maxValue': true };
         }
-        if (control.validator) {
-            const error = control.validator({} as AbstractControl);
-            if (error && error.required) {
-                if (!value || !value.start || !value.end) {
-                    return { required: true };
-                }
-            }
-        }
+
+        // TODO: fix what happens on blur and ensure there value is either null or with both start and end filled
 
         return null;
     }
