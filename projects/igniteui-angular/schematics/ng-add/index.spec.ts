@@ -4,6 +4,7 @@ import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { scssImport, cssImport } from './add-normalize';
 import { ProjectType } from '@schematics/angular/utility/workspace-models';
+import { DEPENDENCIES_MAP, PackageTarget, PackageEntry } from '../utils/dependency-handler';
 
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
@@ -57,11 +58,34 @@ describe('ng-add schematics', () => {
     expect(Object.keys(pkgJsonData).length).toBeGreaterThan(0);
   });
 
+  it('should include ALL dependencies in map', () => {
+    const pkgJson = require('../../package.json');
+    const allDependencies = Object.assign({}, pkgJson.dependencies, pkgJson.peerDependencies, pkgJson.igxDevDependencies);
+    for (const key of Object.keys(allDependencies)) {
+      const expectedPackages: PackageEntry = {
+        name: key,
+        target: jasmine.anything() as any
+      };
+      expect(DEPENDENCIES_MAP).toContain(expectedPackages, `Dependency ${key} missing in dependencies map!`);
+    }
+  });
+
   it('should add packages to package.json dependencies', () => {
+    const expectedDeps = DEPENDENCIES_MAP.filter(dep => dep.target === PackageTarget.REGULAR).map(dep => dep.name);
+    const expectedDevDeps = DEPENDENCIES_MAP.filter(dep => dep.target === PackageTarget.DEV).map(dep => dep.name);
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.devDependencies).toBeTruthy();
+    // Check for explicit dependencies
+    expect(Object.keys(pkgJsonData.dependencies).length).toEqual(expectedDeps.length, `Different number of added dependencies!`);
+    expect(Object.keys(pkgJsonData.devDependencies).length).toEqual(expectedDevDeps.length, `Different number of added devDependencies!`);
+    for (const dependency of expectedDeps) {
+      expect(pkgJsonData.dependencies.hasOwnProperty(dependency)).toEqual(true, `Dependency ${dependency} is missing from output!`);
+    }
+    for (const dependency of expectedDevDeps) {
+      expect(pkgJsonData.devDependencies.hasOwnProperty(dependency)).toEqual(true, `DevDependency ${dependency} is missing from output!`);
+    }
   });
 
   it('should add the correct igniteui-angular packages to package.json dependencies', () => {
