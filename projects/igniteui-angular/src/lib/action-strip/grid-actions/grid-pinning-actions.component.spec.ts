@@ -7,6 +7,7 @@ import { IgxGridModule, IgxGridComponent } from '../../grids/grid';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxActionStripModule } from '../action-strip.module';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 
 describe('igxGridPinningActions #grid ', () => {
@@ -57,8 +58,22 @@ describe('igxGridPinningActions #grid ', () => {
         expect(grid.pinnedRows.length).toBe(0);
     });
 
-    it('should allow navigating to disabled row in unpinned area', () => {
-        pending('implementation');
+    it('should allow navigating to disabled row in unpinned area', async() => {
+        grid.pinRow('FAMIA');
+        fixture.detectChanges();
+
+        actionStrip.show(grid.pinnedRows[0]);
+        fixture.detectChanges();
+
+        const jumpIcon = fixture.debugElement.query(By.css(`igx-icon[name=jump_down]`));
+        jumpIcon.parent.triggerEventHandler('click', new Event('click'));
+        await wait();
+        fixture.detectChanges();
+        await wait();
+        fixture.detectChanges();
+
+        const secondToLastVisible = grid.rowList.toArray()[grid.rowList.length - 2];
+        expect(secondToLastVisible.rowID).toEqual('FAMIA');
     });
 });
 
