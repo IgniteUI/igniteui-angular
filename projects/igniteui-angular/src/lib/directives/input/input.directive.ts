@@ -39,7 +39,7 @@ export enum IgxInputState {
  * @example
  * ```html
  * <input-group>
- *  <label for="address">Adress</label>
+ *  <label for="address">Address</label>
  *  <input igxInput name="address" type="text" [(ngModel)]="customer.address">
  * </input-group>
  * ```
@@ -289,6 +289,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @internal
      */
     protected onStatusChanged() {
+        // Enable/Disable control based on ngControl #7086
+        if (this.disabled !== this.ngControl.disabled) {
+            this.disabled = this.ngControl.disabled;
+        }
         if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
             if (this.ngControl.control.touched || this.ngControl.control.dirty) {
                 //  TODO: check the logic when control is touched or dirty
