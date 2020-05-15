@@ -145,7 +145,6 @@ All notable changes for each version of this project will be documented in this 
             - The first cell in the first body row;
             - The first cell in column summary if exists;
             - Pager UI;
-    - `onGridKeydown` event is deprecated. Now you can directly bind to keydown on the IgxGrid component in order to perform custom keyboard navigation.
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.

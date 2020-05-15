@@ -3,6 +3,7 @@ import * as path from 'path';
 import { Tree } from '@angular-devkit/schematics';
 import { getWorkspace, getWorkspacePath } from '@schematics/angular/utility/config';
 import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
+import { addPackageToPkgJson } from '../utils/dependency-handler';
 
 const resetPackage = { 'minireset.css': '~0.0.4' };
 
@@ -56,13 +57,8 @@ export function addResetCss(host: Tree): boolean {
     }
 
     if (addPackage) {
-        const targetFile = 'package.json';
-        if (host.exists(targetFile)) {
-            const pkgJson = JSON.parse(host.read(targetFile).toString());
-            pkgJson.dependencies = Object.assign({}, addPackage, pkgJson.dependencies);
-            host.overwrite(targetFile, JSON.stringify(pkgJson, null, 2) + '\n');
-            return true;
-        }
+        const name = Object.keys(resetPackage)[0];
+        return addPackageToPkgJson(host, name, resetPackage[name], 'dependencies');
     }
     return false;
 }
