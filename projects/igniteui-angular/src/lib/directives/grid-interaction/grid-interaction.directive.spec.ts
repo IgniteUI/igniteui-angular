@@ -10,7 +10,10 @@ import { IgxActionStripComponent, IgxActionStripModule } from '../../action-stri
 import { IgxGridInteractionModule } from './grid-interaction.directive';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid';
+import { IgxHierarchicalGridComponent,
+    IgxRowIslandComponent,
+    IgxHierarchicalGridModule,
+    IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid';
 
 
 describe('igxGridInteractionDirective #grid ', () => {
@@ -39,7 +42,7 @@ describe('igxGridInteractionDirective #grid ', () => {
             ]
         }).compileComponents();
     }));
-    describe("in igxGrid", () => {
+    describe('in igxGrid', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxGridInteractionTestComponent);
             fixture.detectChanges();
@@ -55,14 +58,14 @@ describe('igxGridInteractionDirective #grid ', () => {
             fixture.detectChanges();
             pinIcon = fixture.debugElement.query(By.css(`igx-icon[name=pin]`));
             unpinIcon = fixture.debugElement.query(By.css(`igx-icon[name=unpin]`));
-            expect(actionStripElement.nativeElement.style["display"]).not.toBe('none');
+            expect(actionStripElement.nativeElement.style['display']).not.toBe('none');
             UIInteractions.simulateMouseEvent('mouseleave', firstCell.nativeElement, 0, 0);
             fixture.detectChanges();
-            expect(actionStripElement.nativeElement.style["display"]).toBe('none');
+            expect(actionStripElement.nativeElement.style['display']).toBe('none');
         });
     });
 
-    describe("in igxTreeGrid", () => {
+    describe('in igxTreeGrid', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridInteractionTestComponent);
             fixture.detectChanges();
@@ -80,7 +83,7 @@ describe('igxGridInteractionDirective #grid ', () => {
         });
     });
 
-    describe("in igxHierarchicalGrid", () => {
+    describe('in igxHierarchicalGrid', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
             fixture.detectChanges();
@@ -164,7 +167,7 @@ class IgxGridInteractionTestComponent implements OnInit {
 
 @Component({
     template: `
-<igx-tree-grid #treeGrid 
+<igx-tree-grid #treeGrid
 [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
 (rowInteractionStart)="interactionStart = true"
 (rowInteractionEnd)="interactionStart = false"

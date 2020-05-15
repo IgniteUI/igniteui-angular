@@ -1,4 +1,16 @@
-import { Directive, Input, Output, Renderer2, NgModule, EventEmitter, AfterViewInit, Inject, Self, ViewChild, forwardRef, Optional, ElementRef } from '@angular/core';
+import {
+    Directive,
+    Input,
+    Output,
+    Renderer2,
+    NgModule,
+    EventEmitter,
+    AfterViewInit,
+    Inject,
+    Self,
+    Optional,
+    OnDestroy
+} from '@angular/core';
 import { IgxGridCellComponent } from '../../grids/cell.component';
 import { IgxGridBaseDirective } from '../../grids';
 import { RowType } from '../../grids/common/row.interface';
@@ -23,7 +35,7 @@ export interface IRowInteractionArgs {
     selector: '[igxCellInteraction],[igxRowInteraction]'
 })
 
-export class IgxGridInteractionDirective implements AfterViewInit {
+export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
 
     @Input('igxCellInteraction') cellInteraction: IInteractionConfig;
     @Input('igxRowInteraction') rowInteraction: IInteractionConfig;
@@ -61,8 +73,8 @@ export class IgxGridInteractionDirective implements AfterViewInit {
                     const target = evt.target;
                     if (this.isGridCell(target.tagName.toLowerCase())) {
                         const rowNode = target.parentNode.parentNode;
-                        const rowIndex = parseInt(target.getAttribute("data-rowindex"), 10);
-                        const visibleIndex = parseInt(target.getAttribute("data-visibleindex"), 10);
+                        const rowIndex = parseInt(target.getAttribute('data-rowindex'), 10);
+                        const visibleIndex = parseInt(target.getAttribute('data-visibleindex'), 10);
                         const cell = this.grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
 
                         grid = this.extractGrid(rowIndex, rowNode);
@@ -83,13 +95,13 @@ export class IgxGridInteractionDirective implements AfterViewInit {
      * @internal
      * Emit the start and end events
      */
-    private emitEvents(row, rowNode, evt, interaction, cell?) {
+    private emitEvents(row, rowNode, event, interaction, cell?) {
         if (row && row.nativeElement === rowNode) {
             const interactionElement = cell ? cell : row;
             if (cell) {
-                this.onCellInteractionStart.emit({ cell: interactionElement, originalEvent: evt });
+                this.onCellInteractionStart.emit({ cell: interactionElement, originalEvent: event });
             } else {
-                this.onRowInteractionStart.emit({ row: interactionElement, originalEvent: evt });
+                this.onRowInteractionStart.emit({ row: interactionElement, originalEvent: event });
             }
             interaction.end.forEach(endEvent => {
                 const endFn = this.renderer.listen(interactionElement.nativeElement, endEvent, (evt) => {
@@ -124,8 +136,8 @@ export class IgxGridInteractionDirective implements AfterViewInit {
         let grid: IgxGridBaseDirective;
         if (this.rowIsland) {
             // the directive is applied to igx-row-island and should interact with grid representing that island
-            const childGrids = this.rowIsland.rowIslandAPI.getChildGrids().filter(grid => {
-                const row = grid.getRowByIndex(rowIndex);
+            const childGrids = this.rowIsland.rowIslandAPI.getChildGrids().filter(child => {
+                const row = child.getRowByIndex(rowIndex);
                 return row && row.nativeElement === rowNode;
             });
             grid = childGrids.length > 0 ? childGrids[0] : null;
@@ -142,7 +154,7 @@ export class IgxGridInteractionDirective implements AfterViewInit {
         });
         this.cellEndListenerFn.forEach(fn => {
             fn();
-        })
+        });
         this.rowStartListenerFn.forEach(fn => {
             fn();
         });
