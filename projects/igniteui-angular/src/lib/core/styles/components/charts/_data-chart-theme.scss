@@ -68,7 +68,7 @@
 }
 
 @mixin igx-data-chart-typography($type-scale, $categories: (
-    title: 'h6',
+    title: 'h1',
     subtitle: 'subtitle-1',
 )) {
     $name: 'data-chart';
@@ -78,10 +78,7 @@
     $title-styles: igx-type-scale-category($type-scale, $title);
     $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
 
-    @include igx-css-vars((
-        'name': $name,
-        'title-text-style': #{map-get($title-styles, 'font-size')} inherit,
-        'subtitle-text-style': #{map-get($subtitle-styles, 'font-size')} inherit
-    ));
+    @include igx-font-var('title-text-style', $title-styles, $name);
+    @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
 }
 
