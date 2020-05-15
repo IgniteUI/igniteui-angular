@@ -1,4 +1,4 @@
-import { Directive, Input, Output, Renderer2, NgModule, EventEmitter, AfterViewInit, Inject, Self, ViewChild, forwardRef, Optional } from '@angular/core';
+import { Directive, Input, Output, Renderer2, NgModule, EventEmitter, AfterViewInit, Inject, Self, ViewChild, forwardRef, Optional, ElementRef } from '@angular/core';
 import { IgxGridCellComponent } from '../../grids/cell.component';
 import { IgxGridBaseDirective } from '../../grids';
 import { RowType } from '../../grids/common/row.interface';
@@ -25,13 +25,13 @@ export interface IRowInteractionArgs {
 
 export class IgxGridInteractionDirective implements AfterViewInit {
 
-    @Input('igxCellInteraction') cellInteractions: IInteractionConfig;
+    @Input('igxCellInteraction') cellInteraction: IInteractionConfig;
     @Input('igxRowInteraction') rowInteraction: IInteractionConfig;
 
-    @Output() cellInteractionStart = new EventEmitter<ICellInteractionArgs>();
-    @Output() cellInteractionEnd = new EventEmitter<ICellInteractionArgs>();
-    @Output() rowInteractionStart = new EventEmitter<IRowInteractionArgs>();
-    @Output() rowInteractionEnd = new EventEmitter<IRowInteractionArgs>();
+    @Output() onCellInteractionStart = new EventEmitter<ICellInteractionArgs>();
+    @Output() onCellInteractionEnd = new EventEmitter<ICellInteractionArgs>();
+    @Output() onRowInteractionStart = new EventEmitter<IRowInteractionArgs>();
+    @Output() onRowInteractionEnd = new EventEmitter<IRowInteractionArgs>();
 
     private cellStartListenerFn: Array<() => void> = [];
     private cellEndListenerFn: Array<() => void> = [];
@@ -43,73 +43,63 @@ export class IgxGridInteractionDirective implements AfterViewInit {
         @Optional() @Self() @Inject(IgxRowIslandComponent) private rowIsland?: IgxRowIslandComponent) { }
 
     ngAfterViewInit() {
-        if (this.cellInteractions) {
-            this.cellInteractions.start.forEach(() => {
-                // const cellStartFn = this.renderer.listen(this.grid.nativeElement, interaction, (evt) => {
-                //     if (evt.target.tagName.toLowerCase() === 'igx-grid-cell' ||
-                //         evt.target.tagName.toLowerCase() === 'igx-tree-grid-cell' ||
-                //         evt.target.tagName.toLowerCase() === 'igx-hierarchical-grid-cell') {
-                //         const rowIndex = parseInt(evt.target.getAttribute("data-rowindex"), 10);
-                //         const visibleIndex = parseInt(evt.target.getAttribute("data-visibleindex"), 10);
-                //         const cell = this.grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
-                //         this.cellInteractionStart.emit({ cell: cell, originalEvent: evt });
-                //         this.cellInteractions.end.forEach(interaction => {
-                //             const cellEndFn = this.renderer.listen(cell.nativeElement, interaction, (evt) => {
-                //                 this.cellInteractionEnd.emit({ cell: cell, originalEvent: evt });
-                //             });
-                //             this.cellEndListenerFn.push(cellEndFn);
-                //         });
-                //     }
-                // });
-                // this.cellStartListenerFn.push(cellStartFn);
-            });
-            // this.cellInteractions.end.forEach(interaction => {
-            //     this.renderer.listen(this.grid.nativeElement, interaction, (evt) => {
-            //         if (evt.target.tagName.toLowerCase() === 'igx-grid-cell' ||
-            //             evt.target.tagName.toLowerCase() === 'igx-tree-grid-cell' ||
-            //             evt.target.tagName.toLowerCase() === 'igx-hierarchical-grid-cell') {
-            //             const rowIndex = parseInt(evt.target.getAttribute("data-rowindex"), 10);
-            //             const visibleIndex = parseInt(evt.target.getAttribute("data-visibleindex"), 10);
-            //             const cell = this.grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
-            //             this.cellInteractionEnd.emit({ cell: cell, originalEvent: evt });
-            //         }
-            //     });
-            // });
-        }
+        this.listen(this.cellInteraction, true);
+        this.listen(this.rowInteraction, false);
+    }
 
-        if (this.rowInteraction) {
-            this.rowInteraction.start.forEach(interaction => {
-                const rowStartFn = this.renderer.listen(this.grid.nativeElement, interaction, (evt) => {
-                    if (this.isGridCell(evt.target.tagName.toLowerCase())) {
-                        const rowNode = evt.target.parentNode.parentNode;
-                        const rowIndex = parseInt(evt.target.getAttribute("data-rowindex"), 10);
-                        let grid;
-                        if (this.rowIsland) {
-                            // the directive is applied to igx-row-island and should interact with grid representing that island
-                            const childGrids = this.rowIsland.rowIslandAPI.getChildGrids().filter(grid => {
-                                const row = grid.getRowByIndex(rowIndex);
-                                return row && row.nativeElement === rowNode;
-                            });
-                            grid = childGrids.length > 0 ? childGrids[0] : null;
-                        } else {
-                            grid = this.grid;
-                        }
+    /**
+     * @hidden
+     * @internal
+     * Applies start listener to grid and emits events for rows and cell.
+     * Applies end listener to target cell or row element.
+     */
+    private listen(interaction: IInteractionConfig, isCellInteraction = false): void {
+        let grid;
+        if (interaction) {
+            interaction.start.forEach(startEvent => {
+                const startFn = this.renderer.listen(this.grid.nativeElement, startEvent, (evt) => {
+                    const target = evt.target;
+                    if (this.isGridCell(target.tagName.toLowerCase())) {
+                        const rowNode = target.parentNode.parentNode;
+                        const rowIndex = parseInt(target.getAttribute("data-rowindex"), 10);
+                        const visibleIndex = parseInt(target.getAttribute("data-visibleindex"), 10);
+                        const cell = this.grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
+
+                        grid = this.extractGrid(rowIndex, rowNode);
 
                         if (grid) {
                             const row = grid.getRowByIndex(rowIndex);
-                            if (row && row.nativeElement === rowNode) {
-                                this.rowInteractionStart.emit({ row: row, originalEvent: evt });
-                                this.rowInteraction.end.forEach(interaction => {
-                                    const rowEndFn = this.renderer.listen(row.nativeElement, interaction, (evt) => {
-                                        this.rowInteractionEnd.emit({ row: row, originalEvent: evt });
-                                    });
-                                    this.rowEndListenerFn.push(rowEndFn);
-                                });
-                            }
+                            this.emitEvents(row, rowNode, evt, interaction, isCellInteraction ? cell : null);
                         }
                     }
                 });
-                this.rowStartListenerFn.push(rowStartFn);
+                (isCellInteraction ? this.cellStartListenerFn : this.rowStartListenerFn).push(startFn);
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Emit the start and end events
+     */
+    private emitEvents(row, rowNode, evt, interaction, cell?) {
+        if (row && row.nativeElement === rowNode) {
+            const interactionElement = cell ? cell : row;
+            if (cell) {
+                this.onCellInteractionStart.emit({ cell: interactionElement, originalEvent: evt });
+            } else {
+                this.onRowInteractionStart.emit({ row: interactionElement, originalEvent: evt });
+            }
+            interaction.end.forEach(endEvent => {
+                const endFn = this.renderer.listen(interactionElement.nativeElement, endEvent, (evt) => {
+                    if (cell) {
+                        this.onCellInteractionEnd.emit({ cell: interactionElement, originalEvent: evt });
+                    } else {
+                        this.onRowInteractionEnd.emit({ row: interactionElement, originalEvent: evt });
+                    }
+                });
+                (cell ? this.cellEndListenerFn : this.rowEndListenerFn).push(endFn);
             });
         }
     }
@@ -128,11 +118,22 @@ export class IgxGridInteractionDirective implements AfterViewInit {
     /**
      * @hidden
      * @internal
-     * Make sure the row in the specified grid corresponds to the target element
+     * Get the grid which contains the grid interaction directive
      */
-    private isTargetRow(rowIndex, grid, rowNode) {
-        const row = grid.getRowByIndex(rowIndex);
-        return row && row.nativeElement === rowNode;
+    private extractGrid(rowIndex: number, rowNode: any): IgxGridBaseDirective {
+        let grid: IgxGridBaseDirective;
+        if (this.rowIsland) {
+            // the directive is applied to igx-row-island and should interact with grid representing that island
+            const childGrids = this.rowIsland.rowIslandAPI.getChildGrids().filter(grid => {
+                const row = grid.getRowByIndex(rowIndex);
+                return row && row.nativeElement === rowNode;
+            });
+            grid = childGrids.length > 0 ? childGrids[0] : null;
+        } else {
+            grid = this.grid;
+        }
+
+        return grid;
     }
 
     ngOnDestroy() {

@@ -76,8 +76,8 @@
                 <h5>Actions in menu</h5>
                 <igx-grid #grid3
                  [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-                 (rowInteractionStart)="actionstrip3.show($event.row)"
-                 (rowInteractionEnd)="onMouseLeave(actionstrip3, $event.originalEvent)"
+                 (onRowInteractionStart)="actionstrip3.show($event.row)"
+                 (onRowInteractionEnd)="onMouseLeave(actionstrip3, $event.originalEvent)"
                  [data]="data" [width]="'800px'" [height]="'500px'" [rowSelection]="'multiple'"
                     [rowEditable]="true" [primaryKey]="'ID'" [(displayDensity)]="displayDensity">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
