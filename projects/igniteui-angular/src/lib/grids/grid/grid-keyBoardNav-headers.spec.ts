@@ -421,7 +421,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
         });
 
-        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"', async() => {
+        it('Advanced Filtering: Should be able to close Advanced filtering with "escape"',  fakeAsync(() => {
             // Enable Advanced Filtering
             grid.allowAdvancedFiltering = true;
             fix.detectChanges();
@@ -440,14 +440,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
             const afDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             UIInteractions.triggerKeyDownEvtUponElem('Escape', afDialog);
-            await wait(DEBOUNCETIME);
+            tick(DEBOUNCETIME);
             fix.detectChanges();
 
             // Verify AF dialog is closed.
             header = GridFunctions.getColumnHeader('Name', fix);
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
             GridFunctions.verifyHeaderIsFocused(header.parent);
-        });
+        }));
 
 
         it('Column selection: Should be able to select columns when columnSelection is multi', () => {
