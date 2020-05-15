@@ -11,7 +11,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     min = '09:00';
 
     itemsDelta = { hours: 1, minutes: 5 };
-    format = 'hh:mm tt';
+    format = 'hh:mm:ss tt';
     isSpinLoop = true;
     isVertical = true;
     mode = InteractionMode.DropDown;

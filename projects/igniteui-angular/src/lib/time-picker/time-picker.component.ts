@@ -579,6 +579,10 @@ export class IgxTimePickerComponent implements
      */
     public selectedAmPm: string;
 
+    public minValueConverted: Date;
+
+    public maxValueConverted: Date;
+
     /** @hidden @internal */
     private _value: Date;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
@@ -1268,7 +1272,7 @@ export class IgxTimePickerComponent implements
         return date;
     }
 
-    private _convertMinMaxValue(value: string): Date {
+    public convertMinMaxValue(value: string): Date {
         const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
         const sections = value.split(/[\s:]+/);
         let hour, minutes, seconds, amPM;
@@ -1311,9 +1315,9 @@ export class IgxTimePickerComponent implements
     }
 
     private _isValueValid(value: Date): boolean {
-        if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
+        if (this.maxValue && value > this.convertMinMaxValue(this.maxValue)) {
             return false;
-        } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
+        } else if (this.minValue && value < this.convertMinMaxValue(this.minValue)) {
             return false;
         } else {
             return true;
@@ -1485,7 +1489,7 @@ export class IgxTimePickerComponent implements
 
     private _onDropDownClosed(): void {
         const oldValue = this.value;
-        const newVal = this._convertMinMaxValue(this.displayValue);
+        const newVal = this.convertMinMaxValue(this.displayValue);
 
         if (this.displayValue === this.parseMask(false)) {
             return;
@@ -1923,7 +1927,7 @@ export class IgxTimePickerComponent implements
         // timepicker own value property if it is a valid Date
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
-                const newVal = this._convertMinMaxValue(val);
+                const newVal = this.convertMinMaxValue(val);
                 if (oldVal.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
@@ -1971,7 +1975,7 @@ export class IgxTimePickerComponent implements
 
             if (value && value !== this.parseMask()) {
                 if (this._isEntryValid(value)) {
-                    const newVal = this._convertMinMaxValue(value);
+                    const newVal = this.convertMinMaxValue(value);
                     if (!this.value || this.value.getTime() !== newVal.getTime()) {
                         this.value = newVal;
                     }
@@ -2008,8 +2012,8 @@ export class IgxTimePickerComponent implements
         let sign: number;
         let displayVal: string;
         const currentVal = new Date(this.value);
-        const min = this.minValue ? this._convertMinMaxValue(this.minValue) : this._convertMinMaxValue('00:00');
-        const max = this.maxValue ? this._convertMinMaxValue(this.maxValue) : this._convertMinMaxValue('24:00');
+        const min = this.minValue ? this.convertMinMaxValue(this.minValue) : this.convertMinMaxValue('00:00');
+        const max = this.maxValue ? this.convertMinMaxValue(this.maxValue) : this.convertMinMaxValue('24:00');
 
         const cursor = this._getCursorPosition();
 

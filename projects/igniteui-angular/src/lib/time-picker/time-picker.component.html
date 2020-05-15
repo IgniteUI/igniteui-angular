@@ -4,7 +4,7 @@
         <igx-prefix (click)="openDialog(group.element.nativeElement)">
             <igx-icon>access_time</igx-icon>
         </igx-prefix>
-        <input 
+        <input
             type="text"
             [igxMask]="mask"
             igxInput
@@ -61,16 +61,37 @@
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
             <div *ngIf="showHoursList" #hourList [igxItemList]="'hourList'">
-                <span [igxHourItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
+                <span [igxHourItem]="hour"
+                [minValueDate]="convertMinMaxValue(minValue)"
+                [maxValueDate]="convertMinMaxValue(maxValue)"
+                [selectedAmPm]="selectedAmPm"
+                *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
+                <span [igxMinuteItem]="minute"
+                [minValueDate]="convertMinMaxValue(minValue)"
+                [maxValueDate]="convertMinMaxValue(maxValue)"
+                [selectedHour]="selectedHour"
+                [selectedAmPm]="selectedAmPm"
+                *ngFor="let minute of minuteView" >{{ minute }}</span>
             </div>
             <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span [igxSecondsItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
+                <span [igxSecondsItem]="seconds"
+                [minValueDate]="convertMinMaxValue(minValue)"
+                [maxValueDate]="convertMinMaxValue(maxValue)"
+                [selectedHour]="selectedHour"
+                [selectedMinute]="selectedMinute"
+                [selectedAmPm]="selectedAmPm"
+                *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
+                <span [igxAmPmItem]="ampm"
+                [minValueDate]="convertMinMaxValue(minValue)"
+                [maxValueDate]="convertMinMaxValue(maxValue)"
+                [selectedHour]="selectedHour"
+                [selectedMinute]="selectedMinute"
+                [selectedSecond]="selectedSeconds"
+                *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
         <ng-container
