@@ -114,8 +114,8 @@ describe('igxGridInteractionDirective #grid ', () => {
     template: `
 <igx-grid #grid [data]="data" [width]="'800px'" [height]="'500px'"
     [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-    (rowInteractionStart)="actionStrip.show($event.row)"
-    (rowInteractionEnd)="actionStrip.hide()"
+    (onRowInteractionStart)="actionStrip.show($event.row)"
+    (onRowInteractionEnd)="actionStrip.hide()"
     [rowEditable]="true" [primaryKey]="'ID'">
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
         [width]="c.width" [pinned]='c.pinned' [hidden]='c.hidden'>
@@ -169,8 +169,8 @@ class IgxGridInteractionTestComponent implements OnInit {
     template: `
 <igx-tree-grid #treeGrid
 [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-(rowInteractionStart)="interactionStart = true"
-(rowInteractionEnd)="interactionStart = false"
+(onRowInteractionStart)="interactionStart = true"
+(onRowInteractionEnd)="interactionStart = false"
 [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="800px">
     <igx-column [field]="'employeeID'" dataType="number"></igx-column>
     <igx-column [field]="'firstName'"></igx-column>
@@ -192,8 +192,8 @@ class IgxTreeGridInteractionTestComponent {
      <igx-column field="ProductName"></igx-column>
         <igx-row-island
         [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-        (rowInteractionStart)="interactionStart = true"
-        (rowInteractionEnd)="interactionStart = false"
+        (onRowInteractionStart)="interactionStart = true"
+        (onRowInteractionEnd)="interactionStart = false"
         [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
