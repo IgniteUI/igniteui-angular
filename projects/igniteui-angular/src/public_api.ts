@@ -111,6 +111,6 @@ export { ICarouselResourceStrings } from './lib/core/i18n/carousel-resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { IPaginatorResourceStrings } from './lib/core/i18n/paginator-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
-export { IDateRangePickerResourceStrings as IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
+export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { InteractionMode } from './lib/core/enums';
 export { SplitterType } from './lib/splitter/splitter.component';

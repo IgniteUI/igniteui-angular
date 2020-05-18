@@ -246,55 +246,53 @@ export abstract class DatePickerUtil {
     }
 
     /**
-     * Determines whether the provided value is less than the provided min value.
+     * Determines whether the provided value is greater than the provided max value.
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
+     * @returns true if provided value is greater than provided maxValue
      */
     public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
         if (includeTime && includeDate) {
             return value.getTime() > maxValue.getTime();
         }
 
-        let _value = new Date(value.getTime());
-        let _maxValue = new Date(maxValue.getTime());
-        if (includeDate) {
+        const _value = new Date(value.getTime());
+        const _maxValue = new Date(maxValue.getTime());
+        if (!includeTime) {
             _value.setHours(0, 0, 0, 0);
             _maxValue.setHours(0, 0, 0, 0);
-            return _value.getTime() > maxValue.getTime();
         }
-        if (includeTime) {
-            _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
-            _maxValue = new Date(0, 0, 0, _maxValue.getHours(), _maxValue.getMinutes(), _maxValue.getSeconds());
-            return _value.getTime() > _maxValue.getTime();
+        if (!includeDate) {
+            _value.setFullYear(0, 0, 0);
+            _maxValue.setFullYear(0, 0, 0);
         }
 
-        // throw?
+        return _value.getTime() > _maxValue.getTime();
     }
 
     /**
-     * Determines whether the provided value is greater than the provided min value.
+     * Determines whether the provided value is less than the provided min value.
      * @param includeTime set to false if you want to exclude time portion of the two dates
      * @param includeDate set to false if you want to exclude the date portion of the two dates
+     * @returns true if provided value is less than provided minValue
      */
     public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
         if (includeTime && includeDate) {
             return value.getTime() < minValue.getTime();
         }
 
-        let _value = new Date(value.getTime());
-        let _minValue = new Date(minValue.getTime());
-        if (includeDate) {
+        const _value = new Date(value.getTime());
+        const _minValue = new Date(minValue.getTime());
+        if (!includeTime) {
             _value.setHours(0, 0, 0, 0);
             _minValue.setHours(0, 0, 0, 0);
-            return _value.getTime() < _minValue.getTime();
         }
-        if (includeTime) {
-            _value = new Date(0, 0, 0, _value.getHours(), _value.getMinutes(), _value.getSeconds());
-            _minValue = new Date(0, 0, 0, _minValue.getHours(), _minValue.getMinutes(), _minValue.getSeconds());
-            return _value.getTime() > _minValue.getTime();
+        if (!includeDate) {
+            _value.setFullYear(0, 0, 0);
+            _minValue.setFullYear(0, 0, 0);
         }
 
-        // throw?
+        return _value.getTime() < _minValue.getTime();
     }
 
     private static ensureLeadingZero(part: DatePartInfo) {
@@ -847,5 +845,4 @@ export abstract class DatePickerUtil {
         }
     }
 }
-
 
