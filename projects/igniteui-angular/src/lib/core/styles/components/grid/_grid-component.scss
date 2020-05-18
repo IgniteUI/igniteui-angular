@@ -532,6 +532,13 @@
         }
     }
 
+    @for $i from 1 through 25 {
+        @include e(tree-cell, $m: padding-level-#{$i}) {
+            @extend %igx-grid__tree-cell--padding-level-#{$i} !optional;
+        }
+    }
+
+
     @include m(cosy) {
         @extend %grid-display !optional;
 
@@ -626,6 +633,12 @@
             @include e(group-row, $m: padding-level-#{$i}) {
                 @extend %igx-grid__group-row--padding-cosy-level-#{$i} !optional;
             }
+            @include e(tree-cell, $m: padding-level-#{$i}) {
+                @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
+            }
+        }
+
+        @for $i from 1 through 25 {
             @include e(tree-cell, $m: padding-level-#{$i}) {
                 @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
             }
@@ -726,6 +739,12 @@
             @include e(group-row, $m: padding-level-#{$i}) {
                 @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
             }
+            @include e(tree-cell, $m: padding-level-#{$i}) {
+                @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
+            }
+        }
+
+        @for $i from 1 through 25 {
             @include e(tree-cell, $m: padding-level-#{$i}) {
                 @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
             }
