@@ -1,9 +1,10 @@
 <div #toggle="toggle" igxToggle class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'"
     (onOpening)="handleOpening($event)" (onOpened)="handleOpened()"
     (onClosing)="handleClosing($event)" (onClosed)="handleClosed()"
+    [style.flex-basis]="monthsViewNumber * 320 + 'px'"
     [style.width]="monthsViewNumber * 320 + 'px'"
     [style.max-width]="'90vw'"
-    >
+>
     <!-- TODO: use IgxCalendarContainerComponent instead -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
@@ -48,7 +49,7 @@
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
             [value]="this.value | dateRange: this.inputFormat : this.locale"
-            />
+        />
 
         <igx-prefix *ngIf="!this.toggleComponents.length">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
