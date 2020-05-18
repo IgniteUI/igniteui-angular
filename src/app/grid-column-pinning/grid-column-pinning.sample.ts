@@ -9,7 +9,6 @@ import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelect
 })
 
 export class GridColumnPinningSampleComponent implements OnInit {
-    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
     public get rightPinning() {
         return (this.pinningConfig.columns === ColumnPinningPosition.End);
     }
@@ -20,11 +19,15 @@ export class GridColumnPinningSampleComponent implements OnInit {
             this.pinningConfig.columns = ColumnPinningPosition.End;
         }
     }
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
     public selectionMode;
 
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+
+    data: any[];
+    columns: any[];
 
     onChange() {
         if (this.pinningConfig.columns === ColumnPinningPosition.End) {
@@ -41,9 +44,6 @@ export class GridColumnPinningSampleComponent implements OnInit {
             this.pinningConfig = { columns: this.pinningConfig.columns, rows: RowPinningPosition.Bottom };
         }
     }
-
-    data: any[];
-    columns: any[];
 
     ngOnInit(): void {
         this.columns = [
@@ -117,7 +117,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
     doSomeAction(row?: IgxGridRowComponent) {
         !this.grid1.isRecordPinned(row.rowData) ?
          this.grid1.pinRow(row.rowData) :
-         this.grid1.unpinRow(row.rowData)
+         this.grid1.unpinRow(row.rowData);
     }
 
 }

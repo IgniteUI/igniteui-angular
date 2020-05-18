@@ -18,6 +18,9 @@ export class ActionStripSampleComponent {
     public compact = DisplayDensity.compact;
     public displayDensity = this.comfortable;
 
+    data: any[];
+    columns: any[];
+
     doSomeAction() {
         this.result = `Clicked ${this.counter++} times`;
     }
@@ -31,15 +34,15 @@ export class ActionStripSampleComponent {
     }
 
     onMouseOver(event, grid, actionStrip) {
-        if (event.target.nodeName.toLowerCase() === "igx-grid-cell") {
-            const rowIndex = parseInt(event.target.attributes["data-rowindex"].value, 10);
+        if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
+            const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
             actionStrip.show(row);
         }
     }
 
     onMouseLeave(actionstrip, event?) {
-        if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
+        if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
     }
@@ -47,9 +50,6 @@ export class ActionStripSampleComponent {
     setDensity(density: DisplayDensity) {
         this.displayDensity = density;
     }
-
-    data: any[];
-    columns: any[];
 
     ngOnInit(): void {
         this.columns = [

@@ -138,7 +138,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.remoteService.getData(this.virtDirRemote.state, (data) => {
-            //this.virtDirRemote.totalItemCount = data['@odata.count'];
+            // this.virtDirRemote.totalItemCount = data['@odata.count'];
         });
     }
     chunkLoading(evt) {

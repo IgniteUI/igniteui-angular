@@ -24,6 +24,19 @@ export class GridCellStylingSampleComponent implements OnInit {
         'animation': '0.25s ease-in-out forwards alternate popin'
     };
 
+
+    cellClasses1 = {
+        'test1': this.condition1,
+        'test2': this.condition2,
+        'test3': this.condition3
+    };
+
+    cellClasses2 = {
+        'test1': this.condition4,
+        'test2': this.condition5,
+        'test3': this.condition6
+    };
+
     condition = (rowData: any): boolean => {
         return rowData[this.grid1.primaryKey] === 'BLONP';
     }
@@ -47,19 +60,6 @@ export class GridCellStylingSampleComponent implements OnInit {
     condition6 = (rowData: any, columnKey: any): boolean => {
         return rowData[columnKey] > 6;
     }
-
-
-    cellClasses1 = {
-        'test1': this.condition1,
-        'test2': this.condition2,
-        'test3': this.condition3
-    };
-
-    cellClasses2 = {
-        'test1': this.condition4,
-        'test2': this.condition5,
-        'test3': this.condition6
-    };
 
     public ngOnInit(): void {
         this.columns = [
