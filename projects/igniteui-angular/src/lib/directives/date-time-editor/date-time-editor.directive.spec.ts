@@ -17,7 +17,7 @@ describe('IgxDateTimeEditor', () => {
             ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
-        const ngControl = {
+        const ngModel = {
             control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
             valid: false,
             statusChanges: new EventEmitter(),
@@ -26,8 +26,8 @@ describe('IgxDateTimeEditor', () => {
         let inputFormat: string;
         let inputDate: string;
         function initializeDateTimeEditor(control?: NgControl) {
-            const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale, injector);
+            // const injector = { get: () => control };
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 

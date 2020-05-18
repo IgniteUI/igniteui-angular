@@ -232,6 +232,7 @@
     }
 
     %igx-card-content {
+        display: block;
         width: 100%;
         flex: 1 1 auto;
         padding: $card-content-padding;
