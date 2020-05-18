@@ -142,7 +142,7 @@ describe('IgxDateRangePicker', () => {
             dateRange.close();
             fixture.detectChanges();
         }
-        fdescribe('Single Input', () => {
+        describe('Single Input', () => {
             let singleInputElement: DebugElement;
             configureTestSuite();
             beforeAll(async(() => {
