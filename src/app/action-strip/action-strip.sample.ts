@@ -1,12 +1,12 @@
-import {Component, ViewChild} from '@angular/core';
-import {IgxActionStripComponent, IgxGridComponent, DisplayDensity} from 'igniteui-angular';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`
 })
-export class ActionStripSampleComponent {
+export class ActionStripSampleComponent implements OnInit {
     @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
     @ViewChild('actionstrip1') actionStrip1: IgxActionStripComponent;
     @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
