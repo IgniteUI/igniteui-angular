@@ -346,7 +346,6 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     public reverse = false;
 
     ngOnChanges(changes: SimpleChanges) {
-        change = changes;
         for (const prop in changes) {
             if (prop === 'vertical') {
                 this.isVerticalSet = true;
