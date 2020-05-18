@@ -30,19 +30,56 @@ export interface IRowInteractionArgs {
     row: RowType;
     originalEvent: Event;
 }
-
+/**
+ * Allows subscribing to DOM events on cells and rows,
+ * but receive component-related context for the element
+ * triggering the event instead of just DOM-related one.
+ */
 @Directive({
     selector: '[igxCellInteraction],[igxRowInteraction]'
 })
 
 export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
-
+    /**
+     * Controls which events to subscribe to for emitting the interaction outputs for cells
+     * @example
+     * ```html
+     * <igx-grid
+     *    [igxCellInteraction]="{ start: ['pointerenter'], end: ['pointerleave'] }"
+     *    (onCellInteractionStart)="menu.show($event)"
+     *    (onCellInteractionEnd)="menu.hide($event)">
+     * </igx-grid>
+     * ```
+     */
     @Input('igxCellInteraction') cellInteraction: IInteractionConfig;
+    /**
+     * Controls which events to subscribe to for emitting the interaction outputs for rows
+     * @example
+     * ```html
+     * <igx-grid
+     *    [igxRowInteraction]="{ start: ['pointerenter'], end: ['pointerleave'] }"
+     *    (onRowInteractionStart)="menu.show($event)"
+     *    (onRowInteractionEnd)="menu.hide($event)">
+     * </igx-grid>
+     * ```
+     */
     @Input('igxRowInteraction') rowInteraction: IInteractionConfig;
 
+    /**
+     * Emitted when a specified start DOM event is fired for a cell
+     */
     @Output() onCellInteractionStart = new EventEmitter<ICellInteractionArgs>();
+    /**
+     * Emitted when a specified end DOM event is fired for a cell
+     */
     @Output() onCellInteractionEnd = new EventEmitter<ICellInteractionArgs>();
+    /**
+     * Emitted when a specified start DOM event is fired for a row
+     */
     @Output() onRowInteractionStart = new EventEmitter<IRowInteractionArgs>();
+    /**
+     * Emitted when a specified end DOM event is fired for a row
+     */
     @Output() onRowInteractionEnd = new EventEmitter<IRowInteractionArgs>();
 
     private cellStartListenerFn: Array<() => void> = [];
@@ -75,9 +112,9 @@ export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
                         const rowNode = target.parentNode.parentNode;
                         const rowIndex = parseInt(target.getAttribute('data-rowindex'), 10);
                         const visibleIndex = parseInt(target.getAttribute('data-visibleindex'), 10);
-                        const cell = this.grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
 
                         grid = this.extractGrid(rowIndex, rowNode);
+                        const cell = grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
 
                         if (grid) {
                             const row = grid.getRowByIndex(rowIndex);

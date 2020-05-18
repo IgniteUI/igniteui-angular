@@ -76,10 +76,20 @@ describe('igxGridInteractionDirective #grid ', () => {
             const firstCell = fixture.debugElement.query(By.css('igx-tree-grid-cell'));
             UIInteractions.simulateMouseEvent('mouseover', firstCell.nativeElement, 0, 0);
             fixture.detectChanges();
-            expect(fixture.componentInstance.interactionStart).toBe(true);
+            expect(fixture.componentInstance.rowInteractionStart).toBe(true);
             UIInteractions.simulateMouseEvent('mouseleave', firstCell.nativeElement, 0, 0);
             fixture.detectChanges();
-            expect(fixture.componentInstance.interactionStart).toBe(false);
+            expect(fixture.componentInstance.rowInteractionStart).toBe(false);
+        });
+
+        it('should allow cell interaction', () => {
+            const firstCell = fixture.debugElement.query(By.css('igx-tree-grid-cell'));
+            UIInteractions.simulateMouseEvent('pointerenter', firstCell.nativeElement, 0, 0);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.cellInteractionStart).toBe(true);
+            UIInteractions.simulateMouseEvent('pointerleave', firstCell.nativeElement, 0, 0);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.cellInteractionStart).toBe(false);
         });
     });
 
@@ -101,10 +111,27 @@ describe('igxGridInteractionDirective #grid ', () => {
             const firstCell = child1Grid.query(By.css('igx-hierarchical-grid-cell'));
             UIInteractions.simulateMouseEvent('mouseover', firstCell.nativeElement, 0, 0);
             fixture.detectChanges();
-            expect(fixture.componentInstance.interactionStart).toBe(true);
+            expect(fixture.componentInstance.rowInteractionStart).toBe(true);
             UIInteractions.simulateMouseEvent('mouseleave', firstCell.nativeElement, 0, 0);
             fixture.detectChanges();
-            expect(fixture.componentInstance.interactionStart).toBe(false);
+            expect(fixture.componentInstance.rowInteractionStart).toBe(false);
+        });
+
+        it('should allow cell interaction', () => {
+            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+
+            const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+
+            const firstCell = child1Grid.query(By.css('igx-hierarchical-grid-cell'));
+            UIInteractions.simulateMouseEvent('pointerenter', firstCell.nativeElement, 0, 0);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.cellInteractionStart).toBe(true);
+            UIInteractions.simulateMouseEvent('pointerleave', firstCell.nativeElement, 0, 0);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.cellInteractionStart).toBe(false);
         });
     });
 
@@ -169,8 +196,11 @@ class IgxGridInteractionTestComponent implements OnInit {
     template: `
 <igx-tree-grid #treeGrid
 [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-(onRowInteractionStart)="interactionStart = true"
-(onRowInteractionEnd)="interactionStart = false"
+(onRowInteractionStart)="rowInteractionStart = true"
+(onRowInteractionEnd)="rowInteractionStart = false"
+[igxCellInteraction]="{start:['pointerenter'], end: ['pointerleave']}"
+(onCellInteractionStart)="cellInteractionStart = true"
+(onCellInteractionEnd)="cellInteractionStart = false"
 [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="800px">
     <igx-column [field]="'employeeID'" dataType="number"></igx-column>
     <igx-column [field]="'firstName'"></igx-column>
@@ -181,7 +211,8 @@ class IgxGridInteractionTestComponent implements OnInit {
 class IgxTreeGridInteractionTestComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeScrollingData();
-    public interactionStart = false;
+    public rowInteractionStart = false;
+    public cellInteractionStart = false;
 }
 
 @Component({
@@ -192,8 +223,11 @@ class IgxTreeGridInteractionTestComponent {
      <igx-column field="ProductName"></igx-column>
         <igx-row-island
         [igxRowInteraction]="{start:['mouseover'], end: ['mouseleave']}"
-        (onRowInteractionStart)="interactionStart = true"
-        (onRowInteractionEnd)="interactionStart = false"
+        (onRowInteractionStart)="rowInteractionStart = true"
+        (onRowInteractionEnd)="rowInteractionStart = false"
+        [igxCellInteraction]="{start:['pointerenter'], end: ['pointerleave']}"
+        (onCellInteractionStart)="cellInteractionStart = true"
+        (onCellInteractionEnd)="cellInteractionStart = false"
         [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
@@ -207,7 +241,8 @@ class IgxTreeGridInteractionTestComponent {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    public interactionStart = false;
+    public cellInteractionStart = false;
+    public rowInteractionStart = false;
     public width = '500px';
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
