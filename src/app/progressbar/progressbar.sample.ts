@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { IgxTextAlign } from 'igniteui-angular';
 
 @Component({
@@ -8,7 +8,7 @@ import { IgxTextAlign } from 'igniteui-angular';
     templateUrl: 'progressbar.sample.html'
 })
 
-export class ProgressbarSampleComponent {
+export class ProgressbarSampleComponent implements OnInit {
     public positionCenter: IgxTextAlign;
     public positionEnd: IgxTextAlign;
 
