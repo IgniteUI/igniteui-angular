@@ -77,7 +77,7 @@ describe('IgxDateRangePicker', () => {
             const dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRangePicker, 'handleSelection');
+            spyOn(dateRangePicker, 'handleSelection').and.callThrough();
 
             // writeValue
             expect(dateRangePicker.value).toBeUndefined();
@@ -92,7 +92,7 @@ describe('IgxDateRangePicker', () => {
             dateRangePicker.handleSelection([range.start]);
             expect(dateRangePicker.handleSelection).toHaveBeenCalledWith([range.start]);
             expect(dateRangePicker.handleSelection).toHaveBeenCalledTimes(1);
-            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.end });
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
@@ -201,14 +201,14 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRangeInSingleInput();
                 });
 
-                it('should set start date on single date selection', () => {
+                it('should set start and end dates on single date selection', () => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const dayRange = 0;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = null;
+                    endDate = startDate;
                     selectDateRangeFromCalendar(startDate.getDate(), dayRange);
                     verifyDateRangeInSingleInput();
                 });
@@ -506,13 +506,13 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRange();
                 });
 
-                it('should apply selection to start date when single date is selected', () => {
+                it('should apply selection to start and end dates when single date is selected', () => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                    endDate = null;
+                    endDate = startDate;
 
                     selectDateRangeFromCalendar(startDate.getDate(), 0);
                     verifyDateRange();
