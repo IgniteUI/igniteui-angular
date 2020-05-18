@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IgxGridComponent, ColumnPinningPosition, RowPinningPosition, GridSelectionMode, IgxGridRowComponent, IPinningConfig } from 'igniteui-angular';
+import { IgxGridComponent,
+    ColumnPinningPosition,
+    RowPinningPosition,
+    GridSelectionMode,
+    IgxGridRowComponent,
+    IPinningConfig } from 'igniteui-angular';
 
 @Component({
     providers: [],

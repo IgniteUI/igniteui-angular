@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import {
     IgxGridComponent,
     ColumnPinningPosition,
@@ -30,9 +30,11 @@ const FILTERING_ICONS_FONT_SET = 'filtering-icons';
     ],
 })
 
-export class GridRowPinningSampleComponent implements OnInit {
+export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions, private iconService: IgxIconService, private excelExportService: IgxExcelExporterService) {
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
+                private iconService: IgxIconService,
+                private excelExportService: IgxExcelExporterService) {
     }
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
@@ -53,7 +55,7 @@ export class GridRowPinningSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
-	@ViewChild('hGrid', { static: true })
+    @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
