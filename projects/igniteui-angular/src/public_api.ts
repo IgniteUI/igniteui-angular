@@ -69,6 +69,8 @@ export * from './lib/drop-down/index';
 export * from './lib/grids/hiding/hiding.module';
 export * from './lib/grids/common/enums';
 export * from './lib/grids/common/events';
+export * from './lib/grids/common/row.interface';
+export * from './lib/grids/common/cell.interface';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/grids/hierarchical-grid/index';

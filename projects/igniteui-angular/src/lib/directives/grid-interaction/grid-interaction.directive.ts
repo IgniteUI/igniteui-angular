@@ -11,10 +11,10 @@ import {
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IgxGridCellComponent } from '../../grids/cell.component';
 import { IgxGridBaseDirective } from '../../grids';
 import { RowType } from '../../grids/common/row.interface';
 import { IgxRowIslandComponent } from '../../grids/hierarchical-grid';
+import { CellType } from '../../grids/common/cell.interface';
 
 export interface IInteractionConfig {
     start: Array<string>;
@@ -22,7 +22,7 @@ export interface IInteractionConfig {
 }
 
 export interface ICellInteractionArgs {
-    cell: IgxGridCellComponent;
+    cell: CellType;
     originalEvent: Event;
 }
 
