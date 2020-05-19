@@ -112,11 +112,10 @@ export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
                         const rowNode = target.parentNode.parentNode;
                         const rowIndex = parseInt(target.getAttribute('data-rowindex'), 10);
                         const visibleIndex = parseInt(target.getAttribute('data-visibleindex'), 10);
-
                         grid = this.extractGrid(rowIndex, rowNode);
-                        const cell = grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
 
                         if (grid) {
+                            const cell = grid.getCellByColumnVisibleIndex(rowIndex, visibleIndex);
                             const row = grid.getRowByIndex(rowIndex);
                             this.emitEvents(row, rowNode, evt, interaction, isCellInteraction ? cell : null);
                         }
