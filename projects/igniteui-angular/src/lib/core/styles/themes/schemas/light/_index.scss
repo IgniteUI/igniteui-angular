@@ -36,6 +36,7 @@
 @import './navbar';
 @import './navdrawer';
 @import './overlay';
+@import './pie-chart';
 @import './progress';
 @import './radio';
 @import './ripple';
@@ -83,6 +84,7 @@
 /// @property {Map} igx-navbar [$_light-navbar]
 /// @property {Map} igx-navdrawer [$_light-navdrawer]
 /// @property {Map} igx-overlay [$_light-overlay]
+/// @property {Map} pie-chart [$_light-pie-chart]
 /// @property {Map} igx-progress-linear [$_light-progress-linear]
 /// @property {Map} igx-progress-circular [$_light-progress-circular]
 /// @property {Map} igx-radio [$_light-radio]
@@ -131,6 +133,7 @@ $light-schema: (
     igx-overlay: $_light-overlay,
     igx-linear-bar: $_light-progress-linear,
     igx-circular-bar: $_light-progress-circular,
+    pie-chart: $_light-pie-chart,
     igx-radio: $_light-radio,
     igx-ripple: $_light-ripple,
     igx-scrollbar: $_light-scrollbar,
@@ -179,6 +182,7 @@ $light-fluent-schema: (
     igx-overlay: $_fluent-overlay,
     igx-linear-bar: $_fluent-progress-linear,
     igx-circular-bar: $_fluent-progress-circular,
+    pie-chart: $_fluent-pie-chart,
     igx-radio: $_fluent-radio,
     igx-ripple: $_fluent-ripple,
     igx-scrollbar: $_fluent-scrollbar,
@@ -227,6 +231,7 @@ $light-bootstrap-schema: (
     igx-overlay: $_bootstrap-overlay,
     igx-linear-bar: $_bootstrap-progress-linear,
     igx-circular-bar: $_bootstrap-progress-circular,
+    pie-chart: $_bootstrap-pie-chart,
     igx-radio: $_bootstrap-radio,
     igx-ripple: $_bootstrap-ripple,
     igx-scrollbar: $_bootstrap-scrollbar,

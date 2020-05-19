@@ -36,6 +36,7 @@
 @import './navdrawer';
 @import './overlay';
 @import './progress';
+@import './pie-chart';
 @import './radio';
 @import './ripple';
 @import './scrollbar';
@@ -83,6 +84,7 @@
 /// @property {Map} igx-overlay [$_dark-overlay]
 /// @property {Map} igx-progress-linear [$_dark-progress-linear]
 /// @property {Map} igx-progress-circular [$_dark-progress-circular]
+/// @property {Map} pie-chart [$_dark-pie-chart]
 /// @property {Map} igx-radio [$_dark-radio]
 /// @property {Map} igx-ripple [$_dark-ripple]
 /// @property {Map} igx-scrollbar [$_dark-scrollbar]
@@ -129,6 +131,7 @@ $dark-schema: (
     igx-overlay: $_dark-overlay,
     igx-linear-bar: $_dark-progress-linear,
     igx-circular-bar: $_dark-progress-circular,
+    pie-chart: $_dark-pie-chart,
     igx-radio: $_dark-radio,
     igx-ripple: $_dark-ripple,
     igx-scrollbar: $_dark-scrollbar,
@@ -177,6 +180,7 @@ $dark-schema: (
 /// @property {map} igx-overlay [$_dark-fluent-overlay],
 /// @property {map} igx-linear-bar [$_dark-fluent-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-fluent-progress-circular],
+/// @property {Map} pie-chart [$_dark-fluent-pie-chart],
 /// @property {map} igx-radio [$_dark-fluent-radio],
 /// @property {map} igx-ripple [$_dark-fluent-ripple],
 /// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
@@ -223,6 +227,7 @@ $dark-fluent-schema: (
     igx-overlay: $_dark-fluent-overlay,
     igx-linear-bar: $_dark-fluent-progress-linear,
     igx-circular-bar: $_dark-fluent-progress-circular,
+    pie-chart: $_dark-fluent-pie-chart,
     igx-radio: $_dark-fluent-radio,
     igx-ripple: $_dark-fluent-ripple,
     igx-scrollbar: $_dark-fluent-scrollbar,
@@ -271,6 +276,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-overlay [$_dark-bootstrap-overlay],
 /// @property {map} igx-linear-bar [$_dark-bootstrap-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-bootstrap-progress-circular],
+/// @property {Map} pie-chart [$_dark-bootstrap-pie-chart],
 /// @property {map} igx-radio [$_dark-bootstrap-radio],
 /// @property {map} igx-ripple [$_dark-bootstrap-ripple],
 /// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
@@ -317,6 +323,7 @@ $dark-bootstrap-schema: (
     igx-overlay: $_dark-bootstrap-overlay,
     igx-linear-bar: $_dark-bootstrap-progress-linear,
     igx-circular-bar: $_dark-bootstrap-progress-circular,
+    pie-chart: $_dark-bootstrap-pie-chart,
     igx-radio: $_dark-bootstrap-radio,
     igx-ripple: $_dark-bootstrap-ripple,
     igx-scrollbar: $_dark-bootstrap-scrollbar,
