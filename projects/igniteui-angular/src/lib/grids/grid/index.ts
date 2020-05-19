@@ -5,4 +5,3 @@ export * from './grid.directives';
 export * from './grid.module';
 export * from './grid-api.service';
 export * from './grid-row.component';
-export * from '../../directives/grid-interaction/grid-interaction.directive';

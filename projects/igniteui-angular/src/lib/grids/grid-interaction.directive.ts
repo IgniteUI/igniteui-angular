@@ -11,10 +11,10 @@ import {
     Optional,
     OnDestroy
 } from '@angular/core';
-import { IgxGridBaseDirective } from '../../grids';
-import { RowType } from '../../grids/common/row.interface';
-import { IgxRowIslandComponent } from '../../grids/hierarchical-grid';
-import { CellType } from '../../grids/common/cell.interface';
+import { IgxGridBaseDirective } from './grid-base.directive';
+import { RowType } from './common/row.interface';
+import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
+import { CellType } from './common/cell.interface';
 
 export interface IInteractionConfig {
     start: Array<string>;

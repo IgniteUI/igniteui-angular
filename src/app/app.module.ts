@@ -126,7 +126,6 @@ import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } fro
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
-import { IgxGridInteractionModule } from 'projects/igniteui-angular/src/lib/directives/grid-interaction/grid-interaction.directive';
 
 const components = [
     ActionStripSampleComponent,
@@ -255,7 +254,6 @@ const components = [
         HttpClientModule,
         IgxIconModule,
         IgxInputGroupModule,
-        IgxGridInteractionModule,
         IgxActionStripModule,
         IgxGridModule,
         IgxTreeGridModule,

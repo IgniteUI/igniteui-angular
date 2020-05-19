@@ -11,3 +11,4 @@ export { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.d
 export * from './hiding/column-hiding.component';
 export * from './pinning/column-pinning.component';
 export * from './state.directive';
+export * from './grid-interaction.directive';

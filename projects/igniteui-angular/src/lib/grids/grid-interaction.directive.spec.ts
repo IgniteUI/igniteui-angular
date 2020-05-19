@@ -1,19 +1,19 @@
 import { Component, ViewChild, OnInit, ElementRef } from '@angular/core';
-import { configureTestSuite } from '../../test-utils/configure-suite';
+import { configureTestSuite } from '../test-utils/configure-suite';
 import { TestBed, async } from '@angular/core/testing';
-import { IgxIconModule } from '../../icon';
-import { IgxGridModule, IgxGridComponent } from '../../grids/grid';
+import { IgxIconModule } from '../icon';
+import { IgxGridModule, IgxGridComponent } from './grid';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxActionStripComponent, IgxActionStripModule } from '../../action-strip';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxActionStripComponent, IgxActionStripModule } from '../action-strip';
 import { IgxGridInteractionModule } from './grid-interaction.directive';
-import { IgxTreeGridComponent, IgxTreeGridModule } from '../../grids/tree-grid';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridComponent,
     IgxRowIslandComponent,
     IgxHierarchicalGridModule,
-    IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid';
+    IgxHierarchicalRowComponent } from './hierarchical-grid';
 
 
 describe('igxGridInteractionDirective #grid ', () => {

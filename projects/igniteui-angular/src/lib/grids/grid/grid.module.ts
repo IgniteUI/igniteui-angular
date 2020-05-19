@@ -21,7 +21,6 @@ import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { IgxGridInteractionModule } from '../../directives/grid-interaction/grid-interaction.directive';
 
 /**
  * @hidden
@@ -64,8 +63,7 @@ import { IgxGridInteractionModule } from '../../directives/grid-interaction/grid
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
-    IgxGridCommonModule,
-    IgxGridInteractionModule
+    IgxGridCommonModule
   ],
   imports: [
     IgxGridCommonModule,
