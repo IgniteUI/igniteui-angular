@@ -16,6 +16,15 @@
                 "selector": "igx-toast",
                 "type": "component"
            }
+        },
+        {
+            "name": "rowSelectable",
+            "replaceWith": "rowSelection",
+            "valueTransform": "rowSelectable_is_deprecated",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
         }
     ]
 }
