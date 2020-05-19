@@ -106,7 +106,7 @@ export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
         let grid;
         if (interaction) {
             interaction.start.forEach(startEvent => {
-                const startFn = this.renderer.listen(this.grid.nativeElement, startEvent, (evt) => {
+                const startFn = this.renderer.listen(this.grid.tbody.nativeElement, startEvent, (evt) => {
                     const target = evt.target;
                     if (this.isGridCell(target.tagName.toLowerCase())) {
                         const rowNode = target.parentNode.parentNode;
