@@ -483,12 +483,10 @@ class HelperFunctions {
     }
 
     public static verifyExpansionStates(expansion: Map<any, boolean>, gridState: IGridState) {
-        expansion.forEach((exp, i) => {
-            expect(i).toBe(gridState.expansion[0][0]);
-            expect(exp).toBe(gridState.expansion[0][1]);
+        const gridExpansion = new Map<any, boolean>(gridState.expansion);
+        expansion.forEach((value, key, map) => {
+            expect(value).toBe(gridExpansion.get(key));
         });
-
-
     }
 
     public static getChildGridsCollection(grid, state) {
@@ -638,4 +636,4 @@ export function generateDataUneven(count: number, level: number, parendID: strin
     }
     return prods;
 }
-
+// tslint:enable:max-line-length
