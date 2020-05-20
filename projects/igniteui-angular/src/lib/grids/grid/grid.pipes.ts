@@ -13,6 +13,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
+import { GridPagingMode } from '../common/enums';
 
 /**
  * @hidden
@@ -99,8 +100,7 @@ export class IgxGridPagingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
-
-        if (!this.gridAPI.grid.paging) {
+        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.local) {
             return collection;
         }
         const state = {

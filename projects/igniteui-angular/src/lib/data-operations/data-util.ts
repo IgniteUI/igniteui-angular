@@ -82,7 +82,7 @@ export class DataUtil {
         const recordsPerPage = dataLength !== undefined && state.recordsPerPage > dataLength ? dataLength : state.recordsPerPage;
         state.metadata = {
             countPages: 0,
-            countRecords: data.length,
+            countRecords: len,
             error: PagingError.None
         };
         if (index < 0 || isNaN(index)) {
