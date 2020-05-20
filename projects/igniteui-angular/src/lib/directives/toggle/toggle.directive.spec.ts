@@ -471,11 +471,11 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
 
-            const defaults = /*<OverlaySettings>*/{
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+            const defaults: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                scrollStrategy: new AbsoluteScrollStrategy(),
                 excludePositionTarget: true
             };
 
@@ -494,11 +494,11 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
 
-            const settings = /*<OverlaySettings>*/{
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+            const settings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                scrollStrategy: new AbsoluteScrollStrategy(),
                 excludePositionTarget: true
             };
 
@@ -510,7 +510,7 @@ describe('IgxToggle', () => {
             fixture.componentInstance.settings.modal = true;
             fixture.componentInstance.settings.positionStrategy = new AutoPositionStrategy();
             settings.modal = true;
-            settings.positionStrategy = jasmine.any(AutoPositionStrategy);
+            settings.positionStrategy = new AutoPositionStrategy();
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
@@ -529,11 +529,11 @@ describe('IgxToggle', () => {
             const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
             const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
 
-            const settings = /*<OverlaySettings>*/{
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+            const settings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
+                scrollStrategy: new AbsoluteScrollStrategy(),
                 excludePositionTarget: true
             };
             fixture.componentInstance.settings.positionStrategy = new ConnectedPositioningStrategy();
@@ -587,12 +587,12 @@ describe('IgxToggle', () => {
             const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
             fixture.detectChanges();
 
-            const settings = /*<OverlaySettings>*/{
-                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+            const settings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
                 closeOnOutsideClick: true,
                 modal: false,
-                scrollStrategy: jasmine.any(AbsoluteScrollStrategy),
-                outlet: jasmine.any(IgxOverlayOutletDirective),
+                scrollStrategy: new AbsoluteScrollStrategy(),
+                outlet: outlet,
                 excludePositionTarget: true
             };
 
