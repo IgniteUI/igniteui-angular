@@ -99,6 +99,7 @@ describe('IgxDropDown ', () => {
             spyOn(dropdown.onClosed, 'emit').and.callThrough();
 
             dropdown.selectItem(data[1]);
+            const selected = dropdown.selectedItem;
             expect(dropdown.selectedItem).toEqual(data[1]);
             expect(dropdown.onSelection.emit).toHaveBeenCalledTimes(1);
             let args: ISelectionEventArgs = {
@@ -112,7 +113,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem).toBeNull();
             expect(dropdown.onSelection.emit).toHaveBeenCalledTimes(2);
             args = {
-                oldSelection: { value: data[1].value, index: data[1].index, selected: false },
+                oldSelection: selected,
                 newSelection: null,
                 cancel: false
             };
