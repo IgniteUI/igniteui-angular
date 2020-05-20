@@ -53,9 +53,9 @@ describe('IgxGrid - Cell component #grid', () => {
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
             UIInteractions.simulateClickAndSelectEvent(cellElem);
-            const args = {
+            const args: IGridCellEventArgs = {
                 cell: firstCell,
-                event: jasmine.anything()
+                event: new Event('mousedown')
             };
             fix.detectChanges();
 
@@ -302,7 +302,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
             // should attach 'doubletap'
             expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: {} });
+            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,  { cssProps: null });
 
             spyOn(grid.onDoubleClick, 'emit').and.callThrough();
 

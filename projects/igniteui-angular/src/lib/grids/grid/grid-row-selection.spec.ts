@@ -132,14 +132,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
             expect(grid.selectedRows()).toEqual(allRowsArray);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            let args: IRowSelectionEventArgs = {
                 added: allRowsArray,
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: allRowsArray,
                 oldSelection: [],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
@@ -148,14 +149,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 oldSelection: allRowsArray,
                 newSelection: [],
                 added: [],
                 removed: allRowsArray,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 cancel: false
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
         });
 
         it('Header checkbox should deselect all rows - scenario when clicking first row, while header checkbox is clicked', () => {
@@ -197,14 +199,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            let args: IRowSelectionEventArgs = {
                 added: [1],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [1],
                 oldSelection: [],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             expect(grid.selectedRows()).toEqual([1]);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -219,14 +222,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows()).toEqual([1, 2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 added: [2],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [1, 2],
                 oldSelection: [1],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
@@ -236,14 +240,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows()).toEqual([2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 added: [],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [2],
                 oldSelection: [1, 2],
                 removed: [1]
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
@@ -252,14 +257,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.selectedRows()).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 added: [],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [],
                 oldSelection: [2],
                 removed: [2]
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
         });
 
         it('Should select the row with mouse click ', () => {
@@ -719,14 +725,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            let args: IRowSelectionEventArgs = {
                 added: [1],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [1],
                 oldSelection: [],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             expect(grid.selectedRows()).toEqual([1]);
             GridSelectionFunctions.verifyRowSelected(firstRow);
@@ -740,14 +747,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
             expect(grid.selectedRows()).toEqual([2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 added: [2],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [2],
                 oldSelection: [1],
                 removed: [1]
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
         });
 
         it('Should not select multiple rows with clicking and holding Ctrl', () => {
@@ -1142,28 +1150,30 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([gridData[1]]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            let args: IRowSelectionEventArgs = {
                 added: [gridData[1]],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
 
             UIInteractions.simulateClickEvent(secondRow.nativeElement, true);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([gridData[1], gridData[2], gridData[3], gridData[4]]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+            args = {
                 added: [gridData[2], gridData[3], gridData[4]],
                 cancel: false,
-                event: jasmine.anything(),
+                event: new Event('mousedown'),
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: []
-            });
+            };
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
         });
 
         it('Should persist through scrolling vertical', (async () => {

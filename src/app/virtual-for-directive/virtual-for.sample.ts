@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
 import { IgxForOfDirective } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -9,7 +9,7 @@ import { RemoteService } from '../shared/remote.service';
     styleUrls: ['virtual-for.sample.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class VirtualForSampleComponent implements OnInit, AfterViewInit {
+export class VirtualForSampleComponent implements OnInit {
     search1: string;
     data = [];
     remoteData: any;
@@ -134,12 +134,6 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             data.push(obj);
         }
         this.data = data;
-    }
-
-    ngAfterViewInit() {
-        this.remoteService.getData(this.virtDirRemote.state, (data) => {
-            // this.virtDirRemote.totalItemCount = data['@odata.count'];
-        });
     }
     chunkLoading(evt) {
         if (this.prevRequest) {
