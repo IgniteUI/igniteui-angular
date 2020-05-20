@@ -252,6 +252,10 @@ export abstract class DatePickerUtil {
      * @returns true if provided value is greater than provided maxValue
      */
     public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
+        // TODO: check if provided dates are valid dates and not Invalid Date
+        // if maxValue is Invalid Date and value is valid date this will return:
+        // - false if includeDate is true
+        // - true if includeDate is false
         if (includeTime && includeDate) {
             return value.getTime() > maxValue.getTime();
         }
@@ -277,6 +281,10 @@ export abstract class DatePickerUtil {
      * @returns true if provided value is less than provided minValue
      */
     public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
+        // TODO: check if provided dates are valid dates and not Invalid Date
+        // if value is Invalid Date and minValue is valid date this will return:
+        // - false if includeDate is true
+        // - true if includeDate is false
         if (includeTime && includeDate) {
             return value.getTime() < minValue.getTime();
         }
@@ -634,6 +642,46 @@ export abstract class DatePickerUtil {
 
     public static daysInMonth(fullYear: number, month: number): number {
         return new Date(fullYear, month + 1, 0).getDate();
+    }
+
+    /**
+     * Parse provided input to Date.
+     * @param value input to parse
+     * @returns Date if parse succeed or null
+     */
+    public static parseDate(value: any): Date | null {
+        if (typeof value === 'number') {
+            return new Date(value);
+        }
+
+        // if value is Invalid Date we should return null
+        if (this.isDate(value)) {
+            return this.isValidDate(value) ? value : null;
+        }
+
+        return value ? new Date(Date.parse(value)) : null;
+    }
+
+    /**
+     * Returns whether provided input is date
+     * @param value input to check
+     * @returns true if provided input is date
+     */
+    public static isDate(value: any): boolean {
+        return Object.prototype.toString.call(value) === '[object Date]';
+    }
+
+    /**
+     * Returns whether the input is valid date
+     * @param value input to check
+     * @returns true if provided input is a valid date
+     */
+    public static isValidDate(value: any): boolean {
+        if (this.isDate(value)) {
+            return !isNaN(value.getTime());
+        }
+
+        return false;
     }
 
     private static getYearFormatType(format: string): string {

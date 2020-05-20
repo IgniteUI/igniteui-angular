@@ -59,6 +59,8 @@
         transform: translate3d(0, 0, 0) scale(0);
         will-change: opacity, transform;
         opacity: .5;
+        margin: 0 !important;
+        border: none !important;
     }
 
     %igx-ripple-wrapper {

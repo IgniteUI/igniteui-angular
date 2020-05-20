@@ -236,12 +236,12 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * <igx-date-range-picker [minValue]="minDate"></igx-date-range-picker>
      */
     @Input()
-    public set minValue(value: Date) {
+    public set minValue(value: Date | string) {
         this._minValue = value;
         this.onValidatorChange();
     }
 
-    public get minValue(): Date {
+    public get minValue(): Date | string {
         return this._minValue;
     }
 
@@ -252,12 +252,12 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
      * <igx-date-range-picker [maxValue]="maxDate"></igx-date-range-picker>
      */
     @Input()
-    public set maxValue(value: Date) {
+    public set maxValue(value: Date | string) {
         this._maxValue = value;
         this.onValidatorChange();
     }
 
-    public get maxValue(): Date {
+    public get maxValue(): Date | string {
         return this._maxValue;
     }
 
@@ -419,8 +419,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _ngControl: NgControl;
     private _statusChanges$: Subscription;
     private $destroy = new Subject();
-    private _minValue: Date;
-    private _maxValue: Date;
+    private _minValue: Date | string;
+    private _maxValue: Date | string;
     private $toggleClickNotifier = new Subject();
     private _positionSettings: PositionSettings;
     private _dialogOverlaySettings: OverlaySettings = {
@@ -568,23 +568,29 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public validate(control: AbstractControl): ValidationErrors {
+    public validate(control: AbstractControl): ValidationErrors | null {
         const value: DateRange = control.value;
-        if (this.minValue && value && value.start && DatePickerUtil.lessThanMinValue(value.start, this.minValue, false)) {
-            return { 'minValue': true };
-        }
-        if (this.minValue && value && value.end && DatePickerUtil.lessThanMinValue(value.end, this.minValue, false)) {
-            return { 'minValue': true };
-        }
-        if (this.maxValue && value && value.start && DatePickerUtil.greaterThanMaxValue(value.start, this.maxValue, false)) {
-            return { 'maxValue': true };
-        }
-        if (this.maxValue && value && value.end && DatePickerUtil.greaterThanMaxValue(value.end, this.maxValue, false)) {
-            return { 'maxValue': true };
+        if (value) {
+            const min = DatePickerUtil.parseDate(this.minValue);
+            const max = DatePickerUtil.parseDate(this.maxValue);
+            const start = DatePickerUtil.parseDate(value.start);
+            const end = DatePickerUtil.parseDate(value.end);
+
+            if (min && start && DatePickerUtil.lessThanMinValue(start, min, false)) {
+                return { 'minValue': true };
+            }
+            if (min && end && DatePickerUtil.lessThanMinValue(end, min, false)) {
+                return { 'minValue': true };
+            }
+            if (max && start && DatePickerUtil.greaterThanMaxValue(start, max, false)) {
+                return { 'maxValue': true };
+            }
+            if (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false)) {
+                return { 'maxValue': true };
+            }
         }
 
-        // TODO: fix what happens on blur and ensure there value is either null or with both start and end filled
-
+        // TODO: fix what happens on blur and ensure on blur the value is either null or with both start and end filled
         return null;
     }
 
@@ -784,26 +790,22 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     private updateCalendar(): void {
         this.calendar.disabledDates = [];
-        // TODO: minValue and maxValue type to be Date | String as it is in dateTineEditorDirective
-        // TODO: move isDate and parseDate to utils
-        let minValue = this.minValue;
+        let minValue: Date = DatePickerUtil.parseDate(this.minValue);
         if (!minValue && this.hasProjectedInputs) {
             const start = this.projectedInputs.filter(i => i instanceof IgxDateRangeStartComponent)[0];
             if (start) {
-                const editor = start.dateTimeEditor;
-                minValue = editor.isDate(editor.minValue) ? editor.minValue : editor.parseDate(editor.minValue);
+                minValue = DatePickerUtil.parseDate(start.dateTimeEditor.minValue);
             }
         }
         if (minValue) {
             this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
         }
 
-        let maxValue = this.maxValue;
+        let maxValue: Date = DatePickerUtil.parseDate(this.maxValue);
         if (!maxValue && this.hasProjectedInputs) {
             const end = this.projectedInputs.filter(i => i instanceof IgxDateRangeEndComponent)[0];
             if (end) {
-                const editor = end.dateTimeEditor;
-                maxValue = editor.isDate(editor.maxValue) ? editor.maxValue : editor.parseDate(editor.maxValue);
+                maxValue = DatePickerUtil.parseDate(end.dateTimeEditor.maxValue);
             }
         }
         if (maxValue) {
@@ -822,6 +824,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
         if (range.length > 0) {
             this.calendar.selectDate(range);
+            this.calendar.viewDate = range[0];
         } else {
             this.calendar.deselectDate();
         }

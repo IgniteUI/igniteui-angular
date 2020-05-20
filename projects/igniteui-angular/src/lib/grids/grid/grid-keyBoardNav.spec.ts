@@ -207,8 +207,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             const cell = grid.getCellByColumn(0, 'col0');
             expect(cell).toBeDefined();
-            expect(cell.active).toBeTruthy();
-            expect(cell.selected).toBeTruthy();
+            GridSelectionFunctions.verifyCellActive(cell);
+            GridSelectionFunctions.verifyCellSelected(cell);
         });
 
         it('should allow navigating down', async () => {
@@ -566,10 +566,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-
             const target = grid.getCellByColumn(15, '1');
             expect(target).toBeDefined();
-            expect(target.selected).toBeTruthy();
+            GridSelectionFunctions.verifyCellSelected(target);
+            GridSelectionFunctions.verifyCellActive(target);
         });
 
         it('Custom KB navigation: should be able to scroll horizontally and vertically to a cell in the grid', async () => {
@@ -588,7 +588,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             const target = grid.getCellByColumn(50, '50');
             expect(target).toBeDefined();
-            expect(target.selected).toBeTruthy();
+            GridSelectionFunctions.verifyCellSelected(target);
+            GridSelectionFunctions.verifyCellActive(target);
         });
 
         it('Custom KB navigation: onGridKeydown should be emitted', async () => {
