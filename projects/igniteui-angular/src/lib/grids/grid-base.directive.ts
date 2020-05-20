@@ -416,6 +416,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set pagingMode(val: GridPagingMode) {
         this._pagingMode = val;
+        this._pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     /**
