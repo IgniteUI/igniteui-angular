@@ -23,11 +23,15 @@
                     "description": "Component that emits the output or accepts the input"
                 },
                 "remove": {
-                    "description": "Remove directive/component",
+                    "description": "Remove directive/component/property",
                     "type": "boolean"
                 },
                 "replaceWith": {
-                    "description": "Replace original selector with new one",
+                    "description": "Replace original selector/property with new one",
+                    "type": "string"
+                },
+                "valueTransform": {
+                    "description": "A function that transforms the value of an Input",
                     "type": "string"
                 }
             },

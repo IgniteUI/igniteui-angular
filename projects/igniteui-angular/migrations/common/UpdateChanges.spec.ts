@@ -4,8 +4,8 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
-import { UpdateChanges } from './UpdateChanges';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges, ImportsChanges, ElementType } from './schema';
+import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 
 describe('UpdateChanges', () => {
@@ -28,7 +28,7 @@ describe('UpdateChanges', () => {
                     sourceRoot: '/'
                 }
             }
-          }));
+        }));
     });
 
     // tslint:disable:arrow-parens
@@ -269,35 +269,35 @@ describe('UpdateChanges', () => {
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
 
         const fileContent =
-        `import { Component, Injectable, ViewChild } from "@angular/core";` +
-        `import { IgxGridComponent } from "igniteui-angular";` +
-        `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
-        `import {` +
-        `    IgxCsvExporterService,` +
-        `    IgxExcelExporterOptions,` +
-        `    IgxExporterOptionsBase` +
-        `} from "igniteui-angular";\r\n` +
-        `@Component({` +
-        `    providers: [IgxProvided, RemoteService]` +
-        `})` +
-        `export class GridSampleComponent {` +
-        `    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;` +
-        `    // prop definitions to ignore:\r\n` +
-        `    NotType: { NotAgain: string; extraProp: IgxExcelExporterOptions, IgxExcelExporterOptions: string } = {` +
-        `        NotAgain: "hai",` +
-        `        extraProp: new IgxExcelExporterOptions(),` +
-        `        IgxExcelExporterOptions: "fake"` +
-        `    }` +
-        `    constructor(private csvExporterService: IgxCsvExporterService) { }` +
-        `    public initColumns(event: IgxColumnComponent) {` +
-        `        const column: IgxColumnComponent = event;` +
-        `        this.grid1.filter("ProductName", "Queso", STRING_FILTERS.contains, true);` +
-        `    }` +
-        `    private getOptions(fileName: string): IgxExporterOptionsBase {` +
-        `        return new IgxExcelExporterOptions(fileName);` +
-        `    }` +
-        `}`
-        ;
+            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+            `import { IgxGridComponent } from "igniteui-angular";` +
+            `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
+            `import {` +
+            `    IgxCsvExporterService,` +
+            `    IgxExcelExporterOptions,` +
+            `    IgxExporterOptionsBase` +
+            `} from "igniteui-angular";\r\n` +
+            `@Component({` +
+            `    providers: [IgxProvided, RemoteService]` +
+            `})` +
+            `export class GridSampleComponent {` +
+            `    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;` +
+            `    // prop definitions to ignore:\r\n` +
+            `    NotType: { NotAgain: string; extraProp: IgxExcelExporterOptions, IgxExcelExporterOptions: string } = {` +
+            `        NotAgain: "hai",` +
+            `        extraProp: new IgxExcelExporterOptions(),` +
+            `        IgxExcelExporterOptions: "fake"` +
+            `    }` +
+            `    constructor(private csvExporterService: IgxCsvExporterService) { }` +
+            `    public initColumns(event: IgxColumnComponent) {` +
+            `        const column: IgxColumnComponent = event;` +
+            `        this.grid1.filter("ProductName", "Queso", STRING_FILTERS.contains, true);` +
+            `    }` +
+            `    private getOptions(fileName: string): IgxExporterOptionsBase {` +
+            `        return new IgxExcelExporterOptions(fileName);` +
+            `    }` +
+            `}`
+            ;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -378,7 +378,7 @@ describe('UpdateChanges', () => {
                 { name: 'Size', replaceWith: 'IgxSize' },
                 { name: 'IgxService', replaceWith: 'IgxService1' },
                 { name: 'IgxDiffService', replaceWith: 'IgxNewDiffService' },
-                { name: 'Calendar', replaceWith: 'CalendarActual'}
+                { name: 'Calendar', replaceWith: 'CalendarActual' }
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
@@ -607,6 +607,149 @@ export class AppModule { }`;
 })
 export class AppModule { }`);
 
+        done();
+    });
+
+    it('should handle changes with valueTransform functions', done => {
+        const inputsJson: BindingChanges = {
+            changes: [{
+                'name': 'someProp',
+                'replaceWith': 'someOtherProp',
+                'valueTransform': 'some_prop_transform',
+                'owner': {
+                    'selector': 'igx-component',
+                    'type': ElementType.component
+                }
+            }]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+
+        // bracketed
+        appTree.create(
+            'test.component.html',
+            '<igx-component [someProp]="true"></igx-component>'
+        );
+
+        // No brackets
+        appTree.create(
+            'test2.component.html',
+            '<igx-component someProp="otherVal"></igx-component>'
+        );
+
+        // Small quotes
+        appTree.create(
+            'test3.component.html',
+            `<igx-component someProp='otherVal'></igx-component>`
+        );
+
+        // Multiple occurances
+        appTree.create(
+            'test4.component.html',
+            `<igx-component [someProp]="true"><igx-component>
+<igx-component [someProp]="false" [someProp]="false" [someProp]="false" [someProp]="false"><igx-component>
+<igx-component someProp="true"><igx-component>
+<igx-component someProp="false"><igx-component>`
+        );
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getInputChanges()).toEqual(inputsJson);
+        update.addValueTransform('some_prop_transform', (args: BoundPropertyObject): void => {
+            if (args.bindingType === InputPropertyType.EVAL) {
+                    args.value = args.value === 'true' ? '\'trueValue\'' : '\'falseValue\'';
+            } else {
+                args.value = args.value === 'true' ? 'trueValue' : 'falseValue';
+            }
+        });
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(`<igx-component [someOtherProp]="'trueValue'"></igx-component>`);
+        expect(appTree.readContent('test2.component.html')).toEqual(`<igx-component someOtherProp="falseValue"></igx-component>`);
+        expect(appTree.readContent('test3.component.html')).toEqual(`<igx-component someOtherProp='falseValue'></igx-component>`);
+        expect(appTree.readContent('test4.component.html')).toEqual(`<igx-component [someOtherProp]="'trueValue'"><igx-component>\n` +
+// tslint:disable-next-line:max-line-length
+`<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
+<igx-component someOtherProp="trueValue"><igx-component>
+<igx-component someOtherProp="falseValue"><igx-component>`);
+        done();
+    });
+
+    it('Should be able to change binding type via transform function', done => {
+        const inputsJson: BindingChanges = {
+            changes: [{
+                'name': 'prop',
+                'replaceWith': 'newProp',
+                'valueTransform': 'prop_transform',
+                'owner': {
+                    'selector': 'igx-component',
+                    'type': ElementType.component
+                }
+            }]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+
+        // bracketed
+        appTree.create(
+            'test-bound-to-string.component.html',
+            `<igx-component [prop]="true">STRING</igx-component>
+<igx-component [prop]="false">STRING</igx-component>
+<igx-component [prop]="someOtherProperty">BOUND</igx-component>`
+        );
+        appTree.create(
+            'test-string-to-bound.component.html',
+            `<igx-component prop="changeThisToBound">BOUND</igx-component>
+<igx-component prop="leaveMeBe">STRING</igx-component>`
+        );
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getInputChanges()).toEqual(inputsJson);
+        update.addValueTransform('prop_transform', (args: BoundPropertyObject): void => {
+            if (args.bindingType === InputPropertyType.EVAL) {
+                switch (args.value) {
+                    case 'true':
+                        args.value = 'TRUTHY-STRING-VALUE';
+                        args.bindingType = InputPropertyType.STRING;
+                    break;
+                    case 'false':
+                        args.value = 'FALSY-STRING-VALUE';
+                        args.bindingType = InputPropertyType.STRING;
+                        break;
+                    default:
+                        args.value += ' ? true : false';
+                }
+            } else {
+                if (args.value === 'changeThisToBound') {
+                    args.bindingType = InputPropertyType.EVAL;
+                    args.value = 'true';
+                }
+            }
+        });
+
+        update.applyChanges();
+        expect(appTree.readContent('test-bound-to-string.component.html')).toEqual(
+`<igx-component newProp="TRUTHY-STRING-VALUE">STRING</igx-component>
+<igx-component newProp="FALSY-STRING-VALUE">STRING</igx-component>
+<igx-component [newProp]="someOtherProperty ? true : false">BOUND</igx-component>`);
+        expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(
+`<igx-component [newProp]="true">BOUND</igx-component>
+<igx-component newProp="leaveMeBe">STRING</igx-component>`);
         done();
     });
 });

@@ -8,6 +8,17 @@ import { getLanguageService, getRenamePositions } from './tsUtils';
 import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 import { LanguageService } from 'typescript';
 
+
+export enum InputPropertyType {
+    EVAL = 'eval',
+    STRING = 'string'
+}
+declare type TransformFunction = (args: BoundPropertyObject) => void;
+export interface BoundPropertyObject {
+    value: string;
+    bindingType: InputPropertyType;
+}
+
 // tslint:disable:arrow-parens
 export class UpdateChanges {
     protected workspace: WorkspaceSchema;
@@ -19,6 +30,7 @@ export class UpdateChanges {
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
+    protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
     public get templateFiles(): string[] {
@@ -130,6 +142,10 @@ export class UpdateChanges {
         this.conditionFunctions.set(conditionName, callback);
     }
 
+    public addValueTransform(functionName: string, callback: TransformFunction) {
+        this.valueTransforms.set(functionName, callback);
+    }
+
     protected updateSelectors(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
@@ -202,39 +218,40 @@ export class UpdateChanges {
                 continue;
             }
 
-            let base;
-            let replace;
+            let base: string;
+            let replace: string;
             let groups = 1;
             let searchPattern;
 
             if (type === BindingType.output) {
-                base = String.raw`\(${change.name}\)=(["'])`;
-                replace = `(${change.replaceWith})=$1`;
+                base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
+                replace = `(${change.replaceWith})=$1$2$1`;
             } else {
                 // Match both bound - [name] - and regular - name
-                base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])`;
-                replace = String.raw`$1${change.replaceWith}$2$3`;
+                base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
+                replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
                 groups = 3;
             }
 
             let reg = new RegExp(base, 'g');
             if (change.remove || change.moveBetweenElementTags) {
                 // Group match (\1) as variable as it looks like octal escape (error in strict)
-                reg = new RegExp(String.raw`\s*${base}.*?${'\\' + groups}(?=\s|\>)`, 'g');
+                reg = new RegExp(String.raw`\s*${base}(?=\s|\>)`, 'g');
                 replace = '';
             }
             switch (change.owner.type) {
-            case 'component':
-                searchPattern = String.raw`\<${change.owner.selector}[^\>]*\>`;
-                break;
-            case 'directive':
-                searchPattern = String.raw`\<[^\>]*[\s\[]${change.owner.selector}[^\>]*\>`;
-                break;
+                case 'component':
+                    searchPattern = String.raw`\<${change.owner.selector}[^\>]*\>`;
+                    break;
+                case 'directive':
+                    searchPattern = String.raw`\<[^\>]*[\s\[]${change.owner.selector}[^\>]*\>`;
+                    break;
             }
 
             const matches = fileContent.match(new RegExp(searchPattern, 'g'));
 
             for (const match of matches) {
+                let replaceStatement = replace;
                 if (!this.areConditionsFulfiled(match, change.conditions)) {
                     continue;
                 }
@@ -244,9 +261,27 @@ export class UpdateChanges {
                     fileContent = this.copyPropertyValueBetweenElementTags(fileContent, match, moveMatch);
                 }
 
+                if (change.valueTransform) {
+                    const regExpMatch = match.match(new RegExp(base));
+                    const bindingType = regExpMatch && regExpMatch[1].endsWith('[') ? InputPropertyType.EVAL : InputPropertyType.STRING;
+                    if (regExpMatch) {
+                        const value = regExpMatch[4];
+                        const transform = this.valueTransforms.get(change.valueTransform);
+                        const args = { value, bindingType };
+                        transform(args);
+                        if (args.bindingType !== bindingType) {
+                            replaceStatement = args.bindingType === InputPropertyType.EVAL ?
+                            replaceStatement.replace(`$1`, `$1[`).replace(`$2`, `]$2`) :
+                            replaceStatement.replace(`$1`, regExpMatch[1].replace('[', '')).replace('$2', regExpMatch[2].replace(']', ''));
+
+                        }
+                        replaceStatement = replaceStatement.replace('$4', args.value);
+                    }
+                }
+
                 fileContent = fileContent.replace(
                     match,
-                    match.replace(reg, replace)
+                    match.replace(reg, replaceStatement)
                 );
             }
             overwrite = true;
@@ -369,13 +404,13 @@ export class UpdateChanges {
         }
     }
 
-   /**
-    * Safe split by `','`, considering possible inner function calls. E.g.:
-    * ```
-    * prop: inner-func(),
-    * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
-    * ```
-    */
+    /**
+     * Safe split by `','`, considering possible inner function calls. E.g.:
+     * ```
+     * prop: inner-func(),
+     * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
+     * ```
+     */
     private splitFunctionProps(body: string): string[] {
         const parts = [];
         let lastIndex = 0;
@@ -384,16 +419,16 @@ export class UpdateChanges {
         for (let i = 0; i < body.length; i++) {
             const char = body[i];
             switch (char) {
-            case '(': level++; break;
-            case ')': level--; break;
-            case ',':
-                if (!level) {
-                    parts.push(body.substring(lastIndex, i));
-                    lastIndex = i + 1;
-                }
-                break;
-            default:
-                break;
+                case '(': level++; break;
+                case ')': level--; break;
+                case ',':
+                    if (!level) {
+                        parts.push(body.substring(lastIndex, i));
+                        lastIndex = i + 1;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         parts.push(body.substring(lastIndex));
