@@ -139,6 +139,8 @@ export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
             } else {
                 this.onRowInteractionStart.emit({ row: interactionElement, originalEvent: event });
             }
+            // destroy previous end listeners before listening to new ones
+            this.destroyEndListeners();
             interaction.end.forEach(endEvent => {
                 const endFn = this.renderer.listen(interactionElement.nativeElement, endEvent, (evt) => {
                     if (cell) {
@@ -184,19 +186,27 @@ export class IgxGridInteractionDirective implements AfterViewInit, OnDestroy {
         return grid;
     }
 
-    ngOnDestroy() {
-        this.cellStartListenerFn.forEach(fn => {
-            fn();
-        });
+    /**
+     * @hidden
+     * @internal
+     */
+    private destroyEndListeners() {
         this.cellEndListenerFn.forEach(fn => {
-            fn();
-        });
-        this.rowStartListenerFn.forEach(fn => {
             fn();
         });
         this.rowEndListenerFn.forEach(fn => {
             fn();
         });
+    }
+
+    ngOnDestroy() {
+        this.cellStartListenerFn.forEach(fn => {
+            fn();
+        });
+        this.rowStartListenerFn.forEach(fn => {
+            fn();
+        });
+        this.destroyEndListeners();
     }
 }
 
