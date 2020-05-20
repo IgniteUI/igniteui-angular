@@ -763,7 +763,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex, layout: this.selectionNode.layout };
         this.activate(event);
     }
 
@@ -818,7 +817,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
-            this.grid.navigation.activeNode = this.selectionNode;
             this.activate(event);
         }
         this.grid.onCellClick.emit({
@@ -845,6 +843,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
+
+        if (this.grid.navigation.activeNode) {
+            Object.assign(this.grid.navigation.activeNode, {row: this.rowIndex, column: this.visibleColumnIndex});
+        } else {
+            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+            this.grid.navigation.activeNode = { row: this.rowIndex, column: this.visibleColumnIndex, layout: layout };
+        }
+
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {

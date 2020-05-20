@@ -1,10 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener, Directive } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { NgControl } from '@angular/forms';
+import { IgxInputDirective, IgxInputState } from '../input-group';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { NgControl } from '@angular/forms';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
-import { formatDate } from '@angular/common';
-import { IgxInputDirective } from '../input-group';
 
 /**
  * Represents a range between two dates.
@@ -65,13 +65,19 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     }
 
     /** @hidden @internal */
-    public updateInput(value: Date) {
+    public updateInputValue(value: Date) {
         if (this.ngControl) {
             this.ngControl.control.setValue(value);
         } else {
             this.dateTimeEditor.value = value;
         }
     }
+
+    /** @hidden @internal */
+    public updateInputValidity(state: IgxInputState) {
+        this.inputDirective.valid = state;
+    }
+
 }
 
 /**
@@ -100,8 +106,10 @@ export class IgxPickerToggleComponent {
     @Output()
     public clicked = new EventEmitter();
 
-    @HostListener('click')
-    public onClick() {
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        // do not focus input on click
+        event.stopPropagation();
         this.clicked.emit();
     }
 }
@@ -133,7 +141,10 @@ export class IgxPickerToggleComponent {
 @Component({
     selector: 'igx-date-range-start',
     templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent }]
+    providers: [
+        { provide: IgxInputGroupBase, useExisting: IgxDateRangeStartComponent },
+        { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeStartComponent }
+    ]
 })
 export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent { }
 
@@ -164,7 +175,10 @@ export class IgxDateRangeStartComponent extends IgxDateRangeInputsBaseComponent 
 @Component({
     selector: 'igx-date-range-end',
     templateUrl: '../input-group/input-group.component.html',
-    providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent }]
+    providers: [
+        { provide: IgxInputGroupBase, useExisting: IgxDateRangeEndComponent },
+        { provide: IgxDateRangeInputsBaseComponent, useExisting: IgxDateRangeEndComponent }
+    ]
 })
 export class IgxDateRangeEndComponent extends IgxDateRangeInputsBaseComponent { }
 
