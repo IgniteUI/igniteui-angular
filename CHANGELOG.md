@@ -38,7 +38,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxDateRangePicker` component added.
     - Allows the selection of a range of dates from a calendar UI or input fields. Supports `dialog` and `dropdown` modes.
-    - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
+    - Added `IgxDateRangeStartComponent` and `IgxDateRangeEndComponent`.
     - The default template consists of a single *readonly* field:
     ```html
     <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
