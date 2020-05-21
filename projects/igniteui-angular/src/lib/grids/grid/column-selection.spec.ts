@@ -97,7 +97,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID'],
                 added: ['ProductID'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -116,7 +116,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['InStock'],
                 added: ['InStock'],
                 removed: ['ProductID'],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -129,7 +129,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: [],
                 added: [],
                 removed: ['InStock'],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -376,7 +376,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID'],
                 added: ['ProductID'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -392,7 +392,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'InStock'],
                 added: ['InStock'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -414,7 +414,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'InStock', 'OrderDate'],
                 added: ['OrderDate'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -431,7 +431,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['ProductID', 'OrderDate'],
                 added: [],
                 removed: ['InStock'],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -447,7 +447,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['OrderDate'],
                 added: [],
                 removed: ['ProductID'],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -472,7 +472,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock'],
                 added: ['InStock'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -489,7 +489,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
                 added: ['OrderDate'],
                 removed: [],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -508,7 +508,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 newSelection: ['UnitsInStock', 'InStock', 'ProductID'],
                 added: ['ProductID'],
                 removed: ['OrderDate'],
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledWith(args);
