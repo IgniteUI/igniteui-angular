@@ -6283,6 +6283,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.navigateTo(rowIndex, visibleColIndex, (c) => {
                 if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
                     c.target.activate();
+                    this.tbody.nativeElement.focus();
                 }
             });
         }
