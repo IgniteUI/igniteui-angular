@@ -409,6 +409,7 @@
     }
 
     %form-group-display--disabled {
+        user-select: none;
         color: --var($theme, 'disabled-text-color');
     }
 
