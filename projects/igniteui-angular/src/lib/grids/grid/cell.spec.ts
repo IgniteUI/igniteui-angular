@@ -55,7 +55,7 @@ describe('IgxGrid - Cell component #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             const args: IGridCellEventArgs = {
                 cell: firstCell,
-                event: new Event('mousedown')
+                event: jasmine.anything() as any
             };
             fix.detectChanges();
 
