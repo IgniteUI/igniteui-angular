@@ -302,7 +302,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
             // should attach 'doubletap'
             expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,  { cssProps: null });
+            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,
+                { cssProps: {} as any });
 
             spyOn(grid.onDoubleClick, 'emit').and.callThrough();
 
