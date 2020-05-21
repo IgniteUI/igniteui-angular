@@ -388,7 +388,6 @@
     }
 
     %form-group-display--disabled {
-        pointer-events: none;
         user-select: none;
         color: --var($theme, 'disabled-text-color');
     }
