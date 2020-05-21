@@ -834,8 +834,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const transParams: HierarchicalTransaction = {
                 id: addedRowId_1,
                 type: TransactionType.ADD,
-                newValue: newRow,
-                path: []
+                newValue: newRow
             };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
@@ -970,8 +969,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const transParams: HierarchicalTransaction = {
                 id: addedRowId,
                 type: TransactionType.ADD,
-                newValue: newRow,
-                path: []
+                newValue: newRow
             };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
@@ -1071,7 +1069,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transParams: HierarchicalTransaction = { id: addedRowId, type: TransactionType.ADD, newValue: newRow, path: [] };
+            const transParams: HierarchicalTransaction = { id: addedRowId, type: TransactionType.ADD, newValue: newRow };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);

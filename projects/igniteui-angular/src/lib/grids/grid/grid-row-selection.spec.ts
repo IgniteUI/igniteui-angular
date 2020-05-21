@@ -135,7 +135,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             let args: IRowSelectionEventArgs = {
                 added: allRowsArray,
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: allRowsArray,
                 oldSelection: [],
                 removed: []
@@ -154,7 +154,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 newSelection: [],
                 added: [],
                 removed: allRowsArray,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 cancel: false
             };
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith(args);
@@ -202,7 +202,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             let args: IRowSelectionEventArgs = {
                 added: [1],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
                 removed: []
@@ -225,7 +225,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             args = {
                 added: [2],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [1, 2],
                 oldSelection: [1],
                 removed: []
@@ -243,7 +243,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             args = {
                 added: [],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1, 2],
                 removed: [1]
@@ -260,7 +260,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             args = {
                 added: [],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [],
                 oldSelection: [2],
                 removed: [2]
@@ -728,7 +728,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             let args: IRowSelectionEventArgs = {
                 added: [1],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [1],
                 oldSelection: [],
                 removed: []
@@ -750,7 +750,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             args = {
                 added: [2],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [2],
                 oldSelection: [1],
                 removed: [1]
@@ -1153,7 +1153,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             let args: IRowSelectionEventArgs = {
                 added: [gridData[1]],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [gridData[1]],
                 oldSelection: [],
                 removed: []
@@ -1168,7 +1168,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             args = {
                 added: [gridData[2], gridData[3], gridData[4]],
                 cancel: false,
-                event: new Event('mousedown'),
+                event: jasmine.anything() as any,
                 newSelection: [gridData[1], gridData[2], gridData[3], gridData[4]],
                 oldSelection: [gridData[1]],
                 removed: []
