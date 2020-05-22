@@ -102,15 +102,20 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     focusTbody(event) {
-        if (!this.activeNode || !this.activeNode.row) {
+        if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
                 row: 0,
                 column: 0
             };
 
-        }
+            this.grid.navigateTo(0, 0, (obj) => {
+                this.grid.clearCellSelection();
+                obj.target.activate(event);
+            });
 
-        super.focusTbody(event);
+        } else {
+            super.focusTbody(event);
+        }
     }
 
     protected nextSiblingIndex(isNext) {
