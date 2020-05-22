@@ -12,6 +12,7 @@
       "@types/jszip",
       "hammerjs",
       "jszip",
-      "resize-observer-polyfill"
+      "resize-observer-polyfill",
+      "igniteui-trial-watermark"
     ]
 }

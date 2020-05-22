@@ -37,6 +37,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         baseHGridContent = GridFunctions.getGridContent(fixture);
+        GridFunctions.focusFirstCell(fixture);
     }));
 
     // simple tests
@@ -660,6 +661,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             hierarchicalGrid = fixture.componentInstance.hgrid;
             setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
             baseHGridContent = GridFunctions.getGridContent(fixture);
+            GridFunctions.focusFirstCell(fixture);
         }));
 
         // complex tests
@@ -785,6 +787,7 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         baseHGridContent = GridFunctions.getGridContent(fixture);
+        GridFunctions.focusFirstCell(fixture);
     }));
 
     it('should allow navigating up between sibling child grids.', (async () => {
@@ -912,6 +915,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
         baseHGridContent = GridFunctions.getGridContent(fixture);
+        GridFunctions.focusFirstCell(fixture);
     }));
 
     it('should navigate to last cell in next row for child grid using Arrow Down from last cell of parent with more columns', (async () => {
