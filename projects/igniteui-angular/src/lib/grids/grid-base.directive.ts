@@ -3615,7 +3615,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
         }
-        return this._totalRecords >= 0 ? this._totalRecords / this.perPage : -1;
+        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
     }
 
     /**
