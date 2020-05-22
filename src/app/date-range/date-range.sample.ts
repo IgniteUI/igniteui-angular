@@ -52,7 +52,7 @@ export class DateRangeSampleComponent {
                 { updateOn: e.value, validators: Validators.required }
             );
             this.reactiveForm.setControl(name, newControl);
-        })
+        });
     }
 }
 function minDateValidator(minValue: Date): ValidatorFn {
