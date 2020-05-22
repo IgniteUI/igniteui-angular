@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IgxGridModule } from '../grid/grid.module';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -36,7 +36,8 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
   ],
   entryComponents: [
     IgxGridComponent
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxHierarchicalGridModule {
 }
