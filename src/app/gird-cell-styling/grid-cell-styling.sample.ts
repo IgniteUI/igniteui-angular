@@ -24,7 +24,6 @@ export class GridCellStylingSampleComponent implements OnInit {
         'animation': '0.25s ease-in-out forwards alternate popin'
     };
 
-
     cellClasses1 = {
         'test1': this.condition1,
         'test2': this.condition2,
@@ -37,27 +36,25 @@ export class GridCellStylingSampleComponent implements OnInit {
         'test3': this.condition6
     };
 
-    condition = (rowData: any): boolean => {
+    condition(rowData: any): boolean {
         return rowData[this.grid1.primaryKey] === 'BLONP';
     }
-
-    condition1 = (rowData: any, columnKey: any): boolean => {
+    condition1(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] === 'ALFKI' || rowData[columnKey] === 'ANTON';
     }
-    condition2 = (rowData: any, columnKey: any): boolean => {
+    condition2(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] === 'BERGS' || rowData[columnKey] === 'ANATR';
     }
-    condition3 = (rowData: any, columnKey: any) => {
+    condition3(rowData: any, columnKey: any) {
         return rowData[columnKey] === 'FRANS' || rowData[columnKey] === 'BLONP';
     }
-
-    condition4 = (rowData: any, columnKey: any): boolean => {
+    condition4(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 0 && rowData[columnKey] <= 3;
     }
-    condition5 = (rowData: any, columnKey: any): boolean => {
+    condition5(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 3 && rowData[columnKey] <= 6;
     }
-    condition6 = (rowData: any, columnKey: any): boolean => {
+    condition6(rowData: any, columnKey: any): boolean {
         return rowData[columnKey] > 6;
     }
 
