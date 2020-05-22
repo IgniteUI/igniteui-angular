@@ -563,8 +563,8 @@ describe('IgxTabs', () => {
         let theTabs;
 
         beforeEach(async(() => {
-            router = TestBed.get(Router);
-            location = TestBed.get(Location);
+            router = TestBed.inject(Router);
+            location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabsRoutingTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -771,7 +771,7 @@ describe('IgxTabs', () => {
         let theTabs;
 
         beforeEach(async(() => {
-            router = TestBed.get(Router);
+            router = TestBed.inject(Router);
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
