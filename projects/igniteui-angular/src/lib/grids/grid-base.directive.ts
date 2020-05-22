@@ -6288,6 +6288,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public endRowEdit(commit = true, event?: Event) {
+        this.endEdit(commit, event);
+        const activeCell = this.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
+        }
+    }
     /**
      * @hidden
      */
