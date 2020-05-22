@@ -21,7 +21,7 @@ describe('Icon Service', () => {
     });
 
     it('should set the default icon set', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
             iconService.defaultFontSet = MY_FONT;
@@ -29,14 +29,14 @@ describe('Icon Service', () => {
     });
 
     it('should get the default icon set', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
         iconService.defaultFontSet = MY_FONT;
 
         expect(iconService.defaultFontSet).toBe(MY_FONT);
     });
 
     it('should associate alias name with icon set name', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
             iconService.registerFontSetAlias(ALIAS, MY_FONT);
@@ -44,15 +44,15 @@ describe('Icon Service', () => {
     });
 
     it('should get icon set name from alias name', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
         iconService.registerFontSetAlias(ALIAS, MY_FONT);
 
         expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
     });
 
     it('should add custom svg icon from url', () => {
-        const iconService = TestBed.get(IgxIconService) as IgxIconService;
-        const document = TestBed.get(DOCUMENT);
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+        const document = TestBed.inject(DOCUMENT);
 
         const iconName = 'test';
         const fontSet = 'svg-icons';
@@ -71,8 +71,8 @@ describe('Icon Service', () => {
     });
 
     it('should add custom svg icon from text', () => {
-        const iconService = TestBed.get(IgxIconService) as IgxIconService;
-        const document = TestBed.get(DOCUMENT);
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+        const document = TestBed.inject(DOCUMENT);
 
         const iconName = 'test';
         const fontSet = 'svg-icons';
