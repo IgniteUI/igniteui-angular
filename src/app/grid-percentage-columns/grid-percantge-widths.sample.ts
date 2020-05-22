@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
  @Component({
     providers: [],
-    selector: 'ap-grid-percantge-widths.sample',
+    selector: 'app-grid-percantge-widths.sample',
     templateUrl: 'grid-percantge-widths.sample.html'
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {

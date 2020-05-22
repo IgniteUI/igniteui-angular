@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import {
     IgxGridComponent,
     ColumnPinningPosition,
@@ -30,7 +30,12 @@ const FILTERING_ICONS_FONT_SET = 'filtering-icons';
     ],
 })
 
-export class GridRowPinningSampleComponent implements OnInit {
+export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
+
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
+                private iconService: IgxIconService,
+                private excelExportService: IgxExcelExporterService) {
+    }
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
 
     public options = {
@@ -50,13 +55,17 @@ export class GridRowPinningSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
 
-	@ViewChild('hGrid', { static: true })
+    @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
     @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions, private iconService: IgxIconService, private excelExportService: IgxExcelExporterService) {
-    }
+    data: any[];
+    hierarchicalData: any[];
+    columns: any[];
+    hColumns: any[];
+    treeColumns: any[];
+    treeData: any[];
 
     onRowChange() {
         if (this.pinningConfig.rows === RowPinningPosition.Bottom) {
@@ -73,13 +82,6 @@ export class GridRowPinningSampleComponent implements OnInit {
             this.pinningConfig = { columns: ColumnPinningPosition.End, rows: this.pinningConfig.rows };
         }
     }
-
-    data: any[];
-    hierarchicalData: any[];
-    columns: any[];
-    hColumns: any[];
-    treeColumns: any[];
-    treeData: any[];
 
     ngOnInit(): void {
         this.columns = [
@@ -105,7 +107,7 @@ export class GridRowPinningSampleComponent implements OnInit {
             { field: 'childData', width: '200px' },
             { field: 'childData2', width: '200px' },
             { field: 'hasChild', width: '200px' }
-        ]
+        ];
 
         this.data = [
             // tslint:disable:max-line-length
@@ -139,7 +141,7 @@ export class GridRowPinningSampleComponent implements OnInit {
         ];
         this.hierarchicalData = this.generateDataUneven(100, 3);
 
-        //treegrid cols and data
+        // treegrid cols and data
         this.treeColumns = [
             { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: false },
             { field: 'Salary', label: 'Salary', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: true },
@@ -197,7 +199,7 @@ export class GridRowPinningSampleComponent implements OnInit {
         const rec = this.data[index];
         this.grid1.isRecordPinned(rec) ?
             this.grid1.pinRow(this.data[index]) :
-            this.grid1.unpinRow(this.data[index])
+            this.grid1.unpinRow(this.data[index]);
     }
 
     togglePining(row: IgxGridRowComponent, event) {
@@ -244,16 +246,16 @@ export class GridRowPinningSampleComponent implements OnInit {
     }
 
     public exportButtonHandler() {
-        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions("ExportFileFromGrid"));
+        this.excelExportService.export(this.grid1, new IgxExcelExporterOptions('ExportFileFromGrid'));
     }
 
     public saveGridState() {
         const state = this.state.getState() as string;
-        window.localStorage.setItem("grid1-state", state);
+        window.localStorage.setItem('grid1-state', state);
     }
 
     public restoreGridState() {
-        const state = window.localStorage.getItem("grid1-state");
+        const state = window.localStorage.getItem('grid1-state');
         this.state.setState(state);
     }
 
