@@ -11,7 +11,8 @@ import {
     ViewChild,
     ContentChild,
     AfterViewInit,
-    AfterContentInit
+    AfterContentInit,
+    Directive
 } from '@angular/core';
 import {
     IgxProcessBarTextTemplateDirective,
@@ -44,6 +45,7 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
 /**
  * @hidden
  */
+@Directive()
 export abstract class BaseProgress {
     private requestAnimationId: number = undefined;
 
