@@ -31,6 +31,8 @@ export interface BindingChange extends ChangeAction {
     moveBetweenElementTags?: boolean;
     /** An array of function names that will be executed as conditions. */
     conditions?: string[];
+    /** A function that transforms the value of an Input */
+    valueTransform?: string;
 }
 
 export interface ClassChanges {

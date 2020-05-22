@@ -17,7 +17,7 @@ export interface Transaction {
  * @hidden
  */
 export interface HierarchicalTransaction extends Transaction {
-    path: any[];
+    path?: any[];
 }
 
 export interface State {
