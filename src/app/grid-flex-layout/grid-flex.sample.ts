@@ -15,7 +15,7 @@ export class GridFlexSampleComponent implements OnInit, AfterViewInit {
     grid1: IgxGridComponent;
     columns;
 
-    constructor(){
+    constructor() {
     }
 
     ngOnInit() {

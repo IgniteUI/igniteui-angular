@@ -1,10 +1,10 @@
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, Injector, OnInit
+  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, Host, Optional, Injector
 } from '@angular/core';
 import {
-  NG_VALUE_ACCESSOR, ControlValueAccessor,
-  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NgControl,
+  ControlValueAccessor,
+  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NgControl, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { formatDate, DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
@@ -51,7 +51,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
     { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
   ]
 })
-export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
+export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, Validator, ControlValueAccessor {
   /**
    * Locale settings used for value formatting.
    *
@@ -164,7 +164,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.updateMask();
   }
 
-  public get value() {
+  public get value(): Date {
     return this._value;
   }
 
@@ -192,7 +192,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private _format: string;
   private document: Document;
   private _isFocused: boolean;
-  private _ngControl: NgControl;
   private _minValue: string | Date;
   private _maxValue: string | Date;
   private _oldValue: Date | string;
@@ -237,8 +236,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected elementRef: ElementRef,
     protected maskParser: MaskParsingService,
     @Inject(DOCUMENT) private _document: any,
-    @Inject(LOCALE_ID) private _locale: any,
-    private _injector: Injector) {
+    @Inject(LOCALE_ID) private _locale: any) {
     super(elementRef, maskParser, renderer);
     this.document = this._document as Document;
     this.locale = this.locale || this._locale;
@@ -256,11 +254,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       // TODO: fill in partial dates?
       this.updateMask();
     }
-  }
-
-  /** @hidden @internal */
-  public ngOnInit() {
-    this._ngControl = this._injector.get<NgControl>(NgControl, null);
   }
 
   /** Clear the input element value. */
@@ -297,7 +290,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public writeValue(value: any): void {
-    this.value = value;
+    this._value = value;
+    this.updateMask();
   }
 
   /** @hidden @internal */
@@ -427,6 +421,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return mask;
   }
 
+  // TODO: move isDate to utils
   private isDate(value: any): value is Date {
     return value instanceof Date && typeof value === 'object';
   }
@@ -482,11 +477,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private updateValue(newDate: Date): void {
     this._oldValue = this.value;
-    if (this._ngControl) {
-      this._ngControl.control.setValue(newDate);
-    } else {
-      this.value = newDate;
-    }
+    this.value = newDate;
 
     if (this.value && !this.valueInRange(this.value)) {
       this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
@@ -578,7 +569,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return date && date.getTime && !isNaN(date.getTime());
   }
 
-  private parseDate(val: string): Date | null {
+    // TODO: move parseDate to utils
+    public parseDate(val: string): Date | null {
     if (!val) { return null; }
     return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }

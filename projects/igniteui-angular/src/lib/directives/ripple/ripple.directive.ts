@@ -122,8 +122,8 @@ export class IgxRippleDirective {
 
         const rectBounds = target.getBoundingClientRect();
         const radius = Math.max(rectBounds.width, rectBounds.height);
-        let left = event.clientX - rectBounds.left - radius / 2;
-        let top = event.clientY - rectBounds.top - radius / 2;
+        let left = Math.round(event.clientX - rectBounds.left - radius / 2);
+        let top = Math.round(event.clientY - rectBounds.top - radius / 2);
 
         if (this._centered) {
             left = top = 0;
