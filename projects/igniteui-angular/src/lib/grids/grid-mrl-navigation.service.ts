@@ -221,7 +221,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         }
         const alt = event.altKey;
         const ctrl = event.ctrlKey;
-        this.performHeaderKeyCombination(this.grid.getColumnByVisibleIndex(this.activeNode.column), key, event.shiftKey, ctrl, alt);
+        this.performHeaderKeyCombination(this.grid.getColumnByVisibleIndex(this.activeNode.column), key, event.shiftKey, ctrl, alt, event);
         if (!ctrl && !alt && (key.includes('down') || key.includes('up'))) {
             const children = this.parentByChildIndex(this.activeNode.column).children;
             const col = key.includes('down') ? this.getNextRowIndex(children, false) : this.getPreviousRowIndex(children, false);
