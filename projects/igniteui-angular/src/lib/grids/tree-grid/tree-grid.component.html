@@ -131,7 +131,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
-        <igc-trial-watermark text="{{resourceStrings.igx_grid_watermark_placeholder}}"></igc-trial-watermark>
+        <igc-trial-watermark></igc-trial-watermark>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
