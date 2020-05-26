@@ -2506,6 +2506,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         fit('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
+            // Click on a column with default filter
             GridFunctions.clickFilterCellChip(fix, 'Licensed');
             fix.detectChanges();
 
