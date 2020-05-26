@@ -40,6 +40,7 @@
 @import './radio';
 @import './ripple';
 @import './scrollbar';
+@import './shape-chart';
 @import './slider';
 @import './snackbar';
 @import './splitter';
@@ -88,6 +89,7 @@
 /// @property {Map} igx-radio [$_dark-radio]
 /// @property {Map} igx-ripple [$_dark-ripple]
 /// @property {Map} igx-scrollbar [$_dark-scrollbar]
+/// @property {Map} shape-chart [$_dark-shape-chart]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
 /// @property {Map} igx-splitter [$_dark-splitter]
@@ -135,6 +137,7 @@ $dark-schema: (
     igx-radio: $_dark-radio,
     igx-ripple: $_dark-ripple,
     igx-scrollbar: $_dark-scrollbar,
+    shape-chart: $_dark-shape-chart,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
     igx-splitter: $_dark-splitter,
@@ -184,6 +187,7 @@ $dark-schema: (
 /// @property {map} igx-radio [$_dark-fluent-radio],
 /// @property {map} igx-ripple [$_dark-fluent-ripple],
 /// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
+/// @property {map} shape-chart [$_dark-fluent-shape-chart],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
 /// @property {map} igx-splitter [$_dark-fluent-splitter],
@@ -231,6 +235,7 @@ $dark-fluent-schema: (
     igx-radio: $_dark-fluent-radio,
     igx-ripple: $_dark-fluent-ripple,
     igx-scrollbar: $_dark-fluent-scrollbar,
+    shape-chart: $_dark-fluent-shape-chart,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
     igx-splitter: $_dark-fluent-splitter,
@@ -280,6 +285,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-radio [$_dark-bootstrap-radio],
 /// @property {map} igx-ripple [$_dark-bootstrap-ripple],
 /// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
+/// @property {map} shape-chart [$_dark-bootstrap-shape-chart],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
 /// @property {map} igx-splitter [$_dark-bootstrap-splitter],
@@ -327,6 +333,7 @@ $dark-bootstrap-schema: (
     igx-radio: $_dark-bootstrap-radio,
     igx-ripple: $_dark-bootstrap-ripple,
     igx-scrollbar: $_dark-bootstrap-scrollbar,
+    shape-chart: $_dark-bootstrap-shape-chart,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
     igx-splitter: $_dark-bootstrap-splitter,
