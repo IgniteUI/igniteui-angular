@@ -2504,6 +2504,24 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
                 '\`ReleaseDate\` customer filter tempalte was not found.');
         }));
+
+        fit('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'Licensed');
+            fix.detectChanges();
+
+            // Verify filter row is visible
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).not.toBeNull();
+
+            // Click on a column with custom filter
+            const header = GridFunctions.getColumnHeaderByIndex(fix, 1);
+            header.click();
+            fix.detectChanges();
+
+            // Expect the filter row is closed
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
+        }));
     });
 });
 
