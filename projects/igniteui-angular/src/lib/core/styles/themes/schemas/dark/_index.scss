@@ -37,9 +37,11 @@
 @import './navdrawer';
 @import './overlay';
 @import './progress';
+@import './pie-chart';
 @import './radio';
 @import './ripple';
 @import './scrollbar';
+@import './shape-chart';
 @import './slider';
 @import './snackbar';
 @import './splitter';
@@ -85,9 +87,11 @@
 /// @property {Map} igx-overlay [$_dark-overlay]
 /// @property {Map} igx-progress-linear [$_dark-progress-linear]
 /// @property {Map} igx-progress-circular [$_dark-progress-circular]
+/// @property {Map} pie-chart [$_dark-pie-chart]
 /// @property {Map} igx-radio [$_dark-radio]
 /// @property {Map} igx-ripple [$_dark-ripple]
 /// @property {Map} igx-scrollbar [$_dark-scrollbar]
+/// @property {Map} shape-chart [$_dark-shape-chart]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
 /// @property {Map} igx-splitter [$_dark-splitter]
@@ -132,9 +136,11 @@ $dark-schema: (
     igx-overlay: $_dark-overlay,
     igx-linear-bar: $_dark-progress-linear,
     igx-circular-bar: $_dark-progress-circular,
+    pie-chart: $_dark-pie-chart,
     igx-radio: $_dark-radio,
     igx-ripple: $_dark-ripple,
     igx-scrollbar: $_dark-scrollbar,
+    shape-chart: $_dark-shape-chart,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
     igx-splitter: $_dark-splitter,
@@ -181,9 +187,11 @@ $dark-schema: (
 /// @property {map} igx-overlay [$_dark-fluent-overlay],
 /// @property {map} igx-linear-bar [$_dark-fluent-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-fluent-progress-circular],
+/// @property {Map} pie-chart [$_dark-fluent-pie-chart],
 /// @property {map} igx-radio [$_dark-fluent-radio],
 /// @property {map} igx-ripple [$_dark-fluent-ripple],
 /// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
+/// @property {map} shape-chart [$_dark-fluent-shape-chart],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
 /// @property {map} igx-splitter [$_dark-fluent-splitter],
@@ -228,9 +236,11 @@ $dark-fluent-schema: (
     igx-overlay: $_dark-fluent-overlay,
     igx-linear-bar: $_dark-fluent-progress-linear,
     igx-circular-bar: $_dark-fluent-progress-circular,
+    pie-chart: $_dark-fluent-pie-chart,
     igx-radio: $_dark-fluent-radio,
     igx-ripple: $_dark-fluent-ripple,
     igx-scrollbar: $_dark-fluent-scrollbar,
+    shape-chart: $_dark-fluent-shape-chart,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
     igx-splitter: $_dark-fluent-splitter,
@@ -277,9 +287,11 @@ $dark-fluent-schema: (
 /// @property {map} igx-overlay [$_dark-bootstrap-overlay],
 /// @property {map} igx-linear-bar [$_dark-bootstrap-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-bootstrap-progress-circular],
+/// @property {Map} pie-chart [$_dark-bootstrap-pie-chart],
 /// @property {map} igx-radio [$_dark-bootstrap-radio],
 /// @property {map} igx-ripple [$_dark-bootstrap-ripple],
 /// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
+/// @property {map} shape-chart [$_dark-bootstrap-shape-chart],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
 /// @property {map} igx-splitter [$_dark-bootstrap-splitter],
@@ -324,9 +336,11 @@ $dark-bootstrap-schema: (
     igx-overlay: $_dark-bootstrap-overlay,
     igx-linear-bar: $_dark-bootstrap-progress-linear,
     igx-circular-bar: $_dark-bootstrap-progress-circular,
+    pie-chart: $_dark-bootstrap-pie-chart,
     igx-radio: $_dark-bootstrap-radio,
     igx-ripple: $_dark-bootstrap-ripple,
     igx-scrollbar: $_dark-bootstrap-scrollbar,
+    shape-chart: $_dark-bootstrap-shape-chart,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
     igx-splitter: $_dark-bootstrap-splitter,

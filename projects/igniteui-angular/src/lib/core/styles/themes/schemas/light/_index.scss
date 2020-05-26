@@ -37,10 +37,12 @@
 @import './navbar';
 @import './navdrawer';
 @import './overlay';
+@import './pie-chart';
 @import './progress';
 @import './radio';
 @import './ripple';
 @import './scrollbar';
+@import './shape-chart';
 @import './slider';
 @import './snackbar';
 @import './splitter';
@@ -85,11 +87,13 @@
 /// @property {Map} igx-navbar [$_light-navbar]
 /// @property {Map} igx-navdrawer [$_light-navdrawer]
 /// @property {Map} igx-overlay [$_light-overlay]
+/// @property {Map} pie-chart [$_light-pie-chart]
 /// @property {Map} igx-progress-linear [$_light-progress-linear]
 /// @property {Map} igx-progress-circular [$_light-progress-circular]
 /// @property {Map} igx-radio [$_light-radio]
 /// @property {Map} igx-ripple [$_light-ripple]
 /// @property {Map} igx-scrollbar [$_light-scrollbar]
+/// @property {Map} shape-chart [$_light-shape-chart]
 /// @property {Map} igx-slider [$_light-slider]
 /// @property {Map} igx-snackbar [$_light-snackbar]
 /// @property {Map} igx-splitter [$_light-splitter]
@@ -134,8 +138,10 @@ $light-schema: (
     igx-overlay: $_light-overlay,
     igx-linear-bar: $_light-progress-linear,
     igx-circular-bar: $_light-progress-circular,
+    pie-chart: $_light-pie-chart,
     igx-radio: $_light-radio,
     igx-ripple: $_light-ripple,
+    shape-chart: $_light-shape-chart,
     igx-scrollbar: $_light-scrollbar,
     igx-slider: $_light-slider,
     igx-snackbar: $_light-snackbar,
@@ -183,8 +189,10 @@ $light-fluent-schema: (
     igx-overlay: $_fluent-overlay,
     igx-linear-bar: $_fluent-progress-linear,
     igx-circular-bar: $_fluent-progress-circular,
+    pie-chart: $_fluent-pie-chart,
     igx-radio: $_fluent-radio,
     igx-ripple: $_fluent-ripple,
+    shape-chart: $_fluent-shape-chart,
     igx-scrollbar: $_fluent-scrollbar,
     igx-slider: $_fluent-slider,
     igx-snackbar: $_fluent-snackbar,
@@ -232,8 +240,10 @@ $light-bootstrap-schema: (
     igx-overlay: $_bootstrap-overlay,
     igx-linear-bar: $_bootstrap-progress-linear,
     igx-circular-bar: $_bootstrap-progress-circular,
+    pie-chart: $_bootstrap-pie-chart,
     igx-radio: $_bootstrap-radio,
     igx-ripple: $_bootstrap-ripple,
+    shape-chart: $_bootstrap-shape-chart,
     igx-scrollbar: $_bootstrap-scrollbar,
     igx-slider: $_bootstrap-slider,
     igx-snackbar: $_bootstrap-snackbar,
