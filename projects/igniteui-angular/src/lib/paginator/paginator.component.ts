@@ -7,6 +7,7 @@ import { IgxSelectModule } from '../select/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 @Component({
     selector: 'igx-paginator',
@@ -169,13 +170,41 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
 
     /**
-     *An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
-    */
+     * @deprecated Use 'resourceStrings' instead.
+     * An @Input property, sets a preposition between the current page and total pages.
+     * The default is 'of' localized string.
+     * @memberof IgxPaginatorComponent
+     */
+    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
+    @Input()
+    public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
+
+    /**
+     * Emitted when `perPage` property value of the paginator is changed.
+     * @example
+     * ```html
+     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
+     */
     @Output()
     public perPageChange = new EventEmitter<number>();
     /**
-     *An event that is emitted when the paginating is used.
-    */
+     * Emitted after the current page is changed.
+     * @example
+     * ```html
+     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
+     */
     @Output()
     public pageChange = new EventEmitter<number>();
 
