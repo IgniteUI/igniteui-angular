@@ -46,7 +46,7 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
  * @hidden
  */
 @Directive()
-export abstract class BaseProgress {
+export abstract class BaseProgressDirective {
     private requestAnimationId: number = undefined;
 
     protected _initValue = 0;
@@ -297,7 +297,7 @@ let NEXT_GRADIENT_ID = 0;
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html'
 })
-export class IgxLinearProgressBarComponent extends BaseProgress implements AfterContentInit {
+export class IgxLinearProgressBarComponent extends BaseProgressDirective implements AfterContentInit {
 
     constructor() {
         super();
@@ -481,7 +481,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress implements After
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html'
 })
-export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit, AfterContentInit {
+export class IgxCircularProgressBarComponent extends BaseProgressDirective implements AfterViewInit, AfterContentInit {
 
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;

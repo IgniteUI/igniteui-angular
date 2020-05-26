@@ -1,6 +1,6 @@
 import * as JSZip from 'jszip';
 
-import { EventEmitter, Injectable, Output, Directive } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
@@ -35,7 +35,6 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
  * this.excelExportService.exportData(this.localData, new IgxExcelExporterOptions("FileName"));
  * ```
  */
-@Directive()
 @Injectable()
 export class IgxExcelExporterService extends IgxBaseExporter {
 

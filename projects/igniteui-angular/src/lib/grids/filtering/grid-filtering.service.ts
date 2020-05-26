@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, NgModuleRef, Directive } from '@angular/core';
+import { Injectable, OnDestroy, NgModuleRef } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -36,7 +36,6 @@ export class ExpressionUI {
 /**
  * @hidden
  */
-@Directive()
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
 
