@@ -13,6 +13,7 @@
 @import './calendar';
 @import './card';
 @import './carousel';
+@import './category-chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
@@ -59,6 +60,7 @@
 /// @property {Map} igx-calendar [$_dark-calendar]
 /// @property {Map} igx-card [$_dark-card]
 /// @property {Map} igx-carousel [$_dark-carousel]
+/// @property {Map} category-chart [$_dark-category-chart]
 /// @property {Map} igx-checkbox [$_dark-checkbox]
 /// @property {Map} igx-chip [$_dark-chip]
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
@@ -105,6 +107,7 @@ $dark-schema: (
     igx-calendar: $_dark-calendar,
     igx-card: $_dark-card,
     igx-carousel: $_dark-carousel,
+    category-chart: $_dark-category-chart,
     igx-checkbox: $_dark-checkbox,
     igx-chip: $_dark-chip,
     igx-column-hiding: $_dark-column-hiding,
@@ -153,6 +156,7 @@ $dark-schema: (
 /// @property {map} igx-calendar [$_dark-fluent-calendar],
 /// @property {map} igx-card [$_dark-fluent-card],
 /// @property {map} igx-carousel [$_dark-fluent-carousel],
+/// @property {map} category-chart [$_dark-fluent-category-chart]
 /// @property {map} igx-checkbox [$_dark-fluent-checkbox],
 /// @property {map} igx-chip [$_dark-fluent-chip],
 /// @property {map} igx-column-hiding [$_dark-fluent-column-hiding],
@@ -199,6 +203,7 @@ $dark-fluent-schema: (
     igx-calendar: $_dark-fluent-calendar,
     igx-card: $_dark-fluent-card,
     igx-carousel: $_dark-fluent-carousel,
+    category-chart: $_dark-fluent-category-chart,
     igx-checkbox: $_dark-fluent-checkbox,
     igx-chip: $_dark-fluent-chip,
     igx-column-hiding: $_dark-fluent-column-hiding,
@@ -247,6 +252,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-calendar [$_dark-bootstrap-calendar],
 /// @property {map} igx-card [$_dark-bootstrap-card],
 /// @property {map} igx-carousel [$_dark-bootstrap-carousel],
+/// @property {map} category-chart [$_dark-bootstrap-category-chart]
 /// @property {map} igx-checkbox [$_dark-bootstrap-checkbox],
 /// @property {map} igx-chip [$_dark-bootstrap-chip],
 /// @property {map} igx-column-hiding [$_dark-bootstrap-column-hiding],
@@ -293,6 +299,7 @@ $dark-bootstrap-schema: (
     igx-calendar: $_dark-bootstrap-calendar,
     igx-card: $_dark-bootstrap-card,
     igx-carousel: $_dark-bootstrap-carousel,
+    category-chart: $_dark-bootstrap-category-chart,
     igx-checkbox: $_dark-bootstrap-checkbox,
     igx-chip: $_dark-bootstrap-chip,
     igx-column-hiding: $_dark-bootstrap-column-hiding,

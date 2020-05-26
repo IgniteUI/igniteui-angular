@@ -18,6 +18,7 @@
 @import '../components/card/card-theme';
 @import '../components/carousel/carousel-theme';
 @import '../components/charts/data-chart-theme';
+@import '../components/charts/category-chart-theme';
 @import '../components/checkbox/checkbox-theme';
 @import '../components/chip/chip-theme';
 @import '../components/column-hiding/column-hiding-theme';
@@ -217,6 +218,13 @@
 
     @if not(index($exclude, 'data-chart')) {
         @include igx-css-vars(igx-data-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'category-chart')) {
+        @include igx-css-vars(igx-category-chart-theme(
             $palette,
             $schema,
         ));

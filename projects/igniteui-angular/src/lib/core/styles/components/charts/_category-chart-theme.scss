@@ -1,0 +1,231 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss
+///   $custom-chart-theme: igx-category-chart-theme($brushes: (red, green, blue));
+///   // Pass the theme to the igx-css-vars mixin
+///   @include igx-css-vars($custom-chart-theme);
+@function igx-category-chart-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $width: null,
+    $height: null,
+    $margin: null,
+    $brushes: null,
+    $marker-brushes: null,
+    $negative-brushes: null,
+    $outlines: null,
+    $marker-outlines: null,
+    $negative-outlines: null,
+    $title-margin: null,
+    $title-alignment: null,
+    $title-text-color: null,
+    $title-text-style: null,
+    $subtitle-margin: null,
+    $subtitle-alignment: null,
+    $subtitle-text-color: null,
+    $subtitle-text-style: null,
+    $thickness: null,
+    $trend-line-brushes: null,
+    $trend-line-thickness: null,
+    $x-axis-label-margin: null,
+    $x-axis-label-text-color: null,
+    $x-axis-label-text-style: null,
+    $x-axis-label-vertical-alignment: null,
+    $x-axis-major-stroke: null,
+    $x-axis-major-stroke-thickness: null,
+    $x-axis-minor-stroke: null,
+    $x-axis-minor-stroke-thickness: null,
+    $x-axis-strip: null,
+    $x-axis-stroke: null,
+    $x-axis-stroke-thickness: null,
+    $x-axis-tick-length: null,
+    $x-axis-tick-stroke: null,
+    $x-axis-tick-stroke-thickness: null,
+    $x-axis-title-alignment: null,
+    $x-axis-title-margin: null,
+    $x-axis-title-text-color: null,
+    $x-axis-title-text-style: null,
+    $y-axis-label-margin: null,
+    $y-axis-label-text-color: null,
+    $y-axis-label-text-style: null,
+    $y-axis-label-vertical-alignment: null,
+    $y-axis-major-stroke: null,
+    $y-axis-major-stroke-thickness: null,
+    $y-axis-minor-stroke: null,
+    $y-axis-minor-stroke-thickness: null,
+    $y-axis-strip: null,
+    $y-axis-stroke: null,
+    $y-axis-stroke-thickness: null,
+    $y-axis-title-alignment: null,
+    $y-axis-title-margin: null,
+    $y-axis-title-text-color: null,
+    $y-axis-title-text-style: null,
+    $y-axis-tick-length: null,
+    $y-axis-tick-stroke: null,
+    $y-axis-tick-stroke-thickness: null
+) {
+    $name: 'category-chart';
+    $chart-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $chart-schema: map-get($schema, $name);
+    } @else {
+        $chart-schema: $schema;
+    }
+
+    $theme: apply-palette($chart-schema, $palette);
+    $margin-default: map-get($theme, 'margin');
+    $title-margin-default: map-get($theme, 'title-margin');
+    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
+    $x-axis-label-margin-default: map-get($theme, 'x-axis-label-margin');
+    $x-axis-title-margin-default: map-get($theme, 'x-axis-title-margin');
+    $y-axis-label-margin-default: map-get($theme, 'y-axis-label-margin');
+    $y-axis-title-margin-default: map-get($theme, 'y-axis-title-margin');
+
+    @if not($margin) {
+        $margin: $margin-default;
+    } @else {
+        $margin: expand-shorthand(($margin));
+    }
+
+    @if not($title-margin) {
+        $title-margin: $title-margin-default;
+    } @else {
+        $title-margin: map-keys-prefix(expand-shorthand(($title-margin)), 'title');
+    }
+
+    @if not($subtitle-margin) {
+        $subtitle-margin: $subtitle-margin-default;
+    } @else {
+        $subtitle-margin: map-keys-prefix(expand-shorthand(($subtitle-margin)), 'subtitle');
+    }
+
+    @if not($x-axis-label-margin) {
+        $x-axis-label-margin: $x-axis-label-margin-default;
+    } @else {
+        $x-axis-label-margin: map-keys-prefix(expand-shorthand(($x-axis-label-margin)), 'x-axis-label');
+    }
+
+    @if not($x-axis-title-margin) {
+        $x-axis-title-margin: $x-axis-title-margin-default;
+    } @else {
+        $x-axis-title-margin: map-keys-prefix(expand-shorthand(($x-axis-title-margin)), 'x-axis-title');
+    }
+
+    @if not($y-axis-label-margin) {
+        $y-axis-label-margin: $y-axis-label-margin-default;
+    } @else {
+        $y-axis-label-margin: map-keys-prefix(expand-shorthand(($y-axis-label-margin)), 'y-axis-label');
+    }
+
+    @if not($y-axis-title-margin) {
+        $y-axis-title-margin: $y-axis-title-margin-default;
+    } @else {
+        $y-axis-title-margin: map-keys-prefix(expand-shorthand(($y-axis-title-margin)), 'y-axis-title');
+    }
+
+    @return extend(
+        $theme,
+        $margin,
+        $title-margin,
+        $subtitle-margin,
+        $x-axis-label-margin,
+        $x-axis-title-margin,
+        $y-axis-label-margin,
+        $y-axis-title-margin,
+        (
+            name: $name,
+            width: $width,
+            height: $height,
+            brushes: $brushes,
+            marker-brushes: $marker-brushes,
+            negative-brushes: $negative-brushes,
+            outlines: $outlines,
+            marker-outlines: $marker-outlines,
+            negative-outlines: $negative-outlines,
+            title-alignment: $title-alignment,
+            title-text-color: $title-text-color,
+            title-text-style: $title-text-style,
+            subtitle-text-color: $subtitle-text-color,
+            subtitle-text-style: $subtitle-text-style,
+            thickness: $thickness,
+            trend-line-brushes: $trend-line-brushes,
+            trend-line-thickness: $trend-line-thickness,
+            x-axis-label-text-color: $x-axis-label-text-color,
+            x-axis-label-text-style: $x-axis-label-text-style,
+            x-axis-label-vertical-alignment: $x-axis-label-vertical-alignment,
+            x-axis-major-stroke: $x-axis-major-stroke,
+            x-axis-major-stroke-thickness: $x-axis-major-stroke-thickness,
+            x-axis-minor-stroke: $x-axis-minor-stroke,
+            x-axis-minor-stroke-thickness: $x-axis-minor-stroke-thickness,
+            x-axis-strip: $x-axis-strip,
+            x-axis-stroke: $x-axis-stroke,
+            x-axis-stroke-thickness: $x-axis-stroke-thickness,
+            x-axis-tick-length: $x-axis-tick-length,
+            x-axis-tick-stroke: $x-axis-tick-stroke,
+            x-axis-tick-stroke-thickness: $x-axis-tick-stroke-thickness,
+            x-axis-title-alignment: $x-axis-title-alignment,
+            x-axis-title-text-color: $x-axis-title-text-color,
+            x-axis-title-text-style: $x-axis-title-text-style,
+            y-axis-label-text-color: $y-axis-label-text-color,
+            y-axis-label-text-style: $y-axis-label-text-style,
+            y-axis-label-vertical-alignment: $y-axis-label-vertical-alignment,
+            y-axis-major-stroke: $y-axis-major-stroke,
+            y-axis-major-stroke-thickness: $y-axis-major-stroke-thickness,
+            y-axis-minor-stroke: $y-axis-minor-stroke,
+            y-axis-minor-stroke-thickness: $y-axis-minor-stroke-thickness,
+            y-axis-strip: $y-axis-strip,
+            y-axis-stroke: $y-axis-stroke,
+            y-axis-stroke-thickness: $y-axis-stroke-thickness,
+            y-axis-title-alignment: $y-axis-title-alignment,
+            y-axis-title-text-color: $y-axis-title-text-color,
+            y-axis-title-text-style: $y-axis-title-text-style,
+            y-axis-tick-length: $y-axis-tick-length,
+            y-axis-tick-stroke: $y-axis-tick-stroke,
+            y-axis-tick-stroke-thickness: $y-axis-tick-stroke-thickness
+        )
+    );
+}
+
+@mixin igx-category-chart-typography($type-scale, $categories: (
+    'title': 'h1',
+    'subtitle': 'subtitle-1',
+    'x-axis-label-text-style': 'h4',
+    'x-axis-title-text-style': 'h3',
+    'y-axis-label-text-style': 'h4',
+    'y-axis-title-text-style': 'h3',
+)) {
+    $name: 'category-chart';
+    $title: map-get($categories, 'title');
+    $subtitle: map-get($categories, 'subtitle');
+    $x-axis-label-text-style: map-get($categories, 'x-axis-label-text-style');
+    $x-axis-title-text-style: map-get($categories, 'x-axis-title-text-style');
+    $y-axis-label-text-style: map-get($categories, 'y-axis-label-text-style');
+    $y-axis-title-text-style: map-get($categories, 'y-axis-title-text-style');
+
+    $title-styles: igx-type-scale-category($type-scale, $title);
+    $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
+    $x-axis-label-styles: igx-type-scale-category($type-scale, $x-axis-label);
+    $x-axis-title-styles: igx-type-scale-category($type-scale, $x-axis-title);
+    $y-axis-label-styles: igx-type-scale-category($type-scale, $y-axis-label-text-style);
+    $y-axis-title-styles: igx-type-scale-category($type-scale, $y-axis-title-text-style);
+
+    @include igx-font-var('title-text-style', $title-styles, $name);
+    @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+    @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+    @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+    @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+    @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
+}
