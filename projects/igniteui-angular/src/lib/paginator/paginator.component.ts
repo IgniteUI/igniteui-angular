@@ -7,7 +7,6 @@ import { IgxSelectModule } from '../select/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 @Component({
     selector: 'igx-paginator',
@@ -168,16 +167,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     */
     @Input()
     public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
-
-    /**
-     * @deprecated Use 'resourceStrings' instead.
-     * An @Input property, sets a preposition between the current page and total pages.
-     * The default is 'of' localized string.
-     * @memberof IgxPaginatorComponent
-     */
-    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
-    @Input()
-    public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
