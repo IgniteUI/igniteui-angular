@@ -437,7 +437,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private newDuration = 0;
 
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
-            private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
+        private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -481,6 +481,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                 if (this.animationType !== CarouselAnimationType.none) {
                     if (animationWasStarted) {
                         requestAnimationFrame(() => {
+                            if (this.leaveAnimationPlayer) {
+                                this.leaveAnimationPlayer.reset();
+                            }
+                            if (this.enterAnimationPlayer) {
+                                this.enterAnimationPlayer.reset();
+                            }
                             this.playAnimations();
                         });
                     } else {
@@ -505,13 +511,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.previousSlide && this.previousSlide.previous) {
             this.previousSlide.previous = false;
         }
-        if (this.leaveAnimationPlayer) {
+        if (this.leaveAnimationPlayer || this.enterAnimationPlayer) {
             animationWasStarted = true;
-            this.leaveAnimationPlayer.finish();
-        }
-        if (this.enterAnimationPlayer) {
-            animationWasStarted = true;
-            this.enterAnimationPlayer.finish();
         }
         return animationWasStarted;
     }
@@ -565,10 +566,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playEnterAnimation() {
-        if (!this.getAnimation().enterAnimation) {
+        const animation = this.getAnimation().enterAnimation;
+        if (!animation) {
             return;
         }
-        const animationBuilder = this.builder.build(this.getAnimation().enterAnimation);
+        const animationBuilder = this.builder.build(animation);
 
         this.enterAnimationPlayer = animationBuilder.create(this.currentSlide.nativeElement);
 
@@ -586,11 +588,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playLeaveAnimation() {
-        if (!this.getAnimation().leaveAnimation) {
+        const animation = this.getAnimation().leaveAnimation;
+        if (!animation) {
             return;
         }
 
-        const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
+        const animationBuilder = this.builder.build(animation);
         this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
 
         this.leaveAnimationPlayer.onDone(() => {
@@ -1021,7 +1024,15 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.stoppedByInteraction = true;
             this.stop();
         }
-        this.finishAnimations();
+        const animationWasStarted = this.finishAnimations();
+        if (animationWasStarted) {
+            if (this.leaveAnimationPlayer) {
+                this.leaveAnimationPlayer.finish();
+            }
+            if (this.enterAnimationPlayer) {
+                this.enterAnimationPlayer.finish();
+            }
+        }
 
         if (this.incomingSlide) {
             if (index !== this.incomingSlide.index) {
