@@ -77,8 +77,8 @@
 }
 
 @mixin igx-funnel-chart-typography($type-scale, $categories: (
-    title: 'caption',
-    subtitle: 'caption',
+    title: 'h1',
+    subtitle: 'subtitle-1',
 )) {
     $name: 'funnel-chart';
     $title: map-get($categories, 'title');
