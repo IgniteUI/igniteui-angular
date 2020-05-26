@@ -6,6 +6,61 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} width [null] - The width of the chart.
+/// @param {Map} height [null] - The height of the chart.
+/// @param {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @param {List} brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
+/// @param {List} marker-brushes [series]- Defines the palette from which automatically assigned series marker brushes colors are selected.
+/// @param {List} negative-brushes [series] - Defines the palette used for coloring negative items in a chart type with contextual coloring, such as Waterfall.
+/// @param {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @param {List} marker-outlines [series] - Defines the palette from which automatically assigned series marker outline colors are selected.
+/// @param {List} negative-outlines [series] - Defines the brushes used for drawing negative elements in a chart type with contextual coloring, such as Waterfall.
+/// @param {String} title-alignment [null] - The horizontal alignment to use for the title.
+/// @param {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @param {Color} title-text-color [null] - Sets the color of the chart title.
+/// @param {String} title-text-style [null] - Sets the CSS font property of the chart title.
+/// @param {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @param {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @param {String} subtitle-text-style [null] - Sets the CSS font property of the chart subtitle.
+/// @param {Number} thickness [null] - Sets the thickness for all series in a chart.
+/// @param {List} trend-line-brushes [series] - Defines the palette of brushes used for coloring trend lines in a chart.
+/// @param {Number} trend-line-thickness [null] - Sets the thickness of the trend lines in a chart of type point, line, spline or bubble.
+/// @param {List} x-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the X-axis.
+/// @param {Color} x-axis-label-text-color [null] - Sets the color of labels on the X-axis.
+/// @param {String} x-axis-label-text-style [null] - Sets the CSS font property for labels on X-axis.
+/// @param {String} x-axis-label-vertical-alignment [null] - Sets the vertical alignment of X-axis labels.
+/// @param {Color} x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
+/// @param {Number} x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
+/// @param {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
+/// @param {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
+/// @param {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
+/// @param {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @param {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
+/// @param {Number} x-axis-tick-length [null] - Sets the length of tickmarks along the X-axis.
+/// @param {Color} x-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the X-axis.
+/// @param {Number} x-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the X-axis.
+/// @param {String} x-axis-title-alignment [null] - Sets the horizontal alignment of the X-axis title.
+/// @param {List} x-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the X-axis.
+/// @param {Color} x-axis-title-text-color [null] - Sets the color of the title on the X-axis.
+/// @param {String} x-axis-title-text-style [null] - Sets the CSS font property for the title on the X-axis.
+/// @param {List} y-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the Y-axis.
+/// @param {Color} y-axis-label-text-color [null] - Sets the color of labels on the Y-axis.
+/// @param {String} y-axis-label-text-style [null] - Sets the CSS font property for labels on Y-axis.
+/// @param {String} y-axis-label-vertical-alignment [null] - Sets the vertical alignment of Y-axis labels.
+/// @param {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the y-axis.
+/// @param {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
+/// @param {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
+/// @param {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
+/// @param {Color} y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
+/// @param {Color} y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
+/// @param {Number} y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
+/// @param {String} y-axis-title-alignment [null] - Sets the horizontal alignment of the Y-axis title.
+/// @param {List} y-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the Y-axis.
+/// @param {Color} y-axis-title-text-color [null] - Sets the color of a title on the Y-axis.
+/// @param {String} y-axis-title-text-style [null] - Sets the CSS font property for the title on the Y-axis.
+/// @param {Number} y-axis-tick-length [null] - Sets the length of tickmarks along the Y-axis.
+/// @param {Color} y-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the Y-axis.
+/// @param {Number} y-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the Y-axis.
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
