@@ -20,6 +20,7 @@
 @import '../components/charts/data-chart-theme';
 @import '../components/charts/pie-chart-theme';
 @import '../components/charts/funnel-chart-theme';
+@import '../components/charts/shape-chart-theme';
 @import '../components/checkbox/checkbox-theme';
 @import '../components/chip/chip-theme';
 @import '../components/column-hiding/column-hiding-theme';
@@ -233,6 +234,13 @@
 
     @if not(index($exclude, 'funnel-chart')) {
         @include igx-css-vars(igx-funnel-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'shape-chart')) {
+        @include igx-css-vars(igx-shape-chart-theme(
             $palette,
             $schema,
         ));
