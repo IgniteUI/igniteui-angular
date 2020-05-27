@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { IgxIconService } from './icon.service';
+import { first } from 'rxjs/operators';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -29,7 +30,6 @@ let NEXT_ID = 0;
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
 })
-
 export class IgxIconComponent implements OnInit {
     @ViewChild('noLigature', { read: TemplateRef, static: true })
     private noLigature: TemplateRef<HTMLElement>;
@@ -120,10 +120,15 @@ export class IgxIconComponent implements OnInit {
      */
     public el: ElementRef;
 
-    constructor(private _el: ElementRef, private iconService: IgxIconService) {
+    constructor(
+            private _el: ElementRef,
+            private iconService: IgxIconService,
+            private ref: ChangeDetectorRef) {
         this.el = _el;
         this.font = this.iconService.defaultFontSet;
         this.iconService.registerFontSetAlias('material', 'material-icons');
+        this.iconService.iconLoaded.pipe(first(e => e.name === this.iconName && e.fontSet === this.font))
+            .subscribe(_ => this.ref.detectChanges());
     }
 
     /**
