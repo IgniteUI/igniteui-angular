@@ -78,10 +78,6 @@ export class CardSampleComponent {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
     public panel: IgxExpansionPanelComponent;
 
-    public toggleDetails() {
-        this.panel.toggle();
-    }
-
     details = [
         detailsFactory({
             value: '12%',
@@ -209,4 +205,8 @@ export class CardSampleComponent {
         }),
         cardFactory({})
     ];
+
+    public toggleDetails() {
+        this.panel.toggle();
+    }
 }

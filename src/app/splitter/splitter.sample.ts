@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RemoteService } from '../shared/remote.service';
-import { IgxGridComponent, SplitterType, IgxSplitterComponent, IgxSplitterPaneComponent } from 'igniteui-angular';
+import { IgxGridComponent, SplitterType } from 'igniteui-angular';
 
 
 @Component({
@@ -8,7 +8,7 @@ import { IgxGridComponent, SplitterType, IgxSplitterComponent, IgxSplitterPaneCo
     styleUrls: ['splitter.sample.scss'],
     templateUrl: 'splitter.sample.html'
 })
-export class SplitterSampleComponent {
+export class SplitterSampleComponent implements AfterViewInit {
     type = SplitterType.Horizontal;
     data1 = [];
     data2 = [];
@@ -79,8 +79,8 @@ export class SplitterSampleComponent {
             this.data2 = data['value'];
             this.grid2.isLoading = false;
             this.grid2.selectRows([this.data2[0].OrderID], true);
-            const evt = { newSelection: [this.data2[0].OrderID]};
-            this.onOrderSelection(evt);
+            const event = { newSelection: [this.data2[0].OrderID]};
+            this.onOrderSelection(event);
         });
     }
 

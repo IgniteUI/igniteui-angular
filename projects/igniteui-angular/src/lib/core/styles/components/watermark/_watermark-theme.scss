@@ -1,0 +1,114 @@
+////
+/// @group themes
+/// @access privet
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Returns a map containing all style properties related to the theming the watermark directive.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+/// @requires text-contrast
+/// @requires round-borders
+///
+/// @example scss Change the watermark background
+///   $my-watermark-theme: igx-watermark-theme($background: magenta);
+///   // Pass the theme to the igx-watermark component mixin
+///   @include igx-watermark($my-checkbox-theme);
+@function igx-watermark-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $border-radius: null,
+    $background-image: null,
+    $link-background: null,
+    $color: null,
+    $border-color: null,
+) {
+    $name: 'igx-watermark';
+    $watermark-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $watermark-schema: map-get($schema, $name);
+    } @else {
+        $watermark-schema: $schema;
+    }
+
+    $theme: apply-palette($watermark-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
+    );
+
+    @if not($color) and $link-background {
+        $color: text-contrast($link-background);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        palette: $default-palette,
+        background-image: $background-image,
+        link-background: $link-background,
+        border-radius: $border-radius,
+        color: $color,
+        border-color: $border-color,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+@mixin igx-watermark($theme) {
+    @include igx-root-css-vars($theme);
+
+    %igx-watermark {
+        display: block;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        pointer-events: none;
+    }
+
+    %igx-watermark__link {
+        display: inline-flex;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: rem(14px);
+        padding: rem(2px) rem(4px);
+        line-height: normal;
+        border: 1px solid --var($theme, 'border-color');
+        color: --var($theme, 'color');
+        z-index: 10002;
+        background-color: --var($theme, 'link-background');
+        pointer-events: all;
+        text-decoration: none;
+    }
+
+    %igx-watermark__background-img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10001;
+        pointer-events: none;
+        background-image: --var($theme, 'background-image');
+        background-repeat: repeat;
+        background-position: rem(16px) rem(16px);
+        // Target only IE 10,11.
+        @media all and (-ms-high-contrast:none)
+        {
+            background-image: none;
+        }
+        // END Target only IE 10,11.
+    }
+}
