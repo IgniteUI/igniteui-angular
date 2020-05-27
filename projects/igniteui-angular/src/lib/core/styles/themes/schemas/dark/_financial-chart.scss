@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
 ////
 
-/// Generates a dark base chart schema.
+/// Generates a dark financial chart schema.
 /// @type {Map}
 /// @requires $_light-financial-chart
 /// @see $default-palette
@@ -23,4 +23,3 @@ $_dark-fluent-financial-chart: extend($_fluent-financial-chart);
 /// @requires {function} extend
 /// @requires $_bootstrap-financial-chart
 $_dark-bootstrap-financial-chart: extend($_bootstrap-financial-chart);
-
