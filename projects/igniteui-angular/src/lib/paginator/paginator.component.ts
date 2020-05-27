@@ -169,13 +169,31 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
 
     /**
-     *An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
-    */
+     * Emitted when `perPage` property value of the paginator is changed.
+     * @example
+     * ```html
+     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
+     */
     @Output()
     public perPageChange = new EventEmitter<number>();
     /**
-     *An event that is emitted when the paginating is used.
-    */
+     * Emitted after the current page is changed.
+     * @example
+     * ```html
+     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
+     */
     @Output()
     public pageChange = new EventEmitter<number>();
 
