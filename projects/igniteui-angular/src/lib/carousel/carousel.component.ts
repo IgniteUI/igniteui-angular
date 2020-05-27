@@ -472,21 +472,18 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             }
 
             if (this.currentSlide) {
-                const animationWasStarted = this.finishAnimations();
+                if (this.previousSlide && this.previousSlide.previous) {
+                    this.previousSlide.previous = false;
+                }
                 this.currentSlide.direction = slide.direction;
                 this.currentSlide.active = false;
 
                 this.previousSlide = this.currentSlide;
                 this.currentSlide = slide;
                 if (this.animationType !== CarouselAnimationType.none) {
-                    if (animationWasStarted) {
+                    if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
                         requestAnimationFrame(() => {
-                            if (this.leaveAnimationPlayer) {
-                                this.leaveAnimationPlayer.reset();
-                            }
-                            if (this.enterAnimationPlayer) {
-                                this.enterAnimationPlayer.reset();
-                            }
+                            this.resetAnimations();
                             this.playAnimations();
                         });
                     } else {
@@ -506,15 +503,28 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.playEnterAnimation();
     }
 
-    private finishAnimations(): boolean {
-        let animationWasStarted = false;
-        if (this.previousSlide && this.previousSlide.previous) {
-            this.previousSlide.previous = false;
+    private finishAnimations() {
+        if (this.animationStarted(this.leaveAnimationPlayer)) {
+            this.leaveAnimationPlayer.finish();
         }
-        if (this.leaveAnimationPlayer || this.enterAnimationPlayer) {
-            animationWasStarted = true;
+
+        if (this.animationStarted(this.enterAnimationPlayer)) {
+            this.enterAnimationPlayer.finish();
         }
-        return animationWasStarted;
+    }
+
+    private resetAnimations() {
+        if (this.animationStarted(this.leaveAnimationPlayer)) {
+            this.leaveAnimationPlayer.reset();
+        }
+
+        if (this.animationStarted(this.enterAnimationPlayer)) {
+            this.enterAnimationPlayer.reset();
+        }
+    }
+
+    private animationStarted(animation: AnimationPlayer): boolean {
+        return animation && animation.hasStarted();
     }
 
     private getAnimation(): CarouselAnimationSettings {
@@ -1024,15 +1034,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.stoppedByInteraction = true;
             this.stop();
         }
-        const animationWasStarted = this.finishAnimations();
-        if (animationWasStarted) {
-            if (this.leaveAnimationPlayer) {
-                this.leaveAnimationPlayer.finish();
-            }
-            if (this.enterAnimationPlayer) {
-                this.enterAnimationPlayer.finish();
-            }
+
+        if (this.previousSlide && this.previousSlide.previous) {
+            this.previousSlide.previous = false;
         }
+        this.finishAnimations();
 
         if (this.incomingSlide) {
             if (index !== this.incomingSlide.index) {
