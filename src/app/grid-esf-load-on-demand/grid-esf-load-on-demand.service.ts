@@ -7,7 +7,7 @@ export class GridESFLoadOnDemandService {
     public getRecordsData() {
         return SAMPLE_DATA.slice(0);
     }
-    
+
     public getColumnData(column: IgxColumnComponent, columnExprTree: IFilteringExpressionsTree, done: (colVals: any[]) => void) {
         setTimeout(() => {
             const filteredData = this._filteringStrategy.filter(this.getRecordsData(), columnExprTree);

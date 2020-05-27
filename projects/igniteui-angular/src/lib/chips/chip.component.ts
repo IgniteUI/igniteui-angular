@@ -91,6 +91,25 @@ export class IgxChipComponent extends DisplayDensityBase {
     public id = `igx-chip-${CHIP_ID++}`;
 
     /**
+     * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
+     * @example
+     * ```html
+     * <igx-chip [id]="'igx-chip-1'" [tabIndex]="1"></igx-chip>
+     * ```
+     */
+    @Input()
+    public set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    public get tabIndex() {
+        if (this._tabIndex !== null) {
+            return this._tabIndex;
+        }
+        return !this.disabled ? 0 : null;
+    }
+
+    /**
      * An @Input property that stores data related to the chip.
      * @example
      * ```html
@@ -357,6 +376,13 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      * @internal
      */
+    @HostBinding('attr.tabIndex')
+    public hostTabIndex = null;
+
+    /**
+     * @hidden
+     * @internal
+     */
     @HostBinding('attr.class')
     get hostClass(): string {
         const classes = [this.getComponentDensityClass('igx-chip')];
@@ -433,16 +459,13 @@ export class IgxChipComponent extends DisplayDensityBase {
         return this.getComponentDensityClass('igx-chip__ghost');
     }
 
-    public get chipTabindex() {
-        return !this.disabled ? 0 : '';
-    }
-
     /**
      * @hidden
      * @internal
      */
     public hideBaseElement = false;
 
+    protected _tabIndex = null;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;

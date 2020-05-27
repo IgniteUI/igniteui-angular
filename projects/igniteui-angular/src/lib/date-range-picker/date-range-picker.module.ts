@@ -42,6 +42,7 @@ import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
         IgxDateRangeStartComponent,
         IgxDateRangeEndComponent,
         IgxDateRangeSeparatorDirective,
+        IgxDateTimeEditorModule,
         IgxPickerToggleComponent
     ]
 })

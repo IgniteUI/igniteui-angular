@@ -1,5 +1,5 @@
 ﻿<div #chipArea class="igx-chip__item"
-    [attr.tabindex]="chipTabindex"
+    [attr.tabIndex]="tabIndex"
     (keydown)="onChipKeyDown($event)"
     [igxDrag]="{chip: this}"
     [style.visibility]='hideBaseElement ? "hidden" : "visible"'
@@ -27,7 +27,7 @@
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 
     <div class="igx-chip__remove" *ngIf="removable"
-        tabindex="0"
+        [attr.tabIndex]="tabIndex"
         (keydown)="onRemoveBtnKeyDown($event)"
         (pointerdown)="onRemoveMouseDown($event)"
         (mousedown)="onRemoveMouseDown($event)"

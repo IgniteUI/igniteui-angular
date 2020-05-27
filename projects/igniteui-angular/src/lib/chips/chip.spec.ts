@@ -27,6 +27,21 @@ import { ControlsFunction } from '../test-utils/controls-functions.spec';
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
+            <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
+                <span #label [class]="'igx-chip__text'">Tab Chip</span>
+            </igx-chip>
+            <igx-chip #chipElem tabIndex="2" [disabled]="true" [id]="tabChipDisabled">
+                <span #label [class]="'igx-chip__text'">Tab Chip</span>
+            </igx-chip>
+            <igx-chip #chipElem [tabIndex]="3" [removable]="true" [id]="tabChipInput" >
+                <span #label [class]="'igx-chip__text'">Tab Chip</span>
+            </igx-chip>
+            <igx-chip #chipElem tabIndex="4" [tabIndex]="1" [id]="tabChipBoth">
+                <span #label [class]="'igx-chip__text'">Tab Chip</span>
+            </igx-chip>
+            <igx-chip #chipElem tabIndex="5" [tabIndex]="1" [disabled]="true" [id]="tabChipAll">
+                <span #label [class]="'igx-chip__text'">Tab Chip</span>
+            </igx-chip>
         </igx-chips-area>
     `
 })
@@ -114,7 +129,7 @@ describe('IgxChip', () => {
 
         it('should render chip area and chips inside it', () => {
             expect(chipArea.length).toEqual(1);
-            expect(chipArea[0].nativeElement.children.length).toEqual(4);
+            expect(chipArea[0].nativeElement.children.length).toEqual(9);
             expect(chipArea[0].nativeElement.children[0].tagName).toEqual('IGX-CHIP');
         });
 
@@ -169,7 +184,7 @@ describe('IgxChip', () => {
             // Assert default css class is applied
             const comfortableComponents = fix.debugElement.queryAll(By.css(CHIP_CLASS));
 
-            expect(comfortableComponents.length).toEqual(2);
+            expect(comfortableComponents.length).toEqual(7);
             expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
             expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
         });
@@ -212,6 +227,35 @@ describe('IgxChip', () => {
             expect(chipAreaElem.nativeElement.style.backgroundColor).toEqual(chipColor);
             expect(firstComponent.componentInstance.color).toEqual(chipColor);
         });
+
+        it('should apply correct tabIndex to the chip area only when tabIndex is set as property of the chip and chip is disabled', () => {
+            const firstTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[4];
+            expect(firstTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
+            expect(firstTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+
+            // Chip is disabled, but attribute tabindex has bigger priority.
+            const secondTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[5];
+            expect(secondTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
+            expect(secondTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('2');
+        });
+
+        it('should apply correct tab indexes when tabIndex and removeTabIndex are set as inputs', () => {
+            const thirdTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[6];
+            const deleteBtn = ControlsFunction.getChipRemoveButton(thirdTabChip.componentInstance.chipArea.nativeElement);
+            expect(thirdTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
+            expect(thirdTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('3');
+            expect(deleteBtn.getAttribute('tabindex')).toEqual('3');
+
+            // tabIndex attribute has higher priority than tabIndex.
+            const fourthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[7];
+            expect(fourthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
+            expect(fourthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+
+            // tabIndex attribute has higher priority than tabIndex input and chip being disabled.
+            const fifthTabChip = fix.debugElement.queryAll(By.directive(IgxChipComponent))[8];
+            expect(fifthTabChip.nativeElement.getAttribute('tabindex')).toBeFalsy();
+            expect(fifthTabChip.componentInstance.chipArea.nativeElement.getAttribute('tabindex')).toEqual('1');
+        });
     });
 
     describe('Interactions Tests: ', () => {
@@ -241,14 +285,14 @@ describe('IgxChip', () => {
         });
 
         it('should delete chip when space button is pressed on delete button', () => {
-            HelperTestFunctions.verifyChipsCount(fix, 4);
+            HelperTestFunctions.verifyChipsCount(fix, 9);
             const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const deleteButtonElement = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
             // Removes chip with id City, because country chip is unremovable
             UIInteractions.triggerKeyDownEvtUponElem(' ', deleteButtonElement, true);
             fix.detectChanges();
 
-            HelperTestFunctions.verifyChipsCount(fix, 3);
+            HelperTestFunctions.verifyChipsCount(fix, 8);
 
             const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
             expect(chipComponentsIds.length).toEqual(3);
@@ -256,7 +300,7 @@ describe('IgxChip', () => {
         });
 
         it('should delete chip when enter button is pressed on delete button', () => {
-            HelperTestFunctions.verifyChipsCount(fix, 4);
+            HelperTestFunctions.verifyChipsCount(fix, 9);
 
             const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
             const deleteButtonElement = ControlsFunction.getChipRemoveButton(chipElems[1].nativeElement);
@@ -264,7 +308,7 @@ describe('IgxChip', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Enter', deleteButtonElement, true);
             fix.detectChanges();
 
-            HelperTestFunctions.verifyChipsCount(fix, 3);
+            HelperTestFunctions.verifyChipsCount(fix, 8);
 
             const chipComponentsIds = fix.componentInstance.chipList.map(c => c.id);
             expect(chipComponentsIds.length).toEqual(3);

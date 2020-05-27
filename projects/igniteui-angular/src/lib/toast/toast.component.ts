@@ -13,9 +13,22 @@ import {
     Output
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
+
+/**
+ * Enumeration for toast position
+ * Can be:
+ * Bottom
+ * Middle
+ * Top
+ */
+export enum IgxToastPosition {
+    Bottom,
+    Middle,
+    Top
+}
+
 /**
  * **Ignite UI for Angular Toast** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
@@ -338,19 +351,6 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
             this.navService.remove(this.id);
         }
     }
-}
-
-/**
- * Enumeration for toast position
- * Can be:
- * Bottom
- * Middle
- * Top
- */
-export enum IgxToastPosition {
-    Bottom,
-    Middle,
-    Top
 }
 
 /**

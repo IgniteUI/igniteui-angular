@@ -4,9 +4,9 @@ import {
     Inject,
     NgModule,
     ViewChild,
-    ComponentRef,
     HostBinding,
-    ApplicationRef
+    ApplicationRef,
+    ComponentRef
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, async, inject } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
@@ -349,7 +349,7 @@ describe('igxOverlay', () => {
 
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onOpening.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
             expect(overlayInstance.onAppended.emit).toHaveBeenCalledTimes(1);
@@ -357,18 +357,18 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
             overlayInstance.hide(firstCallId);
 
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false, event: undefined });
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false, event: undefined });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(2);
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) as any });
 
             const secondCallId = overlayInstance.show(fix.componentInstance.item);
             tick();
@@ -824,7 +824,7 @@ describe('igxOverlay', () => {
 
             spyOn(appRef, 'attachView');
             const mockComponent = {
-                hostView: 'test',
+                hostView: fixture.componentRef.hostView,
                 location: { nativeElement: 'element' }
             };
             const factoryMock = jasmine.createSpyObj('factoryMock', {
@@ -838,7 +838,7 @@ describe('igxOverlay', () => {
             const id = overlay.attach(SimpleDynamicComponent, {}, { componentFactoryResolver, injector } as any);
             expect(componentFactoryResolver.resolveComponentFactory).toHaveBeenCalledWith(SimpleDynamicComponent);
             expect(factoryMock.create).toHaveBeenCalledWith(injector);
-            expect(appRef.attachView).toHaveBeenCalledWith('test');
+            expect(appRef.attachView).toHaveBeenCalledWith(fixture.componentRef.hostView);
             expect(overlay.getOverlayById(id).componentRef as any).toBe(mockComponent);
         }));
 
@@ -3534,7 +3534,7 @@ describe('igxOverlay', () => {
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit)
                 .toHaveBeenCalledWith({
-                    id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
+                    id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
                     event: new MouseEvent('click')
                 });
         }));
