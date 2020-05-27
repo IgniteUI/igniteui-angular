@@ -2505,7 +2505,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 '\`ReleaseDate\` customer filter tempalte was not found.');
         }));
 
-        fit('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
+        it('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
             // Click on a column with default filter
             GridFunctions.clickFilterCellChip(fix, 'Licensed');
             fix.detectChanges();
