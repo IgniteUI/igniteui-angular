@@ -55,10 +55,6 @@
 
     $theme: apply-palette($chart-schema, $palette);
 
-    $margin-default: map-get($theme, 'margin');
-    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
-
-
     @return extend($theme, (
         name: $name,
         width: $width,
