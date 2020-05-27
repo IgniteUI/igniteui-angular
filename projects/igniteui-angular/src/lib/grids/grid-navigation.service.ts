@@ -171,7 +171,8 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1) {
+        const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
+        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.activeNode = { row: 0, column: 0 };
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
