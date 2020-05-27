@@ -814,6 +814,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.cancelOperandEdit();
         this.currentGroup = null;
         this.rootGroup = null;
+        this.grid.endEdit(false);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -824,6 +825,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public applyChanges() {
+        this.grid.endEdit(false);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }
