@@ -666,7 +666,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
             }
             crud.end();
-            this.grid.tbody.nativeElement.focus();
+            this.grid.tbody.nativeElement.focus({ preventScroll: true });
             this.grid.notifyChanges();
             crud.begin(this);
             return;
@@ -763,7 +763,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        this.grid.navigation.activeNode = {row: this.rowIndex, column: this.visibleColumnIndex, layout: this.selectionNode.layout };
         this.activate(event);
     }
 
@@ -818,7 +817,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
-            this.grid.navigation.activeNode = this.selectionNode;
             this.activate(event);
         }
         this.grid.onCellClick.emit({
@@ -845,6 +843,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
+
+        if (this.grid.navigation.activeNode) {
+            Object.assign(this.grid.navigation.activeNode, {row: this.rowIndex, column: this.visibleColumnIndex});
+        } else {
+            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+            this.grid.navigation.activeNode = { row: this.rowIndex, column: this.visibleColumnIndex, layout: layout };
+        }
+
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
@@ -898,5 +904,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get searchMetadata() {
+        const meta = new Map<string, any>();
+        meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
+        return meta;
     }
 }

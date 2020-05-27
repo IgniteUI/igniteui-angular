@@ -205,6 +205,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             eventArgs.preventDefault();
         }
 
-        event.stopPropagation();
+        eventArgs.stopPropagation();
     }
 }

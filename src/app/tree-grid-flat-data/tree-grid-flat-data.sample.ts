@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService, IgxGridTransaction, IgxHierarchicalTransactionService,
-         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult, GridSelectionMode } from 'igniteui-angular';
+         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult,
+         GridSelectionMode } from 'igniteui-angular';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = []): IgxSummaryResult[] {
@@ -67,7 +68,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             { 'Salary': 2500, 'employeeID': 3, 'PID': -1, 'firstName': 'Steven', 'lastName': 'Buchanan', 'Title': 'CTO' },
             // sub of ID 0
             { 'Salary': 2500, 'employeeID': 4, 'PID': 0, 'firstName': 'Janet', 'lastName': 'Leverling', 'Title': 'Sales Manager' },
-            { 'Salary': 3500, 'employeeID': 5, 'PID': 0, 'firstName': 'Laura', 'lastName': 'Callahan', 'Title': 'Inside Sales Coordinator' },
+            { 'Salary': 3500, 'employeeID': 5, 'PID': 0, 'firstName': 'Laura', 'lastName': 'Callahan',
+                'Title': 'Inside Sales Coordinator' },
             { 'Salary': 1500, 'employeeID': 6, 'PID': 0, 'firstName': 'Margaret', 'lastName': 'Peacock', 'Title': 'Sales Representative' },
             { 'Salary': 2500, 'employeeID': 7, 'PID': 0, 'firstName': 'Michael', 'lastName': 'Suyama', 'Title': 'Sales Representative' },
             // sub of ID 4
@@ -86,8 +88,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             { 'Salary': 3500, 'employeeID': 17, 'PID': 15, 'firstName': 'Armand', 'lastName': 'Ross', 'Title': 'Product Owner' },
             { 'Salary': 1500, 'employeeID': 18, 'PID': 15, 'firstName': 'Dane', 'lastName': 'Rodriquez', 'Title': 'Team Leader' },
             // sub of ID 19
-            { 'Salary': 2500, 'employeeID': 19, 'PID': 18, 'firstName': 'Declan', 'lastName': 'Lester', 'Title': 'Senior Software Developer' },
-            { 'Salary': 3500, 'employeeID': 20, 'PID': 18, 'firstName': 'Bernard', 'lastName': 'Jarvis', 'Title': 'Senior Software Developer' },
+            { 'Salary': 2500, 'employeeID': 19, 'PID': 18, 'firstName': 'Declan', 'lastName': 'Lester',
+                'Title': 'Senior Software Developer' },
+            { 'Salary': 3500, 'employeeID': 20, 'PID': 18, 'firstName': 'Bernard', 'lastName': 'Jarvis',
+                'Title': 'Senior Software Developer' },
             { 'Salary': 1500, 'employeeID': 21, 'PID': 18, 'firstName': 'Jason', 'lastName': 'Clark', 'Title': 'QA' },
             { 'Salary': 1500, 'employeeID': 22, 'PID': 18, 'firstName': 'Mark', 'lastName': 'Young', 'Title': 'QA' },
             // sub of ID 20
