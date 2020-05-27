@@ -1,0 +1,95 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// Generates a light gauge chart schema.
+/// @type {Map}
+/// @property {Map} width [null] - The width of the gauge in pixels, string (px) or percentage (%).
+/// @property {Map} height [null] - The height of the gauge in pixels, string (px) or percentage (%).
+/// @property {Color} backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
+/// @property {Color} backing-outline [null] - Sets the color to use for the outline of the backing.
+/// @property {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
+/// @property {String} font [null] - Sets the font property.
+/// @property {Color} font-brush [null] - Sets the color to use for the label font.
+/// @property {Number} minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
+/// @property {Number} needle-breadth [null] - Sets the needle breadth.
+/// @property {Color} needle-brush [null] - Sets the color to use for the needle element.
+/// @property {Number} needle-inner-base-width [null] - Sets the width of the needle's inner base.
+/// @property {Number} needle-inner-point-width [null] - Sets the width of the needle's inner point.
+/// @property {Number} needle-outer-base-width [null] - Sets the width of the needle's outer base.
+/// @property {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
+/// @property {Color} needle-outline [null] - Sets the color to use for the outline of needle element.
+/// @property {Number} needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
+/// @property {List} range-brushes [series] - Sets a collection of colors to be used as the palette for linear gauge ranges.
+/// @property {List} range-outlines [series] - Sets a collection of colors to be used as the palette for linear gauge outlines.
+/// @property {Color} scale-brush [null] - Sets the color to use to fill the scale of the linear gauge.
+/// @property {Color} scale-outline [null] - Sets the color to use for the outline of the scale.
+/// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
+/// @property {Color} tick-brush [null] - Sets the color to use for the major tickmarks.
+/// @property {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
+/// @see $default-palette
+$_light-gauge-chart: extend(
+    (
+        'width': null,
+
+        'height': null,
+
+        'backing-brush': null,
+
+        'backing-outline': null,
+
+        'backing-stroke-thickness': null,
+
+        'font': null,
+
+        'font-brush': null,
+
+        'minor-tick-stroke-thickness': null,
+
+        'needle-breadth': null,
+
+        'needle-brush': null,
+
+        'needle-inner-base-width': null,
+
+        'needle-inner-point-width': null,
+
+        'needle-outer-base-width': null,
+
+        'needle-outer-point-width': null,
+
+        'needle-outline': null,
+
+        'needle-stroke-thickness': null,
+
+        'range-brushes': series,
+
+        'range-outlines': series,
+
+        'scale-brush': null,
+
+        'scale-outline': null,
+
+        'scale-stroke-thickness': null,
+
+        'tick-brush': null,
+
+        'tick-stroke-thickness': null
+    )
+);
+
+/// Generates a fluent gauge-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-gauge-chart
+$_fluent-gauge-chart: extend($_light-gauge-chart);
+
+/// Generates a bootstrap gauge-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-gauge-chart
+$_bootstrap-gauge-chart: extend($_light-gauge-chart);
