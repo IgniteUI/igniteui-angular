@@ -267,10 +267,11 @@ describe('IgxGrid - Cell Editing #grid', () => {
         }));
 
         it('should end cell editing when clearing or applying advanced filter', () => {
+            const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const cell = grid.getCellByColumn(0, 'fullName');
 
             // Enter cell edit mode
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fixture.detectChanges();
             expect(cell.editMode).toBe(true);
 
@@ -289,7 +290,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // Enter cell edit mode
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fixture.detectChanges();
             expect(cell.editMode).toBe(true);
 

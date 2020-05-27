@@ -340,13 +340,11 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it('should end row editing when clearing or applying advanced filter', () => {
+            // Enter row edit mode
+            const cellElement = grid.getCellByColumn(2, 'ProductName').nativeElement;
+            cellElement.dispatchEvent(new Event('dblclick'));
             fix.detectChanges();
             const row = grid.getRowByIndex(2);
-            const cell = grid.getCellByColumn(2, 'ProductName');
-
-            // Enter row edit mode
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
-            fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
             // Open Advanced Filtering dialog.
@@ -364,7 +362,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             // Enter row edit mode
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            cellElement.dispatchEvent(new Event('dblclick'));
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
