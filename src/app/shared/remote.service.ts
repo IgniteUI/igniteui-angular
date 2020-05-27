@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class RemoteService {
 
+    public remotePagingData: BehaviorSubject<any[]>;
+    public urlPaging = 'https://www.igniteui.com/api/products';
     totalCount: Observable<number>;
     _totalCount: BehaviorSubject<number>;
     remoteData: Observable<any[]>;
@@ -18,6 +20,7 @@ export class RemoteService {
         this.remoteData = this._remoteData.asObservable();
         this._totalCount = new BehaviorSubject(null);
         this.totalCount = this._totalCount.asObservable();
+        this.remotePagingData = new BehaviorSubject([]);
     }
 
     nullData() {
@@ -44,5 +47,29 @@ export class RemoteService {
 
     buildUrl(dataState: any) {
         return this.urlBuilder(dataState);
+    }
+
+    // Remote paging
+    public getPagingData(index?: number, perPage?: number): any {
+        let qS = '';
+
+        if (perPage) {
+            qS = `?$skip=${index}&$top=${perPage}&$count=true`;
+        }
+
+        this.http
+            .get(`${this.urlPaging + qS}`).pipe(
+                map((data: any) => {
+                    return data;
+                })
+            ).subscribe((data) => this.remotePagingData.next(data));
+    }
+
+    public getPagingDataLength(): any {
+        return this.http.get(this.urlPaging).pipe(
+            map((data: any) => {
+                return data.length;
+            })
+        );
     }
 }

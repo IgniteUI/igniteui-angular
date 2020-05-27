@@ -1,0 +1,25 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+$_default-shape-watermark: (
+    border-radius: 0,
+);
+
+$_round-shape-watermark: (
+    border-radius: 1,
+);
+
+$_square-shape-watermark: (
+    border-radius: 0%,
+);
+
+$_fluent-shape-watermark: (
+    border-radius: 2px,
+);
+
+$_bootstrap-shape-watermark: (
+    border-radius: 4px,
+);
+

@@ -5,7 +5,7 @@ import { logSuccess, addDependencies, overwriteJsonFile,
     getPropertyFromWorkspace, getConfigFile } from '../utils/dependency-handler';
 
 import { addResetCss } from './add-normalize';
-import { getWorkspace, getConfig } from '@schematics/angular/utility/config';
+import { getWorkspace } from '@schematics/angular/utility/config';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 

@@ -62,6 +62,7 @@
 @import '../components/toast/toast-component';
 @import '../components/tooltip/tooltip-component';
 @import '../components/time-picker/time-picker-component';
+@import '../components/watermark/watermark-component';
 @import '../print/index';
 
 /// Includes the base for each theme.
@@ -97,3 +98,4 @@
         @include igx-print-layout();
     }
 }
+

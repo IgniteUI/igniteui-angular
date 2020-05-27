@@ -13,6 +13,7 @@
 @import './calendar';
 @import './card';
 @import './carousel';
+@import './category-chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
@@ -37,9 +38,11 @@
 @import './navdrawer';
 @import './overlay';
 @import './progress';
+@import './pie-chart';
 @import './radio';
 @import './ripple';
 @import './scrollbar';
+@import './shape-chart';
 @import './slider';
 @import './snackbar';
 @import './splitter';
@@ -48,6 +51,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './watermark';
 
 /// The default dark schema for all components.
 /// @type {Map}
@@ -60,6 +64,7 @@
 /// @property {Map} igx-calendar [$_dark-calendar]
 /// @property {Map} igx-card [$_dark-card]
 /// @property {Map} igx-carousel [$_dark-carousel]
+/// @property {Map} category-chart [$_dark-category-chart]
 /// @property {Map} igx-checkbox [$_dark-checkbox]
 /// @property {Map} igx-chip [$_dark-chip]
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
@@ -85,9 +90,11 @@
 /// @property {Map} igx-overlay [$_dark-overlay]
 /// @property {Map} igx-progress-linear [$_dark-progress-linear]
 /// @property {Map} igx-progress-circular [$_dark-progress-circular]
+/// @property {Map} pie-chart [$_dark-pie-chart]
 /// @property {Map} igx-radio [$_dark-radio]
 /// @property {Map} igx-ripple [$_dark-ripple]
 /// @property {Map} igx-scrollbar [$_dark-scrollbar]
+/// @property {Map} shape-chart [$_dark-shape-chart]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
 /// @property {Map} igx-splitter [$_dark-splitter]
@@ -107,6 +114,7 @@ $dark-schema: (
     igx-calendar: $_dark-calendar,
     igx-card: $_dark-card,
     igx-carousel: $_dark-carousel,
+    category-chart: $_dark-category-chart,
     igx-checkbox: $_dark-checkbox,
     igx-chip: $_dark-chip,
     igx-column-hiding: $_dark-column-hiding,
@@ -132,9 +140,11 @@ $dark-schema: (
     igx-overlay: $_dark-overlay,
     igx-linear-bar: $_dark-progress-linear,
     igx-circular-bar: $_dark-progress-circular,
+    pie-chart: $_dark-pie-chart,
     igx-radio: $_dark-radio,
     igx-ripple: $_dark-ripple,
     igx-scrollbar: $_dark-scrollbar,
+    shape-chart: $_dark-shape-chart,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
     igx-splitter: $_dark-splitter,
@@ -142,7 +152,8 @@ $dark-schema: (
     igx-tabs: $_dark-tabs,
     igx-time-picker: $_dark-time-picker,
     igx-toast: $_dark-toast,
-    igx-tooltip: $_dark-tooltip
+    igx-tooltip: $_dark-tooltip,
+    igx-watermark: $_dark-watermark,
 );
 
 /// The default dark fluent schema for all components.
@@ -156,6 +167,7 @@ $dark-schema: (
 /// @property {map} igx-calendar [$_dark-fluent-calendar],
 /// @property {map} igx-card [$_dark-fluent-card],
 /// @property {map} igx-carousel [$_dark-fluent-carousel],
+/// @property {map} category-chart [$_dark-fluent-category-chart]
 /// @property {map} igx-checkbox [$_dark-fluent-checkbox],
 /// @property {map} igx-chip [$_dark-fluent-chip],
 /// @property {map} igx-column-hiding [$_dark-fluent-column-hiding],
@@ -181,9 +193,11 @@ $dark-schema: (
 /// @property {map} igx-overlay [$_dark-fluent-overlay],
 /// @property {map} igx-linear-bar [$_dark-fluent-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-fluent-progress-circular],
+/// @property {Map} pie-chart [$_dark-fluent-pie-chart],
 /// @property {map} igx-radio [$_dark-fluent-radio],
 /// @property {map} igx-ripple [$_dark-fluent-ripple],
 /// @property {map} igx-scrollbar [$_dark-fluent-scrollbar],
+/// @property {map} shape-chart [$_dark-fluent-shape-chart],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
 /// @property {map} igx-splitter [$_dark-fluent-splitter],
@@ -203,6 +217,7 @@ $dark-fluent-schema: (
     igx-calendar: $_dark-fluent-calendar,
     igx-card: $_dark-fluent-card,
     igx-carousel: $_dark-fluent-carousel,
+    category-chart: $_dark-fluent-category-chart,
     igx-checkbox: $_dark-fluent-checkbox,
     igx-chip: $_dark-fluent-chip,
     igx-column-hiding: $_dark-fluent-column-hiding,
@@ -228,9 +243,11 @@ $dark-fluent-schema: (
     igx-overlay: $_dark-fluent-overlay,
     igx-linear-bar: $_dark-fluent-progress-linear,
     igx-circular-bar: $_dark-fluent-progress-circular,
+    pie-chart: $_dark-fluent-pie-chart,
     igx-radio: $_dark-fluent-radio,
     igx-ripple: $_dark-fluent-ripple,
     igx-scrollbar: $_dark-fluent-scrollbar,
+    shape-chart: $_dark-fluent-shape-chart,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
     igx-splitter: $_dark-fluent-splitter,
@@ -238,7 +255,8 @@ $dark-fluent-schema: (
     igx-tabs: $_dark-fluent-tabs,
     igx-time-picker: $_dark-fluent-time-picker,
     igx-toast: $_dark-fluent-toast,
-    igx-tooltip: $_dark-fluent-tooltip
+    igx-tooltip: $_dark-fluent-tooltip,
+    igx-watermark: $_dark-fluent-watermark
 );
 
 /// The default dark bootstrap schema for all components.
@@ -252,6 +270,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-calendar [$_dark-bootstrap-calendar],
 /// @property {map} igx-card [$_dark-bootstrap-card],
 /// @property {map} igx-carousel [$_dark-bootstrap-carousel],
+/// @property {map} category-chart [$_dark-bootstrap-category-chart]
 /// @property {map} igx-checkbox [$_dark-bootstrap-checkbox],
 /// @property {map} igx-chip [$_dark-bootstrap-chip],
 /// @property {map} igx-column-hiding [$_dark-bootstrap-column-hiding],
@@ -277,9 +296,11 @@ $dark-fluent-schema: (
 /// @property {map} igx-overlay [$_dark-bootstrap-overlay],
 /// @property {map} igx-linear-bar [$_dark-bootstrap-progress-linear],
 /// @property {map} igx-circular-bar [$_dark-bootstrap-progress-circular],
+/// @property {Map} pie-chart [$_dark-bootstrap-pie-chart],
 /// @property {map} igx-radio [$_dark-bootstrap-radio],
 /// @property {map} igx-ripple [$_dark-bootstrap-ripple],
 /// @property {map} igx-scrollbar [$_dark-bootstrap-scrollbar],
+/// @property {map} shape-chart [$_dark-bootstrap-shape-chart],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
 /// @property {map} igx-splitter [$_dark-bootstrap-splitter],
@@ -299,6 +320,7 @@ $dark-bootstrap-schema: (
     igx-calendar: $_dark-bootstrap-calendar,
     igx-card: $_dark-bootstrap-card,
     igx-carousel: $_dark-bootstrap-carousel,
+    category-chart: $_dark-bootstrap-category-chart,
     igx-checkbox: $_dark-bootstrap-checkbox,
     igx-chip: $_dark-bootstrap-chip,
     igx-column-hiding: $_dark-bootstrap-column-hiding,
@@ -324,9 +346,11 @@ $dark-bootstrap-schema: (
     igx-overlay: $_dark-bootstrap-overlay,
     igx-linear-bar: $_dark-bootstrap-progress-linear,
     igx-circular-bar: $_dark-bootstrap-progress-circular,
+    pie-chart: $_dark-bootstrap-pie-chart,
     igx-radio: $_dark-bootstrap-radio,
     igx-ripple: $_dark-bootstrap-ripple,
     igx-scrollbar: $_dark-bootstrap-scrollbar,
+    shape-chart: $_dark-bootstrap-shape-chart,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
     igx-splitter: $_dark-bootstrap-splitter,
@@ -334,5 +358,6 @@ $dark-bootstrap-schema: (
     igx-tabs: $_dark-bootstrap-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-bootstrap-toast,
-    igx-tooltip: $_dark-bootstrap-tooltip
+    igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-watermark: $_dark-bootstrap-watermark
 );
