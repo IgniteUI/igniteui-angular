@@ -1,6 +1,6 @@
 import {
     Rule,
-    SchematicContext,    
+    SchematicContext,
     Tree
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';

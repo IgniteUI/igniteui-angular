@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
     IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective,
@@ -21,7 +21,6 @@ import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-
 /**
  * @hidden
  */
@@ -67,6 +66,7 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
   ],
   imports: [
     IgxGridCommonModule,
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IgxGridModule {}

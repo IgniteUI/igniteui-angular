@@ -51,7 +51,7 @@ The default initialization produces a single *readonly* input:
 <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
 ```
 
-With `IgxDateStartComponent`, `IgxDateEndComponent` and `IgxDateTimeEditorDirective` two *editable* inputs can be projected:
+With `IgxDateRangeStartComponent`, `IgxDateRangeEndComponent` and `IgxDateTimeEditorDirective` two *editable* inputs can be projected:
 ```html
 <igx-date-range-picker>
     <igx-date-range-start>

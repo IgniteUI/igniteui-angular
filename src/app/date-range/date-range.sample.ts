@@ -8,6 +8,7 @@ import { IgxDateRangePickerComponent, DateRange, IChangeRadioEventArgs } from 'i
     styleUrls: ['./date-range.sample.scss']
 })
 export class DateRangeSampleComponent {
+    public range: DateRange = { start: new Date('2000,10,1'), end: new Date('2000,10,20') };
     public range1: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
     public range2: DateRange;
     public range3: DateRange = { start: new Date(), end: new Date(new Date().setDate(new Date().getDate() + 5)) };
@@ -51,7 +52,7 @@ export class DateRangeSampleComponent {
                 { updateOn: e.value, validators: Validators.required }
             );
             this.reactiveForm.setControl(name, newControl);
-        })
+        });
     }
 }
 function minDateValidator(minValue: Date): ValidatorFn {
