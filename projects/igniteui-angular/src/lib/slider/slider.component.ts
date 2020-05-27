@@ -625,6 +625,8 @@ export class IgxSliderComponent implements
         } else {
             this._value = value;
         }
+
+        this._onChangeCallback(value);
     }
 
     /**
@@ -1351,6 +1353,8 @@ export class IgxSliderComponent implements
         } else {
             this.value = (value as number) - ((value as number) % this.step);
         }
+
+        this._cdr.detectChanges();
     }
 
     private updateTrack() {
@@ -1421,8 +1425,6 @@ export class IgxSliderComponent implements
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
         }
-
-        this._onChangeCallback(this.value);
     }
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {
