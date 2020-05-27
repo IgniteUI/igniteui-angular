@@ -594,11 +594,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                    typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
+                typeof(row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -617,13 +617,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @hidden @internal
-     * This is overwritten because tree grid records have special record format - ITreeGridRecord,
-     * which already has the rowID in the record object.
+     * @hidden
+     * @internal
      */
-    public isRecordPinned(rec) {
-        const id = rec.rowID;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
+    public getInitialPinnedIndex(rec) {
+        return this._pinnedRecordIDs.indexOf(rec.rowID);
     }
 
     /**
