@@ -53,9 +53,9 @@ describe('IgxGrid - Cell component #grid', () => {
 
             spyOn(grid.onSelection, 'emit').and.callThrough();
             UIInteractions.simulateClickAndSelectEvent(cellElem);
-            const args = {
+            const args: IGridCellEventArgs = {
                 cell: firstCell,
-                event: jasmine.anything()
+                event: jasmine.anything() as any
             };
             fix.detectChanges();
 
@@ -278,7 +278,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
         it('Should not attach doubletap handler for non-iOS', () => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-            const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
             platformUtil.isIOS = false;
             const fix = TestBed.createComponent(NoScrollsComponent);
@@ -291,7 +291,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
         it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-            const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+            const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
             platformUtil.isIOS = true;
             const fix = TestBed.createComponent(NoScrollsComponent);
@@ -302,7 +302,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
             // should attach 'doubletap'
             expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: {} });
+            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,
+                { cssProps: {} as any });
 
             spyOn(grid.onDoubleClick, 'emit').and.callThrough();
 

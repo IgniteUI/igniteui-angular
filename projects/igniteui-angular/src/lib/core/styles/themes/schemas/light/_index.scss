@@ -47,6 +47,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './watermark';
 
 /// The default light schema for all components.
 /// @type {Map}
@@ -138,7 +139,8 @@ $light-schema: (
     igx-tabs: $_light-tabs,
     igx-time-picker: $_light-time-picker,
     igx-toast: $_light-toast,
-    igx-tooltip: $_light-tooltip
+    igx-tooltip: $_light-tooltip,
+    igx-watermark: $_light-watermark
 );
 
 $light-fluent-schema: (
@@ -185,7 +187,8 @@ $light-fluent-schema: (
     igx-tabs: $_fluent-tabs,
     igx-time-picker: $_fluent-time-picker,
     igx-toast: $_fluent-toast,
-    igx-tooltip: $_fluent-tooltip
+    igx-tooltip: $_fluent-tooltip,
+    igx-watermark: $_fluent-watermark
 );
 
 $light-bootstrap-schema: (
@@ -232,6 +235,7 @@ $light-bootstrap-schema: (
     igx-tabs: $_bootstrap-tabs,
     igx-time-picker: $_bootstrap-time-picker,
     igx-toast: $_bootstrap-toast,
-    igx-tooltip: $_bootstrap-tooltip
+    igx-tooltip: $_bootstrap-tooltip,
+    igx-watermark: $_bootstrap-watermark
 );
 
