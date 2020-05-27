@@ -254,6 +254,20 @@
     );
 }
 
+/// Adds typography styles for the category-chart component.
+/// Uses the 'h1', 'h3', 'h4', and 'subtitle-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(
+/// 'title': 'h1',
+/// 'subtitle': 'subtitle-1,
+/// 'x-axis-label-text-style': 'h3',
+/// 'y-axis-label-text-style': 'h3',
+/// 'x-axis-title-text-style': 'h4',
+/// 'y-axis-title-text-style': 'h4',
+/// )] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
 @mixin igx-category-chart-typography($type-scale, $categories: (
     'title': 'h1',
     'subtitle': 'subtitle-1',

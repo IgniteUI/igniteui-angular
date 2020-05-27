@@ -6,7 +6,19 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @property {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title.
+/// @param {Map} $width [null] - The width of the chart.
+/// @param {Map} $height [null] - The height of the chart.
+/// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @param {Color} $title-text-color [null] - Sets the color of the chart title.
+/// @param {List} $title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @param {Color} $subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @param {List} $subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @param {List} $brushes [null] - Defines the palette from which automatically assigned series colors are selected.
+/// @param {List} $marker-brushes [null] - Defines the palette from which automatically assigned marker brushes are selected.
+/// @param {List} $outlines [null] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @param {List} $marker-outlines [null] - Defines the palette from which automatically assigned marker outlines are selected.
+/// @param {Color} $plot-area-background [null] - Sets the brush used as the background for the current Chart object's plot area.
+/// @param {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title.
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -77,6 +89,13 @@
     );
 }
 
+/// Adds typography styles for the data-chart component.
+/// Uses the 'h1' and 'subtitle-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(title: 'h6', subtitle: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
 @mixin igx-data-chart-typography($type-scale, $categories: (
     title: 'h1',
     subtitle: 'subtitle-1',

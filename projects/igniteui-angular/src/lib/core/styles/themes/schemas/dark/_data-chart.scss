@@ -8,16 +8,6 @@
 
 /// Generates a dark base chart schema.
 /// @type {Map}
-/// @property {Map} width [] - The width of the chart.
-/// @property {Map} height [] - The height of the chart.
-/// @property {List} margin [] - Sets the margin (top, right, bottom, left) of the chart content.
-/// @property {Color} title-text-color [] - Sets the color of the chart title.
-/// @property {Color} title-margin [] - Sets the margin (top, right, bottom, left) of the chart title.
-/// @property {Color} subtitle-text-color [] - Sets the color of the chart subtitle.
-/// @property {Color} subtitle-text-style [] - Sets the CSS font property of the chart subtitle.
-/// @property {Color} subtitle-margin [] - Sets the margins (top, right, bottom, left) of the chart subtitle.
-/// @property {List} brushes - Defines the palette from which automatically assigned series colors are selected.
-/// @property {List} outlines - Defines the palette from which automatically assigned series outline colors are selected.
 /// @requires $_light-data-chart
 /// @see $default-palette
 $_dark-data-chart: extend($_light-data-chart);
