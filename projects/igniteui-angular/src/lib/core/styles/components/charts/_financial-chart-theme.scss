@@ -172,13 +172,13 @@
         $x-axis-label-margin: map-keys-prefix(expand-shorthand(($x-axis-label-margin)), 'x-axis-label');
     }
 
-     @if not($x-axis-title-margin) {
+    @if not($x-axis-title-margin) {
         $x-axis-title-margin: $x-axis-title-margin-default;
     } @else {
         $x-axis-title-margin: map-keys-prefix(expand-shorthand(($x-axis-title-margin)), 'x-axis-title');
     }
 
-     @if not($y-axis-label-margin) {
+    @if not($y-axis-label-margin) {
         $y-axis-label-margin: $y-axis-label-margin-default;
     } @else {
         $y-axis-label-margin: map-keys-prefix(expand-shorthand(($y-axis-label-margin)), 'y-axis-label');
@@ -263,17 +263,33 @@
 }
 
 @mixin igx-financial-chart-typography($type-scale, $categories: (
-    title: 'h1',
-    subtitle: 'subtitle-1',
+    'title': 'h1',
+    'subtitle': 'subtitle-1',
+    'x-axis-label-text-style': 'h4',
+    'x-axis-title-text-style': 'h3',
+    'y-axis-label-text-style': 'h4',
+    'y-axis-title-text-style': 'h3',
 )) {
     $name: 'financial-chart';
     $title: map-get($categories, 'title');
     $subtitle: map-get($categories, 'subtitle');
+    $x-axis-label-text-style: map-get($categories, 'x-axis-label-text-style');
+    $x-axis-title-text-style: map-get($categories, 'x-axis-title-text-style');
+    $y-axis-label-text-style: map-get($categories, 'y-axis-label-text-style');
+    $y-axis-title-text-style: map-get($categories, 'y-axis-title-text-style');
 
     $title-styles: igx-type-scale-category($type-scale, $title);
     $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
+    $x-axis-label-styles: igx-type-scale-category($type-scale, $x-axis-label);
+    $x-axis-title-styles: igx-type-scale-category($type-scale, $x-axis-title);
+    $y-axis-label-styles: igx-type-scale-category($type-scale, $y-axis-label-text-style);
+    $y-axis-title-styles: igx-type-scale-category($type-scale, $y-axis-title-text-style);
 
     @include igx-font-var('title-text-style', $title-styles, $name);
     @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+    @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+    @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+    @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+    @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
 }
 
