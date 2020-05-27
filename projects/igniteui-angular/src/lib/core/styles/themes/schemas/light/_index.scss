@@ -14,6 +14,7 @@
 @import './calendar';
 @import './card';
 @import './carousel';
+@import './category-chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
@@ -64,6 +65,7 @@
 /// @property {Map} igx-calendar [$_light-calendar]
 /// @property {Map} igx-card [$_light-card]
 /// @property {Map} igx-carousel [$_light-carousel]
+/// @property {Map} category-chart [$_light-category-chart]
 /// @property {Map} data-chart [$_light-data-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
@@ -112,6 +114,7 @@ $light-schema: (
     igx-calendar: $_light-calendar,
     igx-card: $_light-card,
     igx-carousel: $_light-carousel,
+    category-chart: $_light-category-chart,
     data-chart: $_light-data-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
@@ -163,6 +166,7 @@ $light-fluent-schema: (
     igx-calendar: $_fluent-calendar,
     igx-card: $_fluent-card,
     igx-carousel: $_fluent-carousel,
+    category-chart: $_fluent-category-chart,
     igx-checkbox: $_fluent-checkbox,
     igx-chip: $_fluent-chip,
     igx-column-hiding: $_fluent-column-hiding,
@@ -214,6 +218,7 @@ $light-bootstrap-schema: (
     igx-calendar: $_bootstrap-calendar,
     igx-card: $_bootstrap-card,
     igx-carousel: $_bootstrap-carousel,
+    category-chart: $_bootstrap-category-chart,
     igx-checkbox: $_bootstrap-checkbox,
     igx-chip: $_bootstrap-chip,
     igx-column-hiding: $_bootstrap-column-hiding,
