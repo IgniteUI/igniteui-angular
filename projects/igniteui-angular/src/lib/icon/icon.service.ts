@@ -162,6 +162,7 @@ export class IgxIconService {
 
         // load – when the result is ready, that includes HTTP errors like 404.
         httpRequest.onload = function (event: ProgressEvent) {
+            console.log('Onload');
             if (event) {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
