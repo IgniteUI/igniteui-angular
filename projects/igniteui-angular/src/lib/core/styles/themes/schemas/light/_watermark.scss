@@ -8,6 +8,7 @@
 
 /// Generates a light watermark schema.
 /// @type {Map}
+/// @requires {function} extend
 $_light-watermark: extend(
     $_default-shape-watermark,
     (
@@ -35,7 +36,6 @@ $_light-watermark: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-watermark
-/// @requires $_fluent-shape-watermark
 $_fluent-watermark: extend(
     $_light-watermark,
     $_fluent-shape-watermark,
