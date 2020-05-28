@@ -28,6 +28,11 @@ body {
     }
 }
 
+// @include igx-css-vars(igx-shape-chart-theme(
+//     $outlines: (red, blue, orange, blue),
+//     $margin: 2px 8px
+// ));
+
 // @media print {
 //     html,
 //     body,
