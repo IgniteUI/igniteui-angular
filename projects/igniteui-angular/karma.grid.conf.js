@@ -42,7 +42,14 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox' , '--disable-translate', '--disable-extensions', '--remote-debugging-port=9223', '--disable-web-security',
+        '--disable-gpu']
+      }
+    },
     singleRun: false
   });
 };
