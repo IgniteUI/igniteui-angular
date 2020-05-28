@@ -1,0 +1,25 @@
+@import '../light/gauge-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// Generates a dark gauge-chart schema.
+/// @type {Map}
+/// @requires $_light-gauge-chart
+/// @see $default-palette
+$_dark-gauge-chart: extend($_light-gauge-chart);
+
+/// Generates a dark fluent gauge-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-gauge-chart
+$_dark-fluent-gauge-chart: extend($_fluent-gauge-chart);
+
+/// Generates a bootstrap gauge-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-gauge-chart
+$_dark-bootstrap-gauge-chart: extend($_bootstrap-gauge-chart);

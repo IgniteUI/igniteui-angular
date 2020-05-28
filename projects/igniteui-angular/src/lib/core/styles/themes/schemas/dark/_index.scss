@@ -24,6 +24,7 @@
 @import './divider';
 @import './drop-down';
 @import './expansion-panel';
+@import './gauge-chart';
 @import './financial-chart';
 @import './graph-chart';
 @import './grid';
@@ -76,6 +77,7 @@
 /// @property {Map} igx-divider [$_dark-divider]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
+/// @property {Map} gauge-chart [$_dark-gauge-chart]
 /// @property {Map} financial-chart [$_dark-financial-chart]
 /// @property {Map} graph-chart [$_dark-graph-chart]
 /// @property {Map} igx-grid [$_dark-grid]
@@ -127,6 +129,7 @@ $dark-schema: (
     igx-divider: $_dark-divider,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
+    gauge-chart: $_dark-gauge-chart,
     financial-chart: $_dark-financial-chart,
     graph-chart: $_dark-graph-chart,
     igx-grid: $_dark-grid,
@@ -181,6 +184,7 @@ $dark-schema: (
 /// @property {map} igx-divider [$_dark-fluent-divider],
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-fluent-expansion-panel],
+/// @property {Map} gauge-chart [$_dark-fluent-gauge-chart]
 /// @property {map} financial-chart [$_dark-fluent-financial-chart]
 /// @property {map} graph-chart [$_dark-fluent-graph-chart],
 /// @property {map} igx-grid [$_dark-fluent-grid],
@@ -232,6 +236,7 @@ $dark-fluent-schema: (
     igx-divider: $_dark-fluent-divider,
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
+    gauge-chart: $_dark-fluent-gauge-chart,
     financial-chart: $_dark-fluent-financial-chart,
     graph-chart: $_dark-fluent-graph-chart,
     igx-grid: $_dark-fluent-grid,
@@ -286,6 +291,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-divider [$_dark-bootstrap-divider],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
+/// @property {Map} gauge-chart [$_dark-bootstrap-gauge-chart]
 /// @property {map} financial-chart [$_dark-bootstrap-financial-chart]
 /// @property {map} graph-chart [$_dark-bootstrap-graph-chart],
 /// @property {map} igx-grid [$_dark-bootstrap-grid],
@@ -337,6 +343,7 @@ $dark-bootstrap-schema: (
     igx-divider: $_dark-bootstrap-divider,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
+    gauge-chart: $_dark-bootstrap-gauge-chart,
     financial-chart: $_dark-bootstrap-financial-chart,
     graph-chart: $_dark-bootstrap-graph-chart,
     igx-grid: $_dark-bootstrap-grid,
