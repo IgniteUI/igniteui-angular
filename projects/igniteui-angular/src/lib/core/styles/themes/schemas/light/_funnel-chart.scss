@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a light base data chart schema.
+/// Generates a light funnel chart schema.
 /// @type {Map}
 /// @property {Number} width [null]  - The width of the chart.
 /// @property {Number} height [null]  - The height of the chart.
@@ -58,4 +58,3 @@ $_fluent-funnel-chart: extend($_light-funnel-chart);
 /// @requires {function} extend
 /// @requires $_light-funnel-chart
 $_bootstrap-funnel-chart: extend($_light-funnel-chart);
-

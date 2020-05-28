@@ -38,7 +38,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxDateRangePicker` component added.
     - Allows the selection of a range of dates from a calendar UI or input fields. Supports `dialog` and `dropdown` modes.
-    - Added `IgxDateStartComponent` and `IgxDateEndComponent`.
+    - Added `IgxDateRangeStartComponent` and `IgxDateRangeEndComponent`.
     - The default template consists of a single *readonly* field:
     ```html
     <igx-date-range-picker [(ngModel)]="range"></igx-date-range-picker>
@@ -145,7 +145,6 @@ All notable changes for each version of this project will be documented in this 
             - The first cell in the first body row;
             - The first cell in column summary if exists;
             - Pager UI;
-    - `onGridKeydown` event is deprecated. Now you can directly bind to keydown on the IgxGrid component in order to perform custom keyboard navigation.
 
 - `IgxCombo`:
     - Added `autoFocusSearch` input that allows to manipulate the combo's opening behavior. When the property is `true` (by default), the combo's search input is focused on open. When set to `false`, the focus goes to the combo items container, which can be used to prevent the software keyboard from activating on mobile devices when opening the combo.
@@ -154,8 +153,16 @@ All notable changes for each version of this project will be documented in this 
     - Added functionality for displaying various content into the toast component. It also allows users to access toast styles through its host element.
 
 - `IgxDrag`
-    - New `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
-    - New `dragDirection` input that can specify only one direction of dragging or both.
+    - Added `igxDragIgnore` directive that allows children of the `igxDrag` element to be interactable and receive mouse events. Dragging cannot be performed from those elements that are ignored.
+    - Added `dragDirection` input that can specify only one direction of dragging or both.
+
+- `IgxChip`
+    - Added support for tabIndex attribute applied to the main chip element.
+    - Added `tabIndex` input so it can support change detection as well.
+
+
+- `IgxHighlightDirective`
+    - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.

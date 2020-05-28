@@ -2,9 +2,42 @@ import { SchematicContext, Rule, SchematicsException } from '@angular-devkit/sch
 import { Tree } from '@angular-devkit/schematics/src/tree/interface';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { Options } from '../interfaces/options';
-import { WorkspaceProject, ProjectType, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
+import { WorkspaceProject, ProjectType } from '@schematics/angular/utility/workspace-models';
+
+
+export enum PackageTarget {
+    DEV = 'devDependencies',
+    REGULAR = 'dependencies',
+    NONE = 'none'
+}
+export interface PackageEntry {
+    name: string;
+    target: PackageTarget;
+}
+
 
 const schematicsPackage = '@igniteui/angular-schematics';
+/**
+ * Dependencies are explicitly defined here, so we avoid adding
+ * unnecessary packages to the consuming project's deps
+ */
+export const DEPENDENCIES_MAP: PackageEntry[] = [
+        // dependencies
+        { name: 'hammerjs', target: PackageTarget.REGULAR },
+        { name: 'jszip', target: PackageTarget.REGULAR },
+        { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
+        { name: '@types/hammerjs', target: PackageTarget.DEV },
+        { name: '@types/jszip', target: PackageTarget.DEV },
+        { name: 'igniteui-trial-watermark', target: PackageTarget.NONE },
+        // peerDependencies
+        { name: '@angular/forms', target: PackageTarget.NONE },
+        { name: '@angular/common', target: PackageTarget.NONE },
+        { name: '@angular/core', target: PackageTarget.NONE },
+        { name: '@angular/animations', target: PackageTarget.NONE },
+        { name: 'web-animations-js', target: PackageTarget.REGULAR },
+        // igxDevDependencies
+        { name: '@igniteui/angular-schematics', target: PackageTarget.DEV }
+];
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);
@@ -52,22 +85,20 @@ export function logSuccess(options: Options): Rule {
 export function addDependencies(options: Options): Rule {
     return (tree: Tree, context: SchematicContext) => {
         const pkgJson = require('../../package.json');
-        const dependencies = 'dependencies';
-        const devDependencies = 'devDependencies';
 
-        includeDependencies(pkgJson, context, tree, dependencies);
+        includeDependencies(pkgJson, context, tree);
 
         // Add web-animations-js to dependencies
         Object.keys(pkgJson.peerDependencies).forEach(pkg => {
-            const version = pkgJson.peerDependencies[pkg];
             if (pkg.includes('web-animations')) {
-                addPackageToPkgJson(tree, pkg, version, dependencies);
+                const version = pkgJson.peerDependencies[pkg];
+                addPackageToPkgJson(tree, pkg, version, PackageTarget.REGULAR);
                 logIncludingDependency(context, pkg, version);
                 return;
             }
         });
 
-        addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], devDependencies);
+        addPackageToPkgJson(tree, schematicsPackage, pkgJson.igxDevDependencies[schematicsPackage], PackageTarget.DEV);
         return tree;
     };
 }
@@ -102,13 +133,17 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
-function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree, dependenciesKey: string) {
+function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
     Object.keys(pkgJson.dependencies).forEach(pkg => {
         const version = pkgJson.dependencies[pkg];
+        const entry = DEPENDENCIES_MAP.find(e => e.name === pkg);
+        if (!entry || entry.target === PackageTarget.NONE) {
+            return;
+        }
         switch (pkg) {
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, dependenciesKey);
+                addPackageToPkgJson(tree, pkg, version, entry.target);
 
                 const workspace = getWorkspace(tree);
                 const project = workspace.projects[workspace.defaultProject];
@@ -126,42 +161,13 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
-                addPackageToPkgJson(tree, pkg, version, dependenciesKey);
+                addPackageToPkgJson(tree, pkg, version, entry.target);
                 break;
         }
     });
 }
 
-/**
- * Add an item to an angular.json section, within the architect
- * @param workspace Angular Workspace Schema (angular.json)
- * @param key Architect tool key to add option to
- */
-function addItemToAngularWorkspace(workspace: WorkspaceSchema, key: string, item: string): boolean {
-    const currentProjectName = workspace.defaultProject;
-    if (currentProjectName) {
-        if (!workspace.projects[currentProjectName].architect) {
-            workspace.projects[currentProjectName].architect = {};
-        }
-        if (!workspace.projects[currentProjectName].architect[key]) {
-            workspace.projects[currentProjectName].architect[key] = {};
-        }
-        if (!workspace.projects[currentProjectName].architect[key].options) {
-            workspace.projects[currentProjectName].architect[key].options = {};
-        }
-        if (!workspace.projects[currentProjectName].architect[key].options.scripts) {
-            workspace.projects[currentProjectName].architect[key].options.scripts = [];
-        }
-        if (!workspace.projects[currentProjectName].architect[key].options.scripts.includes(item)) {
-            workspace.projects[currentProjectName].architect[key].options.scripts.push(item);
-            return true;
-        }
-
-        return false;
-    }
-}
-
-function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: string): Tree {
+export function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: string): boolean {
     const targetFile = 'package.json';
     if (tree.exists(targetFile)) {
         const sourceText = tree.read(targetFile).toString();
@@ -179,7 +185,9 @@ function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: s
                     .reduce((result, key) => (result[key] = json[target][key]) && result, {});
             tree.overwrite(targetFile, JSON.stringify(json, null, 2) + '\n');
         }
+
+        return true;
     }
 
-    return tree;
+    return false;
 }

@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -23,7 +23,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
-import { SplitterSampleComponent } from './splitter/slitter.sample';
+import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -54,6 +54,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
+import { GridRemotePagingSampleComponent } from './grid-remote-paging/grid-remote-paging.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
@@ -364,6 +365,10 @@ const appRoutes = [
     {
         path: 'gridRowPinning',
         component: GridRowPinningSampleComponent
+    },
+    {
+        path: 'gridRemotePaging',
+        component: GridRemotePagingSampleComponent
     },
     {
         path: 'gridColumnResizing',

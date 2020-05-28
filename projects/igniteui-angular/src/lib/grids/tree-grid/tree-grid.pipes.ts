@@ -332,7 +332,7 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
         const res = flatData.map(rec =>
             ({
                     rowID: grid.primaryKey ? rec[primaryKey] : rec,
-                    data: Object.assign({}, rec),
+                    data: rec,
                     level: 0,
                     children: []
             }));

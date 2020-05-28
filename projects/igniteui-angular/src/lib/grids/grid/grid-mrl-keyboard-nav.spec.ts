@@ -1693,6 +1693,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
@@ -1704,12 +1705,16 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 GridFunctions.simulateGridContentKeydown(fix, 'end', false, false, true);
                 await wait(200);
                 fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
                     .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'home', false, false, true);
+                await wait(200);
+                fix.detectChanges();
                 await wait(200);
                 fix.detectChanges();
 
@@ -1816,6 +1821,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
                 // last cell from first layout
@@ -1828,13 +1834,15 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 GridFunctions.simulateGridContentKeydown(fix, 'End', false, false, true);
                 await wait(200);
                 fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
                     .toEqual(fix.componentInstance.data[fix.componentInstance.data.length - 1].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'Home', false, false, true);
-                await wait(100);
+                await wait(200);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].CompanyName);
@@ -1872,6 +1880,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1931,6 +1940,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];

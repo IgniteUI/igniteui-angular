@@ -18,6 +18,9 @@
 @import '../components/card/card-theme';
 @import '../components/carousel/carousel-theme';
 @import '../components/charts/data-chart-theme';
+@import '../components/charts/financial-chart-theme';
+@import '../components/charts/graph-chart-theme';
+@import '../components/charts/category-chart-theme';
 @import '../components/charts/pie-chart-theme';
 @import '../components/charts/funnel-chart-theme';
 @import '../components/charts/shape-chart-theme';
@@ -220,6 +223,27 @@
 
     @if not(index($exclude, 'data-chart')) {
         @include igx-css-vars(igx-data-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'financial-chart')) {
+        @include igx-css-vars(igx-financial-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'graph-chart')) {
+        @include igx-css-vars(igx-graph-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'category-chart')) {
+        @include igx-css-vars(igx-category-chart-theme(
             $palette,
             $schema,
         ));
