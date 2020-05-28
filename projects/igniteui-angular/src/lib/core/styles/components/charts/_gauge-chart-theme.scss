@@ -11,7 +11,6 @@
 /// @param {Color} $backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
 /// @param {Color} $backing-outline [null] - Sets the color to use for the outline of the backing.
 /// @param {Number} $backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
-/// @param {String} $font [null] - Sets the font property.
 /// @param {Color} $font-brush [null] - Sets the color to use for the label font.
 /// @param {Number} $minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
 /// @param {Number} $needle-breadth [null] - Sets the needle breadth.
@@ -46,7 +45,6 @@
     $backing-brush: null,
     $backing-outline: null,
     $backing-stroke-thickness: null,
-    $font: null,
     $font-brush: null,
     $minor-tick-stroke-thickness: null,
     $needle-breadth: null,
@@ -85,7 +83,6 @@
             backing-brush: $backing-brush,
             backing-outline: $backing-outline,
             backing-stroke-thickness: $backing-stroke-thickness,
-            font: $font,
             font-brush: $font-brush,
             minor-tick-stroke-thickness: $minor-tick-stroke-thickness,
             needle-breadth: $needle-breadth,
@@ -107,4 +104,14 @@
     );
 }
 
-// @mixin igx-gauge-chart-typography($type-scale, $categories: ()) {};
+/// Adds typography styles for the gauge-chart component.
+/// @access private
+/// @group typography
+/// @requires {mixin} igx-type-style
+@mixin igx-gauge-chart-typography() {
+    $scope: if(is-root(), ':root', '&');
+
+    #{$scope} {
+        @include css-vars-from-theme((font: inherit), 'gauge-chart');
+    }
+}
