@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a dark base chart schema.
+/// Generates a dark funnel chart schema.
 /// @type {Map}
 /// @property {Map} width [] - The width of the chart.
 /// @requires $_light-funnel-chart
@@ -24,4 +24,3 @@ $_dark-fluent-funnel-chart: extend($_fluent-funnel-chart);
 /// @requires {function} extend
 /// @requires $_bootstrap-funnel-chart
 $_dark-bootstrap-funnel-chart: extend($_bootstrap-funnel-chart);
-
