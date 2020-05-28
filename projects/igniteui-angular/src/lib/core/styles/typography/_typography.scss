@@ -31,6 +31,7 @@
 @import '../components/toast/toast-theme';
 @import '../components/tooltip/tooltip-theme';
 @import '../components/charts/data-chart-theme';
+@import '../components/charts/financial-chart-theme';
 @import '../components/charts/shape-chart-theme';
 
 /// Adds typography styles for h1-h6, paragraph and creates
@@ -123,6 +124,7 @@
         @include igx-toast-typography($type-scale);
         @include igx-tooltip-typography($type-scale);
         @include igx-data-chart-typography($type-scale);
+        @include igx-financial-chart-typography($type-scale);
         @include igx-shape-chart-typography($type-scale);
     }
 }

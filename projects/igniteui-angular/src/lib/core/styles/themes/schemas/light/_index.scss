@@ -26,6 +26,7 @@
 @import './drop-down';
 @import './expansion-panel';
 @import './gauge-chart';
+@import './financial-chart';
 @import './grid';
 @import './grid-filtering';
 @import './pagination';
@@ -78,6 +79,7 @@
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
 /// @property {Map} gauge-chart [$_light-gauge-chart]
+/// @property {Map} financial-chart [$_light-financial-chart]
 /// @property {Map} igx-grid [$_light-grid]
 /// @property {Map} igx-grid-filtering [$_light-grid-filtering]
 /// @property {Map} igx-paginator [$_light-pagination]
@@ -128,6 +130,7 @@ $light-schema: (
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
     gauge-chart: $_light-gauge-chart,
+    financial-chart: $_light-financial-chart,
     igx-grid: $_light-grid,
     igx-grid-filtering: $_light-grid-filtering,
     igx-paginator: $_light-pagination,
@@ -181,6 +184,7 @@ $light-fluent-schema: (
     igx-drop-down: $_fluent-drop-down,
     igx-expansion-panel: $_fluent-expansion-panel,
     gauge-chart: $_fluent-gauge-chart,
+    financial-chart: $_fluent-financial-chart,
     igx-grid: $_fluent-grid,
     igx-grid-filtering: $_fluent-grid-filtering,
     igx-paginator: $_fluent-pagination,
@@ -234,6 +238,7 @@ $light-bootstrap-schema: (
     igx-drop-down: $_bootstrap-drop-down,
     igx-expansion-panel: $_bootstrap-expansion-panel,
     gauge-chart: $_bootstrap-gauge-chart,
+    financial-chart: $_bootstrap-financial-chart,
     igx-grid: $_bootstrap-grid,
     igx-grid-filtering: $_bootstrap-grid-filtering,
     igx-paginator: $_bootstrap-pagination,
