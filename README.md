@@ -203,7 +203,7 @@ Community support for open source usage of this product is available at [StackOv
 
 ## License
 This is a commercial product, requiring a valid paid-for license for commercial use.  
-This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their cirriculum.
+This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
 In order for us to verify your eligibility for free usage, please [register for trial](https://Infragistics.com/Angular) and open a support ticket with a request for free license.
 
 To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.  
