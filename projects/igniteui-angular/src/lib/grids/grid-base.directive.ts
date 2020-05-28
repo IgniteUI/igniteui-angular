@@ -28,6 +28,7 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
+import 'igniteui-trial-watermark';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, isIE, compareMaps } from '../core/utils';
@@ -455,7 +456,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Emitted after the current page is changed.
+     * @example
+     * ```html
+     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
      */
     @Output()
     public pageChange = new EventEmitter<number>();
@@ -487,7 +497,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Emitted when `perPage` property value of the grid is changed.
+     * @example
+     * ```html
+     * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
@@ -4227,7 +4246,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
@@ -5795,10 +5814,48 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
             return currentRowIndex;
         }
-        const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :
-            this.dataView.slice(currentRowIndex + 1, this.dataView.length);
-        const nextRow = rows.find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData);
-        return nextRow ? this.dataView.indexOf(nextRow) : currentRowIndex;
+        // find next/prev record that is editable.
+        const nextRowIndex = previous ? this.findPrevEditableDataRowIndex(currentRowIndex) :
+        this.dataView.findIndex((rec, index) =>
+        index > currentRowIndex && this.isEditableDataRecordAtIndex(index));
+        return nextRowIndex !== -1 ? nextRowIndex : currentRowIndex ;
+    }
+
+    /**
+     * Returns the previous editable row index or -1 if no such row is found.
+     * @param currentIndex The index of the current editable record.
+     */
+    private findPrevEditableDataRowIndex(currentIndex): number {
+        let i = this.dataView.length;
+        while (i--) {
+            if (i < currentIndex && this.isEditableDataRecordAtIndex(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    /**
+     * Returns if the record at the specified data view index is a an editable data record.
+     * If record is group rec, summary rec, child rec, ghost rec. etc. it is not editable.
+     * @param dataViewIndex The index of that record in the data view.
+     */
+    private isEditableDataRecordAtIndex(dataViewIndex) {
+        const rec = this.dataView[dataViewIndex];
+        return !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData &&
+        !this.isGhostRecordAtIndex(dataViewIndex);
+    }
+
+    /**
+     * Returns if the record at the specified data view index is a ghost.
+     * If record is pinned but is not in pinned area then it is a ghost record.
+     * @param dataViewIndex The index of that record in the data view.
+     */
+    private isGhostRecordAtIndex(dataViewIndex) {
+        const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
+        const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
+        return isPinned && !isInPinnedArea;
     }
 
     private isValidPosition(rowIndex, colIndex): boolean {
@@ -6247,6 +6304,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     c.target.activate();
                 }
             });
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public endRowEdit(commit = true, event?: Event) {
+        this.endEdit(commit, event);
+        const activeCell = this.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
         }
     }
     /**
