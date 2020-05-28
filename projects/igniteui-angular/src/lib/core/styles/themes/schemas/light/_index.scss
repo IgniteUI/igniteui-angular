@@ -38,6 +38,7 @@
 @import './list';
 @import './navbar';
 @import './navdrawer';
+@import './map-chart';
 @import './overlay';
 @import './pie-chart';
 @import './progress';
@@ -89,6 +90,7 @@
 /// @property {Map} igx-icon [$_light-icon]
 /// @property {Map} igx-input-group [$_light-input-group]
 /// @property {Map} igx-list [$_light-list]
+/// @property {Map} map-chart [$_light-map-chart]
 /// @property {Map} igx-navbar [$_light-navbar]
 /// @property {Map} igx-navdrawer [$_light-navdrawer]
 /// @property {Map} igx-overlay [$_light-overlay]
@@ -140,6 +142,7 @@ $light-schema: (
     igx-icon: $_light-icon,
     igx-input-group: $_light-input-group,
     igx-list: $_light-list,
+    map-chart: $_light-map-chart,
     igx-navbar: $_light-navbar,
     igx-navdrawer: $_light-navdrawer,
     igx-overlay: $_light-overlay,
@@ -194,6 +197,7 @@ $light-fluent-schema: (
     igx-icon: $_fluent-icon,
     igx-input-group: $_fluent-input-group,
     igx-list: $_fluent-list,
+    map-chart: $_fluent-map-chart,
     igx-navbar: $_fluent-navbar,
     igx-navdrawer: $_fluent-navdrawer,
     igx-overlay: $_fluent-overlay,
@@ -248,6 +252,7 @@ $light-bootstrap-schema: (
     igx-icon: $_bootstrap-icon,
     igx-input-group: $_bootstrap-input-group,
     igx-list: $_bootstrap-list,
+    map-chart: $_bootstrap-map-chart,
     igx-navbar: $_bootstrap-navbar,
     igx-navdrawer: $_bootstrap-navdrawer,
     igx-overlay: $_bootstrap-overlay,

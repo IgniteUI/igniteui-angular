@@ -35,6 +35,7 @@
 @import './icon';
 @import './input-group';
 @import './list';
+@import './map-chart';
 @import './navbar';
 @import './navdrawer';
 @import './overlay';
@@ -87,6 +88,7 @@
 /// @property {Map} igx-icon [$_dark-icon]
 /// @property {Map} igx-input-group [$_dark-input-group]
 /// @property {Map} igx-list [$_dark-list]
+/// @property {Map} map-chart [$_dark-map-chart]
 /// @property {Map} igx-navbar [$_dark-navbar]
 /// @property {Map} igx-navdrawer [$_dark-navdrawer]
 /// @property {Map} igx-overlay [$_dark-overlay]
@@ -138,6 +140,7 @@ $dark-schema: (
     igx-icon: $_dark-icon,
     igx-input-group: $_dark-input-group,
     igx-list: $_dark-list,
+    map-chart: $_dark-map-chart,
     igx-navbar: $_dark-navbar,
     igx-navdrawer: $_dark-navdrawer,
     igx-overlay: $_dark-overlay,
@@ -192,6 +195,7 @@ $dark-schema: (
 /// @property {map} igx-icon [$_dark-fluent-icon],
 /// @property {map} igx-input-group [$_dark-fluent-input-group],
 /// @property {map} igx-list [$_dark-fluent-list],
+/// @property {Map} map-chart [$_dark-fluent-map-chart]
 /// @property {map} igx-navbar [$_dark-fluent-navbar],
 /// @property {map} igx-navdrawer [$_dark-fluent-navdrawer],
 /// @property {map} igx-overlay [$_dark-fluent-overlay],
@@ -243,6 +247,7 @@ $dark-fluent-schema: (
     igx-icon: $_dark-fluent-icon,
     igx-input-group: $_dark-fluent-input-group,
     igx-list: $_dark-fluent-list,
+    map-chart: $_dark-fluent-map-chart,
     igx-navbar: $_dark-fluent-navbar,
     igx-navdrawer: $_dark-fluent-navdrawer,
     igx-overlay: $_dark-fluent-overlay,
@@ -297,6 +302,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-icon [$_dark-bootstrap-icon],
 /// @property {map} igx-input-group [$_dark-bootstrap-input-group],
 /// @property {map} igx-list [$_dark-bootstrap-list],
+/// @property {Map} map-chart [$_dark-bootstrap-map-chart]
 /// @property {map} igx-navbar [$_dark-bootstrap-navbar],
 /// @property {map} igx-navdrawer [$_dark-bootstrap-navdrawer],
 /// @property {map} igx-overlay [$_dark-bootstrap-overlay],
@@ -348,6 +354,7 @@ $dark-bootstrap-schema: (
     igx-icon: $_dark-bootstrap-icon,
     igx-input-group: $_dark-bootstrap-input-group,
     igx-list: $_dark-bootstrap-list,
+    map-chart: $_dark-bootstrap-map-chart,
     igx-navbar: $_dark-bootstrap-navbar,
     igx-navdrawer: $_dark-bootstrap-navdrawer,
     igx-overlay: $_dark-bootstrap-overlay,

@@ -1,0 +1,29 @@
+@import '../light/map-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
+////
+
+/// Generates a dark base map chart schema.
+/// @type {Map}
+/// @requires $_light-map-chart
+/// @see $_light-map-chart
+$_dark-map-chart: extend($_light-map-chart);
+
+/// Generates a dark fluent map chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-map-chart
+/// @see $_fluent-map-chart
+$_dark-fluent-map-chart: extend($_fluent-map-chart);
+
+/// Generates a dark bootstrap map chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-map-chart
+/// @see $_bootstrap-map-chart
+$_dark-fluent-map-chart: extend($_fluent-map-chart);
+$_dark-bootstrap-map-chart: extend($_bootstrap-map-chart);
+
