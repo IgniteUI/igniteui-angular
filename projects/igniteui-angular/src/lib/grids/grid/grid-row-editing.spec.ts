@@ -319,6 +319,45 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(false);
 
         });
+
+        it('should end row editing when clearing or applying advanced filter', () => {
+            fix.detectChanges();
+            const row = grid.getRowByIndex(2);
+
+            // Enter row edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
+            fix.detectChanges();
+
+            expect(row.inEditMode).toBe(false);
+
+            // Close the dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
+            fix.detectChanges();
+
+            // Enter row edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            expect(row.inEditMode).toBe(false);
+        });
     });
 
     describe('Navigation - Keyboard', () => {
