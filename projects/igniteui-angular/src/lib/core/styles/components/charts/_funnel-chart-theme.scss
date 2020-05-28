@@ -62,8 +62,7 @@
         outer-label-visibility: $outer-label-visibility,
         outline-thickness: $outline-thickness,
         text-color: $text-color,
-        )
-    );
+    ));
 }
 
 @mixin igx-funnel-chart-typography($type-scale, $categories: (
