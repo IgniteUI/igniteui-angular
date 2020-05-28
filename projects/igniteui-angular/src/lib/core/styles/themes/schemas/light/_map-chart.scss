@@ -14,7 +14,9 @@ $_light-map-chart: extend(
     (
         'width': null,
         'height': null,
-        'plot-area-background': null
+        'plot-area-background': (
+            igx-color: 'surface'
+        )
     )
 );
 
