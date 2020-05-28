@@ -22,8 +22,8 @@
 /// @param {Number} $needle-outer-point-width [null] - Sets the width of the needle's outer point.
 /// @param {Color} $needle-outline [null] - Sets the color to use for the outline of needle element.
 /// @param {Number} $needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
-/// @param {List} $range-brushes [series] - Sets a collection of colors to be used as the palette for linear gauge ranges.
-/// @param {List} $range-outlines [series] - Sets a collection of colors to be used as the palette for linear gauge outlines.
+/// @param {List} $range-brushes [null] - Sets a collection of colors to be used as the palette for linear gauge ranges.
+/// @param {List} $range-outlines [null] - Sets a collection of colors to be used as the palette for linear gauge outlines.
 /// @param {Color} $scale-brush [null] - Sets the color to use to fill the scale of the linear gauge.
 /// @param {Color} $scale-outline [null] - Sets the color to use for the outline of the scale.
 /// @param {Number} $scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
