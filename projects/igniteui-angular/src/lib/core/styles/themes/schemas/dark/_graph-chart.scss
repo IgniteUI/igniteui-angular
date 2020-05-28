@@ -1,0 +1,26 @@
+@import '../light/graph-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark graph chart schema.
+/// @type {Map}
+/// @requires $_light-graph-chart
+/// @see $default-palette
+$_dark-graph-chart: extend($_light-graph-chart);
+
+/// Generates a dark fluent graph-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-graph-chart
+$_dark-fluent-graph-chart: extend($_fluent-graph-chart);
+
+/// Generates a dark bootstrap graph-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-graph-chart
+$_dark-bootstrap-graph-chart: extend($_bootstrap-graph-chart);
+

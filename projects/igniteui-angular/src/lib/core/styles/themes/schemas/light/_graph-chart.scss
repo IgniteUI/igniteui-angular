@@ -1,0 +1,70 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light graph chart schema.
+/// @type {Map}
+/// @prop {Map} width [null] - The width of the chart.
+/// @prop {Map} height [null] - The height of the chart.
+/// @prop {Color} backing-brush [null] - Sets the brush to use to fill the backing of the bullet graph.
+/// @prop {Color} backing-outline [null] - Sets the brush to use for the outline of the backing.
+/// @prop {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
+/// @prop {Color} font-brush [null] - Sets the brush to use for the label font.
+/// @prop {Color} minor-tick-brush [null] - Sets the brush to use for the minor tickmarks.
+/// @prop {Number} minor-tick-thickness [null] - Stroke thickness to use when rendering minor ticks.
+/// @prop {List} range-brushes [series] - Sets a collection of brushes to be used as the palette for bullet graph ranges.
+/// @prop {List} range-outlines [series] - Sets a collection of brushes to be used as the palette for bullet graph outlines.
+/// @prop {Color} scale-background-brush [null] - Sets the background brush for the scale.
+/// @prop {Color} scale-background-outline [null] - Sets the background outline for the scale.
+/// @prop {Number} scale-background-thickness [null] - Sets the background outline thickness for the scale.
+/// @prop {Number} target-value-breadth [null] - Sets the breadth of the target value element.
+/// @prop {Color} target-value-brush [null] - Sets the brush to use when rendering the fill of the comparative marker.
+/// @prop {Color} target-value-outline [null] - Sets the brush to use when rendering the outline of the target value.
+/// @prop {Number} target-value-thickness [null] - Sets the stroke thickness of the outline of the target value bar.
+/// @prop {Color} tick-brush [null] - Sets the brush to use for the major tickmarks.
+/// @prop {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
+/// @prop {Color} value-brush [null] - Sets the brush to use for the actual value element.
+/// @prop {Color} value-outline [null] - Sets the brush to use for the outline of actual value element.
+/// @prop {Number} value-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
+/// @see $default-palette
+$_light-graph-chart: extend(
+    (
+        'width': null,
+        'height': null,
+        'backing-brush': null,
+        'backing-outline': null,
+        'backing-stroke-thickness': null,
+        'font-brush': null,
+        'minor-tick-brush': null,
+        'minor-tick-thickness': null,
+        'range-brushes': series,
+        'range-outlines': series,
+        'scale-background-brush': null,
+        'scale-background-outline': null,
+        'scale-background-thickness': null,
+        'target-value-breadth': null,
+        'target-value-brush': null,
+        'target-value-outline': null,
+        'target-value-thickness': null,
+        'tick-brush': null,
+        'tick-stroke-thickness': null,
+        'value-brush': null,
+        'value-outline': null,
+        'value-stroke-thickness': null,
+    )
+);
+
+/// Generates a fluent graph-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-graph-chart
+$_fluent-graph-chart: extend($_light-graph-chart);
+
+/// Generates a bootstrap graph-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-graph-chart
+$_bootstrap-graph-chart: extend($_light-graph-chart);
+

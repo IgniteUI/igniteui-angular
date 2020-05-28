@@ -25,6 +25,7 @@
 @import './drop-down';
 @import './expansion-panel';
 @import './financial-chart';
+@import './graph-chart';
 @import './grid';
 @import './grid-filtering';
 @import './pagination';
@@ -76,6 +77,7 @@
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} financial-chart [$_dark-financial-chart]
+/// @property {Map} graph-chart [$_dark-graph-chart]
 /// @property {Map} igx-grid [$_dark-grid]
 /// @property {Map} igx-grid-filtering [$_dark-grid-filtering]
 /// @property {Map} igx-paginator [$_dark-pagination]
@@ -126,6 +128,7 @@ $dark-schema: (
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
     financial-chart: $_dark-financial-chart,
+    graph-chart: $_dark-graph-chart,
     igx-grid: $_dark-grid,
     igx-grid-filtering: $_dark-grid-filtering,
     igx-paginator: $_dark-pagination,
@@ -179,6 +182,7 @@ $dark-schema: (
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-fluent-expansion-panel],
 /// @property {map} financial-chart [$_dark-fluent-financial-chart]
+/// @property {map} graph-chart [$_dark-fluent-graph-chart],
 /// @property {map} igx-grid [$_dark-fluent-grid],
 /// @property {map} igx-grid-filtering [$_dark-fluent-grid-filtering],
 /// @property {map} igx-paginator [$_dark-fluent-pagination],
@@ -229,6 +233,7 @@ $dark-fluent-schema: (
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
     financial-chart: $_dark-fluent-financial-chart,
+    graph-chart: $_dark-fluent-graph-chart,
     igx-grid: $_dark-fluent-grid,
     igx-grid-filtering: $_dark-fluent-grid-filtering,
     igx-paginator: $_dark-fluent-pagination,
@@ -282,6 +287,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
 /// @property {map} financial-chart [$_dark-bootstrap-financial-chart]
+/// @property {map} graph-chart [$_dark-bootstrap-graph-chart],
 /// @property {map} igx-grid [$_dark-bootstrap-grid],
 /// @property {map} igx-grid-filtering [$_dark-bootstrap-grid-filtering],
 /// @property {map} igx-paginator [$_dark-bootstrap-pagination],
@@ -332,6 +338,7 @@ $dark-bootstrap-schema: (
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
     financial-chart: $_dark-bootstrap-financial-chart,
+    graph-chart: $_dark-bootstrap-graph-chart,
     igx-grid: $_dark-bootstrap-grid,
     igx-grid-filtering: $_dark-bootstrap-grid-filtering,
     igx-paginator: $_dark-bootstrap-pagination,

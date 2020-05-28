@@ -19,6 +19,7 @@
 @import '../components/carousel/carousel-theme';
 @import '../components/charts/data-chart-theme';
 @import '../components/charts/financial-chart-theme';
+@import '../components/charts/graph-chart-theme';
 @import '../components/charts/category-chart-theme';
 @import '../components/charts/pie-chart-theme';
 @import '../components/charts/shape-chart-theme';
@@ -232,7 +233,14 @@
             $schema,
         ));
     }
-  
+
+    @if not(index($exclude, 'graph-chart')) {
+        @include igx-css-vars(igx-graph-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
     @if not(index($exclude, 'category-chart')) {
         @include igx-css-vars(igx-category-chart-theme(
             $palette,
