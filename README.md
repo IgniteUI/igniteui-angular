@@ -202,11 +202,16 @@ Developer support is provided as part of the commercial, paid-for license via [I
 Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
 
 ## License
-This project is released under the Apache License, version 2.0.  This is a commercial product, requiring a valid paid-for license for commercial use.  This product is free to use for non-commercial applications, like non-profits and educational usage.
+This is a commercial product, requiring a valid paid-for license for commercial use.  
+This product is free to use for non-commercial applications, like non-profits and educational usage.  
+In order for us to verify your eligibility for free usage, please [register for trial](https://Infragistics.com/Angular) and open a support ticket with a request for free license.
 
-To acquire a license for commercial usage, please register for a trial and acquire a license at [Infragistics.com/Angular](https://www.infragistics.com/products/ignite-ui-angular/getting-started).
+To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.  
 
-© Copyright 2017 INFRAGISTICS. All Rights Reserved.  The Infragistics Ultimate license & copyright applies to this distribution.  For information on that license, please go to our website [here](https://www.infragistics.com/legal/license).
+© Copyright 2020 INFRAGISTICS. All Rights Reserved. 
+The Infragistics Ultimate license & copyright applies to this distribution. 
+For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
+
 
 
 
