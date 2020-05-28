@@ -13,11 +13,9 @@
 /// @param {List} $outlines [null] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @param {String} $outer-label-alignment [null] - Sets which side of the chart the outer labels should appear.
 /// @param {Color} $outer-label-text-color [null] - Sets the Color used for the outer labels.
-/// @param {String} $outer-label-text-style [null] - Sets the text style for outer labels.
 /// @param {Color} $outer-label-visibility [null] - Sets whether the outer labels are visible.
 /// @param {Number} $outline-thickness [null] - Sets the thickness of outline around slices.
 /// @param {Color} $text-color - [null] Sets the Color used for the inner labels.
-/// @param {String} $text-style - [null] Sets the text style for inner labels.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -38,11 +36,9 @@
     $width: null,
     $outer-label-alignment: null,
     $outer-label-text-color: null,
-    $outer-label-text-style: null,
     $outer-label-visibility: null,
     $outline-thickness: null,
     $text-color: null,
-    $text-style: null,
 ) {
     $name: 'funnel-chart';
     $chart-schema: ();
@@ -63,27 +59,25 @@
         outlines: $outlines,
         outer-label-alignment: $outer-label-alignment,
         outer-label-text-color: $outer-label-text-color,
-        outer-label-text-style: $outer-label-text-style,
         outer-label-visibility: $outer-label-visibility,
         outline-thickness: $outline-thickness,
         text-color: $text-color,
-        text-style: $text-style,
         )
     );
 }
 
 @mixin igx-funnel-chart-typography($type-scale, $categories: (
-    title: 'h1',
-    subtitle: 'subtitle-1',
+    outer-label-text-style: 'h1',
+    text-style: 'subtitle-1',
 )) {
     $name: 'funnel-chart';
-    $title: map-get($categories, 'title');
-    $subtitle: map-get($categories, 'subtitle');
+    $outer-label-text-style: map-get($categories, 'outer-label-text-style');
+    $text-style: map-get($categories, 'text-style');
 
-    $title-styles: igx-type-scale-category($type-scale, $title);
-    $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
+    $outer-label: igx-type-scale-category($type-scale, $outer-label-text-style);
+    $text: igx-type-scale-category($type-scale, $text-style);
 
-    @include igx-font-var('outer-label-text-style', $title-styles, $name);
-    @include igx-font-var('text-style', $subtitle-styles, $name);
+    @include igx-font-var('outer-label-text-style', $outer-label, $name);
+    @include igx-font-var('text-style', $text, $name);
 }
 
