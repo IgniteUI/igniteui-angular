@@ -40,6 +40,7 @@ module.exports = function (config) {
     },
     port: 9876,
     colors: true,
+    browserNoActivityTimeout: 60000,
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['ChromeHeadlessNoSandbox'],
