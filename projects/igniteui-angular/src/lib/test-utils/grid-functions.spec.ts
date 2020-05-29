@@ -21,7 +21,7 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
-const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
+const SUMMARY_CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -46,6 +46,7 @@ const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const ACTIVE_HEADER_CLASS = 'igx-grid__th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const CELL_ACTIVE_CSS_CLASS = 'igx-grid__td--active';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
@@ -244,7 +245,7 @@ export class GridFunctions {
     }
 
     public static getGroupedRows(fix): DebugElement[] {
-        return this.sortDebugElementsVertically(fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS)));
+        return fix.debugElement.queryAll(By.css(GROUP_ROW_CLASS));
     }
 
     public static verifyGroupRowIsFocused(groupRow, focused = true) {
@@ -1695,6 +1696,10 @@ export class GridFunctions {
         return fix.nativeElement.querySelector(BANNER_ROW_CLASS);
     }
 
+    public static getRowEditingDebugElement(fix): DebugElement {
+        return fix.debugElement.query(By.css(BANNER_ROW_CLASS));
+    }
+
     public static getRowEditingBanner(fix): HTMLElement {
         return fix.nativeElement.querySelector(BANNER_CLASS);
     }
@@ -1713,6 +1718,14 @@ export class GridFunctions {
 
     public static getRowEditingCancelButton(fix): HTMLElement {
         return GridFunctions.getRowEditingBannerRow(fix).firstElementChild as HTMLElement;
+    }
+
+    public static getRowEditingCancelDebugElement(fix): DebugElement {
+        return GridFunctions.getRowEditingDebugElement(fix).queryAll(By.css('.igx-button--flat'))[0];
+    }
+
+    public static getRowEditingDoneDebugElement(fix): DebugElement {
+        return GridFunctions.getRowEditingDebugElement(fix).queryAll(By.css('.igx-button--flat'))[1];
     }
 
     public static getPagingButtons(parent) {
@@ -2033,7 +2046,7 @@ export class GridSummaryFunctions {
         const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
+        const hasClass = summ.nativeElement.classList.contains(SUMMARY_CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
@@ -2118,6 +2131,11 @@ export class GridSelectionFunctions {
     public static verifyCellSelected(cell, selected = true) {
         expect(cell.selected).toBe(selected);
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
+    }
+
+    public static verifyCellActive(cell, active = true) {
+        expect(cell.active).toBe(active);
+        expect(cell.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS)).toBe(active);
     }
 
     // Check the grid selected cell and cell in in the onSelection function

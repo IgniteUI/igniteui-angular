@@ -797,9 +797,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
-        if (!this.contextMenuToggle.collapsed &&
-            (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE)) {
+        const key = eventArgs.key;
+        if (!this.contextMenuToggle.collapsed && (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE)) {
             this.clearSelection();
+        } else if (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE) {
+            this.closeDialog();
         }
     }
 
@@ -1062,6 +1064,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick() {
+        this.grid.endEdit(false);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -1072,12 +1075,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this._overlayComponentId) {
             this._overlayService.hide(this._overlayComponentId);
         }
+        if (this.grid.navigation.activeNode && this.grid.navigation.activeNode.row === -1) {
+            (this.grid as any).theadRow.nativeElement.focus();
+        }
     }
 
     /**
      * @hidden @internal
      */
     public applyChanges() {
+        this.grid.endEdit(false);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }

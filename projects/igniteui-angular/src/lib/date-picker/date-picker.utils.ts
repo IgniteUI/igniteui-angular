@@ -11,17 +11,13 @@ export const enum DateState {
     Invalid = 'invalid',
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum FormatDesc {
     Numeric = 'numeric',
     TwoDigits = '2-digit'
 }
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum DateChars {
     YearChar = 'y',
     MonthChar = 'M',
@@ -31,24 +27,31 @@ const enum DateChars {
 const DATE_CHARS = ['h', 'H', 'm', 's', 'S', 't', 'T'];
 const TIME_CHARS = ['d', 'D', 'M', 'y', 'Y'];
 
-/**
- * @hidden
- */
+/** @hidden */
 const enum DateParts {
     Day = 'day',
     Month = 'month',
     Year = 'year'
 }
 
-/**
- * @hidden
- */
+
+/** @hidden */
 export abstract class DatePickerUtil {
+    public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
+    // TODO: this is the def mask for the date-picker, should remove it during refactoring
     private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
     private static readonly SEPARATOR = 'literal';
     private static readonly NUMBER_OF_MONTHS = 12;
     private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
+
+
+
+    /**
+     *  TODO: Unit tests for all public methods.
+     */
+
+
 
     /**
      * Parse a Date value from masked string input based on determined date parts
@@ -90,20 +93,6 @@ export abstract class DatePickerUtil {
             parts[DatePart.Minutes] || 0,
             parts[DatePart.Seconds] || 0
         );
-    }
-
-    private static ensureLeadingZero(part: DatePartInfo) {
-        switch (part.type) {
-            case DatePart.Date:
-            case DatePart.Month:
-            case DatePart.Hours:
-            case DatePart.Minutes:
-            case DatePart.Seconds:
-                if (part.format.length === 1) {
-                    part.format = part.format.repeat(2);
-                }
-                break;
-        }
     }
 
     /**
@@ -254,6 +243,78 @@ export abstract class DatePickerUtil {
         }
 
         return newDate;
+    }
+
+    /**
+     * Determines whether the provided value is greater than the provided max value.
+     * @param includeTime set to false if you want to exclude time portion of the two dates
+     * @param includeDate set to false if you want to exclude the date portion of the two dates
+     * @returns true if provided value is greater than provided maxValue
+     */
+    public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
+        // TODO: check if provided dates are valid dates and not Invalid Date
+        // if maxValue is Invalid Date and value is valid date this will return:
+        // - false if includeDate is true
+        // - true if includeDate is false
+        if (includeTime && includeDate) {
+            return value.getTime() > maxValue.getTime();
+        }
+
+        const _value = new Date(value.getTime());
+        const _maxValue = new Date(maxValue.getTime());
+        if (!includeTime) {
+            _value.setHours(0, 0, 0, 0);
+            _maxValue.setHours(0, 0, 0, 0);
+        }
+        if (!includeDate) {
+            _value.setFullYear(0, 0, 0);
+            _maxValue.setFullYear(0, 0, 0);
+        }
+
+        return _value.getTime() > _maxValue.getTime();
+    }
+
+    /**
+     * Determines whether the provided value is less than the provided min value.
+     * @param includeTime set to false if you want to exclude time portion of the two dates
+     * @param includeDate set to false if you want to exclude the date portion of the two dates
+     * @returns true if provided value is less than provided minValue
+     */
+    public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
+        // TODO: check if provided dates are valid dates and not Invalid Date
+        // if value is Invalid Date and minValue is valid date this will return:
+        // - false if includeDate is true
+        // - true if includeDate is false
+        if (includeTime && includeDate) {
+            return value.getTime() < minValue.getTime();
+        }
+
+        const _value = new Date(value.getTime());
+        const _minValue = new Date(minValue.getTime());
+        if (!includeTime) {
+            _value.setHours(0, 0, 0, 0);
+            _minValue.setHours(0, 0, 0, 0);
+        }
+        if (!includeDate) {
+            _value.setFullYear(0, 0, 0);
+            _minValue.setFullYear(0, 0, 0);
+        }
+
+        return _value.getTime() < _minValue.getTime();
+    }
+
+    private static ensureLeadingZero(part: DatePartInfo) {
+        switch (part.type) {
+            case DatePart.Date:
+            case DatePart.Month:
+            case DatePart.Hours:
+            case DatePart.Minutes:
+            case DatePart.Seconds:
+                if (part.format.length === 1) {
+                    part.format = part.format.repeat(2);
+                }
+                break;
+        }
     }
 
     private static getCleanVal(inputData: string, datePart: DatePartInfo, promptChar?: string): string {
@@ -583,6 +644,46 @@ export abstract class DatePickerUtil {
         return new Date(fullYear, month + 1, 0).getDate();
     }
 
+    /**
+     * Parse provided input to Date.
+     * @param value input to parse
+     * @returns Date if parse succeed or null
+     */
+    public static parseDate(value: any): Date | null {
+        if (typeof value === 'number') {
+            return new Date(value);
+        }
+
+        // if value is Invalid Date we should return null
+        if (this.isDate(value)) {
+            return this.isValidDate(value) ? value : null;
+        }
+
+        return value ? new Date(Date.parse(value)) : null;
+    }
+
+    /**
+     * Returns whether provided input is date
+     * @param value input to check
+     * @returns true if provided input is date
+     */
+    public static isDate(value: any): boolean {
+        return Object.prototype.toString.call(value) === '[object Date]';
+    }
+
+    /**
+     * Returns whether the input is valid date
+     * @param value input to check
+     * @returns true if provided input is a valid date
+     */
+    public static isValidDate(value: any): boolean {
+        if (this.isDate(value)) {
+            return !isNaN(value.getTime());
+        }
+
+        return false;
+    }
+
     private static getYearFormatType(format: string): string {
         switch (format.match(new RegExp(DateChars.YearChar, 'g')).length) {
             case 1: {
@@ -792,5 +893,4 @@ export abstract class DatePickerUtil {
         }
     }
 }
-
 

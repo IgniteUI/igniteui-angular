@@ -750,7 +750,8 @@ describe('igxCombo', () => {
                 scrollIndex += 10;
                 if (scrollIndex < combo.data.length) {
                     combo.virtualScrollContainer.scrollTo(scrollIndex);
-                    combo.virtualScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                    combo.virtualScrollContainer.onChunkLoad.pipe(take(1)).subscribe(async() => {
+                        await wait(30);
                         checkGroupedItemsClass();
                     });
                 } else {
@@ -1216,21 +1217,19 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 let items = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
                 let lastItem = items[items.length - 1].componentInstance;
-                let lastItemIndex = lastItem.index;
                 expect(lastItem).toBeDefined();
                 lastItem.clicked(mockClick);
                 await wait(30);
                 fixture.detectChanges();
-                expect(dropdown.focusedItem.index).toEqual(lastItemIndex);
+                expect(dropdown.focusedItem).toEqual(lastItem);
                 dropdown.navigateItem(-1);
                 await wait(30);
                 fixture.detectChanges();
                 expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
-                lastItemIndex = lastItem.index;
                 lastItem.clicked(mockClick);
                 await wait(30);
                 fixture.detectChanges();
-                expect(dropdown.focusedItem.index).toEqual(lastItemIndex);
+                expect(dropdown.focusedItem).toEqual(lastItem);
                 dropdown.navigateNext();
                 await wait(30);
                 fixture.detectChanges();

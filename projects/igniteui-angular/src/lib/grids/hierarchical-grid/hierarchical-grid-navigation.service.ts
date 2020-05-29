@@ -39,7 +39,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (rec && this.grid.isChildGridRecord(rec)) {
              // target is child grid
             const virtState = this.grid.verticalScrollContainer.state;
-             const inView = rowIndex >= virtState.startIndex && rowIndex < virtState.startIndex + virtState.chunkSize;
+             const inView = rowIndex >= virtState.startIndex && rowIndex <= virtState.startIndex + virtState.chunkSize;
              const isNext =  this.activeNode.row < rowIndex;
              const targetLayoutIndex = isNext ? null : this.grid.childLayoutKeys.length - 1;
              if (inView) {
@@ -102,14 +102,20 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     focusTbody(event) {
-        if (!this.activeNode) {
+        if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
-                row: null,
-                column: null
+                row: 0,
+                column: 0
             };
-        }
 
-        super.focusTbody(event);
+            this.grid.navigateTo(0, 0, (obj) => {
+                this.grid.clearCellSelection();
+                obj.target.activate(event);
+            });
+
+        } else {
+            super.focusTbody(event);
+        }
     }
 
     protected nextSiblingIndex(isNext) {
@@ -208,8 +214,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
         const childGridNav =  childGrid.navigation;
         this.clearActivation();
-        const visibleColsLength = childGrid.visibleColumns.length - 1;
-        const columnIndex = visibleColIndex <= visibleColsLength ? visibleColIndex : visibleColsLength;
+        const lastVisibleIndex = childGridNav.lastColumnIndex;
+        const columnIndex = visibleColIndex <= lastVisibleIndex ? visibleColIndex : lastVisibleIndex;
         childGridNav.activeNode = { row: targetIndex, column: columnIndex};
         childGrid.tbody.nativeElement.focus({preventScroll: true});
         this._pendingNavigation = false;
@@ -230,8 +236,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
         this.clearActivation();
         const targetRowIndex =  isNext ? indexInParent + 1 : indexInParent - 1;
-        const visibleColsLength = this.grid.parent.visibleColumns.length - 1;
-        const nextColumnIndex = columnIndex <= visibleColsLength ? columnIndex : visibleColsLength;
+        const lastVisibleIndex = this.grid.parent.navigation.lastColumnIndex;
+        const nextColumnIndex = columnIndex <= lastVisibleIndex ? columnIndex : lastVisibleIndex;
         this._pendingNavigation = true;
         const cbFunc = (args) => {
             args.target.grid.tbody.nativeElement.focus();

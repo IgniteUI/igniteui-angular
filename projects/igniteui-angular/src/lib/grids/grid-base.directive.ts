@@ -28,15 +28,16 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
+import 'igniteui-trial-watermark';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMaps } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
@@ -100,7 +101,6 @@ import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import {
     IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
@@ -456,7 +456,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Emitted after the current page is changed.
+     * @example
+     * ```html
+     * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
      */
     @Output()
     public pageChange = new EventEmitter<number>();
@@ -488,7 +497,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
+     * Emitted when `perPage` property value of the grid is changed.
+     * @example
+     * ```html
+     * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
@@ -1342,7 +1360,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
-    @DeprecateProperty('onGridKeydown event is deprecated. Now you can directly bind to keydown on the IgxGrid component.')
     @Output()
     public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
@@ -2451,9 +2468,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected destroy$ = new Subject<any>();
 
-    protected _filteredSortedPinnedData;
-    protected _filteredSortedUnpinnedData;
-    protected _filteredPinnedData;
+    protected _filteredSortedPinnedData: any[];
+    protected _filteredSortedUnpinnedData: any[];
+    protected _filteredPinnedData: any[];
 
     /**
      * @hidden
@@ -2714,29 +2731,43 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `dataView` collection.
+     *
      * @hidden
      * @internal
      */
-    public isRecordPinned(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
-        return this._pinnedRecordIDs.indexOf(id) !== -1;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByViewIndex(rowIndex: number) {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this.pinnedDataView.length) ||
             (!this.isRowPinningToTop && rowIndex >= this.unpinnedDataView.length);
     }
 
     /**
+     * Returns whether the record is pinned or not.
+     *
+     * @param rowIndex Index of the record in the `filteredSortedData` collection.
+     */
+    public isRecordPinnedByIndex(rowIndex: number) {
+        return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
+            (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
+    }
+
+    /**
      * @hidden
      * @internal
      */
-    public pinRecordIndex(rec) {
-        const id = this.primaryKey ? rec[this.primaryKey] : rec;
+    public isRecordPinned(rec) {
+        return this.getInitialPinnedIndex(rec) !== -1;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Returns the record index in order of pinning by the user. Does not consider sorting/filtering.
+     */
+    public getInitialPinnedIndex(rec) {
+        const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
     }
 
@@ -2789,7 +2820,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
@@ -2912,7 +2942,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
+            .subscribe((change: QueryList<IgxColumnComponent>) => {
+                this.onColumnsChanged(change);
+            });
     }
 
     /**
@@ -2998,13 +3030,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public setFilteredSortedData(data, pinned: boolean) {
-        data = data.map(rec => rec.ghostRecord !== undefined ? rec.recordRef : rec);
-        if (this._pinnedRecordIDs.length > 0 && pinned) {
+        data = data || [];
+        if (this.pinnedRecordsCount > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.pinnedRecords = data;
             this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
-        } else if (this._pinnedRecordIDs.length > 0 && !pinned) {
+        } else if (this.pinnedRecordsCount > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
             this.filteredSortedData = data;
@@ -4214,7 +4246,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.endEdit(true);
 
-        const insertIndex = isNumber(eventArgs.insertAtIndex) ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
+        const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
@@ -4334,7 +4366,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
                     if (match.column === activeInfo.column &&
                         match.row === activeInfo.row &&
-                        match.index === activeInfo.index) {
+                        match.index === activeInfo.index &&
+                        compareMaps(match.metadata, activeInfo.metadata)) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
                 });
@@ -5195,7 +5228,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     get unpinnedDataView(): any[] {
-        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf;
+        return this.unpinnedRecords ? this.unpinnedRecords : this.verticalScrollContainer.igxForOf || [];
     }
 
     /**
@@ -5642,7 +5675,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Navigates to a posution in the grid based on provided `rowindex` and `visibleColumnIndex`.
+     * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      * @remarks
      * Also can execute a custom logic over the target element,
      * through a callback function that accepts { targetType: GridKeydownTargetType, target: Object }
@@ -5663,10 +5696,21 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
         const shouldScrollHorizontally = this.navigation.shouldPerformHorizontalScroll(visibleColIndex, rowIndex);
         if (shouldScrollVertically) {
-            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () => {
+                if (shouldScrollHorizontally) {
+                    this.navigation.performHorizontalScrollToCell(visibleColIndex, () =>
+                     this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else if (shouldScrollHorizontally) {
-            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+            this.navigation.performHorizontalScrollToCell(visibleColIndex, () => {
+                if (shouldScrollVertically) {
+                    this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex, () =>
+                        this.executeCallback(rowIndex, visibleColIndex, cb));
+                } else {
+                    this.executeCallback(rowIndex, visibleColIndex, cb);
+                }});
         } else {
             this.executeCallback(rowIndex, visibleColIndex, cb);
         }
@@ -5770,10 +5814,48 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (currentRowIndex < 0 || (currentRowIndex === 0 && previous) || (currentRowIndex >= this.dataView.length - 1 && !previous)) {
             return currentRowIndex;
         }
-        const rows = previous ? this.dataView.slice(0, currentRowIndex).reverse() :
-            this.dataView.slice(currentRowIndex + 1, this.dataView.length);
-        const nextRow = rows.find(rec => !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData);
-        return nextRow ? this.dataView.indexOf(nextRow) : currentRowIndex;
+        // find next/prev record that is editable.
+        const nextRowIndex = previous ? this.findPrevEditableDataRowIndex(currentRowIndex) :
+        this.dataView.findIndex((rec, index) =>
+        index > currentRowIndex && this.isEditableDataRecordAtIndex(index));
+        return nextRowIndex !== -1 ? nextRowIndex : currentRowIndex ;
+    }
+
+    /**
+     * Returns the previous editable row index or -1 if no such row is found.
+     * @param currentIndex The index of the current editable record.
+     */
+    private findPrevEditableDataRowIndex(currentIndex): number {
+        let i = this.dataView.length;
+        while (i--) {
+            if (i < currentIndex && this.isEditableDataRecordAtIndex(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    /**
+     * Returns if the record at the specified data view index is a an editable data record.
+     * If record is group rec, summary rec, child rec, ghost rec. etc. it is not editable.
+     * @param dataViewIndex The index of that record in the data view.
+     */
+    private isEditableDataRecordAtIndex(dataViewIndex) {
+        const rec = this.dataView[dataViewIndex];
+        return !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData &&
+        !this.isGhostRecordAtIndex(dataViewIndex);
+    }
+
+    /**
+     * Returns if the record at the specified data view index is a ghost.
+     * If record is pinned but is not in pinned area then it is a ghost record.
+     * @param dataViewIndex The index of that record in the data view.
+     */
+    private isGhostRecordAtIndex(dataViewIndex) {
+        const isPinned = this.isRecordPinned(this.dataView[dataViewIndex]);
+        const isInPinnedArea = this.isRecordPinnedByViewIndex(dataViewIndex);
+        return isPinned && !isInPinnedArea;
     }
 
     private isValidPosition(rowIndex, colIndex): boolean {
@@ -5856,6 +5938,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 column: matchInfo.column,
                 row: matchInfo.row,
                 index: matchInfo.index,
+                metadata: matchInfo.metadata,
             });
 
         } else {
@@ -5930,7 +6013,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollTo(row: any | number, column: any | number, inCollection = this.filteredSortedData): void {
+    protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
         if (this.paging && typeof (row) !== 'number') {
@@ -5994,7 +6077,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const numberPipe = new IgxDecimalPipeComponent(this.locale);
         const datePipe = new IgxDatePipeComponent(this.locale);
-        data.forEach((dataRow) => {
+        data.forEach((dataRow, rowIndex) => {
             columnItems.forEach((c) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) :
                     c.dataType === 'number' ? numberPipe.transform(dataRow[c.field], this.locale) :
@@ -6005,10 +6088,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
                     if (exactMatch) {
                         if (searchValue === searchText) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: 0,
+                                metadata: metadata,
                             });
                         }
                     } else {
@@ -6016,10 +6102,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                         let searchIndex = searchValue.indexOf(searchText);
 
                         while (searchIndex !== -1) {
+                            const metadata = new Map<string, any>();
+                            metadata.set('pinned', this.isRecordPinnedByIndex(rowIndex));
                             this.lastSearchInfo.matchInfoCache.push({
                                 row: dataRow,
                                 column: c.field,
                                 index: occurenceIndex++,
+                                metadata: metadata,
                             });
 
                             searchValue = searchValue.substring(searchIndex + searchText.length);
@@ -6215,6 +6304,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     c.target.activate();
                 }
             });
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public endRowEdit(commit = true, event?: Event) {
+        this.endEdit(commit, event);
+        const activeCell = this.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
         }
     }
     /**
