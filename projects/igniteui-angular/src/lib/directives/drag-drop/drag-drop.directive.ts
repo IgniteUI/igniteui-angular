@@ -152,6 +152,8 @@ export class IgxDragLocation {
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected ghostContext: any = null;
+    protected _hideBaseOnDrag = false;
+    protected _animateOnRelease = false;
 
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
@@ -232,7 +234,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @DeprecateProperty(`'hideBaseOnDrag' @Input property is deprecated and will be removed in future major versions.
         Alternatives to it are using the new no ghost dragging and custom base styling.`)
     @Input()
-    public hideBaseOnDrag = false;
+    get hideBaseOnDrag() {
+        return this._hideBaseOnDrag;
+    }
+    set hideBaseOnDrag(val) {
+        this._hideBaseOnDrag = val;
+    }
 
     /**
      * @deprecated Please use provided transition functions in future.
@@ -249,7 +256,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @DeprecateProperty(`'animateOnRelease' @Input property is deprecated and will be removed in future major versions.
         Please use 'transitionToOrigin' or 'transitionTo' methods instead.`)
     @Input()
-    public animateOnRelease = false;
+    get animateOnRelease() {
+        return this._animateOnRelease;
+    }
+    set animateOnRelease(val) {
+        this._animateOnRelease = val;
+    }
 
     /**
      * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
