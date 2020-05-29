@@ -13,7 +13,6 @@ module.exports = function (config) {
     ],
     plugins: [
       require('karma-jasmine'),
-      require('jasmine-spec-tags'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
       require('karma-junit-reporter'),
