@@ -1158,7 +1158,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         });
 
         // Hide the base after the ghostElement is created, because otherwise the ghostElement will be not visible.
-        if (this.hideBaseOnDrag) {
+        if (this._hideBaseOnDrag) {
             this.visible = false;
         }
 
@@ -1251,7 +1251,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 return;
             }
 
-            if (this.hideBaseOnDrag) {
+            if (this._hideBaseOnDrag) {
                 this.visible = true;
             }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
