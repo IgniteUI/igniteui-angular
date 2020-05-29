@@ -48,13 +48,10 @@ module.exports = function (config) {
         base: 'ChromeHeadless',
         flags: [
           '--no-sandbox',
-          '--disable-setuid-sandbox',
           '--disable-translate',
           '--disable-extensions',
-          '--remote-debugging-port=9223',
           '--disable-web-security',
-          '--disable-gpu',
-          '--disable-dev-shm-usage']
+          '--disable-gpu']
       }
     },
     singleRun: true
