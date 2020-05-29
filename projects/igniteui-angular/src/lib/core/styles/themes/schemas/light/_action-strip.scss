@@ -1,10 +1,11 @@
 @import '../shape/action-strip';
+
 ////
 /// @group schemas
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-///
+
 /// Generates a light action-strip schema.
 /// @type {Map}
 /// @prop {Color} $color ["'currentColor'"] - The color used for the actions icons.
@@ -38,7 +39,7 @@ $_light-action-strip: extend(
 
 /// Generates a fluent action strip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for action strip actions container..
+/// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for action strip actions container.
 /// @requires {function} extend
 /// @requires $_light-action-strip
 $_fluent-action-strip: extend(
