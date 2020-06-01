@@ -13,6 +13,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
+import { DateRangeType } from '../core/dates';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -30,9 +31,9 @@ describe('IgxDateRangePicker', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
         const mockNgControl = jasmine.createSpyObj('NgControl',
-                                                    ['registerOnChangeCb',
-                                                    'registerOnTouchedCb',
-                                                    'registerOnValidatorChangeCb']);
+            ['registerOnChangeCb',
+                'registerOnTouchedCb',
+                'registerOnValidatorChangeCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
             'get': mockNgControl
         });
@@ -138,6 +139,40 @@ describe('IgxDateRangePicker', () => {
             range.end.setMonth(12);
             // expect(dateRange.validate(mockFormControl)).toEqual({ maxValue: true });
         });
+
+        fit('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            dateRange.ngOnInit();
+
+            dateRange.calendar = calendar;
+            dateRange.minValue = new Date(2000, 10, 1);
+            dateRange.maxValue = new Date(2000, 10, 20);
+
+            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            (dateRange as any).updateCalendar();
+            expect(dateRange.calendar.disabledDates.length).toEqual(2);
+            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
+            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
+        }));
+
+        it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            dateRange.ngOnInit();
+
+            dateRange.calendar = calendar;
+            dateRange.minValue = '2000/10/1';
+            dateRange.maxValue = '2000/10/30';
+
+            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            (dateRange as any).updateCalendar();
+            expect(dateRange.calendar.disabledDates.length).toEqual(2);
+            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
+            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
+        }));
     });
 
     describe('Integration tests', () => {
@@ -278,7 +313,7 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Properties & events tests', () => {
-                it('should show date picker with placeholder', () => {
+                it('should display placeholder', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.placeholder).toEqual('MM/dd/yyyy - MM/dd/yyyy');
 
@@ -332,9 +367,9 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                                    replace(/\//g, '-');
+                        replace(/\//g, '-');
                     inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                                    replace(/\//g, '-');
+                        replace(/\//g, '-');
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
@@ -414,46 +449,6 @@ describe('IgxDateRangePicker', () => {
                     dateRange.toggle();
                     fixture.detectChanges();
                 });
-
-                it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
-                    // TODO: move this to unit tests
-                    const minDate = new Date(2000, 10, 1);
-                    const maxDate = new Date(2000, 10, 20);
-                    fixture.componentInstance.minValue = minDate;
-                    fixture.componentInstance.maxValue = maxDate;
-                    fixture.detectChanges();
-
-                    dateRange.open();
-                    tick();
-                    fixture.detectChanges();
-
-                    const calendarComponent: IgxCalendarComponent = calendar.componentInstance;
-                    expect(calendarComponent.disabledDates.length).toEqual(2);
-                    expect(calendarComponent.disabledDates[0].type).toEqual(DateRangeType.Before);
-                    expect(calendarComponent.disabledDates[0].dateRange[0]).toEqual(minDate);
-                    expect(calendarComponent.disabledDates[1].type).toEqual(DateRangeType.After);
-                    expect(calendarComponent.disabledDates[1].dateRange[0]).toEqual(maxDate);
-                }));
-
-                it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-                    // TODO: move this to unit tests
-                    const minDate = '2000/10/1';
-                    const maxDate = '2000/10/30';
-                    fixture.componentInstance.minValue = minDate;
-                    fixture.componentInstance.maxValue = maxDate;
-                    fixture.detectChanges();
-
-                    dateRange.open();
-                    tick();
-                    fixture.detectChanges();
-
-                    const calendarComponent: IgxCalendarComponent = calendar.componentInstance;
-                    expect(calendarComponent.disabledDates.length).toEqual(2);
-                    expect(calendarComponent.disabledDates[0].type).toEqual(DateRangeType.Before);
-                    expect(calendarComponent.disabledDates[0].dateRange[0]).toEqual(new Date(minDate));
-                    expect(calendarComponent.disabledDates[1].type).toEqual(DateRangeType.After);
-                    expect(calendarComponent.disabledDates[1].dateRange[0]).toEqual(new Date(maxDate));
-                }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
                     spyOn(dateRange.onOpening, 'emit').and.callThrough();
@@ -671,58 +666,60 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRange();
                 });
-                xit('should support different input formats', () => {
-                    // dateRange.inputFormat = 'longDate';
-                    // fixture.detectChanges();
+                // it('should support different input formats', () => {
+                //     dateRange.inputFormat = 'dd/MM/yy';
+                //     dateRange.displayFormat = 'longDate';
+                //     fixture.detectChanges();
 
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
-                    endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    // dateRange.selectRange(startDate, endDate);
-                    // fixture.detectChanges();
-                    // expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                    // expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
+                //     const today = new Date();
+                //     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                //     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                //     dateRange.selectRange(startDate, endDate);
+                //     fixture.detectChanges();
+                //     expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
+                //     expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
 
-                    // dateRange.inputFormat = 'shortDate';
-                    // fixture.detectChanges();
+                // dateRange.inputFormat = 'shortDate';
+                // fixture.detectChanges();
 
-                    // startDate.setDate(2);
-                    // endDate.setDate(19);
-                    // dateRange.selectRange(startDate, endDate);
-                    // fixture.detectChanges();
+                // startDate.setDate(2);
+                // endDate.setDate(19);
+                // dateRange.selectRange(startDate, endDate);
+                // fixture.detectChanges();
 
-                    // let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
-                    // let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
-                    // expect(startInput.nativeElement.value).toEqual(formatFullDate(inputStartDate));
-                    // expect(endInput.nativeElement.value).toEqual(formatFullDate(inputEndDate));
+                // let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                // let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                // expect(startInput.nativeElement.value).toEqual(formatFullDate(inputStartDate));
+                // expect(endInput.nativeElement.value).toEqual(formatFullDate(inputEndDate));
 
-                    dateRange.inputFormat = 'fullDate';
-                    fixture.detectChanges();
+                // dateRange.inputFormat = 'fullDate';
+                // fixture.detectChanges();
 
-                    startDate.setDate(12);
-                    endDate.setDate(23);
-                    dateRange.selectRange(startDate, endDate);
-                    fixture.detectChanges();
+                // startDate.setDate(12);
+                // endDate.setDate(23);
+                // dateRange.selectRange(startDate, endDate);
+                // fixture.detectChanges();
 
-                    // inputStartDate = startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                    // inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                    // expect(startInput.nativeElement.value).toEqual(inputStartDate);
-                    // expect(endInput.nativeElement.value).toEqual(inputEndDate);
+                // inputStartDate =
+                // startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                // inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                // expect(startInput.nativeElement.value).toEqual(inputStartDate);
+                // expect(endInput.nativeElement.value).toEqual(inputEndDate);
 
-                    // dateRange.inputFormat = 'dd-MM-yy';
-                    // fixture.detectChanges();
+                // dateRange.inputFormat = 'dd-MM-yy';
+                // fixture.detectChanges();
 
-                    // startDate.setDate(9);
-                    // endDate.setDate(13);
-                    // dateRange.selectRange(startDate, endDate);
-                    // fixture.detectChanges();
+                // startDate.setDate(9);
+                // endDate.setDate(13);
+                // dateRange.selectRange(startDate, endDate);
+                // fixture.detectChanges();
 
-                    // inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                    //                 replace(/\//g, '-');
-                    // inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                    //                 replace(/\//g, '-');
-                    // expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
-                });
+                // inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                //                 replace(/\//g, '-');
+                // inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                //                 replace(/\//g, '-');
+                // expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
+                // });
             });
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
@@ -770,91 +767,6 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                 }));
             });
-        });
-
-        describe('Calendar UI', () => {
-            configureTestSuite();
-            beforeAll(async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent
-                    ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
-                })
-                    .compileComponents();
-            }));
-            beforeEach(async () => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.detectChanges();
-                dateRange = fixture.componentInstance.dateRange;
-            });
-
-            xit('should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
-                const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-                // UIInteractions.clickElement(startInput.nativeElement);
-                tick(100);
-                fixture.detectChanges();
-                expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
-            }));
-
-            xit('should move focus to the calendar on open in dialog mode', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.componentInstance.mode = InteractionMode.Dialog;
-                fixture.detectChanges();
-
-                const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-                // UIInteractions.clickElement(startInput.nativeElement);
-                tick(100);
-                fixture.detectChanges();
-                expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
-            }));
-
-            xit('should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
-                fixture.componentInstance.dateRange.open();
-                tick();
-                fixture.detectChanges();
-
-                const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-                // UIInteractions.clickElement(button);
-                tick();
-                fixture.detectChanges();
-
-                fixture.componentInstance.dateRange.close();
-                tick();
-                fixture.detectChanges();
-
-                expect(document.activeElement).toHaveClass('igx-input-group__input');
-            }));
-
-            xit('should move the focus to the single input on close', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeDefaultComponent);
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
-                fixture.componentInstance.dateRange.open();
-                tick();
-                fixture.detectChanges();
-
-                const button = fixture.debugElement.query(By.css('.igx-button--flat'));
-                // UIInteractions.clickElement(button);
-                tick();
-                fixture.detectChanges();
-
-                fixture.componentInstance.dateRange.close();
-                tick();
-                fixture.detectChanges();
-
-                expect(document.activeElement).toHaveClass('igx-input-group__input');
-            }));
         });
 
         describe('Rendering', () => {
@@ -1059,4 +971,4 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent { }
     </igx-date-range-picker>
     `
 })
-export class DateRangeTemplatesComponent extends DateRangeTestComponent {}
+export class DateRangeTemplatesComponent extends DateRangeTestComponent { }
