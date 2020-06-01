@@ -43,13 +43,12 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: false,
     failOnEmptyTestSuite: false,
-    browserSocketTimeout: 60000,
-    proxyValidateSSL: false,
+    browserSocketTimeout: 80000,
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox']
+        flags: ['--no-sandbox', '--disable-gpu']
       }
     },
     singleRun: true
