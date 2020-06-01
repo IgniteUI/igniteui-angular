@@ -42,6 +42,8 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: false,
     browserSocketTimeout: 60000,
+    restartOnFileChange: false,
+    pingTimeout: 10000,
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
