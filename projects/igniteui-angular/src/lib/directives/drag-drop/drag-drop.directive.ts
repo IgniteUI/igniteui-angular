@@ -1023,7 +1023,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this._dragStarted) {
             if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement ) {
                 this.dispatchDropEvent(event.pageX, event.pageY, event);
-            } else if (this.animateOnRelease) {
+            } else if (this._animateOnRelease) {
                 this.transitionToOrigin();
             }
 
@@ -1068,7 +1068,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.zone.run(() => {
                 this.dragEnd.emit(eventArgs);
             });
-            if (this.animateOnRelease) {
+            if (this._animateOnRelease) {
                 this.transitionToOrigin();
             } else if (!this.animInProgress) {
                 this.onTransitionEnd(null);
