@@ -5782,7 +5782,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = searchComponent.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length).toBeGreaterThan(1);
+            for (let i = 1; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
 
             sendInputNativeElement(inputNativeElement, dayOfWeek, fix);
             tick(100);
