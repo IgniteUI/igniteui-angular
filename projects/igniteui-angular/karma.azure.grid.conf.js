@@ -42,6 +42,9 @@ module.exports = function (config) {
     colors: false,
     logLevel: config.LOG_DEBUG,
     autoWatch: false,
+    failOnEmptyTestSuite: false,
+    browserSocketTimeout: 60000,
+    proxyValidateSSL: false,
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
