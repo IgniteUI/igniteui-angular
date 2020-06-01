@@ -3,7 +3,7 @@ import { Component, DoCheck, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
-    template: '<ng-content></ng-content>'
+    template: '<span class="igx-drop-down__inner"><ng-content></ng-content></span>'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 

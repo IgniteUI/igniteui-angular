@@ -245,10 +245,10 @@
 
     %igx-drop-down__header,
     %igx-drop-down__item {
-        display: inline-flex;
+        display: flex;
         justify-content: flex-start;
         align-items: center;
-        min-width: 100%;
+        width: 100%;
         white-space: nowrap;
         height: map-get($item-height, 'comfortable');
     }
@@ -269,6 +269,11 @@
             background: --var($theme, 'hover-item-background');
             color: --var($theme, 'hover-item-text-color');
         }
+    }
+
+    %igx-drop-down__inner {
+        display: block;
+        @include ellipsis();
     }
 
     %igx-drop-down__item--cosy {
