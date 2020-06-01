@@ -2839,7 +2839,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100))
+        this.resizeNotify.pipe(destructor, filter(() => !this._init),  throttleTime(100, undefined, {leading: true, trailing: true}))
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
