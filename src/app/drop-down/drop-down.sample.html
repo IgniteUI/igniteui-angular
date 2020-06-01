@@ -70,7 +70,6 @@
         <igx-drop-down #dropDownCompact (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px' displayDensity="compact">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                     {{ item.field }}
-                </div>
             </igx-drop-down-item>
         </igx-drop-down>
     </section>
