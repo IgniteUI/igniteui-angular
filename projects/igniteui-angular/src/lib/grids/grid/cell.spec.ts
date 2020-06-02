@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';

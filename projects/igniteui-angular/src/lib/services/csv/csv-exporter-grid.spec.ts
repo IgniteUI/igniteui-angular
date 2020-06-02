@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridModule } from '../../grids/grid';
+import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';

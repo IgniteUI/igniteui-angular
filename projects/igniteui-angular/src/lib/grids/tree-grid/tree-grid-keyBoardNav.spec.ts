@@ -7,7 +7,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridCellComponent } from '../grid';
+import { IgxGridCellComponent } from '../grid/public_api';
 import { DebugElement } from '@angular/core';
 
 const DEBOUNCETIME = 30;

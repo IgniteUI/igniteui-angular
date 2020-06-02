@@ -7,7 +7,7 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridModule, IgxGridBaseDirective } from './index';
+import { IgxGridModule, IgxGridBaseDirective } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';

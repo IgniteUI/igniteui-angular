@@ -4,7 +4,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';

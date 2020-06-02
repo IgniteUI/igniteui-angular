@@ -2,7 +2,7 @@
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './index';
+import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';

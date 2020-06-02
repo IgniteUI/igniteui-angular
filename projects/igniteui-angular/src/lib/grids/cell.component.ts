@@ -28,7 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { ISearchInfo } from './grid';
+import { ISearchInfo } from './grid/public_api';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

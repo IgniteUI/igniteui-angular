@@ -9,7 +9,7 @@ import {
     IgxSummaryOperand,
     IgxSummaryResult,
     IgxGridGroupByRowComponent
-} from './index';
+} from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';

@@ -14,7 +14,7 @@ import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operatio
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { IgxGridComponent } from '../grids/grid';
+import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';

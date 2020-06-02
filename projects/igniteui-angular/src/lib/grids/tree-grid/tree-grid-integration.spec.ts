@@ -20,7 +20,7 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../grid';
+import { IgxGridCellComponent } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 

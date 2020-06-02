@@ -2,27 +2,30 @@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, GridSelectionMode } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { GridSummaryFunctions,
-         GridSelectionFunctions,
-         GridFunctions,
-         PINNED_SUMMARY,
-         GRID_HEADER_CLASS,
-         HEADER_PINNED_CLASS,
-         CELL_PINNED_CLASS,
-         GRID_MRL_BLOCK_CLASS,
-         GRID_SCROLL_CLASS} from '../../test-utils/grid-functions.spec';
-// tslint:disable-next-line: max-line-length
-import { PinOnInitAndSelectionComponent,
-         PinningComponent,
-         GridPinningMRLComponent,
-         GridFeaturesComponent,
-         MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
+import {
+    CELL_PINNED_CLASS,
+    GRID_HEADER_CLASS,
+    GRID_MRL_BLOCK_CLASS,
+    GRID_SCROLL_CLASS,
+    GridFunctions,
+    GridSelectionFunctions,
+    GridSummaryFunctions,
+    HEADER_PINNED_CLASS,
+    PINNED_SUMMARY
+} from '../../test-utils/grid-functions.spec';
+import {
+    GridFeaturesComponent,
+    GridPinningMRLComponent,
+    MultiColumnHeadersWithGroupingComponent,
+    PinningComponent,
+    PinOnInitAndSelectionComponent
+} from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
 // tslint:disable: no-use-before-declare
 

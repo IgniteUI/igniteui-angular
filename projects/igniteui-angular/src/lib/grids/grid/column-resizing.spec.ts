@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAvatarModule } from '../../avatar/avatar.component';
 import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';

@@ -15,7 +15,7 @@ import {
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridBaseDirective
-} from '../grids/grid';
+} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 

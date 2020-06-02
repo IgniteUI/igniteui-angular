@@ -4,7 +4,7 @@ import {
     IgxGridCellComponent,
     IgxGridModule,
     IgxGridGroupByRowComponent,
-} from './index';
+} from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';

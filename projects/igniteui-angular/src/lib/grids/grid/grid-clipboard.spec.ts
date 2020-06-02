@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxGridModule, IgxGridComponent
-} from './index';
+} from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
