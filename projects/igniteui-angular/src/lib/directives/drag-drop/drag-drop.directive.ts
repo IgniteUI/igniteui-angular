@@ -152,6 +152,8 @@ export class IgxDragLocation {
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected ghostContext: any = null;
+    protected _hideBaseOnDrag = false;
+    protected _animateOnRelease = false;
 
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
@@ -232,7 +234,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @DeprecateProperty(`'hideBaseOnDrag' @Input property is deprecated and will be removed in future major versions.
         Alternatives to it are using the new no ghost dragging and custom base styling.`)
     @Input()
-    public hideBaseOnDrag = false;
+    get hideBaseOnDrag() {
+        return this._hideBaseOnDrag;
+    }
+    set hideBaseOnDrag(val) {
+        this._hideBaseOnDrag = val;
+    }
 
     /**
      * @deprecated Please use provided transition functions in future.
@@ -249,7 +256,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @DeprecateProperty(`'animateOnRelease' @Input property is deprecated and will be removed in future major versions.
         Please use 'transitionToOrigin' or 'transitionTo' methods instead.`)
     @Input()
-    public animateOnRelease = false;
+    get animateOnRelease() {
+        return this._animateOnRelease;
+    }
+    set animateOnRelease(val) {
+        this._animateOnRelease = val;
+    }
 
     /**
      * An @Input property that specifies a template for the ghost element created when dragging starts and `ghost` is true.
@@ -1011,7 +1023,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this._dragStarted) {
             if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement ) {
                 this.dispatchDropEvent(event.pageX, event.pageY, event);
-            } else if (this.animateOnRelease) {
+            } else if (this._animateOnRelease) {
                 this.transitionToOrigin();
             }
 
@@ -1056,7 +1068,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.zone.run(() => {
                 this.dragEnd.emit(eventArgs);
             });
-            if (this.animateOnRelease) {
+            if (this._animateOnRelease) {
                 this.transitionToOrigin();
             } else if (!this.animInProgress) {
                 this.onTransitionEnd(null);
@@ -1146,7 +1158,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         });
 
         // Hide the base after the ghostElement is created, because otherwise the ghostElement will be not visible.
-        if (this.hideBaseOnDrag) {
+        if (this._hideBaseOnDrag) {
             this.visible = false;
         }
 
@@ -1239,7 +1251,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 return;
             }
 
-            if (this.hideBaseOnDrag) {
+            if (this._hideBaseOnDrag) {
                 this.visible = true;
             }
             this.ghostElement.parentNode.removeChild(this.ghostElement);
