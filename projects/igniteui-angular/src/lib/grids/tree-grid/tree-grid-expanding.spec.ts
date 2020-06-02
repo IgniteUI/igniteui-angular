@@ -23,7 +23,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
@@ -1134,7 +1134,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
@@ -1380,7 +1380,7 @@ describe('Custom expand/collapse template', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridCustomExpandersTemplateComponent

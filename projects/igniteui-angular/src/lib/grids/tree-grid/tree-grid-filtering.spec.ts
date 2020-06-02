@@ -13,7 +13,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent

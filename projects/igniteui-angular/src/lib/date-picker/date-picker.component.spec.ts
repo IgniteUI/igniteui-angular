@@ -1298,7 +1298,7 @@ describe('IgxDatePicker', () => {
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);
 
-            inputDirectiveElement.triggerEventHandler('focus', {});
+            inputDirectiveElement.triggerEventHandler('focus', { target: { value: ''}});
             fixture.detectChanges();
 
             expect(inputDirective.valid).toEqual(IgxInputState.INITIAL);

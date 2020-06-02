@@ -17,7 +17,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent

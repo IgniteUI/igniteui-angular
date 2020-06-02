@@ -53,7 +53,7 @@ const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
@@ -1669,7 +1669,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -3689,7 +3689,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -5782,7 +5782,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = searchComponent.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length).toBeGreaterThan(1);
+            for (let i = 1; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
 
             sendInputNativeElement(inputNativeElement, dayOfWeek, fix);
             tick(100);
