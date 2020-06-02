@@ -92,7 +92,7 @@ export * from './lib/tabbar/tabbar.component';
 export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
-export * from './lib/select/index';
+export * from './lib/select/public_api';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';

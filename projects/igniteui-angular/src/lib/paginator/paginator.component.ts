@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { IgxSelectModule } from '../select/index';
+import { IgxSelectModule } from '../select/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
