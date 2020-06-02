@@ -17,7 +17,7 @@ import { GridSelectionMode } from '../common/enums';
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSelectionKeyComponent,

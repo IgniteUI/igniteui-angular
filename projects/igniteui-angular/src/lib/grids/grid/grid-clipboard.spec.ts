@@ -13,7 +13,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridClipboardComponent

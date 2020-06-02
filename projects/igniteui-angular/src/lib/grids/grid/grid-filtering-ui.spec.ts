@@ -53,7 +53,7 @@ const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
@@ -1669,7 +1669,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -3689,7 +3689,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -5960,7 +5960,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         let fix;
         let grid;
 
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             fix = TestBed.createComponent(CustomFilteringStrategyComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
