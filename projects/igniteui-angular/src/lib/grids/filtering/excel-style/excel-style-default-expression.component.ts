@@ -40,6 +40,46 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
+    public dropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        excludePositionTarget: true
+    };
+
+    @Input()
+    public column: IgxColumnComponent;
+
+    @Input()
+    public expressionUI: ExpressionUI;
+
+    @Input()
+    public expressionsList: Array<ExpressionUI>;
+
+    @Input()
+    public grid: any;
+
+    @Input()
+    public displayDensity: DisplayDensity;
+
+    @Output()
+    public onExpressionRemoved = new EventEmitter<ExpressionUI>();
+
+    @Output()
+    public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
+
+    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    public overlayOutlet: IgxOverlayOutletDirective;
+
+    @ViewChild('dropdownConditions', { read: IgxSelectComponent })
+    protected dropdownConditions: IgxSelectComponent;
+
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
+    protected logicOperatorButtonGroup: IgxButtonGroupComponent;
+
+    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
+    protected inputValuesDirective: IgxInputDirective;
+
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
     }
@@ -75,54 +115,17 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.inputValuesDirective;
     }
 
-    public dropDownOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false,
-        excludePositionTarget: true
-    };
-
-    @Input()
-    public column: IgxColumnComponent;
-
-    @Input()
-    public expressionUI: ExpressionUI;
-
-    @Input()
-    public expressionsList: Array<ExpressionUI>;
-
-    @Input()
-    public grid: any;
-
-    @Input()
-    public displayDensity: DisplayDensity;
-
-    @Output()
-    public onExpressionRemoved = new EventEmitter<ExpressionUI>();
-
-    @Output()
-    public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
-    public overlayOutlet: IgxOverlayOutletDirective;
-
-    @ViewChild('dropdownConditions', { read: IgxSelectComponent })
-    protected dropdownConditions: IgxSelectComponent;
-
-    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
-    protected logicOperatorButtonGroup: IgxButtonGroupComponent;
-
-    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
-    protected inputValuesDirective: IgxInputDirective;
-
     ngAfterViewInit(): void {
         this.dropDownOverlaySettings.outlet = this.overlayOutlet;
         this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             target : this.dropdownConditions.inputGroup.element.nativeElement
         });
+    }
+
+    public focus() {
+        // use requestAnimationFrame to focus the values input because when initializing the component
+        // datepicker's input group is not yet fully initialized
+        requestAnimationFrame(() => this.inputValuesElement.focus());
     }
 
     public translateCondition(value: string): string {
@@ -141,12 +144,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public isConditionSelected(conditionName: string): boolean {
         return this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName;
-    }
-
-    public focus() {
-        // use requestAnimationFrame to focus the values input because when initializing the component
-        // datepicker's input group is not yet fully initialized
-        requestAnimationFrame(() => this.inputValuesElement.focus());
     }
 
     public onConditionsChanged(eventArgs: any) {
