@@ -78,7 +78,7 @@ export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
 export * from './lib/icon/public_api';
 export * from './lib/input-group/public_api';
-export * from './lib/list/index';
+export * from './lib/list/public_api';
 export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';

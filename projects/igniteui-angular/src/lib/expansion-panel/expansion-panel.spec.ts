@@ -9,7 +9,7 @@ import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ICON_POSITION, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grids/grid/index';
-import { IgxListModule } from '../list';
+import { IgxListModule } from '../list/public_api';
 import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
