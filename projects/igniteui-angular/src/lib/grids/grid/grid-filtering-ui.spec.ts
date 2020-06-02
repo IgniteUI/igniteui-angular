@@ -5960,7 +5960,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         let fix;
         let grid;
 
-        beforeAll(async(() => {
+        beforeEach(async(() => {
             fix = TestBed.createComponent(CustomFilteringStrategyComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
