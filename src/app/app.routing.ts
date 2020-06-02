@@ -72,6 +72,7 @@ import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-maste
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 
 const appRoutes = [
     {
@@ -330,6 +331,9 @@ const appRoutes = [
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
+    }, {
+        path: 'hierarchicalGridRemoteVirtualization',
+        component: HierarchicalGridRemoteVirtualizationComponent
     }, {
         path: 'hierarchicalGridUpdating',
         component: HierarchicalGridUpdatingSampleComponent

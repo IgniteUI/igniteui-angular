@@ -1,0 +1,25 @@
+
+<div class="grid__wrapper">
+    <ng-template #remoteDataLoadingLarge>
+        <div class="remote-data-loading-template-large"></div>
+    </ng-template>
+    <ng-template #remoteDataLoadingMedium>
+        <div class="remote-data-loading-template-medium"></div>
+    </ng-template>
+    <ng-template #remoteDataLoadingSmall>
+        <div class="remote-data-loading-template-small"></div>
+    </ng-template>
+
+    <igx-hierarchical-grid #hGrid [primaryKey]='"ProductID"' [height]="'500px'" [width]="'100%'" [autoGenerate]='false' (onDataPreLoad)="handlePreLoad($event)">
+        <igx-column [field]="'ProductID'" [sortable]="true"></igx-column>
+        <igx-column [field]="'ProductName'" [sortable]="true"></igx-column>
+        <igx-column [field]="'UnitPrice'" dataType="number" [sortable]="true"></igx-column>
+        <igx-column [field]="'UnitsInStock'" dataType="number" [sortable]="true">
+        </igx-column>
+        <igx-column [field]="'QuantityPerUnit'" [sortable]="true"></igx-column>
+        <igx-row-island [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false">
+          <igx-column [field]="'OrderID'"></igx-column>
+          <igx-column [field]="'Sequence'"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+</div>

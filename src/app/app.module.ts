@@ -126,6 +126,7 @@ import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } fro
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
+import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 
 const components = [
     ActionStripSampleComponent,
@@ -222,6 +223,7 @@ const components = [
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
     HierarchicalGridRemoteSampleComponent,
+    HierarchicalGridRemoteVirtualizationComponent,
     HierarchicalGridUpdatingSampleComponent,
     DisplayFormatPipe,
     InputFormatPipe,
