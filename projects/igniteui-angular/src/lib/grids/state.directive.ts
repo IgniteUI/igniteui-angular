@@ -375,7 +375,8 @@ export class IgxGridStateDirective {
                 width: c.width,
                 header: c.header,
                 resizable: c.resizable,
-                searchable: c.searchable
+                searchable: c.searchable,
+                selectable: c.selectable
             };
         });
         return { columns: gridColumns };
