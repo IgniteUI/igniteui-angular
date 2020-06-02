@@ -5,7 +5,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CommonModule } from '@angular/common';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxInputGroupModule } from '../input-group/index';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import {
     IgxDateRangeStartComponent, IgxDateRangeEndComponent,
     DateRangePickerFormatPipe,

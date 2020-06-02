@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDatePickerModule } from '../../date-picker/date-picker.component';
-import { IgxIconModule } from '../../icon/index';
+import { IgxIconModule } from '../../icon/public_api';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../../input-group/index';
 import { IgxFocusModule } from '../../directives/focus/focus.directive';

@@ -4,7 +4,7 @@ import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent } from './select.component';

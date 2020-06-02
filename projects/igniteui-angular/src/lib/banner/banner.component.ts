@@ -3,7 +3,7 @@ import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { AnimationSettings } from '../expansion-panel/expansion-panel.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
-import { IgxIconModule, IgxIconComponent } from '../icon/index';
+import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
 import { IToggleView } from '../core/navigation';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';

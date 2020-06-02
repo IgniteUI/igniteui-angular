@@ -4,7 +4,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxAvatarComponent, IgxAvatarType, IgxAvatarSize } from './avatar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';

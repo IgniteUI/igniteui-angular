@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 /**
