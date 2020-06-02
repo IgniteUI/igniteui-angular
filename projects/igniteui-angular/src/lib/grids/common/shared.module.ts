@@ -5,7 +5,7 @@ import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../../input-group/index';
+import { IgxInputGroupModule } from '../../input-group/public_api';
 import { IgxFocusModule } from '../../directives/focus/focus.directive';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxForOfModule } from '../../directives/for-of/for_of.directive';

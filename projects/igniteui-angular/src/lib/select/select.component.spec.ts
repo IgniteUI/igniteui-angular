@@ -5,7 +5,7 @@ import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveF
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';

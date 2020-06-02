@@ -4,7 +4,7 @@ import { IgxCalendarModule } from '../calendar/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CommonModule } from '@angular/common';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import {
     IgxDateRangeStartComponent, IgxDateRangeEndComponent,

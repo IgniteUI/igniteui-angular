@@ -6,7 +6,7 @@ import { IgxAutocompleteModule, IgxAutocompleteDirective, AutocompleteOverlaySet
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { IgxIconModule } from '../../icon/public_api';

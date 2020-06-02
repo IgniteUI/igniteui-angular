@@ -12,7 +12,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxInputGroupComponent } from '../../input-group';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 

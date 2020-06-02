@@ -2,7 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
-import { IgxInputDirective } from '../input-group';
+import { IgxInputDirective } from '../input-group/public_api';
 import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
 import { IgxChipComponent } from '../chips/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';

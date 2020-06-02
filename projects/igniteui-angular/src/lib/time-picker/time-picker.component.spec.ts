@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon/public_api';

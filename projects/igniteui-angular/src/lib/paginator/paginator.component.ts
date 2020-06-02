@@ -7,7 +7,7 @@ import { IgxSelectModule } from '../select/index';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 

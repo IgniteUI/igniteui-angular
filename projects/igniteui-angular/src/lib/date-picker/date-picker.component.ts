@@ -30,7 +30,7 @@ import {
     isDateInRanges
 } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/index';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
