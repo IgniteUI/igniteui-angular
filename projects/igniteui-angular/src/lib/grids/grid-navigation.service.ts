@@ -146,7 +146,7 @@ export class IgxGridNavigationService {
         const shift = event.shiftKey;
         const alt = event.altKey;
 
-        this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt);
+        this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt, event);
         if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
         !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
     }
@@ -171,7 +171,8 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1) {
+        const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
+        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.activeNode = { row: 0, column: 0 };
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
@@ -380,7 +381,7 @@ export class IgxGridNavigationService {
         }
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
-    protected performHeaderKeyCombination(column, key, shift, ctrl, alt) {
+    protected performHeaderKeyCombination(column, key, shift, ctrl, alt, event) {
         let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
         if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;

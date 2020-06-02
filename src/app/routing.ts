@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -23,7 +23,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
-import { SplitterSampleComponent } from './splitter/slitter.sample';
+import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';

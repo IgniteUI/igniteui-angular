@@ -421,7 +421,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('home', cell.nativeElement, true, false, false, true);
-            await wait(100);
+            await wait(150);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, '0');
@@ -434,7 +434,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('end', cell.nativeElement, true, false, false, true);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(499, '49');
