@@ -89,7 +89,7 @@ export * from './lib/slider/public_api';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
-export * from './lib/tabs/index';
+export * from './lib/tabs/public_api';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/public_api';
