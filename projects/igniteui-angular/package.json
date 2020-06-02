@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Ignite UI for Angular is a dependency-free Angular toolkit for building modern web apps",
     "author": "Infragistics",
-    "license": "Apache-2.0",
+    "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
         "url": "https://github.com/IgniteUI/igniteui-angular"
@@ -81,7 +81,7 @@
         "web-animations-js": "^2.3.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~9.1.510-beta.0"
+        "@igniteui/angular-schematics": "~9.1.510"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
