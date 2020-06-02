@@ -18,12 +18,18 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/public_api';
 import {
-    IgxDropDownModule,
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    IPositionStrategy,
+    IScrollStrategy,
+    OverlaySettings
+} from '../../services/public_api';
+import {
     IgxDropDownComponent,
-    ISelectionEventArgs,
-    IgxDropDownItemNavigationDirective
+    IgxDropDownItemNavigationDirective,
+    IgxDropDownModule,
+    ISelectionEventArgs
 } from '../../drop-down/public_api';
 import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';

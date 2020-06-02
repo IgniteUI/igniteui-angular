@@ -14,7 +14,11 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxCalendarModule } from '../calendar/public_api';
 import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
-import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs, HorizontalAlignment, VerticalAlignment } from '../services/public_api';
+import {
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs,
+    OverlayEventArgs
+} from '../services/public_api';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();

@@ -1,9 +1,24 @@
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import {
-    Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
-    Injector, OnInit, AfterViewInit, OnDestroy, Inject, Type
-
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    Inject,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    QueryList,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
