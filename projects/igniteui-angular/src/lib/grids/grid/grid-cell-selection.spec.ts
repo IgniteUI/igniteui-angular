@@ -19,7 +19,7 @@ import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,

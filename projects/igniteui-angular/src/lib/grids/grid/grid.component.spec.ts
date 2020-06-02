@@ -34,7 +34,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent,
@@ -566,7 +566,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - virtualization tests', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridTestComponent
@@ -631,7 +631,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - default rendering for rows and columns', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
@@ -1467,7 +1467,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent
@@ -1578,7 +1578,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
         let fix;
 
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridInsideIgxTabsComponent
@@ -1685,7 +1685,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - footer section', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomFooterComponent
@@ -1708,7 +1708,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
     describe('IgxGrid - with custom pagination template', () => {
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridWithCustomPaginationTemplateComponent
@@ -1741,7 +1741,7 @@ describe('IgxGrid Component Tests #grid', () => {
         let observer: MutationObserver;
 
         configureTestSuite();
-        beforeEach(async(() => {
+        beforeAll(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridPerformanceComponent

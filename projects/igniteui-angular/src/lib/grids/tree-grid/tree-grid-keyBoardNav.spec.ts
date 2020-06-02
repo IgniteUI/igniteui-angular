@@ -17,7 +17,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWithNoScrollsComponent,

@@ -14,7 +14,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,

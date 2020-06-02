@@ -19,7 +19,7 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
@@ -2856,6 +2856,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         const grid = fix.componentInstance.grid;
         grid.primaryKey = 'ID';
         grid.rowEditable = true;
+        await wait(DEBOUNCETIME);
         fix.detectChanges();
 
         let targetCell = grid.getCellByColumn(0, 'CompanyName');
@@ -2880,7 +2881,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
         // shift+ tab into last cell
         UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
-        await wait(100);
+        await wait(150);
         fix.detectChanges();
 
         targetCell = grid.getCellByColumn(0, 'PostalCode');
