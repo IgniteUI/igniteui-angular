@@ -38,11 +38,10 @@ module.exports = function (config) {
     junitReporter: {
         outputDir: ''
     },
-    port: 9875,
+    port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-
     browserSocketTimeout: 60000,
     restartOnFileChange: false,
     pingTimeout: 10000,
