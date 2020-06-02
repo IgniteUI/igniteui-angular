@@ -13,7 +13,7 @@ import {
     IgxDateRangeSeparatorDirective,
     IgxDateRangeInputsBaseComponent
 } from './date-range-picker-inputs.common';
-import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+import { IgxDateTimeEditorModule } from '../directives/date-time-editor/index';
 
 /**
  * @hidden
