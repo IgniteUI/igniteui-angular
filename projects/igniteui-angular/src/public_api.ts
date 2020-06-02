@@ -85,7 +85,7 @@ export * from './lib/navigation-drawer/public_api';
 export * from './lib/paginator/paginator.component';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
-export * from './lib/slider/index';
+export * from './lib/slider/public_api';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
