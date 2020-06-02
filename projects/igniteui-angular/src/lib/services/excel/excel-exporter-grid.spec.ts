@@ -17,7 +17,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
+import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

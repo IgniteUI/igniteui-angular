@@ -2,7 +2,7 @@ import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angul
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridRowComponent } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,

@@ -21,7 +21,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
-import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 
 const DEBOUNCE_TIME = 50;

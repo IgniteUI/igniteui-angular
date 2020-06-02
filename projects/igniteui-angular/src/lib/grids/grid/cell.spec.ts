@@ -10,7 +10,7 @@ import { PlatformUtil } from '../../core/utils';
 import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
-import { IgxGridCellComponent } from '../tree-grid';
+import { IgxGridCellComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
 

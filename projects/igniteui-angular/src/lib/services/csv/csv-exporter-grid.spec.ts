@@ -9,7 +9,7 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
+import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';

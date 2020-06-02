@@ -10,7 +10,7 @@ import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridTransaction } from '../tree-grid';
+import { IgxGridTransaction } from '../tree-grid/public_api';
 import { IgxTransactionService } from '../../services/public_api';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
