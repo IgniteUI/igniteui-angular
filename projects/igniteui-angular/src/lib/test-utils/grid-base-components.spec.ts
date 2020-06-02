@@ -15,7 +15,7 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 export class BasicGridComponent {
     public data = [];
 
-    @ViewChild(IgxGridComponent, { static: true })
+    @ViewChild(IgxGridComponent, { static: false })
     public grid: IgxGridComponent;
 }
 
@@ -150,7 +150,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    @ViewChild(IgxGridComponent, { static: true }) grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: false }) grid: IgxGridComponent;
     constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }

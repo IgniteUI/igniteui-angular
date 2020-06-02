@@ -1354,7 +1354,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     </igx-grid>`
 })
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
-    @ViewChild('gridCustomSelectors', { static: true })
+    @ViewChild('gridCustomSelectors', { static: false })
     public grid: IgxGridComponent;
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
@@ -1546,7 +1546,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: false })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
@@ -1591,7 +1591,7 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
     public width = '600px';
     public height = '600px';
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: false })
     public grid: IgxGridComponent;
 
     @ViewChild('dropArea', { read: TemplateRef, static: true })
@@ -1675,7 +1675,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
         '', ColumnDefinitions.productBasic)
 })
 export class GridWithUndefinedDataComponent implements OnInit {
-    @ViewChild(IgxGridComponent, { static: true })
+    @ViewChild(IgxGridComponent, { static: false})
     public grid: IgxGridComponent;
     public data;
     public perPage = 5;
@@ -1725,7 +1725,7 @@ export class GridWithUndefinedDataComponent implements OnInit {
     `
 })
 export class CollapsibleColumnGroupTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: false })
     grid: IgxGridComponent;
     public generalInfCollapsible;
     public generalInfExpanded;
@@ -1770,7 +1770,7 @@ export class CollapsibleColumnGroupTestComponent {
     `
 })
 export class CollapsibleGroupsTemplatesTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: false })
     grid: IgxGridComponent;
 
     @ViewChild('indicatorTemplate', { read: TemplateRef, static: false })
@@ -1791,7 +1791,7 @@ export class CollapsibleGroupsTemplatesTestComponent {
 })
 
 export class CollapsibleGroupsDynamicColComponent {
-    @ViewChild(IgxGridComponent, { static: true })
+    @ViewChild(IgxGridComponent, { static: false })
     public grid: IgxGridComponent;
 
     public columnGroups: Array<any>;
