@@ -8,7 +8,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IgxIconModule } from '../../icon/public_api';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
 
