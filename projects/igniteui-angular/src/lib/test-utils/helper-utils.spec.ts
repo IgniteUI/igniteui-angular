@@ -2,7 +2,7 @@ import { DebugElement, EventEmitter, NgZone, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxGridBaseDirective } from '../grids/index';
+import { IgxGridBaseDirective } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
 
 export function resizeObserverIgnoreError() {
