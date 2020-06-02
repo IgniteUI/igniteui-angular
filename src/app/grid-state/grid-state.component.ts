@@ -32,7 +32,7 @@ class MySummary extends IgxNumberSummaryOperand {
 
 export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public localData = employeesData;
-  public localData2 = this.generateDataUneven(100, 3);
+  public hierData = this.generateDataUneven(100, 3);
   public treeGridFlatData = TREEGRID_FLAT_DATA;
   public employees = EMPLOYEE_DATA;
   public gridId = 'grid1';
@@ -86,7 +86,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     { field: 'Age', header: 'Age', width: '110px', dataType: 'number', movable: true, sortable: true, filterable: true, hasSummary: true, summaries: MySummary, resizable: true},
     { field: 'RegistererDate', header: 'Registerer Date', width: '180px', dataType: 'date', movable: true, sortable: true, filterable: true, resizable: true },
     { field: 'IsActive', header: 'Is Active', width: '140px', dataType: 'boolean', groupable: true, movable: true, sortable: true, filterable: true }
-    // tslint:enable:max-line-length
   ];
 
   public treeGridColumns = [
@@ -96,6 +95,13 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
       { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string', hasSummary: false },
       { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true }
   ];
+
+  public hierGridColumns = [
+    { field: 'ID', label: 'ID', width: 200, resizable: true, sortable: true, filterable: true, pinned: true, dataType: 'number', hasSummary: true },
+    { field: 'ChildLevels', label: 'Child Levels', width: 200, resizable: true, sortable: true, filterable: true, groupable: true, dataType: 'number', hasSummary: true },
+    { field: 'ProductName', label: 'Product Name', width: 300, resizable: true, sortable: true, filterable: true, movable: true, dataType: 'string', hasSummary: false }
+  ];
+  // tslint:enable:max-line-length
 
   constructor(private router: Router) { }
 

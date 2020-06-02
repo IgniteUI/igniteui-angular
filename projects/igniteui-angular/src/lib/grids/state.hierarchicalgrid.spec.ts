@@ -14,16 +14,17 @@ import { IgxHierarchicalGridModule } from './hierarchical-grid/index';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 // tslint:disable:max-line-length
-describe('IgxHierarchicalGridState - input properties #grid', () => {
+describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
     beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridTestBaseComponent, IgxHierarchicalGridTestExpandedBaseComponent
+                IgxHierarchicalGridTestExpandedBaseComponent
             ],
             imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
         }).compileComponents();
@@ -89,25 +90,15 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
     });
 
     it('getState should return corect JSON string', () => {
-        fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}';
+        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[{"id":"igx-row-island-childData","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}}]}';
         fix.detectChanges();
 
-        const state = fix.componentInstance.state;
-        const gridState = state.getState();
-        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
-    });
-
-    xit('getState should return corect JSON string, when hGrid is initially expanded', () => {
-        fix.detectChanges();
-        const initialGridState = '{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"320px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"320px","header":"","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[{"id":"igx-row-island-childData","state":{"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col1","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col2","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col3","width":"136px","header":"","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}}]}';
         const state = fix.componentInstance.state;
         const gridState = state.getState();
         expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
     });
 
     it('getState should return corect IGridState object when using default options', () => {
-        fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fix.detectChanges();
         grid  = fix.componentInstance.hgrid;
         const state = fix.componentInstance.state;
@@ -139,7 +130,6 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
     });
 
     it('getState should return corect IGridState object when options are not default', () => {
-        fix = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
         grid = fix.componentInstance.hgrid;
@@ -186,11 +176,13 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
         const initialState = HelperFunctions.buildStateString(emptyFiltering, emptyFiltering, rowIslandId);
         const filtering = '"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"contains","isUnary":false,"iconName":"contains"},"fieldName":"ProductName","ignoreCase":true,"searchVal":"A0"}],"operator":0,"fieldName":"ProductName"}],"operator":0,"type":0}';
         const filteringState = HelperFunctions.buildStateString(filtering, filtering, rowIslandId);
+        const filteringStateObject = JSON.parse(filteringState) as IGridState;
+        filteringStateObject.columns = fix.componentInstance.childColumns;
 
         let gridState = state.getState(true, ['filtering', 'inheritance']);
         expect(gridState).toBe(initialState);
 
-        state.setState(filteringState);
+        state.setState(JSON.stringify(filteringStateObject));
         gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
@@ -212,6 +204,8 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
         const filteringState = HelperFunctions.buildStateString(filtering, emptyChildFiltering, rowIslandId);
 
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
+        filteringStateObject.columns = fix.componentInstance.childColumns;
+
         let gridState = state.getState(true, ['filtering', 'inheritance']);
         expect(gridState).toBe(initialState);
 
@@ -421,27 +415,33 @@ describe('IgxHierarchicalGridState - input properties #grid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    // it('setState should correctly restore grid columns state from string', () => {
-    //     // const fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
-    //     // fix.detectChanges();
-    //     const state = fix.componentInstance.state;
+    it('setState should correctly restore grid columns state from string', async() => {
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
 
-    //     const rowIslandId = 'igx-row-island-childData';
-    //     const rootGridColumns = '"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"","resizable":false,"searchable":true}]';
-    //     const childGridColumns = '"columns":[{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col1","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col2","width":"136px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"Col3","width":"136px","header":"","resizable":false,"searchable":true}]';
-    //     const initialState = HelperFunctions.buildStateString(rootGridColumns, childGridColumns, rowIslandId);
-    //     const newColumns = '"columns":[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"","resizable":false,"searchable":true}]';
-    //     const newColumnsState = HelperFunctions.buildStateString(newColumns, newColumns, rowIslandId);
+        const rowIslandId = 'igx-row-island-childData';
+        const rootGridColumns = '"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true}]';
+        const childGridColumns = '"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true}]';
+        const initialState = HelperFunctions.buildStateString(rootGridColumns, childGridColumns, rowIslandId);
+        const newColumns = '"columns":[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"Product Name","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"ID","resizable":false,"searchable":true}]';
+        const newColumnsState = HelperFunctions.buildStateString(newColumns, newColumns, rowIslandId);
 
-    //     let gridState = state.getState(true, ['columns', 'inheritance']);
-    //     expect(gridState).toBe(initialState);
+        let gridState = state.getState(true, ['columns', 'inheritance']);
+        expect(gridState).toBe(initialState);
 
-    //     state.setState(newColumnsState);
-    //     gridState = state.getState(false, ['columns', 'inheritance']) as IGridState;
-    //     HelperFunctions.verifyColumns(JSON.parse(newColumnsState).columns, gridState);
-    //     gridState = state.getState(true, ['columns', 'inheritance']);
-    //     expect(gridState).toBe(newColumnsState);
-    // });
+        state.setState(newColumnsState);
+        await wait();
+        fix.detectChanges();
+
+        gridState = state.getState(false, ['columns', 'inheritance']) as IGridState;
+        HelperFunctions.verifyColumns(JSON.parse(newColumnsState).columns, gridState);
+        // const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
+        // gridsCollection.forEach(childGrid => {
+        //     HelperFunctions.verifyColumns(childGrid.grid.columns, childGrid.state);
+        // });
+        // gridState = state.getState(true, ['columns', 'inheritance']);
+        // expect(gridState).toBe(newColumnsState);
+    });
 });
 
 class HelperFunctions {
@@ -554,11 +554,27 @@ class HelperFunctions {
         [hidden]="c.hidden">
     </igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
-            <igx-column field="Col1"></igx-column>
-            <igx-column field="Col2"></igx-column>
-            <igx-column field="Col3"></igx-column>
+        <igx-column *ngFor="let c of childColumns"
+            [width]="c.width"
+            [sortable]="c.sortable"
+            [movable]="c.movable"
+            [editable]="c.editable"
+            [sortingIgnoreCase]="c.sortingIgnoreCase"
+            [filteringIgnoreCase]="c.sortingIgnoreCase"
+            [maxWidth]="c.maxWidth"
+            [hasSummary]="c.hasSummary"
+            [filterable]="c.filterable"
+            [searchable]="c.searchable"
+            [resizable]="c.resizable"
+            [headerClasses]="c.headerClasses"
+            [headerGroupClasses]="c.headerGroupClasses"
+            [groupable]="c.groupable"
+            [field]="c.field"
+            [header]="c.header"
+            [dataType]="c.dataType"
+            [pinned]="c.pinned"
+            [hidden]="c.hidden">
+        </igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
@@ -571,8 +587,17 @@ export class IgxHierarchicalGridTestBaseComponent {
         // tslint:disable:max-line-length
         { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
         { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, movable: true, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true }
+    ];
+
+    public childColumns: any[] = [
+        { field: 'ID', header: 'Product ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
+        { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, movable: true, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true },
+        { field: 'Col1', header: 'Col 1', width: '140px', dataType: 'boolean', pinned: false, movable: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
+        { field: 'Col2', header: 'Col 2', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
+        { field: 'Col3', header: 'Col 3', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
         // tslint:enable:max-line-length
-      ];
+    ];
+
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
@@ -589,14 +614,49 @@ export class IgxHierarchicalGridTestBaseComponent {
     template: `
     <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" [paging]="true" perPage="5" primaryKey="ID"
      [autoGenerate]="false" [height]="'800px'" [width]="'800px'" rowSelection="multiple" cellSelection="multiple">
-     <igx-column field="ID" dataType="number"></igx-column>
-     <igx-column field="ProductName"></igx-column>
+        <igx-column *ngFor="let c of columns"
+            [width]="c.width"
+            [sortable]="c.sortable"
+            [movable]="c.movable"
+            [editable]="c.editable"
+            [sortingIgnoreCase]="c.sortingIgnoreCase"
+            [filteringIgnoreCase]="c.sortingIgnoreCase"
+            [maxWidth]="c.maxWidth"
+            [hasSummary]="c.hasSummary"
+            [filterable]="c.filterable"
+            [searchable]="c.searchable"
+            [resizable]="c.resizable"
+            [headerClasses]="c.headerClasses"
+            [headerGroupClasses]="c.headerGroupClasses"
+            [groupable]="c.groupable"
+            [field]="c.field"
+            [header]="c.header"
+            [dataType]="c.dataType"
+            [pinned]="c.pinned"
+            [hidden]="c.hidden">
+        </igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [paging]="true" perPage="5" primaryKey="ID">
-            <igx-column field="ID" dataType="number"></igx-column>
-            <igx-column field="ProductName"></igx-column>
-            <igx-column field="Col1"></igx-column>
-            <igx-column field="Col2"></igx-column>
-            <igx-column field="Col3"></igx-column>
+            <igx-column *ngFor="let c of childColumns"
+                [width]="c.width"
+                [sortable]="c.sortable"
+                [movable]="c.movable"
+                [editable]="c.editable"
+                [sortingIgnoreCase]="c.sortingIgnoreCase"
+                [filteringIgnoreCase]="c.sortingIgnoreCase"
+                [maxWidth]="c.maxWidth"
+                [hasSummary]="c.hasSummary"
+                [filterable]="c.filterable"
+                [searchable]="c.searchable"
+                [resizable]="c.resizable"
+                [headerClasses]="c.headerClasses"
+                [headerGroupClasses]="c.headerGroupClasses"
+                [groupable]="c.groupable"
+                [field]="c.field"
+                [header]="c.header"
+                [dataType]="c.dataType"
+                [pinned]="c.pinned"
+                [hidden]="c.hidden">
+            </igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [paging]="true" perPage="5">
             </igx-row-island>
         </igx-row-island>
@@ -610,6 +670,22 @@ export class IgxHierarchicalGridTestExpandedBaseComponent {
         sorting: false,
         groupBy: true
     };
+
+    public columns: any[] = [
+        // tslint:disable:max-line-length
+        { field: 'ID', header: 'ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
+        { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, movable: true, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true }
+    ];
+
+    public childColumns: any[] = [
+        { field: 'ID', header: 'Product ID', width: '150px', dataType: 'number', pinned: true, movable: true, sortable: true, filterable: true, groupable: false, hasSummary: false, hidden: false, maxWidth: '300px', searchable: false, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: 'testCss', headerGroupClasses: '', resizable: true },
+        { field: 'ProductName', header: 'Product Name', width: '150px', dataType: 'string', pinned: false, movable: true, sortable: true, filterable: true, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: false, headerClasses: '', headerGroupClasses: '', resizable: true },
+        { field: 'Col1', header: 'Col 1', width: '140px', dataType: 'boolean', pinned: false, movable: false, sortable: false, filterable: true, groupable: false, hasSummary: true, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: true },
+        { field: 'Col2', header: 'Col 2', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
+        { field: 'Col3', header: 'Col 3', width: '110px', dataType: 'date', pinned: false, movable: false, sortable: true, filterable: false, groupable: true, hasSummary: false, hidden: false, maxWidth: '300px', searchable: true, sortingIgnoreCase: true, filteringIgnoreCase: true, editable: true, headerClasses: '', headerGroupClasses: '', resizable: false },
+        // tslint:enable:max-line-length
+    ];
+
     @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;

@@ -64,52 +64,69 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
-                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="localData2" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid" igxGridState displayDensity="cosy"
-                    [rowSelection]="true" [autoGenerate]="false" [allowFiltering]='true'  [paging]="true" [rowDraggable]="true" primaryKey="ID"
-                    [height]="'600px'" [width]="'100%'" #hGrid>
-                    <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
-                    <igx-column-group header="Information">
-                        <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
-                        <igx-column field="ProductName" hasSummary='true'></igx-column>
-                    </igx-column-group>
-                    <ng-template igxHeaderCollapsedIndicator>
-                        <igx-icon role="button" fontSet="material">add</igx-icon>
-                    </ng-template>
-                    <ng-template igxHeaderExpandedIndicator>
-                        <igx-icon role="button" fontSet="material">remove</igx-icon>
-                    </ng-template>
-                    <ng-template igxRowExpandedIndicator>
-                        <igx-icon role="button" fontSet="material">remove</igx-icon>
-                    </ng-template>
-                    <ng-template igxRowCollapsedIndicator>
-                        <igx-icon role="button" fontSet="material">add</igx-icon>
-                    </ng-template>
+                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="hierData" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' igxGridState
+                    displayDensity="cosy" [rowSelection]="true" [autoGenerate]="false" [allowFiltering]='true' [paging]="true" primaryKey="ID"
+                    [height]="'1000px'" [width]="'100%'" #hGrid>
+
+                    <igx-column *ngFor="let c of hierGridColumns"
+                        [sortable]="c.sortable"
+                        [movable]="c.movable"
+                        [editable]="true"
+                        [hasSummary]="c.hasSummary"
+                        [filterable]="c.filterable"
+                        [groupable]="c.groupable"
+                        [field]="c.field"
+                        [header]="c.header"
+                        [dataType]="c.dataType"
+                        [pinned]="c.pinned"
+                        [hidden]="c.hidden">
+                    </igx-column>
 
                     <igx-row-island primaryKey="ID" [key]="'childData'" 
                         [height]='"1200px"' [showExpandAll]='true' [autoGenerate]="false" [allowFiltering]='true' rowSelection='multiple' #layout1>
-                            <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
-                            <igx-column-group header="Information2">
-                                <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
-                                <igx-column field="ProductName" [resizable]="true" [groupable]='true'></igx-column>
-                            </igx-column-group>
+                        <igx-column *ngFor="let c of hierGridColumns"
+                            [sortable]="c.sortable"
+                            [movable]="c.movable"
+                            [editable]="true"
+                            [hasSummary]="c.hasSummary"
+                            [filterable]="c.filterable"
+                            [groupable]="c.groupable"
+                            [field]="c.field"
+                            [header]="c.header"
+                            [dataType]="c.dataType"
+                            [pinned]="c.pinned"
+                            [hidden]="c.hidden">
+                        </igx-column>
 
                         <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false" rowSelection='true' [allowFiltering]='true' >
-                                <igx-column field="ID" [hasSummary]='true'></igx-column>
-                                <igx-column-group header="Information3">
-                                    <igx-column [resizable]="true" field="ChildLevels"></igx-column>
-                                    <igx-column field="ProductName"></igx-column>
-                                </igx-column-group>
+                            <igx-column *ngFor="let c of hierGridColumns"
+                                [sortable]="c.sortable"
+                                [movable]="c.movable"
+                                [editable]="true"
+                                [hasSummary]="c.hasSummary"
+                                [filterable]="c.filterable"
+                                [groupable]="c.groupable"
+                                [field]="c.field"
+                                [header]="c.header"
+                                [dataType]="c.dataType"
+                                [pinned]="c.pinned"
+                                [hidden]="c.hidden">
+                            </igx-column>
 
                                 <igx-row-island primaryKey="ID" [key]="'childData'" [autoGenerate]="false" rowSelection='true' [allowFiltering]='true'>
-                                    <igx-column field="ID" [hasSummary]='true'></igx-column>
-                                    <igx-column-group header="Information4">
-                                        <igx-column field="ChildLevels"></igx-column>
-                                        <igx-column field="ProductName"></igx-column>
-                                    </igx-column-group>
-                                </igx-row-island>
-                                <igx-row-island primaryKey="ProductName" [key]="'childData2'" [autoGenerate]="false">
-                                    <igx-column field="ChildLevels" [groupable]='true' [hasSummary]='true'></igx-column>
-                                    <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
+                                    <igx-column *ngFor="let c of hierGridColumns"
+                                        [sortable]="c.sortable"
+                                        [movable]="c.movable"
+                                        [editable]="true"
+                                        [hasSummary]="c.hasSummary"
+                                        [filterable]="c.filterable"
+                                        [groupable]="c.groupable"
+                                        [field]="c.field"
+                                        [header]="c.header"
+                                        [dataType]="c.dataType"
+                                        [pinned]="c.pinned"
+                                        [hidden]="c.hidden">
+                                    </igx-column>
                                 </igx-row-island>
                         </igx-row-island>
                     </igx-row-island>

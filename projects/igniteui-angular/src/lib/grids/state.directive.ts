@@ -167,7 +167,7 @@ export class IgxGridStateDirective {
     public getState(serialize = true, features?: string | string[]): IGridState | string  {
         let state: IGridState | string;
         this.currGrid = this.grid;
-        state = this.buildState(features) as IGridState;
+        this.state = state = this.buildState(features) as IGridState;
         if (serialize) {
             state = JSON.stringify(state, this.stringifyCallback) as string;
         }
@@ -355,7 +355,7 @@ export class IgxGridStateDirective {
      * Helper method that creates a new array with the current grid columns.
      */
     private getColumns(): IGridState {
-        const gridColumns: IColumnState[] = this.currGrid.columns.sort(this.sortByVisibleIndex).map((c) => {
+        const gridColumns: IColumnState[] = this.currGrid.columns.map((c) => {
             return {
                 pinned: c.pinned,
                 sortable: c.sortable,
@@ -591,11 +591,6 @@ export class IgxGridStateDirective {
         } else {
             this.features.push(features);
         }
-    }
-
-    private sortByVisibleIndex(colA: IgxColumnComponent, colB: IgxColumnComponent) {
-          const a = colA.visibleIndex, b = colB.visibleIndex;
-          return a > b ? 1 : a < b ? -1 : 0;
     }
 
     /**
