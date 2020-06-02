@@ -24,7 +24,7 @@ import { IgxDatePickerModule } from '../../../date-picker/date-picker.component'
 import { IgxIconModule } from '../../../icon/index';
 import { IgxRippleModule } from '../../../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../../../input-group/input-group.component';
-import { IgxDropDownModule } from '../../../drop-down/index';
+import { IgxDropDownModule } from '../../../drop-down/public_api';
 import { IgxForOfModule } from '../../../directives/for-of/for_of.directive';
 import { IgxCheckboxModule } from '../../../checkbox/checkbox.component';
 import { IgxFilterModule } from '../../../directives/filter/filter.directive';

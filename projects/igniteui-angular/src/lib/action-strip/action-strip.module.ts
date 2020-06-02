@@ -4,7 +4,7 @@ import { IgxGridPinningActionsComponent } from './grid-actions/grid-pinning-acti
 import { IgxGridEditingActionsComponent } from './grid-actions/grid-editing-actions.component';
 import { IgxGridActionsBaseDirective } from './grid-actions/grid-actions-base.directive';
 import { CommonModule } from '@angular/common';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';

@@ -1,12 +1,11 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxChipComponent } from '../../chips';
+import { IgxChipComponent } from '../../chips/public_api';
 import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,

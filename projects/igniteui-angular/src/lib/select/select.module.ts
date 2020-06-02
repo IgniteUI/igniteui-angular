@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IgxIconModule } from '../icon/index';
-import { IgxDropDownModule } from './../drop-down/index';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from './../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/input-group.component';

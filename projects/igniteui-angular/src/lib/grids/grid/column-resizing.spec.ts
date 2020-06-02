@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAvatarModule } from '../../avatar/avatar.component';
-import { Calendar } from '../../calendar';
+import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';

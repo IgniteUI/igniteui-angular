@@ -8,7 +8,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { IgxDropDownItemBaseDirective } from '../drop-down/index';
+import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';

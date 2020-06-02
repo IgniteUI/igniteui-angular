@@ -5,7 +5,7 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxBannerComponent, IgxBannerModule } from './banner.component';
 import { IgxCardModule } from '../card/card.component';
 import { IgxIconModule } from '../icon';
-import { IgxExpansionPanelModule } from '../expansion-panel';
+import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';

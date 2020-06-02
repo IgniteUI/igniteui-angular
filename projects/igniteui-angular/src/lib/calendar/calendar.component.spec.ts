@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap,
     monthRange, weekDay, WEEKDAYS
-} from './index';
+} from './public_api';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 

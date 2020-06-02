@@ -4,7 +4,7 @@ import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputState } from '../input-group/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/index';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
 /**
  * Represents a range between two dates.

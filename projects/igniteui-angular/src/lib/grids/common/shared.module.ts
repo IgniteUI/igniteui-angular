@@ -19,7 +19,7 @@ import { IgxDragDropModule } from '../../directives/drag-drop/drag-drop.directiv
 import { IgxButtonGroupModule } from '../../buttonGroup/buttonGroup.component';
 import { IgxProgressBarModule } from '../../progressbar/progressbar.component';
 import { IgxSelectModule } from '../../select/select.module';
-import { IgxDropDownModule } from '../../drop-down/index';
+import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxGridStateModule } from '../state.directive';
 
 

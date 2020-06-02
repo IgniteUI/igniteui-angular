@@ -7,7 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group';
-import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down';
+import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { IgxIconModule } from '../../icon';
 import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services';

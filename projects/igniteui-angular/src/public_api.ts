@@ -29,7 +29,7 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip/tooltip.directive';
-export * from './lib/directives/date-time-editor/index';
+export * from './lib/directives/date-time-editor/public_api';
 
 /**
  * Data operations
@@ -52,20 +52,20 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
-export * from './lib/action-strip/index';
+export * from './lib/action-strip/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/banner.component';
 export * from './lib/buttonGroup/buttonGroup.component';
-export * from './lib/calendar/index';
+export * from './lib/calendar/public_api';
 export * from './lib/card/card.component';
 export * from './lib/carousel/carousel.component';
 export * from './lib/checkbox/checkbox.component';
-export * from './lib/chips/index';
-export * from './lib/combo/index';
+export * from './lib/chips/public_api';
+export * from './lib/combo/public_api';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
-export * from './lib/drop-down/index';
+export * from './lib/drop-down/public_api';
 export * from './lib/grids/hiding/hiding.module';
 export * from './lib/grids/common/enums';
 export * from './lib/grids/common/events';
@@ -79,7 +79,7 @@ export * from './lib/grids/columns/column-layout.component';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
-export * from './lib/expansion-panel/index';
+export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
 export * from './lib/paginator/paginator.component';
@@ -96,7 +96,7 @@ export * from './lib/select/index';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
-export * from './lib/date-range-picker/index';
+export * from './lib/date-range-picker/public_api';
 
 
 /**

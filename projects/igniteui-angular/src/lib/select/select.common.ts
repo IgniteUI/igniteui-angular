@@ -1,4 +1,4 @@
-import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from '../drop-down';
+import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { OverlaySettings } from '../services';
 import { IgxInputDirective } from '../input-group';
 

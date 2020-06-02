@@ -28,7 +28,7 @@ import {
     IgxCalendarSubheaderTemplateDirective,
     WEEKDAYS,
     isDateInRanges
-} from '../calendar/index';
+} from '../calendar/public_api';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/index';
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';

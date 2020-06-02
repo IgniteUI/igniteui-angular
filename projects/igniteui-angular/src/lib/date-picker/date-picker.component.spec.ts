@@ -11,7 +11,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxCalendarModule } from '../calendar';
+import { IgxCalendarModule } from '../calendar/public_api';
 import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
 import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs, HorizontalAlignment, VerticalAlignment } from '../services';

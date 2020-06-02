@@ -11,7 +11,7 @@ import {
 import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
+import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/index';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';

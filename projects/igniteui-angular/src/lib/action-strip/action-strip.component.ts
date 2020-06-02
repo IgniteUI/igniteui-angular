@@ -13,7 +13,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IgxDropDownComponent } from '../drop-down';
+import { IgxDropDownComponent } from '../drop-down/public_api';
 import { CloseScrollStrategy, OverlaySettings } from '../services';
 
 @Directive({
