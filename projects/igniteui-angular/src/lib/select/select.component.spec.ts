@@ -12,7 +12,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { IgxSelectModule } from './select.module';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';

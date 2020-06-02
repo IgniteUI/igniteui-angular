@@ -10,7 +10,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group/p
 import { IgxDropDownModule, IgxDropDownComponent, IgxDropDownItemNavigationDirective } from '../../drop-down/public_api';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { IgxIconModule } from '../../icon/public_api';
-import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services';
+import { ConnectedPositioningStrategy, VerticalAlignment, HorizontalAlignment } from '../../services/public_api';
 
 const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_DROPDOWNLIST_SCROLL = 'igx-drop-down__list-scroll';

@@ -18,7 +18,7 @@ import {
     IgxOverlayService,
     AbsoluteScrollStrategy,
     AutoPositionStrategy
-} from '../../../services/index';
+} from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import {
     IFilteringOperation,

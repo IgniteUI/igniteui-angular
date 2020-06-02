@@ -102,7 +102,7 @@ export * from './lib/date-range-picker/public_api';
 /**
  * Exporter services, classes, interfaces and enums
  */
-export * from './lib/services/index';
+export * from './lib/services/public_api';
 export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';

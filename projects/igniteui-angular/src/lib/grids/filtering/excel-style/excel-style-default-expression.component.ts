@@ -15,7 +15,7 @@ import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-do
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/public_api';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
+import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/public_api';
 import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';

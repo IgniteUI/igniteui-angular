@@ -42,7 +42,7 @@ import { CancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils'
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
-import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/index';
+import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/public_api';
 import {
     DateRange,
     IgxDateRangeEndComponent,

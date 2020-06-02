@@ -47,7 +47,7 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy,
     ContainerPositionStrategy
-} from '../services/index';
+} from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
@@ -61,7 +61,7 @@ import {
     FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
 } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { Transaction, TransactionType, TransactionService, State } from '../services/index';
+import { Transaction, TransactionType, TransactionService, State } from '../services/public_api';
 import {
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective,

@@ -22,7 +22,7 @@ import { IgxHierarchicalTransactionService } from '../../services/transaction/ig
 import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../grid';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { HierarchicalTransaction, TransactionType } from '../../services';
+import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';

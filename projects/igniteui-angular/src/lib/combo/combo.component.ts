@@ -30,7 +30,7 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/inpu
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services/public_api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';

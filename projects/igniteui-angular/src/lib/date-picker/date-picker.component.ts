@@ -42,7 +42,7 @@ import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
     OverlayCancelableEventArgs
-} from '../services/index';
+} from '../services/public_api';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';

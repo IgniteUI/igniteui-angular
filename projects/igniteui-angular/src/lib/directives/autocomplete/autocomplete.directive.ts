@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/index';
+import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/public_api';
 import {
     IgxDropDownModule,
     IgxDropDownComponent,

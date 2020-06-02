@@ -19,7 +19,7 @@ import { GridBaseAPIService } from './api.service';
 import {
     getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil
 } from '../core/utils';
-import { State } from '../services/index';
+import { State } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';

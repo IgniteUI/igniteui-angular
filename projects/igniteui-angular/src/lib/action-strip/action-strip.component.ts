@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownComponent } from '../drop-down/public_api';
-import { CloseScrollStrategy, OverlaySettings } from '../services';
+import { CloseScrollStrategy, OverlaySettings } from '../services/public_api';
 
 @Directive({
     selector: '[igxActionStripMenuItem]'
