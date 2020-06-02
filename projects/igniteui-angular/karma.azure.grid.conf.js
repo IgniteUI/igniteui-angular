@@ -42,13 +42,13 @@ module.exports = function (config) {
     colors: false,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    failOnEmptyTestSuite: false,
     browserSocketTimeout: 80000,
     browsers: ['ChromeHeadlessNoSandbox'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu']
+        flags: ['--no-sandbox', '--disable-gpu'],
+        debug: false
       }
     },
     singleRun: true
