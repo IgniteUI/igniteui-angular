@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, async, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +19,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid';
+import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
 import { GridSelectionMode } from '../common/enums';

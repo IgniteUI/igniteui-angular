@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
