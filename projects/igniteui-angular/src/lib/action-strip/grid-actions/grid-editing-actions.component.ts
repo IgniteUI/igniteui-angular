@@ -1,5 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxGridActionsBaseDirective } from './grid-actions-base.directive';
+import { showMessage } from '../../core/deprecateDecorators';
 
 @Component({
     selector: 'igx-grid-editing-actions',
@@ -15,6 +16,8 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
      */
     @HostBinding('class.igx-action-strip__editing-actions')
     public cssClass = 'igx-action-strip__editing-actions';
+
+    private isMessageShown = false;
 
     /**
      * Enter row or cell edit mode depending the grid rowEditable option
@@ -33,6 +36,11 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const firstEditable = row.cells.filter(cell => cell.editable)[0];
         const grid = row.grid;
+        if (!grid.hasEditableColumn) {
+            this.isMessageShown = showMessage(
+                'The grid should be editable in order to use IgxGridEditingActionsComponent',
+                this.isMessageShown);
+        }
         // be sure row is in view
         if (grid.rowList.filter(r => r === row).length !== 0) {
             grid.crudService.begin(firstEditable);
