@@ -5,7 +5,7 @@
     </div>
 
     <div class="igx-grid__group-content" #groupContent>
-        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow, column: column }">
         </ng-container>
     </div>
 

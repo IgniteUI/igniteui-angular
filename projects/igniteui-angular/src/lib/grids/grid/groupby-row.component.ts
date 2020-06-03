@@ -15,6 +15,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { GridType } from '../common/grid.interface';
+import { IgxColumnComponent } from '../columns/column.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -202,10 +203,20 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
+     * Returns a reference to the `IgxColumnComponent` based on which the grouping is done;
+     * ```typescript
+     * this.grid1.rowList.first.column;
+     * ```
+     */
+    get column(): IgxColumnComponent {
+        return this.grid.getColumnByName(this.groupRow.expression.fieldName);
+    }
+
+    /**
      * @hidden
      */
     get dataType(): any {
-        const column = this.grid.getColumnByName(this.groupRow.expression.fieldName);
+        const column = this.column;
         return (column && column.dataType) || DataType.String;
     }
 }

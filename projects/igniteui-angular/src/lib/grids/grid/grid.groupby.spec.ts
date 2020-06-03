@@ -530,7 +530,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const grRow of groupRows) {
             const elem = grRow.groupContent.nativeElement;
             const grVal = grRow.groupRow.value === null ? '' : grRow.groupRow.value.toString();
-            const expectedText = 'Total items with value:' + grVal +
+            const expectedText = 'Grouping by "Is it Released". ' +
+                'Total items with value:' + grVal +
                 ' are ' + grRow.groupRow.records.length;
             expect(elem.innerText.trim(['\n', '\r', ' '])).toEqual(expectedText);
             const expander = grRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
@@ -2690,9 +2691,9 @@ export class GroupableGridComponent extends DataParent {
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Downloads'" [header]="'Downloads'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
-            <ng-template igxGroupByRow let-groupRow>
-                <span>Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
+            <igx-column [field]="'Released'" [header]="'Is it Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <ng-template igxGroupByRow let-groupRow let-column="column">
+                <span>Grouping by "{{column.header}}". Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
             </ng-template>
             <ng-template igxRowExpandedIndicator let-groupRow>
                 <span>EXPANDED</span>
