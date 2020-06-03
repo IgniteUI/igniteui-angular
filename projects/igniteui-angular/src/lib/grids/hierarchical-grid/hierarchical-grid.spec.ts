@@ -28,7 +28,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach( fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -334,6 +334,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
+        fixture.detectChanges();
+        await wait(30);
         fixture.detectChanges();
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
