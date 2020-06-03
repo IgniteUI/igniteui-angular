@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, Type, DebugElement, NgZone } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './index';
