@@ -143,6 +143,7 @@ private resolver;
         this.hGrid.childRow =  this;
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
+        this.hGrid.rootGrid.cdr.detectChanges();
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,
