@@ -491,18 +491,19 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrids[0].dataRowList.first.cells.first.value).toEqual('00');
         }));
 
-        it('should allow scrolling to the last row after page size has been changed and rows are expanded.', (async () => {
+        it('should allow scrolling to the last row after page size has been changed and rows are expanded.', fakeAsync(() => {
             /* it's better to avoid scrolling and only check for scrollbar availability */
             /* scrollbar doesn't update its visibility in fakeAsync tests */
             hierarchicalGrid.perPage = 20;
             hierarchicalGrid.paging = true;
             hierarchicalGrid.height = '800px';
             fixture.componentInstance.rowIsland.height = '200px';
+            tick();
             fixture.detectChanges();
             expect(hierarchicalGrid.hasVerticalScroll()).toBeTruthy();
 
             hierarchicalGrid.perPage = 5;
-            await wait(DEBOUNCE_TIME);
+            tick(DEBOUNCE_TIME);
             fixture.detectChanges();
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
 
@@ -510,14 +511,16 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // expand 1st row
             hierarchicalGrid.expandRow(dataRows[0].rowID);
-            await wait(DEBOUNCE_TIME);
+            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
             expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             // expand 3rd row
             hierarchicalGrid.expandRow(dataRows[3].rowID);
-            await wait(DEBOUNCE_TIME);
+            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
             expect(hierarchicalGrid.getRowByIndex(4) instanceof IgxChildGridRowComponent).toBeTruthy();
         }));
 
@@ -1027,10 +1030,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 5;
             hierarchicalGrid.height = '700px';
+            tick();
             fixture.detectChanges();
             const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
             // pin the first row
             hierarchicalGrid.getRowByIndex(0).pin();
+            tick();
             fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(6);
@@ -1041,6 +1046,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // pin the second row
             hierarchicalGrid.getRowByIndex(2).pin();
+            tick();
             fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(7);
@@ -1051,6 +1057,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // expand the first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(8);
             expect(hierarchicalGrid.perPage).toEqual(5);
