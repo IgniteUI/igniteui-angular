@@ -10,7 +10,7 @@
         <div class="remote-data-loading-template-small"></div>
     </ng-template>
 
-    <igx-hierarchical-grid #hGrid [primaryKey]='"ProductID"' [height]="'500px'" [width]="'100%'" [autoGenerate]='false' (onDataPreLoad)="handlePreLoad($event)">
+    <igx-hierarchical-grid [data]='gridData | gridHierarchicalRemote:hGrid:hGrid.expansionStates:totalCount' #hGrid [primaryKey]='"ProductID"' [height]="'500px'" [width]="'100%'" [autoGenerate]='false' (onDataPreLoad)="handlePreLoad($event)">
         <igx-column [field]="'ProductID'" [sortable]="true"></igx-column>
         <igx-column [field]="'ProductName'" [sortable]="true"></igx-column>
         <igx-column [field]="'UnitPrice'" dataType="number" [sortable]="true"></igx-column>

@@ -127,6 +127,7 @@ import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sampl
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { IgxGridHierarchicalRemotePipe } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 
 const components = [
     ActionStripSampleComponent,
@@ -242,7 +243,8 @@ const components = [
     AboutComponent,
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
-    GridRemotePagingSampleComponent
+    GridRemotePagingSampleComponent,
+    IgxGridHierarchicalRemotePipe
 ];
 
 @NgModule({

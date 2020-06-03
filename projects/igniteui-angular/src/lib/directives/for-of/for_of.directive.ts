@@ -320,7 +320,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected get isRemote(): boolean {
+    public get isRemote(): boolean {
         return this.totalItemCount !== null;
     }
 

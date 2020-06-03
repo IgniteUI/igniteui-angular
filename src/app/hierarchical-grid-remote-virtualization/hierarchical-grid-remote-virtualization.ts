@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, PipeTransform, Pipe } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -16,6 +16,8 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
 
     public selectionMode;
     remoteData = [];
+    gridData = [];
+    totalCount:number;
     primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
         { name: 'OrderID', type: 'number', level: 1 },
@@ -57,7 +59,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
                   { "OrderID": 3, "Sequence": 2}
                 ];
               });
-            this.hGrid.data = data['value'];
+            this.gridData = data['value'];
             
             this.hGrid.isLoading = false;
         });
@@ -91,9 +93,69 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
                     { "OrderID": 3, "Sequence": 2}
                   ];
                 });
-            this.hGrid.verticalScrollContainer.totalItemCount = data['@odata.count'];
-            this.hGrid.data = data['value'];
+            this.totalCount = data['@odata.count'];
+            this.gridData = data['value'];
             this.hGrid.isLoading = false;
         });
+    }
+}
+
+
+@Pipe({
+    name: 'gridHierarchicalRemote',
+    pure: true
+})
+export class IgxGridHierarchicalRemotePipe implements PipeTransform {
+    public cachedData = [];
+    public transform(
+        collection: any,
+        grid: IgxHierarchicalGridComponent,
+        state: any,
+        totalDataRecordsCount: number
+        ): any[] {
+
+        console.log('hit');
+        const childKeys = grid.childLayoutKeys;
+        if (childKeys.length === 0) {
+            return collection;
+        }
+        const virtualizationState = grid.virtualizationState;
+
+        const primaryKey = grid.primaryKey;
+        const result = this.addHierarchy(grid, collection, state, primaryKey, childKeys);
+        const childRecsBeforeIndex = this.cachedData.filter((x, index) => grid.isChildGridRecord(x) && index<=virtualizationState.startIndex);
+        let dataUpdateStartIndex = virtualizationState.startIndex + childRecsBeforeIndex.length;
+        this._updateCachedData(result, dataUpdateStartIndex);
+        const size = virtualizationState.chunkSize || 10;
+        const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));        
+        grid.verticalScrollContainer.totalItemCount = totalDataRecordsCount + allChildRecords.length;
+        const data = this.cachedData.slice(virtualizationState.startIndex, virtualizationState.startIndex + size);
+        if(!data[0]){
+            data[0]={};
+        }
+        return data;
+    }
+
+    private _updateCachedData(data: any, startIndex: number) {
+        for (let i = 0; i < data.length; i++) {
+            this.cachedData[i + startIndex] = data[i];
+        }
+    }
+
+    public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[]): T[] {
+        const result = [];
+
+        data.forEach((v) => {
+            result.push(v);
+            const childGridsData = {};
+            childKeys.forEach((childKey) => {
+                const childData = v[childKey] ? v[childKey] : null;
+                childGridsData[childKey] = childData;
+            });
+            if (grid.gridAPI.get_row_expansion_state(v)) {
+                result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData: childGridsData});
+            }
+        });
+        return result;
     }
 }
