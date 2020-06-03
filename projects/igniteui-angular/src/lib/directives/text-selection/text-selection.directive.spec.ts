@@ -4,7 +4,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTextSelectionModule} from './text-selection.directive';
+import { IgxTextSelectionModule } from './text-selection.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -20,7 +20,7 @@ describe('IgxSelection', () => {
         });
     }));
 
-    it('Should select the text which is into the input', async() => {
+    it('Should select the text which is into the input', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
@@ -34,7 +34,7 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Should select the text when the input is clicked', async() => {
+    it('Should select the text when the input is clicked', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 
@@ -52,11 +52,15 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Shouldn\'t make a selection when the state is set to false', () => {
+    it('Shouldn\'t make a selection when the state is set to false', async () => {
         const template = ` <input type="text" [igxTextSelection]="false" #select="igxTextSelection"
             (click)="select.trigger()" value="Some custom value!" />`;
 
-        TestBed.overrideTemplateUsingTestingModule(TriggerTextSelectionOnClickComponent, template);
+        TestBed.overrideComponent(TriggerTextSelectionOnClickComponent, {
+            set: {
+                template
+            }
+        });
 
         TestBed.compileComponents().then(() => {
             const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
@@ -81,7 +85,7 @@ describe('IgxSelection', () => {
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
         `
 })
-class TriggerTextSelectionComponent {}
+class TriggerTextSelectionComponent { }
 
 @Component({
     template:
@@ -89,4 +93,4 @@ class TriggerTextSelectionComponent {}
             <input type="text" [igxTextSelection] #select="igxTextSelection" (click)="select.trigger()" value="Some custom value!" />
         `
 })
-class TriggerTextSelectionOnClickComponent {}
+class TriggerTextSelectionOnClickComponent { }

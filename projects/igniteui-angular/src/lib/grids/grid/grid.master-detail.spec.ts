@@ -3,7 +3,7 @@ import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -42,11 +42,12 @@ describe('IgxGrid Master Detail #grid', () => {
     }));
 
     describe('Basic', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-        }));
+            await wait();
+        });
 
         it('Should render an expand icon for all rows', () => {
             const expandIcons = grid.rowList.filter((row) => {
@@ -98,7 +99,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
-            checkbox state, etc. after scrolling them in and out of view.`, (async() => {
+            checkbox state, etc. after scrolling them in and out of view.`, (async () => {
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
             fix.detectChanges();
 
@@ -175,19 +176,18 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
-            checkbox state, etc. after scrolling them in and out of view.`, (async() => {
-
+            checkbox state, etc. after scrolling them in and out of view.`, (async () => {
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
             const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
 
             grid.navigateTo(26);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.last);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
@@ -246,7 +246,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(thirdDetail)).toEqual('120 Hanover Sq.');
         });
 
-        it('Should expand and collapse a row in view by using the expandRow(rowID) and collapseRow(rowID) methods.', async() => {
+        it('Should expand and collapse a row in view by using the expandRow(rowID) and collapseRow(rowID) methods.', async () => {
             grid.expandRow(fix.componentInstance.data[0].ID);
             await wait();
             fix.detectChanges();
@@ -268,7 +268,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(firstRowIconName).toEqual(COLLAPSED_ICON_NAME);
         });
 
-        it('Should expand a row out of view by using the collapseRow() method and update expansionStates.', async() => {
+        it('Should expand a row out of view by using the collapseRow() method and update expansionStates.', async () => {
             const lastIndex = fix.componentInstance.data.length - 1;
             const lastDataRecID = fix.componentInstance.data[lastIndex].ID;
 
@@ -280,7 +280,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.expansionStates.get(lastDataRecID)).toBeTruthy();
         });
 
-        it('Should collapse a row out of view by using the collapseRow() method and update expansionStates.', async() => {
+        it('Should collapse a row out of view by using the collapseRow() method and update expansionStates.', async () => {
             GridFunctions.setAllExpanded(grid, fix.componentInstance.data);
             await wait();
             fix.detectChanges();
@@ -296,7 +296,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.expansionStates.get(lastDataRecID)).toBeFalsy();
         });
 
-        it('Should toggle a row expand state by using the toggleRow(rowID) method.', async() => {
+        it('Should toggle a row expand state by using the toggleRow(rowID) method.', async () => {
             grid.toggleRow(fix.componentInstance.data[0].ID);
             await wait();
             fix.detectChanges();
@@ -313,7 +313,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.rowList.toArray()[0].expanded).toBeFalsy();
         });
 
-        it('Should expand all rows using the expandAll() method and the expansion state should be updated.', async() => {
+        it('Should expand all rows using the expandAll() method and the expansion state should be updated.', async () => {
             grid.expandAll();
             await wait();
             fix.detectChanges();
@@ -324,7 +324,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
-        it('Should collapse all rows using the collapseAll() method and the expansion state should be updated.', async() => {
+        it('Should collapse all rows using the collapseAll() method and the expansion state should be updated.', async () => {
             GridFunctions.setAllExpanded(grid, fix.componentInstance.data);
             await wait();
             fix.detectChanges();
@@ -346,7 +346,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Keyboard Navigation ', () => {
         let gridContent: DebugElement;
-        beforeEach(async() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -373,7 +373,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.getCellByColumn(2, 'ContactName').selected).toBeTruthy();
         });
 
-        it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
+        it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async () => {
             const row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
@@ -388,7 +388,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
-        it('Should navigate down through a detail view completely out of view by scrolling to it.', async() => {
+        it('Should navigate down through a detail view completely out of view by scrolling to it.', async () => {
             grid.navigateTo(6, 0);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -431,7 +431,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(prevRow.cells.toArray()[0].selected).toBeTruthy();
         });
 
-        it('Should navigate up through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
+        it('Should navigate up through a detail view partially out of view by scrolling it so it becomes fully visible.', async () => {
             grid.verticalScrollContainer.addScrollTop(90);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -450,7 +450,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
-        it('Should navigate up through a detail view completely out of view by scrolling to it.', async() => {
+        it('Should navigate up through a detail view completely out of view by scrolling to it.', async () => {
             grid.verticalScrollContainer.addScrollTop(170);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -470,7 +470,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
-         it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async() => {
+        it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async () => {
             const row = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
@@ -491,12 +491,12 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(row.expanded).toBeTruthy();
             expect(targetCellElement.active).toBeTruthy();
 
-             // collapse with alt + arrowleft
-             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-             await wait(DEBOUNCETIME);
-             fix.detectChanges();
-             expect(row.expanded).toBeFalsy();
-             expect(targetCellElement.active).toBeTruthy();
+            // collapse with alt + arrowleft
+            UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(row.expanded).toBeFalsy();
+            expect(targetCellElement.active).toBeTruthy();
 
             // expand with alt + arrowright
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
@@ -504,10 +504,10 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
             expect(row.expanded).toBeTruthy();
             expect(targetCellElement.active).toBeTruthy();
-         });
+        });
 
         it(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
-            at the bottom of the grid without losing focus.`, async() => {
+            at the bottom of the grid without losing focus.`, async () => {
             // navigate to last
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(100);
@@ -544,7 +544,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement.active).toBeTruthy();
         });
 
-        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async () => {
             pending('This test should pass when the issue #7300 is fixed.');
             grid.navigateTo(20, 0);
             await wait(DEBOUNCETIME);
@@ -568,7 +568,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         });
 
-        it('Should navigate to the last data cell in the grid using Ctrl + End.', async() => {
+        it('Should navigate to the last data cell in the grid using Ctrl + End.', async () => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -585,7 +585,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(lastRow.cells.last.active).toBeTruthy();
         });
 
-        it('Should navigate to the first data cell in the grid using Ctrl + Home.', async() => {
+        it('Should navigate to the first data cell in the grid using Ctrl + Home.', async () => {
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -608,7 +608,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(fRow.cells.first.active).toBeTruthy();
         });
 
-        it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async() => {
+        it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async () => {
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -625,7 +625,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(lastRow.cells.first.active).toBeTruthy();
         });
 
-        it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async() => {
+        it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async () => {
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -636,7 +636,7 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
 
-           UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
+            UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -649,7 +649,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
-                and focus is on the detail row container.`, async() => {
+                and focus is on the detail row container.`, async () => {
             // Focus first cell
             let row = grid.getRowByIndex(0);
             let detailRow = GridFunctions.getMasterRowDetail(row);
@@ -803,8 +803,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 grid.expandRow(fix.componentInstance.data[2].ID);
                 const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
-                const startCell =  grid.getCellByColumn(1, 'ContactName');
-                const endCell =  grid.getCellByColumn(6, 'CompanyName');
+                const startCell = grid.getCellByColumn(1, 'ContactName');
+                const endCell = grid.getCellByColumn(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
 
                 UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);
@@ -817,7 +817,7 @@ describe('IgxGrid Master Detail #grid', () => {
                     const cell = grid.getCellByColumn(i, 'ContactName');
                     if (!cell) {
                         UIInteractions.simulatePointerOverElementEvent('pointerenter',
-                        fix.debugElement.query(By.css('.addressArea')).nativeElement);
+                            fix.debugElement.query(By.css('.addressArea')).nativeElement);
                         continue;
                     }
                     UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
@@ -868,7 +868,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Search', () => {
-            it('Should scroll to the correct parent rows when searching in a grid with expanded detail views.', async() => {
+            it('Should scroll to the correct parent rows when searching in a grid with expanded detail views.', async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
                 await wait();
@@ -892,7 +892,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Updating', () => {
-            beforeEach(async() => {
+            beforeEach(async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
                 await wait();
@@ -913,8 +913,8 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(detailViews[0].context.templateID).toBe('detailRow-ANATR');
             });
 
-            it('Should be able to expand detail view of newly added row.', async() => {
-                grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address'});
+            it('Should be able to expand detail view of newly added row.', async () => {
+                grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address' });
                 fix.detectChanges();
                 // scroll to bottom
                 grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
@@ -929,21 +929,21 @@ describe('IgxGrid Master Detail #grid', () => {
                 await wait();
                 fix.detectChanges();
                 expect(lastRow.expanded).toBeTruthy();
-                const lastRowDetail =  GridFunctions.getMasterRowDetail( grid.rowList.last);
+                const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
                 expect(getDetailAddressText(lastRowDetail)).toEqual('Test Address');
             });
 
         });
 
         describe('Sorting', () => {
-            it('Should rearrange detail views to their correct parents after sorting.', async() => {
+            it('Should rearrange detail views to their correct parents after sorting.', async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
                 await wait();
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
 
-                grid.sort({fieldName: 'ContactName', dir: SortingDirection.Desc, ignoreCase: true});
+                grid.sort({ fieldName: 'ContactName', dir: SortingDirection.Desc, ignoreCase: true });
                 fix.detectChanges();
 
                 let row = grid.rowList.first;
@@ -960,7 +960,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Filtering', () => {
-            it('Should persist template state after filtering out the whole data and removing the filter.', async() => {
+            it('Should persist template state after filtering out the whole data and removing the filter.', async () => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
                 await wait();
@@ -1019,7 +1019,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it(`Should navigate down through a detail view by focusing the whole row and continuing
-            onto the next with arrow down in multi-row layout grid.`, async() => {
+            onto the next with arrow down in multi-row layout grid.`, async () => {
                 const gridContent = GridFunctions.getGridContent(fix);
                 let targetCellElement = grid.getCellByColumn(0, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
@@ -1046,8 +1046,8 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it(`Should navigate up through a detail view by
-            focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async() => {
-                const  gridContent = GridFunctions.getGridContent(fix);
+            focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async () => {
+                const gridContent = GridFunctions.getGridContent(fix);
                 let targetCellElement = grid.getCellByColumn(2, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
                 fix.detectChanges();
@@ -1082,12 +1082,12 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
                 grid.groupingExpressions =
-                [{ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false }];
+                    [{ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false }];
                 fix.detectChanges();
             }));
 
             it(`Should correctly position summary rows when summary row position is bottom
-            after grouping by and detail views for the group rows are expanded.`, async() => {
+            after grouping by and detail views for the group rows are expanded.`, async () => {
                 grid.expandAll();
                 await wait();
                 fix.detectChanges();
@@ -1107,7 +1107,7 @@ describe('IgxGrid Master Detail #grid', () => {
             });
 
             it(`Should correctly position summary rows when summary row position is top
-            after grouping by and detail views for the group rows are expanded.`, async() => {
+            after grouping by and detail views for the group rows are expanded.`, async () => {
                 grid.expandAll();
                 await wait();
                 fix.detectChanges();
@@ -1268,7 +1268,7 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         </igx-grid>
     `
 })
-export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent {}
+export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent { }
 
 function getDetailAddressText(detailElem) {
     return detailElem.querySelector('.addressArea').innerText;
