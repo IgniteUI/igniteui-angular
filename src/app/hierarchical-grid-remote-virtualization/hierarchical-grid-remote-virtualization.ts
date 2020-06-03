@@ -60,6 +60,8 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
                 ];
               });
             this.gridData = data['value'];
+            this.hGrid.cdr.detectChanges();
+            (this.hGrid.verticalScrollContainer as any)._updateSizeCache();
             
             this.hGrid.isLoading = false;
         });
@@ -125,8 +127,9 @@ export class IgxGridHierarchicalRemotePipe implements PipeTransform {
         const result = this.addHierarchy(grid, collection, state, primaryKey, childKeys);
         const childRecsBeforeIndex = this.cachedData.filter((x, index) => grid.isChildGridRecord(x) && index<=virtualizationState.startIndex);
         let dataUpdateStartIndex = virtualizationState.startIndex + childRecsBeforeIndex.length;
-        this._updateCachedData(result, dataUpdateStartIndex);
         const size = virtualizationState.chunkSize || 10;
+        const lastChunk =  virtualizationState.startIndex + size === grid.verticalScrollContainer.totalItemCount;
+        this._updateCachedData(result, dataUpdateStartIndex, lastChunk);
         const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));        
         grid.verticalScrollContainer.totalItemCount = totalDataRecordsCount + allChildRecords.length;
         const data = this.cachedData.slice(virtualizationState.startIndex, virtualizationState.startIndex + size);
@@ -136,9 +139,12 @@ export class IgxGridHierarchicalRemotePipe implements PipeTransform {
         return data;
     }
 
-    private _updateCachedData(data: any, startIndex: number) {
+    private _updateCachedData(data: any, startIndex: number, lastChunk:boolean) {
         for (let i = 0; i < data.length; i++) {
             this.cachedData[i + startIndex] = data[i];
+        }
+        if (lastChunk) {
+            this.cachedData.splice(startIndex + data.length);
         }
     }
 
