@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a light base sparkline chart schema.
+/// Generates a light base sparkline schema.
 /// @type {Map}
 /// @prop {Color} brush [igx-color: ('primary', 500)] - Sets the sparkline brush.
 /// @prop {Number} line-thickness [null] - Sets the line thickness of the sparkline.
@@ -29,7 +29,7 @@
 /// @prop {Color} vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
 /// @prop {Color} normal-range-fill [null] - Sets the normal range brush of the sparkline.
 /// @see $default-palette
-$_light-sparkline-chart: extend(
+$_light-sparkline: extend(
     (
         'brush': (
             igx-color: ('primary', 500)
@@ -56,15 +56,15 @@ $_light-sparkline-chart: extend(
     )
 );
 
-/// Generates a fluent sparkline-chart schema.
+/// Generates a fluent sparkline schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-sparkline-chart
-$_fluent-sparkline-chart: extend($_light-sparkline-chart);
+/// @requires $_light-sparkline
+$_fluent-sparkline: extend($_light-sparkline);
 
-/// Generates a bootstrap sparkline-chart schema.
+/// Generates a bootstrap sparkline schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-sparkline-chart
-$_bootstrap-sparkline-chart: extend($_light-sparkline-chart);
+/// @requires $_light-sparkline
+$_bootstrap-sparkline: extend($_light-sparkline);
 

@@ -33,10 +33,10 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-sparkline-chart-theme($brushes: (orange, blue, pink));
+///   $my-sparkline-theme: igx-sparkline-theme($brushes: (orange, blue, pink));
 ///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
-@function igx-sparkline-chart-theme(
+///   @include igx-css-vars($my-sparkline-theme);
+@function igx-sparkline-theme(
     $palette: $default-palette,
     $schema: $light-schema,
 
@@ -61,21 +61,22 @@
     $vertical-axis-brush: null,
     $normal-range-fill: null,
 ) {
-    $name: 'sparkline-chart';
-    $chart-schema: ();
+    $name: 'sparkline';
+    $sparkline-schema: ();
 
     @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+        $sparkline-schema: map-get($schema, $name);
     } @else {
-        $chart-schema: $schema;
+        $sparkline-schema: $schema;
     }
 
-    $theme: apply-palette($chart-schema, $palette);
+    $theme: apply-palette($sparkline-schema, $palette);
 
     @return extend(
         $theme,
         (
             name: $name,
+            brush: $brush,
             line-thickness: $line-thickness,
             marker-brush: $marker-brush,
             marker-size: $marker-size,

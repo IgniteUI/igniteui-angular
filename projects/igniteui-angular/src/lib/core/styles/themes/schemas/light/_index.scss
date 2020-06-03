@@ -49,7 +49,7 @@
 @import './shape-chart';
 @import './slider';
 @import './snackbar';
-@import './sparkline-chart';
+@import './sparkline';
 @import './splitter';
 @import './switch';
 @import './tabs';
@@ -106,7 +106,7 @@
 /// @property {Map} shape-chart [$_light-shape-chart]
 /// @property {Map} igx-slider [$_light-slider]
 /// @property {Map} igx-snackbar [$_light-snackbar]
-/// @property {Map} sparkline-chart [$_light-sparkline-chart]
+/// @property {Map} sparkline [$_light-sparkline]
 /// @property {Map} igx-splitter [$_light-splitter]
 /// @property {Map} igx-switch [$_light-switch]
 /// @property {Map} igx-tabs [$_light-tabs]
@@ -160,7 +160,7 @@ $light-schema: (
     igx-scrollbar: $_light-scrollbar,
     igx-slider: $_light-slider,
     igx-snackbar: $_light-snackbar,
-    sparkline-chart: $_light-sparkline-chart,
+    sparkline: $_light-sparkline,
     igx-splitter: $_light-splitter,
     igx-switch: $_light-switch,
     igx-tabs: $_light-tabs,
@@ -217,7 +217,7 @@ $light-fluent-schema: (
     igx-scrollbar: $_fluent-scrollbar,
     igx-slider: $_fluent-slider,
     igx-snackbar: $_fluent-snackbar,
-    sparkline-chart: $_fluent-sparkline-chart,
+    sparkline: $_fluent-sparkline,
     igx-splitter: $_fluent-splitter,
     igx-switch: $_fluent-switch,
     igx-tabs: $_fluent-tabs,
@@ -274,7 +274,7 @@ $light-bootstrap-schema: (
     igx-scrollbar: $_bootstrap-scrollbar,
     igx-slider: $_bootstrap-slider,
     igx-snackbar: $_bootstrap-snackbar,
-    sparkline-chart: $_bootstrap-sparkline-chart,
+    sparkline: $_bootstrap-sparkline,
     igx-splitter: $_bootstrap-splitter,
     igx-switch: $_bootstrap-switch,
     igx-tabs: $_bootstrap-tabs,

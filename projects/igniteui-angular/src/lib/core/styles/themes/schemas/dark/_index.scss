@@ -48,7 +48,7 @@
 @import './shape-chart';
 @import './slider';
 @import './snackbar';
-@import './sparkline-chart';
+@import './sparkline';
 @import './splitter';
 @import './switch';
 @import './tabs';
@@ -104,7 +104,7 @@
 /// @property {Map} shape-chart [$_dark-shape-chart]
 /// @property {Map} igx-slider [$_dark-slider]
 /// @property {Map} igx-snackbar [$_dark-snackbar]
-/// @property {Map} sparkline-chart [$_dark-sparkline-chart]
+/// @property {Map} sparkline [$_dark-sparkline]
 /// @property {Map} igx-splitter [$_dark-splitter]
 /// @property {Map} igx-switch [$_dark-switch]
 /// @property {Map} igx-tabs [$_dark-tabs]
@@ -158,7 +158,7 @@ $dark-schema: (
     shape-chart: $_dark-shape-chart,
     igx-slider: $_dark-slider,
     igx-snackbar: $_dark-snackbar,
-    sparkline-chart: $_dark-sparkline-chart,
+    sparkline: $_dark-sparkline,
     igx-splitter: $_dark-splitter,
     igx-switch: $_dark-switch,
     igx-tabs: $_dark-tabs,
@@ -215,7 +215,7 @@ $dark-schema: (
 /// @property {map} shape-chart [$_dark-fluent-shape-chart],
 /// @property {map} igx-slider [$_dark-fluent-slider],
 /// @property {map} igx-snackbar [$_dark-fluent-snackbar],
-/// @property {map} sparkline-chart [$_dark-fluent-sparkline-chart],
+/// @property {map} sparkline [$_dark-fluent-sparkline],
 /// @property {map} igx-splitter [$_dark-fluent-splitter],
 /// @property {map} igx-switch [$_dark-fluent-switch],
 /// @property {map} igx-tabs [$_dark-fluent-tabs],
@@ -269,7 +269,7 @@ $dark-fluent-schema: (
     shape-chart: $_dark-fluent-shape-chart,
     igx-slider: $_dark-fluent-slider,
     igx-snackbar: $_dark-fluent-snackbar,
-    sparkline-chart: $_dark-fluent-sparkline-chart,
+    sparkline: $_dark-fluent-sparkline,
     igx-splitter: $_dark-fluent-splitter,
     igx-switch: $_dark-fluent-switch,
     igx-tabs: $_dark-fluent-tabs,
@@ -326,7 +326,7 @@ $dark-fluent-schema: (
 /// @property {map} shape-chart [$_dark-bootstrap-shape-chart],
 /// @property {map} igx-slider [$_dark-bootstrap-slider],
 /// @property {map} igx-snackbar [$_dark-bootstrap-snackbar],
-/// @property {map} sparkline-chart [$_dark-bootstrap-sparkline-chart],
+/// @property {map} sparkline [$_dark-bootstrap-sparkline],
 /// @property {map} igx-splitter [$_dark-bootstrap-splitter],
 /// @property {map} igx-switch [$_dark-bootstrap-switch],
 /// @property {map} igx-tabs [$_dark-bootstrap-tabs],
@@ -380,7 +380,7 @@ $dark-bootstrap-schema: (
     shape-chart: $_dark-bootstrap-shape-chart,
     igx-slider: $_dark-bootstrap-slider,
     igx-snackbar: $_dark-bootstrap-snackbar,
-    sparkline-chart: $_dark-bootstrap-sparkline-chart,
+    sparkline: $_dark-bootstrap-sparkline,
     igx-splitter: $_dark-bootstrap-splitter,
     igx-switch: $_dark-bootstrap-switch,
     igx-tabs: $_dark-bootstrap-tabs,
