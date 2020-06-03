@@ -13,7 +13,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
-import { DateRangeType } from '../core/dates';
+import { DateRangeType } from '../core/dates/dateRange';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -78,7 +78,7 @@ fdescribe('IgxDateRangePicker', () => {
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
-        it('should correctly implement interface methods - ControlValueAccessor ', () => {
+        it('should correctly implement interface methods - ControlValueAccessor', () => {
             const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28) };
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
@@ -106,8 +106,8 @@ fdescribe('IgxDateRangePicker', () => {
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-            // dateRangePicker.handleSelection([range.start]);
-            // expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+            dateRangePicker.handleSelection([range.start]);
+            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
             dateRangePicker.setDisabledState(true);
             expect(dateRangePicker.disabled).toBe(true);
@@ -136,8 +136,8 @@ fdescribe('IgxDateRangePicker', () => {
             range.start.setMonth(2);
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true });
 
-            range.end.setMonth(12);
-            // expect(dateRange.validate(mockFormControl)).toEqual({ maxValue: true });
+            range.end.setMonth(10);
+            expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
     });
 
@@ -290,7 +290,7 @@ fdescribe('IgxDateRangePicker', () => {
                 });
 
                 it('should support different input formats', () => {
-                    dateRange.inputFormat = 'longDate';
+                    dateRange.displayFormat = 'longDate';
                     fixture.detectChanges();
 
                     const today = new Date();
@@ -300,7 +300,7 @@ fdescribe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.value).toEqual(`${formatLongDate(startDate)} - ${formatLongDate(endDate)}`);
 
-                    dateRange.inputFormat = 'shortDate';
+                    dateRange.displayFormat = 'shortDate';
                     fixture.detectChanges();
 
                     startDate.setDate(2);
@@ -312,7 +312,7 @@ fdescribe('IgxDateRangePicker', () => {
                     let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
-                    dateRange.inputFormat = 'fullDate';
+                    dateRange.displayFormat = 'fullDate';
                     fixture.detectChanges();
 
                     startDate.setDate(12);
@@ -324,7 +324,7 @@ fdescribe('IgxDateRangePicker', () => {
                     inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
-                    dateRange.inputFormat = 'dd-MM-yy';
+                    dateRange.displayFormat = 'dd-MM-yy';
                     fixture.detectChanges();
 
                     startDate.setDate(9);
@@ -791,7 +791,7 @@ fdescribe('IgxDateRangePicker', () => {
                 dateRange = fixture.componentInstance.dateRange;
             });
 
-            xit('should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
+            it('should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.componentInstance.mode = InteractionMode.DropDown;
                 fixture.detectChanges();
@@ -803,7 +803,7 @@ fdescribe('IgxDateRangePicker', () => {
                 expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
             }));
 
-            xit('should move focus to the calendar on open in dialog mode', fakeAsync(() => {
+            it('should move focus to the calendar on open in dialog mode', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.componentInstance.mode = InteractionMode.Dialog;
                 fixture.detectChanges();
@@ -815,7 +815,7 @@ fdescribe('IgxDateRangePicker', () => {
                 expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
             }));
 
-            xit('should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
+            it('should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.componentInstance.mode = InteractionMode.DropDown;
                 fixture.detectChanges();
@@ -836,7 +836,7 @@ fdescribe('IgxDateRangePicker', () => {
                 expect(document.activeElement).toHaveClass('igx-input-group__input');
             }));
 
-            xit('should move the focus to the single input on close', fakeAsync(() => {
+            it('should move the focus to the single input on close', fakeAsync(() => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.componentInstance.mode = InteractionMode.DropDown;
                 fixture.detectChanges();

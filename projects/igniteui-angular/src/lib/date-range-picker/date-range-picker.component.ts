@@ -18,7 +18,8 @@ import {
     QueryList,
     SimpleChanges,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    AfterContentInit
 } from '@angular/core';
 import {
     AbstractControl,
@@ -85,7 +86,7 @@ import {
     ]
 })
 export class IgxDateRangePickerComponent extends DisplayDensityBase
-    implements IToggleView, OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
+    implements IToggleView, OnChanges, OnInit, AfterViewInit, AfterContentInit, OnDestroy, ControlValueAccessor, Validator {
     /**
      * Display calendar in either `dialog` or `dropdown` mode.
      * @remarks
@@ -570,28 +571,25 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     /** @hidden @internal */
     public validate(control: AbstractControl): ValidationErrors | null {
         const value: DateRange = control.value;
+        const errors = {};
         if (value) {
             const min = DatePickerUtil.parseDate(this.minValue);
             const max = DatePickerUtil.parseDate(this.maxValue);
             const start = DatePickerUtil.parseDate(value.start);
             const end = DatePickerUtil.parseDate(value.end);
 
-            if (min && start && DatePickerUtil.lessThanMinValue(start, min, false)) {
-                return { 'minValue': true };
+            if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
+                || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
+                Object.assign(errors, { 'minValue': true });
             }
-            if (min && end && DatePickerUtil.lessThanMinValue(end, min, false)) {
-                return { 'minValue': true };
-            }
-            if (max && start && DatePickerUtil.greaterThanMaxValue(start, max, false)) {
-                return { 'maxValue': true };
-            }
-            if (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false)) {
-                return { 'maxValue': true };
+            if ((max && start && DatePickerUtil.greaterThanMaxValue(start, max, false))
+                || (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false))) {
+                Object.assign(errors, { 'maxValue': true });
             }
         }
 
         // TODO: fix what happens on blur and ensure on blur the value is either null or with both start and end filled
-        return null;
+        return Object.keys(errors).length > 0 ? errors : null;
     }
 
     /** @hidden @internal */
@@ -640,6 +638,17 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
         this.initialSetValue();
         this.updateInputs();
+    }
+
+    public ngAfterContentInit(): void {
+        if (this.hasProjectedInputs && this.displayFormat) {
+            this.projectedInputs.forEach(i => {
+                const input = i as IgxDateRangeInputsBaseComponent;
+                if (!input.dateTimeEditor.displayFormat) {
+                    input.dateTimeEditor.displayFormat = this.displayFormat;
+                }
+            });
+        }
     }
 
     /** @hidden @internal */
