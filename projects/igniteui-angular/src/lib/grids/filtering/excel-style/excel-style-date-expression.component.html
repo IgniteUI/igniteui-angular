@@ -1,13 +1,13 @@
 <igx-select #dropdownConditions
         type="box"
-        [maxHeight]="'200px'"
         [displayDensity]="displayDensity"
+        [placeholder]="conditionsPlaceholder"
+        (onSelection)="onConditionsChanged($event)"
         [overlaySettings]="dropDownOverlaySettings">
-    <igx-icon *ngIf="column && dropdownConditions.value && column.filters.condition(dropdownConditions.value)"
-                              igxPrefix
-                              fontSet="filtering-icons"
-                              [name]="column.filters.condition(dropdownConditions.value).iconName">
-    </igx-icon>
+    <igx-prefix>
+        <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
+        <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
+    </igx-prefix>
     <igx-select-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{translateCondition(condition)}}</span>
@@ -60,6 +60,5 @@
 
 <div #overlayOutlet
      igxOverlayOutlet
-     class="igx-advanced-filter__outlet"
      (pointerdown)="onOutletPointerDown($event)">
 </div>
