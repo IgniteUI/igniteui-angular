@@ -1132,6 +1132,8 @@
 
     %igx-grid__tr--pinned-bottom {
         border-top: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+        position: absolute;
+        bottom: 0;
     }
 
     %igx-grid__tr--edit {
