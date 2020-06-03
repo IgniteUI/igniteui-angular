@@ -13,7 +13,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
-import { DateRangeType } from '../core/dates';
+import { DateRangeType } from '../core/dates/dateRange';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -26,7 +26,7 @@ const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle'; // TODO Implementation -> maybe 
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 
-describe('IgxDateRangePicker', () => {
+fdescribe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
@@ -78,7 +78,7 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
-        it('should correctly implement interface methods - ControlValueAccessor ', () => {
+        it('should correctly implement interface methods - ControlValueAccessor', () => {
             const range = { start: new Date(2020, 1, 18), end: new Date(2020, 1, 28) };
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
@@ -106,8 +106,8 @@ describe('IgxDateRangePicker', () => {
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-            // dateRangePicker.handleSelection([range.start]);
-            // expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
+            dateRangePicker.handleSelection([range.start]);
+            expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
             dateRangePicker.setDisabledState(true);
             expect(dateRangePicker.disabled).toBe(true);
@@ -136,8 +136,8 @@ describe('IgxDateRangePicker', () => {
             range.start.setMonth(2);
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true });
 
-            range.end.setMonth(12);
-            // expect(dateRange.validate(mockFormControl)).toEqual({ maxValue: true });
+            range.end.setMonth(10);
+            expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
         fit('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
@@ -324,7 +324,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should support different input formats', () => {
-                    dateRange.inputFormat = 'longDate';
+                    dateRange.displayFormat = 'longDate';
                     fixture.detectChanges();
 
                     const today = new Date();
@@ -334,7 +334,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.value).toEqual(`${formatLongDate(startDate)} - ${formatLongDate(endDate)}`);
 
-                    dateRange.inputFormat = 'shortDate';
+                    dateRange.displayFormat = 'shortDate';
                     fixture.detectChanges();
 
                     startDate.setDate(2);
@@ -346,7 +346,7 @@ describe('IgxDateRangePicker', () => {
                     let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
-                    dateRange.inputFormat = 'fullDate';
+                    dateRange.displayFormat = 'fullDate';
                     fixture.detectChanges();
 
                     startDate.setDate(12);
@@ -358,7 +358,7 @@ describe('IgxDateRangePicker', () => {
                     inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
-                    dateRange.inputFormat = 'dd-MM-yy';
+                    dateRange.displayFormat = 'dd-MM-yy';
                     fixture.detectChanges();
 
                     startDate.setDate(9);
