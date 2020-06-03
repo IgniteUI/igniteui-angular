@@ -52,15 +52,11 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Shouldn\'t make a selection when the state is set to false', async () => {
+    it('Shouldn\'t make a selection when the state is set to false', () => {
         const template = ` <input type="text" [igxTextSelection]="false" #select="igxTextSelection"
             (click)="select.trigger()" value="Some custom value!" />`;
 
-        TestBed.overrideComponent(TriggerTextSelectionOnClickComponent, {
-            set: {
-                template
-            }
-        });
+        TestBed.overrideTemplateUsingTestingModule(TriggerTextSelectionOnClickComponent, template);
 
         TestBed.compileComponents().then(() => {
             const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);

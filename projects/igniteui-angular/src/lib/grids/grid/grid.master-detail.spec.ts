@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -42,12 +42,12 @@ describe('IgxGrid Master Detail #grid', () => {
     }));
 
     describe('Basic', () => {
-        beforeEach(async () => {
+        beforeEach( fakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
-            await wait();
-        });
+            tick(100);
+        }));
 
         it('Should render an expand icon for all rows', () => {
             const expandIcons = grid.rowList.filter((row) => {
@@ -177,6 +177,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
             checkbox state, etc. after scrolling them in and out of view.`, (async () => {
+            fix.detectChanges();
+            await wait(DEBOUNCETIME * 2);
+
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
             const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
 
@@ -960,10 +963,10 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Filtering', () => {
-            it('Should persist template state after filtering out the whole data and removing the filter.', async () => {
+            it('Should persist template state after filtering out the whole data and removing the filter.', fakeAsync(() => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
                 fix.detectChanges();
-                await wait();
+                tick(100);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
 
@@ -977,15 +980,17 @@ describe('IgxGrid Master Detail #grid', () => {
 
                 grid.filter('ContactName', 'NonExistingName', IgxStringFilteringOperand.instance().condition('equals'), true);
                 fix.detectChanges();
+                tick(100);
                 expect(grid.rowList.length).toBe(0);
 
                 grid.clearFilter();
                 fix.detectChanges();
+                tick(100);
 
                 // check checkbox state is persisted.
                 checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
                 expect(checkbox.componentInstance.checked).toBeTruthy();
-            });
+            }));
         });
 
         describe('Multi-row layout', () => {

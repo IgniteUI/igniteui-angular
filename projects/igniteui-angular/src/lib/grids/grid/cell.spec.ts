@@ -358,7 +358,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         }));
 
-        it('should be able to conditionally style cells', async(() => {
+        it('should be able to conditionally style cells', fakeAsync(() => {
             const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
             fixture.detectChanges();
 
