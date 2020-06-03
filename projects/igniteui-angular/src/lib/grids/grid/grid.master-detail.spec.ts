@@ -844,7 +844,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
                 fix.componentInstance.rowSelectable = true;
                 fix.detectChanges();
-            });
+            }));
 
             it('Should not render row selection checkbox for detail views.', () => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
