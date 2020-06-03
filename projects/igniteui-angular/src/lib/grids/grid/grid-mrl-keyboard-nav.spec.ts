@@ -31,9 +31,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
-    });
+    }));
 
     describe('Navigation without scrolling', () => {
         describe('General', () => {
@@ -2564,9 +2564,9 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
-    });
+    }));
 
     it('navigateTo method should work in multi-row layout grid.', async () => {
         fix.componentInstance.colGroups = [

@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -42,7 +42,7 @@ describe('IgxGrid Master Detail #grid', () => {
     }));
 
     describe('Basic', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -745,11 +745,11 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Pinning', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-            });
+            }));
 
             it('Should keep/move the expand/collapse icon to the correct column when pinning the first column or another one.', () => {
                 grid.columnList.last.pin();
@@ -775,11 +775,11 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Column Moving', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
-            });
+            }));
 
             it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', () => {
                 grid.moveColumn(grid.columnList.last, grid.columnList.first);
@@ -839,7 +839,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Row Selection', () => {
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.componentInstance.rowSelectable = true;
@@ -989,14 +989,14 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Multi-row layout', () => {
-            beforeEach(async() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(MRLMasterDetailComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
 
                 GridFunctions.toggleMasterRow(fix, grid.rowList.first);
                 fix.detectChanges();
-            });
+            }));
 
             it('Should render expand/collapse icon in the column with visible index 0.', () => {
                 const cell = grid.getCellByKey('ALFKI', 'CompanyName');
@@ -1074,7 +1074,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('GroupBy', () => {
-            beforeEach(async() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.columns[0].hasSummary = true;
                 fix.detectChanges();
@@ -1084,7 +1084,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid.groupingExpressions =
                 [{ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false }];
                 fix.detectChanges();
-            });
+            }));
 
             it(`Should correctly position summary rows when summary row position is bottom
             after grouping by and detail views for the group rows are expanded.`, async() => {

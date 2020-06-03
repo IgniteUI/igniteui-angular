@@ -1952,13 +1952,12 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid;
         let cell: IgxGridCellComponent;
-
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
-        });
+        }));
 
         it('Should add correct class to the edited row', () => {
             const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
@@ -2370,7 +2369,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
         let groupRows;
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2381,7 +2380,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             fix.detectChanges();
-        });
+        }));
 
         it('Hide row editing dialog with group collapsing/expanding', () => {
             // fix.detectChanges();
@@ -2489,12 +2488,12 @@ describe('IgxGrid - Row Editing #grid', () => {
         let trans;
         let fix;
         let grid;
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             trans = grid.transactions;
-        });
+        }));
 
 
         it(`Should not commit added row to grid's data in grid with transactions`, () => {

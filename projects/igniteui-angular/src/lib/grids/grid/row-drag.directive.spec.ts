@@ -72,7 +72,7 @@ describe('Row Drag Tests #grid', () => {
                     ]
                 }).compileComponents();
             }));
-            beforeEach(() => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
                 grid = fixture.componentInstance.instance;
                 fixture.detectChanges();
@@ -81,7 +81,7 @@ describe('Row Drag Tests #grid', () => {
                 nonDroppableAreaElement = fixture.debugElement.query(By.css(CSS_CLASS_NON_DROPPABLE_AREA)).nativeElement;
                 dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
                 dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-            });
+            }));
 
             it('should drag and drop draggable row over droppable container', () => {
                 dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -475,7 +475,7 @@ describe('Row Drag Tests #grid', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -484,7 +484,7 @@ describe('Row Drag Tests #grid', () => {
             dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-        });
+        }));
         function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
@@ -1066,14 +1066,14 @@ describe('Row Drag Tests #grid', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();
             dragGrid = fixture.componentInstance.treeGrid;
             dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
             dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-        });
+        }));
 
         it('should be able to drag row on every hierarchical level', () => {
             // first level row
