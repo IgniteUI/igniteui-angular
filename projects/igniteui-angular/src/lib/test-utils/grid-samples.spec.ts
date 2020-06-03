@@ -1120,6 +1120,9 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
                     [filterable]="filterable" [resizable]="resizable" dataType="date" [filterCellTemplate]="filterTemplate">
         </igx-column>
+        <igx-column width="100px" field="Licensed" [filterable]="filterable"
+                    [resizable]="resizable" dataType="boolean">
+        </igx-column>
     </igx-grid>
     <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
         <div class="custom-filter" style="flex-grow: 1;">
