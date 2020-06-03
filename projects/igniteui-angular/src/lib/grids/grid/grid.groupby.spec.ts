@@ -2371,14 +2371,17 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
 
-            expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
+            expect(grid.sortingExpressions)
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
             expect(grid.groupingExpressions).toEqual([]);
 
             grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy });
 
-            expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
-            expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+            expect(grid.sortingExpressions)
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+            expect(grid.groupingExpressions)
+                .toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
         }));
 
     it('should update grouping expression when sorting a column first then grouping by another and changing sorting for it',
@@ -2397,8 +2400,12 @@ describe('IgxGrid - GroupBy #grid', () => {
             ]);
             expect(grid.groupingExpressions).toEqual([]);
 
-            grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-            grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.groupBy({
+                fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
+            grid.sort({
+                fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            });
             fix.detectChanges();
             expect(grid.sortingExpressions).toEqual([
                 { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
