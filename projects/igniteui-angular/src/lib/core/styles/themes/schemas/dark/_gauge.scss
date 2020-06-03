@@ -1,0 +1,25 @@
+@import '../light/gauge';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// Generates a dark gauge schema.
+/// @type {Map}
+/// @requires $_light-gauge
+/// @see $default-palette
+$_dark-gauge: extend($_light-gauge);
+
+/// Generates a dark fluent gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-gauge
+$_dark-fluent-gauge: extend($_fluent-gauge);
+
+/// Generates a bootstrap gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-gauge
+$_dark-bootstrap-gauge: extend($_bootstrap-gauge);

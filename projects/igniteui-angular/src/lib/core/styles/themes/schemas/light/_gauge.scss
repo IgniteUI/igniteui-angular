@@ -6,7 +6,7 @@
 /// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
 ////
 
-/// Generates a light gauge chart schema.
+/// Generates a light gauge schema.
 /// @type {Map}
 /// @property {Map} width [null] - The width of the gauge in pixels, string (px) or percentage (%).
 /// @property {Map} height [null] - The height of the gauge in pixels, string (px) or percentage (%).
@@ -31,7 +31,7 @@
 /// @property {Color} tick-brush [null] - Sets the color to use for the major tickmarks.
 /// @property {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
 /// @see $default-palette
-$_light-gauge-chart: extend(
+$_light-gauge: extend(
     (
         'width': null,
 
@@ -79,14 +79,14 @@ $_light-gauge-chart: extend(
     )
 );
 
-/// Generates a fluent gauge-chart schema.
+/// Generates a fluent gauge schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-gauge-chart
-$_fluent-gauge-chart: extend($_light-gauge-chart);
+/// @requires $_light-gauge
+$_fluent-gauge: extend($_light-gauge);
 
-/// Generates a bootstrap gauge-chart schema.
+/// Generates a bootstrap gauge schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-gauge-chart
-$_bootstrap-gauge-chart: extend($_light-gauge-chart);
+/// @requires $_light-gauge
+$_bootstrap-gauge: extend($_light-gauge);
