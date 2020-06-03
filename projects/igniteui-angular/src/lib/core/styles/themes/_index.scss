@@ -23,6 +23,7 @@
 @import '../components/charts/graph-chart-theme';
 @import '../components/charts/category-chart-theme';
 @import '../components/charts/pie-chart-theme';
+@import '../components/charts/sparkline-chart-theme';
 @import '../components/charts/funnel-chart-theme';
 @import '../components/charts/shape-chart-theme';
 @import '../components/checkbox/checkbox-theme';
@@ -259,6 +260,13 @@
 
     @if not(index($exclude, 'pie-chart')) {
         @include igx-css-vars(igx-pie-chart-theme(
+            $palette,
+            $schema,
+        ));
+    }
+
+    @if not(index($exclude, 'sparkline-chart')) {
+        @include igx-css-vars(igx-sparkline-chart-theme(
             $palette,
             $schema,
         ));

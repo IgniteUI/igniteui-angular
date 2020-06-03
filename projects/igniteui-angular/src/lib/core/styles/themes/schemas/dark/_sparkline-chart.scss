@@ -1,0 +1,26 @@
+@import '../light/sparkline-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark sparkline chart schema.
+/// @type {Map}
+/// @requires $_light-sparkline-chart
+/// @see $default-palette
+$_dark-sparkline-chart: extend($_light-sparkline-chart);
+
+/// Generates a dark fluent sparkline-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-sparkline-chart
+$_dark-fluent-sparkline-chart: extend($_fluent-sparkline-chart);
+
+/// Generates a dark bootstrap sparkline-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-sparkline-chart
+$_dark-bootstrap-sparkline-chart: extend($_bootstrap-sparkline-chart);
+
