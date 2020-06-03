@@ -487,35 +487,35 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`should trigger an onGroupingDone event when the user pushes a new array of grouping expressions, which results in
     both grouping and ungrouping at the same time.`, fakeAsync(() => {
-            const fix = TestBed.createComponent(DefaultGridComponent);
-            const grid = fix.componentInstance.instance;
-            grid.primaryKey = 'ID';
-            fix.detectChanges();
-            grid.groupBy([
-                { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-                { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
-                { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
-            ]);
-            tick();
-            fix.detectChanges();
-            const newExpressions = [
-                { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
-                { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
-                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }
-            ];
-            grid.groupingExpressions = newExpressions;
-            tick();
-            fix.detectChanges();
-            const currExpr = fix.componentInstance.currentSortExpressions;
-            expect(currExpr.expressions.length).toEqual(3);
-            expect(currExpr.expressions[0].fieldName).toEqual('ReleaseDate');
-            expect(currExpr.expressions[1].fieldName).toEqual('ProductName');
-            expect(currExpr.expressions[2].fieldName).toEqual('Downloads');
-            expect(currExpr.ungroupedColumns.length).toEqual(1);
-            expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
-            expect(currExpr.groupedColumns.length).toEqual(1);
-            expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
-        }));
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.primaryKey = 'ID';
+        fix.detectChanges();
+        grid.groupBy([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+        ]);
+        tick();
+        fix.detectChanges();
+        const newExpressions = [
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }
+        ];
+        grid.groupingExpressions = newExpressions;
+        tick();
+        fix.detectChanges();
+        const currExpr = fix.componentInstance.currentSortExpressions;
+        expect(currExpr.expressions.length).toEqual(3);
+        expect(currExpr.expressions[0].fieldName).toEqual('ReleaseDate');
+        expect(currExpr.expressions[1].fieldName).toEqual('ProductName');
+        expect(currExpr.expressions[2].fieldName).toEqual('Downloads');
+        expect(currExpr.ungroupedColumns.length).toEqual(1);
+        expect(currExpr.ungroupedColumns[0].field).toEqual('Released');
+        expect(currExpr.groupedColumns.length).toEqual(1);
+        expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
+    }));
 
     it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
@@ -1401,7 +1401,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     }));
 
-    it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
+    it('should update horizontal virtualization state correcly when data row views are re-used from cache.', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1442,17 +1442,17 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait(100);
         fix.detectChanges();
 
-         // verify rows are scrolled to the right
-         dataRows = grid.dataRowList.toArray();
-         dataRows.forEach(dr => {
-             const virtualization = dr.virtDirRow;
-             // should be at last chunk
-             const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
-             expect(virtualization.state.startIndex).toBe(expectedStartIndex);
-             // should have correct left offset
-             const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
-             expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
-         });
+        // verify rows are scrolled to the right
+        dataRows = grid.dataRowList.toArray();
+        dataRows.forEach(dr => {
+            const virtualization = dr.virtDirRow;
+            // should be at last chunk
+            const expectedStartIndex = virtualization.igxForOf.length - virtualization.state.chunkSize;
+            expect(virtualization.state.startIndex).toBe(expectedStartIndex);
+            // should have correct left offset
+            const left = parseInt(virtualization.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            expect(-left).toBe(gridScrLeft - virtualization.getColumnScrollLeft(expectedStartIndex));
+        });
     });
 
     // GroupBy chip
@@ -1575,7 +1575,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
 
-    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
+    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.rowSelection = GridSelectionMode.multiple;
@@ -1594,17 +1594,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
-        setTimeout(() => {
-            const rows = grid.dataRowList.toArray();
-            expect(rows.length).toEqual(1);
-            GridSelectionFunctions.clickRowCheckbox(rows[0].element);
-             setTimeout(() => {
-                grid.cdr.detectChanges();
-                expect(grid.selectedRows().length).toEqual(1);
-                GridSelectionFunctions.verifyRowSelected(rows[0]);
-                done();
-            }, 100);
-        }, 100);
+        await wait(100);
+        const rows = grid.dataRowList.toArray();
+        expect(rows.length).toEqual(1);
+        GridSelectionFunctions.clickRowCheckbox(rows[0].element);
+        await wait(100);
+        grid.cdr.detectChanges();
+        expect(grid.selectedRows().length).toEqual(1);
+        GridSelectionFunctions.verifyRowSelected(rows[0]);
+
     });
 
     it('should persist state for the correct group record when there are group records with the same fieldName and value.',
@@ -1679,8 +1677,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].className).not.toContain(DISABLED_CHIP);
 
         // check no remove button on disabled chip
-        expect( ControlsFunction.getChipRemoveButton(chips[0])).toBeNull();
-        expect( ControlsFunction.getChipRemoveButton(chips[1])).toBeDefined();
+        expect(ControlsFunction.getChipRemoveButton(chips[0])).toBeNull();
+        expect(ControlsFunction.getChipRemoveButton(chips[1])).toBeDefined();
 
         // check click does not allow changing sort dir
         chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
@@ -2348,69 +2346,69 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it(`should hide the grouped columns when hideGroupedColumns option is enabled,
     there are initially set groupingExpressions and columns are autogenareted`,
-    fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-        grid.hideGroupedColumns = true;
-        grid.groupingExpressions = [
-            { fieldName: 'Released', dir: SortingDirection.Asc }
-        ];
-        fix.detectChanges();
-        expect(grid.getColumnByName('Released').hidden).toBe(true);
-        const groupRows = grid.groupsRowList.toArray();
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            grid.hideGroupedColumns = true;
+            grid.groupingExpressions = [
+                { fieldName: 'Released', dir: SortingDirection.Asc }
+            ];
+            fix.detectChanges();
+            expect(grid.getColumnByName('Released').hidden).toBe(true);
+            const groupRows = grid.groupsRowList.toArray();
 
-        expect(groupRows.length).toEqual(3);
-    }));
+            expect(groupRows.length).toEqual(3);
+        }));
 
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again',
-    fakeAsync(/** height/width setter rAF */() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        const strategy = CustomSortingStrategy.instance();
-        fix.componentInstance.enableSorting = true;
-        fix.detectChanges();
+        fakeAsync(/** height/width setter rAF */() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            const strategy = CustomSortingStrategy.instance();
+            fix.componentInstance.enableSorting = true;
+            fix.detectChanges();
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
 
-        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
-        expect(grid.groupingExpressions).toEqual([]);
+            expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
+            expect(grid.groupingExpressions).toEqual([]);
 
-        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy });
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy });
 
-        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
-        expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
-    }));
+            expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+            expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+        }));
 
     it('should update grouping expression when sorting a column first then grouping by another and changing sorting for it',
-    fakeAsync(/** height/width setter rAF */() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.componentInstance.enableSorting = true;
-        fix.detectChanges();
+        fakeAsync(/** height/width setter rAF */() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableSorting = true;
+            fix.detectChanges();
 
-        grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
-        fix.detectChanges();
-        expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
-        ]);
-        expect(grid.groupingExpressions).toEqual([]);
+            grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+            expect(grid.sortingExpressions).toEqual([
+                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
+            ]);
+            expect(grid.groupingExpressions).toEqual([]);
 
-        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-        grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-        fix.detectChanges();
-        expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
-        ]);
-        expect(grid.groupingExpressions).toEqual([{
-            fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
-        }]);
-    }));
+            grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            fix.detectChanges();
+            expect(grid.sortingExpressions).toEqual([
+                { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
+            ]);
+            expect(grid.groupingExpressions).toEqual([{
+                fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+            }]);
+        }));
 
     it('should not be able to group by ColumnGroup', (async () => {
         const fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);
@@ -2517,50 +2515,50 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should order sorting expressions correctly when setting groupingExpressions runtime.',
-    fakeAsync(/** height/width setter rAF */() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.detectChanges();
+        fakeAsync(/** height/width setter rAF */() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            fix.detectChanges();
 
-        const sExprs: ISortingExpression[] = [
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: true }
-        ];
-        const grid = fix.componentInstance.instance;
-        grid.sortingExpressions = sExprs;
+            const sExprs: ISortingExpression[] = [
+                { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: true }
+            ];
+            const grid = fix.componentInstance.instance;
+            grid.sortingExpressions = sExprs;
 
-        fix.detectChanges();
-        let dataRows = grid.dataRowList.toArray();
-        expect(dataRows.length).toEqual(8);
-        // verify data records order
-        const expectedDataRecsOrder = [true, true, true, true, false, false, false, null];
-        dataRows.forEach((row, index) => {
-            expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
-        });
+            fix.detectChanges();
+            let dataRows = grid.dataRowList.toArray();
+            expect(dataRows.length).toEqual(8);
+            // verify data records order
+            const expectedDataRecsOrder = [true, true, true, true, false, false, false, null];
+            dataRows.forEach((row, index) => {
+                expect(row.rowData.Released).toEqual(expectedDataRecsOrder[index]);
+            });
 
-        const grExprs: ISortingExpression[] = [
-            { fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true }
-        ];
-        grid.groupingExpressions = grExprs;
-        fix.detectChanges();
+            const grExprs: ISortingExpression[] = [
+                { fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true }
+            ];
+            grid.groupingExpressions = grExprs;
+            fix.detectChanges();
 
-        // check sorting expressions order - grouping should be applied first
-        expect(grid.sortingExpressions.length).toBe(2);
-        expect(grid.sortingExpressions[0]).toBe(grExprs[0]);
-        expect(grid.sortingExpressions[1]).toBe(sExprs[0]);
+            // check sorting expressions order - grouping should be applied first
+            expect(grid.sortingExpressions.length).toBe(2);
+            expect(grid.sortingExpressions[0]).toBe(grExprs[0]);
+            expect(grid.sortingExpressions[1]).toBe(sExprs[0]);
 
-        dataRows = grid.dataRowList.toArray();
-        const expectedReleaseRecsOrder = [true, false, true, false, false, null, true, true];
-        const expectedProductNameOrder = ['NetAdvantage', 'NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for JavaScript',
-         'Ignite UI for Angular', 'Ignite UI for Angular', '', null];
-        dataRows.forEach((row, index) => {
-            expect(row.rowData.Released).toEqual(expectedReleaseRecsOrder[index]);
-            expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
-        });
-    }));
+            dataRows = grid.dataRowList.toArray();
+            const expectedReleaseRecsOrder = [true, false, true, false, false, null, true, true];
+            const expectedProductNameOrder = ['NetAdvantage', 'NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for JavaScript',
+                'Ignite UI for Angular', 'Ignite UI for Angular', '', null];
+            dataRows.forEach((row, index) => {
+                expect(row.rowData.Released).toEqual(expectedReleaseRecsOrder[index]);
+                expect(row.rowData.ProductName).toEqual(expectedProductNameOrder[index]);
+            });
+        }));
 
     it('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
-        const year =  new Date().getFullYear().toString();
+        const year = new Date().getFullYear().toString();
         fix.detectChanges();
         await wait();
 
