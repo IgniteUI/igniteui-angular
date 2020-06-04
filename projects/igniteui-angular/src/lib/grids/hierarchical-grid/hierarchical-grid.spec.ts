@@ -459,7 +459,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
+fdescribe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -582,11 +582,11 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     it('should apply column settings applied to the row island to all related child grids.',
-    async() => { /** height/width setter rAF + row toggle rAF */
+    fakeAsync(() => { /** height/width setter rAF + row toggle rAF */
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
+        tick();
         fixture.detectChanges();
-        await wait();
 
         const ri1 = fixture.componentInstance.rowIsland1;
         const ri2 = fixture.componentInstance.rowIsland2;
@@ -607,7 +607,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
             const col = child2Cols.find((c) => c.key === ri2Cols[j].key);
             expect(col).not.toBeNull();
         }
-    });
+    }));
+
     it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.',
     (/** height/width setter + row toggle rAF */async() => {
         const ri1 = fixture.componentInstance.rowIsland1;
