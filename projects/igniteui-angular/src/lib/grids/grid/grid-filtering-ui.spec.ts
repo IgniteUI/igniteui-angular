@@ -66,9 +66,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     describe(null, () => {
         let fix: ComponentFixture<any>;
@@ -2546,9 +2543,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             .compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
+    // afterEach(() => {
+    //     UIInteractions.clearOverlay();
+    // });
 
     describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
@@ -4534,9 +4531,9 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
+    // afterEach(() => {
+    //     UIInteractions.clearOverlay();
+    // });
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(CustomFilteringStrategyComponent);
         fix.detectChanges();

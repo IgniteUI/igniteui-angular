@@ -46,7 +46,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ],
-            imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

@@ -49,9 +49,7 @@ describe('Row Drag Tests #grid', () => {
     let pointerDownEvent: PointerEvent;
     let pointerMoveEvent: PointerEvent;
     let pointerUpEvent: PointerEvent;
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
+
     describe('General tests', () => {
         describe('Drag and drop tests', () => {
             let grid: IgxGridComponent;
