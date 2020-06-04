@@ -20,7 +20,7 @@
 @import '../components/charts/data-chart-theme';
 @import '../components/charts/gauge-theme';
 @import '../components/charts/financial-chart-theme';
-@import '../components/charts/graph-chart-theme';
+@import '../components/charts/graph-theme';
 @import '../components/charts/category-chart-theme';
 @import '../components/charts/pie-chart-theme';
 @import '../components/charts/sparkline-theme';
@@ -251,8 +251,8 @@
         ));
     }
 
-    @if not(index($exclude, 'graph-chart')) {
-        @include igx-css-vars(igx-graph-chart-theme(
+    @if not(index($exclude, 'bullet-graph')) {
+        @include igx-css-vars(igx-bullet-graph-theme(
             $palette,
             $schema,
         ));

@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $width [null] - The width of the chart.
-/// @param {Map} $height [null] - The height of the chart.
 /// @param {Color} $backing-brush [null] - Sets the brush to use to fill the backing of the bullet graph.
 /// @param {Color} $backing-outline [null] - Sets the brush to use for the outline of the backing.
 /// @param {Number} $backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
@@ -34,15 +32,13 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-graph-chart-theme($brushes: (orange, blue, pink));
+///   $my-chart-theme: igx-bullet-graph-theme($brushes: (orange, blue, pink));
 ///   // Pass the theme to the igx-css-vars mixin
 ///   @include igx-css-vars($my-chart-theme);
-@function igx-graph-chart-theme(
+@function igx-bullet-graph-theme(
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $width: null,
-    $height: null,
     $backing-brush: null,
     $backing-outline: null,
     $backing-stroke-thickness: null,
@@ -64,7 +60,7 @@
     $value-outline: null,
     $value-stroke-thickness: null,
 ) {
-    $name: 'graph-chart';
+    $name: 'bullet-graph';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -79,8 +75,6 @@
         $theme,
         (
             name: $name,
-            width: $width,
-            height: $height,
             backing-brush: $backing-brush,
             backing-outline: $backing-outline,
             backing-stroke-thickness: $backing-stroke-thickness,
@@ -105,15 +99,15 @@
     );
 }
 
-/// Adds typography styles for the graph-chart component.
+/// Adds typography styles for the graph component.
 /// @access private
 /// @group typography
 /// @requires {mixin} igx-type-style
-@mixin igx-graph-chart-typography() {
+@mixin igx-graph-typography() {
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
-        @include css-vars-from-theme((font: inherit), 'graph-chart');
+        @include css-vars-from-theme((font: inherit), 'bullet-graph');
     }
 }
 

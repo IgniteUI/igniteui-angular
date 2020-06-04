@@ -28,7 +28,7 @@
 @import './expansion-panel';
 @import './gauge';
 @import './financial-chart';
-@import './graph-chart';
+@import './graph';
 @import './grid';
 @import './grid-filtering';
 @import './pagination';
@@ -85,7 +85,7 @@
 /// @property {Map} linear-gauge [$_light-gauge]
 /// @property {Map} radial-gauge [$_light-gauge]
 /// @property {Map} financial-chart [$_light-financial-chart]
-/// @property {Map} graph-chart [$_light-graph-chart]
+/// @property {Map} bullet-graph [$_light-graph]
 /// @property {Map} igx-grid [$_light-grid]
 /// @property {Map} igx-grid-filtering [$_light-grid-filtering]
 /// @property {Map} igx-paginator [$_light-pagination]
@@ -140,7 +140,7 @@ $light-schema: (
     linear-gauge: $_light-gauge,
     radial-gauge: $_light-gauge,
     financial-chart: $_light-financial-chart,
-    graph-chart: $_light-graph-chart,
+    bullet-graph: $_light-graph,
     igx-grid: $_light-grid,
     igx-grid-filtering: $_light-grid-filtering,
     igx-paginator: $_light-pagination,
@@ -198,7 +198,7 @@ $light-fluent-schema: (
     linear-gauge: $_fluent-gauge,
     radial-gauge: $_fluent-gauge,
     financial-chart: $_fluent-financial-chart,
-    graph-chart: $_fluent-graph-chart,
+    bullet-graph: $_fluent-graph,
     igx-grid: $_fluent-grid,
     igx-grid-filtering: $_fluent-grid-filtering,
     igx-paginator: $_fluent-pagination,
@@ -256,7 +256,7 @@ $light-bootstrap-schema: (
     linear-gauge: $_bootstrap-gauge,
     radial-gauge: $_bootstrap-gauge,
     financial-chart: $_bootstrap-financial-chart,
-    graph-chart: $_bootstrap-graph-chart,
+    bullet-graph: $_bootstrap-graph,
     igx-grid: $_bootstrap-grid,
     igx-grid-filtering: $_bootstrap-grid-filtering,
     igx-paginator: $_bootstrap-pagination,

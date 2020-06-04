@@ -4,10 +4,8 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a light graph chart schema.
+/// Generates a light graph schema.
 /// @type {Map}
-/// @prop {Map} width [null] - The width of the chart.
-/// @prop {Map} height [null] - The height of the chart.
 /// @prop {Color} backing-brush [null] - Sets the brush to use to fill the backing of the bullet graph.
 /// @prop {Color} backing-outline [null] - Sets the brush to use for the outline of the backing.
 /// @prop {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
@@ -29,10 +27,8 @@
 /// @prop {Color} value-outline [null] - Sets the brush to use for the outline of actual value element.
 /// @prop {Number} value-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
 /// @see $default-palette
-$_light-graph-chart: extend(
+$_light-graph: extend(
     (
-        'width': null,
-        'height': null,
         'backing-brush': null,
         'backing-outline': null,
         'backing-stroke-thickness': null,
@@ -56,15 +52,15 @@ $_light-graph-chart: extend(
     )
 );
 
-/// Generates a fluent graph-chart schema.
+/// Generates a fluent graph schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-graph-chart
-$_fluent-graph-chart: extend($_light-graph-chart);
+/// @requires $_light-graph
+$_fluent-graph: extend($_light-graph);
 
-/// Generates a bootstrap graph-chart schema.
+/// Generates a bootstrap graph schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_light-graph-chart
-$_bootstrap-graph-chart: extend($_light-graph-chart);
+/// @requires $_light-graph
+$_bootstrap-graph: extend($_light-graph);
 

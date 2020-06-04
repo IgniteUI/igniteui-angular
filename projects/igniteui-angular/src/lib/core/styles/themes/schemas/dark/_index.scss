@@ -26,7 +26,7 @@
 @import './expansion-panel';
 @import './gauge';
 @import './financial-chart';
-@import './graph-chart';
+@import './graph';
 @import './funnel-chart';
 @import './grid';
 @import './grid-filtering';
@@ -82,7 +82,7 @@
 /// @property {Map} linear-gauge [$_dark-gauge]
 /// @property {Map} radial-gauge [$_dark-gauge]
 /// @property {Map} financial-chart [$_dark-financial-chart]
-/// @property {Map} graph-chart [$_dark-graph-chart]
+/// @property {Map} bullet-graph [$_dark-graph]
 /// @property {Map} igx-grid [$_dark-grid]
 /// @property {Map} igx-grid-filtering [$_dark-grid-filtering]
 /// @property {Map} igx-paginator [$_dark-pagination]
@@ -137,7 +137,7 @@ $dark-schema: (
     linear-gauge: $_dark-gauge,
     radial-gauge: $_dark-gauge,
     financial-chart: $_dark-financial-chart,
-    graph-chart: $_dark-graph-chart,
+    bullet-graph: $_dark-graph,
     funnel-chart: $_dark-funnel-chart,
     igx-grid: $_dark-grid,
     igx-grid-filtering: $_dark-grid-filtering,
@@ -195,7 +195,7 @@ $dark-schema: (
 /// @property {Map} linear-gauge [$_dark-fluent-gauge]
 /// @property {Map} radial-gauge [$_dark-fluent-gauge]
 /// @property {map} financial-chart [$_dark-fluent-financial-chart]
-/// @property {map} graph-chart [$_dark-fluent-graph-chart],
+/// @property {map} bullet-graph [$_dark-fluent-graph],
 /// @property {map} igx-grid [$_dark-fluent-grid],
 /// @property {map} igx-grid-filtering [$_dark-fluent-grid-filtering],
 /// @property {map} igx-paginator [$_dark-fluent-pagination],
@@ -250,7 +250,7 @@ $dark-fluent-schema: (
     linear-gauge: $_dark-fluent-gauge,
     radial-gauge: $_dark-fluent-gauge,
     financial-chart: $_dark-fluent-financial-chart,
-    graph-chart: $_dark-fluent-graph-chart,
+    bullet-graph: $_dark-fluent-graph,
     igx-grid: $_dark-fluent-grid,
     igx-grid-filtering: $_dark-fluent-grid-filtering,
     igx-paginator: $_dark-fluent-pagination,
@@ -308,7 +308,7 @@ $dark-fluent-schema: (
 /// @property {Map} linear-gauge [$_dark-bootstrap-gauge]
 /// @property {Map} radial-gauge [$_dark-bootstrap-gauge]
 /// @property {map} financial-chart [$_dark-bootstrap-financial-chart]
-/// @property {map} graph-chart [$_dark-bootstrap-graph-chart],
+/// @property {map} bullet-graph [$_dark-bootstrap-graph],
 /// @property {map} igx-grid [$_dark-bootstrap-grid],
 /// @property {map} igx-grid-filtering [$_dark-bootstrap-grid-filtering],
 /// @property {map} igx-paginator [$_dark-bootstrap-pagination],
@@ -363,7 +363,7 @@ $dark-bootstrap-schema: (
     linear-gauge: $_dark-bootstrap-gauge,
     radial-gauge: $_dark-bootstrap-gauge,
     financial-chart: $_dark-bootstrap-financial-chart,
-    graph-chart: $_dark-bootstrap-graph-chart,
+    bullet-graph: $_dark-bootstrap-graph,
     igx-grid: $_dark-bootstrap-grid,
     igx-grid-filtering: $_dark-bootstrap-grid-filtering,
     igx-paginator: $_dark-bootstrap-pagination,
