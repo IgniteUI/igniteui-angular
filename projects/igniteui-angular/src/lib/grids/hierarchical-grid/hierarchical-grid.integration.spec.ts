@@ -1030,12 +1030,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 5;
             hierarchicalGrid.height = '700px';
-            tick();
             fixture.detectChanges();
             const paginator = fixture.debugElement.query(By.directive(IgxPaginatorComponent)).componentInstance;
             // pin the first row
             hierarchicalGrid.getRowByIndex(0).pin();
-            tick();
             fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(6);
@@ -1046,7 +1044,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // pin the second row
             hierarchicalGrid.getRowByIndex(2).pin();
-            tick();
             fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(7);
@@ -1057,7 +1054,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // expand the first row
             hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
-            tick(DEBOUNCE_TIME);
+            fixture.detectChanges();
+            tick(50);
             fixture.detectChanges();
 
             expect(hierarchicalGrid.rowList.length).toEqual(8);
