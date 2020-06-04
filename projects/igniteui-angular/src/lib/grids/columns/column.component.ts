@@ -294,10 +294,10 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
-     * Enables/Disables column selection.
+     * Select/deselect a column.
      * Default value is `false`.
-     * ```html
-     * <igx-column [selected] = "true"></igx-column>
+     * ```typescript
+     * this.column.selected = true;
      * ```
      * @memberof IgxColumnComponent
      */
