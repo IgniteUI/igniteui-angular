@@ -40,6 +40,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
             this.isMessageShown = showMessage(
                 'The grid should be editable in order to use IgxGridEditingActionsComponent',
                 this.isMessageShown);
+                return;
         }
         // be sure row is in view
         if (grid.rowList.filter(r => r === row).length !== 0) {
