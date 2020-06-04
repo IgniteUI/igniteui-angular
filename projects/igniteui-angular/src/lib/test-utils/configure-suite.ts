@@ -16,16 +16,13 @@ export const configureTestSuite = () => {
     resizeObserverIgnoreError();
   });
 
-  afterEach(fakeAsync(() => {
-    flush();
-    flushMicrotasks();
-
+  afterEach(() => {
     const testBedApi: any = getTestBed();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
       try {
         fixture.destroy();
       } catch (e) {
-        console.error('Error during cleanup of component', {
+        console.error('Error: during cleanup of component', {
           component: fixture.componentInstance,
           stacktrace: e,
         });
@@ -37,7 +34,7 @@ export const configureTestSuite = () => {
     if (testBedApi._testModuleRef) {
       testBedApi._testModuleRef = null;
     }
-  }));
+  });
 
   afterAll(() => {
     TestBed.resetTestingModule = originReset;
