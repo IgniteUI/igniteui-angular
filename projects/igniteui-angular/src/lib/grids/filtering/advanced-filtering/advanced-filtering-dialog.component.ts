@@ -1062,6 +1062,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick() {
+        this.grid.endEdit(false);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -1078,6 +1079,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public applyChanges() {
+        this.grid.endEdit(false);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }
