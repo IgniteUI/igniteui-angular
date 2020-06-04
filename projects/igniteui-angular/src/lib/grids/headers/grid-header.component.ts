@@ -163,7 +163,13 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
             event.stopPropagation();
+
             if (this.grid.filteringService.isFilterRowVisible) {
+                if (this.column.filterCellTemplate) {
+                    this.grid.filteringRow.close();
+                    return;
+                }
+
                 if (this.column.filterable && !this.column.columnGroup &&
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
