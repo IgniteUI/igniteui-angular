@@ -1,6 +1,20 @@
 import { Injectable, SecurityContext, Inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { Subject } from 'rxjs';
+
+/**
+ * Event emitted when a SVG icon is loaded through
+ * a HTTP request.
+ */
+export interface IgxIconLoadedEvent {
+    /** Name of the icon */
+    name: string;
+    /** The actual SVG text */
+    value: string;
+    /** The fontSet for the icon. Defaults to material. */
+    fontSet: string;
+}
 
 /**
  * **Ignite UI for Angular Icon Service** -
@@ -14,16 +28,25 @@ import { DOCUMENT } from '@angular/common';
  * this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
  * ```
  */
-
 @Injectable({
     providedIn: 'root'
 })
-
 export class IgxIconService {
     private _fontSet = 'material-icons';
     private _fontSetAliases = new Map<string, string>();
     private _svgContainer: HTMLElement;
     private _cachedSvgIcons: Set<string> = new Set<string>();
+    private _iconLoaded = new Subject<IgxIconLoadedEvent>();
+
+    /**
+     * Observable that emits when an icon is successfully loaded
+     * through a HTTP request.
+     * @example
+     * ```typescript
+     * this.service.iconLoaded.subscribe((ev: IgxIconLoadedEvent) => ...);
+     * ```
+     */
+    public iconLoaded = this._iconLoaded.asObservable();
 
     constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) { }
 
@@ -143,6 +166,7 @@ export class IgxIconService {
                 const request = event.target as XMLHttpRequest;
                 if (request.status === 200) {
                     instance.cacheSvgIcon(iconName, request.responseText, fontSet);
+                    instance._iconLoaded.next({ name: iconName, value: request.responseText, fontSet });
                 } else {
                     throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
                 }
