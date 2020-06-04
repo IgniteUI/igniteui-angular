@@ -139,6 +139,20 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
+     * Event emmited after a grid is created based on this row island.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'" (afterGridCreated)="gridCreated($event)" #rowIsland>
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
+    @Output()
+    public onGridInitialized = new EventEmitter<IGridCreatedEventArgs>();
+
+    /**
      * @hidden
      */
     get id() {

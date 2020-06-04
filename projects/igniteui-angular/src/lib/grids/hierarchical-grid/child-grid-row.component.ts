@@ -143,7 +143,6 @@ private resolver;
         this.hGrid.childRow =  this;
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
-        this.hGrid.rootGrid.cdr.detectChanges();
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,
@@ -160,6 +159,12 @@ private resolver;
         layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
         this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
+
+        this.layout.onGridInitialized.emit({
+            owner: this.layout,
+            parentID: this.rowData.rowID,
+            grid: this.hGrid
+        });
 
         this.hGrid.cdr.detectChanges();
     }

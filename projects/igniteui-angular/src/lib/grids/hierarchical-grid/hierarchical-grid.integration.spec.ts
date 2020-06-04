@@ -238,7 +238,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // enable sorting
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             childGrid.columnList.first.sortable = true;
-            childGrid.cdr.detectChanges();
+            fixture.detectChanges();
 
             const childHeader = GridFunctions.getColumnHeader('ID', fixture, childGrid);
             GridFunctions.clickHeaderSortIcon(childHeader);

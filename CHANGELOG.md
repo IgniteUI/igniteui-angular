@@ -5,6 +5,8 @@ All notable changes for each version of this project will be documented in this 
 ## 9.1.0
 
 ### General
+- `IgxHierarchicalGrid`
+    - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - When a column is sortable sort indicator is always visible. The column is sorted when click on it.
 - `igx-paginator` -  The following inputs have been deprecated for the `paginator` component and will be removed in future versions

@@ -1372,8 +1372,10 @@ export class IgxHGridRemoteOnDemandComponent {
     }
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
-        event.grid.data = this.generateRowIslandData(5);
-        event.grid.cdr.detectChanges();
+        setTimeout(() => {
+            event.grid.data = this.generateRowIslandData(5);
+            event.grid.cdr.detectChanges();
+        });
     }
 }
 
