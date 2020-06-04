@@ -7,7 +7,7 @@ import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -127,7 +127,8 @@ import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sampl
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { HierarchicalGridRemoteVirtualizationComponent } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
-import { IgxGridHierarchicalRemotePipe } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
+import { IgxGridHierarchicalPipe } from 'projects/igniteui-angular/src/lib/grids/hierarchical-grid/hierarchical-grid.pipes';
 
 const components = [
     ActionStripSampleComponent,
@@ -243,8 +244,7 @@ const components = [
     AboutComponent,
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
-    GridRemotePagingSampleComponent,
-    IgxGridHierarchicalRemotePipe
+    GridRemotePagingSampleComponent
 ];
 
 @NgModule({
@@ -275,6 +275,9 @@ const components = [
     providers: [
         LocalService,
         RemoteService,
+        HierarchicalRemoteService,
+        GridBaseAPIService,
+        IgxGridHierarchicalPipe,
         IgxExcelExporterService,
         IgxIconService,
         IgxCsvExporterService,
