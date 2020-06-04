@@ -692,7 +692,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
     describe('Integration', () => {
         describe('Paging', () => {
-            it('Should not take into account expanded detail views as additional records.', () => {
+             it('Should not take into account expanded detail views as additional records.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.paging = true;
                 grid = fix.componentInstance.grid;
@@ -703,9 +703,9 @@ describe('IgxGrid Master Detail #grid', () => {
 
                 const initialTotalRecords = grid.pagingState.metadata.countRecords;
                 expect(grid.pagingState.metadata.countRecords).toEqual(initialTotalRecords);
-            });
+            }));
 
-            it('Should persist template state after paging to a page with fewer records and paging back.', () => {
+            it('Should persist template state after paging to a page with fewer records and paging back.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 fix.componentInstance.paging = true;
                 fix.componentInstance.perPage = 5;
@@ -731,11 +731,11 @@ describe('IgxGrid Master Detail #grid', () => {
                 // check checkbox state
                 checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
                 expect(checkbox.componentInstance.checked).toBeTruthy();
-            });
+            }));
         });
 
         describe('Hiding', () => {
-            it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', () => {
+            it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -744,7 +744,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
-            });
+            }));
         });
 
         describe('Pinning', () => {
@@ -800,7 +800,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Cell Selection', () => {
-            it('Should exclude expanded detail views when doing range cell selection', () => {
+            it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
@@ -838,7 +838,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
                 expect(selectionChangeSpy).toHaveBeenCalledWith(range);
                 expect(rowDetail.querySelector('[class*="selected"]')).toBeNull();
-            });
+            }));
         });
 
         describe('Row Selection', () => {

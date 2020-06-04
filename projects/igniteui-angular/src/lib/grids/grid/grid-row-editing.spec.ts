@@ -1887,7 +1887,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
     describe('Custom overlay', () => {
 
-        it('Custom overlay', () => {
+        it('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1909,9 +1909,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledTimes(1);
-        });
+        }));
 
-        it('Empty template', () => {
+        it('Empty template', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridEmptyRowEditTemplateComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1945,7 +1945,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             cell = grid.getCellByColumn(0, 'ProductName');
             expect(cell.editMode).toBe(true);
-        });
+        }));
     });
 
     describe('Transaction', () => {
