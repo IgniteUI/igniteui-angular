@@ -66,7 +66,7 @@ describe('igxGridEditingActions #grid ', () => {
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-        });
+        }));
         it('should disable editing actions on disabled rows', () => {
             grid.rowList.first.pin();
             fixture.detectChanges();
