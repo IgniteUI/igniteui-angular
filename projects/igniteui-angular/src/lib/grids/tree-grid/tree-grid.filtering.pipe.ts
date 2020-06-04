@@ -80,14 +80,14 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         this.resetFilteredOutProperty(grid.records);
 
         if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
-            grid.setFilterData(null, pinned);
+            grid.setFilteredData(null, pinned);
             return hierarchyData;
         }
 
         const result = this.filter(hierarchyData, state);
         const filteredData: any[] = [];
         this.expandAllRecursive(grid, result, grid.expansionStates, filteredData);
-        grid.setFilterData(filteredData, pinned);
+        grid.setFilteredData(filteredData, pinned);
 
         return result;
     }

@@ -37,7 +37,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxTextHighlightDirective, IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
+import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
@@ -324,7 +324,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.filteringService.refreshExpressions();
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
-            this.notifyChanges();
+            this.notifyChanges(true);
         }
     }
 
@@ -385,7 +385,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.notifyChanges();
+        this.notifyChanges(true);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
@@ -2969,7 +2969,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    public setFilterData(data, pinned: boolean) {
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredData(data, pinned: boolean) {
         if (this.hasPinnedRecords && pinned) {
             this._filteredPinnedData = data || [];
             const filteredUnpinned =  this._filteredUnpinnedData || [];
@@ -3034,12 +3038,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pinnedRecordsCount > 0 && pinned) {
             this._filteredSortedPinnedData = data;
             this.pinnedRecords = data;
-            this.filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
+            this._filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
         } else if (this.pinnedRecordsCount > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
-            this.filteredSortedData = data;
+            this._filteredSortedData = data;
         }
     }
 
@@ -5949,10 +5953,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
-    }
-    set filteredSortedData(value: any[]) {
-        this._filteredSortedData = value;
-        this.refreshSearch(true);
     }
 
     /**
