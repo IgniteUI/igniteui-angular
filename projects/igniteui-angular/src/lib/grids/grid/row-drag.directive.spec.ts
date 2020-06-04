@@ -910,229 +910,251 @@ describe('Row Drag Tests #grid', () => {
             expect(dragCell.value).toEqual(newCellValue);
         });
     });
+});
 
-    describe('Hiearchical grid feature integration tests', () => {
-        let dragGrid: IgxHierarchicalGridComponent;
-        let dragRows: DebugElement[];
-        let pointerMoveToDropEvent: PointerEvent;
-        configureTestSuite();
-        beforeAll(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxHierarchicalGridTestComponent,
-                    IgxHierarchicalGridCustomGhostTestComponent
-                ],
-                imports: [
-                    FormsModule,
-                    NoopAnimationsModule,
-                    IgxGridModule,
-                    IgxHierarchicalGridModule
-                ]
-            }).compileComponents();
-        }));
-        it('should be able to drag row on every hierarchical level', fakeAsync(/** height/width setter rAF */() => {
-            fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
-            fixture.detectChanges();
-            dragGrid = fixture.componentInstance.hDragGrid;
-            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-            dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
-            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+describe('Row Drag Tests #hGrid', () => {
+    let fixture: ComponentFixture<any>;
+    let dropAreaElement: Element;
+    let dragIndicatorElements: DebugElement[];
+    let dragIndicatorElement: Element;
+    let rowDragDirective: IgxRowDragDirective;
+    let startPoint: Point;
+    let movePoint: Point;
+    let dropPoint: Point;
+    let pointerDownEvent: PointerEvent;
+    let pointerMoveEvent: PointerEvent;
+    let pointerUpEvent: PointerEvent;
+    let dragGrid: IgxHierarchicalGridComponent;
+    let dragRows: DebugElement[];
+    let pointerMoveToDropEvent: PointerEvent;
+    configureTestSuite();
+    beforeAll(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridTestComponent,
+                IgxHierarchicalGridCustomGhostTestComponent
+            ],
+            imports: [
+                FormsModule,
+                NoopAnimationsModule,
+                IgxGridModule,
+                IgxHierarchicalGridModule
+            ]
+        }).compileComponents();
+    }));
+    it('should be able to drag row on every hierarchical level', fakeAsync(/** height/width setter rAF */() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
+        fixture.detectChanges();
+        dragGrid = fixture.componentInstance.hDragGrid;
+        dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+        dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
-            // first level row
-            let rowToDrag = dragGrid.getRowByIndex(0);
-            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
-            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+        // first level row
+        let rowToDrag = dragGrid.getRowByIndex(0);
+        dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+        rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
-            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
-            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
-            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
-            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+        pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+        pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+        spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+        spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
-            // pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+        // pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
 
-            // second level row
-            const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
-            rowToDrag = childGrid.getRowByIndex(0);
-            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
-            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        // second level row
+        const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
+        rowToDrag = childGrid.getRowByIndex(0);
+        dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+        rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(childGrid.onRowDragStart, 'emit').and.callThrough();
-            spyOn(childGrid.onRowDragEnd, 'emit').and.callThrough();
+        spyOn(childGrid.onRowDragStart, 'emit').and.callThrough();
+        spyOn(childGrid.onRowDragEnd, 'emit').and.callThrough();
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(childGrid, rowToDrag, rowDragDirective, 1);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, false, 1);
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(childGrid, rowToDrag, rowDragDirective, 1);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(childGrid, rowToDrag, rowDragDirective, false, 1);
 
-            // third level row
-            const nestedChildGrid = childGrid.hgridAPI.getChildGrids(false)[0];
-            rowToDrag = nestedChildGrid.getRowByIndex(0);
-            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
-            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        // third level row
+        const nestedChildGrid = childGrid.hgridAPI.getChildGrids(false)[0];
+        rowToDrag = nestedChildGrid.getRowByIndex(0);
+        dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+        rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(nestedChildGrid.onRowDragStart, 'emit').and.callThrough();
-            spyOn(nestedChildGrid.onRowDragEnd, 'emit').and.callThrough();
+        spyOn(nestedChildGrid.onRowDragStart, 'emit').and.callThrough();
+        spyOn(nestedChildGrid.onRowDragEnd, 'emit').and.callThrough();
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, false, 1);
-        }));
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(nestedChildGrid, rowToDrag, rowDragDirective, 1);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, false, 1);
+    }));
 
-        it('should correctly create custom ghost element', fakeAsync(/** height/width setter rAF */() => {
-            fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
-            dragGrid = fixture.componentInstance.hDragGrid;
-            fixture.detectChanges();
-            dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
-            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+    it('should correctly create custom ghost element', fakeAsync(/** height/width setter rAF */() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
+        dragGrid = fixture.componentInstance.hDragGrid;
+        fixture.detectChanges();
+        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+        dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
-            // first level row
-            let rowToDrag = dragGrid.getRowByIndex(0);
-            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
-            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+        // first level row
+        let rowToDrag = dragGrid.getRowByIndex(0);
+        dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+        rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
-            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
-            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
-            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
-            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+        pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+        pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
 
-            expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
-            expect((rowDragDirective as any).ghostContext.grid).toEqual(dragGrid);
+        expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
+        expect((rowDragDirective as any).ghostContext.grid).toEqual(dragGrid);
 
-            // second level row
-            const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
-            rowToDrag = childGrid.getRowByIndex(0);
-            dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
-            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        // second level row
+        const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
+        rowToDrag = childGrid.getRowByIndex(0);
+        dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
+        rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
 
-            expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
-            expect((rowDragDirective as any).ghostContext.data.ChildLevels).toEqual(2);
-            expect((rowDragDirective as any).ghostContext.grid).toEqual(childGrid);
-        }));
-    });
+        expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
+        expect((rowDragDirective as any).ghostContext.data.ChildLevels).toEqual(2);
+        expect((rowDragDirective as any).ghostContext.grid).toEqual(childGrid);
+    }));
+});
 
-    describe('Tree grid feature integration tests', () => {
-        let dragGrid: IgxTreeGridComponent;
-        let dragRows: DebugElement[];
-        let pointerMoveToDropEvent: PointerEvent;
-        configureTestSuite();
-        beforeAll(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxTreeGridTestComponent
-                ],
-                imports: [
-                    FormsModule,
-                    NoopAnimationsModule,
-                    IgxGridModule,
-                    IgxTreeGridModule
-                ]
-            }).compileComponents();
-        }));
-        beforeEach(fakeAsync(() => {
-            fixture = TestBed.createComponent(IgxTreeGridTestComponent);
-            fixture.detectChanges();
-            dragGrid = fixture.componentInstance.treeGrid;
-            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-            dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
-            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-        }));
+describe('Row Drag Tests #tGrid', () => {
+    let fixture: ComponentFixture<any>;
+    let dropAreaElement: Element;
+    let dragIndicatorElements: DebugElement[];
+    let dragIndicatorElement: Element;
+    let rowDragDirective: IgxRowDragDirective;
+    let startPoint: Point;
+    let movePoint: Point;
+    let dropPoint: Point;
+    let pointerDownEvent: PointerEvent;
+    let pointerMoveEvent: PointerEvent;
+    let pointerUpEvent: PointerEvent;
+    let dragGrid: IgxTreeGridComponent;
+    let dragRows: DebugElement[];
+    let pointerMoveToDropEvent: PointerEvent;
+    configureTestSuite();
+    beforeAll(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridTestComponent
+            ],
+            imports: [
+                FormsModule,
+                NoopAnimationsModule,
+                IgxGridModule,
+                IgxTreeGridModule
+            ]
+        }).compileComponents();
+    }));
+    beforeEach(fakeAsync(() => {
+        fixture = TestBed.createComponent(IgxTreeGridTestComponent);
+        fixture.detectChanges();
+        dragGrid = fixture.componentInstance.treeGrid;
+        dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
+        dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
+        dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+    }));
 
-        it('should be able to drag row on every hierarchical level', () => {
-            // first level row
-            dragIndicatorElement = dragIndicatorElements[1].nativeElement;
-            let rowToDrag = dragGrid.getRowByIndex(0);
-            rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
+    it('should be able to drag row on every hierarchical level', () => {
+        // first level row
+        dragIndicatorElement = dragIndicatorElements[1].nativeElement;
+        let rowToDrag = dragGrid.getRowByIndex(0);
+        rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
-            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
-            pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
-            pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
-            pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
+        pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+        pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
+        spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
+        spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 1);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 1);
 
-            // second level row
-            dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            rowToDrag = dragGrid.getRowByIndex(1);
-            rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        // second level row
+        dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+        rowToDrag = dragGrid.getRowByIndex(1);
+        rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 2);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 2);
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 2);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 2);
 
-            // third level row
-            dragIndicatorElement = dragIndicatorElements[3].nativeElement;
-            rowToDrag = dragGrid.getRowByIndex(2);
-            rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
-            startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-            pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+        // third level row
+        dragIndicatorElement = dragIndicatorElements[3].nativeElement;
+        rowToDrag = dragGrid.getRowByIndex(2);
+        rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+        startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+        pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            rowDragDirective.onPointerDown(pointerDownEvent);
-            rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 3);
-            rowDragDirective.onPointerMove(pointerMoveToDropEvent);
-            rowDragDirective.onPointerUp(pointerUpEvent);
-            fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 3);
-        });
+        rowDragDirective.onPointerDown(pointerDownEvent);
+        rowDragDirective.onPointerMove(pointerMoveEvent);
+        verifyRowDragStartEvent(dragGrid, rowToDrag, rowDragDirective, 3);
+        rowDragDirective.onPointerMove(pointerMoveToDropEvent);
+        rowDragDirective.onPointerUp(pointerUpEvent);
+        fixture.detectChanges();
+        verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 3);
     });
 });
 @Component({
