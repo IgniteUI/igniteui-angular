@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, ComponentFixture, fakeAsync, flush, flushMicrotasks, resetFakeAsyncZone } from '@angular/core/testing';
+import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
 import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
@@ -11,7 +11,7 @@ export const configureTestSuite = () => {
   let originReset;
   beforeAll(() => {
     originReset = TestBed.resetTestingModule;
-    TestBed.resetTestingModule();
+    // TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
@@ -30,7 +30,6 @@ export const configureTestSuite = () => {
     });
     testBedApi._instantiated = false;
     // reset Ivy TestBed
-    testBedApi._moduleRef = null;
     if (testBedApi._testModuleRef) {
       testBedApi._testModuleRef = null;
     }
