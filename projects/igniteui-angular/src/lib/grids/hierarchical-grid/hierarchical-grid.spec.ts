@@ -459,7 +459,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     });
 });
 
-fdescribe('IgxHierarchicalGrid Row Islands #hGrid', () => {
+describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
