@@ -456,6 +456,7 @@ describe('Row Drag Tests #grid', () => {
             });
         });
     });
+
     describe('Grid feature integration tests', () => {
         let dragGrid: IgxGridComponent;
         let dropGrid: IgxGridComponent;
@@ -909,6 +910,7 @@ describe('Row Drag Tests #grid', () => {
             expect(dragCell.value).toEqual(newCellValue);
         });
     });
+
     describe('Hiearchical grid feature integration tests', () => {
         let dragGrid: IgxHierarchicalGridComponent;
         let dragRows: DebugElement[];
@@ -928,7 +930,7 @@ describe('Row Drag Tests #grid', () => {
                 ]
             }).compileComponents();
         }));
-        it('should be able to drag row on every hierarchical level', () => {
+        it('should be able to drag row on every hierarchical level', fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
             dragGrid = fixture.componentInstance.hDragGrid;
@@ -998,9 +1000,9 @@ describe('Row Drag Tests #grid', () => {
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
             verifyRowDragEndEvent(nestedChildGrid, rowToDrag, rowDragDirective, false, 1);
-        });
+        }));
 
-        it('should correctly create custom ghost element', () => {
+        it('should correctly create custom ghost element', fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent);
             dragGrid = fixture.componentInstance.hDragGrid;
             fixture.detectChanges();
@@ -1046,8 +1048,9 @@ describe('Row Drag Tests #grid', () => {
             expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
             expect((rowDragDirective as any).ghostContext.data.ChildLevels).toEqual(2);
             expect((rowDragDirective as any).ghostContext.grid).toEqual(childGrid);
-        });
+        }));
     });
+
     describe('Tree grid feature integration tests', () => {
         let dragGrid: IgxTreeGridComponent;
         let dragRows: DebugElement[];
@@ -1132,8 +1135,6 @@ describe('Row Drag Tests #grid', () => {
         });
     });
 });
-
-
 @Component({
     template: `
         <igx-grid #grid
