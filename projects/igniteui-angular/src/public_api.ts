@@ -76,6 +76,7 @@ export * from './lib/grids/columns/templates.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
+export * from './lib/grids/hierarchical-grid/hierarchical-grid.pipes';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';

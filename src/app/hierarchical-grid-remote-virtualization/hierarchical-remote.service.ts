@@ -14,7 +14,7 @@ export class HierarchicalRemoteService {
     requestStartIndex = 0;
     totalCount: number;
     remoteData: Observable<any[]>;
-    _remoteData: BehaviorSubject<any[]>;    
+    _remoteData: BehaviorSubject<any[]>;
     url = `https://services.odata.org/V4/Northwind/Northwind.svc/Products`;
     urlBuilder;
 
@@ -32,7 +32,7 @@ export class HierarchicalRemoteService {
         this._remoteData.next(undefined);
     }
 
-    private _updateCachedData(data: any, startIndex: number, lastChunk:boolean) {
+    private _updateCachedData (data: any, startIndex: number, lastChunk: boolean) {
         for (let i = 0; i < data.length; i++) {
             this.cachedData[i + startIndex] = data[i];
         }
@@ -41,7 +41,7 @@ export class HierarchicalRemoteService {
         }
     }
 
-    getData(virtualizationState: any, grid : IgxHierarchicalGridComponent, cb?: (any) => void) {
+    getData(virtualizationState: any, grid: IgxHierarchicalGridComponent, cb?: (any) => void) {
         return this.http.get(this.buildUrl(virtualizationState, grid)).pipe(
             map(response => response),
         )
@@ -50,31 +50,31 @@ export class HierarchicalRemoteService {
             this.totalCount = d['@odata.count'];
 
             result.map(x => {
-                x["Orders"] = [
-                    { "OrderID": 1, "Sequence": 2},
-                    { "OrderID": 2, "Sequence": 2},
-                    { "OrderID": 3, "Sequence": 2},
-                    { "OrderID": 1, "Sequence": 2},
-                    { "OrderID": 2, "Sequence": 2},
-                    { "OrderID": 3, "Sequence": 2},
-                    { "OrderID": 1, "Sequence": 2},
-                    { "OrderID": 2, "Sequence": 2},
-                    { "OrderID": 3, "Sequence": 2}
+                x['Orders'] = [
+                    { 'OrderID': 1, 'Sequence': 2},
+                    { 'OrderID': 2, 'Sequence': 2},
+                    { 'OrderID': 3, 'Sequence': 2},
+                    { 'OrderID': 1, 'Sequence': 2},
+                    { 'OrderID': 2, 'Sequence': 2},
+                    { 'OrderID': 3, 'Sequence': 2},
+                    { 'OrderID': 1, 'Sequence': 2},
+                    { 'OrderID': 2, 'Sequence': 2},
+                    { 'OrderID': 3, 'Sequence': 2}
                   ];
                 });
-                const processedData = this.hierarchyPipe.addHierarchy(grid, result, grid.expansionStates, grid.primaryKey, grid.childLayoutKeys);       
+                const processedData = this.hierarchyPipe
+                .addHierarchy(grid, result, grid.expansionStates, grid.primaryKey, grid.childLayoutKeys);
 
-                const childRecsBeforeIndex = this.cachedData.filter((x, index) => grid.isChildGridRecord(x) && index < virtualizationState.startIndex);
+                const childRecsBeforeIndex = this.cachedData
+                .filter((x, index) => grid.isChildGridRecord(x) && index < virtualizationState.startIndex);
                 const size = virtualizationState.chunkSize || 10;
                 const lastChunk =  virtualizationState.startIndex + size === grid.verticalScrollContainer.totalItemCount;
                 this._updateCachedData(processedData, this.requestStartIndex + childRecsBeforeIndex.length, lastChunk);
-                const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));        
+                const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));
                 grid.verticalScrollContainer.totalItemCount = this.totalCount + allChildRecords.length;
 
                 const dataResult = this.cachedData.slice(virtualizationState.startIndex, virtualizationState.startIndex + size);
-                console.log(dataResult);
                 this._remoteData.next(dataResult);
-           
             if (cb) {
                 cb(dataResult);
             }
@@ -85,7 +85,8 @@ export class HierarchicalRemoteService {
         let qS = '';
         if (virtualizationArgs) {
             let requiredChunkSize: number;
-            const childRecsBeforeIndex = this.cachedData.filter((x, index) => grid.isChildGridRecord(x) && index<=virtualizationArgs.startIndex);
+            const childRecsBeforeIndex = this.cachedData
+            .filter((x, index) => grid.isChildGridRecord(x) && index <= virtualizationArgs.startIndex);
             const skip = virtualizationArgs.startIndex - childRecsBeforeIndex.length;
             this.requestStartIndex = skip;
             requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;

@@ -18,7 +18,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
     public selectionMode;
     remoteData = [];
     gridData = [];
-    totalCount:number;
+    totalCount: number;
     primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
         { name: 'OrderID', type: 'number', level: 1 },
@@ -46,7 +46,6 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
             this.gridData = data;
             this.hGrid.cdr.detectChanges();
             (this.hGrid.verticalScrollContainer as any)._updateSizeCache();
-            
             this.hGrid.isLoading = false;
         });
     }
