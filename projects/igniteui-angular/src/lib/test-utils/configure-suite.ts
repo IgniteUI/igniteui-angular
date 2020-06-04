@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, ComponentFixture, fakeAsync, flush, flushMicrotasks } from '@angular/core/testing';
+import { TestBed, getTestBed, ComponentFixture, fakeAsync, flush, flushMicrotasks, resetFakeAsyncZone } from '@angular/core/testing';
 import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
@@ -11,7 +11,7 @@ export const configureTestSuite = () => {
   let originReset;
   beforeAll(() => {
     originReset = TestBed.resetTestingModule;
-    // TestBed.resetTestingModule();
+    TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
@@ -21,10 +21,22 @@ export const configureTestSuite = () => {
     flushMicrotasks();
 
     const testBedApi: any = getTestBed();
-    testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+    testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
+      try {
+        fixture.destroy();
+      } catch (e) {
+        console.error('Error during cleanup of component', {
+          component: fixture.componentInstance,
+          stacktrace: e,
+        });
+      }
+    });
     testBedApi._instantiated = false;
     // reset Ivy TestBed
-    testBedApi._testModuleRef = null;
+    testBedApi._moduleRef = null;
+    if (testBedApi._testModuleRef) {
+      testBedApi._testModuleRef = null;
+    }
   }));
 
   afterAll(() => {
