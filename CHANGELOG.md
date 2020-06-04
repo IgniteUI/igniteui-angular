@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.2.0
+
+### New Features
+
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
+
 ## 9.1.0
 
 ### General

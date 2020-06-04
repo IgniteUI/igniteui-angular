@@ -17,6 +17,7 @@ import { IgxSelectModule } from './select.module';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
+const CSS_CLASS_INPUT_GROUP_HINT = 'igx-input-group__hint';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
@@ -107,7 +108,6 @@ describe('igxSelect', () => {
             ]
         }).compileComponents();
     }));
-
     describe('General tests: ', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -2486,7 +2486,6 @@ describe('igxSelect', () => {
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
     });
-
     describe('Test CDR - Expression changed after it was checked', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectCDRComponent);
@@ -2510,6 +2509,22 @@ describe('igxSelect', () => {
             expect(selectCDR).toBeDefined();
             expect(selectCDR.value).toBe('ID');
         });
+    });
+    describe('Input with input group directives - hint, label, prefix, suffix: ', () => {
+        beforeEach(fakeAsync(()  => {
+            fixture = TestBed.createComponent(IgxSelectAffixComponent);
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+        }));
+        it('should not open dropdown on hint click',
+            fakeAsync(() => {
+                 const hint = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_HINT));
+                 expect(select.collapsed).toBeTruthy();
+                 hint.nativeElement.click();
+                 tick();
+                 fixture.detectChanges();
+                 expect(select.collapsed).toBeTruthy();
+        }));
     });
 });
 
@@ -2704,6 +2719,7 @@ class IgxSelectBottomComponent {
         <igx-suffix>
             <igx-icon fontSet="material">alarm</igx-icon>
         </igx-suffix>
+    <igx-hint>I am a Hint</igx-hint>
     <igx-select-item *ngFor="let item of items" [value]="item">
         {{ item }}
     </igx-select-item>
@@ -2722,7 +2738,6 @@ class IgxSelectAffixComponent {
         'Option 6',
         'Option 7'];
 }
-
 
 @Component({
     template: `
