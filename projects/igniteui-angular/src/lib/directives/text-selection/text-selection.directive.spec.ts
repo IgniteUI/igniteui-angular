@@ -14,7 +14,8 @@ describe('IgxSelection', () => {
         TestBed.configureTestingModule({
             declarations: [
                 TriggerTextSelectionComponent,
-                TriggerTextSelectionOnClickComponent
+                TriggerTextSelectionOnClickComponent,
+                TriggerTextSelectionFalseOnClickComponent
             ],
             imports: [IgxTextSelectionModule]
         });
@@ -52,26 +53,19 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Shouldn\'t make a selection when the state is set to false', () => {
-        const template = ` <input type="text" [igxTextSelection]="false" #select="igxTextSelection"
-            (click)="select.trigger()" value="Some custom value!" />`;
+    it('Shouldn\'t make a selection when the state is set to false', async() => {
+        const fix = TestBed.createComponent(TriggerTextSelectionFalseOnClickComponent);
+        fix.detectChanges();
 
-        TestBed.overrideTemplateUsingTestingModule(TriggerTextSelectionOnClickComponent, template);
+        const input = fix.debugElement.query(By.css('input'));
+        const inputNativeElem = input.nativeElement;
+        const inputElem: HTMLElement = input.nativeElement;
 
-        TestBed.compileComponents().then(() => {
-            const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
-            fix.detectChanges();
+        inputElem.click();
+        fix.detectChanges();
 
-            const input = fix.debugElement.query(By.css('input'));
-            const inputNativeElem = input.nativeElement;
-            const inputElem: HTMLElement = input.nativeElement;
-
-            inputElem.click();
-            fix.detectChanges();
-
-            expect(inputNativeElem.selectionEnd).toEqual(0);
-            expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd)).toEqual('');
-        });
+        expect(inputNativeElem.selectionEnd).toEqual(0);
+        expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd)).toEqual('');
     });
 });
 
@@ -90,3 +84,10 @@ class TriggerTextSelectionComponent { }
         `
 })
 class TriggerTextSelectionOnClickComponent { }
+@Component({
+    template:
+    `
+        <input type="text" [igxTextSelection]="false" #select="igxTextSelection" (click)="select.trigger()" value="Some custom value!" />
+    `
+})
+class TriggerTextSelectionFalseOnClickComponent { }
