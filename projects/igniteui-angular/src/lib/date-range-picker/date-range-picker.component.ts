@@ -18,8 +18,7 @@ import {
     QueryList,
     SimpleChanges,
     TemplateRef,
-    ViewChild,
-    AfterContentInit
+    ViewChild
 } from '@angular/core';
 import {
     AbstractControl,
@@ -86,7 +85,7 @@ import {
     ]
 })
 export class IgxDateRangePickerComponent extends DisplayDensityBase
-    implements IToggleView, OnChanges, OnInit, AfterViewInit, AfterContentInit, OnDestroy, ControlValueAccessor, Validator {
+    implements IToggleView, OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
     /**
      * Display calendar in either `dialog` or `dropdown` mode.
      * @remarks
@@ -640,21 +639,18 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.updateInputs();
     }
 
-    public ngAfterContentInit(): void {
-        if (this.hasProjectedInputs && this.displayFormat) {
+    /** @hidden @internal */
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes['locale']) {
+            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+        }
+        if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.projectedInputs.forEach(i => {
                 const input = i as IgxDateRangeInputsBaseComponent;
                 if (!input.dateTimeEditor.displayFormat) {
                     input.dateTimeEditor.displayFormat = this.displayFormat;
                 }
             });
-        }
-    }
-
-    /** @hidden @internal */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['locale']) {
-            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
         }
     }
 
