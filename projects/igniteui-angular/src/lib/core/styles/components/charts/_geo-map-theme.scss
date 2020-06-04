@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $width [null] - Sets the width of the map.
-/// @param {Map} $height [null] - Sets the height of the map.
 /// @param {String} $plot-area-background [null]- Gets or sets the brush used as the background for the current Map object's plot area.
 /// @requires $default-palette
 /// @requires $light-schema
@@ -15,19 +13,15 @@
 /// @requires extend
 ///
 /// @example scss
-///   $my-chart-theme: igx-map-chart-theme($width: 550px);
+///   $my-map-theme: igx-geo-map-theme($width: 550px);
 ///   // Pass the theme to the igx-css-vars mixin
-///   @include igx-css-vars($my-chart-theme);
-
-@function igx-map-chart-theme(
+///   @include igx-css-vars($my-map-theme);
+@function igx-geo-map-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-
-    $width: null,
-    $height: null,
     $plot-area-background: null
 ) {
-    $name: 'map-chart';
+    $name: 'geo-map';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -40,8 +34,6 @@
 
     @return extend( $theme, (
         name: $name,
-        width: $width,
-        height: $height,
         plot-area-background: $plot-area-background
     ));
 }
