@@ -36,7 +36,7 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         const row = this.strip.context;
         const firstEditable = row.cells.filter(cell => cell.editable)[0];
         const grid = row.grid;
-        if (!grid.hasEditableColumn) {
+        if (!grid.hasEditableColumns) {
             this.isMessageShown = showMessage(
                 'The grid should be editable in order to use IgxGridEditingActionsComponent',
                 this.isMessageShown);
