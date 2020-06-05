@@ -40,7 +40,7 @@ module.exports = function (config) {
       suppressFailed: false,
       suppressPassed: false,
       showSpecTiming: false,
-      failFast: true
+      failFast: false
     },
     port: 9876,
     colors: true,
