@@ -35,6 +35,7 @@ export const configureTestSuite = () => {
         });
       }
     });
+    testBedApi._activeFixtures = [];
     testBedApi._instantiated = false;
     // reset Ivy TestBed
     if (testBedApi._testModuleRef) {
