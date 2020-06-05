@@ -19,12 +19,6 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
     remoteData = [];
     gridData = [];
     totalCount: number;
-    primaryKeys = [
-        { name: 'CustomerID', type: 'string', level: 0 },
-        { name: 'OrderID', type: 'number', level: 1 },
-        { name: 'EmployeeID', type: 'number', level: 2 },
-        { name: 'ProductID', type: 'number', level: 2 }
-    ];
 
     @ViewChild('rowIsland1', { static: true })
     rowIsland1: IgxRowIslandComponent;
@@ -33,7 +27,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
     hGrid: IgxHierarchicalGridComponent;
 
     constructor(private remoteService: HierarchicalRemoteService) {
-        remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Products';
+        remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Customers?$expand=Orders';
     }
 
     private _prevRequest: any;

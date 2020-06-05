@@ -9,7 +9,6 @@ import { IgxHierarchicalGridAPIService, IgxHierarchicalGridComponent } from 'ign
 export class HierarchicalRemoteService {
 
     public remotePagingData: BehaviorSubject<any[]>;
-    public urlPaging = 'https://www.igniteui.com/api/products';
     public cachedData = [];
     requestStartIndex = 0;
     totalCount: number;
@@ -46,22 +45,8 @@ export class HierarchicalRemoteService {
             map(response => response),
         )
         .subscribe(d => {
-            const result = d['value'];
-            this.totalCount = d['@odata.count'];
-
-            result.map(x => {
-                x['Orders'] = [
-                    { 'OrderID': 1, 'Sequence': 2},
-                    { 'OrderID': 2, 'Sequence': 2},
-                    { 'OrderID': 3, 'Sequence': 2},
-                    { 'OrderID': 1, 'Sequence': 2},
-                    { 'OrderID': 2, 'Sequence': 2},
-                    { 'OrderID': 3, 'Sequence': 2},
-                    { 'OrderID': 1, 'Sequence': 2},
-                    { 'OrderID': 2, 'Sequence': 2},
-                    { 'OrderID': 3, 'Sequence': 2}
-                  ];
-                });
+                const result = d['value'];
+                this.totalCount = d['@odata.count'];
                 const processedData = this.hierarchyPipe
                 .addHierarchy(grid, result, grid.expansionStates, grid.primaryKey, grid.childLayoutKeys);
 
@@ -91,7 +76,7 @@ export class HierarchicalRemoteService {
             this.requestStartIndex = skip;
             requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
             const top = requiredChunkSize;
-            qS = `?$skip=${skip}&$top=${top}&$count=true`;
+            qS = `&$skip=${skip}&$top=${top}&$count=true`;
             console.log(qS);
         }
         return `${this.url}${qS}`;
