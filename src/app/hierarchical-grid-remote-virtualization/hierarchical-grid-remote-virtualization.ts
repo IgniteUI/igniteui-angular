@@ -12,7 +12,7 @@ import { debounceTime } from 'rxjs/operators';
 @Component({
     selector: 'app-hierarchical-grid-remote-virtualization-sample',
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
-    styleUrls: ["hierarchical-grid-remote-virtualization.scss"],
+    styleUrls: ['hierarchical-grid-remote-virtualization.scss'],
     providers: [RemoteService]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
@@ -42,15 +42,15 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
 
     public ngAfterViewInit() {
         this.hGrid.isLoading = true;
-        //load initial data
+        // load initial data
         this.handleLoad(this.hGrid.virtualizationState);
 
         // update when row is expanded/collapsed
         this.hGrid.expansionStatesChange.subscribe(x => {
             this.handleLoad(this.hGrid.virtualizationState);
         });
-        
-        //update on scroll
+
+        // update on scroll
         this.hGrid.onDataPreLoad.pipe().subscribe(() => {
             this.gridData = this.remoteService.getDataFromCache(this.hGrid.virtualizationState);
         });

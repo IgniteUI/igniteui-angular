@@ -55,8 +55,8 @@ export class HierarchicalRemoteService {
         .subscribe(d => {
                 const result = d['value'];
                 this.totalCount = d['@odata.count'];
-                if (this.cachedData.length === 0) {                    
-                    this.cachedData = new Array<any>(this.totalCount*2).fill({emptyRec: true});
+                if (this.cachedData.length === 0) {
+                    this.cachedData = new Array<any>(this.totalCount * 2).fill({emptyRec: true});
                 }
                 const processedData = this.hierarchyPipe
                 .addHierarchy(grid, result, grid.expansionStates, grid.primaryKey, grid.childLayoutKeys);
