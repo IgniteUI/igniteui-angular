@@ -1705,7 +1705,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(footerContent).toEqual('Custom content');
             const grid = fix.componentInstance.grid;
 
-            const expectedHeight = parseInt(grid.height) - grid.theadRow.nativeElement.offsetHeight - grid.scrollWidth - 100;
+            const expectedHeight = parseInt(grid.height, 10) - grid.theadRow.nativeElement.offsetHeight - grid.scrollWidth - 100;
             expect(expectedHeight - grid.calcHeight).toBeLessThanOrEqual(1);
         });
     });
