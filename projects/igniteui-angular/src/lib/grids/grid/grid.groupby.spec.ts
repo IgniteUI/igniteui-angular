@@ -2692,7 +2692,10 @@ export class GroupableGridComponent extends DataParent {
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Is it Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRow let-groupRow>
-                <span>Grouping by "{{groupRow.column.header}}". Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
+                <span>
+                    Grouping by "{{groupRow.column.header}}".
+                    Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}
+                </span>
             </ng-template>
             <ng-template igxRowExpandedIndicator let-groupRow>
                 <span>EXPANDED</span>
