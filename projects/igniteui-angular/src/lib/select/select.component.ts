@@ -1,28 +1,44 @@
-import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import {
-    Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
-    Injector, OnInit, AfterViewInit, OnDestroy, Inject, Type
-
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    Inject,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    QueryList,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
+import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { EditorProvider } from '../core/edit-provider';
+import { IgxSelectionAPIService } from '../core/selection';
+import { CancelableEventArgs } from '../core/utils';
+import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { IgxDropDownItemBaseDirective } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-
+import { AbsoluteScrollStrategy, OverlaySettings } from '../services/index';
+import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
-
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
-import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
-import { CancelableEventArgs } from '../core/utils';
-import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
-import { EditorProvider } from '../core/edit-provider';
-import { IgxSelectionAPIService } from '../core/selection';
-import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+
+
+
 
 /** @hidden @internal */
 @Directive({
@@ -79,9 +95,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
 
     private ngControl: NgControl = null;
-    private _statusChanges$: Subscription;
     private _overlayDefaults: OverlaySettings;
     private _value: any;
+    protected destroy$ = new Subject<boolean>();
 
     /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
@@ -350,7 +366,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };
-        this.children.changes.subscribe(() => {
+        this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
         });
@@ -393,7 +409,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public onBlur(): void {
         this._onTouchedCallback();
         if (this.ngControl && !this.ngControl.valid) {
-             this.input.valid = IgxInputState.INVALID;
+            this.input.valid = IgxInputState.INVALID;
         } else {
             this.input.valid = IgxInputState.INITIAL;
         }
@@ -430,7 +446,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      */
     public ngAfterViewInit() {
         if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
             this.manageRequiredAsterisk();
         }
         this.cdr.detectChanges();
@@ -440,17 +456,16 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
         this.selection.clear(this.id);
-        if (this._statusChanges$) {
-            this._statusChanges$.unsubscribe();
-        }
     }
 
     /**
      * @hidden @internal
      * Prevent input blur - closing the items container on Header/Footer Template click.
      */
-   public mousedownHandler(event) {
+    public mousedownHandler(event) {
         event.preventDefault();
     }
 }
