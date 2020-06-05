@@ -1137,24 +1137,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
         });
 
@@ -1240,24 +1244,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 5, 7);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
             it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by ID)', () => {

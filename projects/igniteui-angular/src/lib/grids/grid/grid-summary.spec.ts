@@ -1,7 +1,7 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxDateSummaryOperand,
     IgxGridModule,
@@ -46,7 +46,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ],
-            imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
