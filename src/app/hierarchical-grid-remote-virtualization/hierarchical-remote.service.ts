@@ -31,6 +31,14 @@ export class HierarchicalRemoteService {
         this._remoteData.next(undefined);
     }
 
+    public getDataFromCache(data: any) {
+        const startIndex = data.startIndex;
+        const endIndex = data.chunkSize + startIndex;
+        const dataResult = this.cachedData.slice(startIndex, endIndex);
+        this._remoteData.next(dataResult);
+        return dataResult;
+    }
+
     private _updateCachedData (data: any, startIndex: number, lastChunk: boolean) {
         for (let i = 0; i < data.length; i++) {
             this.cachedData[i + startIndex] = data[i];
@@ -47,6 +55,9 @@ export class HierarchicalRemoteService {
         .subscribe(d => {
                 const result = d['value'];
                 this.totalCount = d['@odata.count'];
+                if (this.cachedData.length === 0) {                    
+                    this.cachedData = new Array<any>(this.totalCount*2).fill({emptyRec: true});
+                }
                 const processedData = this.hierarchyPipe
                 .addHierarchy(grid, result, grid.expansionStates, grid.primaryKey, grid.childLayoutKeys);
 
@@ -57,7 +68,6 @@ export class HierarchicalRemoteService {
                 this._updateCachedData(processedData, this.requestStartIndex + childRecsBeforeIndex.length, lastChunk);
                 const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));
                 grid.verticalScrollContainer.totalItemCount = this.totalCount + allChildRecords.length;
-
                 const dataResult = this.cachedData.slice(virtualizationState.startIndex, virtualizationState.startIndex + size);
                 this._remoteData.next(dataResult);
             if (cb) {
@@ -77,7 +87,6 @@ export class HierarchicalRemoteService {
             requiredChunkSize = virtualizationArgs.chunkSize === 0 ? 11 : virtualizationArgs.chunkSize + childRecsBeforeIndex.length;
             const top = requiredChunkSize;
             qS = `&$skip=${skip}&$top=${top}&$count=true`;
-            console.log(qS);
         }
         return `${this.url}${qS}`;
     }

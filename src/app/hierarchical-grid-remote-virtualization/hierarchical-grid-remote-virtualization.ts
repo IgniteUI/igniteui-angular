@@ -7,10 +7,12 @@ import {
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { HierarchicalRemoteService } from './hierarchical-remote.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-hierarchical-grid-remote-virtualization-sample',
     templateUrl: 'hierarchical-grid-remote-virtualization.html',
+    styleUrls: ["hierarchical-grid-remote-virtualization.scss"],
     providers: [RemoteService]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
@@ -30,33 +32,32 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Customers?$expand=Orders';
     }
 
-    private _prevRequest: any;
-    public handlePreLoad(args) {
-        if (this._prevRequest) {
-            this._prevRequest.unsubscribe();
-        }
+    public handleLoad(args) {
         this.hGrid.isLoading = true;
-        this._prevRequest = this.remoteService.getData(args, this.hGrid, (data) => {
+        this.remoteService.getData(args, this.hGrid, (data) => {
             this.gridData = data;
-            this.hGrid.cdr.detectChanges();
-            (this.hGrid.verticalScrollContainer as any)._updateSizeCache();
             this.hGrid.isLoading = false;
         });
     }
 
-
     public ngAfterViewInit() {
         this.hGrid.isLoading = true;
+        //load initial data
+        this.handleLoad(this.hGrid.virtualizationState);
+
+        // update when row is expanded/collapsed
         this.hGrid.expansionStatesChange.subscribe(x => {
-            this.remoteService.getData(this.hGrid.virtualizationState, this.hGrid, (data) => {
-                this.gridData = data;
-                this.hGrid.isLoading = false;
-            });
+            this.handleLoad(this.hGrid.virtualizationState);
+        });
+        
+        //update on scroll
+        this.hGrid.onDataPreLoad.pipe().subscribe(() => {
+            this.gridData = this.remoteService.getDataFromCache(this.hGrid.virtualizationState);
         });
 
-        this.remoteService.getData(this.hGrid.virtualizationState, this.hGrid, (data) => {
-            this.gridData = data;
-            this.hGrid.isLoading = false;
+        // handle remote request after user stops scrolling for 500ms
+        this.hGrid.onDataPreLoad.pipe(debounceTime(500)).subscribe((event) => {
+            this.handleLoad(event);
         });
     }
 }
