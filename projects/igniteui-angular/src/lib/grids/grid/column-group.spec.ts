@@ -2,7 +2,6 @@ import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, OnInit, TemplateRef, ElementRef } from '@angular/core';
-
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
