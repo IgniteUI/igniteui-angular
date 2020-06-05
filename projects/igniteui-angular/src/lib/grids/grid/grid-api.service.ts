@@ -43,15 +43,15 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             names.forEach((colName) => {
                 const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
                 const grpExpandState = this.grid.groupingExpansionState;
-                /* Do not set the new instance produced by filter
-                when there are not any expansion states */
-                if (grpExpandState.length) {
-                    /* remove expansion states related to the cleared group
+                 /* remove expansion states related to the cleared group
                     and all with deeper hierarchy than the cleared group */
-                    this.grid.groupingExpansionState = grpExpandState
-                        .filter((val) => {
-                            return val.hierarchy && val.hierarchy.length <= grExprIndex;
-                        });
+                const newExpandState = grpExpandState.filter((val) => {
+                    return val.hierarchy && val.hierarchy.length <= grExprIndex;
+                });
+                /* Do not set the new instance produced by filter
+                    when there are no differences between expansion states */
+                if (newExpandState.length !== grpExpandState.length) {
+                   this.grid.groupingExpansionState = newExpandState;
                 }
             });
         } else {
