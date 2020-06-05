@@ -179,7 +179,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Clear the filter of a given column.
+     * Clears the filter of a given column if name is provided. Otherwise clears the filters of all columns.
      */
     public clearFilter(field: string): void {
         if (field) {
@@ -199,6 +199,12 @@ export class IgxFilteringService implements OnDestroy {
         if (field) {
             const expressions = this.getExpressions(field);
             expressions.length = 0;
+        } else {
+            const fields = this.grid.columns.map(c => c.field);
+            fields.forEach(f => {
+                const expressions = this.getExpressions(f);
+                expressions.length = 0;
+            });
         }
 
         this.isFiltering = false;
