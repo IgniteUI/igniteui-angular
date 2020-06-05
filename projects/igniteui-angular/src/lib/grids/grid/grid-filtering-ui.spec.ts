@@ -2071,6 +2071,40 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is not committed');
             expect(input.value).toBe('', 'input value is present and not committed');
         }));
+
+        it('should not retain expression values in cell filter after calling grid clearFilter() method.', fakeAsync(() => {
+            // Click on 'ProductName' filter chip
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Enter expression
+            GridFunctions.typeValueInFilterRowInput('NetAdvantage', fix);
+            tick(DEBOUNCETIME);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(1);
+
+            // Clear filters of all columns
+            grid.clearFilter();
+            fix.detectChanges();
+
+            // Verify filtered data
+            expect(grid.filteredData).toBeNull();
+
+            // Click on 'ProductName' filter chip
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Verify there are no chips since we cleared all filters
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const conditionChips = filteringRow.queryAll(By.directive(IgxChipComponent));
+            expect(conditionChips.length).toBe(0);
+
+            // Verify filtered data
+            expect(grid.filteredData).toBeNull();
+        }));
     });
 
     describe('Integration scenarios', () => {
@@ -2376,8 +2410,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(colOperands[0].nativeElement.innerText).toEqual('AND');
             expect(colIndicator.length).toEqual(0);
         }));
-
-
     });
 
     describe(null, () => {
