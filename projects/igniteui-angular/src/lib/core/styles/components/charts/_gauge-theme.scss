@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $width [null] - The width of the gauge in pixels, string (px) or percentage (%).
-/// @param {Map} $height [null] - The height of the gauge in pixels, string (px) or percentage (%).
 /// @param {Color} $backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
 /// @param {Color} $backing-outline [null] - Sets the color to use for the outline of the backing.
 /// @param {Number} $backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.

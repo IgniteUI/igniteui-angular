@@ -8,8 +8,6 @@
 
 /// Generates a light gauge schema.
 /// @type {Map}
-/// @property {Map} width [null] - The width of the gauge in pixels, string (px) or percentage (%).
-/// @property {Map} height [null] - The height of the gauge in pixels, string (px) or percentage (%).
 /// @property {Color} backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
 /// @property {Color} backing-outline [null] - Sets the color to use for the outline of the backing.
 /// @property {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
@@ -33,10 +31,6 @@
 /// @see $default-palette
 $_light-gauge: extend(
     (
-        'width': null,
-
-        'height': null,
-
         'backing-brush': null,
 
         'backing-outline': null,
@@ -47,17 +41,7 @@ $_light-gauge: extend(
 
         'minor-tick-stroke-thickness': null,
 
-        'needle-breadth': null,
-
         'needle-brush': null,
-
-        'needle-inner-base-width': null,
-
-        'needle-inner-point-width': null,
-
-        'needle-outer-base-width': null,
-
-        'needle-outer-point-width': null,
 
         'needle-outline': null,
 
@@ -69,24 +53,53 @@ $_light-gauge: extend(
 
         'scale-brush': null,
 
-        'scale-outline': null,
-
-        'scale-stroke-thickness': null,
-
         'tick-brush': null,
 
         'tick-stroke-thickness': null
     )
 );
 
-/// Generates a fluent gauge schema.
+/// Generates a light linear gauge schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-gauge
-$_fluent-gauge: extend($_light-gauge);
+$_light-linear-gauge: extend(
+    $_light-gauge,
+    (
+        needle-breadth: null,
 
-/// Generates a bootstrap gauge schema.
+        needle-inner-base-width: null,
+
+        needle-inner-point-width: null,
+
+        needle-outer-base-width: null,
+
+        needle-outer-point-width: null,
+
+        scale-outline: null,
+
+        scale-stroke-thickness: null,
+    )
+);
+
+/// Generates a light radial gauge schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-gauge
-$_bootstrap-gauge: extend($_light-gauge);
+$_light-radial-gauge: extend($_light-gauge);
+
+/// Generates fluent gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-linear-gauge
+/// @requires $_light-radial-gauge
+$_fluent-linear-gauge: extend($_light-linear-gauge);
+$_fluent-radial-gauge: extend($_light-radial-gauge);
+
+/// Generates bootstrap gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-linear-gauge
+/// @requires $_light-radial-gauge
+$_bootstrap-linear-gauge: extend($_light-linear-gauge);
+$_bootstrap-radial-gauge: extend($_light-radial-gauge);

@@ -83,8 +83,8 @@
 /// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
-/// @property {Map} linear-gauge [$_light-gauge]
-/// @property {Map} radial-gauge [$_light-gauge]
+/// @property {Map} linear-gauge [$_light-linear-gauge]
+/// @property {Map} radial-gauge [$_light-radial-gauge]
 /// @property {Map} financial-chart [$_light-financial-chart]
 /// @property {Map} bullet-graph [$_light-graph]
 /// @property {Map} igx-grid [$_light-grid]
@@ -139,8 +139,8 @@ $light-schema: (
     igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
-    linear-gauge: $_light-gauge,
-    radial-gauge: $_light-gauge,
+    linear-gauge: $_light-linear-gauge,
+    radial-gauge: $_light-radial-gauge,
     financial-chart: $_light-financial-chart,
     bullet-graph: $_light-graph,
     igx-grid: $_light-grid,
@@ -198,8 +198,8 @@ $light-fluent-schema: (
     igx-divider: $_fluent-divider,
     igx-drop-down: $_fluent-drop-down,
     igx-expansion-panel: $_fluent-expansion-panel,
-    linear-gauge: $_fluent-gauge,
-    radial-gauge: $_fluent-gauge,
+    linear-gauge: $_fluent-linear-gauge,
+    radial-gauge: $_fluent-radial-gauge,
     financial-chart: $_fluent-financial-chart,
     bullet-graph: $_fluent-graph,
     igx-grid: $_fluent-grid,
@@ -257,8 +257,8 @@ $light-bootstrap-schema: (
     igx-divider: $_bootstrap-divider,
     igx-drop-down: $_bootstrap-drop-down,
     igx-expansion-panel: $_bootstrap-expansion-panel,
-    linear-gauge: $_bootstrap-gauge,
-    radial-gauge: $_bootstrap-gauge,
+    linear-gauge: $_bootstrap-linear-gauge,
+    radial-gauge: $_bootstrap-radial-gauge,
     financial-chart: $_bootstrap-financial-chart,
     bullet-graph: $_bootstrap-graph,
     igx-grid: $_bootstrap-grid,
