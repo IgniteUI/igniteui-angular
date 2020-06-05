@@ -21,6 +21,7 @@
 @import './combo';
 @import './dialog';
 @import './data-chart';
+@import './doughnut-chart';
 @import './funnel-chart';
 @import './date-range-picker';
 @import './divider';
@@ -73,6 +74,7 @@
 /// @property {Map} igx-carousel [$_light-carousel]
 /// @property {Map} category-chart [$_light-category-chart]
 /// @property {Map} data-chart [$_light-data-chart]
+/// @property {Map} doughnut-chart [$_light-dough-chart]
 /// @property {Map} funnel-chart [$_light-funnel-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
@@ -129,6 +131,7 @@ $light-schema: (
     igx-carousel: $_light-carousel,
     category-chart: $_light-category-chart,
     data-chart: $_light-data-chart,
+    doughnut-chart: $_light-doughnut-chart,
     funnel-chart: $_light-funnel-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
@@ -193,6 +196,7 @@ $light-fluent-schema: (
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
     data-chart: $_fluent-data-chart,
+    doughnut-chart: $_fluent-doughnut-chart,
     funnel-chart: $_fluent-funnel-chart,
     igx-date-range: $_fluent-date-range-picker,
     igx-divider: $_fluent-divider,
@@ -252,6 +256,7 @@ $light-bootstrap-schema: (
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,
     data-chart: $_bootstrap-data-chart,
+    doughnut-chart: $_bootstrap-doughnut-chart,
     funnel-chart: $_bootstrap-funnel-chart,
     igx-date-range: $_bootstrap-date-range-picker,
     igx-divider: $_bootstrap-divider,

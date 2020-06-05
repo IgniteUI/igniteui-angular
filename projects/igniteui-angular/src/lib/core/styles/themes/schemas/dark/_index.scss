@@ -20,6 +20,7 @@
 @import './combo';
 @import './dialog';
 @import './data-chart';
+@import './doughnut-chart';
 @import './date-range-picker';
 @import './divider';
 @import './drop-down';
@@ -76,6 +77,7 @@
 /// @property {Map} igx-combo [$_dark-combo]
 /// @property {Map} igx-dialog [$_dark-dialog]
 /// @property {Map} data-chart [$_dark-data-chart]
+/// @property {Map} doughnut-chart [$_dark-doughnut-chart]
 /// @property {Map} igx-date-range-picker [$_dark-date-range-picker]
 /// @property {Map} igx-divider [$_dark-divider]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
@@ -132,6 +134,7 @@ $dark-schema: (
     igx-combo: $_dark-combo,
     igx-dialog: $_dark-dialog,
     data-chart: $_dark-data-chart,
+    doughnut-chart: $_dark-doughnut-chart,
     igx-date-range: $_dark-date-range-picker,
     igx-divider: $_dark-divider,
     igx-drop-down: $_dark-drop-down,
@@ -191,6 +194,7 @@ $dark-schema: (
 /// @property {map} igx-combo [$_dark-fluent-combo],
 /// @property {map} igx-dialog [$_dark-fluent-dialog],
 /// @property {Map} data-chart [$_dark-fluent-data-chart]
+/// @property {Map} doughnut-chart [$_dark-fluent-doughnut-chart]
 /// @property {map} igx-date-range-picker [$_dark-fluent-date-range-picker],
 /// @property {map} igx-divider [$_dark-fluent-divider],
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
@@ -246,7 +250,8 @@ $dark-fluent-schema: (
     igx-column-hiding: $_dark-fluent-column-hiding,
     igx-combo: $_dark-fluent-combo,
     igx-dialog: $_dark-fluent-dialog,
-    data-chart: $_dark-data-chart,
+    data-chart: $_dark-fluent-data-chart,
+    doughnut-chart: $_dark-fluent-doughnut-chart,
     igx-date-range: $_dark-fluent-date-range-picker,
     igx-divider: $_dark-fluent-divider,
     igx-drop-down: $_dark-fluent-drop-down,
@@ -306,6 +311,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-combo [$_dark-bootstrap-combo],
 /// @property {map} igx-dialog [$_dark-bootstrap-dialog],
 /// @property {Map} data-chart [$_dark-bootstrap-data-chart]
+/// @property {Map} doughnut-chart [$_dark-bootstrap-doughnut-chart]
 /// @property {map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
 /// @property {map} igx-divider [$_dark-bootstrap-divider],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
@@ -362,6 +368,7 @@ $dark-bootstrap-schema: (
     igx-combo: $_dark-bootstrap-combo,
     igx-dialog: $_dark-bootstrap-dialog,
     data-chart: $_dark-bootstrap-data-chart,
+    doughnut-chart: $_dark-bootstrap-doughnut-chart,
     igx-date-range: $_dark-bootstrap-date-range-picker,
     igx-divider: $_dark-bootstrap-divider,
     igx-drop-down: $_dark-bootstrap-drop-down,
