@@ -160,7 +160,7 @@ export class IgxSorting implements IGridSortingStrategy {
         let result = [];
         while (i < data.length) {
             const group = this.groupedRecordsByExpression(data, i, expressions[level]);
-            const column = grid.getColumnByName(expressions[level].fieldName);
+            const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
                 level,
