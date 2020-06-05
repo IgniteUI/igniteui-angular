@@ -273,18 +273,20 @@ describe('IgLinearBar', () => {
     it('when passing string as value it should be parsed correctly', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         const compInstance = fix.componentInstance;
-        const stringValue = '0.50';
+        const bar = compInstance.progressbar;
+
+        compInstance.animate = false;
+        fix.detectChanges();
+
+        const stringValue = '20';
         compInstance.value = stringValue;
         fix.detectChanges();
 
-        const bar = compInstance.progressbar;
-
-        let expectedRes: number | string = stringValue.toString();
-        expectedRes = parseFloat(stringValue);
+        const expectedRes = parseInt(stringValue, 10);
         expect(bar.value).toBe(expectedRes);
     });
 
-    it('when update step is bigger than passed value the progress indicator should follow the value representation', () => {
+    it('when update step is bigger than passed value the progress indicator should follow the value itself', fakeAsync(() => {
         const fix = TestBed.createComponent(InitLinearProgressBarComponent);
         fix.detectChanges();
 
@@ -297,13 +299,14 @@ describe('IgLinearBar', () => {
         bar.value = value;
 
         fix.detectChanges();
+        tick(tickTime);
 
         const percentValue = Common.calcPercentage(value, max);
         expect(bar.value).toBe(value);
         expect(bar.step).toBe(step);
         expect(bar.max).toBe(max);
         expect(bar.valueInPercent).toBe(percentValue);
-    });
+    }));
 
     it(`when step value is not divisble to passed value the result returned from the
         value getter should be as same as the passed one`, fakeAsync(() => {
