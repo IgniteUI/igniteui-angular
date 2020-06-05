@@ -1887,6 +1887,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+                setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
@@ -1947,6 +1948,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+                setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1961,14 +1963,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
