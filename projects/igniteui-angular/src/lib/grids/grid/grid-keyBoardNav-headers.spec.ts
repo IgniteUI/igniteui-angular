@@ -60,11 +60,11 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should focus first header when the grid is scrolled', async () => {
             grid.navigateTo(7, 5);
-            await wait(100);
+            await wait(150);
             fix.detectChanges();
 
             gridHeader.triggerEventHandler('focus', {});
-            await wait(200);
+            await wait(250);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('ID', fix);

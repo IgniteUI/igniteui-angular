@@ -2524,6 +2524,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getFilterCell(fix, 'ReleaseDate').query(By.css('.custom-filter'))).not.toBeNull(
                 '\`ReleaseDate\` customer filter template was not found.');
         }));
+
+        it('Should close default filter template when clicking on a column with custom one.', fakeAsync(() => {
+            // Click on a column with default filter
+            GridFunctions.clickFilterCellChip(fix, 'Licensed');
+            fix.detectChanges();
+
+            // Verify filter row is visible
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).not.toBeNull();
+
+            // Click on a column with custom filter
+            const header = GridFunctions.getColumnHeaderByIndex(fix, 1);
+            header.click();
+            fix.detectChanges();
+
+            // Expect the filter row is closed
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).toBeNull('Default filter template was found on a column with custom filtering.');
+        }));
     });
 });
 
@@ -4280,7 +4299,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length).toBeGreaterThan(1);
+            for (let i = 1; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
 
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, dayOfWeek, fix);
             tick(100);

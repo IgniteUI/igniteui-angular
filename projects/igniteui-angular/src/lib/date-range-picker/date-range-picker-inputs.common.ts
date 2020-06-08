@@ -1,10 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener, Directive } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputState } from '../input-group';
+import { IgxInputDirective, IgxInputState } from '../input-group/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/index';
 
 /**
  * Represents a range between two dates.

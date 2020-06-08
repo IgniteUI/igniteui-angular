@@ -264,6 +264,44 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(editCell.nativeElement.value).toBe('test');
             expect(firstCell.editMode).toBeTruthy();
         }));
+
+        it('should end cell editing when clearing or applying advanced filter', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+
+            // Enter cell edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fixture);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(false);
+
+            // Close the dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fixture);
+            fixture.detectChanges();
+
+            // Enter cell edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fixture);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(false);
+        });
     });
 
     describe('Scroll, pin and blur', () => {

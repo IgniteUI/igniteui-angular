@@ -2839,7 +2839,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100))
+        this.resizeNotify.pipe(destructor, filter(() => !this._init),  throttleTime(100, undefined, {leading: true, trailing: true}))
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
@@ -4293,14 +4293,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     get totalHeight() {
         return this.calcHeight ? this.calcHeight + this.pinnedRowHeight : this.calcHeight;
     }
-
-    get pinnedBottom() {
-        const start = this.verticalScrollContainer.state.startIndex;
-        const end = this.verticalScrollContainer.state.startIndex + this.verticalScrollContainer.state.chunkSize - 1;
-        const bottom = this.verticalScrollContainer.getScrollForIndex(end, true) - this.verticalScrollContainer.getScrollForIndex(start);
-        return bottom;
-    }
-
 
     /**
      * Recalculates grid width/height dimensions.
