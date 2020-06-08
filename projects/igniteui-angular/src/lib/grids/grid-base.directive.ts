@@ -3765,19 +3765,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
         let dropIndex = columnCollection.indexOf(to);
 
-        if (to.columnGroup) {
+        if (to.columnGroup && position === DropPosition.AfterDropTarget) {
             dropIndex += to.allChildren.length;
         }
 
-        if (position === DropPosition.BeforeDropTarget) {
+        if (position === DropPosition.BeforeDropTarget && dropIndex > 0) {
             dropIndex--;
         }
 
         if (position === DropPosition.AfterDropTarget) {
             dropIndex++;
         }
-
-        columnCollection.splice(dropIndex, 0, ...columnCollection.splice(columnCollection.indexOf(from), 1));
+        const childColumnsCount = from.allChildren.length;
+        columnCollection.splice(dropIndex, 0, ...columnCollection.splice(columnCollection.indexOf(from), childColumnsCount + 1));
     }
     /**
      * @hidden
@@ -5155,9 +5155,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned && !c.columnLayoutChild)
-        .sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b)) :
-            this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
+        this._pinnedColumns = this.columnList
+        .filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
             this.columnList.filter((c) => !c.pinned)
                 .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));

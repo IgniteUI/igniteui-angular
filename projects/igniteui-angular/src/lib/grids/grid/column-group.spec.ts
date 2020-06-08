@@ -779,7 +779,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         expect(grid.getCellByColumn(0, 'City').value).toEqual('Berlin');
     }));
 
-    fit('Should pin column groups using indexes correctly.', fakeAsync(() => {
+    it('Should pin column groups using indexes correctly.', fakeAsync(() => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
 
@@ -799,7 +799,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         tick();
         fixture.detectChanges();
 
-        testColumnsVisibleIndexes([ci.idCol].concat(ci.genInfoColList)
+        testColumnsVisibleIndexes(ci.genInfoColList.concat(ci.idCol)
             .concat(ci.postalCodeColList).concat(ci.cityColList).concat(ci.countryColList)
             .concat(ci.regionColList).concat(ci.addressColList).concat(ci.phoneColList)
             .concat(ci.faxColList));
@@ -1075,7 +1075,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         testColumnsOrder(colsOrder);
     }));
 
-    fit('Should move columns and groups. Pinning enabled.', fakeAsync(() => {
+    it('Should move columns and groups. Pinning enabled.', fakeAsync(() => {
         const fixture = TestBed.createComponent(StegosaurusGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
