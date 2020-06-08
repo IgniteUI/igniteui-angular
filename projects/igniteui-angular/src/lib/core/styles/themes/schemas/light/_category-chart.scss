@@ -8,8 +8,6 @@
 
 /// Generates a light category chart schema.
 /// @type {Map}
-/// @property {Map} width [null] - The width of the chart.
-/// @property {Map} height [null] - The height of the chart.
 /// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
 /// @property {List} marker-brushes [series]- Defines the palette from which automatically assigned series marker brushes colors are selected.
@@ -66,10 +64,6 @@
 /// @see $default-palette
 $_light-category-chart: extend(
     (
-        'width': null,
-
-        'height': null,
-
         'margin': (
             expand-shorthand: (null)
         ),
@@ -93,7 +87,10 @@ $_light-category-chart: extend(
             map-keys-prefix: 'title'
         ),
 
-        'title-text-color': null,
+        'title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'title-text-style': null,
 
@@ -102,7 +99,10 @@ $_light-category-chart: extend(
             map-keys-prefix: 'subtitle'
         ),
 
-        'subtitle-text-color': null,
+        'subtitle-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'subtitle-text-style': null,
 
@@ -117,7 +117,10 @@ $_light-category-chart: extend(
             map-keys-prefix: 'x-axis-label'
         ),
 
-        'x-axis-label-text-color': null,
+        'x-axis-label-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'x-axis-label-text-style': null,
 
@@ -139,7 +142,10 @@ $_light-category-chart: extend(
 
         'x-axis-tick-length': null,
 
-        'x-axis-tick-stroke': null,
+        'x-axis-tick-stroke': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'x-axis-tick-stroke-thickness': null,
 
@@ -150,7 +156,10 @@ $_light-category-chart: extend(
             map-keys-prefix: 'x-axis-title'
         ),
 
-        'x-axis-title-text-color': null,
+        'x-axis-title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'x-axis-title-text-style': null,
 
@@ -159,7 +168,10 @@ $_light-category-chart: extend(
             map-keys-prefix: 'y-axis-label'
         ),
 
-        'y-axis-label-text-color': null,
+        'y-axis-label-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'y-axis-label-text-style': null,
 
@@ -186,13 +198,19 @@ $_light-category-chart: extend(
             map-keys-prefix: 'y-axis-title'
         ),
 
-        'y-axis-title-text-color': null,
+        'y-axis-title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'y-axis-title-text-style': null,
 
         'y-axis-tick-length': null,
 
-        'y-axis-tick-stroke': null,
+        'y-axis-tick-stroke': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
 
         'y-axis-tick-stroke-thickness': null
     )
