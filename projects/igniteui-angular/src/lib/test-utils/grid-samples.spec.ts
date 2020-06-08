@@ -586,6 +586,7 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
     colGroups = [
         {
+            field: 'group1',
             group: 'group1',
             pinned: true,
             columns: [
@@ -596,6 +597,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
             ]
         },
         {
+            field: 'group2',
             group: 'group2',
             columns: [
                 { field: 'Country', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
