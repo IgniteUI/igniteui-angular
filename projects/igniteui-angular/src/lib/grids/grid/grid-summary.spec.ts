@@ -1684,6 +1684,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '31', '43', '74', '37']);
 
             grid.clearGrouping('OnPTO');
+            fix.detectChanges();
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             verifySummariesForParentID19(fix, 6);
