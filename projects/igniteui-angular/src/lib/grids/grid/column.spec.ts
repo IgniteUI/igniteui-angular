@@ -10,6 +10,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
@@ -179,7 +180,7 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(headers[0].nativeElement.style['min-width']).toEqual('200px');
     });
 
-    it('headers and cells classes should be correct after scroll horizontal', ((done) => {
+    it('headers and cells classes should be correct after scroll horizontal', async () => {
         // Use setTimeout because when scroll the grid whenStable does not work
         const fix = TestBed.createComponent(ColumnHaederClassesComponent);
         fix.detectChanges();
@@ -200,30 +201,28 @@ describe('IgxGrid - Column properties #grid', () => {
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
         grid.headerContainer.getScroll().scrollLeft = 200;
-        setTimeout(() => {
-            fix.detectChanges();
-            headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-            headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
-            expect(headers[0].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+        await wait(100);
+        fix.detectChanges();
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(headers[0].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
-            allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-            allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
-            expect(allCells[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+        allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(allCells[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
-            grid.headerContainer.getScroll().scrollLeft = 0;
-            setTimeout(() => {
-                fix.detectChanges();
-                headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
-                expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+        grid.headerContainer.getScroll().scrollLeft = 0;
+        await wait(100);
+        fix.detectChanges();
+        headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
-                allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
-                expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-                done();
-            }, 100);
-        }, 100);
-    }));
+        allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
+        expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
+
+    });
 
     it('column width should be adjusted after a column has been hidden', () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
