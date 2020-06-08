@@ -3765,7 +3765,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
         let dropIndex = columnCollection.indexOf(to);
 
-        if (to.columnGroup && position === DropPosition.AfterDropTarget) {
+        if (to.columnGroup && position !== DropPosition.BeforeDropTarget) {
             dropIndex += to.allChildren.length;
         }
 

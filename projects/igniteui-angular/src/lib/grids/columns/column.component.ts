@@ -1606,7 +1606,8 @@ export class IgxColumnComponent implements AfterContentInit {
             }
 
             if (grid._unpinnedColumns.indexOf(this) !== -1) {
-                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1);
+                const childrenCount = this.allChildren.length;
+                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1 + childrenCount);
             }
         }
 
