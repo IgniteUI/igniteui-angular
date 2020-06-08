@@ -33,6 +33,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxTransactionService } from '../../services/index';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
@@ -129,8 +130,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public set filteredData(value) {
         this._filteredData = value;
-
-
     }
 
     /**
@@ -142,6 +141,35 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public get filteredData() {
         return this._filteredData;
+    }
+
+    /**
+     * Emitted when a new chunk of data is loaded from virtualization.
+     * @example
+     * ```typescript
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     * ```
+     */
+    @Output()
+    public onDataPreLoad = new EventEmitter<IForOfState>();
+
+    /**
+     * Gets/Sets the total number of records in the data source.
+     * @remarks
+     * This property is required for remote grid virtualization to function when it is bound to remote data.
+     * @example
+     * ```typescript
+     * const itemCount = this.grid1.totalItemCount;
+     * this.grid1.totalItemCount = 55;
+     * ```
+     */
+    set totalItemCount(count) {
+        this.verticalScrollContainer.totalItemCount = count;
+        this.cdr.detectChanges();
+    }
+
+    get totalItemCount() {
+        return this.verticalScrollContainer.totalItemCount;
     }
 
     /**
@@ -361,6 +389,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.onRowIslandChange()
         );
         super.ngAfterContentInit();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public dataLoading(event) {
+        this.onDataPreLoad.emit(event);
     }
 
     /** @hidden */

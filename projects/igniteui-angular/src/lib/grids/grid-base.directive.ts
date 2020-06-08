@@ -36,7 +36,7 @@ import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective, IActiveHighlightInfo } from '../directives/text-highlight/text-highlight.directive';
 import {
     AbsoluteScrollStrategy,
@@ -1256,16 +1256,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
-
-    /**
-     * Emitted when a new chunk of data is loaded from virtualization.
-     * @example
-     * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
-     * ```
-     */
-    @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * Emitted when column is resized.
@@ -3166,13 +3156,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.preventContainerScroll);
         });
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
     }
 
     /**
