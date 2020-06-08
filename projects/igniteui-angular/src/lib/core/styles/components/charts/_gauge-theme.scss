@@ -6,6 +6,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
 /// @param {Color} $backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
 /// @param {Color} $backing-outline [null] - Sets the color to use for the outline of the backing.
 /// @param {Number} $backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
@@ -69,21 +70,16 @@
 /// @param {Number} $backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
 /// @param {Color} $font-brush [null] - Sets the color to use for the label font.
 /// @param {Number} $minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
-/// @param {Number} $needle-breadth [null] - Sets the needle breadth.
 /// @param {Color} $needle-brush [null] - Sets the color to use for the needle element.
-/// @param {Number} $needle-inner-base-width [null] - Sets the width of the needle's inner base.
-/// @param {Number} $needle-inner-point-width [null] - Sets the width of the needle's inner point.
-/// @param {Number} $needle-outer-base-width [null] - Sets the width of the needle's outer base.
-/// @param {Number} $needle-outer-point-width [null] - Sets the width of the needle's outer point.
 /// @param {Color} $needle-outline [null] - Sets the color to use for the outline of needle element.
 /// @param {Number} $needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
 /// @param {List} $range-brushes [null] - Sets a collection of colors to be used as the palette for linear gauge ranges.
 /// @param {List} $range-outlines [null] - Sets a collection of colors to be used as the palette for linear gauge outlines.
 /// @param {Color} $scale-brush [null] - Sets the color to use to fill the scale of the linear gauge.
-/// @param {Color} $scale-outline [null] - Sets the color to use for the outline of the scale.
-/// @param {Number} $scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
 /// @param {Color} $tick-brush [null] - Sets the color to use for the major tickmarks.
 /// @param {Number} $tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
+/// @param {Color} $needle-pivot-brush [null] - Sets the color of the needle pivot point.
+/// @param {Color} $needle-pivot-outline [null] - Sets the outline color of the needle pivot point.
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -130,3 +126,4 @@
         @include css-vars-from-theme((font: inherit), 'radial-gauge');
     }
 }
+

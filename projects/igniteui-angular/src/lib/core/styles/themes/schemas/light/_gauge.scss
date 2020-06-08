@@ -8,42 +8,54 @@
 
 /// Generates a light gauge schema.
 /// @type {Map}
-/// @property {Color} backing-brush [null] - Sets the color to use to fill the backing of the linear gauge.
-/// @property {Color} backing-outline [null] - Sets the color to use for the outline of the backing.
+/// @property {Color} backing-brush [(igx-color: 'surface', darken: 8%)] - Sets the color to use to fill the backing of the linear gauge.
+/// @property {Color} backing-outline [(igx-color: 'surface', darken: 8%)] - Sets the color to use for the outline of the backing.
 /// @property {Number} backing-stroke-thickness [null] - Sets the stroke thickness of the backing outline.
-/// @property {Color} font-brush [null] - Sets the color to use for the label font.
+/// @property {Color} font-brush [(igx-color: 'surface', rgba: .62)] - Sets the color to use for the label font.
+/// @property {Color} minor-tick-brush [(igx-color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
 /// @property {Number} minor-tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering minor ticks.
-/// @property {Number} needle-breadth [null] - Sets the needle breadth.
-/// @property {Color} needle-brush [null] - Sets the color to use for the needle element.
-/// @property {Number} needle-inner-base-width [null] - Sets the width of the needle's inner base.
-/// @property {Number} needle-inner-point-width [null] - Sets the width of the needle's inner point.
-/// @property {Number} needle-outer-base-width [null] - Sets the width of the needle's outer base.
-/// @property {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
-/// @property {Color} needle-outline [null] - Sets the color to use for the outline of needle element.
+/// @property {Color} needle-brush [(igx-color: 'primary')] - Sets the color to use for the needle element.
+/// @property {Color} needle-outline [(igx-color: 'surface')] - Sets the color to use for the outline of needle element.
 /// @property {Number} needle-stroke-thickness [null] - Sets the stroke thickness to use when rendering single actual value element.
 /// @property {List} range-brushes [series] - Sets a collection of colors to be used as the palette for linear gauge ranges.
 /// @property {List} range-outlines [series] - Sets a collection of colors to be used as the palette for linear gauge outlines.
-/// @property {Color} scale-brush [null] - Sets the color to use to fill the scale of the linear gauge.
-/// @property {Color} scale-outline [null] - Sets the color to use for the outline of the scale.
-/// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
-/// @property {Color} tick-brush [null] - Sets the color to use for the major tickmarks.
+/// @property {Color} scale-brush [(igx-color: 'surface', darken: 8%)] - Sets the color to use to fill the scale of the linear gauge.
+/// @property {Color} tick-brush [(igx-color: 'surface', rgba: .62)] - Sets the color to use for the major tickmarks.
 /// @property {Number} tick-stroke-thickness [null] - Sets the stroke thickness to use when rendering ticks.
 /// @see $default-palette
 $_light-gauge: extend(
     (
-        'backing-brush': null,
+        'backing-brush': (
+            igx-color: 'surface',
+            darken: 5%
+        ),
 
-        'backing-outline': null,
+        'backing-outline': (
+            igx-color: 'surface',
+            darken: 8%
+        ),
 
         'backing-stroke-thickness': null,
 
-        'font-brush': null,
+        'font-brush': (
+            igx-contrast-color: 'surface',
+            rgba: .62
+        ),
+
+        'minor-tick-brush': (
+            igx-contrast-color: 'surface',
+            rgba: .62
+        ),
 
         'minor-tick-stroke-thickness': null,
 
-        'needle-brush': null,
+        'needle-brush': (
+            igx-color: 'primary',
+        ),
 
-        'needle-outline': null,
+        'needle-outline': (
+            igx-color: 'surface',
+        ),
 
         'needle-stroke-thickness': null,
 
@@ -51,9 +63,15 @@ $_light-gauge: extend(
 
         'range-outlines': series,
 
-        'scale-brush': null,
+        'scale-brush': (
+            igx-color: 'surface',
+            darken: 8%
+        ),
 
-        'tick-brush': null,
+        'tick-brush': (
+            igx-contrast-color: 'surface',
+            rgba: .62
+        ),
 
         'tick-stroke-thickness': null
     )
@@ -61,6 +79,13 @@ $_light-gauge: extend(
 
 /// Generates a light linear gauge schema.
 /// @type {Map}
+/// @property {Number} needle-breadth [null] - Sets the needle breadth.
+/// @property {Number} needle-inner-base-width [null] - Sets the width of the needle's inner base.
+/// @property {Number} needle-inner-point-width [null] - Sets the width of the needle's inner point.
+/// @property {Number} needle-outer-base-width [null] - Sets the width of the needle's outer base.
+/// @property {Number} needle-outer-point-width [null] - Sets the width of the needle's outer point.
+/// @property {Color} scale-outline [(igx-color: 'surface', darken: 8%)] - Sets the color to use for the outline of the scale.
+/// @property {Number} scale-stroke-thickness [null] - Sets the stroke thickness of the scale outline.
 /// @requires {function} extend
 /// @requires $_light-gauge
 $_light-linear-gauge: extend(
@@ -76,7 +101,10 @@ $_light-linear-gauge: extend(
 
         needle-outer-point-width: null,
 
-        scale-outline: null,
+        scale-outline: (
+            igx-color: 'surface',
+            darken: 8%
+        ),
 
         scale-stroke-thickness: null,
     )
@@ -84,9 +112,22 @@ $_light-linear-gauge: extend(
 
 /// Generates a light radial gauge schema.
 /// @type {Map}
+/// @property {Color} needle-pivot-brush [igx-color: 'primary'] - Sets the color of the needle pivot point.
+/// @property {Color} needle-pivot-outline [igx-color: 'surface'] - Sets the outline color of the needle pivot point.
 /// @requires {function} extend
 /// @requires $_light-gauge
-$_light-radial-gauge: extend($_light-gauge);
+$_light-radial-gauge: extend(
+    $_light-gauge,
+    (
+        needle-pivot-brush: (
+            igx-color: 'primary',
+        ),
+
+        needle-pivot-outline: (
+            igx-color: 'surface',
+        )
+    )
+);
 
 /// Generates fluent gauge schemas.
 /// @type {Map}
