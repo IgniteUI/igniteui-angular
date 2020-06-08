@@ -844,13 +844,13 @@ describe('Row Pinning #grid', () => {
 
     describe(' Cell Editing', () => {
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             // enable cell editing for column
             grid = fix.componentInstance.instance;
             grid.getColumnByName('CompanyName').editable = true;
-        });
+        }));
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
             const  gridContent = GridFunctions.getGridContent(fix);
@@ -933,13 +933,13 @@ describe('Row Pinning #grid', () => {
     describe(' Navigation', () => {
         let gridContent: DebugElement;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.instance;
             setupGridScrollDetection(fix, grid);
             gridContent = GridFunctions.getGridContent(fix);
-        });
+        }));
 
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async() => {
             grid.getRowByIndex(5).pin();
