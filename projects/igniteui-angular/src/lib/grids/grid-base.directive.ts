@@ -173,7 +173,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 
-    public get scrollWidth() {
+    /**
+     * @hidden @internal
+     */
+    public get scrollSize() {
         return this.verticalScrollContainer.getScrollbarWidth();
     }
 
@@ -4713,7 +4716,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get outerWidth() {
-        return this.hasVerticalScroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
+        return this.hasVerticalScroll() ? this.calcWidth + this.scrollSize : this.calcWidth;
     }
 
     /**
@@ -4807,7 +4810,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
-            width -= this.scrollWidth;
+            width -= this.scrollSize;
         }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
@@ -4978,7 +4981,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (width === null) {
             let currentWidth = this.calcWidth;
             if (this.hasVerticalScroll()) {
-                currentWidth += this.scrollWidth;
+                currentWidth += this.scrollSize;
             }
             width = currentWidth + 'px';
             this.resetCaches();
@@ -5020,7 +5023,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this.width, 10) || parseInt(this.hostWidth, 10) || this.calcWidth;
         if (this.hasVerticalScroll() && !this.isPercentWidth) {
-            width -= this.scrollWidth;
+            width -= this.scrollSize;
         }
         if (this.pinning.columns === ColumnPinningPosition.End) {
             width -= this.featureColumnsWidth();

@@ -191,9 +191,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
         tick();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(parseInt(locationColGroup.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
+        expect(parseInt(locationColGroup.width, 10) + grid.scrollSize).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
         const cityColumn = grid.getColumnByName('City');
-        expect(parseInt(cityColumn.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
+        expect(parseInt(cityColumn.width, 10) + grid.scrollSize).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
     }));
 
     it('Width should be correct. Column group with column. Width in px.', fakeAsync(() => {
@@ -208,9 +208,9 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(parseInt(locationColGroup.width, 10) + grid.scrollWidth).toBe(gridWidthPx);
+        expect(parseInt(locationColGroup.width, 10) + grid.scrollSize).toBe(gridWidthPx);
         const cityColumn = grid.getColumnByName('City');
-        expect(parseInt(cityColumn.width, 10) + grid.scrollWidth).toBe(gridWidthPx);
+        expect(parseInt(cityColumn.width, 10) + grid.scrollSize).toBe(gridWidthPx);
     }));
 
     it('Width should be correct. Column group with column. Width in percent.', fakeAsync(() => {
@@ -226,7 +226,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
         const locationColGroup = getColGroup(grid, 'Location');
         const gridWidthInPx = ((parseInt(gridWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollWidth) + 'px';
+            parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollSize) + 'px';
         expect(locationColGroup.width).toBe(gridWidthInPx);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridWidthInPx);
