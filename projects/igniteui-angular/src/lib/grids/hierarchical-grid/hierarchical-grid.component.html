@@ -102,7 +102,7 @@
             | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
-                    [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                    [style.width.px]='calcWidth'>
                     <ng-container *ngFor="let rowData of pinnedData; let rowIndex = index">
                         <ng-container *ngTemplateOutlet="pinned_hierarchical_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
