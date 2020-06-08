@@ -588,14 +588,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private addPointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
-        this.nativeElement.addEventListener('pointerdown', this.pointerdown);
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
     private  removePointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
-        this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
@@ -606,6 +604,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
+            this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
             if (isIE()) {
@@ -629,6 +628,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
+            this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
             if (isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
@@ -755,6 +755,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerdown = (event: PointerEvent) => {
+        if (this.cellSelectionMode !== GridSelectionMode.multiple) {
+            this.activate(event);
+            return;
+        }
         if (!isLeftClick(event)) {
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
@@ -816,9 +820,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        if (this.cellSelectionMode !== GridSelectionMode.multiple) {
-            this.activate(event);
-        }
         this.grid.onCellClick.emit({
             cell: this,
             event

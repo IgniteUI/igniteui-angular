@@ -433,6 +433,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         hierarchicalGrid.expandRow(row2.rowData);
         expect(row1.expanded).toBe(false);
         expect(row2.expanded).toBe(true);
+        hierarchicalGrid.expandAll();
+        expect(row1.expanded).toBe(false);
     });
 
     it('should not expand children when hasChildrenKey is false for the row and there is primaryKey', () => {
@@ -1373,7 +1375,7 @@ export class IgxHGridRemoteOnDemandComponent {
         setTimeout(() => {
             event.grid.data = this.generateRowIslandData(5);
             event.grid.cdr.detectChanges();
-        }, 1000);
+        });
     }
 }
 

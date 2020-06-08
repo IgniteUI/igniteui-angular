@@ -1,10 +1,11 @@
 @import '../light/action-strip';
+
 ////
 /// @group schemas
 /// @access private
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
-///
+
 /// Generates a dark action-strip schema.
 /// @type {Map}
 /// @property {Map} actions-background [igx-color: ('grays', 200), hexrgba: #000, rgba: .8]- actions container background.
@@ -25,22 +26,12 @@ $_dark-action-strip: extend(
 /// Generates a dark fluent action strip schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_dark-action-strip
-$_dark-fluent-action-strip: extend(
-    $_dark-action-strip,
-    (
-        variant: 'fluent',
-    )
-);
+/// @requires $_fluent-action-strip
+$_dark-fluent-action-strip: extend($_fluent-action-strip);
 
 /// Generates a dark bootstrap action strip schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @requires $_dark-action-strip
-$_dark-bootstrap-action-strip: extend(
-    $_dark-action-strip,
-    (
-        variant: 'bootstrap',
-    )
-);
+/// @requires $_bootstrap-action-strip
+$_dark-bootstrap-action-strip: extend($_bootstrap-action-strip);
 
