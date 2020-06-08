@@ -177,7 +177,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get scrollSize() {
-        return this.verticalScrollContainer.getScrollbarWidth();
+        return this.verticalScrollContainer.getScrollNativeSize();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;

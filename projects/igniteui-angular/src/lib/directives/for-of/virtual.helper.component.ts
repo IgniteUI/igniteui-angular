@@ -25,22 +25,6 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
     }
 
     ngOnInit() {
-        this.scrollWidth = this.getScrollWidth();
+        this.scrollWidth = this.scrollNativeSize;
     }
-
-    private getScrollWidth() {
-        const div = document.createElement('div');
-        const style = div.style;
-        style.width = '100px';
-        style.height = '100px';
-        style.position = 'absolute';
-        style.top = '-10000px';
-        style.top = '-10000px';
-        style.overflow = 'scroll';
-        document.body.appendChild(div);
-        const scrollWidth = div.offsetWidth - div.clientWidth;
-        document.body.removeChild(div);
-        return scrollWidth ? scrollWidth + 1 : 1;
-    }
-
 }
