@@ -52,6 +52,7 @@
     "@angular/platform-browser": "^9.1.7",
     "@angular/platform-browser-dynamic": "^9.1.7",
     "@angular/router": "^9.1.7",
+    "@types/core-js": "^2.5.3",
     "@types/hammerjs": "^2.0.36",
     "@types/jszip": "^3.4.1",
     "@types/source-map": "0.5.2",
@@ -62,6 +63,7 @@
     "jszip": "^3.4.0",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.5.4",
+    "setimmediate": "^1.0.5",
     "tslib": "^1.13.0",
     "web-animations-js": "^2.3.2",
     "zone.js": "~0.10.3"

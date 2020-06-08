@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 
-import { cloneValue, IBaseEventArgs } from '../../core/utils';
+import { cloneValue, IBaseEventArgs, yieldingLoop } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
@@ -202,12 +202,13 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<any>();
         const isSpecialData = ExportUtilities.isSpecialData(data);
 
-        data.forEach((row, index) => {
-            this.exportRow(dataToExport, row, index, isSpecialData);
+        yieldingLoop(data.length, 1000, (i) => {
+            const row = data[i];
+            this.exportRow(dataToExport, row, i, isSpecialData);
+        }, () => {
+            this.exportDataImplementation(dataToExport, options);
+            this.resetDefaults();
         });
-
-        this.exportDataImplementation(dataToExport, options);
-        this.resetDefaults();
     }
 
     protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;

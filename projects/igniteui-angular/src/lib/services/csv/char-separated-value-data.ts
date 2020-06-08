@@ -1,4 +1,5 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
+import { yieldingLoop } from '../../core/utils';
 
 /**
  * @hidden
@@ -36,6 +37,26 @@ export class CharSeparatedValueData {
         return this._headerRecord + this._dataRecords;
     }
 
+    public prepareDataAsync(done: (result: string) => void) {
+        if (!this._data || this._data.length === 0) {
+            return '';
+        }
+
+        const keys = ExportUtilities.getKeysFromData(this._data);
+
+        if (keys.length === 0) {
+            return '';
+        }
+
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
+        this._escapeCharacters.push(this._delimiter);
+
+        this._headerRecord = this.processHeaderRecord(keys, this._escapeCharacters);
+        this.processDataRecordsAsync(this._data, keys, this._escapeCharacters, (dr) => {
+            done(this._headerRecord + dr);
+        });
+    }
+
     private processField(value, escapeChars): string {
         let safeValue = ExportUtilities.hasValue(value) ? String(value) : '';
         if (escapeChars.some((v) => safeValue.includes(v))) {
@@ -71,6 +92,18 @@ export class CharSeparatedValueData {
         }
 
         return dataRecords;
+    }
+
+    private processDataRecordsAsync(currentData, keys, escapeChars, done: (result: string) => void) {
+        let dataRecords = '';
+        yieldingLoop(currentData.length, 1000,
+            (i) => {
+                const row = currentData[i];
+                dataRecords += this.processRecord(row, keys, escapeChars);
+            },
+            () => {
+                done(dataRecords);
+            });
     }
 
     private setDelimiter(value) {

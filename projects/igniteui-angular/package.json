@@ -66,8 +66,10 @@
         "csv export"
     ],
     "dependencies": {
+        "@types/core-js": "^2.5.3",
         "@types/hammerjs": "^2.0.36",
         "@types/jszip": "^3.1.7",
+        "core-js": "^3.6.5",
         "hammerjs": "^2.0.8",
         "jszip": "^3.3.0",
         "resize-observer-polyfill": "^1.5.1",
