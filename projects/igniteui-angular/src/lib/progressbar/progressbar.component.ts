@@ -1,18 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    NgModule,
-    Output,
-    Renderer2,
-    ViewChild,
-    ContentChild,
-    AfterViewInit,
-    AfterContentInit
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, NgModule, Output, Renderer2, ViewChild, ContentChild, AfterViewInit, AfterContentInit, Directive } from '@angular/core';
 import {
     IgxProcessBarTextTemplateDirective,
     IgxProgressBarGradientDirective,
@@ -44,6 +31,7 @@ export interface IChangeProgressEventArgs extends IBaseEventArgs {
 /**
  * @hidden
  */
+@Directive()
 export abstract class BaseProgress {
     private requestAnimationId: number = undefined;
 

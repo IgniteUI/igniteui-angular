@@ -72,7 +72,8 @@
         "jszip": "^3.3.0",
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3"
-    },
+    ,    "tslib": "^2.0.0"
+},
     "peerDependencies": {
         "@angular/common": "^9.0.0",
         "@angular/core": "^9.0.0",

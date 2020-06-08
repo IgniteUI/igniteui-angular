@@ -23,7 +23,8 @@ import {
     Type,
     OnDestroy,
     NgModuleRef,
-    NgZone
+    NgZone,
+    Directive
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
@@ -37,6 +38,7 @@ let warningShown = false;
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
  * The overlay service allows users to show components on overlay div above all other elements in the page.
  */
+@Directive()
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
     private _componentId = 0;
