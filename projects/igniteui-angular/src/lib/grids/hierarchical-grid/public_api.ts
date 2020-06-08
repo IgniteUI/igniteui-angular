@@ -1,4 +1,4 @@
-export * from '../index';
+export * from '../public_api';
 export * from './hierarchical-grid-base.directive';
 export * from './hierarchical-grid.component';
 export * from './hierarchical-grid.module';
