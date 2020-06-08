@@ -94,6 +94,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         (firstRow.nativeElement.children[0] as HTMLElement).click();
+        await wait();
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -119,11 +120,12 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         // scroll down
         elem.scrollTop = 1000;
         await wait();
-
+        fixture.detectChanges();
 
         // scroll to top
         elem.scrollTop = 0;
         await wait();
+        fixture.detectChanges();
 
         expect(childGrid.rowList.length).toEqual(1);
         expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();

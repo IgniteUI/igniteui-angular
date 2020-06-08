@@ -1,4 +1,4 @@
-﻿import { async, TestBed, fakeAsync } from '@angular/core/testing';
+﻿import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -27,9 +27,8 @@ import { IgxGridComponent } from './grid.component';
 // tslint:disable: no-use-before-declare
 
 describe('IgxGrid - Column Pinning #grid', () => {
-    const DEBOUNCETIME = 30;
-
     configureTestSuite();
+    const DEBOUNCETIME = 30;
 
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -48,9 +47,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
     describe('To Start', () => {
 
         describe('Initially pinned columns', () => {
+            configureTestSuite();
             let fix;
             let grid: IgxGridComponent;
-
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
                 fix.detectChanges();
@@ -219,13 +218,14 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(result).toBe(false);
             });
 
-            it('should fix column when grid width is 100% and column width is set', () => {
+            it('should fix column when grid width is 100% and column width is set', fakeAsync(() => {
                 fix.componentInstance.grid.width = '100%';
+                tick(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(grid.pinnedColumns.length).toEqual(2);
                 expect(grid.unpinnedColumns.length).toEqual(9);
-            });
+            }));
 
             it('should allow navigating to/from pinned area', (async () => {
 
@@ -258,6 +258,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('Features', () => {
+            configureTestSuite();
             let fix;
             let grid: IgxGridComponent;
 
@@ -314,6 +315,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('', () => {
+            configureTestSuite();
             let fix;
             let grid: IgxGridComponent;
 
@@ -467,6 +469,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         const pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
         describe('', () => {
+            configureTestSuite();
 
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
@@ -660,6 +663,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('MRL/MCH', () => {
+            configureTestSuite();
             it('should correctly pin column groups to end.', fakeAsync(() => {
 
                 fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);
