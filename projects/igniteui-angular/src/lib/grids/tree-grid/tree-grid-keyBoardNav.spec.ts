@@ -657,7 +657,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             let newCell = treeGrid.getCellByColumn(5, treeColumns[4]);
             UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             newCell = treeGrid.getCellByColumn(6, treeColumns[0]);
@@ -666,7 +666,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect( treeGrid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
 
             UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent, false, true);
-            await wait(DEBOUNCETIME);
+            await wait(DEBOUNCETIME * 2);
             fix.detectChanges();
 
             newCell = treeGrid.getCellByColumn(5, treeColumns[4]);
