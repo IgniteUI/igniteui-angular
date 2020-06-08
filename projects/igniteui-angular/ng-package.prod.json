@@ -8,7 +8,6 @@
     }
   },
   "whitelistedNonPeerDependencies": [
-      "@types/core-js",
       "@types/hammerjs",
       "@types/jszip",
       "core-js",

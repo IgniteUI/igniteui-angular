@@ -66,7 +66,6 @@
         "csv export"
     ],
     "dependencies": {
-        "@types/core-js": "^2.5.3",
         "@types/hammerjs": "^2.0.36",
         "@types/jszip": "^3.1.7",
         "core-js": "^3.6.5",
@@ -74,6 +73,9 @@
         "jszip": "^3.3.0",
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3"
+    },
+    "devDependencies": {
+        "@types/core-js": "^2.5.3"
     },
     "peerDependencies": {
         "@angular/common": "^9.0.0",
