@@ -637,6 +637,8 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
         this.initialSetValue();
         this.updateInputs();
+        this.updateDisplayFormat();
+        this.updateInputFormat();
     }
 
     /** @hidden @internal */
@@ -645,12 +647,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
         }
         if (changes['displayFormat'] && this.hasProjectedInputs) {
-            this.projectedInputs.forEach(i => {
-                const input = i as IgxDateRangeInputsBaseComponent;
-                if (!input.dateTimeEditor.displayFormat) {
-                    input.dateTimeEditor.displayFormat = this.displayFormat;
-                }
-            });
+            this.updateDisplayFormat();
+        }
+        if (changes['inputFormat'] && this.hasProjectedInputs) {
+            this.updateInputFormat();
         }
     }
 
@@ -937,5 +937,23 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             start.updateInputValue(this.value.start);
             end.updateInputValue(this.value.end);
         }
+    }
+
+    private updateDisplayFormat(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            if (!input.dateTimeEditor.displayFormat) {
+                input.dateTimeEditor.displayFormat = this.displayFormat;
+            }
+        });
+    }
+
+    private updateInputFormat(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            if (input.dateTimeEditor.inputFormat !== this.inputFormat) {
+                input.dateTimeEditor.inputFormat = this.inputFormat;
+            }
+        });
     }
 }
