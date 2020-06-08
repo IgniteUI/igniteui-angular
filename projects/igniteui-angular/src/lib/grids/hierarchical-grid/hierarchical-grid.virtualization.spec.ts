@@ -299,10 +299,10 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(scrHeight).toBe(0);
 
         (hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0] as HTMLElement).click();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
         hierarchicalGrid.verticalScrollContainer.scrollNext();
-        await wait(100);
+        await wait(200);
         fixture.detectChanges();
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
