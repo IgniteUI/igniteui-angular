@@ -3,6 +3,7 @@ import { IgxIconService } from './icon.service';
 import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
 
 describe('Icon Service', () => {
     configureTestSuite();
@@ -85,5 +86,29 @@ describe('Icon Service', () => {
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
+    });
+
+    it('should emit loading event for a custom svg icon from url', done => {
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+
+        iconService.iconLoaded.pipe(first()).subscribe(event => {
+            expect(event.name).toMatch('test');
+            expect(event.fontSet).toMatch('svg-icons');
+            done();
+        });
+
+        const iconName = 'test';
+        const fontSet = 'svg-icons';
+
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
+        spyOn(XMLHttpRequest.prototype, 'send').and.callFake(() => {
+            (iconService as any)._iconLoaded.next({
+                name: iconName,
+                value: svgText,
+                fontSet: fontSet
+            });
+        });
+
+        iconService.addSvgIcon(iconName, 'test.svg', fontSet);
     });
 });
