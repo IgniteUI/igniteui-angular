@@ -1579,7 +1579,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
 
-    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
+    it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.rowSelection = GridSelectionMode.multiple;
@@ -1598,17 +1598,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         // scroll to bottom
         grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
-        setTimeout(() => {
-            const rows = grid.dataRowList.toArray();
-            expect(rows.length).toEqual(1);
-            GridSelectionFunctions.clickRowCheckbox(rows[0].element);
-             setTimeout(() => {
-                grid.cdr.detectChanges();
-                expect(grid.selectedRows().length).toEqual(1);
-                GridSelectionFunctions.verifyRowSelected(rows[0]);
-                done();
-            }, 100);
-        }, 100);
+        await wait(100);
+        const rows = grid.dataRowList.toArray();
+        expect(rows.length).toEqual(1);
+        GridSelectionFunctions.clickRowCheckbox(rows[0].element);
+        await wait(100);
+        grid.cdr.detectChanges();
+        expect(grid.selectedRows().length).toEqual(1);
+        GridSelectionFunctions.verifyRowSelected(rows[0]);
     });
 
     it('should persist state for the correct group record when there are group records with the same fieldName and value.',
