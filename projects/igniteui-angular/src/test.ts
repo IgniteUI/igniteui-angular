@@ -23,4 +23,4 @@ context.keys().map(context);
 
 // configureTestSuite();
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;

@@ -42,10 +42,6 @@ describe('IgxGrid - Column Moving #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
-
     describe('', () => {
         // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
