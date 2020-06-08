@@ -147,7 +147,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * Emitted when a new chunk of data is loaded from virtualization.
      * @example
      * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()"></igx-hierarchical-grid>
      * ```
      */
     @Output()
