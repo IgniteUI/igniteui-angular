@@ -7,7 +7,7 @@ import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective } from '../grid';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 
 /** @hidden */

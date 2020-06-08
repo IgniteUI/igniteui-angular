@@ -28,9 +28,9 @@ import {
     IgxCalendarSubheaderTemplateDirective,
     WEEKDAYS,
     isDateInRanges
-} from '../calendar/index';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/index';
+} from '../calendar/public_api';
+import { IgxIconModule } from '../icon/public_api';
+import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInputState } from '../input-group/public_api';
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -42,7 +42,7 @@ import {
     AbsoluteScrollStrategy,
     AutoPositionStrategy,
     OverlayCancelableEventArgs
-} from '../services/index';
+} from '../services/public_api';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -59,7 +59,6 @@ import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from '.
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 

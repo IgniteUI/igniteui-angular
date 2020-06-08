@@ -20,17 +20,18 @@ import {
     ViewChild
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
-import { IgxDropDownItemBaseDirective } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
-import { AbsoluteScrollStrategy, OverlaySettings } from '../services/index';
+import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
+import { OverlaySettings } from '../services/overlay/utilities';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';

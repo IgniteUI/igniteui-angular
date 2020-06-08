@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IGridCellEventArgs } from '../grid';
+import { IGridCellEventArgs } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
@@ -28,7 +28,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach( fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -335,6 +335,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
+        await wait(30);
+        fixture.detectChanges();
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
         expect(childGrid.calcWidth - 370).toBeLessThan(3);
@@ -471,8 +473,9 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
+        tick();
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
@@ -550,14 +553,15 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).',
-    async() => { /** height/width setter rAF + row toggle rAF */
+    fakeAsync(() => { /** height/width setter rAF + row toggle rAF */
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
+
         const ri1 = fixture.componentInstance.rowIsland1;
         ri1.rowSelection = GridSelectionMode.multiple;
+        tick(50);
         fixture.detectChanges();
-        await wait();
 
         // check rendered grid
         let childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
@@ -567,20 +571,22 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         // expand new row and check newly generated grid
         const row2 = hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row2.expander);
+        tick(50);
         fixture.detectChanges();
-        await wait();
+
         childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
         expect(childGrids[0].rowSelection).toBe( GridSelectionMode.multiple);
         expect(childGrids[1].rowSelection).toBe( GridSelectionMode.multiple);
         expect(childGrids[2].rowSelection).toBe(GridSelectionMode.none);
         expect(childGrids[3].rowSelection).toBe(GridSelectionMode.none);
-    });
+    }));
+
     it('should apply column settings applied to the row island to all related child grids.',
-    async() => { /** height/width setter rAF + row toggle rAF */
+    fakeAsync(() => { /** height/width setter rAF + row toggle rAF */
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
+        tick();
         fixture.detectChanges();
-        await wait();
 
         const ri1 = fixture.componentInstance.rowIsland1;
         const ri2 = fixture.componentInstance.rowIsland2;
@@ -601,7 +607,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
             const col = child2Cols.find((c) => c.key === ri2Cols[j].key);
             expect(col).not.toBeNull();
         }
-    });
+    }));
+
     it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.',
     (/** height/width setter + row toggle rAF */async() => {
         const ri1 = fixture.componentInstance.rowIsland1;
@@ -729,7 +736,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSizingComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -871,7 +878,7 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
         fixture.detectChanges();
     }));
@@ -948,7 +955,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridColumnsUpdateComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1119,7 +1126,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1131,14 +1138,13 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         fixture.detectChanges();
 
         let hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
-
         let childGrids = hierarchicalGrid.hgridAPI.getChildGrids();
         expect(childGrids.length).toBe(1);
         expect(hGrids.length).toBe(2);
 
         fixture.componentInstance.toggleRI = false;
         fixture.detectChanges();
-        tick();
+        tick(30);
         fixture.detectChanges();
 
         hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
@@ -1149,7 +1155,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
         fixture.componentInstance.toggleRI = true;
         fixture.detectChanges();
-        tick();
+        tick(30);
         fixture.detectChanges();
 
         hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
@@ -1212,7 +1218,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -1375,7 +1381,7 @@ export class IgxHGridRemoteOnDemandComponent {
         setTimeout(() => {
             event.grid.data = this.generateRowIslandData(5);
             event.grid.cdr.detectChanges();
-        }, 1000);
+        });
     }
 }
 

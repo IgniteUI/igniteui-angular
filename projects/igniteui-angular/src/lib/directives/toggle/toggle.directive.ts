@@ -15,7 +15,13 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
+import {
+    AbsoluteScrollStrategy,
+    ConnectedPositioningStrategy,
+    IPositionStrategy,
+    OverlayEventArgs,
+    OverlaySettings
+} from '../../services/public_api';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayClosingEventArgs } from '../../services/overlay/utilities';

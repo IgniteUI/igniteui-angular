@@ -1,17 +1,17 @@
 import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
-import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { IgxCalendarComponent } from '../calendar/index';
+import { IgxCalendarComponent } from '../calendar/public_api';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
-import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+import { IgxDateTimeEditorModule } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
 
 // The number of milliseconds in one day

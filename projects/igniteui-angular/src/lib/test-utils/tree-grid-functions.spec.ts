@@ -1,5 +1,5 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowDirective, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid';
+import { IgxTreeGridComponent, IgxRowDirective, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';

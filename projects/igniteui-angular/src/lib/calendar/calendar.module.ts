@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxCalendarComponent } from './calendar.component';
 import {
     IgxCalendarHeaderTemplateDirective,

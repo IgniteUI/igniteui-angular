@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import {
     ColumnPinningTestComponent,
@@ -51,10 +51,6 @@ describe('Column Pinning UI #grid', () => {
             columnChooser = fix.componentInstance.chooser;
             columnChooserElement = GridFunctions.getColumnPinningElement(fix);
         }));
-
-        afterAll(() => {
-            UIInteractions.clearOverlay();
-        });
 
         it('title is initially empty.', async(() => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);

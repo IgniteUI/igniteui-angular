@@ -32,7 +32,7 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-import { IgxTransactionService } from '../../services/index';
+import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
@@ -66,16 +66,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
-     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Gets/Sets the value of the `id` attribute.
+     * @remarks
+     * If not provided it will be automatically generated.
+     * @example
      * ```html
      * <igx-hierarchical-grid [id]="'igx-hgrid-1'" [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
-     * @memberof IgxHierarchicalGridComponent
      */
     @HostBinding('attr.id')
     @Input()
     public get id(): string {
         return this.h_id;
+    }
+    public set id(value: string) {
+        this.h_id = value;
     }
 
     /**
