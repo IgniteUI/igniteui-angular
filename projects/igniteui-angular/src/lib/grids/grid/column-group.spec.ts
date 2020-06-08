@@ -21,7 +21,7 @@ const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,

@@ -716,13 +716,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
             return;
         }
-
-        const containerSize = parseInt(this.igxForContainerSize, 10);
-        const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
-            const maxVirtScrollTop = this._virtHeight - containerSize;
-            this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
+            this._calcVirtualScrollTop(event.target.scrollTop);
         } else {
             this._bScrollInternal = false;
         }
@@ -1289,11 +1284,25 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
     private _updateVScrollOffset() {
         let scrollOffset = 0;
+        let currentScrollTop = this.scrollPosition;
+        if (this._virtHeightRatio !== 1) {
+            this._calcVirtualScrollTop(this.scrollPosition);
+            currentScrollTop = this._virtScrollTop;
+        }
         const vScroll =  this.scrollComponent.nativeElement;
         scrollOffset = vScroll && this.scrollComponent.size ?
-            this.scrollPosition - this.sizesCache[this.state.startIndex] : 0;
+        currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
     }
+
+    protected _calcVirtualScrollTop(scrollTop: number) {
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const maxRealScrollTop = this.scrollComponent.size - containerSize;
+        const realPercentScrolled = maxRealScrollTop !== 0 ?  scrollTop / maxRealScrollTop : 0;
+        const maxVirtScrollTop = this._virtHeight - containerSize;
+        this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
+    }
+
     private _updateHScrollOffset() {
         let scrollOffset = 0;
         scrollOffset =  this.scrollComponent.nativeElement &&
@@ -1564,13 +1573,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (!parseInt(this.scrollComponent.nativeElement.style.height, 10)) {
             return;
         }
-
-        const containerSize = parseInt(this.igxForContainerSize, 10);
-        const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
-            const maxVirtScrollTop = this._virtHeight - containerSize;
-            this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
+            this._calcVirtualScrollTop(event.target.scrollTop);
         } else {
             this._bScrollInternal = false;
         }

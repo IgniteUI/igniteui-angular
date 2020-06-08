@@ -21,7 +21,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
-    beforeEach(async(() => {
+    beforeAll(async(() => {
 
         TestBed.configureTestingModule({
             declarations: [

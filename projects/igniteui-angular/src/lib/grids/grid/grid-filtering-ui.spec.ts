@@ -53,7 +53,7 @@ const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
@@ -1669,7 +1669,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2845,9 +2845,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Verify filter cell chip is scrolled into view on click.', fakeAsync(() => {
+        it('Verify filter cell chip is scrolled into view on click.', async () => {
             grid.width = '470px';
-            tick(100);
+            await wait(30);
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is not fully visible.
@@ -2858,11 +2858,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 'chip should not be fully visible and thus not within grid');
 
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
-            tick(100);
+            await wait(30);
             fix.detectChanges();
 
-            GridFunctions.closeFilterRow(fix);
-            tick(100);
+            grid.filteringRow.close();
+            await wait();
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is fully visible.
@@ -2871,7 +2871,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             gridRect = grid.nativeElement.getBoundingClientRect();
             expect(chipRect.left > gridRect.left && chipRect.right < gridRect.right).toBe(true,
                 'chip should be fully visible and within grid');
-        }));
+        });
 
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
@@ -3689,7 +3689,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
+    beforeAll(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -5782,7 +5782,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             listItems = searchComponent.querySelectorAll('igx-list-item');
-            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems.length).toBeGreaterThan(1);
+            for (let i = 1; i < listItems.length; i++) {
+                expect(listItems[i].textContent.toString().indexOf(todayDate) > -1).toBeTruthy();
+            }
 
             sendInputNativeElement(inputNativeElement, dayOfWeek, fix);
             tick(100);
