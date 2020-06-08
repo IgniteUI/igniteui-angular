@@ -32,8 +32,8 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-import { IgxTransactionService } from '../../services/index';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';

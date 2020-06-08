@@ -19,7 +19,7 @@ import {
 import { Subscription } from 'rxjs';
 import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
