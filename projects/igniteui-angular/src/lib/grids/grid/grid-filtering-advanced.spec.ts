@@ -43,10 +43,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
-
     describe('General tests - ', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {

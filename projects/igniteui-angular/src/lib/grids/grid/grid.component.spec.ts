@@ -137,7 +137,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         });
 
-        it('should remove all rows if data becomes null/undefined.', async () => {
+        it('should remove all rows if data becomes null/undefined.', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
@@ -150,7 +150,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowList.length).toEqual(0);
             expect(noRecordsSpan).toBeTruthy();
             expect(noRecordsSpan.nativeElement.innerText).toBe('Grid has no data.');
-        });
+        }));
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
@@ -1614,10 +1614,10 @@ describe('IgxGrid Component Tests #grid', () => {
             }).compileComponents();
         }));
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
-        });
+        }));
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
             const grid = fix.componentInstance.grid3;
@@ -1627,7 +1627,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
