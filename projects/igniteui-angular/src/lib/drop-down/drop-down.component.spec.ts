@@ -100,24 +100,25 @@ describe('IgxDropDown ', () => {
             spyOn(dropdown.onClosed, 'emit').and.callThrough();
 
             dropdown.selectItem(data[1]);
+            const selected = dropdown.selectedItem;
             expect(dropdown.selectedItem).toEqual(data[1]);
             expect(dropdown.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(dropdown.onSelection.emit).toHaveBeenCalledWith(
-                {
-                    oldSelection: null,
-                    newSelection: data[1],
-                    cancel: false
-                });
+            let args: ISelectionEventArgs = {
+                oldSelection: null,
+                newSelection: data[1],
+                cancel: false
+            };
+            expect(dropdown.onSelection.emit).toHaveBeenCalledWith(args);
 
             dropdown.clearSelection();
             expect(dropdown.selectedItem).toBeNull();
             expect(dropdown.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(dropdown.onSelection.emit).toHaveBeenCalledWith(
-                {
-                    oldSelection: { value: data[1].value, index: data[1].index, selected: false },
-                    newSelection: null,
-                    cancel: false
-                });
+            args = {
+                oldSelection: selected,
+                newSelection: null,
+                cancel: false
+            };
+            expect(dropdown.onSelection.emit).toHaveBeenCalledWith(args);
         });
         it('setSelectedItem should return selected item', () => {
             const selectionService = new IgxSelectionAPIService();

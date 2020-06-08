@@ -12,6 +12,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+import { DateRangeType } from '../core/dates';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -77,7 +78,7 @@ describe('IgxDateRangePicker', () => {
             const dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRangePicker, 'handleSelection');
+            spyOn(dateRangePicker, 'handleSelection').and.callThrough();
 
             // writeValue
             expect(dateRangePicker.value).toBeUndefined();
@@ -92,7 +93,7 @@ describe('IgxDateRangePicker', () => {
             dateRangePicker.handleSelection([range.start]);
             expect(dateRangePicker.handleSelection).toHaveBeenCalledWith([range.start]);
             expect(dateRangePicker.handleSelection).toHaveBeenCalledTimes(1);
-            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.end });
+            expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
@@ -201,14 +202,14 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRangeInSingleInput();
                 });
 
-                it('should set start date on single date selection', () => {
+                it('should set start and end dates on single date selection', () => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const dayRange = 0;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = null;
+                    endDate = startDate;
                     selectDateRangeFromCalendar(startDate.getDate(), dayRange);
                     verifyDateRangeInSingleInput();
                 });
@@ -248,6 +249,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.placeholder).toEqual(placeholder);
                 });
+
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
@@ -325,6 +327,46 @@ describe('IgxDateRangePicker', () => {
                     dateRange.toggle();
                     fixture.detectChanges();
                 });
+
+                it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
+                    // TODO: move this to unit tests
+                    const minDate = new Date(2000, 10, 1);
+                    const maxDate = new Date(2000, 10, 20);
+                    fixture.componentInstance.minValue = minDate;
+                    fixture.componentInstance.maxValue = maxDate;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    const calendarComponent: IgxCalendarComponent = calendar.componentInstance;
+                    expect(calendarComponent.disabledDates.length).toEqual(2);
+                    expect(calendarComponent.disabledDates[0].type).toEqual(DateRangeType.Before);
+                    expect(calendarComponent.disabledDates[0].dateRange[0]).toEqual(minDate);
+                    expect(calendarComponent.disabledDates[1].type).toEqual(DateRangeType.After);
+                    expect(calendarComponent.disabledDates[1].dateRange[0]).toEqual(maxDate);
+                }));
+
+                it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
+                    // TODO: move this to unit tests
+                    const minDate = '2000/10/1';
+                    const maxDate = '2000/10/30';
+                    fixture.componentInstance.minValue = minDate;
+                    fixture.componentInstance.maxValue = maxDate;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    const calendarComponent: IgxCalendarComponent = calendar.componentInstance;
+                    expect(calendarComponent.disabledDates.length).toEqual(2);
+                    expect(calendarComponent.disabledDates[0].type).toEqual(DateRangeType.Before);
+                    expect(calendarComponent.disabledDates[0].dateRange[0]).toEqual(new Date(minDate));
+                    expect(calendarComponent.disabledDates[1].type).toEqual(DateRangeType.After);
+                    expect(calendarComponent.disabledDates[1].dateRange[0]).toEqual(new Date(maxDate));
+                }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
                     spyOn(dateRange.onOpening, 'emit').and.callThrough();
@@ -506,13 +548,13 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRange();
                 });
 
-                it('should apply selection to start date when single date is selected', () => {
+                it('should apply selection to start and end dates when single date is selected', () => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                    endDate = null;
+                    endDate = startDate;
 
                     selectDateRangeFromCalendar(startDate.getDate(), 0);
                     verifyDateRange();
@@ -701,9 +743,9 @@ describe('IgxDateRangePicker', () => {
 
             }));
             it('should render aria attributes properly', fakeAsync(() => {
-                toggleBtn = fixture.debugElement.query(By.css(`.${ CSS_CLASS_TOGGLE_BUTTON}`));
-                calendarElement = fixture.debugElement.query(By.css(`.${ CSS_CLASS_CALENDAR}`));
-                singleInputElement = fixture.debugElement.query(By.css(`.${ CSS_CLASS_INPUT}`));
+                toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLE_BUTTON}`));
+                calendarElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR}`));
+                singleInputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
                 startDate = new Date(2020, 1, 1);
                 endDate = new Date(2020, 1, 4);
                 const expectedLabelID = dateRange.label.id;
@@ -748,6 +790,8 @@ export class DateRangeTestComponent implements OnInit {
     public todayButtonText: string;
     public doneButtonText: string;
     public mode: InteractionMode;
+    public minValue: Date | String;
+    public maxValue: Date | String;
 
     @ViewChild(IgxDateRangePickerComponent, { read: IgxDateRangePickerComponent, static: true })
     public dateRange: IgxDateRangePickerComponent;
@@ -791,11 +835,11 @@ export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent
 @Component({
     selector: 'igx-date-range-single-input-test',
     template: `
-    <igx-date-range-picker [mode]="mode">
+    <igx-date-range-picker [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
     </igx-date-range-picker>
     `
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
     @ViewChild(IgxDateRangePickerComponent)
     public dateRange: IgxDateRangePickerComponent;
- }
+}

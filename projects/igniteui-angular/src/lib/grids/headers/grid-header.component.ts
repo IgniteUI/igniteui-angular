@@ -162,7 +162,13 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event) {
         if (!this.colResizingService.isColumnResizing) {
+
             if (this.grid.filteringService.isFilterRowVisible) {
+                if (this.column.filterCellTemplate) {
+                    this.grid.filteringRow.close();
+                    return;
+                }
+
                 if (this.column.filterable && !this.column.columnGroup &&
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
@@ -183,6 +189,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
 
 
     public onFilteringIconClick(event) {
+        event.stopPropagation();
         this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
     }
 

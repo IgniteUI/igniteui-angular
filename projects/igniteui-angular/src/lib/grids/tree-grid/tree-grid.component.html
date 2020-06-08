@@ -87,7 +87,7 @@
                         'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
                         'igx-grid__tr--pinned-top': isRowPinningToTop
                     }"
-                    class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                    class='igx-grid__tr--pinned' [style.width.px]='calcWidth'>
                     <ng-container *ngFor="let rowData of pinnedData;let rowIndex = index;">
                         <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
@@ -131,6 +131,7 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+        <igc-trial-watermark></igc-trial-watermark>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
@@ -206,8 +207,8 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
