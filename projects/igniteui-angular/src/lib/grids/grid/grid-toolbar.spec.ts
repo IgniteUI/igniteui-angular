@@ -52,9 +52,6 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
         grid = fixture.componentInstance.grid1;
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     it('testing toolbar visibility', () => {
         expect(GridFunctions.getToolbar(fixture)).toBe(null);
@@ -535,9 +532,6 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
   });
 
   describe('Custom Content - ', () => {
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     it('should not have content container when no template is provided', () => {
         const fixture = TestBed.createComponent(GridToolbarTestPage1Component);

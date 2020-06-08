@@ -26,7 +26,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;

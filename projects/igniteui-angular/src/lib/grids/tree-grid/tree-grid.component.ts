@@ -3,8 +3,6 @@ import {
     Component,
     HostBinding,
     Input,
-    Output,
-    EventEmitter,
     forwardRef,
     OnInit,
     TemplateRef,
@@ -18,7 +16,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs, IPinRowEventArgs } from '../common/events';
+import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -28,7 +26,6 @@ import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -375,16 +372,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     this.loadingRows.delete(parentID);
                     this.addChildRows(children, parentID);
                     this.notifyChanges();
-
-                    requestAnimationFrame(() => {
-                        const cellID = this.selectionService.activeElement;
-                        if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
-                            if (cell) {
-                                cell.nativeElement.focus();
-                            }
-                        }
-                    });
                 });
             }
         }

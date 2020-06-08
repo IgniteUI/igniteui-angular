@@ -33,12 +33,12 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     }));
 
     describe('Hiding ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        });
+        }));
 
         it('should allow setting a whole group as hidden/shown.', () => {
 
@@ -366,7 +366,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Pinning ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutPinningTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -770,7 +770,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Filtering ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -813,7 +813,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('GroupBy ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -883,7 +883,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
         const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
 
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -1140,7 +1140,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Selection ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;

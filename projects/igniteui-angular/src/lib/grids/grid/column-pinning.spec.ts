@@ -52,10 +52,6 @@ describe('Column Pinning UI #grid', () => {
             columnChooserElement = GridFunctions.getColumnPinningElement(fix);
         }));
 
-        afterAll(() => {
-            UIInteractions.clearOverlay();
-        });
-
         it('title is initially empty.', async(() => {
             const title = GridFunctions.getColumnChooserTitle(columnChooserElement);
             expect(title).toBe(null);

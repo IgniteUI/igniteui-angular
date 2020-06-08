@@ -1,13 +1,12 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { IgxActionStripModule } from '../action-strip.module';
-
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -28,44 +27,46 @@ describe('igxGridEditingActions #grid ', () => {
             ]
         }).compileComponents();
     }));
-    beforeEach(() => {
-        fixture = TestBed.createComponent(IgxActionStripTestingComponent);
-        fixture.detectChanges();
-        actionStrip = fixture.componentInstance.actionStrip;
-        grid = fixture.componentInstance.grid;
-    });
+    describe('Base ', () => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fixture = TestBed.createComponent(IgxActionStripTestingComponent);
+            fixture.detectChanges();
+            actionStrip = fixture.componentInstance.actionStrip;
+            grid = fixture.componentInstance.grid;
+        }));
 
-    it('should allow editing and deleting row', () => {
-        let editIcon, deleteIcon;
-        actionStrip.show(grid.rowList.first);
-        fixture.detectChanges();
-        editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
-        expect(editIcon.nativeElement.innerText).toBe('edit');
-        editIcon.parent.triggerEventHandler('click', new Event('click'));
-        fixture.detectChanges();
-        expect(grid.rowInEditMode).not.toBeNull();
-        expect(grid.rowList.first.inEditMode).toBe(true);
+        it('should allow editing and deleting row', () => {
+            let editIcon, deleteIcon;
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
+            expect(editIcon.nativeElement.innerText).toBe('edit');
+            editIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+            expect(grid.rowInEditMode).not.toBeNull();
+            expect(grid.rowList.first.inEditMode).toBe(true);
 
-        expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
-        const dataLenght = grid.dataLength;
-        actionStrip.show(grid.rowList.first);
-        fixture.detectChanges();
-        deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
-        expect(deleteIcon.nativeElement.innerText).toBe('delete');
-        deleteIcon.parent.triggerEventHandler('click', new Event('click'));
-        actionStrip.hide();
-        fixture.detectChanges();
-        expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
-        expect(dataLenght - 1).toBe(grid.dataLength);
+            expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
+            const dataLenght = grid.dataLength;
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
+            expect(deleteIcon.nativeElement.innerText).toBe('delete');
+            deleteIcon.parent.triggerEventHandler('click', new Event('click'));
+            actionStrip.hide();
+            fixture.detectChanges();
+            expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
+            expect(dataLenght - 1).toBe(grid.dataLength);
+        });
     });
 
     describe('integration with pinning actions ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(IgxActionStripPinEditComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             grid = fixture.componentInstance.grid;
-        });
+        }));
         it('should disable editing actions on disabled rows', () => {
             grid.rowList.first.pin();
             fixture.detectChanges();

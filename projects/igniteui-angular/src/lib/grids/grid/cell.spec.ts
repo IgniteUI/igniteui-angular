@@ -276,7 +276,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         }));
 
-        it('Should not attach doubletap handler for non-iOS', () => {
+        it('Should not attach doubletap handler for non-iOS', fakeAsync(/** height/width setter rAF */() => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
@@ -287,9 +287,9 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(addListenerSpy).not.toHaveBeenCalled();
 
             platformUtil.isIOS = oldIsIOS;
-        });
+        }));
 
-        it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
+        it('Should handle doubletap on iOS, trigger onDoubleClick event', fakeAsync(/** height/width setter rAF */() => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
@@ -322,7 +322,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
 
             platformUtil.isIOS = oldIsIOS;
-        });
+        }));
     });
 
     describe('No column widths', () => {
@@ -358,7 +358,7 @@ describe('IgxGrid - Cell component #grid', () => {
             }).compileComponents();
         }));
 
-        it('should be able to conditionally style cells', async(() => {
+        it('should be able to conditionally style cells', fakeAsync(() => {
             const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
             fixture.detectChanges();
 

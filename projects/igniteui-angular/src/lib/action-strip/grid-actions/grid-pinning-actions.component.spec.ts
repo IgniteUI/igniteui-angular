@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxGridModule, IgxGridComponent } from '../../grids/grid/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,12 +28,12 @@ describe('igxGridPinningActions #grid ', () => {
             ]
         }).compileComponents();
     }));
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(IgxActionStripTestingComponent);
         fixture.detectChanges();
         actionStrip = fixture.componentInstance.actionStrip;
         grid = fixture.componentInstance.grid;
-    });
+    }));
 
     it('should allow pinning and unpinning rows in a grid', () => {
         let pinIcon, unpinIcon;

@@ -1,10 +1,10 @@
 import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { TestBed, async } from '@angular/core/testing';
 import { IgxIconModule } from '../icon/public_api';
+import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxActionStripModule } from './action-strip.module';
@@ -55,14 +55,14 @@ describe('igxActionStrip', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxActionStripTestingComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
             actionStripElement = fixture.componentInstance.actionStripElement;
             parentContainer = fixture.componentInstance.parentContainer;
             innerContainer = fixture.componentInstance.innerContainer;
-        });
+        }));
         it('should be overlapping its parent container when no context is applied', () => {
             const parentBoundingRect = parentContainer.nativeElement.getBoundingClientRect();
             const actionStripBoundingRect = actionStripElement.nativeElement.getBoundingClientRect();

@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
@@ -398,7 +398,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(  hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
     }));
 
-    it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
+    it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', ( async () => {
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         const parentCell = parentRow.cells.toArray()[0];
@@ -406,13 +406,15 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
         // collapse
         UIInteractions.triggerEventHandlerKeyDown('arrowleft', baseHGridContent, true, false, false);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(false);
         // expand
         UIInteractions.triggerEventHandlerKeyDown('arrowright', baseHGridContent, true, false, false);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
-    });
+    }));
 
     it('should retain active cell when expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', (async () => {
         // scroll to last row
@@ -446,7 +448,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(parentCell.active).toBeTruthy();
     }));
 
-    it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
+    it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', (async () => {
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
@@ -454,14 +456,16 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
         // collapse
         UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent, true, false, false);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(false);
         // expand
         parentCell = parentRow.cells.toArray()[0];
         UIInteractions.triggerEventHandlerKeyDown('arrowdown', baseHGridContent, true, false, false);
+        await wait(DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
-    });
+    }));
 
     it('should skip child grids that have no data when navigating up/down', (async () => {
         // set first child to not have data
