@@ -68,7 +68,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public onIndicatorFocus() {
         this.gridAPI.submit_value();
-        this.nativeElement.focus();
     }
 
     /**
