@@ -6,8 +6,10 @@
     "entryFile": "src/public_api.ts"
   },
   "whitelistedNonPeerDependencies": [
+      "@types/core-js",
       "@types/hammerjs",
       "@types/jszip",
+      "core-js",
       "hammerjs",
       "jszip",
       "resize-observer-polyfill",
