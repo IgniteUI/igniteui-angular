@@ -52,4 +52,19 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     public get size() {
         return this._size;
     }
+
+    public get scrollNativeSize() {
+        const div = document.createElement('div');
+        const style = div.style;
+        style.width = '100px';
+        style.height = '100px';
+        style.position = 'absolute';
+        style.top = '-10000px';
+        style.top = '-10000px';
+        style.overflow = 'scroll';
+        document.body.appendChild(div);
+        const scrollWidth = div.offsetWidth - div.clientWidth;
+        document.body.removeChild(div);
+        return scrollWidth ? scrollWidth + 1 : 1;
+    }
 }
