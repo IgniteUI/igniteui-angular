@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -66,9 +66,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     describe(null, () => {
         let fix: ComponentFixture<any>;
@@ -2597,10 +2594,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             .compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
-
     describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
         let grid: IgxGridComponent;
@@ -4585,9 +4578,6 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(CustomFilteringStrategyComponent);
         fix.detectChanges();

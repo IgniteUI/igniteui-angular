@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxListComponent } from '../list';
+import { IgxListComponent } from '../list/public_api';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 
 @Component({
