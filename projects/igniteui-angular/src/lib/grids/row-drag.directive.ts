@@ -2,7 +2,7 @@ import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/cor
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowDirective, IgxGridBaseDirective } from './grid';
+import { IgxRowDirective, IgxGridBaseDirective } from './grid/public_api';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { GridType } from './common/grid.interface';
 import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';

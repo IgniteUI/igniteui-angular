@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, async, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { TestBed, async, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DataParent, SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { Point } from '../../services';
+import { Point } from '../../services/public_api';
 
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
@@ -19,9 +19,9 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid';
+import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid/public_api';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
-import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 
 const DEBOUNCE_TIME = 50;

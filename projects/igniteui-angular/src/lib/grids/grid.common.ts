@@ -1,5 +1,5 @@
 ﻿import { Directive } from '@angular/core';
-import { ConnectedPositioningStrategy } from '../services';
+import { ConnectedPositioningStrategy } from '../services/public_api';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
