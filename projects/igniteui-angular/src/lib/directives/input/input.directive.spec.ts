@@ -18,7 +18,7 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
-fdescribe('IgxInput', () => {
+describe('IgxInput', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
