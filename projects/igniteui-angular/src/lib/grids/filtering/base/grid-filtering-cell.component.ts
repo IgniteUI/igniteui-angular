@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
+import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 
 /**

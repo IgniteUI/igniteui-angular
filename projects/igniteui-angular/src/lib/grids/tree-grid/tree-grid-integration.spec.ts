@@ -2,7 +2,7 @@ import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angul
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridRowComponent } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
@@ -20,9 +20,9 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../grid';
+import { IgxGridCellComponent } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
-import { HierarchicalTransaction, TransactionType } from '../../services';
+import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';

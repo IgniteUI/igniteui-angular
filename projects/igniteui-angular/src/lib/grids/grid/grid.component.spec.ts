@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -20,7 +20,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
 
 
@@ -1655,7 +1655,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
 

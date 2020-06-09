@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { DefaultSortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';

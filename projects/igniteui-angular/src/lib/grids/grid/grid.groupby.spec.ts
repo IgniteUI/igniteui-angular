@@ -8,7 +8,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -24,7 +24,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
-    const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const DISABLED_CHIP = 'igx-chip--disabled';
@@ -2096,7 +2095,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
         expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
-        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollWidth);
+        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollSize);
 
         grid.clearGrouping();
         tick();
@@ -2110,7 +2109,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
-        const expectedWidth = parseInt(grid.width, 10) - grid.scrollWidth;
+        const expectedWidth = parseInt(grid.width, 10) - grid.scrollSize;
         expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));
 

@@ -5,10 +5,11 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseDirective } from '../grid';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { GridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
+import { GridPagingMode } from '../common/enums';
 
 /**
  * @hidden
@@ -244,11 +245,11 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
-        if (!grid.paging) {
+        if (!grid.paging || grid.pagingMode !== GridPagingMode.local) {
             return collection;
         }
 
-        const len = collection.length;
+        const len = grid._totalRecords >= 0 ? grid._totalRecords : collection.length;
         const totalPages = Math.ceil(len / perPage);
 
         const state = {
@@ -256,7 +257,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state);
+        const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state, len);
         grid.pagingState = state;
         (grid as any)._page = state.index;
 

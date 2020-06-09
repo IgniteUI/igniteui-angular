@@ -3,8 +3,8 @@ import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { IgxGridModule } from './index';
+import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
+import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -12,7 +12,7 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxInputGroupComponent } from '../../input-group';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { GridSummaryCalculationMode, GridSummaryPosition, GridSelectionMode } from '../common/enums';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
