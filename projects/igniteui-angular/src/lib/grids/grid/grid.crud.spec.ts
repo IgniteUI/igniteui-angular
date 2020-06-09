@@ -156,7 +156,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
             rowID: 1,
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
-            cancel: false
+            cancel: false,
+            owner: grid
         };
 
         expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
@@ -177,7 +178,9 @@ describe('IgxGrid - CRUD operations #grid', () => {
             cellID: cell.cellID,
             oldValue: 1,
             newValue: 200,
-            cancel: false
+            cancel: false,
+            columnField: cell.column.field,
+            owner: grid
         };
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);

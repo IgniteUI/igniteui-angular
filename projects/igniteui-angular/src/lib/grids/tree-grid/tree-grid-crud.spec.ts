@@ -369,7 +369,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 147,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 4);
@@ -397,7 +398,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 299,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -425,7 +427,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 299,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -455,7 +458,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    columnField: cellComponent.column.field,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -485,7 +490,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    columnField: cellComponent.column.field,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -525,7 +532,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 1,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -557,7 +565,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 1,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -588,7 +597,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 7,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -616,7 +626,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 7,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -647,7 +658,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     rowID: 7,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Jack Simon');
                 verifyCellValue(fix, 5, 'Name', 'New Name');
@@ -679,7 +691,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    columnField: cellComponent.column.field,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
@@ -710,7 +724,9 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    columnField: cellComponent.column.field,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);

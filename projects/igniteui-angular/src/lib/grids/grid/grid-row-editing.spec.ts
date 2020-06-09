@@ -152,8 +152,22 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, cancel: false };
-            let rowArgs: IGridEditEventArgs = { rowID: row.rowID, oldValue: row.rowData, cancel: false };
+            let cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: cell.value,
+                cancel: false,
+                columnField: cell.column.field,
+                owner: grid
+            };
+            let rowArgs: IGridEditEventArgs = {
+                rowID: row.rowID,
+                oldValue: row.rowData,
+                newValue: undefined,
+                cancel: false,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
@@ -162,9 +176,23 @@ describe('IgxGrid - Row Editing #grid', () => {
             flush();
 
             expect(row.inEditMode).toBe(false);
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: cell.value, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: cell.value,
+                cancel: false,
+                columnField: cell.column.field,
+                owner: grid
+            };
             // no change, new value is null
-            rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: null, cancel: false };
+            rowArgs = {
+                rowID: row.rowID,
+                oldValue: row.rowData,
+                newValue: null,
+                cancel: false,
+                owner: grid
+            };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 
@@ -180,10 +208,21 @@ describe('IgxGrid - Row Editing #grid', () => {
             flush();
             fix.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: newCellValue, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: newCellValue,
+                cancel: false,
+                columnField: cell.column.field,
+                owner: grid
+            };
             rowArgs = {
-                rowID: row.rowID, oldValue: row.rowData,
-                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }), cancel: false
+                rowID: row.rowID,
+                oldValue: row.rowData,
+                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                cancel: false,
+                owner: grid
             };
             UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom, true);
             flush();
@@ -1594,7 +1633,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         }));
 
@@ -1632,7 +1672,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
 
             // Enter cell edit mode again
@@ -1653,7 +1694,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
         }));
 
@@ -1683,7 +1725,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         }));
 
@@ -1721,7 +1764,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
 
             // Enter cell edit mode again
@@ -1742,7 +1786,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
         }));
 
@@ -1760,8 +1805,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalled();
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 oldValue: initialData,
+                newValue: undefined,
                 rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         }));
 
@@ -1785,8 +1832,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 oldValue: initialData,
+                newValue: undefined,
                 rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
         }));
 
@@ -1816,7 +1865,8 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         }));
 
@@ -1846,16 +1896,22 @@ describe('IgxGrid - Row Editing #grid', () => {
                 newValue: null,
                 oldValue: initialData,
                 rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         }));
 
         it(`Should properly emit 'onCellEdit' event `, fakeAsync(() => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            spyOn(grid.onRowEdit, 'emit').and.callThrough();
-
-            let cell = grid.getCellByColumn(0, 'ProductName');
-            const cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'Chai', newValue: 'New Value', cancel: false };
+            const cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 'Chai',
+                newValue: 'New Value',
+                cancel: false,
+                columnField: cell.column.field,
+                owner: grid
+            };
 
             cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
             tick(16);
