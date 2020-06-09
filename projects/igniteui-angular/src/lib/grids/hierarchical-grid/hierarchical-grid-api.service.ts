@@ -2,7 +2,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
 import { IPathSegment } from './hierarchical-grid-base.directive';
-import { IgxGridBaseDirective, GridBaseAPIService } from '../grid';
+import { IgxGridBaseDirective, GridBaseAPIService } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 
