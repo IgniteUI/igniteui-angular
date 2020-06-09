@@ -166,7 +166,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
-        this.cdr.detectChanges();
     }
 
     get totalItemCount() {
