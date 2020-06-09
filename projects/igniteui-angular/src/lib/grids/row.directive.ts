@@ -248,7 +248,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    public dragging = false;
+    protected get dragging() {
+        return this.grid.dragRowID === this.rowID;
+    }
 
     // TODO: Refactor
     public get inEditMode(): boolean {

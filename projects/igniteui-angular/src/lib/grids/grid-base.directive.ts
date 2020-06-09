@@ -584,6 +584,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public rowDragging = false;
 
+    /**
+     * Gets the row ID that is being dragged.
+     * @remarks
+     * The row ID is either the primaryKey value or the data record instance.
+     */
+    public dragRowID = null;
+
 
    /**
     * Gets/Sets whether the rows are editable.
