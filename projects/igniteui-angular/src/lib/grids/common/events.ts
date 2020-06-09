@@ -29,6 +29,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs 
     oldValue: any;
     newValue?: any;
     event?: Event;
+    columnField?: string;
 }
 
 export interface IPinColumnEventArgs extends IBaseEventArgs {

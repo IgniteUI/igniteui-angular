@@ -87,7 +87,8 @@ export class IgxCell {
             cellID: this.id,
             oldValue: this.value,
             newValue: this.editValue,
-            cancel: false
+            cancel: false,
+            columnField: this.column.field
         };
     }
 }
@@ -133,11 +134,9 @@ export class IgxGridCRUDService {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
         }
         this.row = this.createRow(this.cell);
-        const args = {
-            rowID: this.row.id,
-            oldValue: this.row.data,
-            cancel: false
-        };
+        // TODO: should we emit newValue in onRowEditEnter?
+        const args = this.row.createEditEventArgs();
+        args.owner = this.grid;
         this.grid.onRowEditEnter.emit(args);
         if (args.cancel) {
             this.endRowEdit();
@@ -156,12 +155,9 @@ export class IgxGridCRUDService {
     begin(cell): void {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
-        const args = {
-            cellID: newCell.id,
-            rowID: newCell.id.rowID,
-            oldValue: newCell.value,
-            cancel: false
-        };
+        // TODO: should we emit newValue in onCellEditEnter?
+        const args = newCell.createEditEventArgs();
+        args.owner = this.grid;
 
         this.grid.onCellEditEnter.emit(args);
 
