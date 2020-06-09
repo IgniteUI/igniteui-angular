@@ -1044,7 +1044,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        super.dataLoading(this.onDataPreLoad, event);
+        this.onDataPreLoad.emit(event);
     }
 
     /**

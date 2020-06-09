@@ -6170,13 +6170,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public dataLoading(eventEmitter, event) {
-        eventEmitter.emit(event);
-    }
-
-    /**
-     * @hidden @internal
-     */
     openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
