@@ -5067,15 +5067,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         const selectedData = [];
         const activeEl = this.selectionService.activeElement;
-
-        const selectionMap = Array.from(this.selectionService.selection)
-            .filter((tuple) => tuple[0] < source.length);
+        const totalItems = (this as any).totalItemCount ?? 0;
+        const isRemote = totalItems && totalItems > this.dataView.length;
+        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+            Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
         }
 
-        for (const [row, set] of selectionMap) {
+        for (let [row, set] of selectionMap) {
+            row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
