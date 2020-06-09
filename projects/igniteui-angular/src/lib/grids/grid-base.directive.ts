@@ -47,7 +47,7 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy,
     ContainerPositionStrategy
-} from '../services/index';
+} from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
@@ -61,7 +61,7 @@ import {
     FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
 } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { Transaction, TransactionType, TransactionService, State } from '../services/index';
+import { Transaction, TransactionType, TransactionService, State } from '../services/public_api';
 import {
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective,
@@ -70,7 +70,7 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { IgxGridRowComponent } from './grid';
+import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
@@ -113,7 +113,8 @@ import {
     GridSummaryCalculationMode,
     FilterMode,
     ColumnPinningPosition,
-    RowPinningPosition
+    RowPinningPosition,
+    GridPagingMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -407,6 +408,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set locale(value) {
         this._locale = value;
+    }
+
+    @Input()
+    get pagingMode() {
+        return this._pagingMode;
+    }
+
+    set pagingMode(val: GridPagingMode) {
+        this._pagingMode = val;
+        this._pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     /**
@@ -2492,6 +2504,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _pagingMode = GridPagingMode.local;
+    /**
+     * @hidden @internal
+     */
+    public _totalRecords = -1;
+    /**
+     * @hidden
+     */
     protected _hideRowSelectors = false;
     /**
      * @hidden
@@ -3614,7 +3634,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
         }
-        return -1;
+        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
     }
 
     /**
@@ -3663,9 +3683,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const totalRecords = this.grid.totalRecords;
      * ```
      */
+    @Input()
     get totalRecords(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countRecords;
+        return this._totalRecords >= 0 ? this._totalRecords : this.pagingState?.metadata.countRecords;
+    }
+
+    set totalRecords(total: number) {
+        if (total >= 0) {
+            this._totalRecords = total;
+            this._pipeTrigger++;
+            this.notifyChanges();
         }
     }
 

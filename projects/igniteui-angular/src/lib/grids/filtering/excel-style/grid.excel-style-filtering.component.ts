@@ -18,7 +18,7 @@ import {
     IgxOverlayService,
     AbsoluteScrollStrategy,
     AutoPositionStrategy
-} from '../../../services/index';
+} from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import {
     IFilteringOperation,
@@ -36,7 +36,7 @@ import { IgxExcelStyleCustomDialogComponent } from './excel-style-custom-dialog.
 import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
-import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
+import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseDirective } from '../../grid-base.directive';
 import { DisplayDensity } from '../../../core/density';

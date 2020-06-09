@@ -3,7 +3,7 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from '../common/events';
-import { HierarchicalTransaction, TransactionType, State } from '../../services';
+import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { mergeObjects } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
