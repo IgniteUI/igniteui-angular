@@ -8,8 +8,6 @@
 
 /// Generates a light base data chart schema.
 /// @type {Map}
-/// @property {Map} width [null] - The width of the chart.
-/// @property {Map} height [null] - The height of the chart.
 /// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @property {Color} title-text-color [igx-color: ('grays', 900)] - Sets the color of the chart title.
 /// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
@@ -24,10 +22,6 @@
 /// @see $default-palette
 $_light-data-chart: extend(
     (
-        'width': null,
-
-        'height': null,
-
         'margin': null,
 
         'title-text-color': (
@@ -54,7 +48,7 @@ $_light-data-chart: extend(
             igx-color: ('surface', 500)
         ),
 
-        'title-horizontal-alignment': null
+        'title-horizontal-alignment': null,
     )
 );
 

@@ -8,8 +8,6 @@
 
 /// Generates a light funnel chart schema.
 /// @type {Map}
-/// @property {Number} width [null]  - The width of the chart.
-/// @property {Number} height [null]  - The height of the chart.
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @property {String} outer-label-alignment [null] - Sets which side of the chart the outer labels should appear.
@@ -23,26 +21,14 @@
 /// @see $default-palette
 $_light-funnel-chart: extend(
     (
-        'width': null,
-
-        'height': null,
-
         'brushes': series,
-
         'outlines': series,
-
         'outer-label-alignment': null,
-
         'outer-label-text-color': null,
-
         'outer-label-text-style': null,
-
         'outer-label-visibility': null,
-
         'outline-thickness': null,
-
         'text-color': null,
-
         'text-style': null,
     )
 );

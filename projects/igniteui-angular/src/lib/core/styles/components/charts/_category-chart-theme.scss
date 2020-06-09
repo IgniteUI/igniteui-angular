@@ -18,6 +18,7 @@
 /// @param {Color} $title-text-color [null] - Sets the color of the chart title.
 /// @param {String} $title-text-style [null] - Sets the CSS font property of the chart title.
 /// @param {List} $subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @param {String} $subtitle-alignment [null] - The horizontal alignment to use for the subtitle.
 /// @param {Color} $subtitle-text-color [null] - Sets the color of the chart subtitle.
 /// @param {String} $subtitle-text-style [null] - Sets the CSS font property of the chart subtitle.
 /// @param {Number} $thickness [null] - Sets the thickness for all series in a chart.
@@ -207,6 +208,7 @@
             title-alignment: $title-alignment,
             title-text-color: $title-text-color,
             title-text-style: $title-text-style,
+            subtitle-alignment: $subtitle-alignment,
             subtitle-text-color: $subtitle-text-color,
             subtitle-text-style: $subtitle-text-style,
             thickness: $thickness,

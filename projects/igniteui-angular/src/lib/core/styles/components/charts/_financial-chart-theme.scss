@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Number} $width [null] - The width of the chart.
-/// @param {Number} $height [null] - The height of the chart.
 /// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @param {String} $title-alignment [null] - The horizontal alignment to use for the title.
 /// @param {Color} $title-text-color [null] - Sets the color of the chart title.
@@ -79,8 +77,6 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $width: null,
-    $height: null,
     $margin: null,
     $title-alignment: null,
     $title-text-color: null,
@@ -201,8 +197,6 @@
         $y-axis-title-margin,
         (
             name: $name,
-            width: $width,
-            height: $height,
             margin: $margin,
             title-alignment: $title-alignment,
             title-text-color: $title-text-color,

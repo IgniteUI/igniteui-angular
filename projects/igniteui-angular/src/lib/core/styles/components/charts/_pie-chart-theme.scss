@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $width [null] - Sets the width of the chart.
-/// @param {Map} $height [null] - Sets the height of the chart.
 /// @param {List} $brushes [series] - Defines the palette from which automatically assigned series colors are selected.
 /// @param {List} $outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @param {Number} $label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
@@ -31,8 +29,6 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $width: null,
-    $height: null,
     $brushes: null,
     $outlines: null,
     $label-extent: null,
@@ -57,8 +53,6 @@
 
     @return extend( $theme, (
         name: $name,
-        width: $width,
-        height: $height,
         brushes: $brushes,
         outlines: $outlines,
         label-extent: $label-extent,
@@ -71,6 +65,4 @@
         radius-factor: $radius-factor,
     ));
 }
-
-// @mixin igx-pie-chart-typography($type-scale, $categories: ()) {};
 

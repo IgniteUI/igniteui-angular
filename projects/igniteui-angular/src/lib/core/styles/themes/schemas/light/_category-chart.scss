@@ -20,6 +20,7 @@
 /// @property {Color} title-text-color [null] - Sets the color of the chart title.
 /// @property {String} title-text-style [null] - Sets the CSS font property of the chart title.
 /// @property {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @property {String} subtitle-alignment [null] - The horizontal alignment to use for the subtitle.
 /// @property {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
 /// @property {String} subtitle-text-style [null] - Sets the CSS font property of the chart subtitle.
 /// @property {Number} thickness [null] - Sets the thickness for all series in a chart.
@@ -98,6 +99,8 @@ $_light-category-chart: extend(
             expand-shorthand: (null),
             map-keys-prefix: 'subtitle'
         ),
+
+        'subtitle-alignment': null,
 
         'subtitle-text-color': (
             igx-color: ('grays', 700),

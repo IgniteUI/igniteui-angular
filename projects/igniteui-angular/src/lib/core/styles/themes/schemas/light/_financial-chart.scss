@@ -8,8 +8,6 @@
 
 /// Generates a light base chart schema.
 /// @type {Map}
-/// @prop {Number} width [null] - The width of the chart.
-/// @prop {Number} height [null] - The height of the chart.
 /// @prop {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @prop {String} title-alignment [null] - The horizontal alignment to use for the title.
 /// @prop {Color} title-text-color [null] - Sets the color of the chart title.
@@ -71,8 +69,6 @@
 /// @see $default-palette
 $_light-financial-chart: extend(
     (
-        'width': null,
-        'height': null,
         'margin': null,
         'title-alignment': null,
         'title-text-color': null,

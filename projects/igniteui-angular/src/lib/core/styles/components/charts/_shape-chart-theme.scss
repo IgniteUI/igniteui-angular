@@ -6,8 +6,6 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $width [null] - The width of the chart.
-/// @param {Map} $height [null] - The height of the chart.
 /// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @param {Color} $title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
 /// @param {Color} $title-text-color [null] - Sets the color of the chart title.
@@ -60,8 +58,6 @@
 @function igx-shape-chart-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-    $width: null,
-    $height: null,
     $margin: null,
     $title-text-color: null,
     $title-margin: null,
@@ -172,8 +168,6 @@
         $y-axis-title-margin,
         (
             name: $name,
-            width: $width,
-            height: $height,
             title-text-color: $title-text-color,
             subtitle-text-color: $subtitle-text-color,
             brushes: $brushes,

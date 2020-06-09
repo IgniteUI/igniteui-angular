@@ -8,8 +8,6 @@
 
 /// Generates a light pie chart schema.
 /// @type {Map}
-/// @property {Map} width [null] - Sets the width of the chart.
-/// @property {Map} height [null] - Sets the height of the chart.
 /// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
 /// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @property {Number} label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
@@ -23,28 +21,15 @@
 /// @see $default-palette
 $_light-pie-chart: extend(
     (
-        'width': null,
-
-        'height': null,
-
         'brushes': series,
-
         'outlines': series,
-
         'label-extent': null,
-
         'label-inner-color': null,
-
         'label-outer-color': null,
-
         'labels-position': null,
-
         'leader-line-margin': null,
-
         'leader-line-type': null,
-
         'leader-line-visibility': null,
-
         'radius-factor': null,
     )
 );

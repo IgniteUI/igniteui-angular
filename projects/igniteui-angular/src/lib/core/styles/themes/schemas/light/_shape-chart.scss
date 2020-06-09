@@ -8,8 +8,6 @@
 
 /// Generates a light base shape chart schema.
 /// @type {Map}
-/// @property {Map} width [null] - The width of the chart.
-/// @property {Map} height [null] - The height of the chart.
 /// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
 /// @property {Color} title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
 /// @property {Color} title-text-color [null] - Sets the color of the chart title.
@@ -54,8 +52,6 @@
 /// @see $default-palette
 $_light-shape-chart: extend(
     (
-        'width': null,
-        'height': null,
         'margin': null,
         'title-alignment': null,
 
