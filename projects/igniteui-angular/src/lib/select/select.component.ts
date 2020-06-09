@@ -367,11 +367,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };
-        this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        const changes$ = this.children.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.setSelection(this.items.find(x => x.value === this.value));
             this.cdr.detectChanges();
         });
-        Promise.resolve().then(() => this.children.notifyOnChanges());
+        Promise.resolve().then(() => {
+            if (!changes$.closed) {
+                this.children.notifyOnChanges();
+            }
+        });
     }
 
     /** @hidden @internal */
