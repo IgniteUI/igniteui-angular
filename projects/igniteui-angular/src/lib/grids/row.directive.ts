@@ -248,7 +248,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    protected get dragging() {
+    public get dragging() {
         return this.grid.dragRowID === this.rowID;
     }
 
