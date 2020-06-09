@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
 
 const CSS_CLASS_COMBO = 'igx-combo';

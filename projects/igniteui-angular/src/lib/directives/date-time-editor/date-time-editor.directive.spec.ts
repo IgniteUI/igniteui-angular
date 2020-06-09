@@ -6,7 +6,7 @@ import { async, fakeAsync, TestBed, tick, } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
