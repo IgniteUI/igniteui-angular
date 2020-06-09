@@ -1,10 +1,17 @@
-import { Component, ChangeDetectorRef, ElementRef, Inject,
-     ChangeDetectionStrategy, NgZone, Input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    NgZone
+} from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseDirective } from '../grid';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';

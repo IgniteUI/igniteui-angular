@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { IgxGridModule, IgxGridComponent } from './grid';
+import { IgxGridModule, IgxGridComponent } from './grid/public_api';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';

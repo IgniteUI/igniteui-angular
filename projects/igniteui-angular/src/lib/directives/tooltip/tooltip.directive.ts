@@ -6,7 +6,7 @@ import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
 import { fadeOut } from '../../animations/fade/index';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { HorizontalAlignment, AutoPositionStrategy, PositionSettings, OverlaySettings } from '../../services';
+import { HorizontalAlignment, AutoPositionStrategy, PositionSettings, OverlaySettings } from '../../services/public_api';
 import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
