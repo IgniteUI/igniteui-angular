@@ -735,7 +735,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 }
             ];
             fixture.componentInstance.colGroups = uniqueGroups;
-            fixture.componentInstance.grid.width = (800 + grid.scrollWidth) + 'px';
+            fixture.componentInstance.grid.width = (800 + grid.scrollSize) + 'px';
             fixture.detectChanges();
 
             // pin group3
@@ -1051,7 +1051,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should correctly resize column while there is another column that does not have width set', async() => {
-            grid.width = 1500 + grid.scrollWidth + 'px';
+            grid.width = 1500 + grid.scrollSize + 'px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
@@ -1093,7 +1093,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
-            grid.width = 1500 + grid.scrollWidth + 'px';
+            grid.width = 1500 + grid.scrollSize + 'px';
             fixture.detectChanges();
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
