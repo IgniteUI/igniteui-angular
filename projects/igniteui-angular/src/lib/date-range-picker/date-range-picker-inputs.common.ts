@@ -77,7 +77,6 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     public updateInputValidity(state: IgxInputState) {
         this.inputDirective.valid = state;
     }
-
 }
 
 /**

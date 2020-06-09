@@ -491,7 +491,8 @@ describe('IgxDateRangePicker', () => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent
+                        DateRangeTwoInputsTestComponent,
+                        DateRangeTwoInputsNgModelTestComponent
                     ],
                     imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
                 })
@@ -584,6 +585,7 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRange();
                 });
             });
+
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
@@ -628,6 +630,19 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                }));
+            });
+
+            describe('Data binding', () => {
+                it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
+                    fixture.detectChanges();
+                    const range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
+                    fixture.componentInstance.dateRange.open();
+                    fixture.detectChanges();
+                    tick();
+                    expect(fixture.componentInstance.dateRange.value.start.getTime()).toEqual(range.start.getTime());
+                    expect(fixture.componentInstance.dateRange.value.end.getTime()).toEqual(range.end.getTime());
                 }));
             });
         });
@@ -819,6 +834,22 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     startDate = new Date(2020, 1, 1);
     endDate = new Date(2020, 1, 4);
     range;
+}
+
+@Component({
+    selector: 'igx-date-range-two-inputs-ng-model',
+    template: `
+    <igx-date-range-picker [mode]="'dropdown'">
+        <igx-date-range-start>
+            <input igxInput [(ngModel)]="range.start" igxDateTimeEditor>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
+        </igx-date-range-end>
+    </igx-date-range-picker>`
+})
+export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
+    public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
 }
 
 @Component({

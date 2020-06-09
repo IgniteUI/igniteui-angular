@@ -52,8 +52,6 @@ import {
     IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
 
-
-
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
  *
@@ -638,8 +636,12 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
-        this.initialSetValue();
-        this.updateInputs();
+
+        // delay the invocation of initialSetValue
+        // until the current change detection cycle has completed
+        Promise.resolve().then(() => {
+            this.initialSetValue();
+        });
     }
 
     /** @hidden @internal */
@@ -915,13 +917,23 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private initialSetValue() {
-        // if there is no value, no ngControl but we have inputs we may have value set trough
-        // inputs' ngModels - we should generate our initial control value
-        if (!this.value && this.hasProjectedInputs && !this._ngControl) {
-            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent).dateTimeEditor.value;
-            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent).dateTimeEditor.value;
-            this.updateValue({ start, end });
+        // if there is no value and no ngControl on the picker but we have inputs we may have value set through
+        // their ngModels - we should generate our initial control value
+        if ((!this.value || (!this.value.start && !this.value.end)) && this.hasProjectedInputs && !this._ngControl) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent);
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
+            const value = {
+                start: start.dateTimeEditor.value,
+                end: end.dateTimeEditor.value
+            };
 
+            if (start.dateTimeEditor.ngControl && end.dateTimeEditor.ngControl) {
+                // ngModel will handle value setting in the editors
+                // we need to only set the internal value of the picker
+                this._value = value;
+            } else {
+                this.updateValue(value);
+            }
         }
     }
 
