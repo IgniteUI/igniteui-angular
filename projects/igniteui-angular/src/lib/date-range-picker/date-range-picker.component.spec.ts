@@ -14,6 +14,8 @@ import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
 import { DateRangeType } from '../core/dates/dateRange';
+import { CancelableBrowserEventArgs, IBaseEventArgs, CancelableEventArgs } from '../core/utils';
+import { take } from 'rxjs/operators';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -533,6 +535,31 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
+
+                it('should not close calendar if closing event is canceled', fakeAsync(() => {
+                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
+                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    dateRange.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+                    dateRange.toggle();
+                    tick(DEBOUNCE_TIME);
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    const dayRange = 6;
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 14, 0, 0, 0);
+                    endDate = new Date(startDate);
+                    endDate.setDate(endDate.getDate() + dayRange);
+                    dateRange.selectRange(startDate, endDate);
+
+                    dateRange.close();
+                    tick();
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(dateRange.onClosing.emit).toHaveBeenCalled();
+                    expect(dateRange.onClosed.emit).not.toHaveBeenCalled();
+                }));
             });
 
             describe('Keyboard navigation', () => {
@@ -994,7 +1021,7 @@ export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent
     </igx-date-range-picker>
     `
 })
-export class DateRangeDefaultComponent extends DateRangeTestComponent { }
+export class DateRangeDefaultComponent extends DateRangeTestComponent {}
 
 @Component({
     selector: 'igx-date-range-templates-test',
