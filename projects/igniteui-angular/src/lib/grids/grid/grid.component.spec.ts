@@ -137,7 +137,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         });
 
-        it('should remove all rows if data becomes null/undefined.', async () => {
+        it('should remove all rows if data becomes null/undefined.', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
@@ -150,7 +150,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowList.length).toEqual(0);
             expect(noRecordsSpan).toBeTruthy();
             expect(noRecordsSpan.nativeElement.innerText).toBe('Grid has no data.');
-        });
+        }));
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
