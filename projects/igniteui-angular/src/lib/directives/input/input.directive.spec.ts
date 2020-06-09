@@ -18,7 +18,7 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
-describe('IgxInput', () => {
+fdescribe('IgxInput', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -614,6 +614,29 @@ describe('IgxInput', () => {
         expect(input.valid).toBe(IgxInputState.INITIAL);
         expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should not set null or undefined as input value', () => {
+        const fixture = TestBed.createComponent(InputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        expect(igxInput.value).toBe('');
+
+        igxInput.value = undefined;
+        expect(igxInput.value).toBe('');
+
+        igxInput.value = null;
+        expect(igxInput.value).toBe('');
+
+        igxInput.value = 0;
+        expect(igxInput.value).toBe('0');
+
+        igxInput.value = false;
+        expect(igxInput.value).toBe('false');
+
+        igxInput.value = 'Test';
+        expect(igxInput.value).toBe('Test');
     });
 });
 
