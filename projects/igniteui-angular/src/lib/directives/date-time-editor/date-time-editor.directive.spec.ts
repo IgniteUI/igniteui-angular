@@ -26,8 +26,8 @@ describe('IgxDateTimeEditor', () => {
         let inputFormat: string;
         let inputDate: string;
         function initializeDateTimeEditor(control?: NgControl) {
-            const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale, injector);
+            // const injector = { get: () => control };
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 

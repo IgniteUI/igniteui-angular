@@ -1,10 +1,10 @@
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, Host, Optional, Injector, OnInit
+  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NgControl, NG_VALUE_ACCESSOR,
+  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { formatDate, DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
@@ -51,7 +51,7 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
     { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
   ]
 })
-export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
+export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, Validator, ControlValueAccessor {
   /**
    * Locale settings used for value formatting.
    *
@@ -188,9 +188,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Output()
   public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
-  /** @hidden @internal */
-  public ngControl: NgControl;
-
   private _value: Date;
   private _format: string;
   private document: Document;
@@ -239,8 +236,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected elementRef: ElementRef,
     protected maskParser: MaskParsingService,
     @Inject(DOCUMENT) private _document: any,
-    @Inject(LOCALE_ID) private _locale: any,
-    private injector: Injector) {
+    @Inject(LOCALE_ID) private _locale: any) {
     super(elementRef, maskParser, renderer);
     this.document = this._document as Document;
     this.locale = this.locale || this._locale;
@@ -258,10 +254,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       // TODO: fill in partial dates?
       this.updateMask();
     }
-  }
-
-  public ngOnInit(): void {
-    this.ngControl = this.injector.get<NgControl>(NgControl, null);
   }
 
   /** Clear the input element value. */

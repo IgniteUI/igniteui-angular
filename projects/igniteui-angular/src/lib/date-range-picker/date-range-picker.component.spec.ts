@@ -637,7 +637,7 @@ describe('IgxDateRangePicker', () => {
                 it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
                     fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
                     fixture.detectChanges();
-                    const range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
+                    const range = (fixture.componentInstance as DateRangeTwoInputsNgModelTestComponent).range;
                     fixture.componentInstance.dateRange.open();
                     fixture.detectChanges();
                     tick();

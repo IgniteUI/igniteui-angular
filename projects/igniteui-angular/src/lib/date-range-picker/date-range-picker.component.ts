@@ -641,6 +641,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         // until the current change detection cycle has completed
         Promise.resolve().then(() => {
             this.initialSetValue();
+            this.updateInputs();
         });
     }
 
@@ -922,18 +923,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if ((!this.value || (!this.value.start && !this.value.end)) && this.hasProjectedInputs && !this._ngControl) {
             const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent);
             const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
-            const value = {
+            this._value = {
                 start: start.dateTimeEditor.value,
                 end: end.dateTimeEditor.value
             };
-
-            if (start.dateTimeEditor.ngControl && end.dateTimeEditor.ngControl) {
-                // ngModel will handle value setting in the editors
-                // we need to only set the internal value of the picker
-                this._value = value;
-            } else {
-                this.updateValue(value);
-            }
         }
     }
 
