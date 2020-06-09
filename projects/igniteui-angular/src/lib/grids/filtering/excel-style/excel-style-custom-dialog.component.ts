@@ -30,7 +30,7 @@ import {
     HorizontalAlignment,
     IgxOverlayService,
     AbsoluteScrollStrategy
-} from '../../../services/index';
+} from '../../../services/public_api';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';

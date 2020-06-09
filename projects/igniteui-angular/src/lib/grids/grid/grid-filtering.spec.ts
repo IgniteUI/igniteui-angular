@@ -3,9 +3,9 @@ import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxChipComponent } from '../../chips';
+import { IgxChipComponent } from '../../chips/public_api';
 import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,

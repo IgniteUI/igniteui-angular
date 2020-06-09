@@ -1,5 +1,5 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
