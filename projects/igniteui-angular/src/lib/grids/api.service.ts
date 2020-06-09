@@ -143,6 +143,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         cell.editValue = value;
 
         const args = cell.createEditEventArgs();
+        args.owner = this.grid;
 
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
@@ -225,6 +226,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         this._update_row(row, value);
 
         const args = row.createEditEventArgs();
+        args.owner = this.grid;
 
         // If no valid row is found
         if (index === -1) {
