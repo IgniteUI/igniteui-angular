@@ -530,7 +530,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const grRow of groupRows) {
             const elem = grRow.groupContent.nativeElement;
             const grVal = grRow.groupRow.value === null ? '' : grRow.groupRow.value.toString();
-            const expectedText = 'Total items with value:' + grVal +
+            const expectedText = 'Grouping by "Is it Released". ' +
+                'Total items with value:' + grVal +
                 ' are ' + grRow.groupRow.records.length;
             expect(elem.innerText.trim(['\n', '\r', ' '])).toEqual(expectedText);
             const expander = grRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
