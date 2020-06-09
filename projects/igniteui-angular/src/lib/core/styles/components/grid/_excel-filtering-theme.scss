@@ -108,7 +108,8 @@
 
     %grid-excel-sort {
         display: block;
-        padding: rem(8px) rem(0px);
+        padding-top: rem(8px);
+        padding-bottom: rem(8px);
 
         header {
             color: igx-color($palette, 'grays', 700);
