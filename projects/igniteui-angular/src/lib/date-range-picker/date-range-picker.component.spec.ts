@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
-import { IgxDateTimeEditorModule } from '../directives/date-time-editor';
+import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
 import { DateRangeType } from '../core/dates/dateRange';
 
@@ -26,7 +26,7 @@ const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle'; // TODO Implementation -> maybe 
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 
-fdescribe('IgxDateRangePicker', () => {
+describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
         const calendar = new IgxCalendarComponent();
@@ -107,6 +107,7 @@ fdescribe('IgxDateRangePicker', () => {
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
             dateRangePicker.handleSelection([range.start]);
+            (dateRangePicker as any).updateValidityOnBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
             dateRangePicker.setDisabledState(true);
@@ -140,7 +141,7 @@ fdescribe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        fit('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
+        it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
             dateRange.ngOnInit();
 
@@ -323,10 +324,13 @@ fdescribe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.placeholder).toEqual(placeholder);
                 });
 
-                it('should support different input formats', () => {
+                it('should support different display and input formats', () => {
+                    let inputFormat = 'dd/MM/yy';
+                    dateRange.inputFormat = inputFormat;
                     dateRange.displayFormat = 'longDate';
                     fixture.detectChanges();
 
+                    expect(dateRange.inputDirective.placeholder).toEqual(`${inputFormat} - ${inputFormat}`);
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
@@ -334,9 +338,14 @@ fdescribe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(singleInputElement.nativeElement.value).toEqual(`${formatLongDate(startDate)} - ${formatLongDate(endDate)}`);
 
+                    dateRange.value = null;
+
+                    inputFormat = 'yy-M-dd';
+                    dateRange.inputFormat = inputFormat;
                     dateRange.displayFormat = 'shortDate';
                     fixture.detectChanges();
 
+                    expect(dateRange.inputDirective.placeholder).toEqual(`${inputFormat} - ${inputFormat}`);
                     startDate.setDate(2);
                     endDate.setDate(19);
                     dateRange.selectRange(startDate, endDate);
@@ -346,9 +355,14 @@ fdescribe('IgxDateRangePicker', () => {
                     let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
+                    dateRange.value = null;
+
+                    inputFormat = 'EE/M/yy';
+                    dateRange.inputFormat = inputFormat;
                     dateRange.displayFormat = 'fullDate';
                     fixture.detectChanges();
 
+                    expect(dateRange.inputDirective.placeholder).toEqual(`${inputFormat} - ${inputFormat}`);
                     startDate.setDate(12);
                     endDate.setDate(23);
                     dateRange.selectRange(startDate, endDate);
@@ -358,6 +372,10 @@ fdescribe('IgxDateRangePicker', () => {
                     inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
 
+                    dateRange.value = null;
+
+                    inputFormat = 'yyyy/M/d';
+                    dateRange.inputFormat = inputFormat;
                     dateRange.displayFormat = 'dd-MM-yy';
                     fixture.detectChanges();
 
@@ -372,6 +390,7 @@ fdescribe('IgxDateRangePicker', () => {
                         replace(/\//g, '-');
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
+
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
@@ -666,60 +685,105 @@ fdescribe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRange();
                 });
-                // it('should support different input formats', () => {
-                //     dateRange.inputFormat = 'dd/MM/yy';
-                //     dateRange.displayFormat = 'longDate';
-                //     fixture.detectChanges();
+                it('should support different input and display formats', () => {
+                    let inputFormat = 'dd/MM/yy';
+                    let displayFormat = 'longDate';
+                    fixture.componentInstance.inputFormat = inputFormat;
+                    fixture.componentInstance.displayFormat = displayFormat;
+                    fixture.detectChanges();
 
-                //     const today = new Date();
-                //     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
-                //     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                //     dateRange.selectRange(startDate, endDate);
-                //     fixture.detectChanges();
-                //     expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
-                //     expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
+                    const startInputEditor = startInput.injector.get(IgxDateTimeEditorDirective);
+                    const endInputEditor = endInput.injector.get(IgxDateTimeEditorDirective);
+                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(startInputEditor.displayFormat).toEqual(displayFormat);
+                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.displayFormat).toEqual(displayFormat);
 
-                // dateRange.inputFormat = 'shortDate';
-                // fixture.detectChanges();
+                    inputFormat = 'yy-MM-dd';
+                    displayFormat = 'shortDate';
+                    fixture.componentInstance.inputFormat = inputFormat;
+                    fixture.componentInstance.displayFormat = displayFormat;
+                    fixture.detectChanges();
 
-                // startDate.setDate(2);
-                // endDate.setDate(19);
-                // dateRange.selectRange(startDate, endDate);
-                // fixture.detectChanges();
+                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(startInputEditor.displayFormat).toEqual(displayFormat);
+                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.displayFormat).toEqual(displayFormat);
 
-                // let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
-                // let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
-                // expect(startInput.nativeElement.value).toEqual(formatFullDate(inputStartDate));
-                // expect(endInput.nativeElement.value).toEqual(formatFullDate(inputEndDate));
+                    inputFormat = 'EE/MM/yy';
+                    displayFormat = 'fullDate';
+                    fixture.componentInstance.inputFormat = inputFormat;
+                    fixture.componentInstance.displayFormat = displayFormat;
+                    fixture.detectChanges();
 
-                // dateRange.inputFormat = 'fullDate';
-                // fixture.detectChanges();
+                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(startInputEditor.displayFormat).toEqual(displayFormat);
+                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.displayFormat).toEqual(displayFormat);
 
-                // startDate.setDate(12);
-                // endDate.setDate(23);
-                // dateRange.selectRange(startDate, endDate);
-                // fixture.detectChanges();
+                    inputFormat = 'MMM, yy';
+                    displayFormat = 'MMMM, yyyy';
+                    fixture.componentInstance.inputFormat = inputFormat;
+                    fixture.componentInstance.displayFormat = displayFormat;
+                    fixture.detectChanges();
 
-                // inputStartDate =
-                // startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                // inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-                // expect(startInput.nativeElement.value).toEqual(inputStartDate);
-                // expect(endInput.nativeElement.value).toEqual(inputEndDate);
+                    expect(startInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(startInputEditor.displayFormat).toEqual(displayFormat);
+                    expect(endInputEditor.inputFormat).toEqual(inputFormat);
+                    expect(endInputEditor.displayFormat).toEqual(displayFormat);
+                });
 
-                // dateRange.inputFormat = 'dd-MM-yy';
-                // fixture.detectChanges();
+                it('should display dates according to the applied display format', () => {
+                    const today = new Date();
+                    startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+                    expect(startInput.nativeElement.value).toEqual(formatFullDate(startDate));
+                    expect(endInput.nativeElement.value).toEqual(formatFullDate(endDate));
 
-                // startDate.setDate(9);
-                // endDate.setDate(13);
-                // dateRange.selectRange(startDate, endDate);
-                // fixture.detectChanges();
+                    fixture.componentInstance.displayFormat = 'shortDate';
+                    fixture.detectChanges();
 
-                // inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                //                 replace(/\//g, '-');
-                // inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
-                //                 replace(/\//g, '-');
-                // expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
-                // });
+                    startDate.setDate(2);
+                    endDate.setDate(19);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    let inputStartDate = startDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    let inputEndDate = endDate.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                    expect(startInput.nativeElement.value).toEqual(inputStartDate);
+                    expect(endInput.nativeElement.value).toEqual(inputEndDate);
+
+                    fixture.componentInstance.displayFormat = 'fullDate';
+                    fixture.detectChanges();
+
+                    startDate.setDate(12);
+                    endDate.setDate(23);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    inputStartDate =
+                        startDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    inputEndDate = endDate.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                    expect(startInput.nativeElement.value).toEqual(inputStartDate);
+                    expect(endInput.nativeElement.value).toEqual(inputEndDate);
+
+                    fixture.componentInstance.displayFormat = 'dd-MM-yy';
+                    fixture.detectChanges();
+
+                    startDate.setDate(9);
+                    endDate.setDate(13);
+                    dateRange.selectRange(startDate, endDate);
+                    fixture.detectChanges();
+
+                    inputStartDate = startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                        replace(/\//g, '-');
+                    inputEndDate = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: '2-digit' }).
+                        replace(/\//g, '-');
+                    expect(startInput.nativeElement.value).toEqual(inputStartDate);
+                    expect(endInput.nativeElement.value).toEqual(inputEndDate);
+                });
             });
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
@@ -896,7 +960,7 @@ export class DateRangeTestComponent implements OnInit {
 @Component({
     selector: 'igx-date-range-two-inputs-test',
     template: `
-    <igx-date-range-picker [mode]="mode" [(ngModel)]="range" required>
+    <igx-date-range-picker [mode]="mode" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
             <igx-date-range-start>
                 <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-start>
@@ -908,6 +972,8 @@ export class DateRangeTestComponent implements OnInit {
 })
 export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     range;
+    inputFormat: string;
+    displayFormat: string;
 }
 
 @Component({

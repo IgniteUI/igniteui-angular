@@ -942,9 +942,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private updateDisplayFormat(): void {
         this.projectedInputs.forEach(i => {
             const input = i as IgxDateRangeInputsBaseComponent;
-            if (!input.dateTimeEditor.displayFormat) {
-                input.dateTimeEditor.displayFormat = this.displayFormat;
-            }
+            input.dateTimeEditor.displayFormat = this.displayFormat;
         });
     }
 
