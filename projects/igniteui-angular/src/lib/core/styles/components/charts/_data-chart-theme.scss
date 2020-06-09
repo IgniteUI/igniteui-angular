@@ -18,7 +18,7 @@
 /// @param {List} $outlines [null] - Defines the palette from which automatically assigned series outline colors are selected.
 /// @param {List} $marker-outlines [null] - Defines the palette from which automatically assigned marker outlines are selected.
 /// @param {Color} $plot-area-background [null] - Sets the brush used as the background for the current Chart object's plot area.
-/// @param {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title.
+/// @param {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title. Valid options are 'left', 'center', and 'right';
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -57,12 +57,19 @@
 
     $theme: apply-palette($chart-schema, $palette);
     $margin-default: map-get($theme, 'margin');
+    $title-margin-default: map-get($theme, 'title-margin');
     $subtitle-margin-default: map-get($theme, 'subtitle-margin');
 
     @if not($margin) {
         $margin: $margin-default;
     } @else {
         $margin: expand-shorthand(($margin));
+    }
+
+    @if not($title-margin) {
+        $title-margin: $title-margin-default;
+    } @else {
+        $title-margin: map-keys-prefix(expand-shorthand(($title-margin)), 'title');
     }
 
     @if not($subtitle-margin) {
@@ -84,6 +91,9 @@
             subtitle-text-color: null,
             brushes: $brushes,
             outlines: $outlines,
+            marker-brushes: $marker-brushes,
+            marker-outlines: $marker-outlines,
+            plot-area-background: $plot-area-background,
             title-horizontal-alignment: $title-horizontal-alignment,
         )
     );
