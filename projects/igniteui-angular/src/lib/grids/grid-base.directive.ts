@@ -2495,11 +2495,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                if (this.rowEditable) {
+                    this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+                }
             });
-
-            if (this.rowEditable) {
-                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
-            }
         });
         this.disableTransitions = false;
 
