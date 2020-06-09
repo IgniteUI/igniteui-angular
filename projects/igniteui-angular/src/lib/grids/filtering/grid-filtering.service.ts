@@ -232,9 +232,8 @@ export class IgxFilteringService implements OnDestroy {
             const expressions = this.getExpressions(field);
             expressions.length = 0;
         } else {
-            const fields = this.grid.columns.map(c => c.field);
-            fields.forEach(f => {
-                const expressions = this.getExpressions(f);
+            this.grid.columns.forEach(c => {
+                const expressions = this.getExpressions(c.field);
                 expressions.length = 0;
             });
         }
