@@ -158,7 +158,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             let rowArgs: IGridEditEventArgs = {
@@ -182,7 +182,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             // no change, new value is null
@@ -214,7 +214,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: newCellValue,
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             rowArgs = {
@@ -1909,7 +1909,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: 'Chai',
                 newValue: 'New Value',
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
 

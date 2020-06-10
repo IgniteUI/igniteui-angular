@@ -563,7 +563,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'John Brown',
                 oldValue: 'John Brown',
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -582,7 +582,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 20,
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
@@ -607,7 +607,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'John Brown',
                 oldValue: 'John Brown',
                 cancel: true,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -625,7 +625,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 20,
                 cancel: true,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
@@ -656,7 +656,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
@@ -678,7 +678,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 1,
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
@@ -711,7 +711,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
@@ -736,7 +736,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: '1',
                 cancel: true,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
@@ -845,7 +845,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
@@ -879,7 +879,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
-                columnField: cell.column.field,
+                column: cell.column,
                 owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
