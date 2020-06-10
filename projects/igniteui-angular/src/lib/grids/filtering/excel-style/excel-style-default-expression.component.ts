@@ -13,7 +13,7 @@ import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/public_api';
+import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
@@ -41,7 +41,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public dropDownOverlaySettings: OverlaySettings = {
-        scrollStrategy: new CloseScrollStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true
