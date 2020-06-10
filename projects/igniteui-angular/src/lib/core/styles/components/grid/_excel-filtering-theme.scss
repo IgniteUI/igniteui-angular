@@ -239,10 +239,6 @@
             padding: rem(8px);
         }
 
-        %grid-excel-sort {
-            padding: rem(8px);
-        }
-
         %grid-excel-actions {
             padding: rem(8px);
         }
@@ -272,8 +268,6 @@
         }
 
         %grid-excel-sort {
-            padding: rem(4px);
-
             @extend %grid-excel-action--compact;
 
             igx-buttongroup {
