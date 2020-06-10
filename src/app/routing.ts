@@ -92,6 +92,7 @@ import { GridExternalFilteringComponent } from './grid-external-filtering/grid-e
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
 import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
     {
@@ -395,6 +396,10 @@ const appRoutes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
     },
     {
         path: 'treeGrid',

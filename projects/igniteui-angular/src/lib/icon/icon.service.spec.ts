@@ -3,6 +3,7 @@ import { IgxIconService } from './icon.service';
 import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
 
 describe('Icon Service', () => {
     configureTestSuite();
@@ -21,7 +22,7 @@ describe('Icon Service', () => {
     });
 
     it('should set the default icon set', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
             iconService.defaultFontSet = MY_FONT;
@@ -29,14 +30,14 @@ describe('Icon Service', () => {
     });
 
     it('should get the default icon set', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
         iconService.defaultFontSet = MY_FONT;
 
         expect(iconService.defaultFontSet).toBe(MY_FONT);
     });
 
     it('should associate alias name with icon set name', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
 
         expect(() => {
             iconService.registerFontSetAlias(ALIAS, MY_FONT);
@@ -44,15 +45,15 @@ describe('Icon Service', () => {
     });
 
     it('should get icon set name from alias name', () => {
-        const iconService = TestBed.get(IgxIconService);
+        const iconService = TestBed.inject(IgxIconService);
         iconService.registerFontSetAlias(ALIAS, MY_FONT);
 
         expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
     });
 
     it('should add custom svg icon from url', () => {
-        const iconService = TestBed.get(IgxIconService) as IgxIconService;
-        const document = TestBed.get(DOCUMENT);
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+        const document = TestBed.inject(DOCUMENT);
 
         const iconName = 'test';
         const fontSet = 'svg-icons';
@@ -71,8 +72,8 @@ describe('Icon Service', () => {
     });
 
     it('should add custom svg icon from text', () => {
-        const iconService = TestBed.get(IgxIconService) as IgxIconService;
-        const document = TestBed.get(DOCUMENT);
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+        const document = TestBed.inject(DOCUMENT);
 
         const iconName = 'test';
         const fontSet = 'svg-icons';
@@ -85,5 +86,29 @@ describe('Icon Service', () => {
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
+    });
+
+    it('should emit loading event for a custom svg icon from url', done => {
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+
+        iconService.iconLoaded.pipe(first()).subscribe(event => {
+            expect(event.name).toMatch('test');
+            expect(event.fontSet).toMatch('svg-icons');
+            done();
+        });
+
+        const iconName = 'test';
+        const fontSet = 'svg-icons';
+
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
+        spyOn(XMLHttpRequest.prototype, 'send').and.callFake(() => {
+            (iconService as any)._iconLoaded.next({
+                name: iconName,
+                value: svgText,
+                fontSet: fontSet
+            });
+        });
+
+        iconService.addSvgIcon(iconName, 'test.svg', fontSet);
     });
 });

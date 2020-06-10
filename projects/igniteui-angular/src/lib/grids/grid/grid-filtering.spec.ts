@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
@@ -28,7 +28,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
                 IgxGridFilteringComponent
             ],
             imports: [
-                BrowserAnimationsModule,
+                NoopAnimationsModule,
                 IgxGridModule]
         })
             .compileComponents();
@@ -688,7 +688,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
                 IgxGridFilteringBindingComponent
             ],
             imports: [
-                BrowserAnimationsModule,
+                NoopAnimationsModule,
                 IgxGridModule]
         })
             .compileComponents();
