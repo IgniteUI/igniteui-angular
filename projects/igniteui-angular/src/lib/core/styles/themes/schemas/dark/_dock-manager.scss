@@ -8,35 +8,35 @@
 /// Generates a dark dock-manager schema.
 /// @type {Map}
 /// @requires {function} extend
-/// @prop {Color} primary-color [#111] -
-/// @prop {Color} accent-color [#424242] -
-/// @prop {Color} text-color [rgba(255, 255, 255, .7)] -
-/// @prop {Color} border-color [#212121] -
-/// @prop {Color} button-text [#fff] -
-/// @prop {Color} splitter-background [#000] -
-/// @prop {Color} flyout-shadow-color [rgba(0, 0, 0, .38)] -
-/// @prop {Color} joystick-icon-color-active [#fff] -
-/// @prop {Color} joystick-border-color [#424242] -
-/// @prop {Color} tab-background-active [#212121] -
-/// @prop {Color} pane-content-background [#212121] -
-/// @prop {Color} floating-pane-border-color [rgba(0, 0, 0, .26)] -
-/// @prop {Color} context-menu-color-active [#fff] -
+/// @prop {Color} accent-color [#424242] - Sets the pinned header background color, the joystick background and border colors, as well as the context menu background color.
+/// @prop {Color} border-color [#212121] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
+/// @prop {Color} button-text [#fff] - Sets the button text color.
+/// @prop {Color} context-menu-color-active [#fff] - Sets the text color for active context menus.
+/// @prop {Color} floating-pane-border-color [rgba(0, 0, 0, .26)] - Sets the border color for floating panes.
+/// @prop {Color} flyout-shadow-color [rgba(0, 0, 0, .38)] - Sets the border color for floating panes.
+/// @prop {Color} joystick-border-color [#424242] - Sets the border color of the joystick.
+/// @prop {Color} joystick-icon-color-active [#fff] - Sets the color of the active joystick icons.
+/// @prop {Color} pane-content-background [#212121] - Sets the background color of the content panes.
+/// @prop {Color} primary-color [#111] - Sets the base dock manager color as well as the pane headers and tabs background colors.
+/// @prop {Color} splitter-background [#000] - Sets the background color for the splitters.
+/// @prop {Color} tab-background-active [#212121] - Sets the background color for active tabs.
+/// @prop {Color} text-color [rgba(255, 255, 255, .7)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
 /// @requires $_light-dock-manager
 $_dark-dock-manager: extend(
     $_light-dock-manager, (
-        primary-color: #111,
         accent-color: #424242,
-        text-color: rgba(255, 255, 255, .7),
         border-color: #212121,
         button-text: #fff,
-        splitter-background: #000,
-        flyout-shadow-color: rgba(0, 0, 0, .38),
-        joystick-icon-color-active: #fff,
-        joystick-border-color: #424242,
-        tab-background-active: #212121,
-        pane-content-background: #212121,
-        floating-pane-border-color: rgba(0, 0, 0, .26),
         context-menu-color-active: #fff,
+        floating-pane-border-color: rgba(0, 0, 0, .26),
+        flyout-shadow-color: rgba(0, 0, 0, .38),
+        joystick-border-color: #424242,
+        joystick-icon-color-active: #fff,
+        pane-content-background: #212121,
+        primary-color: #111,
+        splitter-background: #000,
+        tab-background-active: #212121,
+        text-color: rgba(255, 255, 255, .7),
     )
 );
 
