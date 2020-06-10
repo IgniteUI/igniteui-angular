@@ -4,7 +4,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../hiding/column-hiding-item.directive';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';

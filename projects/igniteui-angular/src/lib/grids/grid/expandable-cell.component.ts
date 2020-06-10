@@ -1,10 +1,20 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
-     ChangeDetectionStrategy, NgZone, OnInit, Input, TemplateRef } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    Inject,
+    Input,
+    NgZone,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
 import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseDirective } from '.';
+import { IgxGridBaseDirective } from './public_api';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
@@ -68,7 +78,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public onIndicatorFocus() {
         this.gridAPI.submit_value();
-        this.nativeElement.focus();
     }
 
     /**

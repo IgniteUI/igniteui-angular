@@ -6,7 +6,7 @@ import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
