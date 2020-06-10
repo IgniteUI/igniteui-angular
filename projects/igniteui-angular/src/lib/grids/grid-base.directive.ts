@@ -113,7 +113,8 @@ import {
     GridSummaryCalculationMode,
     FilterMode,
     ColumnPinningPosition,
-    RowPinningPosition
+    RowPinningPosition,
+    GridPagingMode
 } from './common/enums';
 import {
     IGridCellEventArgs,
@@ -173,8 +174,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 
-    public get scrollWidth() {
-        return this.verticalScrollContainer.getScrollbarWidth();
+    /**
+     * @hidden @internal
+     */
+    public get scrollSize() {
+        return this.verticalScrollContainer.getScrollNativeSize();
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -407,6 +411,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     set locale(value) {
         this._locale = value;
+    }
+
+    @Input()
+    get pagingMode() {
+        return this._pagingMode;
+    }
+
+    set pagingMode(val: GridPagingMode) {
+        this._pagingMode = val;
+        this._pipeTrigger++;
+        this.notifyChanges(true);
     }
 
     /**
@@ -2499,6 +2514,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _pagingMode = GridPagingMode.local;
+    /**
+     * @hidden @internal
+     */
+    public _totalRecords = -1;
+    /**
+     * @hidden
+     */
     protected _hideRowSelectors = false;
     /**
      * @hidden
@@ -3621,7 +3644,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.pagingState) {
             return this.pagingState.metadata.countPages;
         }
-        return -1;
+        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
     }
 
     /**
@@ -3670,9 +3693,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * const totalRecords = this.grid.totalRecords;
      * ```
      */
+    @Input()
     get totalRecords(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countRecords;
+        return this._totalRecords >= 0 ? this._totalRecords : this.pagingState?.metadata.countRecords;
+    }
+
+    set totalRecords(total: number) {
+        if (total >= 0) {
+            this._totalRecords = total;
+            this._pipeTrigger++;
+            this.notifyChanges();
         }
     }
 
@@ -4633,9 +4663,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getPagingHeight(): number {
+    protected getPagingFooterHeight(): number {
         let pagingHeight = 0;
-        if (this.paging && this.footer) {
+        if (this.footer) {
             pagingHeight = this.footer.nativeElement.firstElementChild ?
                 this.footer.nativeElement.offsetHeight : 0;
         }
@@ -4666,7 +4696,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
-        const pagingHeight = this.getPagingHeight();
+        const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
@@ -4720,7 +4750,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get outerWidth() {
-        return this.hasVerticalScroll() ? this.calcWidth + this.scrollWidth : this.calcWidth;
+        return this.hasVerticalScroll() ? this.calcWidth + this.scrollSize : this.calcWidth;
     }
 
     /**
@@ -4814,7 +4844,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (this.hasVerticalScroll() && this.width !== null) {
-            width -= this.scrollWidth;
+            width -= this.scrollSize;
         }
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
@@ -4985,7 +5015,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (width === null) {
             let currentWidth = this.calcWidth;
             if (this.hasVerticalScroll()) {
-                currentWidth += this.scrollWidth;
+                currentWidth += this.scrollSize;
             }
             width = currentWidth + 'px';
             this.resetCaches();
@@ -5027,7 +5057,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this.width, 10) || parseInt(this.hostWidth, 10) || this.calcWidth;
         if (this.hasVerticalScroll() && !this.isPercentWidth) {
-            width -= this.scrollWidth;
+            width -= this.scrollSize;
         }
         if (this.pinning.columns === ColumnPinningPosition.End) {
             width -= this.featureColumnsWidth();
@@ -5429,15 +5459,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         const selectedData = [];
         const activeEl = this.selectionService.activeElement;
-
-        const selectionMap = Array.from(this.selectionService.selection)
-            .filter((tuple) => tuple[0] < source.length);
+        const totalItems = (this as any).totalItemCount ?? 0;
+        const isRemote = totalItems && totalItems > this.dataView.length;
+        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+            Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
         }
 
-        for (const [row, set] of selectionMap) {
+        for (let [row, set] of selectionMap) {
+            row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
