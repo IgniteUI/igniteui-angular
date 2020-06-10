@@ -27,7 +27,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public onStateUpdate = new EventEmitter<void>();
+    public onStateUpdate = new EventEmitter<void | any>();
 
     /**
      * @inheritdoc
@@ -205,7 +205,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             }
 
             this._undoStack.push(actions);
-            this.onStateUpdate.emit();
+            this.onStateUpdate.emit({ actions });
         }
     }
 
