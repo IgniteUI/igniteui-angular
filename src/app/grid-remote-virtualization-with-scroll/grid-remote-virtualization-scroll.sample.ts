@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
 import { debounceTime } from 'rxjs/operators';
-import { RemoteVirtService } from '../shared/remote.service - Copy';
+import { RemoteVirtService } from '../shared/remoteProductsData.service';
 
 @Component({
     selector: 'app-grid-remote-virtualization-scroll',
