@@ -1182,7 +1182,7 @@ describe('IgxGrid Master Detail #grid', () => {
 @Component({
     template: `
         <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
-        [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
+        [paging]="paging" [perPage]="perPage" [rowSelectable]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
@@ -1221,7 +1221,7 @@ export class DefaultGridMasterDetailComponent {
 @Component({
     template: `
         <igx-grid [data]="data" [expansionStates]='expStates'
-         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
+         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
