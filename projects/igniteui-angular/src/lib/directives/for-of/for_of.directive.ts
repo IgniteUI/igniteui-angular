@@ -179,7 +179,19 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.parentVirtDir.totalItemCount = data.Count;
      * ```
      */
-    public totalItemCount: number = null;
+    public get totalItemCount() {
+        return this._totalItemCount;
+    }
+
+    public set totalItemCount(val) {
+        if (this._totalItemCount !== val) {
+            this._totalItemCount = val;
+            // update sizes in case total count changes.
+            this.scrollComponent.size = this.initSizesCache(this.igxForOf);
+        }
+    }
+
+    private _totalItemCount: number = null;
 
     /**
      * An event that is emitted after a new chunk has been loaded.
@@ -1521,7 +1533,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (changes && !this.isRemote) {
             newHeight = this.handleCacheChanges(changes);
         } else {
-            newHeight = this.initSizesCache(this.igxForOf);
+            return;
         }
 
         const diff = oldHeight - newHeight;
