@@ -62,7 +62,7 @@
     $theme: apply-palette($dock-manager-schema, $palette);
 
     @return extend($theme, (
-        name: $name,
+        name: 'igc',
         primary-color: $primary-color,
         accent-color: $accent-color,
         text-color: $text-color,
