@@ -324,7 +324,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.filteringService.refreshExpressions();
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
-            this.notifyChanges(true);
+            this.notifyChanges();
         }
     }
 
@@ -385,7 +385,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.notifyChanges(true);
+        this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
@@ -3040,10 +3040,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.pinnedRecords = data;
             this._filteredSortedData = this.isRowPinningToTop ? [... this._filteredSortedPinnedData, ... this._filteredSortedUnpinnedData] :
             [... this._filteredSortedUnpinnedData, ... this._filteredSortedPinnedData];
+            this.refreshSearch(true, false);
         } else if (this.pinnedRecordsCount > 0 && !pinned) {
             this._filteredSortedUnpinnedData = data;
         } else {
             this._filteredSortedData = data;
+            this.refreshSearch(true, false);
         }
     }
 
@@ -4353,7 +4355,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param updateActiveInfo
      */
-    public refreshSearch(updateActiveInfo?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean, endEdit = true): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -4369,7 +4371,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             }
 
-            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
+            return this.find(this.lastSearchInfo.searchText,
+                0,
+                this.lastSearchInfo.caseSensitive,
+                this.lastSearchInfo.exactMatch,
+                false,
+                endEdit);
         } else {
             return 0;
         }
@@ -5872,12 +5879,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.field + col._calcWidth;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean, endEdit?: boolean) {
         if (!this.rowList) {
             return 0;
         }
 
-        this.endEdit(false);
+        if (!endEdit) {
+            this.endEdit(false);
+        }
 
         if (!text) {
             this.clearSearch();
