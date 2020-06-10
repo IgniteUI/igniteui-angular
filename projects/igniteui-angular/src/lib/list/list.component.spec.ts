@@ -29,7 +29,7 @@ import {
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
 import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
@@ -700,23 +700,20 @@ describe('List', () => {
     });
 
     it('should allow setting the index of list items', (async () => {
-        pending('Related to the bug #7054');
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
-        await wait();
+        await wait(50);
 
         fixture.componentInstance.igxFor.scrollTo(8);
-        await wait(200);
-        fixture.detectChanges();
-        await wait(200);
+        await wait(50);
         fixture.detectChanges();
 
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const len = items.length;
-        expect(items[0].nativeElement.textContent).toContain('3');
-        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(2);
-        expect(items[len - 1].nativeElement.textContent).toContain('11');
-        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(10);
+        expect(items[0].nativeElement.textContent).toContain('2');
+        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(1);
+        expect(items[len - 1].nativeElement.textContent).toContain('10');
+        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(9);
     }));
 
     it('should return items as they appear in the list with virtualization', (async () => {
@@ -727,8 +724,6 @@ describe('List', () => {
         fixture.componentInstance.igxFor.scrollTo(6);
         await wait(50);
         fixture.detectChanges();
-        await wait(50);
-        fixture.detectChanges();
 
         const dItems = GridFunctions.sortDebugElementsVertically(fixture.debugElement.queryAll(By.css('igx-list-item')));
         const pItems = fixture.componentInstance.forOfList.items;
@@ -737,6 +732,7 @@ describe('List', () => {
             expect(dItems[i].nativeElement).toEqual(pItems[i].element);
         }
     }));
+
     it('Initializes igxListThumbnail directive', () => {
         const fixture = TestBed.createComponent(ListDirectivesComponent);
         fixture.detectChanges();

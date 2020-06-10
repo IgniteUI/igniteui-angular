@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { ScrollMonth } from './calendar-base';
-import { Calendar } from '../calendar';
 
 enum Direction {
     Up = 'ArrowUp',

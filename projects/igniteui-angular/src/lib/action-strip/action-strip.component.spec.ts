@@ -1,10 +1,10 @@
 import { IgxActionStripComponent } from './action-strip.component';
 import { Component, ViewChild, ElementRef, ViewContainerRef } from '@angular/core';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxIconModule } from '../icon/public_api';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
-import { IgxIconModule } from '../icon';
 import { By } from '@angular/platform-browser';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxActionStripModule } from './action-strip.module';

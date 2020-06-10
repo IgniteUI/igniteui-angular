@@ -1,4 +1,4 @@
-export * from '../index';
+export * from '../public_api';
 export * from './tree-grid.component';
 export * from './tree-grid.module';
 export * from './tree-grid-api.service';

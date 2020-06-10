@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -10,7 +10,7 @@ import { PlatformUtil } from '../../core/utils';
 import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
-import { IgxGridCellComponent } from '../tree-grid';
+import { IgxGridCellComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -201,7 +201,7 @@ describe('IgxGrid - Cell component #grid', () => {
             // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
             expect(lastCell.nativeElement.getBoundingClientRect().left +
                 lastCell.nativeElement.offsetWidth +
-                grid.scrollWidth).toEqual(parseInt(grid.width, 10));
+                grid.scrollSize).toEqual(parseInt(grid.width, 10));
         }));
 
         it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {

@@ -1,9 +1,7 @@
-import { DebugElement, EventEmitter, NgZone, Injectable } from '@angular/core';
-import { By } from '@angular/platform-browser';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { EventEmitter, NgZone, Injectable } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxGridBaseDirective } from '../grids/index';
-import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
+import { IgxGridBaseDirective } from '../grids/public_api';
+import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/public_api';
 
 export function resizeObserverIgnoreError() {
     jasmine.getEnv().allowRespy(true);
