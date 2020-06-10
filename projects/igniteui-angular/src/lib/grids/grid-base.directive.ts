@@ -4298,9 +4298,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getPagingHeight(): number {
+    protected getPagingFooterHeight(): number {
         let pagingHeight = 0;
-        if (this.paging && this.footer) {
+        if (this.footer) {
             pagingHeight = this.footer.nativeElement.firstElementChild ?
                 this.footer.nativeElement.offsetHeight : 0;
         }
@@ -4331,7 +4331,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                                  this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
-        const pagingHeight = this.getPagingHeight();
+        const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
@@ -5067,15 +5067,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         const selectedData = [];
         const activeEl = this.selectionService.activeElement;
-
-        const selectionMap = Array.from(this.selectionService.selection)
-            .filter((tuple) => tuple[0] < source.length);
+        const totalItems = (this as any).totalItemCount ?? 0;
+        const isRemote = totalItems && totalItems > this.dataView.length;
+        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+            Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
         }
 
-        for (const [row, set] of selectionMap) {
+        for (let [row, set] of selectionMap) {
+            row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
