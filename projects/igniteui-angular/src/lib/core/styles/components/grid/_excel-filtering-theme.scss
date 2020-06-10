@@ -108,7 +108,8 @@
 
     %grid-excel-sort {
         display: block;
-        padding: rem(8px) rem(16px);
+        padding-top: rem(8px);
+        padding-bottom: rem(8px);
 
         header {
             color: igx-color($palette, 'grays', 700);
@@ -244,10 +245,6 @@
             padding: rem(8px);
         }
 
-        %grid-excel-sort {
-            padding: rem(8px);
-        }
-
         %grid-excel-actions {
             padding: rem(8px);
         }
@@ -277,8 +274,6 @@
         }
 
         %grid-excel-sort {
-            padding: rem(4px);
-
             @extend %grid-excel-action--compact;
 
             igx-buttongroup {
