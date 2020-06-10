@@ -721,8 +721,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.sizesCache[index + 1] - this.sizesCache[index];
     }
 
-    public getScrollbarWidth() {
-        return this.scrollComponent ? (this.scrollComponent as VirtualHelperComponent).scrollWidth : 0;
+    /**
+     * @hidden
+     * Function that is called to get the native scrollbar size that the browsers renders.
+     */
+    public getScrollNativeSize() {
+        return this.scrollComponent ? this.scrollComponent.scrollNativeSize : 0;
     }
 
     /**

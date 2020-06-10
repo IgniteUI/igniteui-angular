@@ -345,7 +345,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         // headers are aligned to cells
         GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
-        const autoSizedColumnWidth = 400 - grid.scrollWidth;
+        const autoSizedColumnWidth = 400 - grid.scrollSize;
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns)
             .toEqual('200px 200px ' + autoSizedColumnWidth + 'px 100px 100px 200px');
@@ -624,7 +624,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
             ]
         }];
         fixture.detectChanges();
-        fixture.componentInstance.grid.width = (1000 + grid.scrollWidth) + 'px';
+        fixture.componentInstance.grid.width = (1000 + grid.scrollSize) + 'px';
         fixture.detectChanges();
 
         // check columns

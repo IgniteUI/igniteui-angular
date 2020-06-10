@@ -201,7 +201,7 @@ describe('IgxGrid - Cell component #grid', () => {
             // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
             expect(lastCell.nativeElement.getBoundingClientRect().left +
                 lastCell.nativeElement.offsetWidth +
-                grid.scrollWidth).toEqual(parseInt(grid.width, 10));
+                grid.scrollSize).toEqual(parseInt(grid.width, 10));
         }));
 
         it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {

@@ -72,17 +72,17 @@ export class DataUtil {
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
 
-    public static page<T>(data: T[], state: IPagingState): T[] {
+    public static page<T>(data: T[], state: IPagingState, dataLength?: number): T[] {
         if (!state) {
             return data;
         }
-        const len = data.length;
+        const len = dataLength !== undefined ? dataLength : data.length;
         const index = state.index;
         const res = [];
-        const recordsPerPage = state.recordsPerPage;
+        const recordsPerPage = dataLength !== undefined && state.recordsPerPage > dataLength ? dataLength : state.recordsPerPage;
         state.metadata = {
             countPages: 0,
-            countRecords: data.length,
+            countRecords: len,
             error: PagingError.None
         };
         if (index < 0 || isNaN(index)) {
