@@ -1,0 +1,50 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light dock-manager schema.
+/// @type {Map}
+/// @prop {Color} primary-color [#E5E7E9] -
+/// @prop {Color} accent-color [#fff] -
+/// @prop {Color} text-color [rgba(0, 0, 0, .72)] -
+/// @prop {Color} border-color [#F3F5F7] -
+/// @prop {Color} button-text [rgba(0, 0, 0, .72)] -
+/// @prop {Color} splitter-background [#D3D6D9] -
+/// @prop {Color} flyout-shadow-color [rgba(0, 0, 0, .08)] -
+/// @prop {Color} joystick-icon-color-active [#000] -
+/// @prop {Color} joystick-border-color [#D3D6D9] -
+/// @prop {Color} tab-background-active [#F3F5F7] -
+/// @prop {Color} pane-content-background [#F3F5F7] -
+/// @prop {Color} floating-pane-border-color [#fff] -
+/// @prop {Color} context-menu-color-active [#000] -
+$_light-dock-manager: (
+    primary-color: #e5e7e9,
+    accent-color: #fff,
+    text-color: rgba(0, 0, 0, .72),
+    border-color: #f3f5f7,
+    button-text: rgba(0, 0, 0, .72),
+    splitter-background: #d3d6d9,
+    flyout-shadow-color: rgba(0, 0, 0, .08),
+    joystick-icon-color-active: #000,
+    joystick-border-color: #d3d6d9,
+    tab-background-active: #f3f5f7,
+    pane-content-background: #f3f5f7,
+    floating-pane-border-color: #fff,
+    context-menu-color-active: #000,
+);
+
+/// Generates a fluent dock-manager schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-dock-manager
+$_fluent-dock-manager: extend($_light-dock-manager);
+
+/// Generates a bootstrap dock-manager schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-dock-manager
+/// @requires $_bootstrap-shape-dock-manager
+$_bootstrap-dock-manager: extend($_light-dock-manager);
+

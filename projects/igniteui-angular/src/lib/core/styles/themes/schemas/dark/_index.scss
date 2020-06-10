@@ -20,6 +20,7 @@
 @import './dialog';
 @import './date-range-picker';
 @import './divider';
+@import './dock-manager';
 @import './drop-down';
 @import './expansion-panel';
 @import './grid';
@@ -66,6 +67,7 @@
 /// @property {Map} igx-dialog [$_dark-dialog]
 /// @property {Map} igx-date-range-picker [$_dark-date-range-picker]
 /// @property {Map} igx-divider [$_dark-divider]
+/// @property {Map} igc-dock-manager [$_dark-dock-manager]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} igx-grid [$_dark-grid]
@@ -111,6 +113,7 @@ $dark-schema: (
     igx-dialog: $_dark-dialog,
     igx-date-range: $_dark-date-range-picker,
     igx-divider: $_dark-divider,
+    igc-dock-manager: $_dark-dock-manager,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
     igx-grid: $_dark-grid,
@@ -159,6 +162,7 @@ $dark-schema: (
 /// @property {map} igx-dialog [$_dark-fluent-dialog],
 /// @property {map} igx-date-range-picker [$_dark-fluent-date-range-picker],
 /// @property {map} igx-divider [$_dark-fluent-divider],
+/// @property {map} igc-dock-manager [$_dark-fluent-dock-manager],
 /// @property {map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-fluent-expansion-panel],
 /// @property {map} igx-grid [$_dark-fluent-grid],
@@ -204,6 +208,7 @@ $dark-fluent-schema: (
     igx-dialog: $_dark-fluent-dialog,
     igx-date-range: $_dark-fluent-date-range-picker,
     igx-divider: $_dark-fluent-divider,
+    igc-dock-manager: $_dark-fluent-dock-manager,
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
     igx-grid: $_dark-fluent-grid,
@@ -252,6 +257,7 @@ $dark-fluent-schema: (
 /// @property {map} igx-dialog [$_dark-bootstrap-dialog],
 /// @property {map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
 /// @property {map} igx-divider [$_dark-bootstrap-divider],
+/// @property {map} igc-dock-manager [$_dark-bootstrap-dock-manager],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
 /// @property {map} igx-grid [$_dark-bootstrap-grid],
@@ -297,6 +303,7 @@ $dark-bootstrap-schema: (
     igx-dialog: $_dark-bootstrap-dialog,
     igx-date-range: $_dark-bootstrap-date-range-picker,
     igx-divider: $_dark-bootstrap-divider,
+    igc-dock-manager: $_dark-bootstrap-dock-manager,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
     igx-grid: $_dark-bootstrap-grid,
