@@ -2849,10 +2849,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe(() => {
-            this.transactions.getAggregatedChanges(false)
-            .filter(x => x.type === TransactionType.DELETE)
-            .forEach(row => this.selectionService.deselectRow(row.id));
+        this.transactions.onStateUpdate.pipe(destructor).subscribe((event?) => {
+            if (event) {
+                const deleteActions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
+                for (const action of deleteActions) {
+                    if (this.selectionService.isRowSelected(action.transaction.id)) {
+                        this.selectionService.deselectRow(action.transaction.id);
+                    }
+                }
+            }
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
