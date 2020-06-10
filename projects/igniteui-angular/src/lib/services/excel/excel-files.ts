@@ -3,6 +3,7 @@ import { ExcelStrings } from './excel-strings';
 import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
+import { yieldingLoop } from '../../core/utils';
 
 /**
  * @hidden
@@ -55,6 +56,10 @@ export class ThemeFile implements IExcelFile {
  */
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.34;
+    private maxOutlineLevel = 0;
+    private dimension = '';
+    private freezePane = '';
+    private rowHeight = '';
 
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const sheetData = [];
@@ -129,6 +134,104 @@ export class WorksheetFile implements IExcelFile {
         folder.file('sheet1.xml',
                     ExcelStrings.getSheetXML(dimension, freezePane, cols.join(''), sheetData.join(''), hasTable,
                     worksheetData.isTreeGridData, maxOutlineLevel));
+    }
+
+    public writeElementAsync(folder: JSZip, worksheetData: WorksheetData, done: () => void) {
+        this.prepareDataAsync(worksheetData, (cols, rows) => {
+            const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+            folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
+            done();
+        });
+    }
+
+    private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, rows: string) => void) {
+        let sheetData = '';
+        let cols = '';
+        const dictionary = worksheetData.dataDictionary;
+
+        if (worksheetData.isEmpty) {
+            sheetData += '<sheetData/>';
+            this.dimension = 'A1';
+        } else {
+            sheetData += '<sheetData>';
+            const height =  worksheetData.options.rowHeight;
+            this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+            sheetData += `<row r="1"${this.rowHeight}>`;
+
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const column = ExcelStrings.getExcelColumn(i) + 1;
+                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
+                sheetData += `<c r="${column}" t="s"><v>${value}</v></c>`;
+            }
+            sheetData += '</row>';
+
+            this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
+            cols += '<cols>';
+
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const width = dictionary.columnWidths[i];
+                // Use the width provided in the options if it exists
+                const widthInTwips = worksheetData.options.columnWidth ?
+                                    worksheetData.options.columnWidth :
+                                    Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+
+                cols += `<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`;
+            }
+
+            cols += '</cols>';
+
+            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
+                !worksheetData.options.ignorePinning &&
+                !worksheetData.options.ignoreColumnsOrder) {
+                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
+                const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
+                this.freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+            }
+
+            this.processDataRecordsAsync(worksheetData, (rows) => {
+                sheetData += rows;
+                sheetData += '</sheetData>';
+                done(cols, sheetData);
+            });
+        }
+    }
+
+    private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
+        let dataRecords = '';
+        const height =  worksheetData.options.rowHeight;
+        this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+
+        yieldingLoop(worksheetData.rowCount - 1, 1000,
+            (i) => {
+                dataRecords += this.processRow(worksheetData, i + 1);
+            },
+            () => {
+                done(dataRecords);
+            });
+    }
+
+    private processRow(worksheetData: WorksheetData, i: number) {
+        const rowData = new Array(worksheetData.columnCount + 2);
+        if (!worksheetData.isTreeGridData) {
+            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}>`;
+        } else {
+            const originalData = worksheetData.data[i].originalRowData;
+            const sCollapsed = (!originalData.expanded) ? '' : (originalData.expanded === true) ? '' : ` collapsed="1"`;
+            const sHidden = (originalData.parent && this.hasCollapsedParent(originalData)) ? ` hidden="1"` : '';
+            const rowOutlineLevel = originalData.level ? originalData.level : 0;
+            const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
+            this.maxOutlineLevel = this.maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : this.maxOutlineLevel;
+            rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`;
+        }
+
+        for (let j = 0; j < worksheetData.columnCount; j++) {
+            const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+            rowData[j + 1] = cellData;
+        }
+        rowData[worksheetData.columnCount + 1] = '</row>';
+
+        return rowData.join('');
     }
 
     private hasCollapsedParent(rowData) {

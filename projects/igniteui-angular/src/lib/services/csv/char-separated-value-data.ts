@@ -75,14 +75,13 @@ export class CharSeparatedValueData {
     }
 
     private processRecord(record, keys, escapeChars): string {
-        let recordData = '';
-        for (const keyName of keys) {
-
-            const value = (record[keyName] !== undefined) ? record[keyName] : this._isSpecialData ? record : '';
-            recordData += this.processField(value, this._escapeCharacters);
+        const recordData = new Array(keys.length);
+        for (let index = 0; index < keys.length; index++) {
+            const value = (record[keys[index]] !== undefined) ? record[keys[index]] : this._isSpecialData ? record : '';
+            recordData[index] = this.processField(value, this._escapeCharacters);
         }
 
-        return recordData.slice(0, -this._delimiterLength) + this._eor;
+        return recordData.join('').slice(0, -this._delimiterLength) + this._eor;
     }
 
     private processDataRecords(currentData, keys, escapeChars) {
