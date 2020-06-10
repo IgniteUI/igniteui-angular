@@ -27,7 +27,7 @@ import { CancelableEventArgs, CancelableBrowserEventArgs, isIE, IBaseEventArgs }
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
-import { OverlaySettings } from '../services';
+import { OverlaySettings } from '../services/public_api';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';

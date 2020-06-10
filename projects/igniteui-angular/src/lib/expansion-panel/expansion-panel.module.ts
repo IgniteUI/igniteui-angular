@@ -3,12 +3,15 @@ import { NgModule } from '@angular/core';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
-import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
-  IgxExpansionPanelIconDirective } from './expansion-panel.directives';
+import {
+    IgxExpansionPanelDescriptionDirective,
+    IgxExpansionPanelTitleDirective,
+    IgxExpansionPanelIconDirective
+} from './expansion-panel.directives';
 
 /**
  * @hidden

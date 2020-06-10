@@ -1,21 +1,36 @@
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import {
-    Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
-    Injector, OnInit, AfterViewInit, OnDestroy, Inject, Type
-
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    Inject,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    QueryList,
+    TemplateRef,
+    ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { IgxDropDownItemBaseDirective } from '../drop-down/index';
+import { IgxDropDownItemBaseDirective } from '../drop-down/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services/index';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services/public_api';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';

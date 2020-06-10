@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule, IgxGridComponent } from './index';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -35,14 +35,14 @@ describe('IgxGrid - search API #grid - ', () => {
     }));
 
     describe('BasicGrid - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
             fix.detectChanges();
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should clear all highlights', () => {
             const count = grid.findNext('software');
@@ -842,14 +842,14 @@ describe('IgxGrid - search API #grid - ', () => {
     });
 
     describe('GroupableGrid - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
 
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should be able to navigate through highlights with grouping enabled', () => {
             grid.groupBy({
@@ -1164,11 +1164,11 @@ describe('IgxGrid - search API #grid - ', () => {
     });
 
     describe('Grid with Avatar - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridWithAvatarComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
-        });
+        }));
 
         it('Cells with no text should be excluded from the search', () => {
             const matches = grid.findNext('https');
