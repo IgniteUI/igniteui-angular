@@ -5709,8 +5709,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
-        if (rowIndex < 0 || rowIndex > this.dataView.length - 1
-            || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
+        const totalItems = (this as any).totalItemCount ?? this.dataView.length - 1;
+        if (rowIndex < 0 || rowIndex > totalItems || (visibleColIndex !== -1
+            && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
