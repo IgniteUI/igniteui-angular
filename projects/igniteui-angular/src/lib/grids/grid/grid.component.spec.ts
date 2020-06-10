@@ -1703,6 +1703,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const footerContent = footer.textContent.trim();
 
             expect(footerContent).toEqual('Custom content');
+            const grid = fix.componentInstance.grid;
+
+            const expectedHeight = parseInt(grid.height, 10) - grid.theadRow.nativeElement.offsetHeight - grid.scrollWidth - 100;
+            expect(expectedHeight - grid.calcHeight).toBeLessThanOrEqual(1);
         });
     });
 
@@ -2090,15 +2094,19 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 @Component({
     template:
         `<div>
-        <igx-grid #grid [data]="data" [displayDensity]="'compact'" [autoGenerate]="true"
-            [paging]="true" [perPage]="5">
+        <igx-grid #grid [data]="data" height='300px' [displayDensity]="'compact'" [autoGenerate]="true"
+            >
             <igx-grid-footer>
-            Custom content
+                <div style='height:100px;'>
+                Custom content
+                </div>
             </igx-grid-footer>
         </igx-grid>
         </div>`
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 @Component({
     template:
