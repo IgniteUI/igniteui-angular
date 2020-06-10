@@ -177,7 +177,9 @@ describe('IgxGrid - CRUD operations #grid', () => {
             cellID: cell.cellID,
             oldValue: 1,
             newValue: 200,
-            cancel: false
+            cancel: false,
+            column: cell.column,
+            owner: grid
         };
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);

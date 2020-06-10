@@ -93,7 +93,7 @@ export class IgxCell {
             oldValue: this.value,
             newValue: this.editValue,
             cancel: false,
-            columnField: this.column.field
+            column: this.column
         };
     }
 }

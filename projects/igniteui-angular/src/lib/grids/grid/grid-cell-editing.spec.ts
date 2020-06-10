@@ -562,7 +562,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', cancel: false };
+            let cellArgs: IGridEditEventArgs = {
+                rowID: cell.row.rowID,
+                cellID: cell.cellID,
+                newValue: 'John Brown',
+                oldValue: 'John Brown',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
@@ -573,7 +581,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBeFalsy();
             cell = grid.getCellByColumn(0, 'age');
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 20,
+                newValue: 20,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
@@ -590,7 +606,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', cancel: true };
+            let cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                newValue: 'John Brown',
+                oldValue: 'John Brown',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
@@ -603,7 +627,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, cancel: true };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 20,
+                newValue: 20,
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
@@ -626,7 +658,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -640,7 +680,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, newValue: 1, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 20,
+                newValue: 1,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
@@ -665,7 +713,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -682,7 +738,15 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, newValue: '1', cancel: true };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 20,
+                newValue: '1',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -782,7 +846,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false
+                rowID: cell.row.rowID,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: false,
+                column: cell.column,
+                owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
@@ -811,7 +880,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true
+                rowID: cell.row.rowID,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: true,
+                column: cell.column,
+                owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);

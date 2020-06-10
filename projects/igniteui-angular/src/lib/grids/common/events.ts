@@ -7,6 +7,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxRowDirective } from '../row.directive';
+import { ColumnType } from './column.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -29,7 +30,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs 
     oldValue: any;
     newValue?: any;
     event?: Event;
-    columnField?: string;
+    column?: ColumnType;
 }
 
 export interface IPinColumnEventArgs extends IBaseEventArgs {

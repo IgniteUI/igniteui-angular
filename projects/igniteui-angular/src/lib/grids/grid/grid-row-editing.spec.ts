@@ -137,8 +137,22 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, cancel: false };
-            let rowArgs: IGridEditEventArgs = { rowID: row.rowID, oldValue: row.rowData, cancel: false };
+            let cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: cell.value,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
+            let rowArgs: IGridEditEventArgs = {
+                rowID: row.rowID,
+                oldValue: row.rowData,
+                newValue: undefined,
+                cancel: false,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
@@ -147,7 +161,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(row.inEditMode).toBe(false);
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: cell.value, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: cell.value,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             // no change, new value is null
             rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: null, cancel: false };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
@@ -162,8 +184,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value,
-                newValue: newCellValue, cancel: false };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: cell.value,
+                newValue: newCellValue,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             rowArgs = {
                 rowID: row.rowID, oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }), cancel: false
@@ -1783,7 +1812,15 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            const cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'Chai', newValue: 'New Value', cancel: false };
+            const cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                oldValue: 'Chai',
+                newValue: 'New Value',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
