@@ -341,9 +341,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
     }
 
-    public inputGroupClick(event: MouseEvent) {
-        if ((event.target as HTMLElement).className !== 'igx-input-group__hint') {
-            this.toggle();
+    public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
+        const targetClass = (event.target as HTMLElement).className;
+        if (!targetClass.includes('igx-input-group__hint')) {
+            this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
         }
     }
 

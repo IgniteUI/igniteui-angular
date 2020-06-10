@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 9.2.0
+## 10.0.0
 
 ### New Features
 
