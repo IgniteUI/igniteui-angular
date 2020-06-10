@@ -3,7 +3,7 @@ import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -41,10 +41,6 @@ describe('IgxGrid - Column Moving #grid', () => {
             ]
         }).compileComponents();
     }));
-
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     describe('', () => {
         // configureTestSuite();

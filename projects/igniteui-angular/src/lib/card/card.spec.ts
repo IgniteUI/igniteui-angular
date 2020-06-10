@@ -16,7 +16,7 @@ import {
 } from './card.component';
 
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Card', () => {
