@@ -62,6 +62,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private _nextX;
     private _nextY;
     private parentElement;
+    private baseDeltaMultiplier = 1 / 120;
+    private firefoxDeltaMultiplier = 1 / 30;
 
     ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
@@ -106,28 +108,30 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.wheelDeltaX) {
             /* Option supported on Chrome, Safari, Opera.
             /* 120 is default for mousewheel on these browsers. Other values are for trackpads */
-            scrollDeltaX = -evt.wheelDeltaX / 120;
+            scrollDeltaX = -evt.wheelDeltaX * this.baseDeltaMultiplier;
 
             if (-minWheelStep < scrollDeltaX && scrollDeltaX < minWheelStep) {
                 scrollDeltaX = Math.sign(scrollDeltaX) * minWheelStep;
             }
         } else if (evt.deltaX) {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
-            scrollDeltaX = this.calcAxisCoords(evt.deltaX, -1, 1);
+            const deltaScaledX = evt.deltaX * (evt.deltaMode === 0 ?  this.firefoxDeltaMultiplier : 1);
+            scrollDeltaX = this.calcAxisCoords(deltaScaledX, -1, 1);
         }
 
         /** Get delta for the Y axis */
         if (evt.wheelDeltaY) {
             /* Option supported on Chrome, Safari, Opera.
             /* 120 is default for mousewheel on these browsers. Other values are for trackpads */
-            scrollDeltaY = -evt.wheelDeltaY / 120;
+            scrollDeltaY = -evt.wheelDeltaY * this.baseDeltaMultiplier;
 
             if (-minWheelStep < scrollDeltaY && scrollDeltaY < minWheelStep) {
                 scrollDeltaY = Math.sign(scrollDeltaY) * minWheelStep;
             }
         } else if (evt.deltaY) {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
-            scrollDeltaY = this.calcAxisCoords(evt.deltaY, -1, 1);
+            const deltaScaledY = evt.deltaY * (evt.deltaMode === 0 ?  this.firefoxDeltaMultiplier : 1);
+            scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
             this._scrollToX(
