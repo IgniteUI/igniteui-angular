@@ -105,6 +105,7 @@ import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
 import {
     HierarchicalGridRemoteVirtualizationComponent
 } from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
     {
@@ -436,6 +437,10 @@ const appRoutes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
     },
     {
         path: 'treeGrid',

@@ -1655,7 +1655,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
 
