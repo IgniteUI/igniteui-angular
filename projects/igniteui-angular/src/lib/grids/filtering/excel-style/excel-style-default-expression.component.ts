@@ -13,7 +13,7 @@ import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../../services/index';
+import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
 import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
@@ -41,7 +41,7 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public dropDownOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
+        scrollStrategy: new CloseScrollStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true
@@ -71,7 +71,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public overlayOutlet: IgxOverlayOutletDirective;
 
-    @ViewChild('dropdownConditions', { read: IgxSelectComponent })
+    @ViewChild('dropdownConditions', { read: IgxSelectComponent, static: true })
     protected dropdownConditions: IgxSelectComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
