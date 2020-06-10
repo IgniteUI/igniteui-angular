@@ -1903,6 +1903,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Should properly emit 'onCellEdit' event `, fakeAsync(() => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+
+            let cell = grid.getCellByColumn(0, 'ProductName');
             const cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,

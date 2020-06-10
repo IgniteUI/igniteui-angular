@@ -164,7 +164,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             (this.grid as any)._pipeTrigger++;
         }
 
-        // TODO
         this.grid.onCellEdit.emit(args);
         return args;
     }

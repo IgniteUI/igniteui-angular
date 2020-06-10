@@ -1041,6 +1041,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.editMode) {
             const args = this.crudService.cell.createEditEventArgs();
+            args.owner = this.grid;
             this.grid.onCellEditCancel.emit(args);
             if (args.cancel) {
                 return;

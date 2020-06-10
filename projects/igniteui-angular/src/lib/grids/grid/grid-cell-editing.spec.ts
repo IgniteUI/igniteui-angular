@@ -785,7 +785,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
-        it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+        it(`Should update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -794,6 +794,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // update the cell value via updateRow and cancel the event
+            // calling this will push additional transaction
             grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.getRowByIndex(rowIndex);
@@ -815,9 +816,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(secondNewValue);
 
             grid.transactions.undo();
+            // for some reason in this test we are changing the row value in onCellEdit. This
+            // pushes additional transaction in the transaction log. To restore the state we
+            // should call undo twice
+            grid.transactions.undo();
             fixture.detectChanges();
             expect(cell.value).toBe(firstNewValue);
 
+            grid.transactions.undo();
+            // for some reason in this test we are changing the row value in onCellEdit. This
+            // pushes additional transaction in the transaction log. To restore the state we
+            // should call undo twice
             grid.transactions.undo();
             fixture.detectChanges();
             expect(cell.value).toBe(initialValue);
