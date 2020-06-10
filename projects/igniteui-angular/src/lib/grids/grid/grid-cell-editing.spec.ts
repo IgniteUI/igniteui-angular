@@ -718,7 +718,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(false);
-            expect(cell.value).toBe('John Brown');
+            expect(cell.value).toBe('New Name');
 
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
@@ -734,7 +734,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: 20,
-                newValue: '1',
+                newValue: 1,
                 cancel: true,
                 column: cell.column,
                 owner: grid
