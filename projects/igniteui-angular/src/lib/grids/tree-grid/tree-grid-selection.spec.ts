@@ -490,7 +490,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should deselect row when delete its parent', () => {
-            pending('Related to the bug #5673');
             treeGrid.selectRows([treeGrid.getRowByIndex(3).rowID, treeGrid.getRowByIndex(5).rowID], true);
             fix.detectChanges();
 
@@ -579,7 +578,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should have correct header checkbox when add a row', () => {
-            pending('Related to the bug #5673');
             treeGrid.selectAllRows();
             fix.detectChanges();
 
@@ -600,7 +598,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should have correct header checkbox when add a row and undo transaction', fakeAsync(() => {
-            pending('Related to the bug #5673');
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
             tick();
             fix.detectChanges();
