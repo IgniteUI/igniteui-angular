@@ -417,12 +417,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _value: DateRange;
     private _collapsed = true;
     private _ngControl: NgControl;
-    private _statusChanges$: Subscription;
     private $destroy = new Subject();
+    private _statusChanges$: Subscription;
+    private $toggleClickNotifier = new Subject();
     private _minValue: Date | string;
     private _maxValue: Date | string;
-    private $toggleClickNotifier = new Subject();
     private _positionSettings: PositionSettings;
+    private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true
@@ -622,6 +623,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
+        this.cacheFocusedInput();
         this.attachOnTouched();
 
         const subsToClicked = () => {
@@ -685,7 +687,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.updateValidityOnBlur();
         } else {
             // input click
-            this.focusInput();
+            if (this.hasProjectedInputs && this._focusedInput) {
+                this._focusedInput.setFocus();
+                this._focusedInput = null;
+            }
+            if (this.inputDirective) {
+                this.inputDirective.focus();
+            }
         }
     }
 
@@ -709,15 +717,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                     this.inputDirective.valid = IgxInputState.INITIAL;
                 }
             }
-        }
-    }
-
-    private focusInput() {
-        // TODO: should we always focus start input?
-        (this.projectedInputs
-            .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
-        if (this.inputDirective) {
-            this.inputDirective.focus();
         }
     }
 
@@ -895,6 +894,16 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         this.updateValidityOnBlur();
                     }
                 });
+        }
+    }
+
+    private cacheFocusedInput(): void {
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach(i => {
+                fromEvent(i.dateTimeEditor.nativeElement, 'focus')
+                    .pipe(takeUntil(this.$destroy))
+                    .subscribe(() => this._focusedInput = i);
+            });
         }
     }
 
