@@ -19,7 +19,7 @@ import { FilteringLogic } from '../../../data-operations/filtering-expression.in
 import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
-import { IgxInputDirective } from '../../../input-group';
+import { IgxInputDirective } from '../../../input-group/public_api';
 
 /**
  * @hidden
