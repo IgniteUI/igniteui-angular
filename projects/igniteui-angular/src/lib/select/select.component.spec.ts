@@ -18,6 +18,7 @@ import { IgxSelectModule } from './select.module';
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_HINT = 'igx-input-group__hint';
+const CSS_CLASS_HINT = 'igx-input-group__hint-item--start';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_DROPDOWN_LIST_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
@@ -2516,9 +2517,18 @@ describe('igxSelect', () => {
             select = fixture.componentInstance.select;
             fixture.detectChanges();
         }));
-        it('should not open dropdown on hint click',
+        it('should not open dropdown on hint container click',
             fakeAsync(() => {
-                 const hint = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_HINT));
+                 const hintContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_HINT));
+                 expect(select.collapsed).toBeTruthy();
+                 hintContainer.nativeElement.click();
+                 tick();
+                 fixture.detectChanges();
+                 expect(select.collapsed).toBeTruthy();
+        }));
+        it('should not open dropdown on hint element click',
+            fakeAsync(() => {
+                 const hint = fixture.debugElement.query(By.css('.' + CSS_CLASS_HINT));
                  expect(select.collapsed).toBeTruthy();
                  hint.nativeElement.click();
                  tick();
