@@ -14,8 +14,7 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { GridSelectionMode } from './common/enums';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid';
-
+import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid/public_api';
 describe('IgxGridState - input properties #tGrid', () => {
     configureTestSuite();
     let fix;
