@@ -16,7 +16,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './columns/column.component';
-import { TransactionType } from '../services';
+import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';

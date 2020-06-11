@@ -1,18 +1,17 @@
 
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 
-const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 
@@ -1091,24 +1090,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
         });
 
@@ -1194,24 +1197,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 5, 7);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
             it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by ID)', () => {

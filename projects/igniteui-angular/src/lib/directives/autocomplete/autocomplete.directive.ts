@@ -1,14 +1,37 @@
 import {
-    Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
-    NgModule, ElementRef, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Optional,
+    Output,
+    Self
+} from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/index';
-import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
-import { IgxInputGroupComponent } from '../../input-group/index';
+import {
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy,
+    IPositionStrategy,
+    IScrollStrategy,
+    OverlaySettings
+} from '../../services/public_api';
+import {
+    IgxDropDownComponent,
+    IgxDropDownItemNavigationDirective,
+    IgxDropDownModule,
+    ISelectionEventArgs
+} from '../../drop-down/public_api';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 
 /**

@@ -20,7 +20,7 @@ import {
     ContentChild,
     Injectable
 } from '@angular/core';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
