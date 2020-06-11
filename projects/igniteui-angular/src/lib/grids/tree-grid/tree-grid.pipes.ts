@@ -213,7 +213,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         }
         const filteredSortedData = [];
         this.flattenTreeGridRecords(result, filteredSortedData);
-        grid.filteredSortedData = filteredSortedData;
+        grid.setFilteredSortedData(filteredSortedData);
 
         return result;
     }
