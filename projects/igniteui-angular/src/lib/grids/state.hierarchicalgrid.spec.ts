@@ -10,7 +10,7 @@ import { GridSelectionRange } from './selection/selection.service';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
-import { IgxHierarchicalGridModule } from './hierarchical-grid/index';
+import { IgxHierarchicalGridModule } from './hierarchical-grid/public_api';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { GridSelectionMode } from './common/enums';
