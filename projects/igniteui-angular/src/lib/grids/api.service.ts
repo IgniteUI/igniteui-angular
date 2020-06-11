@@ -143,6 +143,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         cell.editValue = value;
 
         const args = cell.createEditEventArgs();
+        args.cell = this.grid.getCellByColumn(args.cellID.rowIndex, args.column.field);
         args.owner = this.grid;
 
         this.grid.onCellEdit.emit(args);

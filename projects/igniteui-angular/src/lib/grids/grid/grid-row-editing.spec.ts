@@ -143,6 +143,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -167,6 +168,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -190,6 +192,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: cell.value,
                 newValue: newCellValue,
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -1818,6 +1821,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: 'Chai',
                 newValue: 'New Value',
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };

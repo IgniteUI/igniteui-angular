@@ -178,6 +178,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             oldValue: 1,
             newValue: 200,
             cancel: false,
+            cell: cell,
             column: cell.column,
             owner: grid
         };

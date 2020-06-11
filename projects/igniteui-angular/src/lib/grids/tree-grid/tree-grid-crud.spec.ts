@@ -459,6 +459,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
+                    cell: cellComponent,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -491,6 +492,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
+                    cell: cellComponent,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -687,6 +689,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
+                    cell: cellComponent,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -720,6 +723,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
+                    cell: cellComponent,
                     column: cellComponent.column,
                     owner: treeGrid
                 });

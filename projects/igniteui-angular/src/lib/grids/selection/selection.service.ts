@@ -163,6 +163,7 @@ export class IgxGridCRUDService {
         newCell.primaryKey = this.primaryKey;
         // TODO: should we emit newValue in onCellEditEnter?
         const args = newCell.createEditEventArgs();
+        args.cell = cell;
         args.owner = this.grid;
 
         this.grid.onCellEditEnter.emit(args);
@@ -215,6 +216,7 @@ export class IgxGridCRUDService {
         }
         if (this.inEditMode) {
             const args = this.cell.createEditEventArgs();
+            args.cell = this.grid.getCellByColumn(args.cellID.rowIndex, args.column.field);
             args.owner = this.grid;
             this.grid.onCellEditCancel.emit(args);
             if (args.cancel) {

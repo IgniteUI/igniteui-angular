@@ -568,6 +568,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'John Brown',
                 oldValue: 'John Brown',
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -587,6 +588,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 20,
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -612,6 +614,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 newValue: 'John Brown',
                 oldValue: 'John Brown',
                 cancel: true,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -633,6 +636,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 20,
                 cancel: true,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -664,6 +668,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -686,6 +691,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: 1,
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -719,6 +725,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -744,6 +751,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 20,
                 newValue: '1',
                 cancel: true,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -790,7 +798,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
-        it(`Should update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+        it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -850,6 +858,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
@@ -884,6 +893,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
+                cell: cell,
                 column: cell.column,
                 owner: grid
             };
