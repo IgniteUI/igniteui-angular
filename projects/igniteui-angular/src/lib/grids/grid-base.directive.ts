@@ -5809,9 +5809,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: Function = null) {
         if (!cb) { return; }
+        let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+        if (!row) {
+            if ((this as any).totalItemCount) {
+                this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                    this.cdr.detectChanges();
+                    row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
+                    const cbArgs = this.getNavigationArguments(row, visibleColIndex);
+                    cb(cbArgs);
+                });
+            }
+            return;
+        }
+        const args = this.getNavigationArguments(row, visibleColIndex);
+        cb(args);
+    }
+
+    private getNavigationArguments(row, visibleColIndex) {
         let targetType, target;
-        const row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
-        if (!row) { return; }
         switch (row.nativeElement.tagName.toLowerCase()) {
             case 'igx-grid-groupby-row':
                 targetType = GridKeydownTargetType.groupRow;
@@ -5831,8 +5846,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 target = visibleColIndex !== -1 ? row.cells.find(c => c.visibleColumnIndex === visibleColIndex) : row.cells.first;
                 break;
         }
-        const args = { targetType: targetType, target: target };
-        cb(args);
+        return { targetType: targetType, target: target };
     }
 
     private getNextDataRowIndex(currentRowIndex, previous = false): number {
