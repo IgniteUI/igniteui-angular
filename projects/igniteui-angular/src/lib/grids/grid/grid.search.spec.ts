@@ -714,7 +714,6 @@ describe('IgxGrid - search API #grid - ', () => {
             let cellInput = null;
             cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, newVal);
-            cellInput.value = 'newCellValue';
 
             // press tab on edited cell
             GridFunctions.simulateGridContentKeydown(fix, 'tab');
