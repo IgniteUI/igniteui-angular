@@ -48,7 +48,7 @@
             aria-haspopup="grid"
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
-            [value]="this.value | dateRange: this.displayFormat : this.locale"
+            [value]="this.value | dateRange: this.inputFormat : this.locale : this.formatter"
         />
 
         <igx-prefix *ngIf="!this.toggleComponents.length">
