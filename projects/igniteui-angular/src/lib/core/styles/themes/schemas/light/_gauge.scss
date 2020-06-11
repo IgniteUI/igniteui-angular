@@ -129,18 +129,27 @@ $_light-radial-gauge: extend(
     )
 );
 
-/// Generates fluent gauge schemas.
+/// Generates a light fluent gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-linear-gauge
-/// @requires $_light-radial-gauge
 $_fluent-linear-gauge: extend($_light-linear-gauge);
+
+/// Generates a light fluent gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-radial-gauge
 $_fluent-radial-gauge: extend($_light-radial-gauge);
 
-/// Generates bootstrap gauge schemas.
+/// Generates a light bootstrap gauge schemas.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-linear-gauge
-/// @requires $_light-radial-gauge
 $_bootstrap-linear-gauge: extend($_light-linear-gauge);
+
+/// Generates a light bootstrap gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-radial-gauge
 $_bootstrap-radial-gauge: extend($_light-radial-gauge);
+

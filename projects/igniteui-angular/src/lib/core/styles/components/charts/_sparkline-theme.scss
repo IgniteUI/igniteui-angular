@@ -7,26 +7,26 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @prop {Color} $brush [null] - Sets the sparkline brush.
-/// @prop {Number} $line-thickness [null] - Sets the line thickness of the sparkline.
-/// @prop {Color} $marker-brush [null] - Sets the marker brush of the sparkline.
-/// @prop {Color} $marker-size [null] - Sets the marker size of the sparkline.
-/// @prop {Color} $first-marker-brush [null] - Sets the first marker brush of the sparkline.
-/// @prop {Number} $first-marker-size [null] - Sets the first marker size of the sparkline.
-/// @prop {Color} $last-marker-brush [null] - Sets the last marker brush of the sparkline.
-/// @prop {Number} $last-marker-size [null] - Sets the last marker size of the sparkline.
-/// @prop {Color} $low-marker-brush [null] - Sets the low marker brush of the sparkline.
-/// @prop {Number} $low-marker-size [null] - Sets the low marker size of the sparkline.
-/// @prop {Color} $high-marker-brush [null] - Sets the high marker brush of the sparkline.
-/// @prop {Number} $high-marker-size [null] - Sets the high marker size of the sparkline.
-/// @prop {Color} $negative-brush [null] - Sets the negative brush of the sparkline.
-/// @prop {Color} $negative-marker-brush [null] - Sets the negative marker brush of the sparkline.
-/// @prop {Number} $negative marker-size [null] - Sets the negative marker size of the sparkline.
-/// @prop {Color} $trend-line-brush [null] - Sets the trendline brush of the sparkline.
-/// @prop {Color} $trend-line-thickness [null] - Sets the thickness of the sparkline's trendline.
-/// @prop {Color} $horizontal-axis-brush [null] - Sets the horizontal axis line brush of the sparkline.
-/// @prop {Color} $vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
-/// @prop {Color} $normal-range-fill [null] - Sets the normal range brush of the sparkline.
+/// @param {Color} $brush [null] - Sets the sparkline brush.
+/// @param {Number} $line-thickness [null] - Sets the line thickness of the sparkline.
+/// @param {Color} $marker-brush [null] - Sets the marker brush of the sparkline.
+/// @param {Color} $marker-size [null] - Sets the marker size of the sparkline.
+/// @param {Color} $first-marker-brush [null] - Sets the first marker brush of the sparkline.
+/// @param {Number} $first-marker-size [null] - Sets the first marker size of the sparkline.
+/// @param {Color} $last-marker-brush [null] - Sets the last marker brush of the sparkline.
+/// @param {Number} $last-marker-size [null] - Sets the last marker size of the sparkline.
+/// @param {Color} $low-marker-brush [null] - Sets the low marker brush of the sparkline.
+/// @param {Number} $low-marker-size [null] - Sets the low marker size of the sparkline.
+/// @param {Color} $high-marker-brush [null] - Sets the high marker brush of the sparkline.
+/// @param {Number} $high-marker-size [null] - Sets the high marker size of the sparkline.
+/// @param {Color} $negative-brush [null] - Sets the negative brush of the sparkline.
+/// @param {Color} $negative-marker-brush [null] - Sets the negative marker brush of the sparkline.
+/// @param {Number} $negative marker-size [null] - Sets the negative marker size of the sparkline.
+/// @param {Color} $trend-line-brush [null] - Sets the trendline brush of the sparkline.
+/// @param {Color} $trend-line-thickness [null] - Sets the thickness of the sparkline's trendline.
+/// @param {Color} $horizontal-axis-brush [null] - Sets the horizontal axis line brush of the sparkline.
+/// @param {Color} $vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
+/// @param {Color} $normal-range-fill [null] - Sets the normal range brush of the sparkline.
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette

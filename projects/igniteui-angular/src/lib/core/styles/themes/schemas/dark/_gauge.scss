@@ -8,24 +8,36 @@
 
 /// Generates dark gauge schemas.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-linear-gauge
-/// @requires $_light-radial-gauge
-/// @see $default-palette
 $_dark-linear-gauge: extend($_light-linear-gauge);
+
+/// Generates dark gauge schemas.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-radial-gauge
 $_dark-radial-gauge: extend($_light-radial-gauge);
 
 /// Generates a dark fluent gauge schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-linear-gauge
-/// @requires $_fluent-radial-gauge
 $_dark-fluent-linear-gauge: extend($_fluent-linear-gauge);
+
+/// Generates a dark fluent gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-radial-gauge
 $_dark-fluent-radial-gauge: extend($_fluent-radial-gauge);
 
-/// Generates a bootstrap gauge schema.
+/// Generates a dark bootstrap gauge schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-linear-gauge
-/// @requires $_bootstrap-radial-gauge
 $_dark-bootstrap-linear-gauge: extend($_bootstrap-linear-gauge);
+
+/// Generates a dark bootstrap gauge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-radial-gauge
 $_dark-bootstrap-radial-gauge: extend($_bootstrap-radial-gauge);

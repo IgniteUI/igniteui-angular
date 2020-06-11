@@ -17,7 +17,6 @@
 /// @property {Number} outline-thickness [null] - Sets the thickness of outline around slices.
 /// @property {Color} text-color [null] - Sets the Color used for the inner labels.
 /// @property {String} text-style [null] - Sets the text style for inner labels.
-
 /// @see $default-palette
 $_light-funnel-chart: extend(
     (
