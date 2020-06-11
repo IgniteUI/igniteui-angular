@@ -39,7 +39,8 @@
         <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
     </div>
 
-    <div #scrollContainer class="igx-drop-down__list-scroll" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
+    <!-- #7436 LMB scrolling closes items container - unselectable attribute is IE specific  -->
+    <div #scrollContainer class="igx-drop-down__list-scroll" unselectable="on" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
         <ng-content select="igx-select-item, igx-select-item-group"></ng-content>
     </div>
 
