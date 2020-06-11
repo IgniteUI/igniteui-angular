@@ -1,6 +1,6 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { IgxDateRangePickerComponent, DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
+import { DateRange, IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-date-range',

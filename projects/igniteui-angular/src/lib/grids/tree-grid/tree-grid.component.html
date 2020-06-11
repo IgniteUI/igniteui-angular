@@ -55,7 +55,7 @@
         <igx-grid-filtering-row #filteringRow *ngIf="filteringService.isFilterRowVisible"
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
-    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollWidth"></div>
+    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollSize"></div>
     <div #loadingOverlay>
         <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
         </igx-circular-bar>
@@ -87,7 +87,7 @@
                         'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
                         'igx-grid__tr--pinned-top': isRowPinningToTop
                     }"
-                    class='igx-grid__tr--pinned' [style.bottom.px]=' !isRowPinningToTop ? pinnedBottom : null'>
+                    class='igx-grid__tr--pinned' [style.width.px]='calcWidth'>
                     <ng-container *ngFor="let rowData of pinnedData;let rowIndex = index;">
                         <ng-container *ngTemplateOutlet="pinned_record_template; context: getContext(rowData, rowIndex, true)">
                         </ng-container>
@@ -135,7 +135,7 @@
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
-        <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
+        <div [hidden]='!hasVerticalScroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollSize"
             [style.height.px]='calcHeight'>
         <div class="igx-grid__tbody-scrollbar-start" [style.height.px]=' isRowPinningToTop ? pinnedRowHeight : 0'></div>
         <div class="igx-grid__tbody-scrollbar-main" [style.height.px]='calcHeight'>
@@ -152,10 +152,10 @@
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
     <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
-        [style.width.px]="scrollWidth"></div>
+        [style.width.px]="scrollSize"></div>
 </div>
 
-<div class="igx-grid__scroll" #scr [hidden]="isHorizontalScrollHidden">
+<div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
@@ -174,7 +174,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="processedExpandedFlatData.length"
+    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords"
         [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>

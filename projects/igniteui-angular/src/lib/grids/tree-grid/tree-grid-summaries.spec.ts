@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './index';
+import { IgxTreeGridModule } from './public_api';
 import {
     IgxTreeGridSummariesComponent,
     IgxTreeGridSummariesKeyComponent,
