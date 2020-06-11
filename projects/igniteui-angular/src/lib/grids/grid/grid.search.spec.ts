@@ -9,11 +9,12 @@ import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
+import { DebugElement } from '@angular/core';
 
 describe('IgxGrid - search API #grid - ', () => {
     configureTestSuite();
@@ -686,6 +687,45 @@ describe('IgxGrid - search API #grid - ', () => {
             highlights = cell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
             expect(row.inEditMode).toBe(false);
+        });
+
+        it('Should keep edit mode when tabbing, after search is applied', () => {
+            grid.primaryKey = 'ID';
+            grid.getColumnByName('Name').editable = true;
+            grid.getColumnByName('JobTitle').editable = true;
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(1, 'Name');
+            const caseyCell = grid.getCellByColumn(0, 'Name');
+
+            grid.findNext('Casey');
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            let highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+            expect(highlights.length).toBe(1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.nativeElement);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+            highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+            expect(highlights.length).toBe(1);
+
+            let cellInput = null;
+            cellInput = cell.nativeElement.querySelector('[igxinput]');
+            cellInput.value = 'newCellValue';
+
+            const gridContent: DebugElement = fix.debugElement.query(By.css('.igx-grid__tbody-content'));
+            // press tab on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeFalsy();
+            highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+
+            const nextCell = grid.getCellByColumn(1, 'JobTitle');
+            expect(nextCell.editMode).toBeTruthy();
+            expect(highlights.length).toBe(1);
         });
     });
 
