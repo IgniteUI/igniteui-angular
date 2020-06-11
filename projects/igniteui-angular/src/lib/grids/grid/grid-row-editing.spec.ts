@@ -173,7 +173,13 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
             // no change, new value is null
-            rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: null, cancel: false };
+            rowArgs = {
+                rowID: row.rowID,
+                newValue: null,
+                oldValue: row.rowData,
+                cancel: false,
+                owner: grid
+            };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
 
@@ -197,8 +203,11 @@ describe('IgxGrid - Row Editing #grid', () => {
                 owner: grid
             };
             rowArgs = {
-                rowID: row.rowID, oldValue: row.rowData,
-                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }), cancel: false
+                rowID: row.rowID,
+                newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
+                oldValue: row.rowData,
+                cancel: false,
+                owner: grid
             };
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
 
@@ -1563,10 +1572,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).not.toHaveBeenCalled();
             expect(grid.onRowEdit.emit).toHaveBeenCalled();
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
-                rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         });
 
@@ -1598,10 +1608,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
-                rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
 
             // Enter cell edit mode again
@@ -1618,10 +1629,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
-                rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
         });
 
@@ -1645,10 +1657,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEdit.emit).not.toHaveBeenCalled();
             expect(grid.onRowEditCancel.emit).toHaveBeenCalled();
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: null,
                 oldValue: initialData,
-                rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         });
 
@@ -1681,10 +1694,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: null,
                 oldValue: initialData,
-                rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
 
             // Enter cell edit mode again
@@ -1702,10 +1716,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: null,
                 oldValue: initialData,
-                rowID: 1,
-                cancel: true
+                cancel: true,
+                owner: grid
             });
         });
 
@@ -1725,9 +1740,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onRowEditEnter.emit).toHaveBeenCalled();
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
-                oldValue: initialData,
                 rowID: 1,
-                cancel: false
+                newValue: undefined,
+                oldValue: initialData,
+                cancel: false,
+                owner: grid
             });
         });
 
@@ -1750,9 +1767,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
-                oldValue: initialData,
                 rowID: 1,
-                cancel: true
+                newValue: undefined,
+                oldValue: initialData,
+                cancel: true,
+                owner: grid
             });
         });
 
@@ -1777,10 +1796,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
-                rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         });
 
@@ -1804,10 +1824,11 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                rowID: 1,
                 newValue: null,
                 oldValue: initialData,
-                rowID: 1,
-                cancel: false
+                cancel: false,
+                owner: grid
             });
         });
 
