@@ -1,9 +1,18 @@
 import { EventEmitter } from '@angular/core';
+import { ThrowStmt } from '@angular/compiler';
 
 export enum TransactionType {
     ADD = 'add',
     DELETE = 'delete',
     UPDATE = 'update'
+}
+
+export enum TransactionEventSource {
+    UNDO = 'undo',
+    REDO = 'redo',
+    CLEAR = 'clear',
+    ADD = 'add',
+    END = 'endPending'
 }
 
 export interface Transaction {
@@ -26,6 +35,11 @@ export interface State {
     type: TransactionType;
 }
 
+export interface IStateUpdateEvent {
+    origin: TransactionEventSource;
+    actions?: any;
+}
+
 /**
  * @experimental
  * @hidden
@@ -43,7 +57,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo
      */
-    onStateUpdate?: EventEmitter<void>;
+    onStateUpdate?: EventEmitter<IStateUpdateEvent>;
 
     /**
      * @returns if there are any transactions in the Undo stack

@@ -19,7 +19,13 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs, IPinRowEventArgs } from '../common/events';
-import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
+import {
+    HierarchicalTransaction,
+    HierarchicalState,
+    TransactionType,
+    TransactionEventSource,
+    IStateUpdateEvent
+} from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -350,10 +356,16 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?) => {
-            if (event) {
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?: IStateUpdateEvent) => {
+            if (event.origin === TransactionEventSource.REDO) {
                 const deleteActions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
                 for (const action of deleteActions) {
+                    this.deselectChildren(action.transaction.id);
+                }
+            }
+            if (event.origin === TransactionEventSource.UNDO) {
+                const addActions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
+                for (const action of addActions) {
                     this.deselectChildren(action.transaction.id);
                 }
             }
