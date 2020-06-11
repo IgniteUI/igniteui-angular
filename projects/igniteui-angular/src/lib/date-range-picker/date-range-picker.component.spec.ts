@@ -1,7 +1,7 @@
 import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
-import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, FormControl, Validators } from '@angular/forms';
@@ -14,8 +14,7 @@ import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { IgxIconModule } from '../icon';
 import { DateRangeType } from '../core/dates/dateRange';
-import { CancelableBrowserEventArgs, IBaseEventArgs, CancelableEventArgs } from '../core/utils';
-import { take } from 'rxjs/operators';
+import { CancelableEventArgs } from '../core/utils';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -24,9 +23,10 @@ const defaultIconText = 'calendar_today';
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle'; // TODO Implementation -> maybe add class for the div container ('igx-date-picker')
+const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
+const CSS_CLASS_LABEL = 'igx-input-group__label';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -959,6 +959,15 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
             }));
+            fit('should render custom label', () => {
+                fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
+                fixture.detectChanges();
+
+
+                const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
+                expect(inputGroup.children[1].children[0].classes[CSS_CLASS_LABEL]).toBeTruthy();
+                expect(inputGroup.children[1].children[0].nativeElement.textContent).toEqual('Select Date');
+            });
         });
     });
 });
