@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
 import { IgxIconComponent } from './icon.component';
-import { DeprecateMethod } from '../core/deprecateDecorators';
 
 /**
  * @hidden
