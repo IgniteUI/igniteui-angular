@@ -28,7 +28,7 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, combineLatest, pipe } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -2822,6 +2822,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data) {
+        this._filteredSortedData = data;
+        this.refreshSearch(true, false);
+    }
+
+    /**
      * @hidden @internal
      */
     public _setupRowObservers() {
@@ -4024,7 +4033,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param updateActiveInfo
     */
-    public refreshSearch(updateActiveInfo?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean, endEdit = true): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -4039,7 +4048,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             }
 
-            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
+            return this.find(this.lastSearchInfo.searchText,
+                0,
+                this.lastSearchInfo.caseSensitive,
+                this.lastSearchInfo.exactMatch,
+                false,
+                endEdit);
         } else {
             return 0;
         }
@@ -5356,12 +5370,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.field + col._calcWidth;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean, endEdit = true) {
         if (!this.rowList) {
             return 0;
         }
 
-        this.endEdit(false);
+        if (endEdit) {
+            this.endEdit(false);
+        }
 
         if (!text) {
             this.clearSearch();
@@ -5436,10 +5452,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
-    }
-    set filteredSortedData(value: any[]) {
-        this._filteredSortedData = value;
-        this.refreshSearch(true);
     }
 
     /**
