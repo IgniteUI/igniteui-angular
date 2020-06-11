@@ -17,6 +17,7 @@
 /// @param {List} $marker-outlines [null] - Defines the palette from which automatically assigned marker outlines are selected.
 /// @param {Color} $plot-area-background [null] - Sets the brush used as the background for the current Chart object's plot area.
 /// @param {String} $title-horizontal-alignment [null] - The horizontal alignment to use for the title. Valid options are 'left', 'center', and 'right';
+/// @param {String} $subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle. Valid options are 'left', 'center', and 'right';
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -41,6 +42,7 @@
     $marker-outlines: null,
     $plot-area-background: null,
     $title-horizontal-alignment: null,
+    $subtitle-horizontal-alignment: null,
 ) {
     $name: 'data-chart';
     $chart-schema: ();
@@ -89,6 +91,7 @@
             marker-outlines: $marker-outlines,
             plot-area-background: $plot-area-background,
             title-horizontal-alignment: $title-horizontal-alignment,
+            subtitle-horizontal-alignment: $subtitle-horizontal-alignment,
         )
     );
 }

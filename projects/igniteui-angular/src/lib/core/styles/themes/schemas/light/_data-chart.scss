@@ -19,6 +19,7 @@
 /// @property {List} marker-outlines [series] - Defines the palette from which automatically assigned marker outlines are selected.
 /// @property {Color} plot-area-background [igx-color: ('surface', 500)] - Sets the brush used as the background for the current Chart object's plot area.
 /// @property {String} title-horizontal-alignment [null] - The horizontal alignment to use for the title.
+/// @property {String} subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle.
 /// @see $default-palette
 $_light-data-chart: extend(
     (
@@ -49,6 +50,8 @@ $_light-data-chart: extend(
         ),
 
         'title-horizontal-alignment': null,
+
+        'subtitle-horizontal-alignment': null,
     )
 );
 
