@@ -5911,12 +5911,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.field + col._calcWidth;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean, endEdit?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean, endEdit = true) {
         if (!this.rowList) {
             return 0;
         }
 
-        if (!endEdit) {
+        if (endEdit) {
             this.endEdit(false);
         }
 
