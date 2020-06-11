@@ -644,7 +644,7 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar.nativeElement);
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
                 fixture.detectChanges();
                 tick(100);
 
@@ -661,7 +661,7 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar.nativeElement);
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
                 fixture.detectChanges();
                 tick(100);
 
