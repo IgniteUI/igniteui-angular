@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.0.0
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The event arguments of `onCellEdit`, `onCellEditEnter` and `onCellEditCancel` events will contain a reference to the edited cell, as well as a reference to the column where the edited cell is.
+
 ## 9.1.0
 
 ### General
