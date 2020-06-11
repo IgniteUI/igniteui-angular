@@ -15,6 +15,7 @@ import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { DebugElement } from '@angular/core';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - search API #grid - ', () => {
     configureTestSuite();
@@ -693,13 +694,12 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.primaryKey = 'ID';
             grid.getColumnByName('Name').editable = true;
             grid.getColumnByName('JobTitle').editable = true;
-            grid.cdr.detectChanges();
             fix.detectChanges();
             const cell = grid.getCellByColumn(1, 'Name');
             const caseyCell = grid.getCellByColumn(0, 'Name');
+            const newVal = 'newCellValue';
 
             grid.findNext('Casey');
-            grid.cdr.detectChanges();
             fix.detectChanges();
             let highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(highlights.length).toBe(1);
@@ -713,13 +713,15 @@ describe('IgxGrid - search API #grid - ', () => {
 
             let cellInput = null;
             cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, newVal);
             cellInput.value = 'newCellValue';
 
             const gridContent: DebugElement = fix.debugElement.query(By.css('.igx-grid__tbody-content'));
             // press tab on edited cell
-            UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
+            GridFunctions.simulateGridContentKeydown(fix, 'tab');
             fix.detectChanges();
 
+            expect(cell.value).toBe(newVal);
             expect(cell.editMode).toBeFalsy();
             highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
 
