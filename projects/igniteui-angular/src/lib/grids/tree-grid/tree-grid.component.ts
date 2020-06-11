@@ -33,6 +33,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 
@@ -347,6 +348,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
+        });
+
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?) => {
+            if (event) {
+                const deleteActions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
+                for (const action of deleteActions) {
+                    this.deselectChildren(action.transaction.id);
+                }
+            }
         });
     }
 
@@ -675,5 +685,21 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
+    }
+
+    /**
+     * @description A recursive way to deselect all selected children of a given record
+     * @param recordID ID of the record whose children to deselect
+     * @hidden
+     * @internal
+     */
+    private deselectChildren(recordID): void {
+        const selectedChildren = [];
+        const rowToDeselect = (this.getRowByKey(recordID) as IgxTreeGridRowComponent).treeRow;
+        this.selectionService.deselectRow(recordID);
+        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        if (selectedChildren.length > 0) {
+            selectedChildren.forEach(x => this.deselectChildren(x));
+        }
     }
 }

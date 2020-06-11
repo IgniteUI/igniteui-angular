@@ -505,8 +505,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedRows()).toEqual([]);
 
             // try to select deleted row
-            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
-            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(0).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
@@ -521,8 +521,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             // select rows
-            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
-            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(0).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
