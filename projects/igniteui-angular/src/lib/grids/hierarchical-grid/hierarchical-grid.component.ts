@@ -83,10 +83,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.h_id = value;
     }
 
-    public set id(value: string) {
-        this.h_id = value;
-    }
-
     /**
      * An @Input property that lets you fill the `IgxHierarchicalGridComponent` with an array of data.
      * ```html
