@@ -276,12 +276,12 @@
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {Map} $shades - A map of variations as keys and opacities as values.
 /// Based on the Material color system.
-/// @returns {Map} - A map consisting of 10 grayscale color variations and 10
+/// @returns {Map} - A map consisting of 10 color variations and 10
 /// text contrast colors for each variation.
 @function grayscale-palette($color, $shades) {
     $result: ();
     @each $saturation, $opacity in $shades {
-        $shade: rgba(grayscale($color), $opacity);
+        $shade: rgba($color, $opacity);
         $result: map-merge($result, ($saturation: $shade));
     }
     @return $result;
@@ -297,7 +297,7 @@
 /// @param {Color} $success [#4eb862] - The success color used throughout the application.
 /// @param {Color} $warn [#fbb13c] - The warning color used throughout the application.
 /// @param {Color} $error [#ff134a] - The error color used throughout the application.
-/// @param {Color} $grays [#000 | $igx-foreground-color] - The color used for generating the grayscale palette.
+/// @param {Color} $grays [#000 | $igx-foreground-color] - The color used for generating the grays palette.
 /// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
