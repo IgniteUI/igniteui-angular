@@ -726,7 +726,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             expect(cell.editMode).toBe(false);
-            expect(cell.value).toBe('New Name');
+            expect(cell.value).toBe('John Brown');
 
             cell = grid.getCellByColumn(0, 'age');
             expect(cell.editMode).toBe(true);
@@ -742,7 +742,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: 20,
-                newValue: 1,
+                newValue: '1',
                 cancel: true,
                 column: cell.column,
                 owner: grid
@@ -799,7 +799,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             // update the cell value via updateRow and cancel the event
-            // calling this will push additional transaction
             grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.getRowByIndex(rowIndex);
@@ -821,17 +820,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(secondNewValue);
 
             grid.transactions.undo();
-            // for some reason in this test we are changing the row value in onCellEdit. This
-            // pushes additional transaction in the transaction log. To restore the state we
-            // should call undo twice
-            grid.transactions.undo();
             fixture.detectChanges();
             expect(cell.value).toBe(firstNewValue);
 
-            grid.transactions.undo();
-            // for some reason in this test we are changing the row value in onCellEdit. This
-            // pushes additional transaction in the transaction log. To restore the state we
-            // should call undo twice
             grid.transactions.undo();
             fixture.detectChanges();
             expect(cell.value).toBe(initialValue);

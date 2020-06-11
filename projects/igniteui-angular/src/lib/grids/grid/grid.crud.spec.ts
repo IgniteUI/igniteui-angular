@@ -176,7 +176,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
             oldValue: 1,
-            newValue: 0,
+            newValue: 200,
             cancel: false,
             column: cell.column,
             owner: grid
@@ -186,13 +186,12 @@ describe('IgxGrid - CRUD operations #grid', () => {
         expect(grid.rowList.first.cells.first.nativeElement.textContent).not.toMatch('-100');
 
         // Update an existing cell
-        // updating numeric cell with string will end with cell value equals to 0
         grid.updateCell('change', 1, 'index');
         fix.detectChanges();
 
         expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
-        expect(grid.rowList.first.cells.first.value).toEqual(0);
-        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('0');
+        expect(grid.rowList.first.cells.first.value).toEqual(200);
+        expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('200');
     });
 
     it('should support updating a cell value through the cell object', () => {

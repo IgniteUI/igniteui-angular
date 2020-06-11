@@ -145,6 +145,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const args = cell.createEditEventArgs();
         args.owner = this.grid;
 
+        this.grid.onCellEdit.emit(args);
+        if (args.cancel) {
+            return args;
+        }
+
         // Cast to number after emit
         // TODO: Clean up this
         args.newValue = cell.castToNumber(args.newValue);
@@ -170,8 +175,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             (this.grid as any)._pipeTrigger++;
         }
 
-        // TODO
-        this.grid.onCellEdit.emit(args);
         return args;
     }
 
