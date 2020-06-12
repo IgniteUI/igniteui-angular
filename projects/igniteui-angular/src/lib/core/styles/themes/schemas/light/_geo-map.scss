@@ -1,0 +1,32 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light geo map schema.
+/// @type {Map}
+/// @prop {String} plot-area-background [null]- Gets or sets the brush used as the background for the current Map object's plot area.
+/// @see $default-palette
+$_light-geo-map: extend(
+    (
+        'plot-area-background': (
+            igx-color: 'surface'
+        )
+    )
+);
+
+/// Generates a fluent geo map schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-geo-map
+/// @see $_light-geo-map
+$_fluent-geo-map: extend($_light-geo-map);
+
+/// Generates a bootstrap geo map schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-geo-map
+/// @see $_light-geo-map
+$_bootstrap-geo-map: extend($_light-geo-map);
+

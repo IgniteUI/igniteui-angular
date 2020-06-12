@@ -1,0 +1,29 @@
+@import '../light/pie-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark base pie chart schema.
+/// @type {Map}
+/// @requires $_light-pie-chart
+/// @see $_light-pie-chart
+$_dark-pie-chart: extend($_light-pie-chart);
+
+/// Generates a dark fluent pie chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-pie-chart
+/// @see $_fluent-pie-chart
+$_dark-fluent-pie-chart: extend($_fluent-pie-chart);
+
+/// Generates a dark bootstrap pie chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-pie-chart
+/// @see $_bootstrap-pie-chart
+$_dark-fluent-pie-chart: extend($_fluent-pie-chart);
+$_dark-bootstrap-pie-chart: extend($_bootstrap-pie-chart);
+
