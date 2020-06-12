@@ -2831,9 +2831,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.transactions.onStateUpdate.pipe(destructor).subscribe((event?: IStateUpdateEvent) => {
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
-                actions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
             } else if (event.origin === TransactionEventOrigin.UNDO) {
-                actions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
             }
             if (actions.length > 0) {
                 for (const action of actions) {
