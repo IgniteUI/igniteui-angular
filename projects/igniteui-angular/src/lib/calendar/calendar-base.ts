@@ -379,7 +379,7 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         const result = [];
         start = this.getDateOnly(start);
         end = this.getDateOnly(end);
-        while (start.getTime() !== end.getTime()) {
+        while (start.getTime() < end.getTime()) {
             start = this.calendarModel.timedelta(start, 'day', 1);
             result.push(start);
         }
