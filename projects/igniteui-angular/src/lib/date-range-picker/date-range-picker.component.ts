@@ -376,9 +376,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        if (this.formatter) {
-            return this.formatter(this.value);
-        }
         if (!this.hasProjectedInputs) {
             if (this.placeholder !== '') {
                 return this.placeholder;

@@ -17,9 +17,12 @@ export interface DateRange {
 /** @hidden @internal */
 @Pipe({ name: 'dateRange' })
 export class DateRangePickerFormatPipe implements PipeTransform {
-    public transform(values: DateRange, inputFormat?: string, locale?: string): string {
+    public transform(values: DateRange, inputFormat?: string, locale?: string, formatter?: (_: DateRange) => string): string {
         if (!values) {
             return '';
+        }
+        if (formatter) {
+            return formatter(values);
         }
         const { start, end } = values;
         // TODO: move default locale from IgxDateTimeEditorDirective to its commons file/use displayFormat
