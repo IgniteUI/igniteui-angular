@@ -10,7 +10,7 @@ import {
     ContentChild
 } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 
 /**
  * IgxActionIcon is a container for the action nav icon of the IgxNavbar.

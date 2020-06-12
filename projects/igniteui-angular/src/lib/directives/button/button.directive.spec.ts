@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxIconComponent, IgxIconService } from '../../icon';
+import { IgxIconComponent, IgxIconService } from '../../icon/public_api';
 import { DisplayDensity } from '../../core/density';
 
 const FLAT_RAISED_OUTLINED_BUTTON_COMPACT = 'igx-button--compact';
