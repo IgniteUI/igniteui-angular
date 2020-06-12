@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IgxSplitBarComponent } from './splitter-bar/splitter-bar.component';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { IgxSplitterComponent } from './splitter.component';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 
 @NgModule({

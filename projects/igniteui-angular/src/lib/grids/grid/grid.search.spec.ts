@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule, IgxGridComponent } from './index';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -9,11 +9,13 @@ import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
+import { DebugElement } from '@angular/core';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - search API #grid - ', () => {
     configureTestSuite();
@@ -35,14 +37,14 @@ describe('IgxGrid - search API #grid - ', () => {
     }));
 
     describe('BasicGrid - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
             fix.detectChanges();
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should clear all highlights', () => {
             const count = grid.findNext('software');
@@ -687,6 +689,44 @@ describe('IgxGrid - search API #grid - ', () => {
             expect(highlights.length).toBe(1);
             expect(row.inEditMode).toBe(false);
         });
+
+        it('Should keep edit mode when tabbing, after search is applied', () => {
+            grid.primaryKey = 'ID';
+            grid.getColumnByName('Name').editable = true;
+            grid.getColumnByName('JobTitle').editable = true;
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(1, 'Name');
+            const caseyCell = grid.getCellByColumn(0, 'Name');
+            const newVal = 'newCellValue';
+
+            grid.findNext('Casey');
+            fix.detectChanges();
+            let highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+            expect(highlights.length).toBe(1);
+
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell.nativeElement);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBeTruthy();
+            highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+            expect(highlights.length).toBe(1);
+
+            let cellInput = null;
+            cellInput = cell.nativeElement.querySelector('[igxinput]');
+            UIInteractions.setInputElementValue(cellInput, newVal);
+
+            // press tab on edited cell
+            GridFunctions.simulateGridContentKeydown(fix, 'tab');
+            fix.detectChanges();
+
+            expect(cell.value).toBe(newVal);
+            expect(cell.editMode).toBeFalsy();
+            highlights = caseyCell.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
+
+            const nextCell = grid.getCellByColumn(1, 'JobTitle');
+            expect(nextCell.editMode).toBeTruthy();
+            expect(highlights.length).toBe(1);
+        });
     });
 
     describe('ScrollableGrid - ', () => {
@@ -842,14 +882,14 @@ describe('IgxGrid - search API #grid - ', () => {
     });
 
     describe('GroupableGrid - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
 
             component = fix.componentInstance;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
-        });
+        }));
 
         it('Should be able to navigate through highlights with grouping enabled', () => {
             grid.groupBy({
@@ -1164,11 +1204,11 @@ describe('IgxGrid - search API #grid - ', () => {
     });
 
     describe('Grid with Avatar - ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridWithAvatarComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
-        });
+        }));
 
         it('Cells with no text should be excluded from the search', () => {
             const matches = grid.findNext('https');

@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { IgxCalendarComponent } from '../calendar';
+import { IgxCalendarComponent } from '../calendar/public_api';
 import { InteractionMode } from '../core/enums';
 import { IgxDatePickerActionsDirective } from './date-picker.directives';
 

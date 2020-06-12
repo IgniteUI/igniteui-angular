@@ -13,6 +13,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
+import { GridPagingMode } from '../common/enums';
 
 /**
  * @hidden
@@ -99,19 +100,19 @@ export class IgxGridPagingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
-
-        if (!this.gridAPI.grid.paging) {
+        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.local) {
             return collection;
         }
         const state = {
             index: page,
             recordsPerPage: perPage
         };
-        DataUtil.correctPagingState(state, collection.data.length);
+        const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.data.length;
+        DataUtil.correctPagingState(state, total);
 
         const result = {
-            data: DataUtil.page(cloneArray(collection.data), state),
-            metadata: DataUtil.page(cloneArray(collection.metadata), state)
+            data: DataUtil.page(cloneArray(collection.data), state, total),
+            metadata: DataUtil.page(cloneArray(collection.metadata), state, total)
         };
         if (this.gridAPI.grid.page !== state.index) {
             this.gridAPI.grid.page = state.index;
@@ -147,7 +148,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
         }
 
         const result = DataUtil.filter(cloneArray(collection), state);
-        grid.setFilterData(result, pinned);
+        grid.setFilteredData(result, pinned);
         return result;
     }
 }

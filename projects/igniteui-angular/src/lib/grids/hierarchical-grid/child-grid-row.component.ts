@@ -160,6 +160,12 @@ private resolver;
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
         this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
+        this.layout.onGridInitialized.emit({
+            owner: this.layout,
+            parentID: this.rowData.rowID,
+            grid: this.hGrid
+        });
+
         this.hGrid.cdr.detectChanges();
     }
 

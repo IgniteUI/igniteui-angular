@@ -2,9 +2,9 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
-import { IgxInputDirective } from '../input-group';
+import { IgxInputDirective } from '../input-group/public_api';
 import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
-import { IgxChipComponent } from '../chips';
+import { IgxChipComponent } from '../chips/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
@@ -15,7 +15,7 @@ import {
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridBaseDirective
-} from '../grids/grid';
+} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
@@ -293,7 +293,7 @@ export class GridFunctions {
     }
 
     public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
-        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
                                                Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
