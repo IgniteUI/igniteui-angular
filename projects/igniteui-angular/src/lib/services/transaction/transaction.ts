@@ -7,7 +7,7 @@ export enum TransactionType {
     UPDATE = 'update'
 }
 
-export enum TransactionEventSource {
+export enum TransactionEventOrigin {
     UNDO = 'undo',
     REDO = 'redo',
     CLEAR = 'clear',
@@ -36,7 +36,7 @@ export interface State {
 }
 
 export interface IStateUpdateEvent {
-    origin: TransactionEventSource;
+    origin: TransactionEventOrigin;
     actions?: any;
 }
 

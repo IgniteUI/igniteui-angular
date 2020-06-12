@@ -48,7 +48,7 @@ import {
     ConnectedPositioningStrategy,
     ContainerPositionStrategy,
     IStateUpdateEvent,
-    TransactionEventSource
+    TransactionEventOrigin
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -2829,17 +2829,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.transactions.onStateUpdate.pipe(destructor).subscribe((event?: IStateUpdateEvent) => {
-            if (event.origin === TransactionEventSource.REDO) {
-                const deleteActions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
-                for (const action of deleteActions) {
-                    if (this.selectionService.isRowSelected(action.transaction.id)) {
-                        this.selectionService.deselectRow(action.transaction.id);
-                    }
-                }
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
             }
-            if (event.origin === TransactionEventSource.UNDO) {
-                const addActions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
-                for (const action of addActions) {
+            if (actions.length > 0) {
+                for (const action of actions) {
                     if (this.selectionService.isRowSelected(action.transaction.id)) {
                         this.selectionService.deselectRow(action.transaction.id);
                     }

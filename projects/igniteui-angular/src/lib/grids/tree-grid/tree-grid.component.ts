@@ -23,7 +23,7 @@ import {
     HierarchicalTransaction,
     HierarchicalState,
     TransactionType,
-    TransactionEventSource,
+    TransactionEventOrigin,
     IStateUpdateEvent
 } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/index';
@@ -357,15 +357,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         });
 
         this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?: IStateUpdateEvent) => {
-            if (event.origin === TransactionEventSource.REDO) {
-                const deleteActions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
-                for (const action of deleteActions) {
-                    this.deselectChildren(action.transaction.id);
-                }
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions.filter(x => x.transaction.type === TransactionType.DELETE);
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
             }
-            if (event.origin === TransactionEventSource.UNDO) {
-                const addActions = event.actions.filter(x => x.transaction.type === TransactionType.ADD);
-                for (const action of addActions) {
+            if (actions.length) {
+                for (const action of actions) {
                     this.deselectChildren(action.transaction.id);
                 }
             }
