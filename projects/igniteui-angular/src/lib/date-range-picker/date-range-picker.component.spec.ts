@@ -1,4 +1,3 @@
-import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
@@ -13,6 +12,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
+import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
+import { IgxIconModule } from '../icon/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -494,7 +495,8 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
+                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
                 })
                     .compileComponents();
             }));
@@ -632,6 +634,43 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
                 }));
             });
+
+            it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
+                fixture.componentInstance.mode = InteractionMode.DropDown;
+                fixture.detectChanges();
+
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
+
+            it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
 
             describe('Data binding', () => {
                 it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
@@ -822,6 +861,9 @@ export class DateRangeTestComponent implements OnInit {
     template: `
     <igx-date-range-picker [mode]="mode" [(ngModel)]="range" required>
             <igx-date-range-start>
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
                 <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-start>
             <igx-date-range-end>
