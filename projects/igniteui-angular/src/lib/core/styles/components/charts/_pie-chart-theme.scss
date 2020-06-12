@@ -1,0 +1,68 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {List} $brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @param {List} $outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @param {Number} $label-extent [null] - Sets the pixel amount by which the labels are offset from the edge of the slices.
+/// @param {Color} $label-inner-color [null] - Sets the color for labels rendered inside of the pie chart.
+/// @param {Color} $label-outer-color [null] - Sets the color for labels rendered outside of the pie chart.
+/// @param {String} $labels-position [null] - Sets the position of chart labels. Valid values are: 'none', 'center', 'insideEnd', 'outsideEnd', and 'bestFit'.
+/// @param {Number} $leader-line-margin [null] - Sets the margin between a label and the end of its leader line.
+/// @param {String} $leader-line-type [null] - Sets what type of leader lines will be used for the outside end labels. Valid values are: 'straight', 'spline', and 'arc'.
+/// @param {String} $leader-line-visibility [null] - Sets whether the leader lines are visible. Valid values are: 'visible' and 'collapsed'.
+/// @param {Number} $radius-factor [null] - Sets the scaling factor of the chart's radius. Value between 0 and 1.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss
+///   $my-chart-theme: igx-pie-chart-theme($brushes: (red, orange, blue));
+///   // Pass the theme to the igx-css-vars mixin
+///   @include igx-css-vars($my-chart-theme);
+@function igx-pie-chart-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $brushes: null,
+    $outlines: null,
+    $label-extent: null,
+    $label-inner-color: null,
+    $label-outer-color: null,
+    $labels-position: null,
+    $leader-line-margin: null,
+    $leader-line-type: null,
+    $leader-line-visibility: null,
+    $radius-factor: null,
+) {
+    $name: 'pie-chart';
+    $chart-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $chart-schema: map-get($schema, $name);
+    } @else {
+        $chart-schema: $schema;
+    }
+
+    $theme: apply-palette($chart-schema, $palette);
+
+    @return extend( $theme, (
+        name: $name,
+        brushes: $brushes,
+        outlines: $outlines,
+        label-extent: $label-extent,
+        label-inner-color: $label-inner-color,
+        label-outer-color: $label-outer-color,
+        labels-position: $labels-position,
+        leader-line-margin: $leader-line-margin,
+        leader-line-type: $leader-line-type,
+        leader-line-visibility: $leader-line-visibility,
+        radius-factor: $radius-factor,
+    ));
+}
+

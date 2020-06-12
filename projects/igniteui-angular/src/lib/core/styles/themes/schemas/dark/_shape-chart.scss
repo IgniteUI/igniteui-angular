@@ -1,0 +1,26 @@
+@import '../light/shape-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark shape chart schema.
+/// @type {Map}
+/// @requires $_light-shape-chart
+/// @see $default-palette
+$_dark-shape-chart: extend($_light-shape-chart);
+
+/// Generates a dark fluent shape-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-shape-chart
+$_dark-fluent-shape-chart: extend($_fluent-shape-chart);
+
+/// Generates a dark bootstrap shape-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-shape-chart
+$_dark-bootstrap-shape-chart: extend($_bootstrap-shape-chart);
+
