@@ -1,0 +1,26 @@
+@import '../light/data-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark data chart schema.
+/// @type {Map}
+/// @requires $_light-data-chart
+/// @see $default-palette
+$_dark-data-chart: extend($_light-data-chart);
+
+/// Generates a dark fluent data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-data-chart
+$_dark-fluent-data-chart: extend($_fluent-data-chart);
+
+/// Generates a dark bootstrap data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-data-chart
+$_dark-bootstrap-data-chart: extend($_bootstrap-data-chart);
+
