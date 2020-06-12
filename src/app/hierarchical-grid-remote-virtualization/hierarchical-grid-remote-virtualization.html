@@ -8,7 +8,7 @@
     </div>
 </ng-template>
 
-<igx-hierarchical-grid #hGrid [data]="gridData" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'500px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
+<igx-hierarchical-grid #hGrid [data]="gridData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'500px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
     <igx-column field="CustomerID" [hidden]='true'></igx-column>
     <igx-column field="CompanyName" [cellTemplate]="cellTemplate"></igx-column>
     <igx-column field="ContactName" [cellTemplate]="cellTemplate"></igx-column>

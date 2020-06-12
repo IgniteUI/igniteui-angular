@@ -188,6 +188,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._totalItemCount = val;
             // update sizes in case total count changes.
             this.scrollComponent.size = this.initSizesCache(this.igxForOf);
+            this.scrollPosition = this.getScrollForIndex(this.state.startIndex);
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, PipeTransform, Pipe } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, PipeTransform, Pipe, ChangeDetectorRef } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -30,27 +30,23 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
 
     public isExpanding = false;
 
-    constructor(private remoteService: HierarchicalRemoteService) {
+    constructor(private remoteService: HierarchicalRemoteService, private cdr: ChangeDetectorRef) {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Customers?$expand=Orders';
     }
 
     public handleLoad(args) {
-        this.hGrid.isLoading = !this.isExpanding;
         this.remoteService.getData(args, this.hGrid, (data) => {
             this.gridData = data;
-            this.hGrid.isLoading = false;
-            this.isExpanding = false;
+            this.cdr.detectChanges();
         });
     }
 
     public ngAfterViewInit() {
-        this.hGrid.isLoading = true;
         // load initial data
         this.handleLoad(this.hGrid.virtualizationState);
 
         // update when row is expanded/collapsed
         this.hGrid.expansionStatesChange.subscribe(x => {
-            this.isExpanding = true;
             this.handleLoad(this.hGrid.virtualizationState);
         });
 
