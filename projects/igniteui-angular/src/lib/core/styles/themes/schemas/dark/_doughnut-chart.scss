@@ -1,0 +1,26 @@
+@import '../light/doughnut-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark doughnut chart schema.
+/// @type {Map}
+/// @requires $_light-doughnut-chart
+/// @see $default-palette
+$_dark-doughnut-chart: extend($_light-doughnut-chart);
+
+/// Generates a dark fluent doughnut-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-doughnut-chart
+$_dark-fluent-doughnut-chart: extend($_fluent-doughnut-chart);
+
+/// Generates a dark bootstrap doughnut-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-doughnut-chart
+$_dark-bootstrap-doughnut-chart: extend($_bootstrap-doughnut-chart);
+
