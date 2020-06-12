@@ -15,15 +15,16 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { IgxIconModule } from '../icon';
 import { DateRangeType } from '../core/dates/dateRange';
 import { CancelableEventArgs } from '../core/utils';
+import { DateRange } from './date-range-picker-inputs.common';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const DEBOUNCE_TIME = 16;
 const defaultIconText = 'calendar_today';
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
-const CSS_CLASS_INPUT = 'igx-input-group__input';
+const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_TOGGLE = 'igx-toggle';
+const CSS_CLASS_CALENDAR_TOGGLE = '.igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
@@ -217,6 +218,7 @@ describe('IgxDateRangePicker', () => {
             dateRange.close();
             fixture.detectChanges();
         }
+
         describe('Single Input', () => {
             let singleInputElement: DebugElement;
             configureTestSuite();
@@ -240,7 +242,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
                 calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
-                singleInputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+                singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
             }));
 
@@ -867,7 +869,7 @@ describe('IgxDateRangePicker', () => {
                     declarations: [
                         DateRangeTestComponent,
                         DateRangeDefaultComponent,
-                        DateRangeDefaultCustomLabelComponent,
+                        DateRangeCustomComponent,
                         DateRangeTemplatesComponent
                     ],
                     imports: [IgxDateRangePickerModule,
@@ -887,6 +889,7 @@ describe('IgxDateRangePicker', () => {
                 expect(inputGroup.children[0].nativeElement.innerText).toBe(defaultIconText);
                 expect(inputGroup.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
+
             it('should be able to set toggle icon', () => {
                 const prefixIconText = 'flight_takeoff';
                 const suffixIconText = 'flight_land';
@@ -921,12 +924,12 @@ describe('IgxDateRangePicker', () => {
             });
 
             it('should render aria attributes properly', fakeAsync(() => {
-                fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
                 const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_ICON}`));
                 const calendarElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR}`));
-                const singleInputElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+                const singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 startDate = new Date(2020, 1, 1);
                 endDate = new Date(2020, 1, 4);
                 const expectedLabelID = dateRange.label.id;
@@ -944,7 +947,7 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                const calendarWrapper = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR_TOGGLE}`));
+                const calendarWrapper = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_TOGGLE));
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
                 expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
 
@@ -959,14 +962,29 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
             }));
-            fit('should render custom label', () => {
-                fixture = TestBed.createComponent(DateRangeDefaultCustomLabelComponent);
-                fixture.detectChanges();
 
+            it('should render custom label', () => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
 
                 const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
                 expect(inputGroup.children[1].children[0].classes[CSS_CLASS_LABEL]).toBeTruthy();
                 expect(inputGroup.children[1].children[0].nativeElement.textContent).toEqual('Select Date');
+            });
+
+            it('should be able to apply custom format', () => {
+                fixture = TestBed.createComponent(DateRangeCustomComponent);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+                const singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
+
+                startDate = new Date(2020, 10, 8, 0, 0, 0);
+                endDate = new Date(2020, 11, 8, 0, 0, 0);
+                dateRange.selectRange(startDate, endDate);
+                fixture.detectChanges();
+
+                const result = fixture.componentInstance.formatter({start: startDate, end: endDate});
+                expect(singleInputElement.nativeElement.value).toEqual(result);
             });
         });
     });
@@ -978,7 +996,6 @@ describe('IgxDateRangePicker', () => {
 })
 export class DateRangeTestComponent implements OnInit {
     [x: string]: any;
-    public todayButtonText: string;
     public doneButtonText: string;
     public mode: InteractionMode;
     public minValue: Date | String;
@@ -988,10 +1005,17 @@ export class DateRangeTestComponent implements OnInit {
     public dateRange: IgxDateRangePickerComponent;
 
     public ngOnInit(): void {
-        this.todayButtonText = 'Today';
         this.doneButtonText = 'Done';
     }
 }
+@Component({
+    selector: 'igx-date-range-single-input-test',
+    template: `
+    <igx-date-range-picker [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
+    </igx-date-range-picker>
+    `
+})
+export class DateRangeDefaultComponent extends DateRangeTestComponent { }
 
 @Component({
     selector: 'igx-date-range-two-inputs-test',
@@ -1011,27 +1035,24 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     inputFormat: string;
     displayFormat: string;
 }
-
 @Component({
-    selector: 'igx-date-range-single-input-label-test',
+    selector: 'igx-date-range-single-input-custom-test',
     template: `
-    <igx-date-range-picker [mode]="'dropdown'">
-        <label igxLabel>Select Date</label>
-    </igx-date-range-picker>
-    `
+<igx-date-range-picker [value]="date" [mode]="'dropdown'" [formatter]="formatter">
+<label igxLabel>Select Date</label>
+</igx-date-range-picker>
+`
 })
-export class DateRangeDefaultCustomLabelComponent extends DateRangeTestComponent {
+export class DateRangeCustomComponent extends DateRangeTestComponent {
+    public date: DateRange;
+    private monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
+
+    public formatter = (date: DateRange) => {
+        const startDate = `${this.monthFormatter.format(date.start)} ${date.start.getDate()}, ${date.start.getFullYear()}`;
+        const endDate = `${this.monthFormatter.format(date.end)} ${date.end.getDate()}, ${date.end.getFullYear()}`;
+        return `You selected ${startDate}-${endDate}`;
+    }
 }
-
-@Component({
-    selector: 'igx-date-range-single-input-test',
-    template: `
-    <igx-date-range-picker [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
-    </igx-date-range-picker>
-    `
-})
-export class DateRangeDefaultComponent extends DateRangeTestComponent {}
-
 @Component({
     selector: 'igx-date-range-templates-test',
     template: `
