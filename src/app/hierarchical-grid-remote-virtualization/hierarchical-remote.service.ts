@@ -33,7 +33,7 @@ export class HierarchicalRemoteService {
 
     public getDataFromCache(data: any) {
         const startIndex = data.startIndex;
-        const endIndex = data.chunkSize + startIndex;
+        const endIndex = (data.chunkSize || 11) + startIndex;
         const dataResult = this.cachedData.slice(startIndex, endIndex);
         while(dataResult.length < data.chunkSize) {
             dataResult.push({emptyRec: true});
@@ -67,12 +67,12 @@ export class HierarchicalRemoteService {
 
                 const childRecsBeforeIndex = this.cachedData
                 .filter((x, index) => grid.isChildGridRecord(x) && index < virtualizationState.startIndex);
-                const size = virtualizationState.chunkSize || 10;
+                const size = virtualizationState.chunkSize || 11;
                 const lastChunk =  virtualizationState.startIndex + size === grid.verticalScrollContainer.totalItemCount;
                 this._updateCachedData(processedData, this.requestStartIndex + childRecsBeforeIndex.length, lastChunk);
                 const allChildRecords = this.cachedData.filter(x => grid.isChildGridRecord(x));
                 grid.verticalScrollContainer.totalItemCount = this.totalCount + allChildRecords.length;
-                const dataResult = this.cachedData.slice(virtualizationState.startIndex, virtualizationState.startIndex + size);
+                const dataResult = this.getDataFromCache(virtualizationState);
                 this._remoteData.next(dataResult);
             if (cb) {
                 cb(dataResult);
