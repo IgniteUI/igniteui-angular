@@ -1890,7 +1890,9 @@ const generalStyles = [`
             <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }">
                 Drag 3
                 <div igxDragHandle class="dragHandle"></div>
-                <div igxDragIgnore class="ignoredElem"></div>
+                <div>
+                    <div igxDragIgnore class="ignoredElem"></div>
+                </div>
             </div>
             <ng-template #ghostTemplate>
                 <div class="ghostElement">Drag Template</div>

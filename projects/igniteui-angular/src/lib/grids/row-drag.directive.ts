@@ -60,7 +60,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 return;
             }
-            this.row.dragging = true;
+            this.row.grid.dragRowID = this.row.rowID;
             this.row.grid.rowDragging = true;
             this.row.grid.markForCheck();
 
@@ -143,7 +143,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
-        this.row.dragging = false;
+        this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.markForCheck();
         this._unsubscribe();
