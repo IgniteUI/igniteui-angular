@@ -28,15 +28,18 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
     @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
+    public isExpanding = false;
+
     constructor(private remoteService: HierarchicalRemoteService) {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/Customers?$expand=Orders';
     }
 
     public handleLoad(args) {
-        this.hGrid.isLoading = true;
+        this.hGrid.isLoading = !this.isExpanding;
         this.remoteService.getData(args, this.hGrid, (data) => {
             this.gridData = data;
             this.hGrid.isLoading = false;
+            this.isExpanding = false;
         });
     }
 
@@ -47,6 +50,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
 
         // update when row is expanded/collapsed
         this.hGrid.expansionStatesChange.subscribe(x => {
+            this.isExpanding = true;
             this.handleLoad(this.hGrid.virtualizationState);
         });
 
