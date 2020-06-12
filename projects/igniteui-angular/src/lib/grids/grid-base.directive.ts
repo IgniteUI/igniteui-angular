@@ -3872,7 +3872,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnLayouts) {
             this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
-        
         // after reordering is done reset cached column collections.
         this.resetColumnCollections();
         column.resetCaches();
