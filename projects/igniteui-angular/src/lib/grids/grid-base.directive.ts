@@ -3781,7 +3781,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
         const fromIndex = columnCollection.indexOf(from);
         const childColumnsCount = from.allChildren.length;
-        
         // remove item(s) to be moved.
         const fromCollection = columnCollection.splice(fromIndex, childColumnsCount + 1);
 
@@ -3792,7 +3791,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (to.columnGroup) {
                 dropIndex += to.allChildren.length;
             }
-        }       
+        }
         columnCollection.splice(dropIndex, 0, ...fromCollection);
     }
     /**

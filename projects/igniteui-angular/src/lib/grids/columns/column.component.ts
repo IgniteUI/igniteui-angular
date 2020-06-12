@@ -1664,13 +1664,13 @@ export class IgxColumnComponent implements AfterContentInit {
 
         const targetColumn = grid._unpinnedColumns[index];
 
-        if (!hasIndex){
+        if (!hasIndex) {
             grid._unpinnedColumns.splice(index, 0, this);
             if (grid._pinnedColumns.indexOf(this) !== -1) {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
             }
         }
-  
+
 
         if (hasIndex) {
             grid.moveColumn(this, targetColumn);
