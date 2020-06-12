@@ -1,0 +1,248 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {List} $margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @param {Color} $title-alignment [null] - Sets horizontal alignment which determines the title position, relative to the left and right edges of the control.
+/// @param {Color} $title-text-color [null] - Sets the color of the chart title.
+/// @param {List} $title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @param {String} $subtitle-alignment [null] - Sets horizontal alignment which determines the subtitle position, relative to the left and right edges of the control.
+/// @param {Color} $subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @param {List} $subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @param {List} $brushes [null] - Defines the palette from which automatically assigned series colors are selected.
+/// @param {List} $marker-brushes [null] - Sets the palette of brushes used for rendering fill area of data point markers.
+/// @param {List} $outlines [null] - Sets the palette of brushes to use for outlines on the chart series.
+/// @param {List} $marker-outlines [null] - Sets the palette of brushes used for rendering outlines of data point markers.
+/// @param {Number} $thickness [null] - Sets the thickness for all series in this chart.
+/// @param {List} $trend-line-brushes [null] - Sets the palette of brushes to used for coloring trend lines in this chart.
+/// @param {Number} $trend-line-thickness [null] - Sets the thickness of the trend lines in this chart. This property applies only to these chart types: point, line, spline, and bubble.
+/// @param {List} $x-axis-label-margin [null] - Sets the margin of labels on the X-axis.
+/// @param {Color} $x-axis-label-text-color [null] - Sets color of labels on the X-axis.
+/// @param {String} $x-axis-label-vertical-alignment [null] - Sets Vertical alignment of X-axis labels.
+/// @param {Color} $x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
+/// @param {Number} $x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
+/// @param {Color} $x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
+/// @param {Number} $x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
+/// @param {Color} $x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
+/// @param {Color} $x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @param {Number} $x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
+/// @param {String} $x-axis-title-alignment [null] - Sets Horizontal alignment of the X-axis title.
+/// @param {Color} $x-axis-title-color [null] - Sets color of title on the X-axis.
+/// @param {List} $x-axis-title-margin [null] - Sets the margin around the title on the X-axis.
+/// @param {List} $y-axis-label-margin [null] - Sets the margin of labels on the Y-axis.
+/// @param {Color} $y-axis-label-text-color [null] - Sets color of labels on the Y-axis.
+/// @param {String} $y-axis-label-vertical-alignment [null] - Sets Vertical alignment of Y-axis labels.
+/// @param {Color} $y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the Y-axis.
+/// @param {Number} $y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
+/// @param {Color} $y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
+/// @param {Number} $y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
+/// @param {Color} $y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
+/// @param {Color} $y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
+/// @param {Number} $y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
+/// @param {String} $y-axis-title-alignment [null] - Sets Horizontal alignment of the Y-axis title.
+/// @param {Color} $y-axis-title-color [null] - Sets color of title on the Y-axis.
+/// @param {List} $y-axis-title-margin [null] - Sets the margin around the title on the Y-axis.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss
+///   $my-chart-theme: igx-shape-chart-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the igx-css-vars mixin
+///   @include igx-css-vars($my-chart-theme);
+@function igx-shape-chart-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $margin: null,
+    $title-text-color: null,
+    $title-margin: null,
+    $subtitle-text-color: null,
+    $subtitle-margin: null,
+    $brushes: null,
+    $outlines: null,
+    $marker-brushes: null,
+    $marker-outlines: null,
+    $thickness: null,
+    $trend-line-brushes: null,
+    $trend-line-thickness: null,
+    $x-axis-label-margin: null,
+    $x-axis-label-text-color: null,
+    $x-axis-label-vertical-alignment: null,
+    $x-axis-major-stroke: null,
+    $x-axis-major-stroke-thickness: null,
+    $x-axis-minor-stroke: null,
+    $x-axis-minor-stroke-thickness: null,
+    $x-axis-strip: null,
+    $x-axis-stroke: null,
+    $x-axis-stroke-thickness: null,
+    $x-axis-title-alignment: null,
+    $x-axis-title-color: null,
+    $x-axis-title-margin: null,
+    $y-axis-label-margin: null,
+    $y-axis-label-text-color: null,
+    $y-axis-label-vertical-alignment: null,
+    $y-axis-major-stroke: null,
+    $y-axis-major-stroke-thickness: null,
+    $y-axis-minor-stroke: null,
+    $y-axis-minor-stroke-thickness: null,
+    $y-axis-strip: null,
+    $y-axis-stroke: null,
+    $y-axis-stroke-thickness: null,
+    $y-axis-title-alignment: null,
+    $y-axis-title-color: null,
+    $y-axis-title-margin: null,
+) {
+    $name: 'shape-chart';
+    $chart-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $chart-schema: map-get($schema, $name);
+    } @else {
+        $chart-schema: $schema;
+    }
+
+    $theme: apply-palette($chart-schema, $palette);
+    $margin-default: map-get($theme, 'margin');
+    $title-margin-default: map-get($theme, 'title-margin');
+    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
+    $x-axis-label-margin-default: map-get($theme, 'x-axis-label-margin');
+    $y-axis-label-margin-default: map-get($theme, 'y-axis-label-margin');
+    $x-axis-title-margin-default: map-get($theme, 'x-axis-title-margin');
+    $y-axis-title-margin-default: map-get($theme, 'y-axis-title-margin');
+
+    @if not($margin) {
+        $margin: $margin-default;
+    } @else {
+        $margin: expand-shorthand(($margin));
+    }
+
+    @if not($title-margin) {
+        $title-margin: $title-margin-default;
+    } @else {
+        $title-margin: map-keys-prefix(expand-shorthand(($title-margin)), 'title');
+    }
+
+    @if not($subtitle-margin) {
+        $subtitle-margin: $subtitle-margin-default;
+    } @else {
+        $subtitle-margin: map-keys-prefix(expand-shorthand(($subtitle-margin)), 'subtitle');
+    }
+
+    @if not($x-axis-label-margin) {
+        $x-axis-label-margin: $x-axis-label-margin-default;
+    } @else {
+        $x-axis-label-margin: map-keys-prefix(expand-shorthand(($x-axis-label-margin)), 'x-axis-label');
+    }
+
+    @if not($y-axis-label-margin) {
+        $y-axis-label-margin: $y-axis-label-margin-default;
+    } @else {
+        $y-axis-label-margin: map-keys-prefix(expand-shorthand(($y-axis-label-margin)), 'y-axis-label');
+    }
+
+    @if not($x-axis-title-margin) {
+        $x-axis-title-margin: $x-axis-title-margin-default;
+    } @else {
+        $x-axis-title-margin: map-keys-prefix(expand-shorthand(($x-axis-title-margin)), 'x-axis-title');
+    }
+
+    @if not($y-axis-title-margin) {
+        $y-axis-title-margin: $y-axis-title-margin-default;
+    } @else {
+        $y-axis-title-margin: map-keys-prefix(expand-shorthand(($y-axis-title-margin)), 'y-axis-title');
+    }
+
+    @return extend(
+        $theme,
+        $margin,
+        $title-margin,
+        $subtitle-margin,
+        $x-axis-label-margin,
+        $x-axis-title-margin,
+        $y-axis-label-margin,
+        $y-axis-title-margin,
+        (
+            name: $name,
+            title-text-color: $title-text-color,
+            subtitle-text-color: $subtitle-text-color,
+            brushes: $brushes,
+            outlines: $outlines,
+            thickness: $thickness,
+            trend-line-brushes: $trend-line-brushes,
+            trend-line-thickness: $trend-line-thickness,
+            x-axis-label-text-color: $x-axis-label-text-color,
+            x-axis-label-vertical-alignment: $x-axis-label-vertical-alignment,
+            x-axis-major-stroke: $x-axis-major-stroke,
+            x-axis-major-stroke-thickness: $x-axis-major-stroke-thickness,
+            x-axis-minor-stroke: $x-axis-minor-stroke,
+            x-axis-minor-stroke-thickness: $x-axis-minor-stroke-thickness,
+            x-axis-strip: $x-axis-strip,
+            x-axis-stroke: $x-axis-stroke,
+            x-axis-stroke-thickness: $x-axis-stroke-thickness,
+            x-axis-title-alignment: $x-axis-title-alignment,
+            x-axis-title-color: $x-axis-title-color,
+            y-axis-label-text-color: $y-axis-label-text-color,
+            y-axis-label-vertical-alignment: $y-axis-label-vertical-alignment,
+            y-axis-major-stroke: $y-axis-major-stroke,
+            y-axis-major-stroke-thickness: $y-axis-major-stroke-thickness,
+            y-axis-minor-stroke: $y-axis-minor-stroke,
+            y-axis-minor-stroke-thickness: $y-axis-minor-stroke-thickness,
+            y-axis-strip: $y-axis-strip,
+            y-axis-stroke: $y-axis-stroke,
+            y-axis-stroke-thickness: $y-axis-stroke-thickness,
+            y-axis-title-alignment: $y-axis-title-alignment,
+            y-axis-title-color: $y-axis-title-color,
+        )
+    );
+}
+
+/// Adds typography styles for the data-chart component.
+/// Uses the 'h3', 'h4', 'h6', and 'subtitle-1'
+/// category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(
+/// 'title': 'h6',
+/// 'subtitle': 'subtitle-1,
+/// 'x-axis-label-text-style': 'h4',
+/// 'y-axis-label-text-style': 'h4',
+/// 'x-axis-title-text-style': 'h3',
+/// 'y-axis-title-text-style': 'h3',
+/// )] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-shape-chart-typography($type-scale, $categories: (
+    'title': 'h6',
+    'subtitle': 'subtitle-1',
+    'x-axis-label-text-style': 'h4',
+    'y-axis-label-text-style': 'h4',
+    'x-axis-title-text-style': 'h3',
+    'y-axis-title-text-style': 'h3',
+)) {
+    $name: 'shape-chart';
+    $title: map-get($categories, 'title');
+    $subtitle: map-get($categories, 'subtitle');
+    $x-axis-title-text-style: map-get($categories, 'x-axis-title-text-style');
+    $x-axis-label-text-style: map-get($categories, 'x-axis-label-text-style');
+    $y-axis-title-text-style: map-get($categories, 'y-axis-title-text-style');
+    $y-axis-label-text-style: map-get($categories, 'y-axis-label-text-style');
+
+    $title-styles: igx-type-scale-category($type-scale, $title);
+    $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
+    $x-axis-title-styles: igx-type-scale-category($type-scale, $x-axis-title-text-style);
+    $x-axis-label-styles: igx-type-scale-category($type-scale, $x-axis-label-text-style);
+    $y-axis-title-styles: igx-type-scale-category($type-scale, $y-axis-title-text-style);
+    $y-axis-label-styles: igx-type-scale-category($type-scale, $y-axis-label-text-style);
+
+    @include igx-font-var('title-text-style', $title-styles, $name);
+    @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+    @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+    @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+    @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
+    @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+}
+
