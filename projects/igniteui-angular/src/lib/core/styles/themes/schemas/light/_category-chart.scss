@@ -1,0 +1,232 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// Generates a light category chart schema.
+/// @type {Map}
+/// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @property {List} brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
+/// @property {List} marker-brushes [series]- Defines the palette from which automatically assigned series marker brushes colors are selected.
+/// @property {List} negative-brushes [series] - Defines the palette used for coloring negative items in a chart type with contextual coloring, such as Waterfall.
+/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @property {List} marker-outlines [series] - Defines the palette from which automatically assigned series marker outline colors are selected.
+/// @property {List} negative-outlines [series] - Defines the brushes used for drawing negative elements in a chart type with contextual coloring, such as Waterfall.
+/// @property {String} title-alignment [null] - The horizontal alignment to use for the title.
+/// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @property {Color} title-text-color [null] - Sets the color of the chart title.
+/// @property {String} title-text-style [null] - Sets the CSS font property of the chart title.
+/// @property {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @property {String} subtitle-alignment [null] - The horizontal alignment to use for the subtitle.
+/// @property {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @property {String} subtitle-text-style [null] - Sets the CSS font property of the chart subtitle.
+/// @property {Number} thickness [null] - Sets the thickness for all series in a chart.
+/// @property {List} trend-line-brushes [series] - Defines the palette of brushes used for coloring trend lines in a chart.
+/// @property {Number} trend-line-thickness [null] - Sets the thickness of the trend lines in a chart of type point, line, spline or bubble.
+/// @property {List} x-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the X-axis.
+/// @property {Color} x-axis-label-text-color [null] - Sets the color of labels on the X-axis.
+/// @property {String} x-axis-label-text-style [null] - Sets the CSS font property for labels on X-axis.
+/// @property {String} x-axis-label-vertical-alignment [null] - Sets the vertical alignment of X-axis labels.
+/// @property {Color} x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
+/// @property {Number} x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
+/// @property {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
+/// @property {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
+/// @property {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
+/// @property {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @property {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
+/// @property {Number} x-axis-tick-length [null] - Sets the length of tickmarks along the X-axis.
+/// @property {Color} x-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the X-axis.
+/// @property {Number} x-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the X-axis.
+/// @property {String} x-axis-title-alignment [null] - Sets the horizontal alignment of the X-axis title.
+/// @property {List} x-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the X-axis.
+/// @property {Color} x-axis-title-text-color [null] - Sets the color of the title on the X-axis.
+/// @property {String} x-axis-title-text-style [null] - Sets the CSS font property for the title on the X-axis.
+/// @property {List} y-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the Y-axis.
+/// @property {Color} y-axis-label-text-color [null] - Sets the color of labels on the Y-axis.
+/// @property {String} y-axis-label-text-style [null] - Sets the CSS font property for labels on Y-axis.
+/// @property {String} y-axis-label-vertical-alignment [null] - Sets the vertical alignment of Y-axis labels.
+/// @property {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the y-axis.
+/// @property {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
+/// @property {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
+/// @property {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
+/// @property {Color} y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
+/// @property {Color} y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
+/// @property {Number} y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
+/// @property {String} y-axis-title-alignment [null] - Sets the horizontal alignment of the Y-axis title.
+/// @property {List} y-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the Y-axis.
+/// @property {Color} y-axis-title-text-color [null] - Sets the color of a title on the Y-axis.
+/// @property {String} y-axis-title-text-style [null] - Sets the CSS font property for the title on the Y-axis.
+/// @property {Number} y-axis-tick-length [null] - Sets the length of tickmarks along the Y-axis.
+/// @property {Color} y-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the Y-axis.
+/// @property {Number} y-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the Y-axis.
+/// @see $default-palette
+$_light-category-chart: extend(
+    (
+        'margin': (
+            expand-shorthand: (null)
+        ),
+
+        'brushes': series,
+
+        'marker-brushes': series,
+
+        'negative-brushes': series,
+
+        'outlines': series,
+
+        'marker-outlines': series,
+
+        'negative-outlines': series,
+
+        'title-alignment': null,
+
+        'title-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'title'
+        ),
+
+        'title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'title-text-style': null,
+
+        'subtitle-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'subtitle'
+        ),
+
+        'subtitle-alignment': null,
+
+        'subtitle-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'subtitle-text-style': null,
+
+        'thickness': null,
+
+        'trend-line-brushes': series,
+
+        'trend-line-thickness': null,
+
+        'x-axis-label-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'x-axis-label'
+        ),
+
+        'x-axis-label-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'x-axis-label-text-style': null,
+
+        'x-axis-label-vertical-alignment': null,
+
+        'x-axis-major-stroke': null,
+
+        'x-axis-major-stroke-thickness': null,
+
+        'x-axis-minor-stroke': null,
+
+        'x-axis-minor-stroke-thickness': null,
+
+        'x-axis-strip': null,
+
+        'x-axis-stroke': null,
+
+        'x-axis-stroke-thickness': null,
+
+        'x-axis-tick-length': null,
+
+        'x-axis-tick-stroke': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'x-axis-tick-stroke-thickness': null,
+
+        'x-axis-title-alignment': null,
+
+        'x-axis-title-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'x-axis-title'
+        ),
+
+        'x-axis-title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'x-axis-title-text-style': null,
+
+        'y-axis-label-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'y-axis-label'
+        ),
+
+        'y-axis-label-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'y-axis-label-text-style': null,
+
+        'y-axis-label-vertical-alignment': null,
+
+        'y-axis-major-stroke': null,
+
+        'y-axis-major-stroke-thickness': null,
+
+        'y-axis-minor-stroke': null,
+
+        'y-axis-minor-stroke-thickness': null,
+
+        'y-axis-strip': null,
+
+        'y-axis-stroke': null,
+
+        'y-axis-stroke-thickness': null,
+
+        'y-axis-title-alignment': null,
+
+        'y-axis-title-margin': (
+            expand-shorthand: (null),
+            map-keys-prefix: 'y-axis-title'
+        ),
+
+        'y-axis-title-text-color': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'y-axis-title-text-style': null,
+
+        'y-axis-tick-length': null,
+
+        'y-axis-tick-stroke': (
+            igx-color: ('grays', 700),
+            hexrgba: #fff
+        ),
+
+        'y-axis-tick-stroke-thickness': null
+    )
+);
+
+/// Generates a fluent category-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-category-chart
+$_fluent-category-chart: extend($_light-category-chart);
+
+/// Generates a bootstrap category-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-category-chart
+$_bootstrap-category-chart: extend($_light-category-chart);

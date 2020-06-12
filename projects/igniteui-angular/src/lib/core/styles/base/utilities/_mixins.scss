@@ -238,12 +238,14 @@
 ///   :root {
 ///     @include css-vars-from-theme($my-theme);
 ///   }
-@mixin css-vars-from-theme($theme) {
-    $prefix: map-get($theme, 'name');
-
+@mixin css-vars-from-theme($theme, $prefix: null) {
     @each $key, $value in $theme {
         @if $key != 'name' and $key != 'palette' and type-of($value) != 'map' {
-            --#{$prefix}-#{$key}: #{$value};
+            @if $prefix {
+                --#{$prefix}-#{$key}: #{$value};
+            } @else {
+                --#{$key}: #{$value};
+            }
         }
     }
 }
@@ -269,9 +271,10 @@
 /// @requires {mixin} css-vars-from-theme
 @mixin igx-css-vars($theme) {
     $scope: if(is-root(), ':root', '&');
+    $prefix: map-get($theme, 'name');
 
     #{$scope} {
-        @include css-vars-from-theme($theme);
+        @include css-vars-from-theme($theme, $prefix);
     }
 }
 

@@ -1,0 +1,69 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light base data chart schema.
+/// @type {Map}
+/// @property {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @property {Color} title-text-color [igx-color: ('grays', 900)] - Sets the color of the chart title.
+/// @property {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @property {Color} subtitle-text-color [igx-color: ('grays', 600)] - Sets the color of the chart subtitle.
+/// @property {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @property {List} brushes [series] - Defines the palette from which automatically assigned series colors are selected.
+/// @property {List} marker-brushes [series] - Defines the palette from which automatically assigned marker brushes are selected.
+/// @property {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @property {List} marker-outlines [series] - Defines the palette from which automatically assigned marker outlines are selected.
+/// @property {Color} plot-area-background [igx-color: ('surface', 500)] - Sets the brush used as the background for the current Chart object's plot area.
+/// @property {String} title-horizontal-alignment [null] - The horizontal alignment to use for the title.
+/// @property {String} subtitle-horizontal-alignment [null] - The horizontal alignment to use for the subtitle.
+/// @see $default-palette
+$_light-data-chart: extend(
+    (
+        'margin': null,
+
+        'title-text-color': (
+            igx-color: ('grays', 900)
+        ),
+
+        'title-margin': null,
+
+        'subtitle-text-color': (
+            igx-color: ('grays', 600)
+        ),
+
+        'subtitle-margin': null,
+
+        'brushes': series,
+
+        'marker-brushes': series,
+
+        'outlines': series,
+
+        'marker-outlines': series,
+
+        'plot-area-background': (
+            igx-color: ('surface', 500)
+        ),
+
+        'title-horizontal-alignment': null,
+
+        'subtitle-horizontal-alignment': null,
+    )
+);
+
+/// Generates a fluent data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-data-chart
+$_fluent-data-chart: extend($_light-data-chart);
+
+/// Generates a bootstrap data-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-data-chart
+$_bootstrap-data-chart: extend($_light-data-chart);
+
