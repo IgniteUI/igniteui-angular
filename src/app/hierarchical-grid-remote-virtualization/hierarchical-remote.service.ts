@@ -35,7 +35,7 @@ export class HierarchicalRemoteService {
         const startIndex = data.startIndex;
         const endIndex = (data.chunkSize || 11) + startIndex;
         const dataResult = this.cachedData.slice(startIndex, endIndex);
-        while(dataResult.length < data.chunkSize) {
+        while (dataResult.length < data.chunkSize) {
             dataResult.unshift({emptyRec: true});
         }
         this._remoteData.next(dataResult);
