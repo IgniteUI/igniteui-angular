@@ -145,7 +145,7 @@ export class WorksheetFile implements IExcelFile {
         });
     }
 
-    private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, rows: string) => void) {
+    private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
         let sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
@@ -153,6 +153,7 @@ export class WorksheetFile implements IExcelFile {
         if (worksheetData.isEmpty) {
             sheetData += '<sheetData/>';
             this.dimension = 'A1';
+            done('', sheetData);
         } else {
             sheetData += '<sheetData>';
             const height =  worksheetData.options.rowHeight;

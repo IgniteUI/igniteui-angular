@@ -39,13 +39,13 @@ export class CharSeparatedValueData {
 
     public prepareDataAsync(done: (result: string) => void) {
         if (!this._data || this._data.length === 0) {
-            return '';
+            done('');
         }
 
         const keys = ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
-            return '';
+            done('');
         }
 
         this._isSpecialData = ExportUtilities.isSpecialData(this._data);
