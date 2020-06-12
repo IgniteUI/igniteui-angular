@@ -2851,12 +2851,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.notifyChanges();
-            if (this.transactions.getAggregatedChanges(false).length === 0) {
-                // Needs better check, calling 'transactions.clear()' will also trigger this
-                if (this.gridAPI.atInexistingPage()) {
-                    this.page--;
-                }
-            }
         });
 
         this.resizeNotify.pipe(destructor, filter(() => !this._init),  throttleTime(100, undefined, {leading: true, trailing: true}))
