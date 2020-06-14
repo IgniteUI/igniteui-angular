@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { IgxGridModule, IgxGridComponent } from './grid';
+import { IgxGridComponent, IgxGridModule } from './grid';
 import { Component, ViewChild } from '@angular/core';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
@@ -17,6 +17,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
+// tslint:disable:max-line-length
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
 
@@ -24,7 +25,8 @@ describe('IgxGridState - input properties #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
-                IgxGridStateWithOptionsComponent
+                IgxGridStateWithOptionsComponent,
+                IgxGridStateWithDetailsComponent
             ],
             imports: [ NoopAnimationsModule, IgxGridModule ]
         }).compileComponents();
@@ -39,7 +41,8 @@ describe('IgxGridState - input properties #grid', () => {
             groupBy: true,
             paging: true,
             cellSelection: true,
-            rowSelection: true
+            rowSelection: true,
+            expansion: true
         };
 
         const fix = TestBed.createComponent(IgxGridStateComponent);
@@ -57,10 +60,11 @@ describe('IgxGridState - input properties #grid', () => {
             filtering: false,
             advancedFiltering: true,
             sorting: false,
-            groupBy: true,
+            groupBy: false,
             paging: true,
             cellSelection: true,
-            rowSelection: true
+            rowSelection: true,
+            expansion: true
         };
 
         const fix = TestBed.createComponent(IgxGridStateWithOptionsComponent);
@@ -71,8 +75,7 @@ describe('IgxGridState - input properties #grid', () => {
     });
 
     it('getState should return corect JSON string', () => {
-        // tslint:disable-next-line:max-line-length
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true},"paging":{"index":0,"recordsPerPage":15,"metadata":{"countPages":1,"countRecords":10,"error":0}},"cellSelection":[],"rowSelection":[]}';
+        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":15,"metadata":{"countPages":1,"countRecords":10,"error":0}},"cellSelection":[],"rowSelection":[],"expansion":[],"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true}}';
         const fix = TestBed.createComponent(IgxGridStateComponent);
         fix.detectChanges();
 
@@ -137,8 +140,8 @@ describe('IgxGridState - input properties #grid', () => {
         const sorting = grid.sortingExpressions;
 
         let gridState = state.getState(false) as IGridState;
-        expect(gridState.filtering).toBeFalsy();
-        expect(gridState.sorting).toBeFalsy();
+        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
+        HelperFunctions.verifySortingExpressions(sorting, gridState);
         HelperFunctions.verifyPaging(pagingState, gridState);
 
         gridState = state.getState(false, ['filtering', 'sorting', 'paging']) as IGridState;
@@ -167,7 +170,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // tslint:disable-next-line:max-line-length
         const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"is_true"},"fieldName":"InStock","ignoreCase":true}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
 
@@ -186,7 +188,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // tslint:disable-next-line:max-line-length
         const filteringState = '{"filtering":{"filteringOperands":[{"filteringOperands":[{"condition":{"name":"true","isUnary":true,"iconName":"is_true"},"fieldName":"InStock","ignoreCase":true}],"operator":0,"fieldName":"InStock"}],"operator":0,"type":0}}';
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
         const initialState = '{"filtering":{"filteringOperands":[],"operator":0}}';
@@ -206,7 +207,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // tslint:disable-next-line:max-line-length
         const sortingState = '{"sorting":[{"fieldName":"OrderDate","dir":1,"ignoreCase":true}]}';
         const initialState = '{"sorting":[]}';
 
@@ -244,7 +244,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // tslint:disable-next-line:max-line-length
         const groupingState = '{"groupBy":{"expressions":[{"dir":1,"fieldName":"ProductID","ignoreCase":false},{"dir":1,"fieldName":"OrderDate","ignoreCase":false}],"expansion":[],"defaultExpanded":true}}';
         const initialState = '{"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true}}';
 
@@ -263,7 +262,6 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const grid  = fix.componentInstance.grid;
         const state = fix.componentInstance.state;
-        // tslint:disable-next-line:max-line-length
         const groupingState = '{"groupBy":{"expressions":[{"dir":1,"fieldName":"ProductID","ignoreCase":false},{"dir":1,"fieldName":"OrderDate","ignoreCase":false}],"expansion":[],"defaultExpanded":true}}';
         const initialState = '{"groupBy":{"expressions":[],"expansion":[],"defaultExpanded":true}}';
         const groupingStateObject = JSON.parse(groupingState) as IGridState;
@@ -283,8 +281,8 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         // tslint:disable:max-line-length
-        const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+        const columnsState = '{"columns":[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":true,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true}]}';
         // tslint:enable:max-line-length
         const columns = JSON.parse(columnsState).columns;
 
@@ -303,8 +301,8 @@ describe('IgxGridState - input properties #grid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         // tslint:disable:max-line-length
-        const columnsState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
         const initialState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true}]}';
+        const columnsState = '{"columns":[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"date","hasSummary":false,"field":"OrderDate","width":"110px","header":"Date ordered","resizable":false,"searchable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ProductID","width":"150px","header":"Product ID","resizable":true,"searchable":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"200px","header":"Prodyct Name","resizable":true,"searchable":true},{"pinned":true,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"InStock","width":"140px","header":"In Stock","resizable":true,"searchable":true}]}';
         // tslint:enable:max-line-length
         const columnsStateObject = JSON.parse(columnsState);
 
@@ -469,6 +467,26 @@ describe('IgxGridState - input properties #grid', () => {
         gridState = state.getState(true, 'advancedFiltering');
         expect(gridState).toBe(advFilteringState);
     });
+
+    it('should correctly restore expansion state from string', () => {
+        const fix = TestBed.createComponent(IgxGridStateWithDetailsComponent);
+        fix.detectChanges();
+        const grid  = fix.componentInstance.grid;
+        const state = fix.componentInstance.state;
+
+        const expansionState = '{"expansion":[[1,true],[2,true],[3,true]]}';
+        const initialState = '{"expansion":[]}';
+
+        let gridState = state.getState(true, 'expansion');
+        expect(gridState).toBe(initialState);
+
+        state.setState(expansionState);
+        fix.detectChanges();
+        gridState = state.getState(false, 'expansion');
+        HelperFunctions.verifyExpansionStates(grid.expansionStates, gridState as IGridState);
+        gridState = state.getState(true, 'expansion');
+        expect(gridState).toBe(expansionState);
+    });
 });
 
 class HelperFunctions {
@@ -529,6 +547,13 @@ class HelperFunctions {
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
             expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
+        });
+    }
+
+    public static verifyExpansionStates(expansion: Map<any, boolean>, gridState: IGridState) {
+        const gridExpansion = new Map<any, boolean>(gridState.expansion);
+        expansion.forEach((value, key, map) => {
+            expect(value).toBe(gridExpansion.get(key));
         });
     }
 }
@@ -592,7 +617,7 @@ export class IgxGridStateWithOptionsComponent {
         filtering: false,
         advancedFiltering: true,
         sorting: false,
-        groupBy: true
+        groupBy: false
     };
 
     @ViewChild('grid', { read: IgxGridComponent, static: true })
@@ -601,3 +626,24 @@ export class IgxGridStateWithOptionsComponent {
     @ViewChild(IgxGridStateDirective, { static: true })
     public state: IgxGridStateDirective;
 }
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" [paging]="true" [autoGenerate]="true" igxGridState primaryKey="ProductID">
+            <!-- Grid Detail View Template -->
+            <ng-template igxGridDetail let-dataItem>
+                <span>Detail view</span>
+            </ng-template>
+        </igx-grid>
+    `
+})
+export class IgxGridStateWithDetailsComponent {
+    public data = SampleTestData.foodProductData();
+
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+}
+// tslint:enable:max-line-length

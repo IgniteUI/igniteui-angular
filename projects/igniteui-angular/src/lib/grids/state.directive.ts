@@ -11,6 +11,7 @@ import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFiltering
 import { GridSelectionRange } from './selection/selection.service';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupingState } from '../data-operations/groupby-state.interface';
+import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
 
 export interface IGridState {
@@ -22,6 +23,15 @@ export interface IGridState {
     groupBy?: IGroupingState;
     cellSelection?: GridSelectionRange[];
     rowSelection?: any[];
+    columnSelection?: string[];
+    expansion?: any[];
+    rowIslands?: IGridStateCollection[];
+    id?: string;
+}
+
+export interface IGridStateCollection {
+    id: string;
+    state: IGridState;
 }
 
 export interface IGridStateOptions {
@@ -29,10 +39,12 @@ export interface IGridStateOptions {
     filtering?: boolean;
     advancedFiltering?: boolean;
     sorting?: boolean;
-    groupBy?: boolean;
     paging?: boolean;
     cellSelection?: boolean;
     rowSelection?: boolean;
+    expansion?: boolean;
+    groupBy?: boolean;
+    inheritance?: boolean;
 }
 
 export interface IColumnState {
@@ -57,15 +69,27 @@ export interface IColumnState {
     searchable: boolean;
 }
 
-const COLUMNS = 'columns';
-const FILTERING = 'filtering';
-const ADVANCED_FILTERING = 'advancedFiltering';
-const SORTING = 'sorting';
-const GROUPBY = 'groupBy';
-const PAGING = 'paging';
-const ROW_SELECTION = 'rowSelection';
-const CELL_SELECTION = 'cellSelection';
+export interface IFeatureStrategy {
+    getFeatureState: (key: string) => IGridState;
+    restoreFeatureState: (key, state: IGridState) => void;
+}
 
+export enum GridFeatures {
+    COLUMNS = 'columns',
+    FILTERING = 'filtering',
+    ADVANCED_FILTERING = 'advancedFiltering',
+    SORTING = 'sorting',
+    PAGING = 'paging',
+    PINNING_CONFIG = 'pinningConfig',
+    CELL_SELECTION = 'cellSelection',
+    ROW_SELECTION = 'rowSelection',
+    EXPANSION = 'expansion',
+    ROW_ISLANDS = 'rowIslands'
+}
+
+export enum FlatGridFeatures {
+    GROUP_BY = 'groupBy',
+}
 @Directive({
     selector: '[igxGridState]'
 })
@@ -76,13 +100,17 @@ export class IgxGridStateDirective {
         filtering: true,
         advancedFiltering: true,
         sorting: true,
-        groupBy: true,
         paging: true,
         cellSelection: true,
-        rowSelection: true
+        rowSelection: true,
+        expansion: true,
+        groupBy: true,
+        inheritance: true
     };
 
     private state: IGridState;
+    private currGrid: IgxGridBaseDirective;
+    private features = [];
 
     /**
      *  An object with options determining if a certain feature state should be saved.
@@ -101,49 +129,43 @@ export class IgxGridStateDirective {
 
     public set options(value: IGridStateOptions) {
         Object.assign(this._options, value);
+        if (!(this.grid instanceof IgxGridComponent)) {
+            delete this._options.groupBy;
+        } else {
+            delete this._options.inheritance;
+        }
     }
 
     /**
      * @hidden
      */
     constructor(
-        @Host() @Optional() private grid: IgxGridComponent,
+        @Host() @Optional() public grid: IgxGridBaseDirective,
         private resolver: ComponentFactoryResolver,
         protected viewRef: ViewContainerRef) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
-     * @param `serialize` determines whether the returned object will be serialized to JSON string. Default value is false.
-     * @param `feature` string or array of strings determining the features which state to retrieve. If skipped, returns all.
+     * @param `serialize` determines whether the returned object will be serialized to JSON string. Default value is true.
+     * @param `feature` string or array of strings determining the features to be added in the state. If skipped, all features are added.
      * @returns Returns the serialized to JSON string IGridState object, or the non-serialized IGridState object.
      * ```html
      * <igx-grid [igxGridState]="options"></igx-grid>
      * ```
      * ```typescript
      * @ViewChild(IgxGridStateDirective, { static: true }) public state;
-     * let state =  this.state.getState();
+     * let state = this.state.getState(); // returns string
+     * let state = this.state(false) // returns `IGridState` object
      * ```
      */
-    public getState(serialize = true, feature?: string | string[]): IGridState | string  {
+    public getState(serialize = true, features?: string | string[]): IGridState | string  {
         let state: IGridState | string;
-        if (feature) {
-            state = {};
-            if (Array.isArray(feature)) {
-                feature.forEach(f => {
-                    state = Object.assign(state, this.getGridFeature(f));
-                });
-            } else {
-                state = this.getGridFeature(feature);
-            }
-        } else {
-            state = this.getAllGridFeatures();
-        }
+        this.currGrid = this.grid;
+        this.state = state = this.buildState(features) as IGridState;
         if (serialize) {
-            state = JSON.stringify(state, this.stringifyCallback);
-            return state as string;
-        } else {
-            return state as IGridState;
+            state = JSON.stringify(state, this.stringifyCallback) as string;
         }
+        return state;
     }
 
     /**
@@ -158,24 +180,96 @@ export class IgxGridStateDirective {
      * this.state.setState(gridState);
      * ```
      */
-    public setState(state: IGridState | string) {
+    public setState(state: IGridState | string, features?: string | string[]) {
         if (typeof state === 'string') {
-            state = JSON.parse(state);
+            state = JSON.parse(state) as IGridState;
         }
-        this.state = state as IGridState;
-        this.restoreGridState();
-        this.grid.cdr.detectChanges();
+        this.currGrid = this.grid;
+        this.restoreGridState(state, features);
+        this.grid.cdr.detectChanges(); // TODO
     }
 
     /**
-     * The method that calls corresponding methods to restore feature from this.state object.
+     * Builds an IGridState object.
      */
-    private restoreGridState() {
-        for (const key of Object.keys(this.state)) {
-            if (this.state[key]) {
-                this.restoreFeature(key, this.state[key]);
+    private buildState(features?: string | string[]): IGridState {
+        this.applyFeatures(features);
+        let gridState = {} as IGridState;
+        this.features.forEach(f => {
+            f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
+            if (!(this.grid instanceof IgxGridComponent) && (f === 'groupBy' || f === 'rowPinning')) {
+                return;
             }
-        }
+            const featureState: IGridState = this.getFeatureState(f);
+            gridState = Object.assign(gridState, featureState);
+        });
+        return gridState;
+    }
+
+    /**
+     * The method that calls corresponding methods to restore features from the passed IGridState object.
+     */
+    private restoreGridState(state: IGridState, features?: string | string[]) {
+        this.applyFeatures(features);
+        this.features.forEach(f => {
+            if (this.options[f]) {
+                f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
+                const featureState = state[f];
+                if (featureState) {
+                    this.restoreFeature(f, featureState);
+                }
+            }
+        });
+    }
+
+    /**
+     * Returns an IGridState object with the state for the passed feature.
+     */
+    private getFeatureState(feature: string): IGridState {
+        const state: IGridState = {};
+        switch (feature) {
+            case GridFeatures.COLUMNS: {
+               Object.assign(state, this.getColumns());
+               break;
+            }
+            case GridFeatures.FILTERING: {
+                Object.assign(state, this.getFiltering());
+                break;
+            }
+            case GridFeatures.ADVANCED_FILTERING: {
+                Object.assign(state, this.getAdvancedFiltering());
+                break;
+            }
+            case GridFeatures.SORTING: {
+                Object.assign(state, this.getSorting());
+                break;
+             }
+             case FlatGridFeatures.GROUP_BY: {
+                Object.assign(state, this.getGroupBy());
+                break;
+             }
+             case GridFeatures.PAGING: {
+                Object.assign(state, this.getPaging());
+                break;
+              }
+              case GridFeatures.ROW_SELECTION: {
+                Object.assign(state, this.getRowSelection());
+                break;
+              }
+              case GridFeatures.CELL_SELECTION: {
+                Object.assign(state, this.getCellSelection());
+                break;
+              }
+              case GridFeatures.EXPANSION: {
+                Object.assign(state, this.getExpansion());
+                break;
+              }
+              case GridFeatures.ROW_ISLANDS: {
+                Object.assign(state, this.getRowIslands());
+                break;
+              }
+         }
+         return state;
     }
 
     /**
@@ -184,106 +278,54 @@ export class IgxGridStateDirective {
     private restoreFeature(feature: string, state: IColumnState[] | IPagingState | ISortingExpression[] |
         IGroupingState | FilteringExpressionsTree | GridSelectionRange[] | any[]) {
         switch (feature) {
-            case COLUMNS: {
+            case GridFeatures.COLUMNS: {
                this.restoreColumns(state as IColumnState[]);
                break;
             }
-            case FILTERING: {
+            case GridFeatures.FILTERING: {
                 this.restoreFiltering(state as FilteringExpressionsTree);
                 break;
             }
-            case ADVANCED_FILTERING: {
+            case GridFeatures.ADVANCED_FILTERING: {
                 this.restoreAdvancedFiltering(state as FilteringExpressionsTree);
                 break;
             }
-            case SORTING: {
+            case GridFeatures.SORTING: {
                 this.restoreSorting(state as ISortingExpression[]);
                 break;
              }
-             case GROUPBY: {
+             case FlatGridFeatures.GROUP_BY: {
                 this.restoreGroupBy(state as IGroupingState);
                 break;
              }
-             case PAGING: {
+             case GridFeatures.PAGING: {
                 this.restorePaging(state as IPagingState);
                 break;
               }
-              case ROW_SELECTION: {
+              case GridFeatures.ROW_SELECTION: {
                 this.restoreRowSelection(state as any[]);
                 break;
               }
-              case CELL_SELECTION: {
+              case GridFeatures.CELL_SELECTION: {
                 this.restoreCellSelection(state as GridSelectionRange[]);
                 break;
               }
-         }
-    }
-
-    /**
-     * Returns an object containing all grid features state.
-     */
-    private getAllGridFeatures(): IGridState {
-        let gridState: IGridState = {};
-
-        for (const key of Object.keys(this.options)) {
-            if (this.options[key]) {
-                const feature = this.getGridFeature(key);
-                gridState =  Object.assign(gridState, feature);
-            }
-        }
-
-        gridState = Object.assign({}, gridState);
-        return gridState;
-    }
-
-    /**
-     * Restores an object containing the state for a grid feature.
-     * `serialize` param determines whether the returned object will be serialized to a JSON string. Default value is false.,
-     */
-    private getGridFeature(feature: string): IGridState {
-        const state: IGridState = {};
-        switch (feature) {
-            case COLUMNS: {
-               Object.assign(state, this.getColumns());
-               break;
-            }
-            case FILTERING: {
-                Object.assign(state, this.getFiltering());
-                break;
-            }
-            case ADVANCED_FILTERING: {
-                Object.assign(state, this.getAdvancedFiltering());
-                break;
-            }
-            case SORTING: {
-                Object.assign(state, this.getSorting());
-                break;
-             }
-             case GROUPBY: {
-                Object.assign(state, this.getGroupBy());
-                break;
-             }
-             case PAGING: {
-                Object.assign(state, this.getPaging());
+              case GridFeatures.EXPANSION: {
+                this.restoreExpansion(state as string[]);
                 break;
               }
-              case ROW_SELECTION: {
-                Object.assign(state, this.getRowSelection());
-                break;
-              }
-              case CELL_SELECTION: {
-                Object.assign(state, this.getCellSelection());
+              case GridFeatures.ROW_ISLANDS: {
+                this.restoreRowIslands(state as any);
                 break;
               }
          }
-         return state;
     }
 
     /**
      * Helper method that creates a new array with the current grid columns.
      */
     private getColumns(): IGridState {
-        const gridColumns: IColumnState[] = this.grid.columns.sort(this.sortByVisibleIndex).map((c) => {
+        const gridColumns: IColumnState[] = this.currGrid.columns.map((c) => {
             return {
                 pinned: c.pinned,
                 sortable: c.sortable,
@@ -310,22 +352,22 @@ export class IgxGridStateDirective {
     }
 
     private getFiltering(): IGridState {
-        const filteringState = this.grid.filteringExpressionsTree;
+        const filteringState = this.currGrid.filteringExpressionsTree;
         return { filtering: filteringState };
     }
 
     private getAdvancedFiltering(): IGridState {
-        const advancedFiltering = this.grid.advancedFilteringExpressionsTree;
+        const advancedFiltering = this.currGrid.advancedFilteringExpressionsTree;
         return { advancedFiltering: advancedFiltering };
     }
 
     private getPaging(): IGridState {
-        const pagingState = this.grid.pagingState;
+        const pagingState = this.currGrid.pagingState;
         return { paging: pagingState };
     }
 
     private getSorting(): IGridState {
-        const sortingState = this.grid.sortingExpressions;
+        const sortingState = this.currGrid.sortingExpressions;
         sortingState.forEach(s => {
             delete s.strategy;
         });
@@ -333,26 +375,48 @@ export class IgxGridStateDirective {
     }
 
     private getGroupBy(): IGridState {
-        const groupingExpressions = this.grid.groupingExpressions;
+        const grid = this.currGrid as IgxGridComponent;
+        const groupingExpressions = grid.groupingExpressions;
         groupingExpressions.forEach(expr => {
             delete expr.strategy;
         });
-        const expansionState = this.grid.groupingExpansionState;
-        const groupsExpanded = this.grid.groupsExpanded;
+        const expansionState = grid.groupingExpansionState;
+        const groupsExpanded = grid.groupsExpanded;
 
         return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
     }
 
     private getRowSelection(): IGridState {
-        const selection = this.grid.selectedRows();
+        const selection = this.currGrid.selectedRows();
         return { rowSelection: selection };
     }
 
     private getCellSelection(): IGridState {
-        const selection = this.grid.getSelectedRanges().map(range => {
+        const selection = this.currGrid.getSelectedRanges().map(range => {
             return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
         });
         return { cellSelection: selection };
+    }
+
+    private getExpansion(): IGridState {
+        const expansionStates = Array.from(this.currGrid.expansionStates);
+        return { expansion: expansionStates };
+    }
+
+    private getRowIslands(): IGridState {
+        const childGridStates: IGridStateCollection[] = [];
+        const rowIslands = (this.currGrid as any).allLayoutList;
+        if (rowIslands) {
+            rowIslands.forEach(rowIslandComponent => {
+                this.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
+                if (this.currGrid) {
+                    const rowIslandState = this.buildState(this.features) as IGridState;
+                    childGridStates.push({ id: `${rowIslandComponent.id}`, state: rowIslandState });
+                }
+            });
+        }
+        this.currGrid = this.grid;
+        return { rowIslands: childGridStates };
     }
 
     /**
@@ -368,13 +432,8 @@ export class IgxGridStateDirective {
             newColumns.push(ref.instance);
         });
 
-        this.grid.columnList.reset(newColumns);
-        this.grid.columnList.notifyOnChanges();
-    }
-
-    private sortByVisibleIndex(colA: IgxColumnComponent, colB: IgxColumnComponent) {
-          const a = colA.visibleIndex, b = colB.visibleIndex;
-          return a > b ? 1 : a < b ? -1 : 0;
+        this.currGrid.columnList.reset(newColumns);
+        this.currGrid.columnList.notifyOnChanges();
     }
 
     /**
@@ -382,7 +441,7 @@ export class IgxGridStateDirective {
      */
     private restoreFiltering(state: FilteringExpressionsTree) {
         const filterTree = this.createExpressionsTreeFromObject(state);
-        this.grid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
+        this.currGrid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
     }
 
     /**
@@ -390,25 +449,26 @@ export class IgxGridStateDirective {
      */
     private restoreAdvancedFiltering(state: FilteringExpressionsTree) {
         const advFilterTree = this.createExpressionsTreeFromObject(state);
-        this.grid.advancedFilteringExpressionsTree = advFilterTree as FilteringExpressionsTree;
+        this.currGrid.advancedFilteringExpressionsTree = advFilterTree as FilteringExpressionsTree;
     }
 
     /**
      * Restores the grid sorting state, i.e. sets the `sortingExpressions` property value.
      */
     private restoreSorting(state: ISortingExpression[]) {
-        this.grid.sortingExpressions = state;
+        this.currGrid.sortingExpressions = state;
     }
 
     /**
      * Restores the grid grouping state, i.e. sets the `groupbyExpressions` property value.
      */
     private restoreGroupBy(state: IGroupingState) {
-        (this.grid as IgxGridComponent).groupingExpressions = state.expressions as IGroupingExpression[];
-        if ((this.grid as IgxGridComponent).groupsExpanded !== state.defaultExpanded) {
-            this.grid.toggleAllGroupRows();
+        const grid = this.currGrid as IgxGridComponent;
+        grid.groupingExpressions = state.expressions as IGroupingExpression[];
+        if (grid.groupsExpanded !== state.defaultExpanded) {
+            grid.toggleAllGroupRows();
         } else {
-            (this.grid as IgxGridComponent).groupingExpansionState = state.expansion as IGroupByExpandState[];
+            grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
         }
     }
 
@@ -416,22 +476,63 @@ export class IgxGridStateDirective {
      * Restores the grid paging state, i.e. sets the `perPage` property value and paginate to index.
      */
     private restorePaging(state: IPagingState) {
-        if (this.grid.perPage !== state.recordsPerPage) {
-            this.grid.perPage = state.recordsPerPage;
-            this.grid.cdr.detectChanges();
+        if (this.currGrid.perPage !== state.recordsPerPage) {
+            this.currGrid.perPage = state.recordsPerPage;
+            this.currGrid.cdr.detectChanges();
         }
-        this.grid.page = state.index;
+        this.currGrid.page = state.index;
     }
 
     private restoreRowSelection(state: any[]) {
-        this.grid.selectRows(state);
+        this.currGrid.selectRows(state);
     }
 
     private restoreCellSelection(state: GridSelectionRange[]) {
         state.forEach(r => {
             const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
-            this.grid.selectRange(range);
+            this.currGrid.selectRange(range);
         });
+    }
+
+    /**
+     * Restores expansion states for the grid, i.e expand/collapse rows.
+     */
+    private restoreExpansion(state: any[]) {
+        const expansionStates = new Map<any, boolean>(state);
+        this.currGrid.expansionStates = expansionStates;
+    }
+
+    /**
+     * Restores grid state for each nested grid inside an IgxHierarchicalGridComponent.
+     */
+    private restoreRowIslands(state: IGridStateCollection[]) {
+        const rowIslands = (this.currGrid as any).allLayoutList;
+        if (rowIslands) {
+            rowIslands.forEach(rowIslandComponent => {
+                this.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
+                const rowIslandState = state.find(st => st.id === rowIslandComponent.id);
+                if (rowIslandState && this.currGrid) {
+                    this.restoreGridState(rowIslandState.state, this.features);
+                }
+            });
+        }
+        this.currGrid = this.grid;
+    }
+
+    /**
+     * Returns a collection of all grid features.
+     */
+    private applyFeatures(features?: string | string[]) {
+        this.features = [];
+        if (!features) {
+            for (const feature of Object.keys(this.options)) {
+                this.features.push(feature);
+            }
+        } else if (Array.isArray(features)) {
+            this.features = [...features as string[]];
+        } else {
+            this.features.push(features);
+        }
     }
 
     /**
@@ -452,10 +553,10 @@ export class IgxGridStateDirective {
             } else {
                 const expr = item as IFilteringExpression;
                 let dataType: string;
-                if (this.grid.columnList.length > 0) {
-                    dataType = this.grid.columnList.find(c => c.field === expr.fieldName).dataType;
+                if (this.currGrid.columnList.length > 0) {
+                    dataType = this.currGrid.columnList.find(c => c.field === expr.fieldName).dataType;
                 } else {
-                    dataType = this.state[COLUMNS].find(c => c.field === expr.fieldName).dataType;
+                    dataType = this.state.columns.find(c => c.field === expr.fieldName).dataType;
                 }
                 // when ESF, values are stored in Set.
                 // First those values are converted to an array before returning string in the stringifyCallback
