@@ -80,7 +80,6 @@ export enum GridFeatures {
     ADVANCED_FILTERING = 'advancedFiltering',
     SORTING = 'sorting',
     PAGING = 'paging',
-    PINNING_CONFIG = 'pinningConfig',
     CELL_SELECTION = 'cellSelection',
     ROW_SELECTION = 'rowSelection',
     EXPANSION = 'expansion',

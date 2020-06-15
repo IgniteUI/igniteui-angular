@@ -46,11 +46,9 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     { key: GridFeatures.ADVANCED_FILTERING, shortName: 'Adv Filt' },
     { key: GridFeatures.CELL_SELECTION, shortName: 'Cell Sel' },
     { key: GridFeatures.COLUMNS, shortName: 'Columns' } ,
-    { key: GridFeatures.COLUMN_SELECTION, shortName: 'Cols Sel' },
     { key: GridFeatures.EXPANSION, shortName: 'Expansion' },
     { key: GridFeatures.FILTERING, shortName: 'Filt' },
     { key: GridFeatures.PAGING, shortName: 'Paging' },
-    { key: GridFeatures.ROW_PINNING, shortName: 'Row Pining' },
     { key: GridFeatures.ROW_SELECTION, shortName: 'Row Sel' },
     { key: GridFeatures.SORTING, shortName: 'Sorting' },
     { key: FlatGridFeatures.GROUP_BY, shortName: 'GroupBy'}
@@ -59,15 +57,13 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public options: IGridStateOptions = {
     cellSelection: true,
     rowSelection: true,
-    columnSelection: true,
     filtering: true,
     advancedFiltering: true,
     paging: true,
     sorting: true,
     groupBy: true,
     columns: true,
-    expansion: true,
-    rowPinning: true
+    expansion: true
   };
 
   @ViewChild(IgxExpansionPanelComponent, { static: true }) public igxExpansionPanel: IgxExpansionPanelComponent;
