@@ -3,9 +3,16 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 10.0
+
 ### General
 - `igx-select`, `igx-combo`, `igx-dropdown`
 - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+
+## 9.1.1
+
+### General
+- `IgxHierarchicalGrid`
+    - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
 
 ## 9.1.0
 

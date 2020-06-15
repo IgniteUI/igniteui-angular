@@ -32,7 +32,7 @@ import {
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { InteractionMode } from '../core/enums';
@@ -41,8 +41,8 @@ import { IToggleView } from '../core/navigation';
 import { CancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/index';
-import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/index';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
+import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/public_api';
 import {
     DateRange,
     IgxDateRangeEndComponent,
@@ -51,8 +51,6 @@ import {
     IgxDateRangeStartComponent,
     IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
-
-
 
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
@@ -417,12 +415,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _value: DateRange;
     private _collapsed = true;
     private _ngControl: NgControl;
-    private _statusChanges$: Subscription;
     private $destroy = new Subject();
+    private _statusChanges$: Subscription;
+    private $toggleClickNotifier = new Subject();
     private _minValue: Date | string;
     private _maxValue: Date | string;
-    private $toggleClickNotifier = new Subject();
     private _positionSettings: PositionSettings;
+    private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true
@@ -622,6 +621,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
+        this.cacheFocusedInput();
         this.attachOnTouched();
 
         const subsToClicked = () => {
@@ -638,8 +638,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
-        this.initialSetValue();
-        this.updateInputs();
+
+        // delay the invocation of initialSetValue
+        // until the current change detection cycle has completed
+        Promise.resolve().then(() => {
+            this.initialSetValue();
+            this.updateInputs();
+        });
     }
 
     /** @hidden @internal */
@@ -685,7 +690,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.updateValidityOnBlur();
         } else {
             // input click
-            this.focusInput();
+            if (this.hasProjectedInputs && this._focusedInput) {
+                this._focusedInput.setFocus();
+                this._focusedInput = null;
+            }
+            if (this.inputDirective) {
+                this.inputDirective.focus();
+            }
         }
     }
 
@@ -709,15 +720,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                     this.inputDirective.valid = IgxInputState.INITIAL;
                 }
             }
-        }
-    }
-
-    private focusInput() {
-        // TODO: should we always focus start input?
-        (this.projectedInputs
-            .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
-        if (this.inputDirective) {
-            this.inputDirective.focus();
         }
     }
 
@@ -898,6 +900,16 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
     }
 
+    private cacheFocusedInput(): void {
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach(i => {
+                fromEvent(i.dateTimeEditor.nativeElement, 'focus')
+                    .pipe(takeUntil(this.$destroy))
+                    .subscribe(() => this._focusedInput = i);
+            });
+        }
+    }
+
     private configPositionStrategy(): void {
         this._positionSettings = {
             openAnimation: fadeIn,
@@ -915,13 +927,15 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private initialSetValue() {
-        // if there is no value, no ngControl but we have inputs we may have value set trough
-        // inputs' ngModels - we should generate our initial control value
-        if (!this.value && this.hasProjectedInputs && !this._ngControl) {
-            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent).dateTimeEditor.value;
-            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent).dateTimeEditor.value;
-            this.updateValue({ start, end });
-
+        // if there is no value and no ngControl on the picker but we have inputs we may have value set through
+        // their ngModels - we should generate our initial control value
+        if ((!this.value || (!this.value.start && !this.value.end)) && this.hasProjectedInputs && !this._ngControl) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent);
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
+            this._value = {
+                start: start.dateTimeEditor.value,
+                end: end.dateTimeEditor.value
+            };
         }
     }
 

@@ -1,10 +1,10 @@
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, Host, Optional, Injector
+  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NgControl, NG_VALUE_ACCESSOR,
+  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { formatDate, DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
@@ -569,8 +569,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return date && date.getTime && !isNaN(date.getTime());
   }
 
-    // TODO: move parseDate to utils
-    public parseDate(val: string): Date | null {
+  // TODO: move parseDate to utils
+  public parseDate(val: string): Date | null {
     if (!val) { return null; }
     return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }

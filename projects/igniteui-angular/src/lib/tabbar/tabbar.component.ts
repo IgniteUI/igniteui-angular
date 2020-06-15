@@ -21,7 +21,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { IgxBadgeModule } from '../badge/badge.component';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IBaseEventArgs } from '../core/utils';
 import { Subscription } from 'rxjs';
 
