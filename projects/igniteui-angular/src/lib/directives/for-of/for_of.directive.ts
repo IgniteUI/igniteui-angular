@@ -187,8 +187,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this._totalItemCount !== val) {
             this._totalItemCount = val;
             // update sizes in case total count changes.
-            this.scrollComponent.size = this.initSizesCache(this.igxForOf);
-            this.scrollPosition = this.getScrollForIndex(this.state.startIndex);
+            const newSize = this.initSizesCache(this.igxForOf);
+            const sizeDiff = this.scrollComponent.size - newSize;
+            this.scrollComponent.size = newSize;
+
+            this._adjustScrollPositionAfterSizeChange(sizeDiff);
         }
     }
 
@@ -1130,10 +1133,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const newHeight = this.initSizesCache(this.igxForOf);
 
         const diff = oldHeight - newHeight;
+        this._adjustScrollPositionAfterSizeChange(diff);
+    }
 
+    private _adjustScrollPositionAfterSizeChange(sizeDiff) {
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && this.scrollPosition > 0) {
+        if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
             const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
             this.scrollPosition = this.sizesCache[this.state.startIndex] - offset;
