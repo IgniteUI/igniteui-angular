@@ -14,15 +14,22 @@
 @import './calendar';
 @import './card';
 @import './carousel';
+@import './category-chart';
 @import './checkbox';
 @import './chip';
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './data-chart';
+@import './doughnut-chart';
+@import './funnel-chart';
 @import './date-range-picker';
 @import './divider';
 @import './drop-down';
 @import './expansion-panel';
+@import './gauge';
+@import './financial-chart';
+@import './graph';
 @import './grid';
 @import './grid-filtering';
 @import './pagination';
@@ -34,13 +41,17 @@
 @import './list';
 @import './navbar';
 @import './navdrawer';
+@import './geo-map';
 @import './overlay';
+@import './pie-chart';
 @import './progress';
 @import './radio';
 @import './ripple';
 @import './scrollbar';
+@import './shape-chart';
 @import './slider';
 @import './snackbar';
+@import './sparkline';
 @import './splitter';
 @import './switch';
 @import './tabs';
@@ -61,6 +72,10 @@
 /// @property {Map} igx-calendar [$_light-calendar]
 /// @property {Map} igx-card [$_light-card]
 /// @property {Map} igx-carousel [$_light-carousel]
+/// @property {Map} category-chart [$_light-category-chart]
+/// @property {Map} data-chart [$_light-data-chart]
+/// @property {Map} doughnut-chart [$_light-dough-chart]
+/// @property {Map} funnel-chart [$_light-funnel-chart]
 /// @property {Map} igx-checkbox [$_light-checkbox]
 /// @property {Map} igx-chip [$_light-chip]
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
@@ -70,6 +85,10 @@
 /// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
+/// @property {Map} linear-gauge [$_light-linear-gauge]
+/// @property {Map} radial-gauge [$_light-radial-gauge]
+/// @property {Map} financial-chart [$_light-financial-chart]
+/// @property {Map} bullet-graph [$_light-graph]
 /// @property {Map} igx-grid [$_light-grid]
 /// @property {Map} igx-grid-filtering [$_light-grid-filtering]
 /// @property {Map} igx-paginator [$_light-pagination]
@@ -79,16 +98,20 @@
 /// @property {Map} igx-icon [$_light-icon]
 /// @property {Map} igx-input-group [$_light-input-group]
 /// @property {Map} igx-list [$_light-list]
+/// @property {Map} geo-map [$_light-geo-map]
 /// @property {Map} igx-navbar [$_light-navbar]
 /// @property {Map} igx-navdrawer [$_light-navdrawer]
 /// @property {Map} igx-overlay [$_light-overlay]
+/// @property {Map} pie-chart [$_light-pie-chart]
 /// @property {Map} igx-progress-linear [$_light-progress-linear]
 /// @property {Map} igx-progress-circular [$_light-progress-circular]
 /// @property {Map} igx-radio [$_light-radio]
 /// @property {Map} igx-ripple [$_light-ripple]
 /// @property {Map} igx-scrollbar [$_light-scrollbar]
+/// @property {Map} shape-chart [$_light-shape-chart]
 /// @property {Map} igx-slider [$_light-slider]
 /// @property {Map} igx-snackbar [$_light-snackbar]
+/// @property {Map} sparkline [$_light-sparkline]
 /// @property {Map} igx-splitter [$_light-splitter]
 /// @property {Map} igx-switch [$_light-switch]
 /// @property {Map} igx-tabs [$_light-tabs]
@@ -106,6 +129,10 @@ $light-schema: (
     igx-calendar: $_light-calendar,
     igx-card: $_light-card,
     igx-carousel: $_light-carousel,
+    category-chart: $_light-category-chart,
+    data-chart: $_light-data-chart,
+    doughnut-chart: $_light-doughnut-chart,
+    funnel-chart: $_light-funnel-chart,
     igx-checkbox: $_light-checkbox,
     igx-chip: $_light-chip,
     igx-column-hiding: $_light-column-hiding,
@@ -115,6 +142,10 @@ $light-schema: (
     igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
+    linear-gauge: $_light-linear-gauge,
+    radial-gauge: $_light-radial-gauge,
+    financial-chart: $_light-financial-chart,
+    bullet-graph: $_light-graph,
     igx-grid: $_light-grid,
     igx-grid-filtering: $_light-grid-filtering,
     igx-paginator: $_light-pagination,
@@ -124,16 +155,20 @@ $light-schema: (
     igx-icon: $_light-icon,
     igx-input-group: $_light-input-group,
     igx-list: $_light-list,
+    geo-map: $_light-geo-map,
     igx-navbar: $_light-navbar,
     igx-navdrawer: $_light-navdrawer,
     igx-overlay: $_light-overlay,
     igx-linear-bar: $_light-progress-linear,
     igx-circular-bar: $_light-progress-circular,
+    pie-chart: $_light-pie-chart,
     igx-radio: $_light-radio,
     igx-ripple: $_light-ripple,
+    shape-chart: $_light-shape-chart,
     igx-scrollbar: $_light-scrollbar,
     igx-slider: $_light-slider,
     igx-snackbar: $_light-snackbar,
+    sparkline: $_light-sparkline,
     igx-splitter: $_light-splitter,
     igx-switch: $_light-switch,
     igx-tabs: $_light-tabs,
@@ -154,15 +189,23 @@ $light-fluent-schema: (
     igx-calendar: $_fluent-calendar,
     igx-card: $_fluent-card,
     igx-carousel: $_fluent-carousel,
+    category-chart: $_fluent-category-chart,
     igx-checkbox: $_fluent-checkbox,
     igx-chip: $_fluent-chip,
     igx-column-hiding: $_fluent-column-hiding,
     igx-combo: $_fluent-combo,
     igx-dialog: $_fluent-dialog,
+    data-chart: $_fluent-data-chart,
+    doughnut-chart: $_fluent-doughnut-chart,
+    funnel-chart: $_fluent-funnel-chart,
     igx-date-range: $_fluent-date-range-picker,
     igx-divider: $_fluent-divider,
     igx-drop-down: $_fluent-drop-down,
     igx-expansion-panel: $_fluent-expansion-panel,
+    linear-gauge: $_fluent-linear-gauge,
+    radial-gauge: $_fluent-radial-gauge,
+    financial-chart: $_fluent-financial-chart,
+    bullet-graph: $_fluent-graph,
     igx-grid: $_fluent-grid,
     igx-grid-filtering: $_fluent-grid-filtering,
     igx-paginator: $_fluent-pagination,
@@ -172,16 +215,20 @@ $light-fluent-schema: (
     igx-icon: $_fluent-icon,
     igx-input-group: $_fluent-input-group,
     igx-list: $_fluent-list,
+    geo-map: $_fluent-geo-map,
     igx-navbar: $_fluent-navbar,
     igx-navdrawer: $_fluent-navdrawer,
     igx-overlay: $_fluent-overlay,
     igx-linear-bar: $_fluent-progress-linear,
     igx-circular-bar: $_fluent-progress-circular,
+    pie-chart: $_fluent-pie-chart,
     igx-radio: $_fluent-radio,
     igx-ripple: $_fluent-ripple,
+    shape-chart: $_fluent-shape-chart,
     igx-scrollbar: $_fluent-scrollbar,
     igx-slider: $_fluent-slider,
     igx-snackbar: $_fluent-snackbar,
+    sparkline: $_fluent-sparkline,
     igx-splitter: $_fluent-splitter,
     igx-switch: $_fluent-switch,
     igx-tabs: $_fluent-tabs,
@@ -202,15 +249,23 @@ $light-bootstrap-schema: (
     igx-calendar: $_bootstrap-calendar,
     igx-card: $_bootstrap-card,
     igx-carousel: $_bootstrap-carousel,
+    category-chart: $_bootstrap-category-chart,
     igx-checkbox: $_bootstrap-checkbox,
     igx-chip: $_bootstrap-chip,
     igx-column-hiding: $_bootstrap-column-hiding,
     igx-combo: $_bootstrap-combo,
     igx-dialog: $_bootstrap-dialog,
+    data-chart: $_bootstrap-data-chart,
+    doughnut-chart: $_bootstrap-doughnut-chart,
+    funnel-chart: $_bootstrap-funnel-chart,
     igx-date-range: $_bootstrap-date-range-picker,
     igx-divider: $_bootstrap-divider,
     igx-drop-down: $_bootstrap-drop-down,
     igx-expansion-panel: $_bootstrap-expansion-panel,
+    linear-gauge: $_bootstrap-linear-gauge,
+    radial-gauge: $_bootstrap-radial-gauge,
+    financial-chart: $_bootstrap-financial-chart,
+    bullet-graph: $_bootstrap-graph,
     igx-grid: $_bootstrap-grid,
     igx-grid-filtering: $_bootstrap-grid-filtering,
     igx-paginator: $_bootstrap-pagination,
@@ -220,16 +275,20 @@ $light-bootstrap-schema: (
     igx-icon: $_bootstrap-icon,
     igx-input-group: $_bootstrap-input-group,
     igx-list: $_bootstrap-list,
+    geo-map: $_bootstrap-geo-map,
     igx-navbar: $_bootstrap-navbar,
     igx-navdrawer: $_bootstrap-navdrawer,
     igx-overlay: $_bootstrap-overlay,
     igx-linear-bar: $_bootstrap-progress-linear,
     igx-circular-bar: $_bootstrap-progress-circular,
+    pie-chart: $_bootstrap-pie-chart,
     igx-radio: $_bootstrap-radio,
     igx-ripple: $_bootstrap-ripple,
+    shape-chart: $_bootstrap-shape-chart,
     igx-scrollbar: $_bootstrap-scrollbar,
     igx-slider: $_bootstrap-slider,
     igx-snackbar: $_bootstrap-snackbar,
+    sparkline: $_bootstrap-sparkline,
     igx-splitter: $_bootstrap-splitter,
     igx-switch: $_bootstrap-switch,
     igx-tabs: $_bootstrap-tabs,
