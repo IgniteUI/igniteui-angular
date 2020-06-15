@@ -28,7 +28,7 @@ import {
     Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, combineLatest, pipe } from 'rxjs';
+import { Subject, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -2495,11 +2495,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                if (this.rowEditable) {
+                    this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+                }
             });
-
-            if (this.rowEditable) {
-                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
-            }
         });
         this.disableTransitions = false;
 
@@ -2640,12 +2639,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.notifyChanges();
-            if (this.transactions.getAggregatedChanges(false).length === 0) {
-                // Needs better check, calling 'transactions.clear()' will also trigger this
-                if (this.gridAPI.atInexistingPage()) {
-                    this.page--;
-                }
-            }
         });
 
         this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100))
@@ -2820,6 +2813,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngAfterContentInit() {
         this.setupColumns();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public setFilteredSortedData(data) {
+        this._filteredSortedData = data;
+        this.refreshSearch(true, false);
     }
 
     /**
@@ -4025,7 +4027,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param updateActiveInfo
     */
-    public refreshSearch(updateActiveInfo?: boolean): number {
+    public refreshSearch(updateActiveInfo?: boolean, endEdit = true): number {
         if (this.lastSearchInfo.searchText) {
             this.rebuildMatchCache();
 
@@ -4040,7 +4042,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             }
 
-            return this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
+            return this.find(this.lastSearchInfo.searchText,
+                0,
+                this.lastSearchInfo.caseSensitive,
+                this.lastSearchInfo.exactMatch,
+                false,
+                endEdit);
         } else {
             return 0;
         }
@@ -4298,9 +4305,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getPagingHeight(): number {
+    protected getPagingFooterHeight(): number {
         let pagingHeight = 0;
-        if (this.paging && this.footer) {
+        if (this.footer) {
             pagingHeight = this.footer.nativeElement.firstElementChild ?
                 this.footer.nativeElement.offsetHeight : 0;
         }
@@ -4331,7 +4338,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                                  this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
-        const pagingHeight = this.getPagingHeight();
+        const pagingHeight = this.getPagingFooterHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
@@ -5067,15 +5074,17 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         const selectedData = [];
         const activeEl = this.selectionService.activeElement;
-
-        const selectionMap = Array.from(this.selectionService.selection)
-            .filter((tuple) => tuple[0] < source.length);
+        const totalItems = (this as any).totalItemCount ?? 0;
+        const isRemote = totalItems && totalItems > this.dataView.length;
+        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+            Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
         }
 
-        for (const [row, set] of selectionMap) {
+        for (let [row, set] of selectionMap) {
+            row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
@@ -5355,12 +5364,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return col.field + col._calcWidth;
     }
 
-    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
+    private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean, endEdit = true) {
         if (!this.rowList) {
             return 0;
         }
 
-        this.endEdit(false);
+        if (endEdit) {
+            this.endEdit(false);
+        }
 
         if (!text) {
             this.clearSearch();
@@ -5435,10 +5446,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
-    }
-    set filteredSortedData(value: any[]) {
-        this._filteredSortedData = value;
-        this.refreshSearch(true);
     }
 
     /**

@@ -540,10 +540,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return false;
     }
 
-    public atInexistingPage(): boolean {
-        return this.grid.totalPages - 1 > this.grid.page;
-    }
-
     public get_row_expansion_state(record: any): boolean {
         const grid = this.grid;
         const states = grid.expansionStates;
