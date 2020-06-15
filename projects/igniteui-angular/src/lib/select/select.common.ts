@@ -1,6 +1,6 @@
-import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from '../drop-down';
-import { OverlaySettings } from '../services';
-import { IgxInputDirective } from '../input-group';
+import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from '../drop-down/public_api';
+import { OverlaySettings } from '../services/public_api';
+import { IgxInputDirective } from '../input-group/public_api';
 
 /** @hidden @internal */
 export interface IgxSelectBase extends IgxDropDownBaseDirective {

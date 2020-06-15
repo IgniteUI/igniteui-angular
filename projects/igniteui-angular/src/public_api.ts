@@ -29,7 +29,7 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip/tooltip.directive';
-export * from './lib/directives/date-time-editor/index';
+export * from './lib/directives/date-time-editor/public_api';
 
 /**
  * Data operations
@@ -52,57 +52,57 @@ export * from './lib/data-operations/data-util';
 /**
  * Components
  */
-export * from './lib/action-strip/index';
+export * from './lib/action-strip/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/banner.component';
 export * from './lib/buttonGroup/buttonGroup.component';
-export * from './lib/calendar/index';
+export * from './lib/calendar/public_api';
 export * from './lib/card/card.component';
 export * from './lib/carousel/carousel.component';
 export * from './lib/checkbox/checkbox.component';
-export * from './lib/chips/index';
-export * from './lib/combo/index';
+export * from './lib/chips/public_api';
+export * from './lib/combo/public_api';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
-export * from './lib/drop-down/index';
+export * from './lib/drop-down/public_api';
 export * from './lib/grids/hiding/hiding.module';
 export * from './lib/grids/common/enums';
 export * from './lib/grids/common/events';
-export * from './lib/grids/grid/index';
-export * from './lib/grids/tree-grid/index';
-export * from './lib/grids/hierarchical-grid/index';
+export * from './lib/grids/grid/public_api';
+export * from './lib/grids/tree-grid/public_api';
+export * from './lib/grids/hierarchical-grid/public_api';
 export * from './lib/grids/columns/templates.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';
 export * from './lib/grids/columns/column-layout.component';
-export * from './lib/icon/index';
-export * from './lib/input-group/index';
-export * from './lib/list/index';
-export * from './lib/expansion-panel/index';
+export * from './lib/icon/public_api';
+export * from './lib/input-group/public_api';
+export * from './lib/list/public_api';
+export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/navbar.component';
-export * from './lib/navigation-drawer/index';
+export * from './lib/navigation-drawer/public_api';
 export * from './lib/paginator/paginator.component';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
-export * from './lib/slider/index';
+export * from './lib/slider/public_api';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
-export * from './lib/tabs/index';
+export * from './lib/tabs/public_api';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
-export * from './lib/select/index';
+export * from './lib/select/public_api';
 export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
-export * from './lib/date-range-picker/index';
+export * from './lib/date-range-picker/public_api';
 
 
 /**
  * Exporter services, classes, interfaces and enums
  */
-export * from './lib/services/index';
+export * from './lib/services/public_api';
 export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/utils';
