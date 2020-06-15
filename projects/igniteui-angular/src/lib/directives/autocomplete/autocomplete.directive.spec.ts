@@ -592,6 +592,31 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
+        it('Should trigger onItemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
+            spyOn(autocomplete.onItemSelected, 'emit').and.callThrough();
+
+            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
+            UIInteractions.setInputElementValue(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            expect(fixture.componentInstance.townSelected).toBe('s');
+            tick();
+            fixture.detectChanges();
+            expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(1);
+            expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
+
+            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
+            UIInteractions.setInputElementValue(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            expect(fixture.componentInstance.townSelected).toBe('s');
+            tick();
+            fixture.detectChanges();
+            expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(2);
+            expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
+        }));
         it('Should call onInput/open/close methods properly', fakeAsync(() => {
             let startsWith = 'g';
             spyOn(autocomplete, 'onInput').and.callThrough();

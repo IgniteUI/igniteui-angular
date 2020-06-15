@@ -233,3 +233,29 @@
     }
     @content;
 }
+
+/// Transforms a type style map into a font style rule assigned to a css variable.
+/// @param {String} $name - The custom CSS variable name.
+/// @param {Map} $type-style - A type style map reference as produces by igx-type-style.
+/// @param {String} $prefix [null] - Optional prefix.
+/// @example scss Assign the `h1` styles to custom CSS property using the CSS font shorthand syntax.
+///   $h1-style: igx-type-scale-category($type-scale, 'h1');
+///   @include igx-font-var('h1-font', $h1-style);
+@mixin igx-font-var($name, $type-style, $prefix: null) {
+    $fs: map-get($type-style, 'font-style');
+    $fz: map-get($type-style, 'font-size');
+    $fw: map-get($type-style, 'font-weight');
+    $lh: map-get($type-style, 'line-height');
+
+    // unused for now
+    $tt: map-get($type-style, 'text-transform');
+    $ls: map-get($type-style, 'letter-spacing');
+    $mt: map-get($type-style, 'margin-top');
+    $mb: map-get($type-style, 'margin-bottom');
+
+    @include igx-css-vars((
+        'name': $prefix,
+        #{$name}: #{$fs $fw $fz}/#{$lh} inherit,
+    ));
+}
+
