@@ -149,10 +149,11 @@ import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { isNumber } from 'util';
+import { showMessage } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
-
+let warningShown = false;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
@@ -3816,6 +3817,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         let position = pos;
         if (position === DropPosition.None) {
+            warningShown = showMessage(
+                'DropPosition.None is deprecated.' +
+                'Use DropPosition.AfterDropTarget instead.',
+                warningShown);
             position =  DropPosition.AfterDropTarget;
         }
         if ((column.level !== dropTarget.level) ||
