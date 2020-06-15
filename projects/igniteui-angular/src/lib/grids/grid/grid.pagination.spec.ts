@@ -1,5 +1,5 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { GridWithUndefinedDataComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -140,6 +140,24 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(4);
             verifyGridPager(fix, 3, '1', '1\xA0of\xA04', []);
         });
+
+        it('should be able to set totalRecords', () => {
+            grid.perPage = 5;
+            fix.detectChanges();
+
+            expect(grid.paging).toBeTruthy();
+            expect(grid.perPage).toEqual(5, 'Invalid page size');
+            expect(grid.totalRecords).toBe(10);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', []);
+
+            grid.totalRecords = 4;
+            fix.detectChanges();
+
+            expect(grid.perPage).toEqual(5, 'Invalid page size');
+            expect(grid.totalRecords).toBe(4);
+            verifyGridPager(fix, 4, '1', '1\xA0of\xA01', []);
+        });
+
 
         it('change paging settings UI', () => {
 

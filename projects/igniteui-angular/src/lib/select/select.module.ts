@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IgxIconModule } from '../icon/index';
-import { IgxDropDownModule } from './../drop-down/index';
+import { IgxIconModule } from '../icon/public_api';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from './../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
@@ -15,14 +15,35 @@ import { IgxSelectGroupComponent } from './select-group.component';
 
 /** @hidden */
 @NgModule({
-    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective,
-        IgxSelectToggleIconDirective, IgxSelectGroupComponent, IgxSelectHeaderDirective,
-        IgxSelectFooterDirective],
-    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective,
-         IgxSelectToggleIconDirective, IgxSelectGroupComponent, IgxSelectHeaderDirective,
-         IgxSelectFooterDirective],
-    imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
+    declarations: [
+        IgxSelectComponent,
+        IgxSelectFooterDirective,
+        IgxSelectGroupComponent,
+        IgxSelectHeaderDirective,
+        IgxSelectItemComponent,
+        IgxSelectItemNavigationDirective,
+        IgxSelectToggleIconDirective
+    ],
+    exports: [
+        IgxSelectComponent,
+        IgxSelectFooterDirective,
+        IgxSelectGroupComponent,
+        IgxSelectHeaderDirective,
+        IgxSelectItemComponent,
+        IgxSelectItemNavigationDirective,
+        IgxSelectToggleIconDirective
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IgxButtonModule,
+        IgxDropDownModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxRippleModule,
+        IgxToggleModule,
+        ReactiveFormsModule
+    ],
     providers: []
 })
 export class IgxSelectModule { }

@@ -6,7 +6,7 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverl
 import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy, HorizontalAlignment
-} from '../../services';
+} from '../../services/public_api';
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';

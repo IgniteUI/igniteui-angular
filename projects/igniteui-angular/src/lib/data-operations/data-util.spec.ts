@@ -22,7 +22,7 @@ import {
 } from './filtering-condition';
 import { IPagingState, PagingError } from './paging-state.interface';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
+import { Transaction, TransactionType, HierarchicalTransaction } from '../services/public_api';
 import { group } from '@angular/animations';
 
 /* Test sorting */

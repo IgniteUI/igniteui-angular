@@ -19,7 +19,7 @@ import {
     IgxExcelExporterOptions,
     IgxExcelExporterService,
     AbsoluteScrollStrategy
-} from '../../services/index';
+} from '../../services/public_api';
 import { GridBaseAPIService } from '../api.service';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxGridBaseDirective } from '../grid-base.directive';
