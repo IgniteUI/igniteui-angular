@@ -3811,6 +3811,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
+        if (column === dropTarget) {
+            return;
+        }
         let position = pos;
         if (position === DropPosition.None) {
             position =  DropPosition.AfterDropTarget;
