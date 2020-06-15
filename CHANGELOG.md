@@ -5,7 +5,7 @@ All notable changes for each version of this project will be documented in this 
 ## 10.0
 
 ### General
-- `igx-select`, `igx-combo`, `igx-dropdown`
+- `igx-select`, `igx-combo`, `igx-drop-down`
 - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
 
 ## 9.1.1
