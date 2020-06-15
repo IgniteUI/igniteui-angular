@@ -2611,6 +2611,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
+    public paginatorSettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        outlet: this.outletDirective
+    };
+
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
