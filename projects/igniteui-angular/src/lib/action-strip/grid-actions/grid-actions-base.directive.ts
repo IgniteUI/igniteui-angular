@@ -1,6 +1,6 @@
 import { Directive, Inject } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
-import { IgxRowDirective } from '../../grids';
+import { IgxRowDirective } from '../../grids/public_api';
 
 @Directive({
     selector: '[igxGridActionsBase]'

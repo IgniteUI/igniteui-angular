@@ -6,7 +6,7 @@ import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services';
+import { ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';

@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule } from './index';
+import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';

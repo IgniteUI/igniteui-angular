@@ -15,7 +15,7 @@ import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.componen
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { KEYS } from '../../../core/utils';
-import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
+import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
