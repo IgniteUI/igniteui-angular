@@ -1,8 +1,8 @@
 ﻿import { Component, ViewChild, Type, DebugElement, NgZone } from '@angular/core';
-import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './index';
+import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -31,9 +31,9 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
-    });
+    }));
 
     describe('Navigation without scrolling', () => {
         describe('General', () => {
@@ -484,8 +484,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstRowCell = rows[1].queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = firstRowCell[2];
@@ -1534,6 +1534,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'ContactName', rowStart: 2, colStart: 1, colEnd: 3 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const penultRowCells = rows[rows.length - 2].queryAll(By.css(CELL_CSS_CLASS));
@@ -1565,6 +1566,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'ContactTitle', rowStart: 2, colStart: 2 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
 
@@ -1583,7 +1585,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactTitle');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown', false, false, true);
-                await wait(DEBOUNCETIME);
+                await wait(DEBOUNCETIME * 2);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value)
@@ -1628,6 +1630,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1753,6 +1756,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'Fax', rowStart: 2, colStart: 1, colEnd: 3, rowEnd: 4 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 // last cell from first layout
@@ -1823,6 +1827,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
                 // last cell from first layout
                 const lastCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
@@ -1882,6 +1887,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+                setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
@@ -1942,6 +1948,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+                setupGridScrollDetection(fix, fix.componentInstance.grid);
                 const rows = fix.debugElement.queryAll(By.css(ROW_CSS_CLASS));
                 const firstCell = rows[2].queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -1956,14 +1963,14 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Phone');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[0].Fax);
                 expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
 
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
-                await wait();
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(fix.componentInstance.selectedCell.value).toEqual(fix.componentInstance.data[1].Phone);
@@ -1998,11 +2005,11 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                             { field: 'ID', rowStart: 1, colStart: 1, rowEnd: 4 }
                         ]
                     }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                setupGridScrollDetection(fix, grid);
-                fix.detectChanges();
+                 fix.detectChanges();
 
                 // focus 3rd row, first cell
                 let cell = grid.getCellByColumn(2, 'ContactName');
@@ -2090,7 +2097,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '300px';
-                setupGridScrollDetection(fix, grid);
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 // focus 1st row, 2nd row cell
@@ -2147,7 +2154,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const grid = fix.componentInstance.grid;
                 grid.columnWidth = '300px';
                 grid.width = '400px';
-                setupGridScrollDetection(fix, grid);
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 let firstCell = grid.getCellByColumn(0, 'ID');
@@ -2199,6 +2206,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'PostalCode', rowStart: 3, colStart: 2 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -2322,6 +2330,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                     ]
                 }];
                 fix.componentInstance.grid.width = '600px';
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const firstCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
@@ -2361,6 +2370,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                         { field: 'PostalCode', rowStart: 3, colStart: 2 }
                     ]
                 }];
+                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const secondCell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
 
@@ -2564,9 +2574,9 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(ColumnLayoutTestComponent);
-    });
+    }));
 
     it('navigateTo method should work in multi-row layout grid.', async () => {
         fix.componentInstance.colGroups = [
@@ -2596,10 +2606,11 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
                 ]
             }
         ];
+        await wait(DEBOUNCETIME);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.width = '500px';
-        setupGridScrollDetection(fix, grid);
+        await wait(DEBOUNCETIME);
         fix.detectChanges();
 
         // navigate down to cell in a row that is in the DOM but is not in view (half-visible row)
@@ -2656,10 +2667,11 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
                 ]
             }
         ];
+        await wait(DEBOUNCETIME);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.width = '500px';
-        setupGridScrollDetection(fix, grid);
+        await wait(DEBOUNCETIME);
         fix.detectChanges();
 
         // navigate to cell in a row is not in the DOM

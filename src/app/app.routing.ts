@@ -72,6 +72,7 @@ import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-maste
 import { DateTimeEditorSampleComponent } from './date-time-editor/date-time-editor.sample';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
     {
@@ -350,6 +351,10 @@ const appRoutes = [
         path: 'gridAbout',
         component: AboutComponent
     },
+    {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
+    }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

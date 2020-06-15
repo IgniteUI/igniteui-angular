@@ -29,7 +29,12 @@ module.exports = function (config) {
       },
       reporters: ['spec'],
       specReporter: {
-          suppressSkipped: true
+        suppressSkipped: true,
+        suppressErrorSummary: false,
+        suppressFailed: false,
+        suppressPassed: false,
+        showSpecTiming: false,
+        failFast: false
       },
       port: 9876,
       colors: true,

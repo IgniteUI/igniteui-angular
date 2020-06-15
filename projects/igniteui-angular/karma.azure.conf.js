@@ -35,7 +35,7 @@ module.exports = function (config) {
     },
     reporters: ['junit'],
     junitReporter: {
-        outputDir: ''
+      outputDir: ''
     },
     port: 9876,
     colors: true,
