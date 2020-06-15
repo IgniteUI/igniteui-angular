@@ -7,6 +7,9 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxHierarchicalGrid`
     - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
+- `IgxGridState` directive
+    - Added support for expansion states, column selection and row pinning.
+    - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
 
 ## 9.1.0
 
