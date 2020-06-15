@@ -35,13 +35,25 @@ module.exports = function (config) {
     },
     reporters: ['spec'],
     specReporter: {
-        suppressSkipped: true
+      suppressSkipped: true,
+      suppressErrorSummary: false,
+      suppressFailed: false,
+      suppressPassed: false,
+      showSpecTiming: false,
+      failFast: false
     },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu'],
+        debug: false
+      }
+    },
     singleRun: false
   });
 };

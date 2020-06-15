@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -66,9 +66,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     describe(null, () => {
         let fix: ComponentFixture<any>;
@@ -2071,6 +2068,40 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is not committed');
             expect(input.value).toBe('', 'input value is present and not committed');
         }));
+
+        it('should not retain expression values in cell filter after calling grid clearFilter() method.', fakeAsync(() => {
+            // Click on 'ProductName' filter chip
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Enter expression
+            GridFunctions.typeValueInFilterRowInput('NetAdvantage', fix);
+            tick(DEBOUNCETIME);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            // Verify filtered data
+            expect(grid.filteredData.length).toEqual(1);
+
+            // Clear filters of all columns
+            grid.clearFilter();
+            fix.detectChanges();
+
+            // Verify filtered data
+            expect(grid.filteredData).toBeNull();
+
+            // Click on 'ProductName' filter chip
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Verify there are no chips since we cleared all filters
+            const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const conditionChips = filteringRow.queryAll(By.directive(IgxChipComponent));
+            expect(conditionChips.length).toBe(0);
+
+            // Verify filtered data
+            expect(grid.filteredData).toBeNull();
+        }));
     });
 
     describe('Integration scenarios', () => {
@@ -2376,8 +2407,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(colOperands[0].nativeElement.innerText).toEqual('AND');
             expect(colIndicator.length).toEqual(0);
         }));
-
-
     });
 
     describe(null, () => {
@@ -2564,10 +2593,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         })
             .compileComponents();
     }));
-
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
 
     describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
@@ -4553,9 +4578,6 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         }).compileComponents();
     }));
 
-    afterEach(() => {
-        UIInteractions.clearOverlay();
-    });
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(CustomFilteringStrategyComponent);
         fix.detectChanges();
