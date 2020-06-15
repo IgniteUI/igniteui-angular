@@ -1,0 +1,70 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light base sparkline schema.
+/// @type {Map}
+/// @prop {Color} brush [igx-color: ('primary', 500)] - Sets the sparkline brush.
+/// @prop {Number} line-thickness [null] - Sets the line thickness of the sparkline.
+/// @prop {Color} marker-brush [null] - Sets the marker brush of the sparkline.
+/// @prop {Color} marker-size [null] - Sets the marker size of the sparkline.
+/// @prop {Color} first-marker-brush [null] - Sets the first marker brush of the sparkline.
+/// @prop {Number} first-marker-size [null] - Sets the first marker size of the sparkline.
+/// @prop {Color} last-marker-brush [null] - Sets the last marker brush of the sparkline.
+/// @prop {Number} last-marker-size [null] - Sets the last marker size of the sparkline.
+/// @prop {Color} low-marker-brush [null] - Sets the low marker brush of the sparkline.
+/// @prop {Number} low-marker-size [null] - Sets the low marker size of the sparkline.
+/// @prop {Color} high-marker-brush [null] - Sets the high marker brush of the sparkline.
+/// @prop {Number} high-marker-size [null] - Sets the high marker size of the sparkline.
+/// @prop {Color} negative-brush [null] - Sets the negative brush of the sparkline.
+/// @prop {Color} negative-marker-brush [null] - Sets the negative marker brush of the sparkline.
+/// @prop {Number} negative marker-size [null] - Sets the negative marker size of the sparkline.
+/// @prop {Color} trend-line-brush [null] - Sets the trendline brush of the sparkline.
+/// @prop {Color} trend-line-thickness [null] - Sets the thickness of the sparkline's trendline.
+/// @prop {Color} horizontal-axis-brush [null] - Sets the horizontal axis line brush of the sparkline.
+/// @prop {Color} vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
+/// @prop {Color} normal-range-fill [null] - Sets the normal range brush of the sparkline.
+/// @see $default-palette
+$_light-sparkline: extend(
+    (
+        'brush': (
+            igx-color: ('primary', 500)
+        ),
+        'line-thickness': null,
+        'marker-brush': null,
+        'marker-size': null,
+        'first-marker-brush': null,
+        'first-marker-size': null,
+        'last-marker-brush': null,
+        'last-marker-size': null,
+        'low-marker-brush': null,
+        'low-marker-size': null,
+        'high-marker-brush': null,
+        'high-marker-size': null,
+        'negative-brush': null,
+        'negative-marker-brush': null,
+        'negative-marker-size': null,
+        'trend-line-brush': null,
+        'trend-line-thickness': null,
+        'horizontal-axis-brush': null,
+        'vertical-axis-brush': null,
+        'normal-range-fill': null,
+    )
+);
+
+/// Generates a fluent sparkline schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-sparkline
+$_fluent-sparkline: extend($_light-sparkline);
+
+/// Generates a bootstrap sparkline schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-sparkline
+$_bootstrap-sparkline: extend($_light-sparkline);
+
