@@ -889,7 +889,6 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -909,6 +908,10 @@
             opacity: 1;
             line-height: normal; /* Fix placeholder position in Safari */
         }
+    }
+    
+    input:not([type='date']) {
+        line-height: 0 !important; /* resets typography styles */
     }
 
     %form-group-input--cosy {
