@@ -27,6 +27,7 @@ import {
     IgxGridEmptyRowEditTemplateComponent,
     VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
+import { IgxCell } from '../selection/selection.service';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -132,25 +133,25 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
 
             let cellInput = null;
+            let igxCell: IgxCell;
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
-
+            igxCell = grid.crudService.createCell(cell);
+            igxCell.primaryKey = grid.primaryKey;
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: cell.value,
-                newValue: cell.value,
                 cancel: false,
-                cell: cell,
+                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
             let rowArgs: IGridEditEventArgs = {
                 rowID: row.rowID,
                 oldValue: row.rowData,
-                newValue: undefined,
                 cancel: false,
                 owner: grid
             };
@@ -162,13 +163,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(row.inEditMode).toBe(false);
+            igxCell = grid.crudService.createCell(cell);
+            igxCell.primaryKey = grid.primaryKey;
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
-                cell: cell,
+                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -192,13 +195,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
+            igxCell = grid.crudService.createCell(cell);
+            igxCell.primaryKey = grid.primaryKey;
+            igxCell.editValue = 'Aaaaa';
+            igxCell.rowData.ProductName = 'Aaaaa';
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: cell.value,
                 newValue: newCellValue,
                 cancel: false,
-                cell: cell,
+                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -1741,7 +1748,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalled();
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                newValue: undefined,
                 oldValue: initialData,
                 cancel: false,
                 owner: grid
@@ -1768,7 +1774,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
-                newValue: undefined,
                 oldValue: initialData,
                 cancel: true,
                 owner: grid
@@ -1836,13 +1841,16 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            const igxCell: IgxCell = grid.crudService.createCell(cell);
+            igxCell.primaryKey = grid.primaryKey;
+            igxCell.editValue = 'New Value';
             const cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 oldValue: 'Chai',
                 newValue: 'New Value',
                 cancel: false,
-                cell: cell,
+                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };

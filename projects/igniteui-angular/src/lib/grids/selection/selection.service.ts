@@ -53,20 +53,23 @@ export class IgxRow {
     state: any;
     newData: any;
 
-    constructor(public id: any, public index: number, public data: any) { }
+    constructor(public id: any, public index: number, public data: any, public grid: any) { }
 
-    createEditEventArgs(): IGridEditEventArgs {
-        return {
+    createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
+        const args: IGridEditEventArgs = {
             rowID: this.id,
             oldValue: { ... this.data },
-            newValue: this.newData,
-            cancel: false
+            cancel: false,
+            owner: this.grid
         };
+        if (includeNewValue) {
+            args.newValue = this.newData;
+        }
+        return args;
     }
 }
 
 export class IgxCell {
-
     primaryKey: any;
     state: any;
 
@@ -76,7 +79,8 @@ export class IgxCell {
         public column,
         public value: any,
         public editValue: any,
-        public rowData: any) { }
+        public rowData: any,
+        public grid: any) { }
 
     castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -86,15 +90,20 @@ export class IgxCell {
         return value;
     }
 
-    createEditEventArgs(): IGridEditEventArgs {
-        return {
+    createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
+        const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
             oldValue: this.value,
-            newValue: this.editValue,
             cancel: false,
-            column: this.column
+            column: this.column,
+            cell: this,
+            owner: this.grid
         };
+        if (includeNewValue) {
+            args.newValue = this.editValue;
+        }
+        return args;
     }
 }
 
@@ -107,11 +116,11 @@ export class IgxGridCRUDService {
     public isInCompositionMode = false;
 
     createCell(cell): IgxCell {
-        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
+        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
     }
 
     createRow(cell: IgxCell): IgxRow {
-        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData);
+        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData, cell.grid);
     }
 
     sameRow(rowID): boolean {
@@ -140,9 +149,7 @@ export class IgxGridCRUDService {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
         }
         this.row = this.createRow(this.cell);
-        // TODO: should we emit newValue in onRowEditEnter?
-        const args = this.row.createEditEventArgs();
-        args.owner = this.grid;
+        const args = this.row.createEditEventArgs(false);
         this.grid.onRowEditEnter.emit(args);
         if (args.cancel) {
             this.endRowEdit();
@@ -161,10 +168,7 @@ export class IgxGridCRUDService {
     begin(cell): void {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
-        // TODO: should we emit newValue in onCellEditEnter?
-        const args = newCell.createEditEventArgs();
-        args.cell = cell;
-        args.owner = this.grid;
+        const args = newCell.createEditEventArgs(false);
 
         this.grid.onCellEditEnter.emit(args);
 
@@ -216,8 +220,6 @@ export class IgxGridCRUDService {
         }
         if (this.inEditMode) {
             const args = this.cell.createEditEventArgs();
-            args.cell = this.grid.getCellByColumn(args.cellID.rowIndex, args.column.field);
-            args.owner = this.grid;
             this.grid.onCellEditCancel.emit(args);
             if (args.cancel) {
                 return;

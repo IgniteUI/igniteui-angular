@@ -11,6 +11,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
+import { IgxCell } from '../selection/selection.service';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -456,13 +457,15 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                const igxCell: IgxCell = treeGrid.crudService.createCell(cellComponent);
+                igxCell.value = oldCellValue;
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
-                    cell: cellComponent,
+                    cell: igxCell,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -489,13 +492,15 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                const igxCell: IgxCell = treeGrid.crudService.createCell(cellComponent);
+                igxCell.value = oldCellValue;
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
-                    cell: cellComponent,
+                    cell: igxCell,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -691,13 +696,15 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                const igxCell: IgxCell = treeGrid.crudService.createCell(cellComponent);
+                igxCell.value = oldCellValue;
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
-                    cell: cellComponent,
+                    cell: igxCell,
                     column: cellComponent.column,
                     owner: treeGrid
                 });
@@ -725,13 +732,15 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                const igxCell: IgxCell = treeGrid.crudService.createCell(cellComponent);
+                igxCell.value = oldCellValue;
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
-                    cell: cellComponent,
+                    cell: igxCell,
                     column: cellComponent.column,
                     owner: treeGrid
                 });

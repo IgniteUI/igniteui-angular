@@ -7,6 +7,7 @@ import { IgxGridModule } from './index';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxCell } from '../selection/selection.service';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 
@@ -173,13 +174,15 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         const cell = grid.getCellByColumn(0, 'index');
+        const igxCell: IgxCell = grid.crudService.createCell(cell);
+        igxCell.editValue = 'change';
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
             oldValue: 1,
             newValue: 200,
             cancel: false,
-            cell: cell,
+            cell: igxCell,
             column: cell.column,
             owner: grid
         };
