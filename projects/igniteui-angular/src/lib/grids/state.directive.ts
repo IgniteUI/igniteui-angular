@@ -69,11 +69,6 @@ export interface IColumnState {
     searchable: boolean;
 }
 
-export interface IFeatureStrategy {
-    getFeatureState: (key: string) => IGridState;
-    restoreFeatureState: (key, state: IGridState) => void;
-}
-
 export enum GridFeatures {
     COLUMNS = 'columns',
     FILTERING = 'filtering',
