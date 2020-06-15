@@ -4,7 +4,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTextSelectionModule} from './text-selection.directive';
+import { IgxTextSelectionModule } from './text-selection.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -14,13 +14,14 @@ describe('IgxSelection', () => {
         TestBed.configureTestingModule({
             declarations: [
                 TriggerTextSelectionComponent,
-                TriggerTextSelectionOnClickComponent
+                TriggerTextSelectionOnClickComponent,
+                TriggerTextSelectionFalseOnClickComponent
             ],
             imports: [IgxTextSelectionModule]
         });
     }));
 
-    it('Should select the text which is into the input', async() => {
+    it('Should select the text which is into the input', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
@@ -34,7 +35,7 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Should select the text when the input is clicked', async() => {
+    it('Should select the text when the input is clicked', async () => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 
@@ -52,26 +53,19 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Shouldn\'t make a selection when the state is set to false', () => {
-        const template = ` <input type="text" [igxTextSelection]="false" #select="igxTextSelection"
-            (click)="select.trigger()" value="Some custom value!" />`;
+    it('Shouldn\'t make a selection when the state is set to false', async() => {
+        const fix = TestBed.createComponent(TriggerTextSelectionFalseOnClickComponent);
+        fix.detectChanges();
 
-        TestBed.overrideTemplateUsingTestingModule(TriggerTextSelectionOnClickComponent, template);
+        const input = fix.debugElement.query(By.css('input'));
+        const inputNativeElem = input.nativeElement;
+        const inputElem: HTMLElement = input.nativeElement;
 
-        TestBed.compileComponents().then(() => {
-            const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
-            fix.detectChanges();
+        inputElem.click();
+        fix.detectChanges();
 
-            const input = fix.debugElement.query(By.css('input'));
-            const inputNativeElem = input.nativeElement;
-            const inputElem: HTMLElement = input.nativeElement;
-
-            inputElem.click();
-            fix.detectChanges();
-
-            expect(inputNativeElem.selectionEnd).toEqual(0);
-            expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd)).toEqual('');
-        });
+        expect(inputNativeElem.selectionEnd).toEqual(0);
+        expect(inputNativeElem.value.substring(inputNativeElem.selectionStart, inputNativeElem.selectionEnd)).toEqual('');
     });
 });
 
@@ -81,7 +75,7 @@ describe('IgxSelection', () => {
             <input type="text" [igxTextSelection]="true" value="Some custom value!" />
         `
 })
-class TriggerTextSelectionComponent {}
+class TriggerTextSelectionComponent { }
 
 @Component({
     template:
@@ -89,4 +83,11 @@ class TriggerTextSelectionComponent {}
             <input type="text" [igxTextSelection] #select="igxTextSelection" (click)="select.trigger()" value="Some custom value!" />
         `
 })
-class TriggerTextSelectionOnClickComponent {}
+class TriggerTextSelectionOnClickComponent { }
+@Component({
+    template:
+    `
+        <input type="text" [igxTextSelection]="false" #select="igxTextSelection" (click)="select.trigger()" value="Some custom value!" />
+    `
+})
+class TriggerTextSelectionFalseOnClickComponent { }

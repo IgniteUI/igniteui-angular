@@ -957,7 +957,6 @@
         width: 100%;
         background: --var($theme, 'header-background');
         z-index: 10001;
-        overflow: hidden;
     }
 
     %grid-thead-thumb {

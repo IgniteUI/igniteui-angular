@@ -359,6 +359,7 @@ export class IgxGridNavigationService {
     }
 
     protected findLastDataRowIndex(): number {
+        if ((this.grid as any).totalItemCount) { return (this.grid as any).totalItemCount - 1;  }
         let i = this.grid.dataView.length;
         while (i--) {
             if (this.isDataRow(i)) {
@@ -376,7 +377,8 @@ export class IgxGridNavigationService {
     }
 
     protected isValidPosition(rowIndex: number, colIndex: number): boolean {
-        if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
+        const length = (this.grid as any).totalItemCount ?? this.grid.dataView.length;
+        if (rowIndex < 0 || colIndex < 0 || length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;

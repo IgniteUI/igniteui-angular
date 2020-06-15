@@ -449,13 +449,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    @ContentChildren(IgxDragHandleDirective)
+    @ContentChildren(IgxDragHandleDirective, { descendants: true })
     public dragHandles: QueryList<IgxDragHandleDirective>;
 
     /**
      * @hidden
      */
-    @ContentChildren(IgxDragIgnoreDirective)
+    @ContentChildren(IgxDragIgnoreDirective, { descendants: true })
     public dragIgnoredElems: QueryList<IgxDragIgnoreDirective>;
 
     /**
