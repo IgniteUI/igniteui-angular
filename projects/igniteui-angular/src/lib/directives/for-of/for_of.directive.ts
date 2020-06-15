@@ -190,11 +190,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const newSize = this.initSizesCache(this.igxForOf);
             const sizeDiff = this.scrollComponent.size - newSize;
             this.scrollComponent.size = newSize;
-            const lastChunk = this.state.startIndex + this.state.chunkSize >= val;
-            if (!lastChunk) {
-                this._adjustScrollPositionAfterSizeChange(sizeDiff);
-
+            const lastChunkExceeded = this.state.startIndex + this.state.chunkSize > val;
+            if (lastChunkExceeded) {
+                this.state.startIndex = val - this.state.chunkSize;
             }
+            this._adjustScrollPositionAfterSizeChange(sizeDiff);
         }
     }
 
