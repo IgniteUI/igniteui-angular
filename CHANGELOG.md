@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.0.0
+
+### General
+- `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `IStateUpdateEvent`, which has two properies:
+    - `origin` - a mandatory property. It can vary within the values of the `TransactionEventOrigin` interface; 
+    - `actions` - an optional property that contains information about the transactions, that caused the emission of the event. It is used by `undo` and `redo`.
+
+
 ## 9.1.1
 
 ### General
