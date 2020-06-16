@@ -1,4 +1,4 @@
-import { HorizontalAlignment, VerticalAlignment, Point } from '../services';
+import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
 export function wait(ms = 0) {

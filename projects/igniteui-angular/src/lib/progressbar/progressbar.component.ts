@@ -200,7 +200,7 @@ export abstract class BaseProgressDirective {
         };
 
         const stepDirection = this.directionFlow(oldVal, newVal);
-        if (this._animate && newVal >= this.step) {
+        if (this._animate) {
             this.runAnimation(newVal, stepDirection);
         } else {
             this.updateProgressDirectly(newVal);
@@ -221,7 +221,7 @@ export abstract class BaseProgressDirective {
      * @hidden
      */
     protected updateProgressSmoothly(val: number, step: number) {
-        this._value += step;
+        this._value = valueInRange(this._value, this._max) + step;
         const passedValue = toPercent(val, this._max);
         const progressValue = toPercent(this._value, this._max);
         if (this.valueInPercent === passedValue) {
@@ -240,7 +240,7 @@ export abstract class BaseProgressDirective {
      * @hidden
      */
     protected updateProgressDirectly(val: number) {
-        this._value = val;
+        this._value = valueInRange(val, this._max);
         this.valueInPercent = toPercent(this._value, this._max);
     }
 
@@ -286,7 +286,7 @@ export abstract class BaseProgressDirective {
      * @param step
      */
     private updateProgress(val: number) {
-        this._value = val;
+        this._value = valueInRange(val, this._max);
         this.valueInPercent = toPercent(this._value, this._max);
     }
 }

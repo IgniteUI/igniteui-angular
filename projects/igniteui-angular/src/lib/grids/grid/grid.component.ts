@@ -1033,11 +1033,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {
-        if (this.groupingExpressions.length) {
+        if (this.groupingExpressions.length || this.hasDetails) {
             const source = [];
 
             const process = (record) => {
-                if (record.expression || record.summaries) {
+                if (record.expression || record.summaries || this.isDetailRecord(record)) {
                     source.push(null);
                     return;
                 }

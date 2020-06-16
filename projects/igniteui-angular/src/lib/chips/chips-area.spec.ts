@@ -1,12 +1,11 @@
-﻿import { ChipsSampleComponent } from './../../../../../src/app/chips/chips.sample';
-import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import {
     async,
     TestBed
 } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxChipsModule } from './chips.module';
 import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../directives/suffix/suffix.directive';

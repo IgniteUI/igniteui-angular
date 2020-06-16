@@ -34,7 +34,7 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
+import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IPositionStrategy } from './position/IPositionStrategy';
@@ -3655,7 +3655,7 @@ describe('igxOverlay', () => {
 @Component({
     // tslint:disable-next-line:component-selector
     selector: `simple - dynamic - component`,
-    template: '<div style=\'width:100px; height: 100px; background-color: red\'></div>'
+    template: `<div style='width:100px; height: 100px; background-color: red'></div>`
 })
 export class SimpleDynamicComponent {
     @HostBinding('style.display')
@@ -3676,7 +3676,7 @@ export class SimpleRefComponent {
 }
 
 @Component({
-    template: '<div style=\'width:3000px; height: 1000px; background-color: red\'></div>'
+    template: `<div style='width:3000px; height: 1000px; background-color: red'></div>`
 })
 export class SimpleBigSizeComponent {
     @HostBinding('style.display')

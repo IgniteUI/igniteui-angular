@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './index';
+import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
