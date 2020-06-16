@@ -44,11 +44,67 @@ $_dark-dock-manager: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-dock-manager
-$_dark-fluent-dock-manager: extend($_fluent-dock-manager);
+$_dark-fluent-dock-manager: extend(
+    $_fluent-dock-manager, (
+        border-color: #222,
+        button-text: #fff,
+        context-menu-background-active: #111,
+        context-menu-color-active: #fff,
+        context-menu-background: #333,
+        context-menu-color: #fff,
+        dock-background: #2a2a2a,
+        floating-pane-border-color: rgba(0, 0, 0, 0),
+        joystick-background-active: #111,
+        joystick-background: #333,
+        joystick-border-color: rgba(0, 0, 0, 0),
+        joystick-icon-color: #fff,
+        joystick-icon-color-active: #fff,
+        pane-content-background: #222,
+        pinned-header-background: #2a2a2a,
+        primary-color: #2a2a2a,
+        splitter-background: #151515,
+        splitter-handle: #000,
+        tab-background-active: #222,
+        tab-background: #222,
+        tab-border-color-active: #222,
+        tab-border-color: #222,
+        tab-text-active: #217346,
+        tab-text: #fff,
+        text-color: #fff,
+    )
+);
 
 /// Generates a dark bootstrap dock-manager schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-dock-manager
-$_dark-bootstrap-dock-manager: extend($_bootstrap-dock-manager);
+$_dark-bootstrap-dock-manager: extend(
+    $_bootstrap-dock-manager, (
+        border-color: #242939,
+        button-text: #007bff,
+        context-menu-background-active: #007bff,
+        context-menu-color-active: #fff,
+        context-menu-background: #222,
+        context-menu-color: #007bff,
+        dock-background: #111,
+        floating-pane-border-color: rgba(255, 255, 255, .12),
+        joystick-background-active: #007bff,
+        joystick-background: #222,
+        joystick-border-color: rgba(255, 255, 255, .12),
+        joystick-icon-color: #007bff,
+        joystick-icon-color-active: #fff,
+        pane-content-background: #242939,
+        pinned-header-background: #111,
+        primary-color: #111,
+        splitter-background: #1a1e29,
+        splitter-handle: #000,
+        tab-background-active: #242939,
+        tab-background: #242939,
+        tab-border-color-active: rgba(255, 255, 255, .12),
+        tab-border-color: #242939,
+        tab-text-active: rgba(255, 255, 255, .74),
+        tab-text: #007bff,
+        text-color: #fff,
+    )
+);
 

@@ -79,11 +79,12 @@ $_light-dock-manager: (
 /// @requires $_light-dock-manager
 $_fluent-dock-manager: extend(
     $_light-dock-manager, (
-        dock-background: #fff,
+        border-color: #fff,
         button-text: rgba(0, 0, 0, .74),
         context-menu-background-active: #EBEBEB,
         context-menu-color-active: rgba(0, 0, 0, .74),
         context-menu-color: rgba(0, 0, 0, .74),
+        dock-background: #fff,
         floating-pane-border-color: #BDBDBD,
         joystick-background-active: #EBEBEB,
         joystick-border-color: #BDBDBD,
@@ -110,11 +111,12 @@ $_fluent-dock-manager: extend(
 /// @requires $_bootstrap-shape-dock-manager
 $_bootstrap-dock-manager: extend(
     $_light-dock-manager, (
-        dock-background: #f8f9fa,
+        border-color: #fff,
         button-text: #007bff,
         context-menu-background-active: #007bff,
         context-menu-color-active: #fff,
         context-menu-color: #007bff,
+        dock-background: #f8f9fa,
         floating-pane-border-color: #E0E0E0,
         joystick-background-active: #007bff,
         joystick-border-color: #E0E0E0,
