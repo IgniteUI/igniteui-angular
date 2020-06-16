@@ -755,11 +755,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerdown = (event: PointerEvent) => {
-        if (this.cellSelectionMode !== GridSelectionMode.multiple) {
+        if (isLeftClick(event) && this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;
         }
         if (!isLeftClick(event)) {
+            event.preventDefault();
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
