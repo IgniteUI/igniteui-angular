@@ -48,7 +48,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             const actions = [{ transaction, recordRef }];
             this._undoStack.push(actions);
             this._redoStack = [];
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions: actions });
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions });
         }
     }
 
