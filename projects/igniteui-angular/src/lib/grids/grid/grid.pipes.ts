@@ -38,7 +38,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions, sorting);
         }
-        grid.filteredSortedData = result;
+        grid.setFilteredSortedData(result);
 
         return result;
     }
