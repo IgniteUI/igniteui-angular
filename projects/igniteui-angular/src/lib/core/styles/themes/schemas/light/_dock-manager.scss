@@ -77,12 +77,61 @@ $_light-dock-manager: (
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-dock-manager
-$_fluent-dock-manager: extend($_light-dock-manager);
+$_fluent-dock-manager: extend(
+    $_light-dock-manager, (
+        dock-background: #fff,
+        button-text: rgba(0, 0, 0, .74),
+        context-menu-background-active: #EBEBEB,
+        context-menu-color-active: rgba(0, 0, 0, .74),
+        context-menu-color: rgba(0, 0, 0, .74),
+        floating-pane-border-color: #BDBDBD,
+        joystick-background-active: #EBEBEB,
+        joystick-border-color: #BDBDBD,
+        joystick-icon-color: rgba(0, 0, 0, .74),
+        joystick-icon-color-active: rgba(0, 0, 0, .74),
+        pane-content-background: #fff,
+        primary-color: #fff,
+        splitter-background: #f2f2f2,
+        splitter-handle: #ccc,
+        tab-background-active: #fff,
+        tab-background: #fff,
+        tab-border-color-active: #fff,
+        tab-border-color: #fff,
+        tab-text-active: #2b579a,
+        tab-text: rgba(0, 0, 0, .62),
+        text-color: rgba(0, 0, 0, .74),
+    )
+);
 
 /// Generates a bootstrap dock-manager schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-dock-manager
 /// @requires $_bootstrap-shape-dock-manager
-$_bootstrap-dock-manager: extend($_light-dock-manager);
+$_bootstrap-dock-manager: extend(
+    $_light-dock-manager, (
+        dock-background: #f8f9fa,
+        button-text: #007bff,
+        context-menu-background-active: #007bff,
+        context-menu-color-active: #fff,
+        context-menu-color: #007bff,
+        floating-pane-border-color: #E0E0E0,
+        joystick-background-active: #007bff,
+        joystick-border-color: #E0E0E0,
+        joystick-icon-color: #007bff,
+        joystick-icon-color-active: #fff,
+        pane-content-background: #fff,
+        pinned-header-background: #f8f9fa,
+        primary-color: #f8f9fa,
+        splitter-background: #e9ecef,
+        splitter-handle: #bdc6d0,
+        tab-background-active: #fff,
+        tab-background: #fff,
+        tab-border-color-active: rgba(0, 0, 0, .12),
+        tab-border-color: #fff,
+        tab-text-active: rgba(0, 0, 0, .74),
+        tab-text: #007bff,
+        text-color: rgba(0, 0, 0, .74),
+    )
+);
 
