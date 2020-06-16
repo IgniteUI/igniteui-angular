@@ -14,6 +14,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { DropPosition } from '../moving/moving.service';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -931,7 +932,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         testColumnsOrder(genInfoCols.concat(locCols).concat(contactInfoCols));
 
         // moving last to be first
-        grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup);
+        grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
@@ -949,7 +950,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         testColumnsOrder(genInfoCols.concat(contactInfoCols).concat(locCols));
 
         // moving inner to be first
-        grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup);
+        grid.moveColumn(ci.contactInfoColGroup, ci.genInfoColGroup, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         testColumnsOrder(contactInfoCols.concat(genInfoCols).concat(locCols));
@@ -977,7 +978,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         ci.regionCol, ci.cityCol];
 
         // moving last to be first
-        grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
+        grid.moveColumn(ci.postalCodeCol, ci.phoneCol, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
@@ -998,7 +999,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         ci.phoneCol, ci.postalCodeCol, ci.faxCol]));
 
         // moving inner to be first
-        grid.moveColumn(ci.postalCodeCol, ci.phoneCol);
+        grid.moveColumn(ci.postalCodeCol, ci.phoneCol, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         testColumnsOrder(genInfoAndLocCols.concat([ci.contactInfoColGroup,
@@ -1033,14 +1034,14 @@ describe('IgxGrid - multi-column headers #grid', () => {
         const grid = ci.grid;
 
         // moving a two-level col
-        grid.moveColumn(ci.phoneCol, ci.locationColGroup);
+        grid.moveColumn(ci.phoneCol, ci.locationColGroup, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         testColumnsOrder([ci.contactInfoColGroup, ci.phoneCol, ci.locationColGroup, ci.countryCol,
         ci.genInfoColGroup, ci.companyNameCol, ci.cityCol]);
 
         // moving a three-level col
-        grid.moveColumn(ci.cityCol, ci.contactInfoColGroup);
+        grid.moveColumn(ci.cityCol, ci.contactInfoColGroup, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         const colsOrder = [ci.cityCol, ci.contactInfoColGroup, ci.phoneCol,
@@ -1094,7 +1095,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         // moving group from unpinned to pinned
-        ci.grid.moveColumn(ci.phoneColGroup, ci.idCol);
+        ci.grid.moveColumn(ci.phoneColGroup, ci.idCol, DropPosition.BeforeDropTarget);
         tick();
         fixture.detectChanges();
         let postMovingOrder = ci.phoneColList.concat([ci.idCol]).concat(ci.genInfoColList)
