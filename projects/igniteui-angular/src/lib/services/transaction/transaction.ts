@@ -35,14 +35,14 @@ export interface State {
     type: TransactionType;
 }
 
-export interface Action {
-    transaction: Transaction;
+export interface Action<T extends Transaction> {
+    transaction: T;
     recordRef: any;
 }
 
 export interface StateUpdateEvent {
     origin: TransactionEventOrigin;
-    actions: Array<Action>;
+    actions: Action<Transaction>[];
 }
 
 /**

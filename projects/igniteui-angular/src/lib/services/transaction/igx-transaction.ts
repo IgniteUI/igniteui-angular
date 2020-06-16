@@ -1,4 +1,4 @@
-import { Transaction, State, TransactionType, StateUpdateEvent, TransactionEventOrigin } from './transaction';
+import { Transaction, State, TransactionType, StateUpdateEvent, TransactionEventOrigin, Action } from './transaction';
 import { IgxBaseTransactionService } from './base-transaction';
 import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
@@ -6,8 +6,8 @@ import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 @Injectable()
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
     protected _transactions: T[] = [];
-    protected _redoStack: { transaction: T, recordRef: any }[][] = [];
-    protected _undoStack: { transaction: T, recordRef: any }[][] = [];
+    protected _redoStack: Action<T>[][] = [];
+    protected _undoStack: Action<T>[][] = [];
     protected _states: Map<any, S> = new Map();
 
     /**
@@ -116,7 +116,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
-            const actions: { transaction: T, recordRef: any }[] = [];
+            const actions: Action<T>[] = [];
             // don't use addTransaction due to custom undo handling
             for (const transaction of this._pendingTransactions) {
                 const pendingState = this._pendingStates.get(transaction.id);
@@ -179,7 +179,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             return;
         }
 
-        const lastActions: { transaction: T, recordRef: any }[] = this._undoStack.pop();
+        const lastActions: Action<T>[] = this._undoStack.pop();
         this._transactions.splice(this._transactions.length - lastActions.length);
         this._redoStack.push(lastActions);
 
@@ -198,7 +198,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public redo(): void {
         if (this._redoStack.length > 0) {
-            let actions: { transaction: T, recordRef: any, useInUndo?: boolean }[];
+            let actions: Action<T>[];
             actions = this._redoStack.pop();
             for (const action of actions) {
                 this.updateState(this._states, action.transaction, action.recordRef);
