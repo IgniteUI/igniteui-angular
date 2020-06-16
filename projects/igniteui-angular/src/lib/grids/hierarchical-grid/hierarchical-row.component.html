@@ -19,8 +19,8 @@
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowSelectors" (pointerdown)="$event.preventDefault()">
-    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+<ng-container *ngIf="showRowSelectors">
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: {
