@@ -1145,7 +1145,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
             const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            this.scrollPosition = this.sizesCache[this.state.startIndex] - offset;
+            const newSize = this.sizesCache[this.state.startIndex] - offset;
+            this.scrollPosition = newSize === this.scrollPosition ? newSize + 1 : newSize;
         }
     }
 
