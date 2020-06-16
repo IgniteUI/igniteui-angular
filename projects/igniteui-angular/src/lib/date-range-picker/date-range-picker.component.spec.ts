@@ -1,4 +1,3 @@
-import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
@@ -13,6 +12,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/public_api';
 import { DateRangeType } from '../core/dates';
+import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
+import { IgxIconModule } from '../icon/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -491,9 +492,11 @@ describe('IgxDateRangePicker', () => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent
+                        DateRangeTwoInputsTestComponent,
+                        DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
+                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
                 })
                     .compileComponents();
             }));
@@ -584,6 +587,7 @@ describe('IgxDateRangePicker', () => {
                     verifyDateRange();
                 });
             });
+
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
@@ -628,6 +632,56 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                }));
+            });
+
+            it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
+                fixture.componentInstance.mode = InteractionMode.DropDown;
+                fixture.detectChanges();
+
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
+
+            it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
+
+            describe('Data binding', () => {
+                it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
+                    fixture.detectChanges();
+                    const range = (fixture.componentInstance as DateRangeTwoInputsNgModelTestComponent).range;
+                    fixture.componentInstance.dateRange.open();
+                    fixture.detectChanges();
+                    tick();
+                    expect(fixture.componentInstance.dateRange.value.start.getTime()).toEqual(range.start.getTime());
+                    expect(fixture.componentInstance.dateRange.value.end.getTime()).toEqual(range.end.getTime());
                 }));
             });
         });
@@ -807,6 +861,9 @@ export class DateRangeTestComponent implements OnInit {
     template: `
     <igx-date-range-picker [mode]="mode" [(ngModel)]="range" required>
             <igx-date-range-start>
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
                 <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-start>
             <igx-date-range-end>
@@ -819,6 +876,22 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     startDate = new Date(2020, 1, 1);
     endDate = new Date(2020, 1, 4);
     range;
+}
+
+@Component({
+    selector: 'igx-date-range-two-inputs-ng-model',
+    template: `
+    <igx-date-range-picker [mode]="'dropdown'">
+        <igx-date-range-start>
+            <input igxInput [(ngModel)]="range.start" igxDateTimeEditor>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
+        </igx-date-range-end>
+    </igx-date-range-picker>`
+})
+export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
+    public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
 }
 
 @Component({
