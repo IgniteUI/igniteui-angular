@@ -1,4 +1,4 @@
-import { Transaction, State, TransactionType, IStateUpdateEvent, TransactionEventOrigin } from './transaction';
+import { Transaction, State, TransactionType, StateUpdateEvent, TransactionEventOrigin } from './transaction';
 import { IgxBaseTransactionService } from './base-transaction';
 import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
@@ -27,7 +27,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    public onStateUpdate = new EventEmitter<IStateUpdateEvent>();
+    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
     /**
      * @inheritdoc
@@ -45,9 +45,10 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         transactions.push(transaction);
 
         if (!this._isPending) {
-            this._undoStack.push([{ transaction, recordRef }]);
+            const actions = [{ transaction, recordRef }];
+            this._undoStack.push(actions);
             this._redoStack = [];
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD });
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.ADD, actions: actions });
         }
     }
 
@@ -127,7 +128,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             this._undoStack.push(actions);
             this._redoStack = [];
 
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.END});
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.END, actions});
         }
         super.endPending(commit);
     }
@@ -167,7 +168,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             this._undoStack = [];
         }
         this._redoStack = [];
-        this.onStateUpdate.emit({ origin: TransactionEventOrigin.CLEAR });
+        this.onStateUpdate.emit({ origin: TransactionEventOrigin.CLEAR, actions: []});
     }
 
     /**
@@ -205,7 +206,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             }
 
             this._undoStack.push(actions);
-            this.onStateUpdate.emit({ origin: TransactionEventOrigin.REDO, actions: actions });
+            this.onStateUpdate.emit({ origin: TransactionEventOrigin.REDO, actions });
         }
     }
 

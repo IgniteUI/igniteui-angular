@@ -47,7 +47,7 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy,
     ContainerPositionStrategy,
-    IStateUpdateEvent,
+    StateUpdateEvent,
     TransactionEventOrigin
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
@@ -2858,7 +2858,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe((event?: IStateUpdateEvent) => {
+        this.transactions.onStateUpdate.pipe(destructor).subscribe((event?: StateUpdateEvent) => {
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];

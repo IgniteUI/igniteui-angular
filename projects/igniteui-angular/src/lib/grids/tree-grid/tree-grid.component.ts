@@ -22,7 +22,7 @@ import {
     HierarchicalState,
     TransactionType,
     TransactionEventOrigin,
-    IStateUpdateEvent
+    StateUpdateEvent
 } from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -353,7 +353,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?: IStateUpdateEvent) => {
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event?: StateUpdateEvent) => {
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];

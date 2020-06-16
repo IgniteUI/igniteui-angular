@@ -35,9 +35,14 @@ export interface State {
     type: TransactionType;
 }
 
-export interface IStateUpdateEvent {
+export interface Action {
+    transaction: Transaction;
+    recordRef: any;
+}
+
+export interface StateUpdateEvent {
     origin: TransactionEventOrigin;
-    actions?: any;
+    actions: Array<Action>;
 }
 
 /**
@@ -57,7 +62,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo
      */
-    onStateUpdate?: EventEmitter<IStateUpdateEvent>;
+    onStateUpdate?: EventEmitter<StateUpdateEvent>;
 
     /**
      * @returns if there are any transactions in the Undo stack
