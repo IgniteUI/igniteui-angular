@@ -800,10 +800,13 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         describe('Cell Selection', () => {
-            it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
+            beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
                 fix.detectChanges();
+            }));
+
+            it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
                 const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
                 const startCell = grid.getCellByColumn(1, 'ContactName');
@@ -838,6 +841,22 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
                 expect(selectionChangeSpy).toHaveBeenCalledWith(range);
                 expect(rowDetail.querySelector('[class*="selected"]')).toBeNull();
+            }));
+
+            it('getSelectedData should return correct values when there are master details', fakeAsync(() => {
+                const range = { rowStart: 0, rowEnd: 5, columnStart: 'ContactName', columnEnd: 'ContactName' };
+                const expectedData = [
+                    { ContactName: 'Maria Anders' },
+                    { ContactName: 'Ana Trujillo' },
+                    { ContactName: 'Antonio Moreno' }
+                ];
+                grid.expandAll();
+                tick(100);
+                fix.detectChanges();
+
+                grid.selectRange(range);
+                fix.detectChanges();
+                expect(grid.getSelectedData()).toEqual(expectedData);
             }));
         });
 
@@ -1081,10 +1100,12 @@ describe('IgxGrid Master Detail #grid', () => {
         describe('GroupBy', () => {
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
-                fix.componentInstance.columns[0].hasSummary = true;
                 fix.detectChanges();
 
                 grid = fix.componentInstance.grid;
+                grid.getColumnByName('ContactName').hasSummary = true;
+                fix.detectChanges();
+
                 grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
                 grid.groupingExpressions =
                     [{ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false }];
@@ -1173,9 +1194,7 @@ describe('IgxGrid Master Detail #grid', () => {
     template: `
         <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
         [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
-            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
-                [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
-                [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
+            <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
             <ng-template igxGridDetail let-dataItem>
@@ -1214,9 +1233,7 @@ export class DefaultGridMasterDetailComponent {
     template: `
         <igx-grid [data]="data" [expansionStates]='expStates'
          [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelection]="rowSelectable">
-            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
-                [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
-                [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
+            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
 
             <ng-template igxGridDetail let-dataItem>

@@ -1,0 +1,141 @@
+// @import '../shape/chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
+////
+
+/// Generates a light base chart schema.
+/// @type {Map}
+/// @prop {List} margin [null] - Sets the margin (top, right, bottom, left) of the chart content.
+/// @prop {String} title-alignment [null] - The horizontal alignment to use for the title.
+/// @prop {Color} title-text-color [null] - Sets the color of the chart title.
+/// @prop {List} title-margin [null] - Sets the margin (top, right, bottom, left) of the chart title.
+/// @prop {Color} subtitle-text-color [null] - Sets the color of the chart subtitle.
+/// @prop {List} subtitle-margin [null] - Sets the margins (top, right, bottom, left) of the chart subtitle.
+/// @prop {String} subtitle-alignment [null] - Gets or sets horizontal alignment which determines the subtitle position, relative to the left and right edges of the control.
+/// @prop {List} brushes [series] - Defines the palette from which automatically assigned series brushes colors are selected.
+/// @prop {List} marker-brushes [series]- Defines the palette from which automatically assigned series marker brushes colors are selected.
+/// @prop {List} negative-brushes [series] - Defines the palette used for coloring negative items in a chart type with contextual coloring, such as Waterfall.
+/// @prop {List} outlines [series] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @prop {List} marker-outlines [series] - Defines the palette from which automatically assigned series marker outline colors are selected.
+/// @prop {List} negative-outlines [series] - Defines the brushes used for drawing negative elements in a chart type with contextual coloring, such as Waterfall.
+/// @prop {List} indicator-brushes [series] - Defines the brushes used for financial indicators.
+/// @prop {List} indicator-negative-brushes [series] - Defines the brushes used for negative elements in financial indicators.
+/// @prop {Number} indicator-thickness [null]- Defines the palette from which automatically assigned series marker brushes colors are selected.
+/// @prop {Color} plot-area-background [null]- Gets or sets the brush used as the background for the current Chart object's plot area.
+/// @prop {Number} thickness [null] - Sets the thickness for all series in a chart.
+/// @prop {Number} toolbar-height [null] - Sets the height of the tooolbar.
+/// @prop {List} trend-line-brushes [series] - Defines the palette of brushes used for coloring trend lines in a chart.
+/// @prop {Number} trend-line-thickness [null] - Sets the thickness of the trend lines in a chart of type point, line, spline or bubble.
+/// @prop {List} volume-brushes [series]- Defines the brushes to use for filling volume series in the volume pane.
+/// @prop {List} volume-outlines [series] - Defines the brushes to use for outlining volume series in the volume pane.
+/// @prop {Number} volume-thickness [null]- Defines the outline thickness of volume series in the volume pane.
+/// @prop {List} x-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the X-axis.
+/// @prop {Color} x-axis-label-text-color [null] - Sets the color of labels on the X-axis.
+/// @prop {String} x-axis-label-vertical-alignment [null] - Sets the vertical alignment of X-axis labels.
+/// @prop {Color} x-axis-major-stroke [null] - Sets the color to apply to major gridlines along the X-axis.
+/// @prop {Number} x-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the X-axis.
+/// @prop {Color} x-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the X-axis.
+/// @prop {Number} x-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the X-axis.
+/// @prop {Color} x-axis-strip [null] - Sets the color to apply to stripes along the X-axis.
+/// @prop {Color} x-axis-stroke [null] - Sets the color to apply to the X-axis line.
+/// @prop {Number} x-axis-stroke-thickness [null] - Sets the thickness to apply to the X-axis line.
+/// @prop {Number} x-axis-tick-length [null] - Sets the length of tickmarks along the X-axis.
+/// @prop {Color} x-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the X-axis.
+/// @prop {Number} x-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the X-axis.
+/// @prop {String} x-axis-title-alignment [null] - Sets the horizontal alignment of the X-axis title.
+/// @prop {List} x-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the X-axis.
+/// @prop {Color} x-axis-title-text-color [null] - Sets the color of the title on the X-axis.
+/// @prop {List} y-axis-label-margin [null] - Sets the margin (top, right, bottom, left) of labels on the Y-axis.
+/// @prop {Color} y-axis-label-text-color [null] - Sets the color of labels on the Y-axis.
+/// @prop {String} y-axis-label-vertical-alignment [null] - Sets the vertical alignment of Y-axis labels.
+/// @prop {Color} y-axis-major-stroke [null] - Sets the color to apply to major gridlines along the y-axis.
+/// @prop {Number} y-axis-major-stroke-thickness [null] - Sets the thickness to apply to major gridlines along the Y-axis.
+/// @prop {Color} y-axis-minor-stroke [null] - Sets the color to apply to minor gridlines along the Y-axis.
+/// @prop {Number} y-axis-minor-stroke-thickness [null] - Sets the thickness to apply to minor gridlines along the Y-axis.
+/// @prop {Color} y-axis-strip [null] - Sets the color to apply to stripes along the Y-axis.
+/// @prop {Color} y-axis-stroke [null] - Sets the color to apply to the Y-axis line.
+/// @prop {Number} y-axis-stroke-thickness [null] - Sets the thickness to apply to the Y-axis line.
+/// @prop {String} y-axis-title-alignment [null] - Sets the horizontal alignment of the Y-axis title.
+/// @prop {List} y-axis-title-margin [null] - Sets the margin (top, right, bottom, left) of a title on the Y-axis.
+/// @prop {Color} y-axis-title-text-color [null] - Sets the color of a title on the Y-axis.
+/// @prop {Number} y-axis-tick-length [null] - Sets the length of tickmarks along the Y-axis.
+/// @prop {Color} y-axis-tick-stroke [null] - Sets the color to apply to tickmarks along the Y-axis.
+/// @prop {Number} y-axis-tick-stroke-thickness [null] - Sets the thickness to apply to tickmarks along the Y-axis.
+/// @prop {String} zoom-slider-x-axis-major-stroke [null] - Gets or sets stroke brush of major gridlines on x-axis of the zoom slider pane.
+/// @prop {Number} zoom-slider-x-axis-major-stroke-thickness [null] - Gets or sets thickness of major gridlines on x-axis of the zoom slider pane.
+/// @see $default-palette
+$_light-financial-chart: extend(
+    (
+        'margin': null,
+        'title-alignment': null,
+        'title-text-color': null,
+        'title-margin': null,
+        'subtitle-text-color': null,
+        'subtitle-margin': null,
+        'subtitle-alignment': null,
+        'brushes': series,
+        'outlines': series,
+        'marker-brushes': series,
+        'marker-outlines': series,
+        'plot-area-background': null,
+        'indicator-brushes': series,
+        'indicator-negative-brushes': series,
+        'indicator-thickness': null,
+        'negative-brushes': series,
+        'negative-outlines': series,
+        'overlay-brushes': series,
+        'overlay-outlines': series,
+        'overlay-thickness': series,
+        'thickness': null,
+        'toolbar-height': null,
+        'trend-line-brushes': series,
+        'trend-line-thickness': null,
+        'volume-brushes': series,
+        'volume-outlines': series,
+        'volume-thickness': null,
+        'x-axis-label-margin': null,
+        'x-axis-label-text-color': null,
+        'x-axis-label-vertical-alignment': null,
+        'x-axis-major-stroke': null,
+        'x-axis-major-stroke-thickness': null,
+        'x-axis-minor-stroke': null,
+        'x-axis-minor-stroke-thickness': null,
+        'x-axis-strip': null,
+        'x-axis-stroke': null,
+        'x-axis-stroke-thickness': null,
+        'x-axis-title-alignment': null,
+        'x-axis-title-margin': null,
+        'x-axis-title-text-color': null,
+        'y-axis-label-margin': null,
+        'y-axis-label-text-color': null,
+        'y-axis-label-vertical-alignment': null,
+        'y-axis-major-stroke': null,
+        'y-axis-major-stroke-thickness': null,
+        'y-axis-minor-stroke': null,
+        'y-axis-minor-stroke-thickness': null,
+        'y-axis-strip': null,
+        'y-axis-stroke': null,
+        'y-axis-stroke-thickness': null,
+        'y-axis-title-alignment': null,
+        'y-axis-title-margin': null,
+        'y-axis-title-text-color': null,
+        'zoom-slider-x-axis-major-stroke': null,
+        'zoom-slider-x-axis-major-stroke-thickness': null
+    )
+);
+
+/// Generates a fluent financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-financial-chart
+$_fluent-financial-chart: extend($_light-financial-chart);
+
+/// Generates a bootstrap financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-financial-chart
+$_bootstrap-financial-chart: extend($_light-financial-chart);
+
