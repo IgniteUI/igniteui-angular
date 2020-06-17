@@ -760,6 +760,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         if (!isLeftClick(event)) {
+            event.preventDefault();
+            this.setActiveNode();
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
@@ -844,14 +846,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public activate(event: FocusEvent | KeyboardEvent) {
         const node = this.selectionNode;
-
-        if (this.grid.navigation.activeNode) {
-            Object.assign(this.grid.navigation.activeNode, {row: this.rowIndex, column: this.visibleColumnIndex});
-        } else {
-            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
-            this.grid.navigation.activeNode = { row: this.rowIndex, column: this.visibleColumnIndex, layout: layout };
-        }
-
+        this.setActiveNode();
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
@@ -915,5 +910,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const meta = new Map<string, any>();
         meta.set('pinned', this.grid.isRecordPinnedByViewIndex(this.row.index));
         return meta;
+    }
+
+    private setActiveNode() {
+        if (this.grid.navigation.activeNode) {
+            Object.assign(this.grid.navigation.activeNode, {row: this.rowIndex, column: this.visibleColumnIndex});
+        } else {
+            const layout = this.column.columnLayoutChild ? this.grid.navigation.layout(this.visibleColumnIndex) : null;
+            this.grid.navigation.activeNode = { row: this.rowIndex, column: this.visibleColumnIndex, layout: layout };
+        }
     }
 }
