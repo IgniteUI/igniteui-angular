@@ -11,7 +11,7 @@ var defaults = {
             otherLine: 80,
         },
         issuePattern: '(#)[0-9]+',
-        typesWithMandatoryIssue: [ 'feat', 'fix', 'test' ],
+        typesWithMandatoryIssue: [],
         guidelinesUrl: 'https://bit.ly/angular-guidelines',
         types: [
             'feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'chore', 'build', 'ci', 'revert'
