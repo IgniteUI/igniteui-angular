@@ -2611,12 +2611,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
-    public paginatorSettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: false,
-        outlet: this.outletDirective
-    };
+    /**
+     * @hidden @internal
+     */
+    protected paginatorSettings: OverlaySettings = null;
 
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
@@ -3091,6 +3089,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
+
+        this.paginatorSettings = { outlet: this.outletDirective };
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.preventContainerScroll);
