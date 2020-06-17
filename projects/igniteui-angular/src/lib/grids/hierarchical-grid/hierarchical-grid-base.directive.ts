@@ -19,7 +19,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxOverlayService, IgxTransactionService, Transaction, TransactionService, State } from '../../services/index';
+import { IgxOverlayService, IgxTransactionService, Transaction, TransactionService, State } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';

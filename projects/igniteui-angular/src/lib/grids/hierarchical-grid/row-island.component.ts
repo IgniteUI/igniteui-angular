@@ -28,13 +28,13 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { TransactionService, Transaction, State } from '../../services';
+import { TransactionService, Transaction, State } from '../../services/public_api';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 
-import { IgxOverlayService } from '../../services/index';
+import { IgxOverlayService } from '../../services/public_api';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
@@ -137,6 +137,21 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     @Output()
     public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
+
+    /**
+     * Emitted after a grid is being initialized for this row island.
+     * The emitting is done in `ngAfterViewInit`.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'" (onGridInitialized)="gridInitialized($event)" #rowIsland>
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
+    @Output()
+    public onGridInitialized = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
      * @hidden

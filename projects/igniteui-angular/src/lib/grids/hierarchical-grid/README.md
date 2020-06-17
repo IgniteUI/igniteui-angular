@@ -177,6 +177,7 @@ Below is the list of all inputs that the developers may set to configure the gri
     |--- |--- |
     |_Event emitters_|_Notify for a change_|
     | onGridCreated | Emitted when a grid is being created for this row island | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
+    | onGridInitialized | Emitted after a grid is being initialized for this row island. The emitting is done in `ngAfterViewInit` | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
 
 
 ### Properties

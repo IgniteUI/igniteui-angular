@@ -3,8 +3,7 @@ import {
     async,
     fakeAsync,
     TestBed,
-    tick,
-    flush
+    tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent, IgxProgressBarModule } from './progressbar.component';
@@ -15,7 +14,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 const CIRCULAR_INNER_CLASS = 'igx-circular-bar__inner';
 const CIRCULAR_OUTER_CLASS = 'igx-circular-bar__outer';
 const CIRCULAR_TEXT_CLASS = 'igx-circular-bar__text';
-const CIRCULAR_HIDDEN_TEXT_CLASS = 'igx-circular-bar__text--hidden';
 const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 
 describe('IgCircularBar', () => {
@@ -259,17 +257,20 @@ describe('IgCircularBar', () => {
     it('when passing string as value it should be parsed correctly', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
         const compInstance = fix.componentInstance;
-        const stringValue = '0.50';
+        const stringValue = '10';
+
+        compInstance.animate = false;
+        fix.detectChanges();
+
         compInstance.value = stringValue;
         fix.detectChanges();
 
         const bar = compInstance.progressbar;
-
-        const expectedRes = parseFloat(stringValue);
+        const expectedRes = parseInt(stringValue, 10);
         expect(bar.value).toBe(expectedRes);
     });
 
-    it('when update step is bigger than passed value the progress indicator should follow the value representation', () => {
+    it('when update step is bigger than passed value the progress indicator should follow the value representation', fakeAsync(() => {
         const fix = TestBed.createComponent(InitCircularProgressBarComponent);
         fix.detectChanges();
 
@@ -282,13 +283,14 @@ describe('IgCircularBar', () => {
         bar.value = value;
 
         fix.detectChanges();
+        tick(tickTime);
 
         const percentValue = Common.calcPercentage(value, max);
         expect(bar.value).toBe(value);
         expect(bar.step).toBe(step);
         expect(bar.max).toBe(max);
         expect(bar.valueInPercent).toBe(percentValue);
-    });
+    }));
 
     it(`when step value is not divisble to passed value the result returned from the
     value getter should be the same as the passed one`, fakeAsync(() => {
