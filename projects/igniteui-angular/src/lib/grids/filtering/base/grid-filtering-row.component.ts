@@ -15,12 +15,12 @@ import {
 } from '@angular/core';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down/index';
+import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down/public_api';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
-import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
+import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips/public_api';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from '../grid-filtering.service';

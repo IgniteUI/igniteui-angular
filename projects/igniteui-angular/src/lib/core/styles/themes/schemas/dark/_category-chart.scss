@@ -1,0 +1,81 @@
+@import '../light/category-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/SisIvanova" target="_blank">Silvia Ivanova</a>
+////
+
+/// Generates the base dark category-chart schema.
+/// @type {Map}
+/// @prop {Color} title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the chart title.
+/// @prop {Color} subtitle-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the chart subtitle.
+/// @prop {Color} x-axis-label-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of labels on the X-axis.
+/// @prop {Color} x-axis-tick-stroke [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color to apply to tickmarks along the X-axis.
+/// @prop {Color} x-axis-title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the title on the X-axis.
+/// @prop {Color} y-axis-label-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of labels on the Y-axis.
+/// @prop {Color} y-axis-tick-stroke [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color to apply to tickmarks along the Y-axis.
+/// @prop {Color} y-axis-title-text-color [igx-color: ('grays', 400), hexrgba: #fff] - Sets the color of the title on the Y-axis.
+$_base-dark-category-chart: (
+    title-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    subtitle-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    x-axis-label-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    x-axis-title-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    x-axis-tick-stroke: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    y-axis-label-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    y-axis-title-text-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    y-axis-tick-stroke: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    )
+);
+
+/// Generates a dark category-chart schema based on a mix of $_light-category-chart and $_base-dark-category-chart
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-category-chart
+/// @requires $_base-dark-category-chart
+/// @see $default-palette
+$_dark-category-chart: extend($_light-category-chart, $_base-dark-category-chart);
+
+/// Generates a dark fluent category-chart schema based on a mix of $_fluent-category-chart and $_base-dark-category-chart
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-category-chart
+/// @requires $_base-dark-category-chart
+$_dark-fluent-category-chart: extend($_fluent-category-chart, $_base-dark-category-chart);
+
+/// Generates a bootstrap category-chart schema based on a mix of $_bootstrap-category-chart and $_base-dark-category-chart
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-category-chart
+/// @requires $_base-dark-category-chart
+$_dark-bootstrap-category-chart: extend($_bootstrap-category-chart, $_base-dark-category-chart);
