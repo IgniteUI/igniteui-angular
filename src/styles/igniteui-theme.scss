@@ -6,8 +6,8 @@
 @import 'app-layout';
 
 /* autoprefixer grid: on */
-$palette: $default-palette;
-$schema: $light-schema;
+$palette: $indigo-palette;
+$schema: $light-indigo-schema;
 
 $igx-background-color: igx-color($palette, 'surface');
 $igx-foreground-color: text-contrast($igx-background-color);

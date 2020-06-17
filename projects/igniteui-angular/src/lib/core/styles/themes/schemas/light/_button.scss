@@ -537,3 +537,27 @@ $_bootstrap-button: extend(
         ),
     )
 );
+
+$_indigo-button: extend(
+    $_light-button,
+    $_indigo-shape-button,
+    $_indigo-elevation-button, (
+        variant: 'indigo-design',
+
+        flat-text-color: (
+            igx-color: ('grays', 700),
+            hexrgba: ()
+        ),
+
+        outlined-outline-color: (
+            igx-color: 'grays',
+            hexrgba: ()
+        ),
+
+        outlined-text-color: (
+            igx-color: ('grays', 700),
+            hexrgba: ()
+        )
+    )
+);
+

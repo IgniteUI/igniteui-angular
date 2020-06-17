@@ -168,6 +168,33 @@ $bootstrap-dark-palette: igx-palette(
     $grays: #fff
 ) !default;
 
+/// Indigo Design palette
+/// @type {Map}
+/// @group palettes
+$indigo-palette: igx-palette(
+    $primary: #3f51b5,
+    $secondary: #3f51b5,
+    $info: #17a2b8,
+    $success: #28a745,
+    $warn: #ffc107,
+    $error: #dc3545,
+    $surface: #fff
+) !default;
+
+/// Indigo dark palette
+/// @type {Map}
+/// @group palettes
+$indigo-dark-palette: igx-palette(
+    $primary: igx-color($indigo-palette, 'primary'),
+    $secondary: igx-color($indigo-palette, 'secondary'),
+    $info: igx-color($indigo-palette, 'info'),
+    $success: igx-color($indigo-palette, 'success'),
+    $warn: igx-color($indigo-palette, 'warn'),
+    $error: igx-color($indigo-palette, 'error'),
+    $surface: #24252c,
+    $grays: #fff
+) !default;
+
 /// Global Overlay Color
 /// @group palettes
 /// @type Color
