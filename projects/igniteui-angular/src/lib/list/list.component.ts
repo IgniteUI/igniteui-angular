@@ -30,6 +30,8 @@ import {
 } from './list.common';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
+import { IListResourceStrings } from '../core/i18n/list-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -148,6 +150,23 @@ export class IgxListLineSubTitleDirective {
     providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }]
 })
 export class IgxListComponent extends IgxListBaseDirective {
+    /**
+    * An accessor that sets the resource strings.
+    * By default it uses EN resources.
+    */
+   @Input()
+   set resourceStrings(value: IListResourceStrings) {
+       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+   }
+
+    /**
+    * An accessor that returns the resource strings.
+    */
+    get resourceStrings(): IListResourceStrings {
+        return this._resourceStrings;
+    }
+
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {

@@ -22,15 +22,6 @@ export class IgxListBaseDirective extends DisplayDensityBase {
     children: QueryList<any>;
     listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
     listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
-
-    set resourceStrings(value: IListResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
-    }
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
