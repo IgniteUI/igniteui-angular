@@ -98,11 +98,10 @@
         </div>
     </header>
 
-    <div *ngIf="column.sortable">
-        <ng-container *ngTemplateOutlet="sortingTemplate"></ng-container>
-    </div>
-
     <section class="igx-excel-filter__actions">
+        <div *ngIf="column.sortable">
+            <ng-container *ngTemplateOutlet="sortingTemplate"></ng-container>
+        </div>
 
         <div *ngIf="column.movable">
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
