@@ -702,10 +702,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     @Input()
     public get showGroupArea(): boolean {
-        return this.showGroupArea;
+        return this._showGroupArea;
     }
     public set showGroupArea(value: boolean) {
-        this.showGroupArea = value;
+        this._showGroupArea = value;
     }
 
     private _setGroupColsVisibility(value) {
