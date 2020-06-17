@@ -1745,7 +1745,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public getCalcWidth(): any {
-        if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
+        if (this._calcWidth && !isNaN(this.calcPixelWidth)) {
             return this._calcWidth;
         }
         this.cacheCalcWidth();

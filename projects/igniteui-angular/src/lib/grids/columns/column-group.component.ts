@@ -323,18 +323,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     get width() {
-        let isChildrenWidthInPercent = false, width;
+        let width;
         width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
             }
-            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                isChildrenWidthInPercent = true;
-                return acc + parseInt(val.width, 10);
-            }
             return acc + parseInt(val.calcWidth, 10);
         }, 0)}`;
-        return isChildrenWidthInPercent ? width + '%' : width + 'px';
+        return width + 'px';
     }
 
     set width(val) { }
