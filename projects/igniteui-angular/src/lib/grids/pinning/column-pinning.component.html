@@ -21,3 +21,8 @@
         {{ columnItem.name }}
     </igx-checkbox>
 </div>
+
+<div class="igx-column-hiding__buttons">
+    <button igxButton igxRipple (click)="pinAllColumns()" [disabled]="disablePinAll">{{ pinAllText }}</button>
+    <button igxButton igxRipple (click)="unpinAllColumns()" [disabled]="disableUnpinAll">{{ unpinAllText }}</button>
+</div>
