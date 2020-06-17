@@ -1,5 +1,7 @@
 import { Directive, TemplateRef, EventEmitter, QueryList, Optional, Inject } from '@angular/core';
 import { DisplayDensityBase, IDisplayDensityOptions, DisplayDensityToken } from '../core/density';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IListResourceStrings } from '../core/i18n/list-resources';
 
 export interface IListChild {
     index: number;
@@ -20,6 +22,15 @@ export class IgxListBaseDirective extends DisplayDensityBase {
     children: QueryList<any>;
     listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
     listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
+
+    set resourceStrings(value: IListResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    get resourceStrings(): IListResourceStrings {
+        return this._resourceStrings;
+    }
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
