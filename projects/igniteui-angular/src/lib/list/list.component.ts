@@ -151,17 +151,17 @@ export class IgxListLineSubTitleDirective {
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**
-    * An accessor that sets the resource strings.
-    * By default it uses EN resources.
-    */
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
    @Input()
    set resourceStrings(value: IListResourceStrings) {
        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
    }
 
     /**
-    * An accessor that returns the resource strings.
-    */
+     * Returns the resource strings.
+     */
     get resourceStrings(): IListResourceStrings {
         return this._resourceStrings;
     }
