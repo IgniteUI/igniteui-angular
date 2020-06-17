@@ -12,7 +12,7 @@
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator" #headerDragContainer>
+                <div class="igx-grid__drag-indicator" (pointerdown)="$event.preventDefault()" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
                             *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
@@ -22,7 +22,7 @@
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
                 <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
-                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }">
+                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }" (pointerdown)="$event.preventDefault()">
                     <ng-template #headSelector
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
