@@ -11,14 +11,15 @@ import {
 import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/public_api';
-import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/public_api';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/public_api';
+import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
+import { IgxSelectComponent } from '../../../select/select.component';
+import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
+import { IgxInputDirective } from '../../../input-group/public_api';
 
 /**
  * @hidden
@@ -39,11 +40,11 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
-    private _dropDownOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
+    public dropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(),
-        scrollStrategy: new CloseScrollStrategy()
+        closeOnOutsideClick: true,
+        excludePositionTarget: true
     };
 
     @Input()
@@ -67,21 +68,17 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
-    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent, static: true })
-    protected inputGroupConditions: IgxInputGroupComponent;
+    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    public overlayOutlet: IgxOverlayOutletDirective;
 
-    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
-    protected inputValuesDirective: IgxInputDirective;
-
-    @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })
-    protected dropdownConditions: IgxDropDownComponent;
+    @ViewChild('dropdownConditions', { read: IgxSelectComponent, static: true })
+    protected dropdownConditions: IgxSelectComponent;
 
     @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
-    protected get inputValuesElement() {
-        return this.inputValuesDirective;
-    }
+    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
+    protected inputValuesDirective: IgxInputDirective;
 
     get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
@@ -91,7 +88,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.expressionsList.length === 1;
     }
 
-    get inputConditionsPlaceholder(): string {
+    get conditionsPlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
     }
 
@@ -110,31 +107,25 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     constructor(public cdr: ChangeDetectorRef) {}
 
+    get conditions() {
+        return this.column.filters.conditionList();
+    }
+
+    protected get inputValuesElement() {
+        return this.inputValuesDirective;
+    }
+
     ngAfterViewInit(): void {
-        this._dropDownOverlaySettings.outlet = this.column.grid.outletDirective;
-        this._dropDownOverlaySettings.positionStrategy.settings.target = this.inputGroupConditions.element.nativeElement;
+        this.dropDownOverlaySettings.outlet = this.overlayOutlet;
+        this.dropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
+            target : this.dropdownConditions.inputGroup.element.nativeElement
+        });
     }
 
     public focus() {
         // use requestAnimationFrame to focus the values input because when initializing the component
         // datepicker's input group is not yet fully initialized
         requestAnimationFrame(() => this.inputValuesElement.focus());
-    }
-
-    public isConditionSelected(conditionName: string): boolean {
-        return this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName;
-    }
-
-    public getConditionName(condition: IFilteringOperation) {
-        return condition ? this.translateCondition(condition.name) : null;
-    }
-
-    public getInputWidth() {
-        return this.inputGroupConditions.element.nativeElement.offsetWidth + 'px';
-    }
-
-    get conditions() {
-        return this.column.filters.conditionList();
     }
 
     public translateCondition(value: string): string {
@@ -151,19 +142,19 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
-    public toggleCustomDialogDropDown() {
-        this.dropdownConditions.toggle(this._dropDownOverlaySettings);
+    public isConditionSelected(conditionName: string): boolean {
+        return this.expressionUI.expression.condition && this.expressionUI.expression.condition.name === conditionName;
+    }
+
+    public onConditionsChanged(eventArgs: any) {
+        const value = (eventArgs.newSelection as IgxSelectComponent).value;
+        this.expressionUI.expression.condition = this.getCondition(value);
+
+        this.focus();
     }
 
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.condition(value);
-    }
-
-    public onConditionsChanged(eventArgs: any) {
-        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-        this.expressionUI.expression.condition = this.getCondition(value);
-
-        this.focus();
     }
 
     public onValuesInput(eventArgs) {
@@ -196,15 +187,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.onExpressionRemoved.emit(this.expressionUI);
     }
 
-    public onInputConditionsKeyDown(eventArgs) {
-        if (eventArgs.altKey && (eventArgs.key === KEYS.DOWN_ARROW || eventArgs.key === KEYS.DOWN_ARROW_IE)) {
-            this.toggleCustomDialogDropDown();
-        }
-
-        if (eventArgs.key === KEYS.TAB && eventArgs.shiftKey && this.expressionsList[0] === this.expressionUI) {
-            eventArgs.preventDefault();
-        }
-
-        eventArgs.stopPropagation();
+    public onOutletPointerDown(event) {
+        event.preventDefault();
     }
 }
