@@ -111,6 +111,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _data;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
+    private _showGroupArea = true;
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -697,6 +698,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
+    @Input()
+    public get showGroupArea(): boolean {
+        return this._showGroupArea;
+    }
+    public set showGroupArea(value: boolean) {
+        this._showGroupArea = value;
     }
 
     private _setGroupColsVisibility(value) {

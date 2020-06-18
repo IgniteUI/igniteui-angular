@@ -1,6 +1,12 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 10.0.0
+
+### New Features
+
+- `IgxGrid`
+    - `showGroupArea` input is added, which can be used to enable/disable the group area row.
 
 ## 10.0
 
