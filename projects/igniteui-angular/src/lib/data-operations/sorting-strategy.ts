@@ -160,6 +160,7 @@ export class IgxSorting implements IGridSortingStrategy {
         let result = [];
         while (i < data.length) {
             const group = this.groupedRecordsByExpression(data, i, expressions[level]);
+            const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
                 level,
@@ -167,7 +168,8 @@ export class IgxSorting implements IGridSortingStrategy {
                 value: group[0][expressions[level].fieldName],
                 groupParent: parent,
                 groups: [],
-                height: grid ? grid.renderedRowHeight : null
+                height: grid ? grid.renderedRowHeight : null,
+                column: column
             };
             if (parent) {
                 parent.groups.push(groupRow);
