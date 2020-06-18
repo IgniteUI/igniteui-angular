@@ -187,7 +187,7 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      *
      * ```html
      *  <!--set-->
-     *  <igx-dropdown-item *ngFor="let item of items">
+     *  <igx-drop-down-item *ngFor="let item of items">
      *      <div *ngIf="items.indexOf(item) === 5; then item.isHeader = true">
      *          {{item.field}}
      *      </div>
