@@ -14,6 +14,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -345,6 +346,96 @@ describe('IgxGrid - multi-column headers #grid', () => {
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(colWidthPx);
     }));
+
+    it('Width should be correct. Column group with three columns. Columns with mixed width - px and percent.', async() => {
+        const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        fixture.detectChanges();
+        const componentInstance = fixture.componentInstance;
+        const grid = componentInstance.grid;
+        const col1 = grid.getColumnByName('Country');
+        const col2 = grid.getColumnByName('Region');
+        const col3 = grid.getColumnByName('City');
+
+
+        col1.width = '200px';
+        col2.width = '20%';
+        col3.width = '50%';
+
+        fixture.detectChanges();
+
+        // check group has correct size.
+        let locationColGroup = getColGroup(grid, 'Location');
+        let expectedWidth = (200 + Math.round(grid.calcWidth * 0.7)) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
+
+        // check header and content have same size.
+        const col1Header = grid.getColumnByName('Country').headerCell.elementRef.nativeElement;
+        const cell1 = grid.getRowByIndex(0).cells.toArray()[0].nativeElement;
+        expect(col1Header.offsetWidth).toEqual(cell1.offsetWidth);
+
+        let col2Header = grid.getColumnByName('Region').headerCell.elementRef.nativeElement;
+        let cell2 = grid.getRowByIndex(0).cells.toArray()[1].nativeElement;
+        expect(col2Header.offsetWidth).toEqual(cell2.offsetWidth);
+
+        let col3Header = grid.getColumnByName('City').headerCell.elementRef.nativeElement;
+        let cell3 = grid.getRowByIndex(0).cells.toArray()[2].nativeElement;
+        expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
+
+        // check that if grid is resized, group size is updated.
+
+        componentInstance.gridWrapperWidthPx = '500';
+        fixture.detectChanges();
+
+        await wait(100);
+        fixture.detectChanges();
+
+        locationColGroup = getColGroup(grid, 'Location');
+        expectedWidth = (200 + Math.round(grid.calcWidth * 0.7)) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
+
+        col2Header = grid.getColumnByName('Region').headerCell.elementRef.nativeElement;
+        cell2 = grid.getRowByIndex(0).cells.toArray()[1].nativeElement;
+        expect(col2Header.offsetWidth).toEqual(cell2.offsetWidth);
+
+        col3Header = grid.getColumnByName('City').headerCell.elementRef.nativeElement;
+        cell3 = grid.getRowByIndex(0).cells.toArray()[2].nativeElement;
+        expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
+    });
+
+    it('Width should be correct. Column group with three columns. Columns with mixed width - px, percent and null.', () => {
+        const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
+        fixture.detectChanges();
+        const componentInstance = fixture.componentInstance;
+        const grid = componentInstance.grid;
+        const col1 = grid.getColumnByName('Country');
+        const col2 = grid.getColumnByName('Region');
+        const col3 = grid.getColumnByName('City');
+
+
+        col1.width = '200px';
+        col2.width = '20%';
+        col3.width = null;
+
+        fixture.detectChanges();
+
+        // check group has correct size. Should fill available space in grid since one column has no width.
+        const locationColGroup = getColGroup(grid, 'Location');
+        const expectedWidth = grid.calcWidth - 1 + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
+
+        // check header and content have same size.
+        const col1Header = grid.getColumnByName('Country').headerCell.elementRef.nativeElement;
+        const cell1 = grid.getRowByIndex(0).cells.toArray()[0].nativeElement;
+        expect(col1Header.offsetWidth).toEqual(cell1.offsetWidth);
+
+        const col2Header = grid.getColumnByName('Region').headerCell.elementRef.nativeElement;
+        const cell2 = grid.getRowByIndex(0).cells.toArray()[1].nativeElement;
+        expect(col2Header.offsetWidth).toEqual(cell2.offsetWidth);
+
+        const col3Header = grid.getColumnByName('City').headerCell.elementRef.nativeElement;
+        const cell3 = grid.getRowByIndex(0).cells.toArray()[2].nativeElement;
+        expect(col3Header.offsetWidth).toEqual(cell3.offsetWidth);
+    });
 
     it('Width should be correct. Column group with three columns. Width in percent.', fakeAsync(() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
