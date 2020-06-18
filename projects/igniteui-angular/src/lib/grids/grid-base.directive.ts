@@ -46,7 +46,9 @@ import {
     OverlaySettings,
     PositionSettings,
     ConnectedPositioningStrategy,
-    ContainerPositionStrategy
+    ContainerPositionStrategy,
+    StateUpdateEvent,
+    TransactionEventOrigin
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -2857,7 +2859,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe(() => {
+        this.transactions.onStateUpdate.pipe(destructor).subscribe((event: StateUpdateEvent) => {
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+            }
+            if (actions.length > 0) {
+                for (const action of actions) {
+                    if (this.selectionService.isRowSelected(action.transaction.id)) {
+                        this.selectionService.deselectRow(action.transaction.id);
+                    }
+                }
+            }
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
