@@ -970,6 +970,7 @@
     }
 
     %grid-tbody-scrollbar {
+        background: --var($theme, 'content-background');
         border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
         position: relative;
     }
