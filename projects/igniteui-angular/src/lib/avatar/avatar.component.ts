@@ -9,7 +9,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 
 let NEXT_ID = 0;
 

@@ -3,16 +3,16 @@ import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } f
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/index';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxHintDirective } from '../input-group/index';
+import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
+import { IgxIconModule } from '../icon/public_api';
+import { IgxInputGroupModule, IgxHintDirective } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
+import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { IgxSelectModule } from './select.module';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';

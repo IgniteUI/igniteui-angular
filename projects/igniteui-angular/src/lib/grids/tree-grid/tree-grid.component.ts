@@ -3,8 +3,6 @@ import {
     Component,
     HostBinding,
     Input,
-    Output,
-    EventEmitter,
     forwardRef,
     OnInit,
     TemplateRef,
@@ -18,9 +16,15 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs, IPinRowEventArgs } from '../common/events';
-import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
-import { IgxHierarchicalTransactionService } from '../../services/index';
+import { IRowToggleEventArgs } from '../common/events';
+import {
+    HierarchicalTransaction,
+    HierarchicalState,
+    TransactionType,
+    TransactionEventOrigin,
+    StateUpdateEvent
+} from '../../services/transaction/transaction';
+import { IgxHierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
@@ -28,11 +32,11 @@ import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 
@@ -348,6 +352,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
+
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event: StateUpdateEvent) => {
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+            }
+            if (actions.length) {
+                for (const action of actions) {
+                    this.deselectChildren(action.transaction.id);
+                }
+            }
+        });
     }
 
     ngDoCheck() {
@@ -375,16 +393,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                     this.loadingRows.delete(parentID);
                     this.addChildRows(children, parentID);
                     this.notifyChanges();
-
-                    requestAnimationFrame(() => {
-                        const cellID = this.selectionService.activeElement;
-                        if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
-                            if (cell) {
-                                cell.nativeElement.focus();
-                            }
-                        }
-                    });
                 });
             }
         }
@@ -675,5 +683,21 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
+    }
+
+    /**
+     * @description A recursive way to deselect all selected children of a given record
+     * @param recordID ID of the record whose children to deselect
+     * @hidden
+     * @internal
+     */
+    private deselectChildren(recordID): void {
+        const selectedChildren = [];
+        const rowToDeselect = (this.getRowByKey(recordID) as IgxTreeGridRowComponent).treeRow;
+        this.selectionService.deselectRow(recordID);
+        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        if (selectedChildren.length > 0) {
+            selectedChildren.forEach(x => this.deselectChildren(x));
+        }
     }
 }

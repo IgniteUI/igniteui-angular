@@ -2,7 +2,7 @@ import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { NoopAnimationsModule, BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProductsComponent, ColumnSelectionGroupTestComponent } from '../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -38,7 +38,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 ProductsComponent,
                 ColumnSelectionGroupTestComponent
             ],
-            imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 

@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent } from './index';
+import { IgxTreeGridModule, IgxGridCellComponent } from './public_api';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -490,7 +490,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('should deselect row when delete its parent', () => {
-            pending('Related to the bug #5673');
             treeGrid.selectRows([treeGrid.getRowByIndex(3).rowID, treeGrid.getRowByIndex(5).rowID], true);
             fix.detectChanges();
 
@@ -506,8 +505,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedRows()).toEqual([]);
 
             // try to select deleted row
-            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
-            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(0).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
@@ -522,8 +521,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             // select rows
-            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
-            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(0).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
             fix.detectChanges();
 
@@ -579,7 +578,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should have correct header checkbox when add a row', () => {
-            pending('Related to the bug #5673');
             treeGrid.selectAllRows();
             fix.detectChanges();
 
@@ -600,7 +598,6 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('should have correct header checkbox when add a row and undo transaction', fakeAsync(() => {
-            pending('Related to the bug #5673');
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
             tick();
             fix.detectChanges();

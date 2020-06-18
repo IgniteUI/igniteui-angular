@@ -3,6 +3,7 @@ import { cloneArray } from '../../core/utils';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { DataUtil } from '../../data-operations/data-util';
+import { GridPagingMode } from '../common/enums';
 
 /**
  * @hidden
@@ -63,7 +64,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
     public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
 
-        if (!this.gridAPI.grid.paging) {
+        if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.local) {
             return collection;
         }
 
@@ -72,8 +73,10 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
             recordsPerPage: perPage
         };
 
-        const result: any[] = DataUtil.page(cloneArray(collection), state);
+        const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.length;
+        const result: any[] = DataUtil.page(cloneArray(collection), state, total);
         this.gridAPI.grid.pagingState = state;
         return result;
+
     }
 }
