@@ -23,6 +23,7 @@ import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IgxHintDirective } from '../directives/hint/hint.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -91,6 +92,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
+
+    /** @hidden @internal */
+    @ContentChild(IgxHintDirective, { read: ElementRef }) hintElement: ElementRef;
 
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
@@ -342,11 +346,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
-        const targetClass = (event.target as HTMLElement).className;
-        if (!targetClass.includes('igx-input-group__hint')) {
-            this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        const targetElement = event.target as HTMLElement;
+
+        if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
+            return;
         }
-    }
+        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+}
 
     /** @hidden @internal */
     ngAfterContentInit() {
