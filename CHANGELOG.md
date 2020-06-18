@@ -4,10 +4,6 @@ All notable changes for each version of this project will be documented in this 
 
 ## 10.0.0
 
-### New Features
-
-- `IgxSelect` support for `igxHint` directive added.
-    - Allows the user to add `igxHint` to be displayed bellow the input element.
 ### General
 - `igx-select`, `igx-combo`, `igx-drop-down`
 - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
@@ -18,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxGrid`
     - `showGroupArea` input is added, which can be used to enable/disable the group area row.
+
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
 
 ## 9.1.1
 
