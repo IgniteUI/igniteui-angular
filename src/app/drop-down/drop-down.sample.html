@@ -29,33 +29,25 @@
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
                                 [selected]="item.selected">
-                <div class="igx-drop-down__item-template">
                     {{ item.field }}
-                </div>
             </igx-drop-down-item>
         </igx-drop-down>
 
         <igx-drop-down #dropdown2 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-                <div class="igx-drop-down__item-template">
                     {{ item.field }}
-                </div>
             </igx-drop-down-item>
         </igx-drop-down>
 
         <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
             <div *ngFor="let item of items">
-                <div class="igx-drop-down__item-template">
                     {{ item.field }}
-                </div>
             </div>
         </div>
 
         <igx-drop-down #menu (onSelection)="onSelectionMenu($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
-                <div class="igx-drop-down__item-template">
                     {{ item.field }}
-                </div>
             </igx-drop-down-item>
         </igx-drop-down>
 
@@ -93,9 +85,7 @@
         <igx-drop-down #dropdown3 (onOpening)="onOpening($event)" (onSelection)="onSelectionLogger($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [value]="item" [disabled]="item.disabled"
                 [isHeader]="item.header">
-                <div class="igx-drop-down__item-template">
                     {{ item.field }}
-                </div>
             </igx-drop-down-item>
         </igx-drop-down>
         <button igxButton="raised" igxRipple (click)="clearSelection()" style="display: block">
