@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, async, fakeAsync } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { IgxColumnPinningModule } from '../pinning/pinning.module';
@@ -241,6 +241,101 @@ describe('Column Pinning UI #grid', () => {
 
             toolbar = grid.toolbar.columnPinningUI;
             expect(toolbar.pinnableColumns.length).toBe(4);
+        });
+
+        it('should allow pin/unpin all via the API', () => {
+            //pin all columns
+            columnChooser.pinAllColumns();
+            fix.detectChanges();
+
+            // verify all columns are pinned
+            expect(grid.pinnedColumns.length).toEqual(5);
+
+            //unpin all columns
+            columnChooser.unpinAllColumns();
+            fix.detectChanges();
+
+            // verify all columns are unpinned
+            expect(grid.pinnedColumns.length).toEqual(0);
+        });
+
+        it('"pinnedColumnsCount" reflects properly the number of pinned columns.', fakeAsync(() => {
+            expect(columnChooser.pinnedColumnsCount).toBe(0);
+
+            grid.columns[1].pinned = true;
+            tick();
+            expect(columnChooser.pinnedColumnsCount).toBe(1);
+
+            grid.columns[2].pinned = true;
+            tick();
+            expect(columnChooser.pinnedColumnsCount).toBe(2);
+
+            columnChooser.pinAllColumns();
+            fix.detectChanges();
+            expect(columnChooser.pinnedColumnsCount).toBe(5);
+
+            grid.columns[2].pinned = false;
+            tick();
+            expect(columnChooser.pinnedColumnsCount).toBe(4);
+        }));
+
+        it('- "Pin All" button gets enabled after unchecking a column when all used to be pinned.', () => {
+            const pinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Pin All');
+            //pin all columns
+            pinAll.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            //verify Pin All button is disabled
+            ControlsFunction.verifyButtonIsDisabled(pinAll.nativeElement);
+
+            //unpin ID column
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
+            fix.detectChanges();
+
+            //verify Pin All button is enabled
+            ControlsFunction.verifyButtonIsDisabled(pinAll.nativeElement, false);
+        });
+
+        it('- "Unpin All" button gets enabled after checking a column when all used to be unpinned.', () => {
+            const unpinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Unpin All');
+            //unpin all columns
+            unpinAll.triggerEventHandler('click', new Event('click'));
+            fix.detectChanges();
+
+            //verify Unpin All button is disabled
+            ControlsFunction.verifyButtonIsDisabled(unpinAll.nativeElement);
+
+            //pin Released column
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Released');
+            fix.detectChanges();
+
+            //verify Unpin All button is enabled
+            ControlsFunction.verifyButtonIsDisabled(unpinAll.nativeElement, false);
+        });
+
+        it('- "Pin All" button gets disabled after checking the last unchecked column.', () => {
+            const pinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Pin All').nativeElement;
+            ControlsFunction.verifyButtonIsDisabled(pinAll, false);
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Released');
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductName');
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+            fix.detectChanges();
+
+            ControlsFunction.verifyButtonIsDisabled(pinAll);
+        });
+
+        it('- "Unpin All" button gets disabled after unchecking the last checked column.', () => {
+            const unpinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Unpin All').nativeElement;
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+            fix.detectChanges();
+            ControlsFunction.verifyButtonIsDisabled(unpinAll, false);
+
+            GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
+            fix.detectChanges();
+            ControlsFunction.verifyButtonIsDisabled(unpinAll);
         });
     });
 
