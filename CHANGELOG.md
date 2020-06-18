@@ -1,26 +1,19 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
 ## 10.0.0
-
-### New Features
-
-- `IgxGrid`
-    - `showGroupArea` input is added, which can be used to enable/disable the group area row.
-
-## 10.0
 
 ### General
 - `igx-select`, `igx-combo`, `igx-drop-down`
 - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
-
-## 10.0.0
-
-### General
-- `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properies:
+- `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface; 
     - `actions` - contains information about the transactions, that caused the emission of the event.
 
+### New Features
+- `IgxGrid`
+    - `showGroupArea` input is added, which can be used to enable/disable the group area row.
 
 ## 9.1.1
 
