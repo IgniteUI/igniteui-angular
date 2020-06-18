@@ -32,7 +32,7 @@ class MySummary extends IgxNumberSummaryOperand {
 
 export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public localData = employeesData;
-  public hierData = this.generateDataUneven(100, 3);
+  public hierData = this.generateDataUneven(10, 3);
   public treeGridFlatData = TREEGRID_FLAT_DATA;
   public employees = EMPLOYEE_DATA;
   public gridId = 'grid1';
@@ -107,7 +107,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public ngOnInit() {
     this.router.events.pipe(take(1)).subscribe((event: NavigationStart) => {
-        this.saveGridState();
+        this.saveGridState(null);
     });
   }
 
@@ -136,18 +136,30 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   }
 
   // save state for all grids on the page
-  public saveGridState() {
-      this.state.forEach(stateDirective => {
-        let state = stateDirective.getState(this.serialize);
+  public saveGridState(stateDirective: IgxGridStateDirective) {
+    if (stateDirective) {
+      let state = stateDirective.getState(this.serialize);
+      if (typeof state !== 'string') {
+        state = JSON.stringify(state);
+      }
+      try {
+        window.localStorage.setItem(`${stateDirective.grid.id}-state`, state);
+      } catch (e) {
+          console.log('Storage is full, or the value that you try to se is too long to be written in single item, Please empty data');
+      }
+    } else {
+      this.state.forEach(stateDir => {
+        let state = stateDir.getState(this.serialize);
         if (typeof state !== 'string') {
           state = JSON.stringify(state);
         }
         try {
-          window.localStorage.setItem(`${stateDirective.grid.id}-state`, state);
+          window.localStorage.setItem(`${stateDir.grid.id}-state`, state);
         } catch (e) {
             console.log('Storage is full, or the value that you try to se is too long to be written in single item, Please empty data');
         }
       });
+    }
   }
 
   // restores grid state for the passed stateDirective only

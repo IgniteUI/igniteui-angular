@@ -350,6 +350,7 @@ namespace Features {
             const sortingState = context.currGrid.sortingExpressions;
             sortingState.forEach(s => {
                 delete s.strategy;
+                delete s.owner;
             });
             return { sorting: sortingState };
         }
@@ -555,12 +556,15 @@ namespace Features {
             const childGridStates: IGridStateCollection[] = [];
             const rowIslands = (context.currGrid as any).allLayoutList;
             if (rowIslands) {
-                rowIslands.forEach(rowIslandComponent => {
-                    context.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
-                    if (context.currGrid) {
-                        const rowIslandState = context.buildState(context.features) as IGridState;
-                        childGridStates.push({ id: `${rowIslandComponent.id}`, state: rowIslandState });
-                    }
+                rowIslands.forEach(rowIsland => {
+                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                    childGrids.forEach(chGrid => {
+                        context.currGrid = chGrid;
+                        if (context.currGrid) {
+                            const childGridState = context.buildState(context.features) as IGridState;
+                            childGridStates.push({ id: `${rowIsland.id}`, state: childGridState });
+                        }
+                    });
                 });
             }
             context.currGrid = context.grid;
@@ -570,12 +574,15 @@ namespace Features {
         public restoreFeatureState(context: IgxGridStateDirective, state: any): void {
             const rowIslands = (context.currGrid as any).allLayoutList;
             if (rowIslands) {
-                rowIslands.forEach(rowIslandComponent => {
-                    context.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
-                    const rowIslandState = state.find(st => st.id === rowIslandComponent.id);
-                    if (rowIslandState && context.currGrid) {
-                        context.restoreGridState(rowIslandState.state, context.features);
-                    }
+                rowIslands.forEach(rowIsland => {
+                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                    childGrids.forEach((chGrid, index) => {
+                        context.currGrid = chGrid;
+                        const childGridState = state.filter(st => st.id === rowIsland.id)[index];
+                        if (childGridState && context.currGrid) {
+                            context.restoreGridState(childGridState.state, context.features);
+                        }
+                    });
                 });
             }
             context.currGrid = context.grid;
