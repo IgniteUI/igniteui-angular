@@ -271,6 +271,11 @@
         }
     }
 
+    %igx-drop-down__inner {
+        display: block;
+        @include ellipsis();
+    }
+
     %igx-drop-down__item--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($item-padding, 'cosy');
