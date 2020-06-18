@@ -260,7 +260,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(gridColWidth);
+        const expectedWidth = (grid.calcWidth / 2) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridColWidth);
     }));
@@ -292,7 +293,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(columnWidth);
+        const expectedWidth = (grid.calcWidth / 2) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(columnWidth);
     }));
@@ -396,7 +398,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         fixture.detectChanges();
         const gridColWidth = '20%';
-        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.ngAfterViewInit();
@@ -404,7 +405,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidth);
+        const expectedWidth = (Math.round(grid.calcWidth * 0.2) * 3) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(gridColWidth);
         const regionColumn = grid.getColumnByName('Region');
@@ -440,7 +442,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         fixture.detectChanges();
         const columnWidth = '20%';
-        const groupWidth = '60%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.ngAfterViewInit();
@@ -448,7 +449,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(groupWidth);
+        const expectedWidth = (Math.round(grid.calcWidth * 0.2) * 3) + 'px';
+        expect(locationColGroup.width).toBe(expectedWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(columnWidth);
         const regionColumn = grid.getColumnByName('Region');
