@@ -244,14 +244,14 @@ describe('Column Pinning UI #grid', () => {
         });
 
         it('should allow pin/unpin all via the API', () => {
-            //pin all columns
+            // pin all columns
             columnChooser.pinAllColumns();
             fix.detectChanges();
 
             // verify all columns are pinned
             expect(grid.pinnedColumns.length).toEqual(5);
 
-            //unpin all columns
+            // unpin all columns
             columnChooser.unpinAllColumns();
             fix.detectChanges();
 
@@ -281,35 +281,35 @@ describe('Column Pinning UI #grid', () => {
 
         it('- "Pin All" button gets enabled after unchecking a column when all used to be pinned.', () => {
             const pinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Pin All');
-            //pin all columns
+            // pin all columns
             pinAll.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            //verify Pin All button is disabled
+            // verify Pin All button is disabled
             ControlsFunction.verifyButtonIsDisabled(pinAll.nativeElement);
 
-            //unpin ID column
+            // unpin ID column
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ID');
             fix.detectChanges();
 
-            //verify Pin All button is enabled
+            // verify Pin All button is enabled
             ControlsFunction.verifyButtonIsDisabled(pinAll.nativeElement, false);
         });
 
         it('- "Unpin All" button gets enabled after checking a column when all used to be unpinned.', () => {
             const unpinAll = GridFunctions.getColumnChooserButton(columnChooserElement, 'Unpin All');
-            //unpin all columns
+            // unpin all columns
             unpinAll.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            //verify Unpin All button is disabled
+            // verify Unpin All button is disabled
             ControlsFunction.verifyButtonIsDisabled(unpinAll.nativeElement);
 
-            //pin Released column
+            // pin Released column
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Released');
             fix.detectChanges();
 
-            //verify Unpin All button is enabled
+            // verify Unpin All button is enabled
             ControlsFunction.verifyButtonIsDisabled(unpinAll.nativeElement, false);
         });
 
