@@ -496,7 +496,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        const expectedWidth = (Math.round(grid.calcWidth * 0.2) * 3) + 'px';
+        const expectedWidth = (Math.floor(grid.calcWidth * 0.2) * 3) + 'px';
         expect(locationColGroup.width).toBe(expectedWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(gridColWidth);
@@ -540,7 +540,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        const expectedWidth = (Math.round(grid.calcWidth * 0.2) * 3) + 'px';
+        const expectedWidth = (Math.floor(grid.calcWidth * 0.2) * 3) + 'px';
         expect(locationColGroup.width).toBe(expectedWidth);
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(columnWidth);
