@@ -26,6 +26,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
@@ -556,7 +557,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 colUnitsInStock.movable = true;
                 fix.detectChanges();
 
-                grid.moveColumn(colUnitsInStock, colProductID);
+                grid.moveColumn(colUnitsInStock, colProductID, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
