@@ -209,6 +209,13 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
         }
         return this.hgridAPI.getChildGrid(path);
     }
+
+    /**
+     * @hidden @internal
+     */
+    public get outletDirective() {
+        return this.rootGrid._outletDirective;
+    }
 }
 
 function flatten(arr: any[]) {
