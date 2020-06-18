@@ -145,4 +145,9 @@ export class GridGroupBySampleComponent implements OnInit {
     public selectSummaryMode(event) {
         this.summaryMode = this.summaryModes[event.index].label;
     }
+
+    public hideGroupableRow() {
+        this.grid1.showGroupArea = !this.grid1.showGroupArea;
+        this.grid1.cdr.detectChanges();
+    }
 }
