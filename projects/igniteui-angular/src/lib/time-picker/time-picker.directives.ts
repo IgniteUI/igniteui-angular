@@ -268,6 +268,9 @@ export class IgxHourItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForHours(): boolean {
+        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+            return false;
+        }
         let hour = parseInt(this.value);
         if (this.selectedAmPm === 'PM') {
             hour += 12;
@@ -333,6 +336,9 @@ export class IgxMinuteItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForMinutes(): boolean {
+        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+            return false;
+        }
         const minute = parseInt(this.value);
         let hour = parseInt(this.selectedHour);
         if (this.selectedAmPm === 'PM') {
@@ -403,6 +409,9 @@ export class IgxSecondsItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForSeconds(): boolean {
+        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+            return false;
+        }
         const minute = parseInt(this.selectedMinute);
         let hour = parseInt(this.selectedHour);
         const second = parseInt(this.value);
@@ -475,6 +484,9 @@ export class IgxAmPmItemDirective {
 
     @HostBinding('class.igx-time-picker__item--disabled')
     get applyDisabledStyleForAmPm(): boolean {
+        if (this.minValueDate === undefined || this.maxValueDate === undefined) {
+            return false;
+        }
         const minute = parseInt(this.selectedMinute);
         let hour = parseInt(this.selectedHour);
         const second = parseInt(this.selectedSecond);
