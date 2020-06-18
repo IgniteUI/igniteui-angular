@@ -2644,7 +2644,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    protected paginatorSettings: OverlaySettings = null;
+    public paginatorSettings: OverlaySettings = null;
 
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
