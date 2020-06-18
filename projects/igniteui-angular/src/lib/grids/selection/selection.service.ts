@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../common/events';
-import { IgxGridBaseDirective } from '../grid';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { isEdge } from '../../core/utils';
 

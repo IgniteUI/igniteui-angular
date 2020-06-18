@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxDropDownComponent, IgxDropDownModule } from './index';
+import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
@@ -21,6 +21,7 @@ const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_SCROLL = 'igx-drop-down__list-scroll';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
+const CSS_CLASS_INNER_SPAN = 'igx-drop-down__inner';
 const CSS_CLASS_GROUP_ITEM = 'igx-drop-down__group';
 const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
 const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
@@ -977,7 +978,7 @@ describe('IgxDropDown ', () => {
                 dropdown.toggle();
                 fixture.detectChanges();
                 expect(dropdown.collapsed).toBeFalsy();
-                const dropdownItems = document.querySelectorAll(`.${CSS_CLASS_ITEM}`);
+                const dropdownItems = document.querySelectorAll(`.${CSS_CLASS_INNER_SPAN}`);
                 expect(dropdownItems.length).toEqual(9);
                 expect(dropdown.items.length).toEqual(9);
                 for (let i = 0; i < dropdownItems.length; i++) {

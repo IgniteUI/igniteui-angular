@@ -2,7 +2,7 @@ import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/cor
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowDirective, IgxGridBaseDirective } from './grid';
+import { IgxRowDirective, IgxGridBaseDirective } from './grid/public_api';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { GridType } from './common/grid.interface';
 import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
@@ -60,7 +60,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 return;
             }
-            this.row.dragging = true;
+            this.row.grid.dragRowID = this.row.rowID;
             this.row.grid.rowDragging = true;
             this.row.grid.markForCheck();
 
@@ -143,7 +143,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
-        this.row.dragging = false;
+        this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.markForCheck();
         this._unsubscribe();

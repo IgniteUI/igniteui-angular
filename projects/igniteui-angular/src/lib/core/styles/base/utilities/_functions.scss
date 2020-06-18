@@ -31,6 +31,18 @@
     @return ($pixels / $context) * 1rem;
 }
 
+/// Relative value(em/rem) to pixel.
+/// @access public
+/// @param {number|string} $num - The relative value to be converted.
+/// @param {number|string} $context [$browser-context] - The base context to convert against.
+@function px($num, $context: $browser-context) {
+    @if type-of $num == 'number' {
+        @return ($num / ($num * 0 + 1)) * 16px;
+    }
+
+    @return $num;
+}
+
 /// Calculates the luminance for a given color.
 /// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests.
 ///
@@ -403,17 +415,19 @@
 ///
 @function resolve-value($ctx, $extra: null) {
     $result: null;
+
     @each $fn, $args in $ctx {
         @if function-exists($fn) {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
                 $result: call(get-function($fn), $extra, $args...);
             } @else if $result != null {
-                $result: call(get-function($fn), $result, $args...)
+                $result: call(get-function($fn), $result, $args...);
             } @else {
-                $result: call(get-function($fn), $args...)
+                $result: call(get-function($fn), $args);
             }
         }
     }
+
     @return $result;
 }
 
@@ -421,6 +435,21 @@
 /// @access private
 @function random-color() {
     @return hsl(random(360), 100%, 50%);
+}
+
+@function igx-generate-series-colors($palette) {
+    @return (
+        igx-color($palette, 'primary'),
+        igx-color($palette, 'secondary'),
+        rgb(249, 98, 50),
+        rgb(60, 189, 201),
+        rgb(220, 63, 118),
+        rgb(255, 152, 0),
+        rgb(78, 98, 207),
+        rgb(84, 194, 90),
+        rgb(121, 85, 72),
+        rgb(154, 154, 154)
+    );
 }
 
 /// Applies an `igx-palette` to a given theme schema.
@@ -447,6 +476,12 @@
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
             $result: extend($result, (#{$key}: $value));
+        }
+
+        @if $value == 'series' {
+            $result: extend($result, (
+                #{$key}: #{igx-generate-series-colors($palette)}
+            ));
         }
     }
     @return $result;
@@ -567,3 +602,47 @@
 @function if-rtl($if, $else: null) {
     @return if-ltr($else, $if);
 }
+
+@function expand-shorthand($list) {
+    $len: length($list);
+
+    $margins: (
+        'margin-top': null,
+        'margin-right': null,
+        'margin-bottom': null,
+        'margin-left': null,
+    );
+
+    @for $i from 1 through 4 {
+        $n: $i % $len;
+        $n: if($n != 0, $n, $len);
+
+        @if $len == 3 and $i == 4 {
+            $n: 2;
+        }
+
+        $key: nth(map-keys($margins), $i);
+        $value: nth($list, $n);
+
+        $margins: map-merge($margins, ($key: $value));
+    }
+
+    @return $margins;
+}
+
+@function map-keys-prefix($map, $prefix, $separator: '-') {
+    $keys: map-keys($map);
+    $len: length($keys);
+    $result: ();
+
+    @for $i from 1 through $len {
+        $key: nth($keys, $i);
+
+        $result: map-merge($result, (
+            '#{$prefix}#{$separator}#{$key}': map-get($map, $key))
+        );
+    }
+
+    @return $result;
+}
+
