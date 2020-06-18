@@ -311,6 +311,7 @@
 /// @param {Color} $error [#ff134a] - The error color used throughout the application.
 /// @param {Color} $grays [#000 | $igx-foreground-color] - The color used for generating the grays palette.
 /// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
+/// @param {String} $variant ['material'] - The palette variant that gets generated. Possible values are: 'material', 'fluent', 'bootstrap', and 'indigo-design'.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
 @function igx-palette(
@@ -321,10 +322,17 @@
     $warn: #fbb13c,
     $error: #ff134a,
     $grays: #000,
-    $surface: #fff
+    $surface: #fff,
+    $variant: 'material'
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
-    $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);
+
+    $shades: map-get((
+        'material': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'fluent': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'bootstrap': (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87),
+        'indigo-design': (50: .02, 100: .03, 200: .06, 300: .15, 400: .21, 500: .4, 600: .52, 700: .64, 800: .77, 900: .9),
+    ), $variant);
 
     $primary-palette: generate-palette($primary, $saturations);
     $secondary-palette: generate-palette($secondary, $saturations);

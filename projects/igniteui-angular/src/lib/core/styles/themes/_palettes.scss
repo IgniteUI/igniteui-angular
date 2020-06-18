@@ -1,6 +1,7 @@
 /// Default theme palette.
 /// Will be the one used if no theme palette is specified.
 /// @group palettes
+/// @access public
 /// @type Map
 /// @prop {Map} primary - The primary sub-palette created from the primary color.
 /// @prop {Map} secondary - The secondary sub-palette created from the secondary color.
@@ -47,27 +48,48 @@
 /// @requires igx-palette
 $default-palette: igx-palette($primary: #09f, $secondary: #e41c77) !default;
 
-/// Default dark palette
+/// Default light palette
 /// @type {Map}
+/// @access public
 /// @group palettes
+$light-palette: $default-palette;
+
+/// Material light palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$light-material-palette: $default-palette;
+
+/// @ignore
 $default-dark-palette: igx-palette(
     $primary: igx-color($default-palette, 'primary'),
     $secondary: igx-color($default-palette, 'secondary'),
     $grays: #fff,
-    $surface: #222
+    $surface: #222,
 ) !default;
+
+/// Default dark palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-palette: $default-dark-palette;
+
+/// Material dark palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-material-palette: $default-dark-palette;
 
 /// Green palette
 /// @type {Map}
+/// @access public
 /// @group palettes
 $green-palette: igx-palette(
     $primary: #09f,
     $secondary: #72da67
 ) !default;
 
-/// Dark green palette,
-/// @type {Map}
-/// @group palettes
+/// @ignore
 $green-dark-palette: igx-palette(
     $primary: igx-color($green-palette, 'primary'),
     $secondary: igx-color($green-palette, 'secondary'),
@@ -75,23 +97,34 @@ $green-dark-palette: igx-palette(
     $grays: #fff
 ) !default;
 
+/// Dark green palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-green-palette: $green-dark-palette;
+
 /// Purple palette
 /// @type {Map}
+/// @access public
 /// @group palettes
 $purple-palette: igx-palette(
     $primary: #00b4d6,
     $secondary: #514590
 ) !default;
 
-/// Dark purple palette
-/// @type {Map}
-/// @group palettes
+/// @ignore
 $purple-dark-palette: igx-palette(
     $primary: igx-color($purple-palette, 'primary'),
     $secondary: igx-color($purple-palette, 'secondary'),
     $surface: #333,
     $grays: #fff
 ) !default;
+
+/// Dark purple palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-purple-palette: $purple-dark-palette;
 
 /// Fluent Excel palette
 /// @type {Map}
@@ -101,12 +134,11 @@ $fluent-excel-palette: igx-palette(
     $secondary: #217346,
     $success: #107c10,
     $warn: #797673,
-    $error: #a80000
+    $error: #a80000,
+    $variant: 'fluent'
 ) !default;
 
-/// Fluent Excel dark palette
-/// @type {Map}
-/// @group palettes
+/// @ignore
 $fluent-excel-dark-palette: igx-palette(
     $primary: igx-color($fluent-excel-palette, 'primary'),
     $secondary: igx-color($fluent-excel-palette, 'secondary'),
@@ -114,11 +146,19 @@ $fluent-excel-dark-palette: igx-palette(
     $warn: igx-color($fluent-excel-palette, 'warn'),
     $error: igx-color($fluent-excel-palette, 'error'),
     $surface: #222,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'fluent'
 ) !default;
+
+/// Fluent Excel dark palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-fluent-excel-palette: $fluent-excel-dark-palette;
 
 /// Fluent Word palette
 /// @type {Map}
+/// @access public
 /// @group palettes
 $fluent-word-palette: igx-palette(
     $primary: #2b579a,
@@ -126,11 +166,10 @@ $fluent-word-palette: igx-palette(
     $success: #107c10,
     $warn: #797673,
     $error: #a80000,
+    $variant: 'fluent'
 ) !default;
 
-/// Fluent Word dark palette
-/// @type {Map}
-/// @group palettes
+/// @ignore
 $fluent-word-dark-palette: igx-palette(
     $primary: igx-color($fluent-word-palette, 'primary'),
     $secondary: igx-color($fluent-word-palette, 'secondary'),
@@ -138,11 +177,19 @@ $fluent-word-dark-palette: igx-palette(
     $warn: igx-color($fluent-word-palette, 'warn'),
     $error: igx-color($fluent-word-palette, 'error'),
     $surface: #222,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'fluent'
 ) !default;
+
+/// Fluent Word dark palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-fluent-word-palette: $fluent-word-dark-palette;
 
 /// Bootstrap palette
 /// @type {Map}
+/// @access public
 /// @group palettes
 $bootstrap-palette: igx-palette(
     $primary: #007bff,
@@ -151,12 +198,11 @@ $bootstrap-palette: igx-palette(
     $success: #28a745,
     $warn: #ffc107,
     $error: #dc3545,
-    $surface: #f8f9fa
+    $surface: #f8f9fa,
+    $variant: 'bootstrap'
 ) !default;
 
-/// Bootstrap dark palette
-/// @type {Map}
-/// @group palettes
+/// @ignore
 $bootstrap-dark-palette: igx-palette(
     $primary: igx-color($bootstrap-palette, 'primary'),
     $secondary: igx-color($bootstrap-palette, 'secondary'),
@@ -165,34 +211,47 @@ $bootstrap-dark-palette: igx-palette(
     $warn: igx-color($bootstrap-palette, 'warn'),
     $error: igx-color($bootstrap-palette, 'error'),
     $surface: #333,
-    $grays: #fff
+    $grays: #fff,
+    $variant: 'bootstrap'
 ) !default;
+
+/// Bootstrap dark palette
+/// @type {Map}
+/// @access public
+/// @group palettes
+$dark-bootstrap-palette: $bootstrap-dark-palette;
 
 /// Indigo Design palette
 /// @type {Map}
+/// @access public
 /// @group palettes
 $indigo-palette: igx-palette(
     $primary: #3f51b5,
     $secondary: #3f51b5,
-    $info: #17a2b8,
-    $success: #28a745,
-    $warn: #ffc107,
-    $error: #dc3545,
-    $surface: #fff
+    $info: #9208bc,
+    $success: #689f38,
+    $warn: #ff9800,
+    $error: #cf1a2b,
+    $surface: #fff,
+    $grays: #060716,
+    $variant: 'indigo-design'
 ) !default;
+
 
 /// Indigo dark palette
 /// @type {Map}
+/// @access public
 /// @group palettes
-$indigo-dark-palette: igx-palette(
+$dark-indigo-palette: igx-palette(
     $primary: igx-color($indigo-palette, 'primary'),
     $secondary: igx-color($indigo-palette, 'secondary'),
     $info: igx-color($indigo-palette, 'info'),
     $success: igx-color($indigo-palette, 'success'),
     $warn: igx-color($indigo-palette, 'warn'),
     $error: igx-color($indigo-palette, 'error'),
-    $surface: #24252c,
-    $grays: #fff
+    $surface: #3b3d47,
+    $grays: #fff,
+    $variant: 'indigo-design'
 ) !default;
 
 /// Global Overlay Color
