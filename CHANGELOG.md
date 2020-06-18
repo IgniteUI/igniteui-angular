@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxHierarchicalGrid`
     - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
-
+-  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 ## 9.1.0
 
 ### General
