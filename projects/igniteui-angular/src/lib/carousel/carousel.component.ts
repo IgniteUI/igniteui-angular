@@ -20,7 +20,7 @@ import {
     ContentChild,
     Injectable
 } from '@angular/core';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -437,7 +437,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private newDuration = 0;
 
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
-            private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
+        private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -472,15 +472,18 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             }
 
             if (this.currentSlide) {
-                const animationWasStarted = this.finishAnimations();
+                if (this.previousSlide && this.previousSlide.previous) {
+                    this.previousSlide.previous = false;
+                }
                 this.currentSlide.direction = slide.direction;
                 this.currentSlide.active = false;
 
                 this.previousSlide = this.currentSlide;
                 this.currentSlide = slide;
                 if (this.animationType !== CarouselAnimationType.none) {
-                    if (animationWasStarted) {
+                    if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
                         requestAnimationFrame(() => {
+                            this.resetAnimations();
                             this.playAnimations();
                         });
                     } else {
@@ -500,20 +503,28 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.playEnterAnimation();
     }
 
-    private finishAnimations(): boolean {
-        let animationWasStarted = false;
-        if (this.previousSlide && this.previousSlide.previous) {
-            this.previousSlide.previous = false;
-        }
-        if (this.leaveAnimationPlayer) {
-            animationWasStarted = true;
+    private finishAnimations() {
+        if (this.animationStarted(this.leaveAnimationPlayer)) {
             this.leaveAnimationPlayer.finish();
         }
-        if (this.enterAnimationPlayer) {
-            animationWasStarted = true;
+
+        if (this.animationStarted(this.enterAnimationPlayer)) {
             this.enterAnimationPlayer.finish();
         }
-        return animationWasStarted;
+    }
+
+    private resetAnimations() {
+        if (this.animationStarted(this.leaveAnimationPlayer)) {
+            this.leaveAnimationPlayer.reset();
+        }
+
+        if (this.animationStarted(this.enterAnimationPlayer)) {
+            this.enterAnimationPlayer.reset();
+        }
+    }
+
+    private animationStarted(animation: AnimationPlayer): boolean {
+        return animation && animation.hasStarted();
     }
 
     private getAnimation(): CarouselAnimationSettings {
@@ -565,10 +576,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playEnterAnimation() {
-        if (!this.getAnimation().enterAnimation) {
+        const animation = this.getAnimation().enterAnimation;
+        if (!animation) {
             return;
         }
-        const animationBuilder = this.builder.build(this.getAnimation().enterAnimation);
+        const animationBuilder = this.builder.build(animation);
 
         this.enterAnimationPlayer = animationBuilder.create(this.currentSlide.nativeElement);
 
@@ -586,11 +598,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playLeaveAnimation() {
-        if (!this.getAnimation().leaveAnimation) {
+        const animation = this.getAnimation().leaveAnimation;
+        if (!animation) {
             return;
         }
 
-        const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
+        const animationBuilder = this.builder.build(animation);
         this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
 
         this.leaveAnimationPlayer.onDone(() => {
@@ -1020,6 +1033,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.isPlaying) {
             this.stoppedByInteraction = true;
             this.stop();
+        }
+
+        if (this.previousSlide && this.previousSlide.previous) {
+            this.previousSlide.previous = false;
         }
         this.finishAnimations();
 

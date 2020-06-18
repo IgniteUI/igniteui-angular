@@ -102,6 +102,7 @@ import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinni
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
     {
@@ -433,6 +434,10 @@ const appRoutes = [
     {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
+    },
+    {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
     },
     {
         path: 'treeGrid',

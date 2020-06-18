@@ -1,0 +1,76 @@
+////
+/// @group themes
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {List} $brushes [null] - Defines the palette from which automatically assigned series colors are selected.
+/// @param {List} $outlines [null] - Defines the palette from which automatically assigned series outline colors are selected.
+/// @param {String} $outer-label-alignment [null] - Sets which side of the chart the outer labels should appear.
+/// @param {Color} $outer-label-text-color [null] - Sets the Color used for the outer labels.
+/// @param {Color} $outer-label-visibility [null] - Sets whether the outer labels are visible.
+/// @param {Number} $outline-thickness [null] - Sets the thickness of outline around slices.
+/// @param {Color} $text-color - [null] Sets the Color used for the inner labels.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss
+///   $my-chart-theme: igx-funnel-chart-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the igx-css-vars mixin
+///   @include igx-css-vars($my-chart-theme);
+@function igx-funnel-chart-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $brushes: null,
+    $outlines: null,
+    $outer-label-alignment: null,
+    $outer-label-text-color: null,
+    $outer-label-visibility: null,
+    $outline-thickness: null,
+    $text-color: null,
+) {
+    $name: 'funnel-chart';
+    $chart-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $chart-schema: map-get($schema, $name);
+    } @else {
+        $chart-schema: $schema;
+    }
+
+    $theme: apply-palette($chart-schema, $palette);
+
+    @return extend($theme, (
+        name: $name,
+        brushes: $brushes,
+        outlines: $outlines,
+        outer-label-alignment: $outer-label-alignment,
+        outer-label-text-color: $outer-label-text-color,
+        outer-label-visibility: $outer-label-visibility,
+        outline-thickness: $outline-thickness,
+        text-color: $text-color,
+    ));
+}
+
+@mixin igx-funnel-chart-typography($type-scale, $categories: (
+    outer-label-text-style: 'h1',
+    text-style: 'subtitle-1',
+)) {
+    $name: 'funnel-chart';
+    $outer-label-text-style: map-get($categories, 'outer-label-text-style');
+    $text-style: map-get($categories, 'text-style');
+
+    $outer-label: igx-type-scale-category($type-scale, $outer-label-text-style);
+    $text: igx-type-scale-category($type-scale, $text-style);
+
+    @include igx-font-var('outer-label-text-style', $outer-label, $name);
+    @include igx-font-var('text-style', $text, $name);
+}
+

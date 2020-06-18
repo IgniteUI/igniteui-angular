@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './index';
+import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
@@ -18,6 +18,7 @@ import { GridSelectionMode } from '../common/enums';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DebugElement } from '@angular/core';
+import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
@@ -2287,7 +2288,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.primaryKey = 'ID';
             fix.detectChanges();
 
-            grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'));
+            grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'), DropPosition.BeforeDropTarget);
             fix.detectChanges();
             const newSelectedData = [
                 { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014') },

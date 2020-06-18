@@ -1,5 +1,5 @@
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
-    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
+    <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}" (pointerdown)="$event.preventDefault()" (click)="$event.stopPropagation()"></div>
 </ng-container>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
@@ -7,7 +7,7 @@
     </div>
 </ng-container>
 <ng-container *ngIf="this.showRowSelectors">
-    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+    <div class="igx-grid__cbx-selection" (pointerdown)="$event.preventDefault()" (click)="onRowSelectorClick($event)">
          <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: { index: viewIndex, rowID: rowID, selected: selected }}">
@@ -156,7 +156,7 @@
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
         [column]="col"
         [style.-ms-grid-row-span]="col.gridRowSpan"
-        [style.-ms-grid-column-span]="col.girdColumnSpan"
+        [style.-ms-grid-column-span]="col.gridColumnSpan"
         [style.grid-row-end]="col.rowEnd"
         [style.grid-column-end]="col.colEnd"
         [style.-ms-grid-row]="col.rowStart"
@@ -191,7 +191,7 @@
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
         [column]="col"
         [style.-ms-grid-row-span]="col.gridRowSpan"
-        [style.-ms-grid-column-span]="col.girdColumnSpan"
+        [style.-ms-grid-column-span]="col.gridColumnSpan"
         [style.grid-row-end]="col.rowEnd"
         [style.grid-column-end]="col.colEnd"
         [style.-ms-grid-row]="col.rowStart"

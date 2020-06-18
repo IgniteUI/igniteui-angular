@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import {
@@ -50,7 +50,6 @@ import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;

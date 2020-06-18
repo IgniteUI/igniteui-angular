@@ -7,13 +7,13 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridModule, IgxGridBaseDirective } from './index';
+import { IgxGridModule, IgxGridBaseDirective } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from '../cell.component';
-import { TransactionType, Transaction } from '../../services';
+import { TransactionType, Transaction } from '../../services/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
@@ -318,6 +318,45 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
             cell.setEditMode(false);
 
+        });
+
+        it('should end row editing when clearing or applying advanced filter', () => {
+            fix.detectChanges();
+            const row = grid.getRowByIndex(2);
+
+            // Enter row edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
+            fix.detectChanges();
+
+            expect(row.inEditMode).toBe(false);
+
+            // Close the dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
+            fix.detectChanges();
+
+            // Enter row edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(row.inEditMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            expect(row.inEditMode).toBe(false);
         });
     });
 
@@ -1848,7 +1887,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
     describe('Custom overlay', () => {
 
-        it('Custom overlay', () => {
+        it('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1870,9 +1909,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.componentInstance.buttons.last.element.nativeElement.click();
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledTimes(1);
-        });
+        }));
 
-        it('Empty template', () => {
+        it('Empty template', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridEmptyRowEditTemplateComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
@@ -1906,20 +1945,19 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             cell = grid.getCellByColumn(0, 'ProductName');
             expect(cell.editMode).toBe(true);
-        });
+        }));
     });
 
     describe('Transaction', () => {
         let fix;
         let grid;
         let cell: IgxGridCellComponent;
-
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
-        });
+        }));
 
         it('Should add correct class to the edited row', () => {
             const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
@@ -2331,7 +2369,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
         let groupRows;
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2342,7 +2380,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
             fix.detectChanges();
-        });
+        }));
 
         it('Hide row editing dialog with group collapsing/expanding', () => {
             // fix.detectChanges();
@@ -2450,12 +2488,12 @@ describe('IgxGrid - Row Editing #grid', () => {
         let trans;
         let fix;
         let grid;
-        beforeEach(/** height/width setter rAF */() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             trans = grid.transactions;
-        });
+        }));
 
 
         it(`Should not commit added row to grid's data in grid with transactions`, () => {
