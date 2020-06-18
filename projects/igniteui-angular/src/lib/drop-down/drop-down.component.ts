@@ -525,6 +525,13 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
+     * @hidden @internal
+     */
+    public listClass() {
+        return this.items.length > 0 ? 'igx-drop-down__list' : 'igx-drop-down__list--empty';
+    }
+
+    /**
      * Handles the `onSelection` emit and the drop down toggle when selection changes
      * @hidden
      * @internal
