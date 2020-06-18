@@ -66,7 +66,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
-     * Sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * Gets/Sets the value of the `id` attribute.
+     * @remarks
+     * If not provided it will be automatically generated.
+     * @example
      * ```html
      * <igx-hierarchical-grid [id]="'igx-hgrid-1'" [data]="Data" [autoGenerate]="true"></igx-hierarchical-grid>
      * ```
@@ -76,6 +79,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @Input()
     public get id(): string {
         return this.h_id;
+    }
+    public set id(value: string) {
+        this.h_id = value;
     }
 
     /**
