@@ -12,6 +12,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface; 
     - `actions` - contains information about the transactions, that caused the emission of the event.
+- `IgxPaginator` - The input `overlaySettings` was introduced, which allows the appllication of custom overlay settings over the component. 
 
 ### New Features
 - `IgxGrid`
@@ -22,7 +23,7 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxHierarchicalGrid`
     - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
-
+-  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 ## 9.1.0
 
 ### General

@@ -75,6 +75,11 @@ export class GridMRLSampleComponent {
     }
     pinGroup() {
         const col = this.grid.getColumnByName('group2');
+        console.log(col);
+        col.pinned = !col.pinned;
+    }
+    pinGroup1() {
+        const col = this.grid.getColumnByName('group1');
         col.pinned = !col.pinned;
     }
 
