@@ -90,8 +90,30 @@ $_dark-bootstrap-button: extend(
     )
 );
 
-/// Generates a dark indigo design button schema.
+/// Generates a dark indigo button schema.
 /// @type {Map}
+///
+/// @prop {map} outlined-hover-background [#fff] - The hover background color of an outlined button.
+/// @prop {Color} outlined-hover-text-color [(igx-color: 'surface')] - The hover text color of an outlined button.
+/// @prop {map} outlined-focus-background [#fff] - The focus background color of an outlined button.
+/// @prop {Color} outlined-focus-text-color [(igx-color: 'surface')] - The focus text color of an outlined button.
+///
 /// @requires extend
 /// @requires $_indigo-button
-$_dark-indigo-button: extend($_indigo-button);
+$_dark-indigo-button: extend(
+    $_indigo-button,
+    (
+        outlined-hover-text-color: (
+            igx-color: 'surface'
+        ),
+
+        outlined-hover-background: #fff,
+
+        outlined-focus-text-color: (
+            igx-color: 'surface'
+        ),
+
+        outlined-focus-background: #fff,
+    )
+);
+
