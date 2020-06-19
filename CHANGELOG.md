@@ -18,6 +18,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`
     - `showGroupArea` input is added, which can be used to enable/disable the group area row.
 
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
+
 ## 9.1.1
 
 ### General
