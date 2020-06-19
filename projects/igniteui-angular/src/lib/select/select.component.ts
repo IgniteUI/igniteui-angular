@@ -108,7 +108,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
 
     /** @hidden @internal */
-    @ContentChild(IgxHintDirective, { read: ElementRef }) hintElement: ElementRef;
+    @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
 
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
