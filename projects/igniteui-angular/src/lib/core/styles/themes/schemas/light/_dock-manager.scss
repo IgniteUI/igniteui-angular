@@ -86,9 +86,6 @@ $_light-dock-manager: (
 /// @requires $_light-dock-manager
 $_fluent-dock-manager: extend(
     $_light-dock-manager, (
-        active-color: (
-            igx-color: primary,
-        ),
         background-color: (
             igx-color: surface,
         ),
@@ -180,23 +177,19 @@ $_bootstrap-dock-manager: extend(
         context-menu-background-active: (
             igx-color: primary,
         ),
-        context-menu-color-active: (
-            igx-color: surface
-        ),
+        context-menu-color-active: #fff,
         context-menu-color: (
             igx-color: primary,
         ),
         dock-background: #f8f9fa,
         floating-pane-border-color: (
             igx-color: (grays, 300),
-            hexrgba: (),
         ),
         joystick-background-active: (
             igx-color: primary,
         ),
         joystick-border-color: (
             igx-color: (grays, 300),
-            hexrgba: (),
         ),
         joystick-icon-color: (
             igx-color: primary,
