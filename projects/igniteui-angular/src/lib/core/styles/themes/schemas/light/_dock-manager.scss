@@ -171,42 +171,66 @@ $_fluent-dock-manager: extend(
 /// @requires $_bootstrap-shape-dock-manager
 $_bootstrap-dock-manager: extend(
     $_light-dock-manager, (
-        border-color: #fff,
+        border-color: (
+            igx-color: surface
+        ),
         button-text: (
             igx-color: primary,
         ),
         context-menu-background-active: (
             igx-color: primary,
         ),
-        context-menu-color-active: #fff,
+        context-menu-color-active: (
+            igx-color: surface
+        ),
         context-menu-color: (
             igx-color: primary,
         ),
         dock-background: #f8f9fa,
-        floating-pane-border-color: #E0E0E0,
+        floating-pane-border-color: (
+            igx-color: (grays, 300),
+            hexrgba: (),
+        ),
         joystick-background-active: (
             igx-color: primary,
         ),
-        joystick-border-color: #E0E0E0,
+        joystick-border-color: (
+            igx-color: (grays, 300),
+            hexrgba: (),
+        ),
         joystick-icon-color: (
             igx-color: primary,
         ),
         joystick-icon-color-active: #fff,
-        pane-content-background: #fff,
+        pane-content-background: (
+            igx-color: surface
+        ),
         pinned-header-background: #f8f9fa,
         pane-header-background: #f8f9fa,
         primary-color: #f8f9fa,
         splitter-background: #e9ecef,
         splitter-handle: #bdc6d0,
-        tab-background-active: #fff,
-        tab-background: #fff,
-        tab-border-color-active: rgba(0, 0, 0, .12),
-        tab-border-color: #fff,
-        tab-text-active: rgba(0, 0, 0, .74),
+        tab-background-active: (
+            igx-color: surface
+        ),
+        tab-background: (
+            igx-color: surface
+        ),
+        tab-border-color-active: (
+            igx-color: (grays, 300)
+        ),
+        tab-border-color: (
+            igx-color: surface
+        ),
+        tab-text-active: (
+            igx-color: (grays, 800)
+        ),
         tab-text: (
             igx-color: primary,
         ),
-        text-color: rgba(0, 0, 0, .74),
+        text-color: (
+            igx-color: (grays, 800)
+        ),
     )
 );
 
