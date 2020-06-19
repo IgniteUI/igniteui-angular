@@ -31,6 +31,7 @@ import { IgxToggleModule } from '../../../directives/toggle/toggle.directive';
 import { IgxListModule } from '../../../list/list.component';
 import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
 import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
+import { IgxSelectModule } from './../../../select/select.module';
 
 /**
  * @hidden
@@ -76,7 +77,8 @@ import { IgxProgressBarModule } from '../../../progressbar/progressbar.component
         IgxFilterModule,
         IgxToggleModule,
         IgxListModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
+        IgxSelectModule,
     ],
     entryComponents: [
         IgxGridExcelStyleFilteringComponent
