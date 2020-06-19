@@ -81,6 +81,8 @@ $_bootstrap-dialog: extend(
 
 /// Generates a indigo dialog schema.
 /// @type {Map}
+/// @prop {Map} title-color ['grays', 900)] - The dialog title text color.
+/// @prop {Map} message-color [igx-color: ('grays', 700)] - The dialog message text color.
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
 $_indigo-dialog: extend(
@@ -88,6 +90,14 @@ $_indigo-dialog: extend(
     $_indigo-shape-dialog,
     (
         variant: 'indigo-design',
+
+        title-color: (
+            igx-color: ('grays', 900),
+        ),
+
+        message-color: (
+            igx-color: ('grays', 700),
+        ),
     )
 );
 
