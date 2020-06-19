@@ -102,6 +102,9 @@ import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinni
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import {
+    HierarchicalGridRemoteVirtualizationComponent
+} from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
@@ -460,6 +463,9 @@ const appRoutes = [
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
+    }, {
+        path: 'hierarchicalGridRemoteVirtualization',
+        component: HierarchicalGridRemoteVirtualizationComponent
     }, {
         path: 'hierarchicalGridUpdating',
         component: HierarchicalGridUpdatingSampleComponent
