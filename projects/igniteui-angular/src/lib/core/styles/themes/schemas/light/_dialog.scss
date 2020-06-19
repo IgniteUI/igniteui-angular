@@ -79,3 +79,15 @@ $_bootstrap-dialog: extend(
     )
 );
 
+/// Generates a indigo dialog schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-dialog
+$_indigo-dialog: extend(
+    $_light-dialog,
+    $_indigo-shape-dialog,
+    (
+        variant: 'indigo-design',
+    )
+);
+
