@@ -13,7 +13,6 @@ import {
     ColumnEditablePropertyTestComponent
 } from '../../test-utils/grid-samples.spec';
 import { DebugElement } from '@angular/core';
-import { IgxCell } from '../selection/selection.service';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -557,21 +556,19 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should properly emit 'onCellEditEnter' event`, () => {
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
-            let igxCell: IgxCell;
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
             expect(cell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
             let cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -585,14 +582,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBeFalsy();
             cell = grid.getCellByColumn(0, 'age');
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
+            initialRowData = {...cell.rowData};
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 20,
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -606,21 +602,19 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.onCellEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
-            let igxCell: IgxCell;
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
             expect(cell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 cancel: true,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -630,20 +624,19 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             // press enter on a cell
             cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 20,
                 cancel: true,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -656,7 +649,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             let cellArgs: IGridEditEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
-            let igxCell: IgxCell;
+            let initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -670,16 +663,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.value = 'John Brown';
-            igxCell.primaryKey = grid.primaryKey;
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -687,6 +678,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
@@ -696,17 +688,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.value = 20;
-            igxCell.editValue = '1';
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 20,
                 newValue: 1,
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -720,8 +709,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 e.cancel = true;
             });
             let cellArgs: IGridEditEventArgs;
-            let igxCell: IgxCell;
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -735,16 +724,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = 'New Name';
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -755,6 +742,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe('John Brown');
 
             cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
@@ -764,16 +752,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = '1';
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 20,
                 newValue: '1',
                 cancel: true,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -861,6 +847,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it(`Should properly emit 'onCellEditCancel' event`, () => {
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');
+            const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -874,16 +861,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fixture.detectChanges();
 
-            const igxCell: IgxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = 'New Name';
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
@@ -899,6 +883,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 e.cancel = true;
             });
             const cell = grid.getCellByColumn(0, 'fullName');
+            const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -912,16 +897,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
             fixture.detectChanges();
 
-            const igxCell: IgxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = 'New Name';
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: true,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };

@@ -1,8 +1,9 @@
-import { Injectable, EventEmitter, NgZone } from '@angular/core';
-import { IGridEditEventArgs } from '../common/events';
-import { IgxGridBaseDirective } from '../grid/public_api';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { isEdge } from '../../core/utils';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IGridEditEventArgs } from '../common/events';
+import { GridType } from '../common/grid.interface';
+import { IgxGridBaseDirective } from '../grid/public_api';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -53,11 +54,12 @@ export class IgxRow {
     state: any;
     newData: any;
 
-    constructor(public id: any, public index: number, public data: any, public grid: any) { }
+    constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
     createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
+            rowData:  { ... this.data },
             oldValue: { ... this.data },
             cancel: false,
             owner: this.grid
@@ -80,7 +82,7 @@ export class IgxCell {
         public value: any,
         public editValue: any,
         public rowData: any,
-        public grid: any) { }
+        public grid: IgxGridBaseDirective & GridType) { }
 
     castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -94,10 +96,10 @@ export class IgxCell {
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
+            rowData:  { ... this.rowData },
             oldValue: this.value,
             cancel: false,
             column: this.column,
-            cell: this,
             owner: this.grid
         };
         if (includeNewValue) {
@@ -110,7 +112,7 @@ export class IgxCell {
 @Injectable()
 export class IgxGridCRUDService {
 
-    grid;
+    grid: IgxGridBaseDirective & GridType;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
     public isInCompositionMode = false;

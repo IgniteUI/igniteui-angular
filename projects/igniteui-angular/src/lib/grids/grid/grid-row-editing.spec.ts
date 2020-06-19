@@ -27,7 +27,6 @@ import {
     IgxGridEmptyRowEditTemplateComponent,
     VirtualGridComponent
 } from '../../test-utils/grid-samples.spec';
-import { IgxCell } from '../selection/selection.service';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -125,6 +124,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Emit all events with proper arguments', () => {
             const row = grid.getRowByIndex(2);
+            const initialRowData = {...cell.rowData};
+
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
@@ -133,24 +134,22 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
 
             let cellInput = null;
-            let igxCell: IgxCell;
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: cell.value,
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
             let rowArgs: IGridEditEventArgs = {
                 rowID: row.rowID,
+                rowData: initialRowData,
                 oldValue: row.rowData,
                 cancel: false,
                 owner: grid
@@ -163,21 +162,20 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(row.inEditMode).toBe(false);
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
             // no change, new value is null
             rowArgs = {
                 rowID: row.rowID,
+                rowData: initialRowData,
                 newValue: null,
                 oldValue: row.rowData,
                 cancel: false,
@@ -195,22 +193,21 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.setInputElementValue(cellInput, newCellValue);
             fix.detectChanges();
 
-            igxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = 'Aaaaa';
-            igxCell.rowData.ProductName = 'Aaaaa';
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialRowData,
                 oldValue: cell.value,
                 newValue: newCellValue,
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
+            // TODO: onRowEdit should emit updated rowData - issue #7304
             rowArgs = {
                 rowID: row.rowID,
+                rowData: initialRowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: row.rowData,
                 cancel: false,
@@ -1554,7 +1551,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
             initialRow = grid.getRowByIndex(0);
-            initialData = Object.assign({}, initialRow.rowData);
+            initialData = {...initialRow.rowData};
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));
@@ -1578,8 +1575,10 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(grid.onRowEditCancel.emit).not.toHaveBeenCalled();
             expect(grid.onRowEdit.emit).toHaveBeenCalled();
+            // TODO: onRowEdit should emit updated rowData - issue #7304
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: false,
@@ -1614,8 +1613,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+            // TODO: onRowEdit should emit updated rowData - issue #7304
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: true,
@@ -1635,8 +1636,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toEqual(false);
             expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(2);
+            // TODO: onRowEdit should emit updated rowData - issue #7304
             expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: true,
@@ -1665,6 +1668,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).toHaveBeenCalled();
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
                 cancel: false,
@@ -1702,6 +1706,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
                 cancel: true,
@@ -1724,6 +1729,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
                 cancel: true,
@@ -1748,6 +1754,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalled();
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 oldValue: initialData,
                 cancel: false,
                 owner: grid
@@ -1774,6 +1781,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 oldValue: initialData,
                 cancel: true,
                 owner: grid
@@ -1802,6 +1810,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: Object.assign({}, initialData, { ProductName: 'New Name' }),
                 oldValue: initialData,
                 cancel: false,
@@ -1830,6 +1839,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
                 rowID: 1,
+                rowData: initialData,
                 newValue: null,
                 oldValue: initialData,
                 cancel: false,
@@ -1841,16 +1851,14 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             spyOn(grid.onRowEdit, 'emit').and.callThrough();
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
-            const igxCell: IgxCell = grid.crudService.createCell(cell);
-            igxCell.primaryKey = grid.primaryKey;
-            igxCell.editValue = 'New Value';
+            // TODO: onCellEdit should emit updated rowData - issue #7304
             const cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
+                rowData: initialData,
                 oldValue: 'Chai',
                 newValue: 'New Value',
                 cancel: false,
-                cell: igxCell,
                 column: cell.column,
                 owner: grid
             };
