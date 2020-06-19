@@ -1,10 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener, Directive } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { NgControl } from '@angular/forms';
 import { IgxInputDirective, IgxInputState } from '../input-group';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
+import { DatePickerUtil } from '../date-picker/date-picker.utils';
 
 /**
  * Represents a range between two dates.
@@ -17,17 +17,18 @@ export interface DateRange {
 /** @hidden @internal */
 @Pipe({ name: 'dateRange' })
 export class DateRangePickerFormatPipe implements PipeTransform {
-    public transform(values: DateRange, inputFormat?: string, locale?: string, formatter?: (_: DateRange) => string): string {
-        if (!values) {
+    public transform(values: DateRange, appliedFormat?: string,
+        locale?: string, formatter?: (_: DateRange) => string): string {
+        // TODO: check only values
+        if (!values || !values.start && !values.end) {
             return '';
         }
         if (formatter) {
             return formatter(values);
         }
         const { start, end } = values;
-        // TODO: move default locale from IgxDateTimeEditorDirective to its commons file/use displayFormat
-        const startDate = inputFormat ? formatDate(start, inputFormat, locale || 'en') : start?.toLocaleDateString();
-        const endDate = inputFormat ? formatDate(end, inputFormat, locale || 'en') : end?.toLocaleDateString();
+        const startDate = appliedFormat ? DatePickerUtil.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
+        const endDate = appliedFormat ? DatePickerUtil.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
         let formatted;
         if (start) {
             formatted = `${startDate} - `;
@@ -36,7 +37,6 @@ export class DateRangePickerFormatPipe implements PipeTransform {
             }
         }
 
-        // TODO: no need to set format twice
         return formatted ? formatted : '';
     }
 }

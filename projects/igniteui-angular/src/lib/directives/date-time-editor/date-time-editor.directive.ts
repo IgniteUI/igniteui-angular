@@ -1,12 +1,12 @@
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, Host, Optional, Injector, DoCheck
+  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, DoCheck
 } from '@angular/core';
 import {
   ControlValueAccessor,
-  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NgControl, NG_VALUE_ACCESSOR,
+  Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { formatDate, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { KEYS } from '../../core/utils';
@@ -57,6 +57,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    *
    * @remarks
    * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+   * If a `locale` is set, it must be registered via `registerLocaleData`.
+   * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+   * If it is not registered, `Intl` will be used for formatting.
    *
    * @example
    * ```html
@@ -403,7 +406,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       }
       const format = this.displayFormat || this.inputFormat;
       if (format) {
-        this.inputValue = formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+        this.inputValue = DatePickerUtil.formatDate(this.value, format.replace('tt', 'aa'), this.locale);
       } else {
         // TODO: formatter function?
         this.inputValue = this.value.toLocaleString();

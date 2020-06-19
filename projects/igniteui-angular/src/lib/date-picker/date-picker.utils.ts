@@ -1,5 +1,6 @@
 import { isIE } from '../core/utils';
 import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
+import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 
 /**
  * This enum is used to keep the date validation result.
@@ -48,7 +49,7 @@ export abstract class DatePickerUtil {
 
 
     /**
-     *  TODO: Unit tests for all public methods.
+     *  TODO: (in issue #6483) Unit tests and docs for all public methods.
      */
 
 
@@ -145,6 +146,40 @@ export abstract class DatePickerUtil {
         });
 
         return DatePickerUtil.getMask(parts);
+    }
+
+    public static formatDate(value: number | Date, format: string, locale: string, timezone?: string): string {
+        let formattedDate: string;
+        try {
+            formattedDate = formatDate(value, format, locale, timezone);
+        } catch {
+            console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
+            console.warn('Using default browser locale settings.');
+            const formatter = new Intl.DateTimeFormat(locale);
+            formattedDate = formatter.format(value);
+        }
+
+        return formattedDate;
+    }
+
+    public static getLocaleDateFormat(locale: string, displayFormat?: string): string {
+        const formatKeys = Object.keys(FormatWidth) as (keyof FormatWidth)[];
+        const targetKey = formatKeys.find(k => k.toLowerCase() === displayFormat?.toLowerCase().replace('date', ''));
+        if (!targetKey) {
+            // if displayFormat is not shortDate, longDate, etc.
+            // or if it is not set by the user
+            return displayFormat;
+        }
+        let format: string;
+        try {
+            format = getLocaleDateFormat(locale, FormatWidth[targetKey]);
+        } catch {
+            console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
+            console.warn('Using default browser locale settings.');
+            format = DatePickerUtil.getDefaultInputFormat(locale);
+        }
+
+        return format;
     }
 
     public static isDateOrTimeChar(char: string): boolean {

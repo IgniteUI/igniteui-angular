@@ -1,33 +1,12 @@
 import {
-    AfterViewInit,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Injector,
-    Input,
-    LOCALE_ID,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    QueryList,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild
+    AfterViewInit, Component, ContentChild, ContentChildren, ElementRef,
+    EventEmitter, HostBinding, Inject, Injector, Input, LOCALE_ID,
+    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
+    SimpleChanges, TemplateRef, ViewChild
 } from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    NgControl,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator
+    AbstractControl, ControlValueAccessor, NgControl,
+    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -44,15 +23,9 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group';
 import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/index';
 import {
-    DateRange,
-    IgxDateRangeEndComponent,
-    IgxDateRangeInputsBaseComponent,
-    IgxDateRangeSeparatorDirective,
-    IgxDateRangeStartComponent,
-    IgxPickerToggleComponent
+    DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
+    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
-
-
 
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
@@ -142,10 +115,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public weekStart = WEEKDAYS.SUNDAY;
 
     /**
-     * The `locale` of the calendar.
+     * Locale settings used for value formatting and calendar.
      *
      * @remarks
-     * Default value is `"en"`.
+     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+     * If a `locale` is set, it must be registered via `registerLocaleData`.
+     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+     * If it is not registered, `Intl` will be used for formatting.
      *
      * @example
      * ```html
@@ -376,17 +352,18 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        if (!this.hasProjectedInputs) {
-            if (this.placeholder !== '') {
-                return this.placeholder;
-            }
-            // TODO: use displayFormat - see how shortDate, longDate can be defined
-            return this.inputFormat
-                ? `${this.inputFormat} - ${this.inputFormat}`
-                : `${DatePickerUtil.DEFAULT_INPUT_FORMAT} - ${DatePickerUtil.DEFAULT_INPUT_FORMAT}`;
-        } else {
-            return this.inputFormat || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+        return DatePickerUtil.getLocaleDateFormat(this.locale, this.displayFormat)
+            || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+    }
+
+    /** @hidden @internal */
+    public get singleInputFormat(): string {
+        if (this.placeholder !== '') {
+            return this.placeholder;
         }
+
+        const format = this.appliedFormat;
+        return `${format} - ${format}`;
     }
 
     /** @hidden @internal */
@@ -434,10 +411,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) private _locale: any,
+        @Inject(LOCALE_ID) private localeId: any,
         private _injector: Injector) {
         super(_displayDensityOptions);
-        this.locale = this.locale || this._locale;
+        this.locale = this.locale || this.localeId;
     }
 
     /**
