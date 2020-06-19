@@ -1584,16 +1584,30 @@ export class IgxColumnComponent implements AfterContentInit {
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
-        index = index !== undefined ? index : grid._pinnedColumns.length;
+        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        index = index !== undefined ? index : rootPinnedCols.length;
         const targetColumn = grid._pinnedColumns[index];
         const args = { column: this, insertAtIndex: index, isPinned: true };
         grid.onColumnPinning.emit(args);
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
-            grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
+            if (!grid.hasColumnGroups) {
+                grid._pinnedColumns.splice(args.insertAtIndex, 0, this);
+            } else {
+                // insert based only on root collection
+                rootPinnedCols.splice(args.insertAtIndex, 0, this);
+                let allPinned = [];
+                // re-create hierarchy
+                rootPinnedCols.forEach(group => {
+                    allPinned.push(group);
+                    allPinned = allPinned.concat(group.allChildren);
+                });
+                grid._pinnedColumns = allPinned;
+            }
 
             if (grid._unpinnedColumns.indexOf(this) !== -1) {
-                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1);
+                const childrenCount = this.allChildren.length;
+                grid._unpinnedColumns.splice(grid._unpinnedColumns.indexOf(this), 1 + childrenCount);
             }
         }
 
@@ -1650,13 +1664,16 @@ export class IgxColumnComponent implements AfterContentInit {
 
         const targetColumn = grid._unpinnedColumns[index];
 
-        grid._unpinnedColumns.splice(index, 0, this);
-        if (grid._pinnedColumns.indexOf(this) !== -1) {
-            grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+        if (!hasIndex) {
+            grid._unpinnedColumns.splice(index, 0, this);
+            if (grid._pinnedColumns.indexOf(this) !== -1) {
+                grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
+            }
         }
 
+
         if (hasIndex) {
-            grid._moveColumns(this, targetColumn);
+            grid.moveColumn(this, targetColumn);
         }
 
         if (this.columnGroup) {

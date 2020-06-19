@@ -1,25 +1,32 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
 ## 10.0.0
 
-### New Features
+### General
+- `igxGrid`
+    - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
+- `igx-select`, `igx-combo`, `igx-drop-down`
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+- `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
+    - `origin` - it can vary within the values of the `TransactionEventOrigin` interface; 
+    - `actions` - contains information about the transactions, that caused the emission of the event.
+- `IgxPaginator` - The input `overlaySettings` was introduced, which allows applying custom overlay settings for the component. 
 
+### New Features
 - `IgxGrid`
     - `showGroupArea` input is added, which can be used to enable/disable the group area row.
 
-## 10.0
-
-### General
-- `igx-select`, `igx-combo`, `igx-drop-down`
-- **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
 
 ## 9.1.1
 
 ### General
 - `IgxHierarchicalGrid`
     - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
-
+-  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 ## 9.1.0
 
 ### General
