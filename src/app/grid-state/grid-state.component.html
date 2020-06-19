@@ -10,7 +10,7 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(grid)"></ng-container>
-                <igx-grid [id]="gridId" #grid [igxGridState]="options" [columnPinning]="true"
+                <igx-grid [id]="gridId" #grid [igxGridState]="options" [columnSelection]="'multiple'" [columnPinning]="true"
                     displayDensity="cosy"
                     width="1200px" height="550px" [autoGenerate]="false"
                     [data]="localData"
@@ -64,15 +64,14 @@
         <igx-expansion-panel-body>
             <div style='width: 100%; height: 100%'>
                 <ng-container *ngTemplateOutlet="controls; context: getContext(hGrid)"></ng-container>
-                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="hierData" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' igxGridState
+                <igx-hierarchical-grid #hierGrid [id]="hGridId" [data]="hierData"  [showToolbar]="true" [columnHiding] = "true" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' igxGridState [columnSelection]="'multiple'"
                     displayDensity="cosy" [rowSelection]="true" [autoGenerate]="false" [allowFiltering]='true' [paging]="true" primaryKey="ID"
-                    [height]="'1000px'" [width]="'100%'" #hGrid>
+                    [height]="'1300px'" [width]="'100%'" #hGrid>
 
                     <igx-column *ngFor="let c of hierGridColumns"
                         [sortable]="c.sortable"
                         [movable]="c.movable"
                         [editable]="true"
-                        [hasSummary]="c.hasSummary"
                         [filterable]="c.filterable"
                         [groupable]="c.groupable"
                         [field]="c.field"
@@ -82,13 +81,12 @@
                         [hidden]="c.hidden">
                     </igx-column>
 
-                    <igx-row-island primaryKey="ID" [key]="'childData'" 
-                        [height]='"1200px"' [showExpandAll]='true' [autoGenerate]="false" [allowFiltering]='true' rowSelection='multiple' #layout1>
+                    <igx-row-island primaryKey="ID" [key]="'childData'" [showToolbar]="true" [columnHiding] = "true"
+                        [height]='"450px"' [showExpandAll]='true' [autoGenerate]="false" [allowFiltering]='true' rowSelection='multiple' #layout1>
                         <igx-column *ngFor="let c of hierGridColumns"
                             [sortable]="c.sortable"
                             [movable]="c.movable"
                             [editable]="true"
-                            [hasSummary]="c.hasSummary"
                             [filterable]="c.filterable"
                             [groupable]="c.groupable"
                             [field]="c.field"
@@ -103,7 +101,6 @@
                                 [sortable]="c.sortable"
                                 [movable]="c.movable"
                                 [editable]="true"
-                                [hasSummary]="c.hasSummary"
                                 [filterable]="c.filterable"
                                 [groupable]="c.groupable"
                                 [field]="c.field"
@@ -118,7 +115,6 @@
                                         [sortable]="c.sortable"
                                         [movable]="c.movable"
                                         [editable]="true"
-                                        [hasSummary]="c.hasSummary"
                                         [filterable]="c.filterable"
                                         [groupable]="c.groupable"
                                         [field]="c.field"
@@ -217,6 +213,9 @@
         <div class="switches" style="min-width: inherit">
             <div class="control-item">
                 <button igxButton="raised" (click)="restoreGridState(state)">Restore All</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="saveGridState(state)">Save</button>
             </div>
             <div class="control-item" *ngFor="let f of features">
                 <button igxButton="raised" (click)="restoreFeature(state, f.key)">{{ f.shortName }}</button>

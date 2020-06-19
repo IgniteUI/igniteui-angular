@@ -14,6 +14,7 @@ import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
 import { IPinningConfig } from './public_api';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -34,6 +35,7 @@ export interface IGridState {
 
 export interface IGridStateCollection {
     id: string;
+    parentRowID: any;
     state: IGridState;
 }
 
@@ -350,6 +352,7 @@ namespace Features {
             const sortingState = context.currGrid.sortingExpressions;
             sortingState.forEach(s => {
                 delete s.strategy;
+                delete s.owner;
             });
             return { sorting: sortingState };
         }
@@ -363,6 +366,12 @@ namespace Features {
 
         public getFeatureState(context: IgxGridStateDirective): IGridState {
             const filteringState = context.currGrid.filteringExpressionsTree;
+            if (filteringState) {
+                delete filteringState.owner;
+                for (const item of filteringState.filteringOperands) {
+                    delete (item as IFilteringExpressionsTree).owner;
+                }
+            }
             return { filtering: filteringState };
         }
 
@@ -376,6 +385,12 @@ namespace Features {
 
         public getFeatureState(context: IgxGridStateDirective): IGridState {
             const filteringState = context.currGrid.advancedFilteringExpressionsTree;
+            if (filteringState) {
+                delete filteringState.owner;
+                for (const item of filteringState.filteringOperands) {
+                    delete (item as IFilteringExpressionsTree).owner;
+                }
+            }
             return { advancedFiltering: filteringState };
         }
 
@@ -555,12 +570,16 @@ namespace Features {
             const childGridStates: IGridStateCollection[] = [];
             const rowIslands = (context.currGrid as any).allLayoutList;
             if (rowIslands) {
-                rowIslands.forEach(rowIslandComponent => {
-                    context.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
-                    if (context.currGrid) {
-                        const rowIslandState = context.buildState(context.features) as IGridState;
-                        childGridStates.push({ id: `${rowIslandComponent.id}`, state: rowIslandState });
-                    }
+                rowIslands.forEach(rowIsland => {
+                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                    childGrids.forEach(chGrid => {
+                        const parentRowID = this.getParentRowID(chGrid);
+                        context.currGrid = chGrid;
+                        if (context.currGrid) {
+                            const childGridState = context.buildState(context.features) as IGridState;
+                            childGridStates.push({ id: `${rowIsland.id}`, parentRowID: parentRowID, state: childGridState });
+                        }
+                    });
                 });
             }
             context.currGrid = context.grid;
@@ -570,15 +589,33 @@ namespace Features {
         public restoreFeatureState(context: IgxGridStateDirective, state: any): void {
             const rowIslands = (context.currGrid as any).allLayoutList;
             if (rowIslands) {
-                rowIslands.forEach(rowIslandComponent => {
-                    context.currGrid = rowIslandComponent.rowIslandAPI.getChildGrids()[0];
-                    const rowIslandState = state.find(st => st.id === rowIslandComponent.id);
-                    if (rowIslandState && context.currGrid) {
-                        context.restoreGridState(rowIslandState.state, context.features);
-                    }
+                rowIslands.forEach(rowIsland => {
+                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                    childGrids.forEach(chGrid => {
+                        const parentRowID = this.getParentRowID(chGrid);
+                        context.currGrid = chGrid;
+                        const childGridState = state.find(st => st.id === rowIsland.id && st.parentRowID === parentRowID);
+                        if (childGridState && context.currGrid) {
+                            context.restoreGridState(childGridState.state, context.features);
+                        }
+                    });
                 });
             }
             context.currGrid = context.grid;
+        }
+
+        /**
+         * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
+         */
+        private getParentRowID(grid: IgxHierarchicalGridComponent) {
+            let childGrid, childRow;
+            while (grid.parent) {
+                childRow = grid.childRow;
+                childGrid = grid;
+                grid = grid.parent;
+            }
+            return grid.hgridAPI.getParentRowId(childGrid);
+            // return (childRow.hGridApi as IgxHierarchicalGridAPIService).getParentRowId(childGrid);
         }
     }
 
