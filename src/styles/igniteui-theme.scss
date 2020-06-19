@@ -10,15 +10,19 @@ $palette: $indigo-palette;
 $schema: $light-indigo-schema;
 
 $igx-background-color: igx-color($palette, 'surface');
-$igx-foreground-color: text-contrast($igx-background-color);
+$igx-foreground-color: igx-color($palette, 'grays', 900);
 
 body {
     background: $igx-background-color;
-    color: rgba($igx-foreground-color, .87);
+    color: $igx-foreground-color;
 }
 
 @include igx-core($direction: ltr);
 @include igx-theme($palette: $palette, $schema: $schema);
+@include igx-typography(
+    $font-family: "'Nunito Sans', sans-serif",
+    $type-scale: $indigo-type-scale
+);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {
