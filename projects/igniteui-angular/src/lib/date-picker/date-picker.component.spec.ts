@@ -128,6 +128,22 @@ describe('IgxDatePicker', () => {
             expect(inputGroup.nativeElement.classList.contains('igx-input-group--disabled')).toBeTruthy();
         });
 
+        it('should not be able to toggle & clear when disabled', () => {
+            const date = new Date();
+            datePicker.value = date;
+            datePicker.disabled = true;
+            fixture.detectChanges();
+            expect(datePicker.collapsed).toBeTruthy();
+
+            datePicker.openDialog();
+            fixture.detectChanges();
+            expect(datePicker.collapsed).toBeTruthy();
+
+            datePicker.clear();
+            fixture.detectChanges();
+            expect(datePicker.value).toEqual(date);
+        });
+
         it('When labelVisability is set to false the label should not be visible', () => {
             let label = fixture.debugElement.query(By.directive(IgxLabelDirective));
 
