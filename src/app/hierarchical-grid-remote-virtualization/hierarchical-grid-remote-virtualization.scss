@@ -1,0 +1,10 @@
+.remote-data-loading-template {
+    animation: content-placeholder-animation .5s infinite;
+    background-color: lightgray;
+    height: 15px;
+}
+
+.remote-data-loading-template-medium {
+    @extend .remote-data-loading-template;
+    width: 30px;
+}

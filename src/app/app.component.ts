@@ -408,7 +408,11 @@ export class AppComponent implements OnInit {
         }, {
             link: '/hierarchicalGridRemote',
             icon: 'swap_vert',
-            name: 'Hierarchical Grid Remote'
+            name: 'Hierarchical Grid Remote Load on Demand'
+        }, {
+            link: '/hierarchicalGridRemoteVirtualization',
+            icon: 'swap_vert',
+            name: 'Hierarchical Grid Remote Virtualization'
         }, {
             link: '/hierarchicalGridUpdating',
             icon: 'edit',
