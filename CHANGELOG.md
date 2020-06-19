@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
+-  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 
 ## 9.1.0
 
