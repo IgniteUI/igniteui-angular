@@ -107,7 +107,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
 
-    /** @hidden @internal */
     @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
 
     /** @hidden @internal */
@@ -115,7 +114,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public children: QueryList<IgxSelectItemComponent>;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /** @hidden @internal */
     public allowItemsFocus = false;
@@ -281,9 +280,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     //#region ControlValueAccessor
 
-    /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
-    /** @hidden @internal */
     private _onTouchedCallback: () => void = noop;
 
     /** @hidden @internal */
