@@ -1667,6 +1667,26 @@ describe('IgxTimePicker', () => {
             expect(input).not.toEqual(document.activeElement);
             expect(dummyInput).toEqual(document.activeElement);
         }));
+
+        fit('Disabled style for time outside min and max values', fakeAsync(() => {
+            fixture.detectChanges();
+
+            timePicker.minValue = '09:15:10 AM';
+            timePicker.maxValue = '11:15:10 AM';
+            timePicker.itemsDelta = { hours: 1, minutes: 5, seconds: 5 };
+            // timePicker.value = new Date(2018, 11, 27, 4, 50, 0, 0);
+            // timePicker.value.setHours
+
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+            UIInteractions.simulateClickAndSelectEvent(iconTime);
+            tick();
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const secondColumn = dom.query(By.css('.igx-time-picker__secondList'));
+            const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+        }));
     });
 
     describe('Timepicker with outlet', () => {
