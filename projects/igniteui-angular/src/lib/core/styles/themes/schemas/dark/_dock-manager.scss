@@ -46,6 +46,10 @@ $_dark-dock-manager: extend(
 /// @requires $_fluent-dock-manager
 $_dark-fluent-dock-manager: extend(
     $_fluent-dock-manager, (
+        active-color: (
+            igx-color: primary,
+        ),
+        background-color: #2a2a2a,
         border-color: #222,
         button-text: #fff,
         context-menu-background-active: #111,
@@ -53,22 +57,24 @@ $_dark-fluent-dock-manager: extend(
         context-menu-background: #333,
         context-menu-color: #fff,
         dock-background: #2a2a2a,
-        floating-pane-border-color: rgba(0, 0, 0, 0),
+        floating-pane-border-color: transparent,
         joystick-background-active: #111,
         joystick-background: #333,
-        joystick-border-color: rgba(0, 0, 0, 0),
+        joystick-border-color: transparent,
         joystick-icon-color: #fff,
         joystick-icon-color-active: #fff,
         pane-content-background: #222,
+        pane-header-backround: #2a2a2a,
         pinned-header-background: #2a2a2a,
-        primary-color: #2a2a2a,
         splitter-background: #151515,
         splitter-handle: #000,
         tab-background-active: #222,
         tab-background: #222,
         tab-border-color-active: #222,
         tab-border-color: #222,
-        tab-text-active: #217346,
+        tab-text-active: (
+            igx-color: primary,
+        ),
         tab-text: #fff,
         text-color: #fff,
     )
@@ -94,6 +100,7 @@ $_dark-bootstrap-dock-manager: extend(
         joystick-icon-color: #007bff,
         joystick-icon-color-active: #fff,
         pane-content-background: #242939,
+        pane-header-background: #111,
         pinned-header-background: #111,
         primary-color: #111,
         splitter-background: #1a1e29,
@@ -107,4 +114,3 @@ $_dark-bootstrap-dock-manager: extend(
         text-color: #fff,
     )
 );
-

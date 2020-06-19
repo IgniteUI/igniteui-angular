@@ -40,8 +40,14 @@
 /// @prop {Color} text-color [rgba(0, 0, 0, .72)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
 $_light-dock-manager: (
     accent-color: #fff,
+    active-color: (
+        igx-color: primary,
+    ),
+    background-color: #e5e7e9,
     border-color: #f3f5f7,
-    button-text: rgba(0, 0, 0, .72),
+    button-text: (
+        igx-color: (grays, 800),
+    ),
     context-menu-background-active: null,
     context-menu-background: null,
     context-menu-color-active: #000,
@@ -61,7 +67,6 @@ $_light-dock-manager: (
     pane-header-text: null,
     pinned-header-background: null,
     pinned-header-text: null,
-    primary-color: #e5e7e9,
     splitter-background: #d3d6d9,
     splitter-handle: null,
     tab-background-active: #f3f5f7,
@@ -70,7 +75,9 @@ $_light-dock-manager: (
     tab-border-color: null,
     tab-text-active: null,
     tab-text: null,
-    text-color: rgba(0, 0, 0, .72),
+    text-color: (
+        igx-color: (grays, 800),
+    ),
 );
 
 /// Generates a fluent dock-manager schema.
@@ -79,28 +86,81 @@ $_light-dock-manager: (
 /// @requires $_light-dock-manager
 $_fluent-dock-manager: extend(
     $_light-dock-manager, (
-        border-color: #fff,
-        button-text: rgba(0, 0, 0, .74),
-        context-menu-background-active: #EBEBEB,
-        context-menu-color-active: rgba(0, 0, 0, .74),
-        context-menu-color: rgba(0, 0, 0, .74),
-        dock-background: #fff,
-        floating-pane-border-color: #BDBDBD,
-        joystick-background-active: #EBEBEB,
-        joystick-border-color: #BDBDBD,
-        joystick-icon-color: rgba(0, 0, 0, .74),
-        joystick-icon-color-active: rgba(0, 0, 0, .74),
-        pane-content-background: #fff,
-        primary-color: #fff,
-        splitter-background: #f2f2f2,
+        active-color: (
+            igx-color: primary,
+        ),
+        background-color: (
+            igx-color: surface,
+        ),
+        border-color: (
+            igx-color: surface,
+        ),
+        button-text: (
+            igx-color: (grays, 800),
+        ),
+        context-menu-background-active: (
+            igx-color: (grays, 200),
+            hexrgba: (),
+        ),
+        context-menu-color-active: (
+            igx-color: (grays, 800),
+        ),
+        context-menu-color: (
+            igx-color: (grays, 800),
+        ),
+        dock-background: (
+            igx-color: surface,
+        ),
+        floating-pane-border-color: (
+            igx-color: (grays, 400),
+            hexrgba: (),
+        ),
+        joystick-background-active: (
+            igx-color: (grays, 200),
+            hexrgba: (),
+        ),
+        joystick-border-color: (
+            igx-color: (grays, 400),
+            hexrgba: (),
+        ),
+        joystick-icon-color: (
+            igx-color: (grays, 800),
+        ),
+        joystick-icon-color-active: (
+            igx-color: (grays, 800),
+        ),
+        pane-content-background: (
+            igx-color: surface,
+        ),
+        pane-header-background: (
+            igx-color: surface,
+        ),
+        splitter-background: (
+            igx-color: (grays, 100),
+            hexrgba: (),
+        ),
         splitter-handle: #ccc,
-        tab-background-active: #fff,
-        tab-background: #fff,
-        tab-border-color-active: #fff,
-        tab-border-color: #fff,
-        tab-text-active: #2b579a,
-        tab-text: rgba(0, 0, 0, .62),
-        text-color: rgba(0, 0, 0, .74),
+        tab-background-active: (
+            igx-color: surface,
+        ),
+        tab-background: (
+            igx-color: surface,
+        ),
+        tab-border-color-active: (
+            igx-color: surface,
+        ),
+        tab-border-color: (
+            igx-color: surface,
+        ),
+        tab-text-active: (
+            igx-color: primary,
+        ),
+        tab-text: (
+            igx-color: (grays, 700)
+        ),
+        text-color: (
+            igx-color: (grays, 800)
+        ),
     )
 );
 
@@ -112,18 +172,29 @@ $_fluent-dock-manager: extend(
 $_bootstrap-dock-manager: extend(
     $_light-dock-manager, (
         border-color: #fff,
-        button-text: #007bff,
-        context-menu-background-active: #007bff,
+        button-text: (
+            igx-color: primary,
+        ),
+        context-menu-background-active: (
+            igx-color: primary,
+        ),
         context-menu-color-active: #fff,
-        context-menu-color: #007bff,
+        context-menu-color: (
+            igx-color: primary,
+        ),
         dock-background: #f8f9fa,
         floating-pane-border-color: #E0E0E0,
-        joystick-background-active: #007bff,
+        joystick-background-active: (
+            igx-color: primary,
+        ),
         joystick-border-color: #E0E0E0,
-        joystick-icon-color: #007bff,
+        joystick-icon-color: (
+            igx-color: primary,
+        ),
         joystick-icon-color-active: #fff,
         pane-content-background: #fff,
         pinned-header-background: #f8f9fa,
+        pane-header-background: #f8f9fa,
         primary-color: #f8f9fa,
         splitter-background: #e9ecef,
         splitter-handle: #bdc6d0,
@@ -132,7 +203,9 @@ $_bootstrap-dock-manager: extend(
         tab-border-color-active: rgba(0, 0, 0, .12),
         tab-border-color: #fff,
         tab-text-active: rgba(0, 0, 0, .74),
-        tab-text: #007bff,
+        tab-text: (
+            igx-color: primary,
+        ),
         text-color: rgba(0, 0, 0, .74),
     )
 );
