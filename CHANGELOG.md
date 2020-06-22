@@ -4,7 +4,6 @@ All notable changes for each version of this project will be documented in this 
 
 ## 10.0.0
 
-
 ### General
 - `igxGrid`
     - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.

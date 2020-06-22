@@ -649,7 +649,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             let cellArgs: IGridEditEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
-            let initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -667,7 +666,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialRowData,
+                rowData: cell.rowData,
                 oldValue: 'John Brown',
                 newValue: 'New Name',
                 cancel: false,
@@ -678,7 +677,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
             cell = grid.getCellByColumn(0, 'age');
-            initialRowData = {...cell.rowData};
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
@@ -692,7 +690,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialRowData,
+                rowData: cell.rowData,
                 oldValue: 20,
                 newValue: 1,
                 cancel: false,

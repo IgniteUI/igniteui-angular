@@ -59,7 +59,7 @@ export class IgxRow {
     createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
         const args: IGridEditEventArgs = {
             rowID: this.id,
-            rowData:  { ... this.data },
+            rowData:  this.data,
             oldValue: { ... this.data },
             cancel: false,
             owner: this.grid
@@ -96,7 +96,7 @@ export class IgxCell {
         const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
-            rowData:  { ... this.rowData },
+            rowData:  this.rowData,
             oldValue: this.value,
             cancel: false,
             column: this.column,

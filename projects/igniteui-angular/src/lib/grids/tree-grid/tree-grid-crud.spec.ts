@@ -370,7 +370,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 147,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -401,7 +401,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 299,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -432,7 +432,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 299,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -455,7 +455,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 3, 10);
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
-                const initialRowData = {...cellComponent.rowData};
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
@@ -466,7 +465,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
-                    rowData: initialRowData,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
@@ -490,7 +489,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 3, 10);
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
-                const initialRowData = {...cellComponent.rowData};
 
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
@@ -502,7 +500,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
-                    rowData: initialRowData,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
@@ -546,7 +544,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 1,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -581,7 +579,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 1,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -615,7 +613,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -646,7 +644,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -680,7 +678,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
-                    rowData: oldRow,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
                     cancel: false,
@@ -705,7 +703,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 8, 8);
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
-                const initialRowData = {...cellComponent.rowData};
 
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
@@ -717,7 +714,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
-                    rowData: initialRowData,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,
@@ -741,7 +738,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyRowsCount(fix, 8, 8);
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
-                const initialRowData = {...cellComponent.rowData};
 
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
@@ -754,7 +750,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
-                    rowData: initialRowData,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
                     cancel: false,

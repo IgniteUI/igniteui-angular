@@ -155,7 +155,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         // TODO: onRowEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: 1,
-            rowData: { index: 1, value: 1 },
+            rowData: { index: 200, value: 200 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
             cancel: false,
@@ -180,7 +180,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
-            rowData: { index: 1, value: 1 },
+            rowData: { index: 200, value: 1 },
             oldValue: 1,
             newValue: 200,
             cancel: false,

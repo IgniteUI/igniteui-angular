@@ -141,7 +141,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             let cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialRowData,
+                rowData: cell.rowData,
                 oldValue: cell.value,
                 cancel: false,
                 column: cell.column,
@@ -165,7 +165,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialRowData,
+                rowData: cell.rowData,
                 oldValue: cell.value,
                 newValue: cell.value,
                 cancel: false,
@@ -197,7 +197,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialRowData,
+                rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
                 cancel: false,
@@ -1855,7 +1855,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const cellArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: initialData,
+                rowData: cell.rowData,
                 oldValue: 'Chai',
                 newValue: 'New Value',
                 cancel: false,
