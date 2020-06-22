@@ -18,14 +18,14 @@ export class GridColumnResizingSampleComponent implements OnInit {
     ngOnInit(): void {
         this.columns = [
             // % width, px min/max width.
-            { field: 'ID', width: '10%', resizable: true, maxWidth: 200, minWidth: 70 },
+            { field: 'ID', width: '10%', resizable: true, maxWidth: 200, minWidth: 120 },
             { field: 'CompanyName', width: '300px', resizable: true },
             // % width, no min/max width.
             { field: 'ContactName', width: '20%', resizable: true },
             // % width, % min/max width.
-            { field: 'ContactTitle', width: '15%', resizable: true, maxWidth: '30%', minWidth: '5%' },
+            { field: 'ContactTitle', width: '30%', resizable: true, maxWidth: '5%'},
             // px width, % min/max width.
-            { field: 'Address', width: 300, resizable: true, maxWidth: '20%', minWidth: '10%' },
+            { field: 'Address', width: 300, resizable: true, maxWidth: '20%', minWidth: '15%' },
             { field: 'City', width: 100, resizable: true },
             { field: 'Region', width: 100, resizable: true },
             { field: 'PostalCode', width: 100, resizable: true },
