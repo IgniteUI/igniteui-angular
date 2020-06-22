@@ -35,3 +35,8 @@ $_dark-fluent-action-strip: extend($_fluent-action-strip);
 /// @requires $_bootstrap-action-strip
 $_dark-bootstrap-action-strip: extend($_bootstrap-action-strip);
 
+/// Generates a dark indigo action strip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-action-strip
+$_dark-indigo-action-strip: extend($_indigo-action-strip);
