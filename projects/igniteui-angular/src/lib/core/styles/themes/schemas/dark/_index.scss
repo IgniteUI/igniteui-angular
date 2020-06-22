@@ -415,7 +415,7 @@ $dark-bootstrap-schema: (
 
 /// The default dark indigo schema for all components.
 /// @type {Map}
-/// @property {map} igx-avatar [$_dark-bootstrap-avatar],
+/// @property {map} igx-avatar [$_dark-indigo-avatar],
 /// @property {Map} igx-action-strip [$_dark-indigo-action-strip]
 /// @property {map} igx-badge [$_dark-bootstrap-badge],
 /// @property {map} igx-banner [$_dark-indigo-banner],
@@ -472,7 +472,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-toast [$_dark-bootstrap-toast],
 /// @property {map} igx-tooltip [$_dark-bootstrap-tooltip]
 $dark-indigo-schema: (
-    igx-avatar: $_dark-bootstrap-avatar,
+    igx-avatar: $_dark-indigo-avatar,
     igx-action-strip: $_dark-indigo-action-strip,
     igx-badge: $_dark-bootstrap-badge,
     igx-banner: $_dark-indigo-banner,
