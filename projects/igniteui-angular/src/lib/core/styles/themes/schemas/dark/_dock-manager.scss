@@ -50,6 +50,7 @@ $_dark-dock-manager: extend(
 /// @requires $_fluent-dock-manager
 $_dark-fluent-dock-manager: extend(
     $_fluent-dock-manager, (
+        accent-color: #111,
         background-color: #2a2a2a,
         button-text: #fff,
         context-menu-background-active: #111,
@@ -78,6 +79,7 @@ $_dark-fluent-dock-manager: extend(
 /// @requires $_bootstrap-dock-manager
 $_dark-bootstrap-dock-manager: extend(
     $_bootstrap-dock-manager, (
+        accent-color: #111,
         context-menu-background: #222,
         dock-background: #111,
         joystick-background: #222,
