@@ -126,6 +126,7 @@ import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } fro
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -240,7 +241,8 @@ const components = [
     AboutComponent,
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
-    GridRemotePagingSampleComponent
+    GridRemotePagingSampleComponent,
+    GridVirtualizationScrollSampleComponent
 ];
 
 @NgModule({

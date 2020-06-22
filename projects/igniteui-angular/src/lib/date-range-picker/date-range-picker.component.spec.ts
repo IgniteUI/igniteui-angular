@@ -1,22 +1,22 @@
-import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, FormControl, Validators } from '@angular/forms';
-import { IgxCalendarComponent } from '../calendar/index';
+import { FormsModule, FormControl } from '@angular/forms';
+import { IgxCalendarComponent } from '../calendar/public_api';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HelperTestFunctions } from '../calendar/calendar-helper-utils';
-import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor';
-import { IgxIconModule } from '../icon';
-import { DateRangeType } from '../core/dates/dateRange';
 import { CancelableEventArgs } from '../core/utils';
 import { DateRange } from './date-range-picker-inputs.common';
+import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { DateRangeType } from '../core/dates';
+import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
+import { IgxIconModule } from '../icon/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -610,10 +610,11 @@ describe('IgxDateRangePicker', () => {
                 TestBed.configureTestingModule({
                     declarations: [
                         DateRangeTestComponent,
-                        DateRangeTwoInputsTestComponent
+                        DateRangeTwoInputsTestComponent,
+                        DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule, IgxIconModule,
-                        IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
+                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
                 })
                     .compileComponents();
             }));
@@ -800,7 +801,36 @@ describe('IgxDateRangePicker', () => {
                     expect(startInput.nativeElement.value).toEqual(inputStartDate);
                     expect(endInput.nativeElement.value).toEqual(inputEndDate);
                 });
+
+                it('should select a range from the calendar only when the two inputs are filled in', fakeAsync(() => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/10/2015', startInput);
+
+                    fixture.componentInstance.dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(0);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                    tick();
+                    fixture.detectChanges();
+
+                    endInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/16/2015', endInput);
+                    fixture.detectChanges();
+
+                    fixture.componentInstance.dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(7);
+                }));
             });
+
             describe('Keyboard navigation', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
@@ -845,6 +875,56 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                }));
+            });
+
+            it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
+                fixture.componentInstance.mode = InteractionMode.DropDown;
+                fixture.detectChanges();
+
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
+
+            it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
+                endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                tick();
+                fixture.detectChanges();
+
+                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                fixture.detectChanges();
+                tick(100);
+
+                expect(fixture.componentInstance.dateRange.projectedInputs
+                    .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
+                    .toBeTruthy();
+            }));
+
+            describe('Data binding', () => {
+                it('should properly update component value with ngModel bound to projected inputs - #7353', fakeAsync(() => {
+                    fixture = TestBed.createComponent(DateRangeTwoInputsNgModelTestComponent);
+                    fixture.detectChanges();
+                    const range = (fixture.componentInstance as DateRangeTwoInputsNgModelTestComponent).range;
+                    fixture.componentInstance.dateRange.open();
+                    fixture.detectChanges();
+                    tick();
+                    expect(fixture.componentInstance.dateRange.value.start.getTime()).toEqual(range.start.getTime());
+                    expect(fixture.componentInstance.dateRange.value.end.getTime()).toEqual(range.end.getTime());
                 }));
             });
         });
@@ -1009,6 +1089,9 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent { }
     template: `
     <igx-date-range-picker [mode]="mode" [(ngModel)]="range" [inputFormat]="inputFormat" [displayFormat]="displayFormat" required>
             <igx-date-range-start>
+                <igx-picker-toggle igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
                 <input igxInput igxDateTimeEditor type="text">
             </igx-date-range-start>
             <igx-date-range-end>
@@ -1023,7 +1106,23 @@ export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent {
     displayFormat: string;
 }
 @Component({
-    selector: 'igx-date-range-single-input-custom-test',
+    selector: 'igx-date-range-two-inputs-ng-model',
+    template: `
+    <igx-date-range-picker [mode]="'dropdown'">
+        <igx-date-range-start>
+            <input igxInput [(ngModel)]="range.start" igxDateTimeEditor>
+        </igx-date-range-start>
+        <igx-date-range-end>
+            <input igxInput [(ngModel)]="range.end" igxDateTimeEditor>
+        </igx-date-range-end>
+    </igx-date-range-picker>`
+})
+export class DateRangeTwoInputsNgModelTestComponent extends DateRangeTestComponent {
+    public range = { start: new Date(2020, 1, 1), end: new Date(2020, 1, 4) };
+}
+
+@Component({
+    selector: 'igx-date-range-single-input-label-test',
     template: `
 <igx-date-range-picker [value]="date" [mode]="'dropdown'" [formatter]="formatter">
 <label igxLabel>Select Date</label>
@@ -1081,4 +1180,6 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     </igx-date-range-picker>
     `
 })
-export class DateRangeTemplatesComponent extends DateRangeTestComponent { }
+export class DateRangeTemplatesComponent extends DateRangeTestComponent {
+    range;
+}

@@ -1,0 +1,25 @@
+@import '../light/funnel-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark funnel chart schema.
+/// @type {Map}
+/// @requires $_light-funnel-chart
+/// @see $default-palette
+$_dark-funnel-chart: extend($_light-funnel-chart);
+
+/// Generates a dark fluent funnel-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-funnel-chart
+$_dark-fluent-funnel-chart: extend($_fluent-funnel-chart);
+
+/// Generates a dark bootstrap funnel-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-funnel-chart
+$_dark-bootstrap-funnel-chart: extend($_bootstrap-funnel-chart);

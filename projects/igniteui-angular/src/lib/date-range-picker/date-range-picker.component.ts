@@ -11,7 +11,7 @@ import {
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
+import { IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { InteractionMode } from '../core/enums';
@@ -20,8 +20,8 @@ import { IToggleView } from '../core/navigation';
 import { CancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group';
-import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/index';
+import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
+import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/public_api';
 import {
     DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
     IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
@@ -391,12 +391,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _value: DateRange;
     private _collapsed = true;
     private _ngControl: NgControl;
-    private _statusChanges$: Subscription;
     private $destroy = new Subject();
+    private _statusChanges$: Subscription;
+    private $toggleClickNotifier = new Subject();
     private _minValue: Date | string;
     private _maxValue: Date | string;
-    private $toggleClickNotifier = new Subject();
     private _positionSettings: PositionSettings;
+    private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true
@@ -546,11 +547,21 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         const value: DateRange = control.value;
         const errors = {};
         if (value) {
+            if (this.hasProjectedInputs) {
+                const startInput = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+                const endInput = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+                if (!startInput.dateTimeEditor.value) {
+                    Object.assign(errors, { 'startValue': true });
+                }
+                if (!endInput.dateTimeEditor.value) {
+                    Object.assign(errors, { 'endValue': true });
+                }
+            }
+
             const min = DatePickerUtil.parseDate(this.minValue);
             const max = DatePickerUtil.parseDate(this.maxValue);
             const start = DatePickerUtil.parseDate(value.start);
             const end = DatePickerUtil.parseDate(value.end);
-
             if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
                 || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
                 Object.assign(errors, { 'minValue': true });
@@ -561,7 +572,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             }
         }
 
-        // TODO: fix what happens on blur and ensure on blur the value is either null or with both start and end filled
         return Object.keys(errors).length > 0 ? errors : null;
     }
 
@@ -593,6 +603,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
+        this.cacheFocusedInput();
         this.attachOnTouched();
 
         const subsToClicked = () => {
@@ -609,8 +620,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
-        this.initialSetValue();
-        this.updateInputs();
+
+        // delay the invocation of initialSetValue
+        // until the current change detection cycle has completed
+        Promise.resolve().then(() => {
+            this.initialSetValue();
+            this.updateInputs();
+        });
         this.updateDisplayFormat();
         this.updateInputFormat();
     }
@@ -650,21 +666,24 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public handleClosing(event: CancelableBrowserEventArgs & IBaseEventArgs): void {
-        this.onClosing.emit(event);
-
-        if (this.value && this.value.start && !this.value.end) {
-            this.value = { start: this.value.start, end: this.value.start };
-        }
         if (this.value && !this.value.start && !this.value.end) {
             this.value = null;
         }
+
+        this.onClosing.emit(event);
 
         if (this.mode === InteractionMode.DropDown && event.event && !this.element.nativeElement.contains(event.event.target)) {
             // outside click
             this.updateValidityOnBlur();
         } else {
             // input click
-            this.focusInput();
+            if (this.hasProjectedInputs && this._focusedInput) {
+                this._focusedInput.setFocus();
+                this._focusedInput = null;
+            }
+            if (this.inputDirective) {
+                this.inputDirective.focus();
+            }
         }
     }
 
@@ -688,15 +707,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                     this.inputDirective.valid = IgxInputState.INITIAL;
                 }
             }
-        }
-    }
-
-    private focusInput() {
-        // TODO: should we always focus start input?
-        (this.projectedInputs
-            .find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent)?.setFocus();
-        if (this.inputDirective) {
-            this.inputDirective.focus();
         }
     }
 
@@ -767,46 +777,77 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         });
     }
 
-    private updateCalendar(): void {
-        this.calendar.disabledDates = [];
-        let minValue: Date = DatePickerUtil.parseDate(this.minValue);
+    private parseMinValue(value: string | Date): Date | null {
+        let minValue: Date = DatePickerUtil.parseDate(value);
         if (!minValue && this.hasProjectedInputs) {
             const start = this.projectedInputs.filter(i => i instanceof IgxDateRangeStartComponent)[0];
             if (start) {
                 minValue = DatePickerUtil.parseDate(start.dateTimeEditor.minValue);
             }
         }
-        if (minValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
-        }
 
-        let maxValue: Date = DatePickerUtil.parseDate(this.maxValue);
-        if (!maxValue && this.hasProjectedInputs) {
+        return minValue;
+    }
+
+    private parseMaxValue(value: string | Date): Date | null {
+        let maxValue: Date = DatePickerUtil.parseDate(value);
+        if (!maxValue && this.projectedInputs) {
             const end = this.projectedInputs.filter(i => i instanceof IgxDateRangeEndComponent)[0];
             if (end) {
                 maxValue = DatePickerUtil.parseDate(end.dateTimeEditor.maxValue);
             }
         }
+
+        return maxValue;
+    }
+
+    private updateCalendar(): void {
+        this.calendar.disabledDates = [];
+        const minValue = this.parseMinValue(this.minValue);
+        if (minValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
+        }
+        const maxValue = this.parseMaxValue(this.maxValue);
         if (maxValue) {
             this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
         }
 
         const range: Date[] = [];
-        if (this.value) {
-            if (this.value.start) {
-                range.push(this.value.start);
+        if (this.value?.start && this.value?.end) {
+            if (DatePickerUtil.greaterThanMaxValue(this.value.start, this.value.end)) {
+                this.swapEditorDates();
             }
-            if (this.value.end) {
-                range.push(this.value.end);
+            if (this.valueInRange(this.value, minValue, maxValue)) {
+                range.push(this.value.start, this.value.end);
             }
         }
 
         if (range.length > 0) {
             this.calendar.selectDate(range);
-            this.calendar.viewDate = range[0];
         } else {
             this.calendar.deselectDate();
         }
+        this.calendar.viewDate = range[0] || new Date();
+    }
+
+    private swapEditorDates(): void {
+        if (this.hasProjectedInputs) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+            [start.dateTimeEditor.value, end.dateTimeEditor.value] = [end.dateTimeEditor.value, start.dateTimeEditor.value];
+            [this.value.start, this.value.end] = [this.value.end, this.value.start];
+        }
+    }
+
+    private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
+        if (minValue && DatePickerUtil.lessThanMinValue(value.start, minValue, false)) {
+            return false;
+        }
+        if (maxValue && DatePickerUtil.greaterThanMaxValue(value.end, maxValue, false)) {
+            return false;
+        }
+
+        return true;
     }
 
     private extractRange(selection: Date[]): DateRange {
@@ -835,7 +876,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         } else {
                             this.value = { start: value, end: null };
                         }
-                        // TODO: should we check start and reset end value
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
@@ -859,11 +899,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         if (this.collapsed) {
                             this.updateValidityOnBlur();
                         }
-                        if (this.value && !this.value.start) {
-                            this.value = null;
-                        }
-                        // TODO: if we have start and have no end should we fill end
-                        // as we do on calendar close
                     });
             });
         } else {
@@ -874,6 +909,16 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         this.updateValidityOnBlur();
                     }
                 });
+        }
+    }
+
+    private cacheFocusedInput(): void {
+        if (this.hasProjectedInputs) {
+            this.projectedInputs.forEach(i => {
+                fromEvent(i.dateTimeEditor.nativeElement, 'focus')
+                    .pipe(takeUntil(this.$destroy))
+                    .subscribe(() => this._focusedInput = i);
+            });
         }
     }
 
@@ -894,22 +939,24 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     private initialSetValue() {
-        // if there is no value, no ngControl but we have inputs we may have value set trough
-        // inputs' ngModels - we should generate our initial control value
-        if (!this.value && this.hasProjectedInputs && !this._ngControl) {
-            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent).dateTimeEditor.value;
-            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent).dateTimeEditor.value;
-            this.updateValue({ start, end });
-
+        // if there is no value and no ngControl on the picker but we have inputs we may have value set through
+        // their ngModels - we should generate our initial control value
+        if ((!this.value || (!this.value.start && !this.value.end)) && this.hasProjectedInputs && !this._ngControl) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent);
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
+            this._value = {
+                start: start.dateTimeEditor.value,
+                end: end.dateTimeEditor.value
+            };
         }
     }
 
     private updateInputs(): void {
         const start = this.projectedInputs?.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
         const end = this.projectedInputs?.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
-        if (start && end && this.value) {
-            start.updateInputValue(this.value.start);
-            end.updateInputValue(this.value.end);
+        if (start && end) {
+            start.updateInputValue(this.value?.start ?? null);
+            end.updateInputValue(this.value?.end ?? null);
         }
     }
 

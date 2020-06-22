@@ -108,7 +108,8 @@
 
     %grid-excel-sort {
         display: block;
-        padding: rem(8px) rem(16px);
+        padding-top: rem(8px);
+        padding-bottom: rem(8px);
 
         header {
             color: igx-color($palette, 'grays', 700);
@@ -245,7 +246,8 @@
         }
 
         %grid-excel-sort {
-            padding: rem(8px);
+            padding-top: rem(8px);
+            padding-bottom: rem(8px);
         }
 
         %grid-excel-actions {
@@ -277,7 +279,8 @@
         }
 
         %grid-excel-sort {
-            padding: rem(4px);
+            padding-top: rem(4px);
+            padding-bottom: rem(4px);
 
             @extend %grid-excel-action--compact;
 
@@ -384,7 +387,7 @@
         align-items: center;
         padding: 0 rem(16px);
 
-        igx-input-group {
+        igx-select {
             flex-grow: 1;
             flex-basis: 40%;
             margin: rem(16px) 0;

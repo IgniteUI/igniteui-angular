@@ -1,10 +1,10 @@
 import { Component, ContentChild, Pipe, PipeTransform, Output, EventEmitter, HostListener, Directive } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { IgxInputDirective, IgxInputState } from '../input-group';
+import { IgxInputDirective, IgxInputState } from '../input-group/public_api';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
-import { IgxDateTimeEditorDirective } from '../directives/date-time-editor';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
+import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 
 /**
  * Represents a range between two dates.
@@ -80,7 +80,6 @@ export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
     public updateInputValidity(state: IgxInputState) {
         this.inputDirective.valid = state;
     }
-
 }
 
 /**

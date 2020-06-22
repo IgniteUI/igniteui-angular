@@ -3,15 +3,15 @@ import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IPinningConfig } from '../grid.common';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridTransaction } from '../tree-grid';
-import { IgxTransactionService } from '../../services';
+import { IgxGridTransaction } from '../tree-grid/public_api';
+import { IgxTransactionService } from '../../services/public_api';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
@@ -844,13 +844,13 @@ describe('Row Pinning #grid', () => {
 
     describe(' Cell Editing', () => {
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             // enable cell editing for column
             grid = fix.componentInstance.instance;
             grid.getColumnByName('CompanyName').editable = true;
-        });
+        }));
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
             const  gridContent = GridFunctions.getGridContent(fix);
@@ -933,13 +933,13 @@ describe('Row Pinning #grid', () => {
     describe(' Navigation', () => {
         let gridContent: DebugElement;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(GridRowPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.instance;
             setupGridScrollDetection(fix, grid);
             gridContent = GridFunctions.getGridContent(fix);
-        });
+        }));
 
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async() => {
             grid.getRowByIndex(5).pin();

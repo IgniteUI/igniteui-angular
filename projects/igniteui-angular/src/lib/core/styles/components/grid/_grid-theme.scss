@@ -957,7 +957,6 @@
         width: 100%;
         background: --var($theme, 'header-background');
         z-index: 10001;
-        overflow: hidden;
     }
 
     %grid-thead-thumb {
@@ -971,6 +970,7 @@
     }
 
     %grid-tbody-scrollbar {
+        background: --var($theme, 'content-background');
         border-#{$left}: 1px solid igx-color($palette, 'grays', 300);
         position: relative;
     }
@@ -1132,6 +1132,8 @@
 
     %igx-grid__tr--pinned-bottom {
         border-top: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
+        position: absolute;
+        bottom: 0;
     }
 
     %igx-grid__tr--edit {

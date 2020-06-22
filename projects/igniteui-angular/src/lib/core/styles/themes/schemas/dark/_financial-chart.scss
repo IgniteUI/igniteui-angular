@@ -1,0 +1,25 @@
+@import '../light/financial-chart';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/didimmova" target="_blank">Dilyana Dimova</a>
+////
+
+/// Generates a dark financial chart schema.
+/// @type {Map}
+/// @requires $_light-financial-chart
+/// @see $default-palette
+$_dark-financial-chart: extend($_light-financial-chart);
+
+/// Generates a dark fluent financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-financial-chart
+$_dark-fluent-financial-chart: extend($_fluent-financial-chart);
+
+/// Generates a dark bootstrap financial-chart schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-financial-chart
+$_dark-bootstrap-financial-chart: extend($_bootstrap-financial-chart);
