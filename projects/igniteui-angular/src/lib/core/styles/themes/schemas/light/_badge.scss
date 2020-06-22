@@ -59,3 +59,11 @@ $_bootstrap-badge: extend(
     )
 );
 
+/// Generates an indigo badge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-badge
+$_indigo-badge: extend(
+    $_light-badge
+);
+
