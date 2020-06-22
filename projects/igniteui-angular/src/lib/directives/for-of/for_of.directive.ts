@@ -179,7 +179,26 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * this.parentVirtDir.totalItemCount = data.Count;
      * ```
      */
-    public totalItemCount: number = null;
+    public get totalItemCount() {
+        return this._totalItemCount;
+    }
+
+    public set totalItemCount(val) {
+        if (this._totalItemCount !== val) {
+            this._totalItemCount = val;
+            // update sizes in case total count changes.
+            const newSize = this.initSizesCache(this.igxForOf);
+            const sizeDiff = this.scrollComponent.size - newSize;
+            this.scrollComponent.size = newSize;
+            const lastChunkExceeded = this.state.startIndex + this.state.chunkSize > val;
+            if (lastChunkExceeded) {
+                this.state.startIndex = val - this.state.chunkSize;
+            }
+            this._adjustScrollPositionAfterSizeChange(sizeDiff);
+        }
+    }
+
+    private _totalItemCount: number = null;
 
     /**
      * An event that is emitted after a new chunk has been loaded.
@@ -320,7 +339,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected get isRemote(): boolean {
+    public get isRemote(): boolean {
         return this.totalItemCount !== null;
     }
 
@@ -1117,13 +1136,17 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const newHeight = this.initSizesCache(this.igxForOf);
 
         const diff = oldHeight - newHeight;
+        this._adjustScrollPositionAfterSizeChange(diff);
+    }
 
+    private _adjustScrollPositionAfterSizeChange(sizeDiff) {
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && this.scrollPosition > 0) {
+        if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             this.recalcUpdateSizes();
             const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            this.scrollPosition = this.sizesCache[this.state.startIndex] - offset;
+            const newSize = this.sizesCache[this.state.startIndex] - offset;
+            this.scrollPosition = newSize === this.scrollPosition ? newSize + 1 : newSize;
         }
     }
 
@@ -1525,7 +1548,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (changes && !this.isRemote) {
             newHeight = this.handleCacheChanges(changes);
         } else {
-            newHeight = this.initSizesCache(this.igxForOf);
+            return;
         }
 
         const diff = oldHeight - newHeight;

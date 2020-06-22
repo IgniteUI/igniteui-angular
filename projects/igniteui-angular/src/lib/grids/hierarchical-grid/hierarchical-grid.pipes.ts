@@ -28,6 +28,9 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
             return collection;
         }
         const grid: IgxHierarchicalGridComponent = this.gridAPI.grid;
+        if (grid.verticalScrollContainer.isRemote) {
+            return collection;
+        }
         const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys);
 
         return result;

@@ -12,10 +12,14 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
     - `origin` - it can vary within the values of the `TransactionEventOrigin` interface; 
     - `actions` - contains information about the transactions, that caused the emission of the event.
+- `IgxPaginator` - The input `overlaySettings` was introduced, which allows applying custom overlay settings for the component. 
 
 ### New Features
 - `IgxGrid`
     - `showGroupArea` input is added, which can be used to enable/disable the group area row.
+
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
 
 ## 9.1.1
 
