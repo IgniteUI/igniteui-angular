@@ -37,9 +37,7 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
-
-
-
+import { IgxHintDirective } from '../input-group/public_api';
 
 /** @hidden @internal */
 @Directive({
@@ -109,12 +107,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     @ViewChild('input', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
 
+    @ContentChild(IgxHintDirective, { read: ElementRef }) private hintElement: ElementRef;
+
     /** @hidden @internal */
     @ContentChildren(forwardRef(() => IgxSelectItemComponent), { descendants: true })
     public children: QueryList<IgxSelectItemComponent>;
 
     /** @hidden @internal */
-    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) label: IgxLabelDirective;
+    @ContentChild(forwardRef(() => IgxLabelDirective), { static: true }) public label: IgxLabelDirective;
 
     /** @hidden @internal */
     public allowItemsFocus = false;
@@ -280,9 +280,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     //#region ControlValueAccessor
 
-    /** @hidden @internal */
     private _onChangeCallback: (_: any) => void = noop;
-    /** @hidden @internal */
     private _onTouchedCallback: () => void = noop;
 
     /** @hidden @internal */
@@ -357,6 +355,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
         super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
     }
+
+    public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
+        const targetElement = event.target as HTMLElement;
+
+        if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
+            return;
+        }
+        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+}
 
     /** @hidden @internal */
     ngAfterContentInit() {

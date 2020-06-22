@@ -3,7 +3,7 @@
 </igx-grid-toolbar>
 
 <div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
-    *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+    *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)"
@@ -241,7 +241,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
+    <igx-paginator [overlaySettings]="paginatorSettings" [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 
