@@ -41,7 +41,7 @@
                 <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
                     [ngClass]="{
                     'igx-grid__header-indentation--no-border': isRowSelectable || rowDraggable
-                }" #headerGroupContainer  (click)="toggleAllGroupRows()">
+                }" #headerGroupContainer  (click)="toggleAllGroupRows()" (pointerdown)="$event.preventDefault()">
 
                 <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
                 </div>
@@ -49,7 +49,7 @@
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
                     'igx-grid__drag-indicator--header': !isRowSelectable
-                }" #headerDragContainer>
+                }" (pointerdown)="$event.preventDefault()"  #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
                             *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : dragIndicatorIconBase">
@@ -60,7 +60,7 @@
             <ng-container *ngIf="showRowSelectors">
                 <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
-                }">
+                }" (pointerdown)="$event.preventDefault()">
                     <ng-template #headSelector
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
