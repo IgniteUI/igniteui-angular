@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
+import { OverlaySettings } from '../services/public_api';
 import { IgxSelectModule } from '../select/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -22,6 +23,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     public totalPages: number;
     private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
+    private _overlaySettings: OverlaySettings = {};
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions;
@@ -161,6 +163,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     @Input()
     public dropdownHidden = false;
+
+    /**
+     * An @Input property that sets custom OverlaySettings.
+     * ```html
+     * <igx-paginator [overlaySettings] = "customOverlaySettings"></igx-paginator>
+     * ```
+     */
+    @Input()
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings;
+    }
+
+    public set overlaySettings(value: OverlaySettings) {
+        this._overlaySettings = Object.assign({}, this._overlaySettings, value);
+    }
 
     /**
      * An accessor that sets the resource strings.
