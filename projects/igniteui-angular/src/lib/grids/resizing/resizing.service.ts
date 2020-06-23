@@ -82,10 +82,12 @@ export class IgxColumnResizingService {
         const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
         let size = this.column.getAutoSize();
-        if (this.column.maxWidth && (parseFloat(size) > this.column.maxWidthPx)) {
-            size = isPercentageWidth ? this.column.maxWidthPercent + '%' : this.column.maxWidthPx + 'px';
-        } else if (parseFloat(size) < this.column.minWidthPx) {
-            size = isPercentageWidth ? this.column.minWidthPercent + '%' : this.column.minWidthPx + 'px';
+        const maxWidth = isPercentageWidth ? this.column.maxWidthPercent : this.column.maxWidthPx;
+        const minWidth = isPercentageWidth ? this.column.minWidthPercent : this.column.minWidthPx;
+        if (this.column.maxWidth && (parseFloat(size) > maxWidth)) {
+            size = isPercentageWidth ? maxWidth + '%' : maxWidth + 'px';
+        } else if (parseFloat(size) < minWidth) {
+            size = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
         }
         this.column.width = size;
 
@@ -134,10 +136,7 @@ export class IgxColumnResizingService {
     }
 
     protected _handlePixelResize(diff: number, column: IgxColumnComponent) {
-        let currentColWidth = parseFloat(column.width);
-        const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
-        currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
-
+        const currentColWidth = parseFloat(column.width);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
         if (currentColWidth + diff < colMinWidth) {

@@ -369,6 +369,162 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         expect(grid.columns[1].width).toEqual('80px');
     });
 
+    it('should resize columns with % width.', async() => {
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+        expect(grid.columns[0].width).toBe('25%');
+
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        const startPos = headerResArea.getBoundingClientRect().x;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+        expect(resizer).toBeDefined();
+        // resize with 100px, which is 25%
+        UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 100, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 100, 5);
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('50%');
+    });
+
+    it('should resize columns with % width and % maxWidth.', async() => {
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        grid.columns[0].maxWidth = '30%';
+        expect(grid.columns[0].width).toBe('25%');
+
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        const startPos = headerResArea.getBoundingClientRect().x;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+        expect(resizer).toBeDefined();
+        // resize with +100px, which is 25%
+        UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 100, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 100, 5);
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toBe(grid.columns[0].maxWidth);
+    });
+
+    it('should resize columns with % width and % minWidth.', async() => {
+
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        grid.columns[0].minWidth = '10%';
+        expect(grid.columns[0].width).toBe('25%');
+
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        const startPos = headerResArea.getBoundingClientRect().x;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+        // resize with -100px
+        UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toBe(grid.columns[0].minWidth);
+    });
+
+    it('should resize columns with % width and pixel maxWidth.', async() => {
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        grid.columns[0].maxWidth = '200px';
+        expect(grid.columns[0].width).toBe('25%');
+
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        const startPos = headerResArea.getBoundingClientRect().x;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+        expect(resizer).toBeDefined();
+        // resize with +200px, which is 50%
+        UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 200, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 200, 5);
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('50%');
+    });
+
+    it('should resize columns with % width and pixel minWidth.', async() => {
+
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        // minWidth is 12.5% of the grid width - 400px
+        grid.columns[0].minWidth = '50px';
+        expect(grid.columns[0].width).toBe('25%');
+
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        const startPos = headerResArea.getBoundingClientRect().x;
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+
+        const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
+        // resize with -100px
+        UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
+        UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
+        fixture.detectChanges();
+
+        expect(grid.columns[0].width).toBe('12.5%');
+    });
+
+    it('should autosize column with % width programmatically.', async() => {
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('25%');
+        grid.columns[0].autosize();
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('21%');
+    });
+
+    it('should autosize column with % width on double click.', async() => {
+        const fixture = TestBed.createComponent(ColPercentageGridComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.height = null;
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('25%');
+        const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const headerResArea = headers[0].parent.children[2].nativeElement;
+        UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
+        await wait(DEBOUNCE_TIME);
+        fixture.detectChanges();
+        expect(grid.columns[0].width).toBe('21%');
+    });
+
     it('should resize pinned column with preset max width.', async() => {
         const fixture = TestBed.createComponent(PinnedColumnsComponent);
         fixture.detectChanges();
@@ -894,7 +1050,7 @@ export class ColGridComponent implements OnInit {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``,
-        `<igx-column [field]="'Items'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
+        `<igx-column [field]="'Items'" [width]="'25%'" dataType="string" [filterable]="true" [resizable]="true"></igx-column>
          <igx-column [field]="'ID'" [width]="'25%'" [header]="'ID'" [filterable]="true"></igx-column>
          <igx-column [field]="'ProductName'" [width]="'25%'" dataType="string" [filterable]="true"></igx-column>
          <igx-column [field]="'Test'"[width]="'25%'" dataType="string" [resizable]="true"></igx-column>`
