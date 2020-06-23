@@ -14,6 +14,12 @@ All notable changes for each version of this project will be documented in this 
 - `igx-select`, `igx-combo`, `igx-drop-down`
 - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
 
+## 9.1.4
+
+### New Features
+- `IgxList`
+    - Added localization support.
+
 ## 9.1.1
 
 ### General
@@ -183,9 +189,6 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
-
-- `IgxList`
-    - Added localization support.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
