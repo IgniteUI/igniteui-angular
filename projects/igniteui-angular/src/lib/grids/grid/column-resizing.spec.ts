@@ -392,7 +392,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 350, 5);
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('250px');
+        // column has maxWidth='150px'
+        expect(grid.columns[1].width).toEqual('150px');
     });
 
     it('should autoresize column on double click.', async() => {
@@ -490,7 +491,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         expect(grid.columns[0].width).toEqual('300px');
         expect(fixture.componentInstance.count).toEqual(1);
         expect(fixture.componentInstance.column).toBe(grid.columns[0]);
-        expect(fixture.componentInstance.prevWidth).toEqual('150');
+        expect(fixture.componentInstance.prevWidth).toEqual('150px');
         expect(fixture.componentInstance.newWidth).toEqual('300px');
 
         expect(grid.columns[1].width).toEqual('150px');

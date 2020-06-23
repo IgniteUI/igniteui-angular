@@ -77,14 +77,17 @@ export class IgxColumnResizingService {
      * Autosizes the column to the longest currently visible cell value, including the header cell.
      * If the column has a predifined maxWidth and the autosized column width will become bigger than it,
      * then the column is sized to its maxWidth.
-     * If the column is pinned and the autosized column width will cause the pinned area to become bigger
-     * than the maximum allowed pinned area width (80% of the total grid width), autosizing will be deismissed.
      */
     public autosizeColumnOnDblClick() {
         const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
-
-
-        this.column.autosize();
+        const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
+        let size = this.column.getAutoSize();
+        if (this.column.maxWidth && (parseFloat(size) > this.column.maxWidthPx)) {
+            size = isPercentageWidth ? this.column.maxWidthPercent + '%' : this.column.maxWidthPx + 'px';
+        } else if (parseFloat(size) < this.column.minWidthPx) {
+            size = isPercentageWidth ? this.column.minWidthPercent + '%' : this.column.minWidthPx + 'px';
+        }
+        this.column.width = size;
 
         this.zone.run(() => {});
 
@@ -106,7 +109,7 @@ export class IgxColumnResizingService {
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         let currentColWidth = parseFloat(colWidth);
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
-        currentColWidth = Number.isNaN(currentColWidth) ? actualWidth : currentColWidth + 'px';
+        currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth) : currentColWidth;
 
         if (isPercentageWidth) {
             this._handlePercentageResize(diff, this.column);
