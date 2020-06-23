@@ -108,3 +108,42 @@ $_bootstrap-checkbox: extend(
     )
 );
 
+
+/// Generates an indigo checkbox schema.
+/// @type {Map}
+/// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
+/// @prop {Map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @prop {Map} disabled-color [igx-color: ('grays', 500), rgba: .4] - The disabled border and fill colors.
+/// @prop {Number} border-radius [3px] - The border radius used for the checkbox.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-checkbox
+$_indigo-checkbox: extend(
+    $_light-checkbox,
+    $_indigo-shape-checkbox,
+    (
+        variant: 'indigo-design',
+
+        tick-color: (
+            igx-color: 'surface'
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 500),
+            rgba: .4
+        ),
+
+        disabled-color-label: (
+            igx-color: ('grays', 500),
+            rgba: .4
+        )
+    )
+);

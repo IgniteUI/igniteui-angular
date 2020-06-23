@@ -30,3 +30,26 @@ $_dark-fluent-checkbox: extend($_fluent-checkbox, (
 /// @requires extend
 /// @requires $_bootstrap-checkbox
 $_dark-bootstrap-checkbox: extend($_bootstrap-checkbox);
+
+/// Generates a dark indigo checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#fff] - The checked mark color.
+/// @requires extend
+/// @requires $_indigo-checkbox
+$_dark-indigo-checkbox: extend($_indigo-checkbox, (
+    fill-color: #fff,
+
+    empty-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 700),
+        rgba: .4
+    ),
+
+    disabled-color-label: (
+        igx-color: ('grays', 700),
+        rgba: .4
+    )
+));
