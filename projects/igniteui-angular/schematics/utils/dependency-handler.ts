@@ -59,16 +59,28 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
     throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
 }
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string): string {
-    const buildOptions = getTargetedProjectOptions(project, 'build');
-    if (!buildOptions[option]) {
-        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
-            `workspace config (${project.sourceRoot})`);
+export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string): string {
+    switch (configSection) {
+        case 'build':
+            const buildOptions = getTargetedProjectOptions(project, 'build');
+            if (!buildOptions[option]) {
+                throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
+                    `workspace config ${project.sourceRoot}`);
+            }
+            return buildOptions[option];
+
+        case 'test':
+            const testOptions = getTargetedProjectOptions(project, 'test');
+            if (!testOptions[option]) {
+                throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
+                    `workspace config ${project.sourceRoot}`);
+            }
+            return testOptions[option];
+        default:
+            throw new SchematicsException(`Could not find matching ${configSection} section` +
+            `inside of the workspace config ${project.sourceRoot} `);
     }
-
-    return buildOptions[option];
 }
-
 export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
 }
@@ -148,15 +160,25 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
                 const workspace = getWorkspace(tree);
                 const project = workspace.projects[workspace.defaultProject];
                 const projectOptions = getTargetedProjectOptions(project, 'build');
-                const mainTsPath = getConfigFile(project, 'main');
+                const projectTestOptions = getTargetedProjectOptions(project, 'test');
+                const mainTsPath = getConfigFile(project, 'main', 'build');
+                const testTsPath = getConfigFile(project, 'main', 'test');
                 const hammerImport = 'import \'hammerjs\';\n';
                 const mainTsContent = tree.read(mainTsPath).toString();
+                const testTsContent = tree.read(testTsPath).toString();
                 // if there are no elements in the architect.build.options.scripts array that contain hammerjs
                 // and main.ts does not contain an import with hammerjs
                 if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !mainTsContent.includes(hammerImport)) {
                     // import hammerjs in the main.ts file
-                    const contents = hammerImport + mainTsContent;
-                    tree.overwrite(mainTsPath, contents);
+                    const mainContents = hammerImport + mainTsContent;
+                    tree.overwrite(mainTsPath, mainContents);
+                }
+                // make sure test.ts has hammerjs import even for projects already containing it in main.ts
+                // if there are no elements in the architect.test.options.scripts array that contain hammerjs
+                // and test.ts does not contain an import with hammerjs
+                if (!projectTestOptions.scripts.some(el => el.includes('hammerjs')) && !testTsContent.includes(hammerImport)) {
+                    const testContents = hammerImport + testTsContent;
+                    tree.overwrite(testTsPath, testContents);
                 }
                 break;
             default:
