@@ -424,7 +424,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-button-group [$_dark-bootstrap-button-group],
 /// @property {map} igx-calendar [$_dark-bootstrap-calendar],
 /// @property {map} igx-card [$_dark-indigo-card],
-/// @property {map} igx-carousel [$_dark-bootstrap-carousel],
+/// @property {map} igx-carousel [$_dark-indigo-carousel],
 /// @property {map} category-chart [$_dark-bootstrap-category-chart]
 /// @property {map} igx-checkbox [$_dark-bootstrap-checkbox],
 /// @property {map} igx-chip [$_dark-bootstrap-chip],
@@ -481,7 +481,7 @@ $dark-indigo-schema: (
     igx-button-group: $_dark-bootstrap-button-group,
     igx-calendar: $_dark-bootstrap-calendar,
     igx-card: $_dark-indigo-card,
-    igx-carousel: $_dark-bootstrap-carousel,
+    igx-carousel: $_dark-indigo-carousel,
     category-chart: $_dark-bootstrap-category-chart,
     igx-checkbox: $_dark-bootstrap-checkbox,
     igx-chip: $_dark-bootstrap-chip,
