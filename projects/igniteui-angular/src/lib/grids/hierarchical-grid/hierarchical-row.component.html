@@ -15,12 +15,12 @@
 </ng-template>
 
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()" (pointerdown)="$event.preventDefault()">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
 <ng-container *ngIf="showRowSelectors">
-    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)" (pointerdown)="$event.preventDefault()">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: {
