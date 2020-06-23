@@ -23,3 +23,9 @@ $_dark-fluent-dialog: extend($_fluent-dialog);
 /// @requires extend
 /// @requires $_bootstrap-dialog
 $_dark-bootstrap-dialog: extend($_bootstrap-dialog);
+
+/// Generates a dark indigo dialog schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-dialog
+$_dark-indigo-dialog: extend($_indigo-dialog);

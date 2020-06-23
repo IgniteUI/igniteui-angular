@@ -56,3 +56,14 @@ $_bootstrap-avatar: extend(
     )
 );
 
+/// Generates an indigo avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-avatar
+/// @requires $_indigo-shape-avatar
+$_indigo-avatar: extend(
+    $_light-avatar,
+    (
+        variant: 'indigo-design',
+    )
+);

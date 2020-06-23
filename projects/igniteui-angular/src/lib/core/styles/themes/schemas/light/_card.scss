@@ -124,3 +124,9 @@ $_bootstrap-card: extend(
     )
 );
 
+/// Generates a indigo card schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-card
+$_indigo-card: extend($_light-card);
+
