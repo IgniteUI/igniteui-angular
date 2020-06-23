@@ -261,11 +261,7 @@ export class UIInteractions {
             clientX: x,
             clientY: y
         };
-
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(new MouseEvent(eventName, options));
-            resolve();
-        });
+        element.dispatchEvent(new MouseEvent(eventName, options));
     }
 
     public static createPointerEvent(eventName: string, point: Point) {
