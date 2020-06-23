@@ -181,9 +181,11 @@ All notable changes for each version of this project will be documented in this 
     - Added support for tabIndex attribute applied to the main chip element.
     - Added `tabIndex` input so it can support change detection as well.
 
-
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.
+
+- `IgxList`
+    - Added localization support.
 
 ### RTL Support
 - `igxSlider` have full right-to-left (RTL) support.
