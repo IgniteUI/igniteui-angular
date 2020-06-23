@@ -11,6 +11,7 @@ import {
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
@@ -560,7 +561,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(generalInf.collapsible).toBeFalsy();
             expect(generalInf.visibleIndex).toBe(1);
 
-            grid.moveColumn(generalInf, addressInf);
+            grid.moveColumn(generalInf, addressInf, DropPosition.AfterDropTarget);
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeTruthy();
@@ -570,7 +571,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
-            grid.moveColumn(generalInf, addressInf);
+            grid.moveColumn(generalInf, addressInf, DropPosition.BeforeDropTarget);
             fixture.detectChanges();
 
             expect(addressInf.expanded).toBeFalsy();
