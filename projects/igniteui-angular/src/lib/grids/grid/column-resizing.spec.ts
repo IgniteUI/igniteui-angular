@@ -599,6 +599,22 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         await wait(16);
     });
 
+    it('should autosize column programmatically based only on header.', async() => {
+        const fixture = TestBed.createComponent(LargePinnedColGridComponent);
+        fixture.detectChanges();
+
+        const column = fixture.componentInstance.grid.columnList.filter(c => c.field === 'ReleaseDate')[0];
+        expect(column.width).toEqual('100px');
+
+        column.autosize(true);
+        fixture.detectChanges();
+
+        expect(parseInt(column.width, 10)).toEqual(111);
+
+        // height/width setter rAF
+        await wait(16);
+    });
+
     it('should autosize pinned column programmatically.', async() => {
         const fixture = TestBed.createComponent(LargePinnedColGridComponent);
         fixture.detectChanges();

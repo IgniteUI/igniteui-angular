@@ -21,6 +21,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
 
+- `IgxColumn` 
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+
 ## 9.1.1
 
 ### General
