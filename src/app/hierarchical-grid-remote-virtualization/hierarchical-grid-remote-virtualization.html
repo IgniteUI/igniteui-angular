@@ -1,0 +1,25 @@
+<ng-template #remoteDataLoading>
+    <div class="remote-data-loading-template-medium"></div>
+</ng-template>
+
+<ng-template #cellTemplate igxCell let-val let-rowData="cell.row.rowData">
+    <div *ngIf="!rowData.emptyRec; else remoteDataLoading">
+       {{ val }}
+    </div>
+</ng-template>
+
+<igx-hierarchical-grid #hGrid [data]="gridData" [primaryKey]="'CustomerID'" [autoGenerate]="false" [height]="'500px'" [width]="'100%'" #hGrid [emptyGridMessage]="''">
+    <igx-column field="CustomerID" [hidden]='true'></igx-column>
+    <igx-column field="CompanyName" [cellTemplate]="cellTemplate"></igx-column>
+    <igx-column field="ContactName" [cellTemplate]="cellTemplate"></igx-column>
+    <igx-column field="ContactTitle" [cellTemplate]="cellTemplate"></igx-column>
+    <igx-column field="Country" [cellTemplate]="cellTemplate"></igx-column>
+    <igx-column field="Phone" [cellTemplate]="cellTemplate"></igx-column>
+    <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' [emptyGridMessage]="''">
+        <igx-column field="OrderID"></igx-column>
+        <igx-column field="OrderDate"></igx-column>
+        <igx-column field="ShipCountry"></igx-column>
+        <igx-column field="ShipCity"></igx-column>
+        <igx-column field="ShipAddress"></igx-column>
+        </igx-row-island>
+</igx-hierarchical-grid>
