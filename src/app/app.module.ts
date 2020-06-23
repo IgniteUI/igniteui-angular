@@ -7,7 +7,7 @@ import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -126,6 +126,11 @@ import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } fro
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
+import {
+    HierarchicalGridRemoteVirtualizationComponent
+} from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
+import { IgxGridHierarchicalPipe } from 'igniteui-angular';
 import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const components = [
@@ -223,6 +228,7 @@ const components = [
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
     HierarchicalGridRemoteSampleComponent,
+    HierarchicalGridRemoteVirtualizationComponent,
     HierarchicalGridUpdatingSampleComponent,
     DisplayFormatPipe,
     InputFormatPipe,
@@ -273,6 +279,9 @@ const components = [
     providers: [
         LocalService,
         RemoteService,
+        HierarchicalRemoteService,
+        GridBaseAPIService,
+        IgxGridHierarchicalPipe,
         IgxExcelExporterService,
         IgxIconService,
         IgxCsvExporterService,
