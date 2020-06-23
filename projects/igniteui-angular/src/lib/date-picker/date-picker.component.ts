@@ -34,7 +34,7 @@ import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent, IgxInpu
 import { Subject, fromEvent, animationFrameScheduler, interval, Subscription } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
+import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import {
     OverlaySettings,
     IgxOverlayService,
@@ -144,7 +144,7 @@ const noop = () => { };
     `]
 })
 export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor,
-          EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
+    EditorProvider, OnInit, AfterViewInit, OnDestroy, AfterViewChecked {
     /**
      * Gets/Sets the `IgxDatePickerComponent` label.
      * @remarks
@@ -914,10 +914,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * @param date passed date that has to be set to the calendar.
      */
     public selectDate(date: Date): void {
-        const oldValue =  this.value;
+        const oldValue = this.value;
         this.value = date;
 
-        this.emitValueChangeEvent(oldValue, this.value );
+        this.emitValueChangeEvent(oldValue, this.value);
         this.onSelection.emit(date);
     }
 
@@ -929,9 +929,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ```
      */
     public deselectDate(): void {
-        const oldValue =  this.value;
+        const oldValue = this.value;
         this.value = null;
-        this.emitValueChangeEvent(oldValue, this.value );
+        this.emitValueChangeEvent(oldValue, this.value);
         if (this.calendar) {
             this.calendar.deselectDate();
         }
@@ -946,7 +946,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * ```
      */
     public openDialog(): void {
-        if (!this.collapsed) {
+        if (!this.collapsed || this.disabled) {
             return;
         }
 
@@ -987,10 +987,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * @hidden @internal
      */
     public clear(): void {
-        this.isEmpty = true;
-        this.invalidDate = '';
-        this.deselectDate();
-        this._setCursorPosition(0);
+        if (!this.disabled) {
+            this.isEmpty = true;
+            this.invalidDate = '';
+            this.deselectDate();
+            this._setCursorPosition(0);
+        }
     }
 
     /**
@@ -1008,10 +1010,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             date.setSeconds(this.value.getSeconds());
             date.setMilliseconds(this.value.getMilliseconds());
         }
-        const oldValue =  this.value;
+        const oldValue = this.value;
         this.value = date;
 
-        this.emitValueChangeEvent(oldValue, this.value );
+        this.emitValueChangeEvent(oldValue, this.value);
         this.calendar.viewDate = date;
         this.closeCalendar();
         this.onSelection.emit(date);
@@ -1141,11 +1143,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
                 if (this.disabledDates === null
                     || (this.disabledDates !== null && !isDateInRanges(newValue, this.disabledDates))) {
-                        const oldValue =  this.value;
-                        this.value = newValue;
+                    const oldValue = this.value;
+                    this.value = newValue;
 
-                        this.emitValueChangeEvent(oldValue, this.value );
-                        this.invalidDate = '';
+                    this.emitValueChangeEvent(oldValue, this.value);
+                    this.invalidDate = '';
                 } else {
                     const args: IDatePickerDisabledDateEventArgs = {
                         datePicker: this,
