@@ -17,7 +17,13 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from '../common/events';
-import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
+import {
+    HierarchicalTransaction,
+    HierarchicalState,
+    TransactionType,
+    TransactionEventOrigin,
+    StateUpdateEvent
+} from '../../services/transaction/transaction';
 import { IgxHierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -30,6 +36,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 
@@ -344,6 +351,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
+        });
+
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event: StateUpdateEvent) => {
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+            }
+            if (actions.length) {
+                for (const action of actions) {
+                    this.deselectChildren(action.transaction.id);
+                }
+            }
         });
     }
 
@@ -662,5 +683,21 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);
+    }
+
+    /**
+     * @description A recursive way to deselect all selected children of a given record
+     * @param recordID ID of the record whose children to deselect
+     * @hidden
+     * @internal
+     */
+    private deselectChildren(recordID): void {
+        const selectedChildren = [];
+        const rowToDeselect = (this.getRowByKey(recordID) as IgxTreeGridRowComponent).treeRow;
+        this.selectionService.deselectRow(recordID);
+        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        if (selectedChildren.length > 0) {
+            selectedChildren.forEach(x => this.deselectChildren(x));
+        }
     }
 }

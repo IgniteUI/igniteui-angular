@@ -2,6 +2,25 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.0.0
+
+### General
+- `igxGrid`
+    - **Behavioral Change** - Group rows now display the group column's header name instead of field when one is available.
+- `igx-select`, `igx-combo`, `igx-drop-down`
+    - **Behavioral Change** - The select, combo, and dropdown items now have display block and text-overflow ellipsis enabled by default.
+- `IgxTransaction` - The `onStateUpdate` now emits with information of its origin. The emitted value is of type `StateUpdateEvent`, which has two properties:
+    - `origin` - it can vary within the values of the `TransactionEventOrigin` interface; 
+    - `actions` - contains information about the transactions, that caused the emission of the event.
+- `IgxPaginator` - The input `overlaySettings` was introduced, which allows applying custom overlay settings for the component. 
+
+### New Features
+- `IgxGrid`
+    - `showGroupArea` input is added, which can be used to enable/disable the group area row.
+
+- `IgxSelect` support for `igxHint` directive added.
+    - Allows the user to add `igxHint` to be displayed bellow the input element.
+
 ## 9.1.1
 
 ### General
@@ -10,6 +29,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
+-  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 
 ## 9.1.0
 
@@ -132,11 +152,11 @@ All notable changes for each version of this project will be documented in this 
     ```typescript
     public pinningConfiguration: IPinningConfig = { columns: ColumnPinningPosition.End };
     ```
-    - Added new properties for paging:
-     - `totalRecords` set to alter the pages count based on total remote records. Keep in mind that If you are using paging and all the data is passed to the grid, the value of totalRecords property will be set by default to the length of the provided data source. If totalRecords is set, it will take precedent over the default length based on the data source.
-     - `pagingMode` - accepts `GridPagingMode` enumeration. If the paging mode is set to remote the grid will not paginate the passed data source, if the paging mode is set to local (which is the default value) the grid will paginate the data source based on the page, perPage and totalRecords values.
+  - Added new properties for paging:	
+    - `totalRecords` set to alter the pages count based on total remote records. Keep in mind that If you are using paging and all the data is passed to the grid, the value of totalRecords property will be set by default to the length of the provided data source. If totalRecords is set, it will take precedent over the default length based on the data source.	
+    - `pagingMode` - accepts `GridPagingMode` enumeration. If the paging mode is set to remote the grid will not paginate the passed data source, if the paging mode is set to local (which is the default value) the grid will paginate the data source based on the page, perPage and totalRecords values.   
     - Added functionality for column selection.
-     - `columnSelection` property has been added. It accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple.
+    - `columnSelection` property has been added. It accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple.
     - `selected` property has been added to the IgxColumnComponent; Allows you to set whether the column is selected.
     - `selectable` property has been added to the IgxColumnComponent; Allows you to set whether the column is selectable.
     - `onColumnSelectionChange` event is added for the `IgxGrid`. It is emitted when the column selection is changed.

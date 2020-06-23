@@ -1,4 +1,4 @@
-import { TransactionService, Transaction, State } from './transaction';
+import { TransactionService, Transaction, State, StateUpdateEvent } from './transaction';
 import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
@@ -32,7 +32,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public onStateUpdate = new EventEmitter<void>();
+    public onStateUpdate = new EventEmitter<StateUpdateEvent>();
 
     /**
      * @inheritdoc
