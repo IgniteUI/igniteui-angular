@@ -27,6 +27,8 @@ import {
     IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
 
+const SingleInputDatesConcatenationString = ' - ';
+
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
  *
@@ -363,7 +365,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         }
 
         const format = this.appliedFormat;
-        return `${format} - ${format}`;
+        return `${format}${SingleInputDatesConcatenationString}${format}`;
     }
 
     /** @hidden @internal */

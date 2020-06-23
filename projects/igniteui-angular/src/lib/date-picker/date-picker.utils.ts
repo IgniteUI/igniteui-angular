@@ -153,8 +153,7 @@ export abstract class DatePickerUtil {
         try {
             formattedDate = formatDate(value, format, locale, timezone);
         } catch {
-            console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
-            console.warn('Using default browser locale settings.');
+            this.logMissingLocaleSettings(locale);
             const formatter = new Intl.DateTimeFormat(locale);
             formattedDate = formatter.format(value);
         }
@@ -174,8 +173,7 @@ export abstract class DatePickerUtil {
         try {
             format = getLocaleDateFormat(locale, FormatWidth[targetKey]);
         } catch {
-            console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
-            console.warn('Using default browser locale settings.');
+            this.logMissingLocaleSettings(locale);
             format = DatePickerUtil.getDefaultInputFormat(locale);
         }
 
@@ -336,6 +334,11 @@ export abstract class DatePickerUtil {
         }
 
         return _value.getTime() < _minValue.getTime();
+    }
+
+    private static logMissingLocaleSettings(locale: string): void {
+        console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
+        console.warn('Using default browser locale settings.');
     }
 
     private static ensureLeadingZero(part: DatePartInfo) {

@@ -19,7 +19,6 @@ export interface DateRange {
 export class DateRangePickerFormatPipe implements PipeTransform {
     public transform(values: DateRange, appliedFormat?: string,
         locale?: string, formatter?: (_: DateRange) => string): string {
-        // TODO: check only values
         if (!values || !values.start && !values.end) {
             return '';
         }
