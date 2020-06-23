@@ -55,7 +55,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
      * Applies all transactions over the provided data
      * @param data Data source to update
      * @param primaryKey Primary key of the hierarchical data
-     * @param childDataKey Kye of child data collection
+     * @param childDataKey Key of child data collection
      * @param id Optional record id to commit transactions for
      */
     public commit(data: any[], primaryKey?: any, childDataKey?: any, id?: any): void {
@@ -65,10 +65,10 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
                 transactions = transactions.filter(t => t.id === id);
             }
             DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKey, true);
+            this.clear(id);
         } else {
             super.commit(data, id);
         }
-        this.clear(id);
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
