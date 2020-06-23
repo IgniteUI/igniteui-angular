@@ -71,3 +71,8 @@ $_bootstrap-navbar: extend(
     )
 );
 
+/// Generates an indigo navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navbar
+$_indigo-navbar: extend($_light-navbar, $_indigo-elevation-navbar);
