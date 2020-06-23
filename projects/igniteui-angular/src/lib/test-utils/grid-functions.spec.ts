@@ -87,6 +87,8 @@ export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
 export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
+const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
+const RESIZE_AREA_CLASS = '.igx-grid__th-resize-handle';
 
 export class GridFunctions {
 
@@ -1946,6 +1948,14 @@ export class GridFunctions {
             });
         });
     }
+
+    public static getHeaderResizeArea(header: DebugElement): DebugElement {
+         return  header.parent.query(By.css(RESIZE_AREA_CLASS));
+    }
+
+    public static getResizer(fix): DebugElement {
+        return  fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+   }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
