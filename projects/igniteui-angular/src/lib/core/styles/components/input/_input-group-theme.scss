@@ -505,7 +505,11 @@
     }
 
     %form-group-bundle--box-disabled {
-        background: --var($theme, 'box-disabled-background');
+        @if $not-indigo-theme {
+            background: --var($theme, 'box-disabled-background');
+        } @else {
+            background: transparent;
+        }
     }
 
     %form-group-bundle--border {

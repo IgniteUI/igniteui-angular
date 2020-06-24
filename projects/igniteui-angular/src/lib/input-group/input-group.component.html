@@ -30,7 +30,7 @@
     <div class="igx-input-group__bundle">
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
-        <div *ngIf="!isTypeBootstrap; else inputBundle" class="igx-input-group__bundle-main">
+        <div *ngIf="!isTypeBootstrap || !isTypeIndigo; else inputBundle" class="igx-input-group__bundle-main">
 
             <ng-container *ngIf="!isNotMaterial">
                 <ng-container *ngTemplateOutlet="label"></ng-container>

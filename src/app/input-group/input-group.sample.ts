@@ -9,7 +9,7 @@ import {ButtonGroupAlignment, DisplayDensityToken, IDisplayDensityOptions} from 
 })
 export class InputGroupSampleComponent implements OnInit {
     public inputValue: any;
-    public isRequired: boolean;
+    public isRequired = false;
     public isDisabled = false;
     public isDisabledLabel = 'Enabled';
     public alignment = ButtonGroupAlignment.vertical;
@@ -63,7 +63,7 @@ export class InputGroupSampleComponent implements OnInit {
     }
 
     public toggleRequired() {
-        this.isRequired = this.inputValue === '';
+        this.isRequired = !this.isRequired;
     }
 }
 

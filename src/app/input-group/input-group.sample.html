@@ -18,7 +18,7 @@
                 <igx-prefix>
                     <igx-icon>search</igx-icon>
                 </igx-prefix>
-                <input [required]="isRequired" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
+                <input name="inputTest" [required]="isRequired" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
                 <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
@@ -31,7 +31,7 @@
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
-                <input placeholder="Placeholder" [required]="isRequired" id="fluentfirstName" igxInput value="{{inputValue}}" [(ngModel)]="inputValue" [disabled]="isDisabled"/>
+                <input name="inputTest" placeholder="Placeholder" [required]="isRequired" id="fluentfirstName" igxInput value="{{inputValue}}" [(ngModel)]="inputValue" [disabled]="isDisabled"/>
                 <igx-suffix>
                     <igx-icon>data_usage</igx-icon>
                 </igx-suffix>
@@ -44,7 +44,7 @@
                 <igx-prefix>
                     http://
                 </igx-prefix>
-                <input placeholder="Placeholder" [required]="isRequired" [disabled]="isDisabled" [value]="inputValue" [(ngModel)]="inputValue" igxInput type="text" />
+                <input name="inputTest" [required]="isRequired" [disabled]="isDisabled" [value]="inputValue" [(ngModel)]="inputValue" igxInput type="text" />
                 <igx-suffix>
                     .com
                 </igx-suffix>
@@ -54,11 +54,11 @@
 
             <!-- textarea -->
             <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Message</label>
+                <label igxLabel>Textarea</label>
                 <igx-prefix>
                     <igx-icon>face</igx-icon>
                 </igx-prefix>
-                <textarea placeholder="Placeholder" [required]="isRequired" igxInput [value]="inputValue" [disabled]="isDisabled" [(ngModel)]="inputValue"></textarea>
+                <textarea name="inputTest" [required]="isRequired" igxInput [value]="inputValue" [disabled]="isDisabled" [(ngModel)]="inputValue"></textarea>
                 <igx-suffix>
                     <igx-icon>phone</igx-icon>
                 </igx-suffix>
@@ -87,7 +87,7 @@
                         [value]="value"
                         [disabled]="isDisabled"
                         [type]="inputType">
-                <label igxLabel>Sample Label</label>
+                <label igxLabel>Input type select</label>
                 <igx-prefix igxPrefix>
                     <igx-icon fontSet="material">favorite</igx-icon>
                 </igx-prefix>

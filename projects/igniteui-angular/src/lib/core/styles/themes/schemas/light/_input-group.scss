@@ -311,6 +311,10 @@ $_bootstrap-input-group: extend(
 
 /// Generates a indigo input-group schema.
 /// @type {Map}
+/// @prop {map} idle-text-color [igx-color: ('grays', 500)] - The input text color in the idle state.
+/// @prop {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
+/// @prop {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
+/// @prop {map} disabled-text-color [igx-color: ('grays', 300)] - The input text color in the disabled state.
 /// @requires {function} extend
 /// @requires {map} $_light-input-group
 $_indigo-input-group: extend(
@@ -319,9 +323,18 @@ $_indigo-input-group: extend(
     $_indigo-elevation-input-group,
     (
         variant: 'indigo-design',
+
         box-background: (
-            igx-color: ('grays', 100),
-        )
+            igx-color: ('grays', 100)
+        ),
+
+        idle-text-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-text-color: (
+            igx-color: ('grays', 300)
+        ),
     )
 );
 
