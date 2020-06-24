@@ -50,10 +50,12 @@ $_dark-indigo-bottom-nav: extend(
             igx-color: 'surface',
         ),
 
-        active-item-color: #fff,
+        active-item-color:(
+            igx-contrast-color: 'surface',
+        ),
 
         idle-item-color: (
-            igx-color: #fff,
+            igx-contrast-color: 'surface',
             rgba: .6
         ),
     )
