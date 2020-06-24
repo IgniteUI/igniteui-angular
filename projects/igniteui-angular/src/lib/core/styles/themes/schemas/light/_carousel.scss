@@ -81,10 +81,7 @@ $_bootstrap-carousel: extend($_light-carousel, $_bootstrap-shape-carousel, $_flu
 $_indigo-carousel: extend($_light-carousel, $_square-shape-carousel, $_indigo-elevation-carousel, (
     variant: 'indigo-design',
 
-    button-background: (
-        igx-color: #fff,
-        rgba: .6
-    ),
+    button-background: transparent,
 
     button-arrow-color: (
         igx-color: ('grays', 600)
@@ -101,14 +98,10 @@ $_indigo-carousel: extend($_light-carousel, $_square-shape-carousel, $_indigo-el
     button-disabled-background: transparent,
 
     button-disabled-arrow-color:  (
-        igx-color: ('grays' 600),
-        rgba: .4,
+        igx-color: ('grays' 400),
     ),
 
-    indicator-dot-color:(
-        igx-color: #fff,
-        rgba: .6
-    ),
+    indicator-dot-color: #fff,
 
     indicator-border-color: (
         igx-color: #fff,

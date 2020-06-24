@@ -53,15 +53,19 @@ $_dark-bootstrap-carousel: extend($_bootstrap-carousel, $_base-dark-carousel);
 /// @requires extend
 /// @requires $_indigo-carousel
 /// @requires $_base-dark-carousel
-$_dark-indigo-carousel: extend($_indigo-carousel, $_base-dark-carousel, (
-    button-arrow-color: (
-        igx-color: ('grays', 600)
+$_dark-indigo-carousel: extend($_indigo-carousel, (
+    slide-background: #222,
+
+    indicator-dot-color: (
+        igx-color: ('grays' 900),
     ),
 
-    button-hover-background: (
-        igx-color: ('grays', 300),
-        hexrgba: #222,
-        rgba: .8,
-    )
+    indicator-border-color: (
+        igx-color: ('grays' 600),
+    ),
+
+    indicator-active-border-color: (
+        igx-color: ('grays' 900),
+    ),
 ));
 
