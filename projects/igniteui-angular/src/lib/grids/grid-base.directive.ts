@@ -4034,7 +4034,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                     rowIndex: index
                 };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData);
+                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
                 const args = this.gridAPI.update_cell(cell, value);
 
                 if (this.crudService.cell && this.crudService.sameCell(cell)) {
@@ -4069,7 +4069,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.gridAPI.escape_editMode();
             }
-            const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
+            const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
 
             // TODO: fix for #5934 and probably break for #5763
