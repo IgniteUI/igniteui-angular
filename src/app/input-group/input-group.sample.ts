@@ -38,6 +38,7 @@ export class InputGroupSampleComponent implements OnInit {
             { selected: this.inputType === 'indigo', type: 'indigo', label: 'Indigo', togglable: true},
         ];
     }
+
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }

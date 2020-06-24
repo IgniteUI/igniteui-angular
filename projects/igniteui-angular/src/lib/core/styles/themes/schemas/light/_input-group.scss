@@ -324,6 +324,30 @@ $_indigo-input-group: extend(
     (
         variant: 'indigo-design',
 
+        border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        hover-border-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        focused-border-color: (
+            igx-color: ('primary', 400)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        hover-bottom-line-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        disabled-bottom-line-color: (
+            igx-color: ('grays', 300)
+        ),
+
         box-background: (
             igx-color: ('grays', 100)
         ),

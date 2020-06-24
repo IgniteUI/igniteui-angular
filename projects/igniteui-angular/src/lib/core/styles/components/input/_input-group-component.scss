@@ -662,6 +662,12 @@
             @extend %form-group-bundle--box-disabled !optional;
         }
     }
+
+    @include mx(indigo, focused) {
+        @include e(bundle) {
+            @extend %indigo--box-focused !optional;
+        }
+    }
     // Indigo Theme End //
 
     // Bootstrap Theme Start //
