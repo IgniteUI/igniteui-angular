@@ -5,7 +5,7 @@ import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveF
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule, IgxDropDownItemComponent } from '../drop-down/public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupModule, IgxHintDirective } from '../input-group/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -107,7 +107,6 @@ describe('igxSelect', () => {
             ]
         }).compileComponents();
     }));
-
     describe('General tests: ', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -2486,7 +2485,6 @@ describe('igxSelect', () => {
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
     });
-
     describe('Test CDR - Expression changed after it was checked', () => {
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectCDRComponent);
@@ -2510,6 +2508,33 @@ describe('igxSelect', () => {
             expect(selectCDR).toBeDefined();
             expect(selectCDR.value).toBe('ID');
         });
+    });
+    describe('Input with input group directives - hint, label, prefix, suffix: ', () => {
+        beforeEach(fakeAsync(()  => {
+            fixture = TestBed.createComponent(IgxSelectAffixComponent);
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+        }));
+        it('should not open dropdown on hint container click',
+            fakeAsync(() => {
+                const hint = fixture.debugElement.query(By.directive(IgxHintDirective));
+                const hintContainer: HTMLElement = hint.nativeElement.parentElement;
+
+                expect(select.collapsed).toBeTruthy();
+                hintContainer.click();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeTruthy();
+        }));
+        it('should not open dropdown on hint element click',
+            fakeAsync(() => {
+                const hint = fixture.debugElement.query(By.directive(IgxHintDirective));
+                expect(select.collapsed).toBeTruthy();
+                hint.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                expect(select.collapsed).toBeTruthy();
+        }));
     });
 });
 
@@ -2704,6 +2729,7 @@ class IgxSelectBottomComponent {
         <igx-suffix>
             <igx-icon fontSet="material">alarm</igx-icon>
         </igx-suffix>
+    <igx-hint>I am a Hint</igx-hint>
     <igx-select-item *ngFor="let item of items" [value]="item">
         {{ item }}
     </igx-select-item>
@@ -2722,7 +2748,6 @@ class IgxSelectAffixComponent {
         'Option 6',
         'Option 7'];
 }
-
 
 @Component({
     template: `
