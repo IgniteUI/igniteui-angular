@@ -298,10 +298,10 @@ $light-bootstrap-schema: (
     igx-watermark: $_bootstrap-watermark
 );
 
-$light-indigo-schema: (
+$light-indigo-schema: 
     igx-avatar: $_indigo-avatar,
     igx-action-strip: $_indigo-action-strip,
-    igx-badge: $_bootstrap-badge,
+    igx-badge: $_indigo-badge,
     igx-banner: $_indigo-banner,
     igx-bottom-nav: $_bootstrap-bottom-nav,
     igx-button: $_indigo-button,
@@ -336,7 +336,7 @@ $light-indigo-schema: (
     igx-input-group: $_bootstrap-input-group,
     igx-list: $_bootstrap-list,
     geo-map: $_bootstrap-geo-map,
-    igx-navbar: $_bootstrap-navbar,
+    igx-navbar: $_indigo-navbar,
     igx-navdrawer: $_bootstrap-navdrawer,
     igx-overlay: $_bootstrap-overlay,
     igx-linear-bar: $_bootstrap-progress-linear,
