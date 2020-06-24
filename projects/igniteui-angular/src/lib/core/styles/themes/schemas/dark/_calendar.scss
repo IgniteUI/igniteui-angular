@@ -36,3 +36,9 @@ $_dark-bootstrap-calendar: extend(
         picker-text-color: #fff,
     )
 );
+
+/// Generates a dark indigo calendar schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-calendar
+$_dark-indigo-calendar: extend($_indigo-calendar);

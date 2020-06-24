@@ -298,7 +298,7 @@ $light-bootstrap-schema: (
     igx-watermark: $_bootstrap-watermark
 );
 
-$light-indigo-schema: 
+$light-indigo-schema: (
     igx-avatar: $_indigo-avatar,
     igx-action-strip: $_indigo-action-strip,
     igx-badge: $_indigo-badge,
@@ -306,7 +306,7 @@ $light-indigo-schema:
     igx-bottom-nav: $_bootstrap-bottom-nav,
     igx-button: $_indigo-button,
     igx-button-group: $_bootstrap-button-group,
-    igx-calendar: $_bootstrap-calendar,
+    igx-calendar: $_indigo-calendar,
     igx-card: $_indigo-card,
     igx-carousel: $_bootstrap-carousel,
     category-chart: $_bootstrap-category-chart,
