@@ -136,12 +136,14 @@ export class WorksheetFile implements IExcelFile {
                     worksheetData.isTreeGridData, maxOutlineLevel));
     }
 
-    public writeElementAsync(folder: JSZip, worksheetData: WorksheetData, done: () => void) {
-        this.prepareDataAsync(worksheetData, (cols, rows) => {
-            const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
-            folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
-            done();
+    public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
+        return new Promise(resolve => {
+            this.prepareDataAsync(worksheetData, (cols, rows) => {
+                const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+                folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                    this.dimension, this.freezePane, cols, rows, hasTable, worksheetData.isTreeGridData, this.maxOutlineLevel));
+                resolve();
+            });
         });
     }
 
@@ -199,16 +201,16 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
-        let dataRecords = '';
+        const rowDataArr = new Array(worksheetData.rowCount - 1);
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                dataRecords += this.processRow(worksheetData, i + 1);
+                rowDataArr[i] = this.processRow(worksheetData, i + 1);
             },
             () => {
-                done(dataRecords);
+                done(rowDataArr.join(''));
             });
     }
 
