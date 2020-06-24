@@ -54,3 +54,11 @@ $_dark-bootstrap-input-group: extend(
     $_bootstrap-input-group,
     $_base-dark-input-group
 );
+
+/// Generates a dark indigo input-group schema based on a mix of $_light-input-group and $_base-dark-input-group..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-input-group
+/// @requires $_base-dark-input-group
+/// @see $default-palette
+$_dark-indigo-input-group: extend($_light-input-group, $_base-dark-input-group);

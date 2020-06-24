@@ -14,6 +14,7 @@ const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_FLUENT_CSS_CLASS = 'igx-input-group--fluent';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
+const INPUT_GROUP_INDIGO_CSS_CLASS = 'igx-input-group--indigo';
 const INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS = 'igx-input-group--fluent-search';
 const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
@@ -304,6 +305,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     let isBorder = false;
     let isBox = false;
     let isSearch = false;
+    let isIndigo = false;
     let isFluent = false;
     let isFluentSearch = false;
 
@@ -316,6 +318,9 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
             break;
         case 'box':
             isBox = true;
+            break;
+        case 'indigo':
+            isIndigo = true;
             break;
         case 'fluent':
             isFluent = true;
@@ -332,12 +337,14 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     expect(nativeElement.classList.contains(INPUT_GROUP_BOX_CSS_CLASS)).toBe(isBox);
     expect(nativeElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(isBorder);
     expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_CSS_CLASS)).toBe(isFluent);
+    expect(nativeElement.classList.contains(INPUT_GROUP_INDIGO_CSS_CLASS)).toBe(isIndigo);
     expect(nativeElement.classList.contains(INPUT_GROUP_SEARCH_CSS_CLASS)).toBe(isSearch);
     expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS)).toBe(isFluentSearch);
 
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
+    expect(component.isTypeIndigo).toBe(isBox);
     expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
     expect(component.isTypeFluentSearch).toBe(isFluentSearch);

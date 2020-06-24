@@ -96,7 +96,7 @@
 /// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
 /// @property {Map} igx-highlight [$_light-highlight]
 /// @property {Map} igx-icon [$_light-icon]
-/// @property {Map} igx-input-group [$_light-input-group]
+/// @property {Map} igx-input-group [$_indigo-input-group]
 /// @property {Map} igx-list [$_light-list]
 /// @property {Map} geo-map [$_light-geo-map]
 /// @property {Map} igx-navbar [$_light-navbar]
@@ -333,7 +333,7 @@ $light-indigo-schema: (
     igx-grid-toolbar: $_bootstrap-grid-toolbar,
     igx-highlight: $_bootstrap-highlight,
     igx-icon: $_bootstrap-icon,
-    igx-input-group: $_bootstrap-input-group,
+    igx-input-group: $_indigo-input-group,
     igx-list: $_bootstrap-list,
     geo-map: $_bootstrap-geo-map,
     igx-navbar: $_bootstrap-navbar,

@@ -264,6 +264,9 @@
 
     $transition-timing: .25s $ease-out-cubic;
 
+    $not-indigo-theme: map-get($theme, 'variant') != 'indigo-design';
+    $indigo-theme: map-get($theme, 'variant') == 'indigo-design';
+
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
@@ -410,7 +413,17 @@
 
     %form-group-display--disabled {
         user-select: none;
-        color: --var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color') !important;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--disabled;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--disabled;
+        }
     }
 
     %form-group-bundle {
@@ -433,11 +446,21 @@
 
     %form-group-bundle--box {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        background: --var($theme, 'box-background');
+        transition: background $transition-timing;
         box-shadow: inset 0 -2px 0 0 --var($theme, 'idle-bottom-line-color');
 
-        %form-group-label--box + %form-group-input--box {
-            transform: translateY(0);
+        @if $not-indigo-theme {
+            background: --var($theme, 'box-background');
+            %form-group-label--box + %form-group-input--box {
+                transform: translateY(0);
+            }
+        }
+
+        @if $indigo-theme {
+            &:hover,
+            &:focus {
+                background: --var($theme, 'box-background');
+            }
         }
     }
 
@@ -456,7 +479,11 @@
 
     %form-group-bundle--focus {
         caret-color: --var($theme, 'focused-secondary-color');
-        box-shadow: inset 0 -2px 0 0 --var($theme, 'interim-bottom-line-color');
+        @if $not-indigo-theme {
+            box-shadow: inset 0 -2px 0 0 --var($theme, 'interim-bottom-line-color');
+        } @else {
+            box-shadow: inset 0 -2px 0 0 --var($theme, 'focused-bottom-line-color');
+        }
     }
 
     %form-group-bundle--success {
@@ -497,19 +524,35 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
+        @if $not-indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'hover-border-color');
+        }
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
+        @if $not-indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'focused-border-color');
+        }
     }
 
     %form-group-bundle-border--error {
-        box-shadow: inset 0 0 0 2px --var($theme, 'error-secondary-color');
+        @if $not-indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'error-secondary-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'error-secondary-color');
+        }
     }
 
     %form-group-bundle-border--success {
-        box-shadow: inset 0 0 0 2px --var($theme, 'success-secondary-color');
+        @if $not-indigo-theme {
+            box-shadow: inset 0 0 0 2px --var($theme, 'success-secondary-color');
+        } @else {
+            box-shadow: inset 0 0 0 1px --var($theme, 'success-secondary-color');
+        }
     }
 
     %form-group-bundle-border--disabled {
@@ -949,7 +992,7 @@
     }
 
     %form-group-input--disabled {
-        color: --var($theme, 'disabled-text-color');
+        color: --var($theme, 'disabled-text-color') !important;
 
         &::placeholder {
             color: --var($theme, 'disabled-placeholder-color');
@@ -1293,6 +1336,11 @@
 
     %form-group-helper-item--end {
         order: 1;
+    }
+
+    %form-group-prefix--disabled,
+    %form-group-suffix--disabled {
+        color: --var($theme, 'disabled-text-color');
     }
 
     // Bootstrap

@@ -309,3 +309,19 @@ $_bootstrap-input-group: extend(
     )
 );
 
+/// Generates a indigo input-group schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-input-group
+$_indigo-input-group: extend(
+    $_light-input-group,
+    $_indigo-shape-input-group,
+    $_indigo-elevation-input-group,
+    (
+        variant: 'indigo-design',
+        box-background: (
+            igx-color: ('grays', 100),
+        )
+    )
+);
+
