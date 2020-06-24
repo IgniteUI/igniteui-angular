@@ -1,37 +1,18 @@
-<igx-drop-down
-    #dropdownConditions
-    [maxHeight]="'200px'"
-    [width]="getInputWidth()"
-    [displayDensity]="displayDensity"
-    (onSelection)="onConditionsChanged($event)">
-    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
-        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-        <span>{{ translateCondition(condition) }}</span>
-    </igx-drop-down-item>
-</igx-drop-down>
-
-<igx-input-group
-    #inputGroupConditions
-    (click)="toggleCustomDialogDropDown()"
-    type="box"
-    [displayDensity]="displayDensity">
-
+<igx-select #dropdownConditions
+        type="box"
+        [displayDensity]="displayDensity"
+        [placeholder]="conditionsPlaceholder"
+        (onSelection)="onConditionsChanged($event)"
+        [overlaySettings]="dropDownOverlaySettings">
     <igx-prefix>
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
-
-    <input
-        igxInput
-        (keydown)="onInputConditionsKeyDown($event)"
-        [igxDropDownItemNavigation]="dropdownConditions"
-        tabindex="0"
-        [placeholder]="inputConditionsPlaceholder"
-        autocomplete="off"
-        [value]="getConditionName(expressionUI.expression.condition)"
-        [readonly]="true"
-    />
-</igx-input-group>
+    <igx-select-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
+        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <span>{{translateCondition(condition)}}</span>
+    </igx-select-item>
+</igx-select>
 
 <igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity">
     <input
@@ -74,3 +55,8 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_or }}
     </span>
 </igx-buttongroup>
+
+<div #overlayOutlet
+     igxOverlayOutlet
+     (pointerdown)="onOutletPointerDown($event)">
+</div>
