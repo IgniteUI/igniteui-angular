@@ -298,7 +298,7 @@ $light-bootstrap-schema: (
     igx-watermark: $_bootstrap-watermark
 );
 
-$light-indigo-schema: 
+$light-indigo-schema: (
     igx-avatar: $_indigo-avatar,
     igx-action-strip: $_indigo-action-strip,
     igx-badge: $_indigo-badge,
