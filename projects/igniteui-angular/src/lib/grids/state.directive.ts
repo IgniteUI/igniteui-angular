@@ -385,13 +385,17 @@ namespace Features {
 
         public getFeatureState(context: IgxGridStateDirective): IGridState {
             const filteringState = context.currGrid.advancedFilteringExpressionsTree;
+            let advancedFiltering: any;
             if (filteringState) {
                 delete filteringState.owner;
                 for (const item of filteringState.filteringOperands) {
                     delete (item as IFilteringExpressionsTree).owner;
                 }
+                advancedFiltering = filteringState;
+            } else {
+                advancedFiltering = {};
             }
-            return { advancedFiltering: filteringState };
+            return { advancedFiltering: advancedFiltering };
         }
 
         public restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
@@ -522,6 +526,7 @@ namespace Features {
         }
 
         public restoreFeatureState(context: IgxGridStateDirective, state: string[]): void {
+            context.currGrid.deselectAllColumns();
             context.currGrid.selectColumns(state);
         }
     }
@@ -615,7 +620,6 @@ namespace Features {
                 grid = grid.parent;
             }
             return grid.hgridAPI.getParentRowId(childGrid);
-            // return (childRow.hGridApi as IgxHierarchicalGridAPIService).getParentRowId(childGrid);
         }
     }
 

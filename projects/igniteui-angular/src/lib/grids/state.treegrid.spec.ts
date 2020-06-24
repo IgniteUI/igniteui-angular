@@ -59,7 +59,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
 
     it('getState should return corect JSON string', () => {
         // tslint:disable-next-line:max-line-length
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true}],"filtering":{"filteringOperands":[],"operator":0},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}';
+        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"expansion":[],"rowIslands":[]}';
         fix.detectChanges();
 
         const state = fix.componentInstance.state;
@@ -94,7 +94,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         HelperFunctions.verifyPaging(paging, gridState);
         HelperFunctions.verifySortingExpressions(sorting, gridState);
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
-        HelperFunctions.verifyAdvancedFilteringExpressions(advancedFiltering, gridState);
     });
 
     it('getState should return corect filtering state', () => {
@@ -216,7 +215,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const state = fix.componentInstance.state;
         // tslint:disable-next-line:max-line-length
         const advFilteringState = '{"advancedFiltering":{"filteringOperands":[{"fieldName":"Age","condition":{"name":"greaterThan","isUnary":false,"iconName":"greater_than"},"searchVal":25,"ignoreCase":true},{"fieldName":"ID","condition":{"name":"greaterThan","isUnary":false,"iconName":"greater_than"},"searchVal":"3","ignoreCase":true}],"operator":0,"type":1}}';
-        const initialState = '{}';
+        const initialState = '{"advancedFiltering":{}}';
 
         let gridState = state.getState(true, 'advancedFiltering');
         expect(gridState).toBe(initialState);
