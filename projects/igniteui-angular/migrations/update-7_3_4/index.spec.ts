@@ -28,27 +28,27 @@ describe('Update 7.3.4', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update time picker events', done => {
+    it('should update time picker events', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-time-picker (onOpen)="handler" (onClose)="handler"></igx-time-picker>`
         );
-        const tree = schematicRunner.runSchematic('migration-09', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-09', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
                 `<igx-time-picker (onOpened)="handler" (onClosed)="handler"></igx-time-picker>`);
-        done();
     });
 
-    it('should update date picker events', done => {
+    it('should update date picker events', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-date-picker (onOpen)="handler" (onClose)="handler"></igx-date-picker>`
         );
-        const tree = schematicRunner.runSchematic('migration-09', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-09', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(
                 `<igx-date-picker (onOpened)="handler" (onClosed)="handler"></igx-date-picker>`);
-        done();
     });
 });

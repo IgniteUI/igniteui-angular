@@ -70,6 +70,7 @@
         "@types/jszip": "^3.1.7",
         "hammerjs": "^2.0.8",
         "jszip": "^3.3.0",
+        "tslib": "^2.0.0",
         "resize-observer-polyfill": "^1.5.1",
         "igniteui-trial-watermark": "^1.0.3"
     },
