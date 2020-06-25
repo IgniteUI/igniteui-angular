@@ -61,3 +61,9 @@ $_bootstrap-combo: extend(
     )
 );
 
+/// Generates a indigo combo schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_indigo-combo
+/// @see $indigo-palette
+$_indigo-combo: extend($_light-combo);

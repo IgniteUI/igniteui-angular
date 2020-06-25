@@ -172,6 +172,7 @@ export class IgxGridNavigationService {
 
     focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
+        if (gridRows < 1) { this.activeNode = null; return; }
         if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.activeNode = { row: 0, column: 0 };
             this.grid.navigateTo(0, 0, (obj) => {
@@ -182,7 +183,8 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        if (this.grid.dataView.length && this.activeNode &&
+            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
                 level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
         this.performHorizontalScrollToCell(0);

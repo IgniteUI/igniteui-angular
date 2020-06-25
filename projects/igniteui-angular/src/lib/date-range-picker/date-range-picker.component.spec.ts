@@ -586,6 +586,34 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRange();
                 });
+
+                it('should select a range from the calendar only when the two inputs are filled in', fakeAsync(() => {
+                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    startInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/10/2015', startInput);
+
+                    fixture.componentInstance.dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(0);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                    tick();
+                    fixture.detectChanges();
+
+                    endInput.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('11/16/2015', endInput);
+                    fixture.detectChanges();
+
+                    fixture.componentInstance.dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(7);
+                }));
             });
 
             describe('Keyboard navigation', () => {

@@ -17,9 +17,17 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxGrid`
     - `showGroupArea` input is added, which can be used to enable/disable the group area row.
+    - The event arguments of `onCellEdit`, `onCellEditEnter` and `onCellEditCancel` events will contain a reference to the row data, as well as a reference to the column.
+    - The event arguments of `onRowEdit`, `onRowEditEnter` and `onRowEditCancel` events will contain a reference to the row data.
 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
+
+## 9.1.4
+
+### New Features
+- `IgxList`
+    - Added localization support.
 
 ## 9.1.1
 
@@ -187,7 +195,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Added support for tabIndex attribute applied to the main chip element.
     - Added `tabIndex` input so it can support change detection as well.
-
 
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.

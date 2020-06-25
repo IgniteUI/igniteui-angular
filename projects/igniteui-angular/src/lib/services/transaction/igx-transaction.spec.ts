@@ -945,5 +945,26 @@ describe('IgxTransaction', () => {
             expect(transaction.canUndo).toBeFalsy();
             expect(transaction.getAggregatedChanges(false).length).toBe(0);
         });
+
+        it('Should emit onStateUpdate once when commiting a hierarchical transaction', () => {
+            const data = SampleTestData.employeeTreeData();
+            const transaction = new IgxHierarchicalTransactionService();
+            spyOn(transaction.onStateUpdate, 'emit').and.callThrough();
+            expect(transaction).toBeDefined();
+
+            const updateTransaction: HierarchicalTransaction = {
+                id: 475,
+                type: TransactionType.UPDATE,
+                newValue: {
+                    Age: 60
+                },
+                path: [data[0].ID]
+            };
+            transaction.add(updateTransaction, data[0].Employees[0]);
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(1);
+
+            transaction.commit(data, 'ID');
+            expect(transaction.onStateUpdate.emit).toHaveBeenCalledTimes(2);
+        });
     });
 });

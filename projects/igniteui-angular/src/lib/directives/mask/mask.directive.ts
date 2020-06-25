@@ -153,8 +153,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /** @hidden */
     public ngOnInit(): void {
-        this.renderer.setAttribute(this.nativeElement, 'placeholder',
-            this.placeholder ? this.placeholder : this.maskOptions.format);
+        if (!this.nativeElement.placeholder) {
+          this.renderer.setAttribute(this.nativeElement, 'placeholder', this.maskOptions.format);
+        }
     }
 
     /**
