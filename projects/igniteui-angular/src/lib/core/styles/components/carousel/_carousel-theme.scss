@@ -15,8 +15,9 @@
 /// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
 /// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
 /// @param {Color} $button-disabled-arrow-color [null] - The previous/next buttons disabled arrow color.
-/// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
+/// @param {Color} $indicator-dot-color [null] - The idle indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
+/// @param {Color} $indicator-active-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
 /// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
@@ -57,6 +58,7 @@
 
     $indicator-dot-color: null,
     $indicator-border-color: null,
+    $indicator-active-dot-color: null,
     $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
@@ -109,6 +111,7 @@
 
         indicator-dot-color: $indicator-dot-color,
         indicator-border-color: $indicator-border-color,
+        indicator-active-dot-color: $indicator-active-dot-color,
         indicator-active-border-color: $indicator-active-border-color,
     ));
 }
@@ -260,24 +263,36 @@
         width: 12px;
         height: 12px;
         text-indent: -9999px;
-        border: $indicator-border-style;
-        border-color: --var($theme, 'indicator-border-color');
+
+        @if $variant != 'indigo-design' {
+            border: $indicator-border-style;
+            border-color: --var($theme, 'indicator-border-color');
+            box-shadow: igx-elevation($elevations, 1);
+            opacity: .7;
+        }
+
         border-radius: 50%;
         transition: all .15s $ease-out-quad;
-        box-shadow: igx-elevation($elevations, 1);
-        opacity: .7;
 
         &::after {
-            @include animation('scale-out-center' .15s $ease-out-quad forwards);
+            @if $variant != 'indigo-design' {
+                @include animation('scale-out-center' .15s $ease-out-quad forwards);
+            }
             content: '';
             position: absolute;
-            top: 1px;
-            bottom: 1px;
-            #{$left}: 1px;
-            #{$right}: 1px;
+            @if $variant != 'indigo-design' {
+                top: 1px;
+                bottom: 1px;
+                #{$left}: 1px;
+                #{$right}: 1px;
+            } @else {
+                top: 0;
+                bottom: 0;
+                #{$left}: 0;
+                #{$right}: 0;
+            }
             border-radius: inherit;
             background: --var($theme, 'indicator-dot-color');
-            opacity: 0;
         }
 
         &:hover {
@@ -286,12 +301,15 @@
     }
 
     %igx-nav-dot--active {
-        border: $indicator-border-style;
-        border-color: --var($theme, 'indicator-active-border-color');
+        @if $variant != 'indigo-design' {
+            border: $indicator-border-style;
+            border-color: --var($theme, 'indicator-active-border-color');
+        }
+
         opacity: 1;
 
         &::after {
-            opacity: 1;
+            background: --var($theme, 'indicator-active-dot-color');
             @include animation('scale-in-center' .15s $ease-out-quad forwards);
         }
     }
