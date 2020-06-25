@@ -30,7 +30,7 @@ describe('Update 7.2.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it(`should replace **ONLY** 'isSelected' and 'isFocused'`, done => {
+    it(`should replace **ONLY** 'isSelected' and 'isFocused'`, async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html',
             `<igx-drop-down #myDropDown>
@@ -57,7 +57,8 @@ describe('Update 7.2.0', () => {
                 </igx-drop-down-item>
             </igx-drop-down>`);
 
-        const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-08', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
             `<igx-drop-down #myDropDown>
@@ -84,15 +85,15 @@ describe('Update 7.2.0', () => {
                 </igx-drop-down-item>
             </igx-drop-down>`);
 
-        done();
     });
 
-    it(`should add minireset css package and import`, done => {
+    it(`should add minireset css package and import`, async () => {
         appTree.create('/testSrc/styles.scss', '');
         appTree.create('package.json', '{}');
         spyOn(addNormalize, 'addResetCss').and.callThrough();
 
-        const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-08', {}, appTree)
+            .toPromise();
 
         expect(addNormalize.addResetCss).toHaveBeenCalledWith(appTree);
         expect(tree.readContent('/testSrc/styles.scss')).toContain(addNormalize.scssImport);
@@ -100,6 +101,5 @@ describe('Update 7.2.0', () => {
             dependencies: { 'minireset.css': '~0.0.4' }
         });
         expect(schematicRunner.tasks).toContain(new NodePackageInstallTask().toConfiguration());
-        done();
     });
 });
