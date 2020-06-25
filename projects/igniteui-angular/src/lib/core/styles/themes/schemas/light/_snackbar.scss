@@ -64,3 +64,23 @@ $_bootstrap-snackbar: extend(
     )
 );
 
+/// Generates an indigo snackbar schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the snackbar component.
+/// @requires {function} extend
+/// @requires $_light-snackbar
+/// @requires $_indigo-shape-snackbar
+$_indigo-snackbar: extend(
+    $_light-snackbar,
+    $_indigo-shape-snackbar,
+    (
+        background: (
+            igx-color: ('grays', 600)
+        ),
+
+        text-color: #fff,
+
+        button-color: #fff
+    )
+);
+
