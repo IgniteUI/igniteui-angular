@@ -1,8 +1,9 @@
-import { Injectable, EventEmitter, NgZone } from '@angular/core';
-import { IGridEditEventArgs } from '../common/events';
-import { IgxGridBaseDirective } from '../grid/public_api';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { isEdge } from '../../core/utils';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IGridEditEventArgs } from '../common/events';
+import { GridType } from '../common/grid.interface';
+import { IgxGridBaseDirective } from '../grid/public_api';
 
 export interface GridSelectionRange {
     rowStart: number;
@@ -53,20 +54,24 @@ export class IgxRow {
     state: any;
     newData: any;
 
-    constructor(public id: any, public index: number, public data: any) { }
+    constructor(public id: any, public index: number, public data: any, public grid: IgxGridBaseDirective & GridType) { }
 
-    createEditEventArgs(): IGridEditEventArgs {
-        return {
+    createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
+        const args: IGridEditEventArgs = {
             rowID: this.id,
+            rowData:  this.data,
             oldValue: { ... this.data },
-            newValue: this.newData,
-            cancel: false
+            cancel: false,
+            owner: this.grid
         };
+        if (includeNewValue) {
+            args.newValue = this.newData;
+        }
+        return args;
     }
 }
 
 export class IgxCell {
-
     primaryKey: any;
     state: any;
 
@@ -76,7 +81,8 @@ export class IgxCell {
         public column,
         public value: any,
         public editValue: any,
-        public rowData: any) { }
+        public rowData: any,
+        public grid: IgxGridBaseDirective & GridType) { }
 
     castToNumber(value: any): any {
         if (this.column.dataType === 'number' && !this.column.inlineEditorTemplate) {
@@ -86,31 +92,37 @@ export class IgxCell {
         return value;
     }
 
-    createEditEventArgs(): IGridEditEventArgs {
-        return {
+    createEditEventArgs(includeNewValue = true): IGridEditEventArgs {
+        const args: IGridEditEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
+            rowData:  this.rowData,
             oldValue: this.value,
-            newValue: this.editValue,
-            cancel: false
+            cancel: false,
+            column: this.column,
+            owner: this.grid
         };
+        if (includeNewValue) {
+            args.newValue = this.editValue;
+        }
+        return args;
     }
 }
 
 @Injectable()
 export class IgxGridCRUDService {
 
-    grid;
+    grid: IgxGridBaseDirective & GridType;
     cell: IgxCell | null = null;
     row: IgxRow | null = null;
     public isInCompositionMode = false;
 
     createCell(cell): IgxCell {
-        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData);
+        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
     }
 
     createRow(cell: IgxCell): IgxRow {
-        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData);
+        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData, cell.grid);
     }
 
     sameRow(rowID): boolean {
@@ -139,11 +151,7 @@ export class IgxGridCRUDService {
             console.warn('The grid must have a `primaryKey` specified when using `rowEditable`!');
         }
         this.row = this.createRow(this.cell);
-        const args = {
-            rowID: this.row.id,
-            oldValue: this.row.data,
-            cancel: false
-        };
+        const args = this.row.createEditEventArgs(false);
         this.grid.onRowEditEnter.emit(args);
         if (args.cancel) {
             this.endRowEdit();
@@ -162,12 +170,7 @@ export class IgxGridCRUDService {
     begin(cell): void {
         const newCell = this.createCell(cell);
         newCell.primaryKey = this.primaryKey;
-        const args = {
-            cellID: newCell.id,
-            rowID: newCell.id.rowID,
-            oldValue: newCell.value,
-            cancel: false
-        };
+        const args = newCell.createEditEventArgs(false);
 
         this.grid.onCellEditEnter.emit(args);
 

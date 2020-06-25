@@ -63,3 +63,9 @@ $_bootstrap-action-strip: extend(
     )
 );
 
+/// Generates a indigo action strip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-action-strip
+$_indigo-action-strip: extend($_light-action-strip);
+

@@ -9,10 +9,12 @@ $_default-shape-dialog: (
     border-radius: .1,
 );
 
+/// @type Map
 $_round-shape-dialog: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-dialog: (
     border-radius: 0%,
 );
@@ -22,6 +24,12 @@ $_fluent-shape-dialog: (
     border-radius: 2px,
 );
 
+/// @type Map
 $_bootstrap-shape-dialog: (
     border-radius: 4px,
+);
+
+/// @type Map
+$_indigo-shape-dialog: (
+    border-radius: 2px,
 );

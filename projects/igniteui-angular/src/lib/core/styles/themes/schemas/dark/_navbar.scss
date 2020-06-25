@@ -25,3 +25,9 @@ $_dark-fluent-navbar: extend($_fluent-navbar);
 /// @requires $_bootstrap-navbar
 $_dark-bootstrap-navbar: extend($_bootstrap-navbar);
 
+/// Generates a dark indigo navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-navbar
+$_dark-indigo-navbar: extend($_indigo-navbar);
+

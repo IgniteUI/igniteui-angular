@@ -24,3 +24,9 @@ $_dark-fluent-badge: extend($_fluent-badge);
 /// @requires extend
 /// @requires $_bootstrap-badge
 $_dark-bootstrap-badge: extend($_bootstrap-badge);
+
+/// Generates a dark indigo badge schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-badge
+$_dark-indigo-badge: extend($_indigo-badge);

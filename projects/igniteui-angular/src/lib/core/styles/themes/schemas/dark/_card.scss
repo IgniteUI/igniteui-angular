@@ -28,3 +28,9 @@ $_dark-bootstrap-card: extend(
         background: #222,
     )
 );
+
+/// Generates a dark indigo card schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-card
+$_dark-indigo-card: extend($_indigo-card);
