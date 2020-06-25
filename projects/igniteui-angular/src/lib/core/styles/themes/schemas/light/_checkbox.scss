@@ -120,6 +120,7 @@ $_bootstrap-checkbox: extend(
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-checkbox
+/// @requires {map} $_indigo_shape-checkbox
 $_indigo-checkbox: extend(
     $_light-checkbox,
     $_indigo-shape-checkbox,
