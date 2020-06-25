@@ -144,6 +144,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const args = cell.createEditEventArgs();
 
+        // TODO: emit onCellEdit after value is updated - issue #7304
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
             return args;
@@ -231,6 +232,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
+        // TODO: emit onRowEdit after value is updated - issue #7304
         grid.onRowEdit.emit(args);
 
         if (args.cancel) {

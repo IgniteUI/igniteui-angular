@@ -31,8 +31,7 @@
             "styles": [
               "src/styles/igniteui-theme.scss"
             ],
-            "scripts": [],
-            "es5BrowserSupport": true
+            "scripts": []
           },
           "configurations": {
             "production": {
