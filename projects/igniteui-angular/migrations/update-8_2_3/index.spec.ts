@@ -27,7 +27,7 @@ describe('Update 8.2.3', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update igx-carousel-theme prop', done => {
+    it('should update igx-carousel-theme prop', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.scss',
             `$my-carousel-theme: igx-carousel-theme(
@@ -36,7 +36,8 @@ describe('Update 8.2.3', () => {
                 $button-hover-background: white
               );`
         );
-        const tree = schematicRunner.runSchematic('migration-11', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-11', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(
             `$my-carousel-theme: igx-carousel-theme(
@@ -45,6 +46,5 @@ describe('Update 8.2.3', () => {
                 $button-hover-background: white
               );`
         );
-        done();
     });
 });

@@ -27,7 +27,7 @@ describe('Update 8.2.6', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update igx-carousel-theme prop', done => {
+    it('should update igx-carousel-theme prop', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.scss',
             `$my-toolbar-theme: igx-grid-toolbar-theme(
@@ -47,7 +47,8 @@ describe('Update 8.2.6', () => {
                 $item-focus-text-color: null
               );`
         );
-        const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-12', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
             .toEqual(
                 `$my-toolbar-theme: igx-grid-toolbar-theme(
@@ -61,10 +62,9 @@ describe('Update 8.2.6', () => {
                 $item-focus-text-color: null
               );`
             );
-        done();
     });
 
-    it('should update igx-grid-paginator-theme', done => {
+    it('should update igx-grid-paginator-theme', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.scss',
             `@import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
@@ -76,7 +76,8 @@ describe('Update 8.2.6', () => {
             }
             $dark-grid-paginator-schema: extend($_dark-grid-pagination,());`
         );
-        const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-12', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(
             `@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
@@ -88,6 +89,5 @@ describe('Update 8.2.6', () => {
             }
             $dark-grid-paginator-schema: extend($_dark-pagination,());`
         );
-        done();
     });
 });

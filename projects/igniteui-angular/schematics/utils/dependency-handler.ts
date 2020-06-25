@@ -25,6 +25,7 @@ export const DEPENDENCIES_MAP: PackageEntry[] = [
         // dependencies
         { name: 'hammerjs', target: PackageTarget.REGULAR },
         { name: 'jszip', target: PackageTarget.REGULAR },
+        { name: 'tslib', target: PackageTarget.NONE },
         { name: 'resize-observer-polyfill', target: PackageTarget.REGULAR },
         { name: '@types/hammerjs', target: PackageTarget.DEV },
         { name: '@types/jszip', target: PackageTarget.DEV },
