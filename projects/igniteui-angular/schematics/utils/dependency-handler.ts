@@ -60,16 +60,19 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
     throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
 }
 
-export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string): string {
-    const buildOptions = getTargetedProjectOptions(project, 'build');
-    if (!buildOptions[option]) {
-        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
-            `workspace config (${project.sourceRoot})`);
+export function getConfigFile(project: WorkspaceProject<ProjectType>, option: string, configSection: string = 'build'): string {
+    const options = getTargetedProjectOptions(project, configSection);
+    if (!options) {
+        throw new SchematicsException(`Could not find matching ${configSection} section` +
+            `inside of the workspace config ${project.sourceRoot} `);
     }
+    if (!options[option]) {
+        throw new SchematicsException(`Could not find the project ${option} file inside of the ` +
+            `workspace config ${project.sourceRoot}`);
+    }
+    return options[option];
 
-    return buildOptions[option];
 }
-
 export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
     tree.overwrite(targetFile, JSON.stringify(data, null, 2) + '\n');
 }
@@ -134,6 +137,20 @@ export function getPropertyFromWorkspace(targetProp: string, workspace: any, cur
     return null;
 }
 
+function addHammerToConfig(project: WorkspaceProject<ProjectType>, tree: Tree, config: string) {
+    const projectOptions = getTargetedProjectOptions(project, config);
+    const tsPath = getConfigFile(project, 'main', config);
+    const hammerImport = 'import \'hammerjs\';\n';
+    const tsContent = tree.read(tsPath).toString();
+    // if there are no elements in the architect[config]options.scripts array that contain hammerjs
+    // and the "main" file does not contain an import with hammerjs
+    if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !tsContent.includes(hammerImport)) {
+        // import hammerjs in the specified by config main file
+        const mainContents = hammerImport + tsContent;
+        tree.overwrite(tsPath, mainContents);
+    }
+}
+
 function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree) {
     Object.keys(pkgJson.dependencies).forEach(pkg => {
         const version = pkgJson.dependencies[pkg];
@@ -145,20 +162,10 @@ function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree
             case 'hammerjs':
                 logIncludingDependency(context, pkg, version);
                 addPackageToPkgJson(tree, pkg, version, entry.target);
-
                 const workspace = getWorkspace(tree);
                 const project = workspace.projects[workspace.defaultProject];
-                const projectOptions = getTargetedProjectOptions(project, 'build');
-                const mainTsPath = getConfigFile(project, 'main');
-                const hammerImport = 'import \'hammerjs\';\n';
-                const mainTsContent = tree.read(mainTsPath).toString();
-                // if there are no elements in the architect.build.options.scripts array that contain hammerjs
-                // and main.ts does not contain an import with hammerjs
-                if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !mainTsContent.includes(hammerImport)) {
-                    // import hammerjs in the main.ts file
-                    const contents = hammerImport + mainTsContent;
-                    tree.overwrite(mainTsPath, contents);
-                }
+                addHammerToConfig(project, tree, 'build');
+                addHammerToConfig(project, tree, 'test');
                 break;
             default:
                 logIncludingDependency(context, pkg, version);
