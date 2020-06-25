@@ -223,7 +223,7 @@ export class IgxGridStateDirective {
         let gridState = {} as IGridState;
         this.features.forEach(f => {
             f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
-            if (!(this.grid instanceof IgxGridComponent) && (f === FlatGridFeatures.GROUP_BY || f === GridFeatures.ROW_PINNING)) {
+            if (!(this.grid instanceof IgxGridComponent) && f === FlatGridFeatures.GROUP_BY) {
                 return;
             }
             const feature = this.getFeature(f);
