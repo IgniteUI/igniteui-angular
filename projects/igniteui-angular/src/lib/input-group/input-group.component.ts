@@ -460,3 +460,4 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     ]
 })
 export class IgxInputGroupModule { }
+
