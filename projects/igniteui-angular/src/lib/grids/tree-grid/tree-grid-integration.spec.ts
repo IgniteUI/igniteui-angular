@@ -23,6 +23,7 @@ import { IgxGridTransaction } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
+import { DropPosition } from '../moving/moving.service';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -1508,7 +1509,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const thirdColumnField = treeGrid.columns[2].field;
 
-            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0]);
+            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0], DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
             const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, thirdColumnField);
