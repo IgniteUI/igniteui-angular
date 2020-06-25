@@ -16,7 +16,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxTreeGridComponent, IgxTreeGridModule } from './tree-grid/public_api';
 
-fdescribe('IgxTreeGridState - input properties #tGrid', () => {
+describe('IgxTreeGridState - input properties #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
