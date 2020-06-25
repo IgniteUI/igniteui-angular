@@ -110,3 +110,45 @@ $_bootstrap-radio: extend(
     )
 );
 
+/// Generates an indigo radio schema.
+/// @type {Map}
+///
+/// @property {map} fill-hover-border-color [igx-color: ('primary', 500)] - The text color used for the label text.
+/// @property {map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {map} empty-color [igx-color: ('grays', 500)] - The unchecked border color.
+/// @property {map} fill-color [igx-color: ('primary', 500)] - The checked border and dot colors.
+/// @property {map} fill-color-hover [igx-color: ('primary', 500)] - The checked border and dot colors on hover.
+/// @property {map} disabled-color [igx-color: ('grays', 300)] - The disabled border and dot colors.
+/// @see $default-palette
+
+$_indigo-radio: extend(
+    $_light-radio,
+    (
+        variant: 'indigo-design',
+
+        fill-hover-border-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        label-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        fill-color-hover: (
+            igx-color: ('primary', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 300)
+        )
+    )
+);
+
