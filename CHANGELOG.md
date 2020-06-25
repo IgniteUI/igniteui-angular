@@ -7,15 +7,15 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxList`
     - Added localization support.
+- `IgxGridState` directive
+    - Added support for expansion states, column selection and row pinning.
+    - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
 
 ## 9.1.1
 
 ### General
 - `IgxHierarchicalGrid`
     - `onGridInitialized` - New output has been exposed. Emitted after a grid is being initialized for the corresponding row island.
-- `IgxGridState` directive
-    - Added support for expansion states, column selection and row pinning.
-    - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
 -  **Behavioral Change** - When moving a column `DropPosition.None` is now acting like `DropPosition.AfterDropTarget`.
 
 ## 9.1.0
