@@ -2827,7 +2827,7 @@ class IgxComboInTemplatedFormComponent {
 @Injectable()
 export class LocalService {
     public getData() {
-        const fakeData = Observable.create(obs => {
+        const fakeData = new Observable(obs => {
             setTimeout(() => {
                 obs.next(this.generateData());
                 obs.complete();
@@ -2862,7 +2862,7 @@ export class IgxComboBindingTestComponent {
     public items = [];
     constructor(private localService: LocalService) {
         this.localService.getData().subscribe(
-            (data) => {
+            (data: any[]) => {
                 this.items = data;
             }
         );

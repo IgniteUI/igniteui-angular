@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.1.0
+
+### New Features
+- `IgxColumn` 
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+
 ## 10.0.0
 
 ### General
@@ -23,8 +29,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSelect` support for `igxHint` directive added.
     - Allows the user to add `igxHint` to be displayed bellow the input element.
 
-- `IgxColumn` 
-    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+## 9.1.4
+
+### New Features
+- `IgxList`
+    - Added localization support.
 
 ## 9.1.1
 
@@ -192,7 +201,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Added support for tabIndex attribute applied to the main chip element.
     - Added `tabIndex` input so it can support change detection as well.
-
 
 - `IgxHighlightDirective`
     - New `metadata` property was introduced, which allows adding additional, custom logic to the activation condition of a highlighted element.

@@ -889,7 +889,6 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -900,6 +899,10 @@
         border-top: rem(3px) solid transparent;
         padding-bottom: rem(3px);
 
+        &:not([type='date']) {
+            line-height: 0 !important; /* resets typography styles */
+        }
+
         &::-webkit-input-placeholder {
             line-height: normal;
         }
@@ -907,6 +910,7 @@
         &::placeholder {
             color: --var($theme, 'placeholder-color');
             opacity: 1;
+            line-height: normal; /* Fix placeholder position in Safari */
         }
     }
 
