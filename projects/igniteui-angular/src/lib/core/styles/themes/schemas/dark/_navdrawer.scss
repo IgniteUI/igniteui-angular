@@ -51,8 +51,8 @@ $_dark-bootstrap-navdrawer: extend(
 /// @type {Map}
 /// @prop {map} background [igx-color: ('grays', 800), hexrgba: #000] - The navigation drawer background color.
 /// @prop {map} item-header-text-color [#000] - The header's idle text color.
-/// @prop {map} item-text-color [igx-color: #000, rgba: .8] - The item's idle text color.
-/// @prop {map} item-icon-color [igx-color: #000, rgba: .8] - The item's icon color.
+/// @prop {map} item-text-color [igx-color: 'surface'] - The item's idle text color.
+/// @prop {map} item-icon-color [igx-color: 'surface'] - The item's icon color.
 /// @prop {map} item-active-text-color [#000] - The item's active text color.
 /// @prop {map} item-active-icon-color [#000] - The item's icon active color.
 /// @prop {map} item-hover-text-color [#000] - The item's hover text color.
