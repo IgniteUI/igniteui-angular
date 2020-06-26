@@ -26,21 +26,52 @@ $_dark-dock-manager: extend(
     $_light-dock-manager, (
         accent-color: (
             igx-color: (grays, 400),
+            hexrgba: #000,
         ),
-        border-color: #212121,
-        button-text: #fff,
-        context-menu-color-active: #fff,
-        floating-pane-border-color: rgba(0, 0, 0, .26),
+        primary-color: (
+            igx-color: (grays, 200),
+            hexrgba: #000,
+        ),
+        border-color: (
+            igx-color: surface,
+        ),
+        button-text: (
+            igx-contrast-color: surface,
+        ),
+        context-menu-color-active: (
+            igx-contrast-color: surface,
+        ),
+        floating-pane-border-color: (
+            igx-color: (grays, 100),
+            hexrgba: #000,
+        ),
         flyout-shadow-color: rgba(0, 0, 0, .38),
+        joystick-background-active: (
+            igx-color: surface,
+        ),
         joystick-border-color: (
             igx-color: (grays, 400),
+            hexrgba: #000,
         ),
-        joystick-icon-color-active: #fff,
-        pane-content-background: #212121,
-        primary-color: #111,
-        splitter-background: #000,
-        tab-background-active: #212121,
-        text-color: rgba(255, 255, 255, .7),
+        joystick-icon-color: (
+            igx-contrast-color: surface,
+        ),
+        joystick-icon-color-active: (
+            igx-contrast-color: surface,
+        ),
+        pane-content-background: (
+            igx-color: surface,
+        ),
+        splitter-background: (
+            igx-color: (grays, 100),
+            hexrgba: #000,
+        ),
+        tab-background-active: (
+            igx-color: surface,
+        ),
+        text-color: (
+            igx-color: (grays, 800),
+        ),
     )
 );
 
@@ -50,26 +81,82 @@ $_dark-dock-manager: extend(
 /// @requires $_fluent-dock-manager
 $_dark-fluent-dock-manager: extend(
     $_fluent-dock-manager, (
-        accent-color: #111,
-        background-color: #2a2a2a,
-        button-text: #fff,
-        context-menu-background-active: #111,
-        context-menu-color-active: #fff,
-        context-menu-background: #333,
-        context-menu-color: #fff,
-        dock-background: #2a2a2a,
+        accent-color: (
+            igx-color: surface,
+            rgba: .5,
+            hexrgba: #000,
+        ),
+        primary-color: (
+            igx-color: surface,
+            rgba: .85,
+            hexrgba: #000,
+        ),
+        button-text: (
+            igx-contrast-color: surface,
+        ),
+        context-menu-background-active: (
+            igx-color: surface,
+            rgba: .5,
+            hexrgba: #000,
+        ),
+        context-menu-color-active: (
+            igx-contrast-color: surface,
+        ),
+        context-menu-background: (
+            igx-color: (grays, 400),
+            hexrgba: #000,
+        ),
+        context-menu-color: (
+            igx-contrast-color: surface,
+        ),
+        dock-background: (
+            igx-color: surface,
+            rgba: .85,
+            hexrgba: #000,
+        ),
         floating-pane-border-color: transparent,
-        joystick-background-active: #111,
-        joystick-background: #333,
+        joystick-background-active: (
+            igx-color: surface,
+            rgba: .5,
+            hexrgba: #000,
+        ),
+        joystick-background: (
+            igx-color: (grays, 400),
+            hexrgba: #000,
+        ),
         joystick-border-color: transparent,
-        joystick-icon-color: #fff,
-        joystick-icon-color-active: #fff,
-        pane-header-backround: #2a2a2a,
-        pinned-header-background: #2a2a2a,
-        splitter-background: #151515,
-        splitter-handle: #000,
-        tab-text: #fff,
-        text-color: #fff,
+        joystick-icon-color: (
+            igx-contrast-color: surface,
+        ),
+        joystick-icon-color-active: (
+            igx-contrast-color: surface,
+        ),
+        pane-header-backround: (
+            igx-color: surface,
+            rgba: .85,
+            hexrgba: #000,
+        ),
+        pinned-header-background: (
+            igx-color: surface,
+            rgba: .85,
+            hexrgba: #000,
+        ),
+        splitter-background: (
+            igx-color: surface,
+            rgba: .7,
+            hexrgba: #000,
+        ),
+        splitter-handle: (
+            igx-color: surface,
+            rgba: .2,
+            hexrgba: #000,
+        ),
+        tab-text: (
+            igx-contrast-color: surface,
+        ),
+        text-color: (
+            igx-contrast-color: surface,
+        ),
     )
 );
 
@@ -79,15 +166,57 @@ $_dark-fluent-dock-manager: extend(
 /// @requires $_bootstrap-dock-manager
 $_dark-bootstrap-dock-manager: extend(
     $_bootstrap-dock-manager, (
-        accent-color: #111,
-        context-menu-background: #222,
-        dock-background: #111,
-        joystick-background: #222,
-        pane-header-background: #111,
-        pinned-header-background: #111,
-        primary-color: #111,
-        splitter-background: #1a1e29,
-        splitter-handle: #000,
-        text-color: #fff,
+        accent-color: (
+            igx-color: surface,
+            rgba: .33,
+            hexrgba: #000,
+        ),
+        primary-color: (
+            igx-color: surface,
+            rgba: .33,
+            hexrgba: #000,
+        ),
+        context-menu-background: (
+            igx-color: surface,
+            rgba: .66,
+            hexrgba: #000,
+        ),
+        context-menu-color-active: (
+            igx-contrast-color: surface,
+        ),
+        dock-background: (
+            igx-color: surface,
+            rgba: .33,
+            hexrgba: #000,
+        ),
+        joystick-background: (
+            igx-color: surface,
+            rgba: .66,
+            hexrgba: #000,
+        ),
+        joystick-icon-color-active: (
+            igx-contrast-color: surface,
+        ),
+        pane-header-background: (
+            igx-color: surface,
+            rgba: .33,
+            hexrgba: #000,
+        ),
+        pinned-header-background: (
+            igx-color: surface,
+            rgba: .33,
+            hexrgba: #000,
+        ),
+        splitter-background: (
+            igx-color: (grays,300),
+            hexrgba: #000,
+        ),
+        splitter-handle: (
+            igx-color: (grays,50),
+            hexrgba: #000,
+        ),
+        text-color: (
+            igx-contrast-color: surface,
+        ),
     )
 );
