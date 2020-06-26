@@ -6,10 +6,8 @@
 @import 'app-layout';
 
 /* autoprefixer grid: on */
-//$palette: $indigo-palette;
-//$schema: $light-indigo-schema;
-$palette: $dark-indigo-palette;
-$schema: $dark-indigo-schema;
+$palette: $indigo-palette;
+$schema: $light-indigo-schema;
 
 $igx-background-color: igx-color($palette, 'surface');
 $igx-foreground-color: igx-color($palette, 'grays', 900);
