@@ -83,12 +83,12 @@ $_dark-fluent-dock-manager: extend(
     $_fluent-dock-manager, (
         accent-color: (
             igx-color: surface,
-            rgba: 0.5,
+            rgba: .5,
             hexrgba: #000,
         ),
         primary-color: (
             igx-color: surface,
-            rgba: 0.85,
+            rgba: .85,
             hexrgba: #000,
         ),
         button-text: (
@@ -96,7 +96,7 @@ $_dark-fluent-dock-manager: extend(
         ),
         context-menu-background-active: (
             igx-color: surface,
-            rgba: 0.5,
+            rgba: .5,
             hexrgba: #000,
         ),
         context-menu-color-active: (
@@ -111,13 +111,13 @@ $_dark-fluent-dock-manager: extend(
         ),
         dock-background: (
             igx-color: surface,
-            rgba: 0.85,
+            rgba: .85,
             hexrgba: #000,
         ),
         floating-pane-border-color: transparent,
         joystick-background-active: (
             igx-color: surface,
-            rgba: 0.5,
+            rgba: .5,
             hexrgba: #000,
         ),
         joystick-background: (
@@ -133,22 +133,22 @@ $_dark-fluent-dock-manager: extend(
         ),
         pane-header-backround: (
             igx-color: surface,
-            rgba: 0.85,
+            rgba: .85,
             hexrgba: #000,
         ),
         pinned-header-background: (
             igx-color: surface,
-            rgba: 0.85,
+            rgba: .85,
             hexrgba: #000,
         ),
         splitter-background: (
             igx-color: surface,
-            rgba: 0.7,
+            rgba: .7,
             hexrgba: #000,
         ),
         splitter-handle: (
             igx-color: surface,
-            rgba: 0.2,
+            rgba: .2,
             hexrgba: #000,
         ),
         tab-text: (
@@ -168,17 +168,17 @@ $_dark-bootstrap-dock-manager: extend(
     $_bootstrap-dock-manager, (
         accent-color: (
             igx-color: surface,
-            rgba: 0.33,
+            rgba: .33,
             hexrgba: #000,
         ),
         primary-color: (
             igx-color: surface,
-            rgba: 0.33,
+            rgba: .33,
             hexrgba: #000,
         ),
         context-menu-background: (
             igx-color: surface,
-            rgba: 0.66,
+            rgba: .66,
             hexrgba: #000,
         ),
         context-menu-color-active: (
@@ -186,12 +186,12 @@ $_dark-bootstrap-dock-manager: extend(
         ),
         dock-background: (
             igx-color: surface,
-            rgba: 0.33,
+            rgba: .33,
             hexrgba: #000,
         ),
         joystick-background: (
             igx-color: surface,
-            rgba: 0.66,
+            rgba: .66,
             hexrgba: #000,
         ),
         joystick-icon-color-active: (
@@ -199,12 +199,12 @@ $_dark-bootstrap-dock-manager: extend(
         ),
         pane-header-background: (
             igx-color: surface,
-            rgba: 0.33,
+            rgba: .33,
             hexrgba: #000,
         ),
         pinned-header-background: (
             igx-color: surface,
-            rgba: 0.33,
+            rgba: .33,
             hexrgba: #000,
         ),
         splitter-background: (

@@ -46,7 +46,7 @@ $_light-dock-manager: (
     primary-color: null,
     border-color: (
         igx-color: (primary, 100),
-        rgba: 0.1,
+        rgba: .1,
         hexrgba: (),
     ),
     button-text: (
@@ -77,7 +77,7 @@ $_light-dock-manager: (
     ),
     pane-content-background: (
         igx-color: (primary, 100),
-        rgba: 0.1,
+        rgba: .1,
         hexrgba: (),
     ),
     pane-content-text: null,
@@ -91,7 +91,7 @@ $_light-dock-manager: (
     splitter-handle: null,
     tab-background-active: (
         igx-color: (primary, 100),
-        rgba: 0.1,
+        rgba: .1,
         hexrgba: (),
     ),
     tab-background: null,
@@ -169,7 +169,7 @@ $_fluent-dock-manager: extend(
         ),
         splitter-handle: (
             igx-color: (grays, 400),
-            rgba: 0.2,
+            rgba: .2,
             hexrgba: (),
         ),
         tab-background-active: (
@@ -258,7 +258,7 @@ $_bootstrap-dock-manager: extend(
         ),
         splitter-handle: (
             igx-color: (grays,400),
-            rgba: 0.2,
+            rgba: .2,
             hexrgba: (),
         ),
         tab-background-active: (
