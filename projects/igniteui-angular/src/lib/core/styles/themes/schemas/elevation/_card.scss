@@ -11,14 +11,21 @@ $_default-elevation-card: (
 );
 
 /// @type Map
-$_fluent-elevation-card: (
+$_flat-card: (
     resting-elevation: 0,
     hover-elevation: 0
 );
 
-$_bootstrap-elevation-card: (
-    resting-elevation: 0,
-    hover-elevation: 0
+/// @type Map
+$_fluent-elevation-card: extend($_flat-card);
+
+/// @type Map
+$_bootstrap-elevation-card: extend($_flat-card);
+
+/// @type Map
+$_indigo-elevation-card: (
+    resting-elevation: 4,
+    hover-elevation: 4
 );
 
 
