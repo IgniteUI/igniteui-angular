@@ -120,7 +120,6 @@ $_bootstrap-radio: extend(
 /// @property {map} fill-color-hover [igx-color: ('primary', 500)] - The checked border and dot colors on hover.
 /// @property {map} disabled-color [igx-color: ('grays', 300)] - The disabled border and dot colors.
 /// @see $default-palette
-
 $_indigo-radio: extend(
     $_light-radio,
     (
