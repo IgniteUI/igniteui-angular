@@ -596,3 +596,160 @@ $_bootstrap-grid: extend(
     )
 );
 
+/// Generates an indigo grid schema.
+/// @type {Map}
+/// @prop {Color} header-background [#fff] - The table header background color.
+/// @prop {Color} header-text-color [#000] - The table header text color.
+/// @prop {Map} header-selected-background [igx-color: ('primary', 50)] - The table header background color when selected (ex. column selection).
+/// @prop {Map} header-selected-text-color [igx-contrast-color: ('primary', 50)] - The table header text color when selected (ex. column selection).
+/// @prop {Map} cell-active-border-color [igx-color: ('primary', 500)] - The active(focused) cell border color.
+/// @prop {map} row-highlight [igx-color: ('primary', 500)] - The grid row highlight color.
+///
+/// @prop {Map} sorted-header-icon-color [igx-color: ('primary', 500)] - The sorted table header icon color.
+/// @prop {Map} row-selected-background [ igx-color: ('primary', 50), hexrgba: #fff] - The selected row background color.
+/// @prop {Map} row-selected-hover-background [igx-color: ('primary', 100), hexrgba: #fff] - The selected row hover background.
+/// @prop {Map} pinned-border-color [igx-color: ('primary', 200)] - The color of the pinned border.
+/// @prop {Map} resize-line-color [igx-color: ('primary', 500)] - The table header resize line color.
+/// @requires {function} extend
+/// @requires {map} $_light-grid
+$_indigo-grid: extend(
+    $_light-grid,
+    (
+        variant: 'indigo-design',
+
+        header-background: (
+            igx-color: ('primary', 100)
+        ),
+
+        header-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        header-selected-background: (
+            igx-color: ('primary', 200),
+        ),
+
+        header-selected-text-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        header-border-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        header-border-style: dotted,
+
+        edited-row-indicator: (
+            igx-color: ('primary', 500)
+        ),
+
+        cell-selected-background: (
+            igx-color: ('primary', 50),
+            rgba: .5
+        ),
+
+        cell-active-border-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        ghost-header-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        ghost-header-text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        ghost-header-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        row-border-color: (
+            igx-color: ('primary', 50)
+        ),
+
+        row-highlight: (
+            igx-color: ('primary', 500)
+        ),
+
+        row-ghost-background: (
+            igx-color: ('primary', 50)
+        ),
+
+        row-hover-background: (
+            igx-color: ('primary', 50),
+            rgba: .12,
+            hexrgba: #fff
+        ),
+
+        sorted-header-icon-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        sortable-header-icon-hover-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        row-selected-background: (
+            igx-color: ('primary', 50),
+            rgba: .72
+        ),
+
+        row-selected-hover-background: (
+            igx-color: ('primary', 50),
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 50)
+        ),
+
+        resize-line-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        drop-indicator-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        edit-mode-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        grouparea-background: (
+            igx-color: ('primary', 100)
+        ),
+
+        grouparea-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        drop-area-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        drop-area-text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        drop-area-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+
+        root-summaries-background: (
+            igx-color: ('primary', 100)
+        ),
+
+        body-summaries-background: (
+            igx-color: ('primary', 100)
+        ),
+
+        group-row-background: (
+            igx-color: ('primary', 100)
+        ),
+
+        group-row-selected-background: (
+            igx-color: ('primary', 100)
+        )
+    )
+);
+

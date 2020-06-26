@@ -227,3 +227,16 @@ $_dark-bootstrap-grid: extend(
         ),
     )
 );
+
+/// Generates a dark indigo grid schema.
+/// @type {Map}
+///
+/// @prop {Color} header-background [#222] - The table header background color.
+/// @prop {Color} header-text-color [#fff] - The table header text color.
+/// @prop {Map} header-selected-background [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222] - The table header background color when selected (ex. column selection).
+/// @prop {Map} header-selected-text-color [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222, text-contrast: ()] - The table header text color when selected (ex. column selection).
+///
+/// @requires {function} extend
+/// @requires $_indigo-grid
+$_dark-indigo-grid: extend($_indigo-grid);
+

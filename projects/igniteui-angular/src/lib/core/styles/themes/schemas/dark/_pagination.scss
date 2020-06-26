@@ -36,3 +36,18 @@ $_dark-fluent-pagination: extend($_fluent-pagination, $_base-dark-pagination);
 /// @requires $_bootstrap-pagination
 /// @requires $_base-dark-pagination
 $_dark-bootstrap-pagination: extend($_bootstrap-pagination, $_base-dark-pagination);
+
+/// Generates a dark indigo pagination schema.
+/// @type {Map}
+/// @prop {Map} background-color [igx-color: ('surface', 100)] - The background color of the paging panel.
+/// @requires {function} extend
+/// @requires {map} $_dark-pagination
+$_dark-indigo-pagination: extend(
+    $_indigo-pagination,
+    (
+        background-color: (
+            igx-color: ('surface', 500)
+        ),
+    )
+);
+

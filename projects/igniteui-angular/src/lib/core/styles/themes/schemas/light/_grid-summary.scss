@@ -85,3 +85,26 @@ $_fluent-grid-summary: extend(
 /// @requires {map} $_light-grid-summary
 $_bootstrap-grid-summary: extend($_light-grid-summary);
 
+/// Generates an indigo grid-summary schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid-summary
+$_indigo-grid-summary: extend(
+    $_light-grid-summary,
+    (
+        variant: 'indigo-design',
+
+        background-color: (
+            igx-color: ('primary', 100)
+        ),
+
+        border-color: (
+            igx-color: ('primary', 50)
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 50)
+        )
+    )
+);
+
