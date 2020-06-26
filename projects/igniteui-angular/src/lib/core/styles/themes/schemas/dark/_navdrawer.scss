@@ -45,3 +45,49 @@ $_dark-fluent-navdrawer: extend(
 $_dark-bootstrap-navdrawer: extend(
     $_bootstrap-navdrawer,
 );
+
+
+/// Generates a dark indigo navdrawer schema.
+/// @type {Map}
+/// @prop {map} background [igx-color: ('grays', 800), hexrgba: #000] - The navigation drawer background color.
+/// @prop {map} item-header-text-color [#000] - The header's idle text color.
+/// @prop {map} item-text-color [igx-color: #000, rgba: .8] - The item's idle text color.
+/// @prop {map} item-icon-color [igx-color: #000, rgba: .8] - The item's icon color.
+/// @prop {map} item-active-text-color [#000] - The item's active text color.
+/// @prop {map} item-active-icon-color [#000] - The item's icon active color.
+/// @prop {map} item-hover-text-color [#000] - The item's hover text color.
+/// @prop {map} item-hover-icon-color [#000] - The item's hover icon color.
+/// @requires {function} extend
+/// @requires $_indigo-navdrawer
+$_dark-indigo-navdrawer: extend(
+    $_indigo-navdrawer,
+    (
+        background: (
+            igx-color: ('grays', 800),
+            hexrgba: #000
+        ),
+
+        item-header-text-color: #000,
+
+        item-text-color: (
+            igx-color: 'surface'
+        ),
+
+        item-icon-color: (
+            igx-color: 'surface'
+        ),
+
+        item-active-background: (
+            igx-color: 'surface',
+            rgba: .2
+        ),
+
+        item-active-text-color: #000,
+
+        item-active-icon-color: #000,
+
+        item-hover-text-color: #000,
+
+        item-hover-icon-color: #000,
+    )
+);
