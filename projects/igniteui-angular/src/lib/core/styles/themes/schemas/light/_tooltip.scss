@@ -71,3 +71,24 @@ $_bootstrap-tooltip: extend(
     )
 );
 
+/// Generates an indigo tooltip schema.
+/// @type {Map}
+///
+/// @property {map} background [igx-color: ('grays', 600)] - The background color of the tooltip.
+/// @property {map} text-color [#fff] - The text color of the tooltip.
+/// @prop {Number} border-radius [3px] - The border radius used for the tooltip component.
+///
+/// @requires {function} extend
+/// @requires $_light-tooltip
+/// @requires $_indigo-shape-tooltip
+$_indigo-tooltip: extend(
+    $_light-tooltip,
+    $_indigo-shape-tooltip,
+    (
+        background: (
+            igx-color: ('grays', 600)
+        ),
+
+        text-color: #fff
+    )
+);
