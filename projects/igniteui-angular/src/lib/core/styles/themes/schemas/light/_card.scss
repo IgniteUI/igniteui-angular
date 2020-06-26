@@ -133,7 +133,7 @@ $_bootstrap-card: extend(
     )
 );
 
-/// Generates a indigo card schema.
+/// Generates an indigo card schema.
 /// @type {Map}
 /// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
 /// @prop {Map} header-text-color [igx-color: ('grays', 900)] - The text color of the card title.
@@ -175,4 +175,3 @@ $_indigo-card: extend(
         ),
     )
 );
-
