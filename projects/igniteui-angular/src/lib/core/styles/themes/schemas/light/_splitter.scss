@@ -18,7 +18,7 @@
 /// @property {Number} $size [4px] - The size of the splitter, it's width for vertical and height for horizontal splitter.
 /// @see $default-palette
 $_light-splitter: extend(
-    $_default-shape-splitter,
+    $_round-shape-splitter,
     (
         bar-color: (
             igx-color: 'surface',
@@ -53,7 +53,6 @@ $_fluent-splitter: extend($_light-splitter);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-splitter
-/// @requires $_bootstrap-shape-splitter
 $_bootstrap-splitter: extend(
     $_light-splitter,
     (
