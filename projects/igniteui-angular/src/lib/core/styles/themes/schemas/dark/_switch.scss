@@ -96,5 +96,9 @@ $_dark-indigo-switch: extend(
         track-on-color: #fff,
 
         track-off-color: transparent,
-    )
+
+        label-disabled-color: (
+            igx-color: ('grays', 400)
+        )
+    ),
 );
