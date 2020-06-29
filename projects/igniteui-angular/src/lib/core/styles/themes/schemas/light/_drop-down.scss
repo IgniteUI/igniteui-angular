@@ -291,19 +291,25 @@ $_indigo-drop-down: extend(
             igx-color: ('primary', 500),
         ),
 
-        selected-item-text-color: #fff,
+        selected-item-text-color: (
+            igx-contrast-color: ('primary', 500),
+        ),
 
         selected-hover-item-background: (
             igx-color: ('primary', 400),
         ),
 
-        selected-hover-item-text-color: #fff,
+        selected-hover-item-text-color: (
+            igx-contrast-color: ('primary', 400),
+        ),
 
         selected-focus-item-background: (
             igx-color: ('primary', 400),
         ),
 
-        selected-focus-item-text-color: #fff,
+        selected-focus-item-text-color: (
+            igx-contrast-color: ('primary', 400),
+        ),
 
         disabled-item-text-color: (
             igx-color: ('grays', 700),
