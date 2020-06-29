@@ -32,3 +32,26 @@ $_dark-bootstrap-radio: extend($_bootstrap-radio, (
         igx-color: 'surface'
     ),
 ));
+
+/// Generates a dark indigo radio schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-radio
+$_dark-indigo-radio: extend(
+    $_indigo-radio,
+    (
+        fill-hover-border-color: #fff,
+
+        fill-color: #fff,
+
+        fill-color-hover: #fff,
+
+        empty-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 400)
+        ),
+    )
+);

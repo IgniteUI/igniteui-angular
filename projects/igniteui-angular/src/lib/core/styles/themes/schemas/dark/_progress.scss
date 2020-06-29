@@ -27,6 +27,19 @@ $_dark-fluent-progress-linear: extend($_fluent-progress-linear);
 /// @see $default-palette
 $_dark-bootstrap-progress-linear: extend($_bootstrap-progress-linear);
 
+/// Generates a dark indigo progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @property {color} stripes-color [rgba(#222, .35)] - The track stripes color.
+/// @requires $_indigo-progress-linear
+/// @see $default-palette
+$_dark-indigo-progress-linear: extend(
+    $_indigo-progress-linear,
+    (
+        stripes-color: rgba(#222, .35)
+    )
+);
+
 /// Generates a dark progress-circular schema.
 /// @type {Map}
 /// @requires {function} extend
@@ -44,3 +57,10 @@ $_dark-fluent-progress-circular: extend($_fluent-progress-circular);
 /// @requires {function} extend
 /// @requires $_bootstrap-progress-circular
 $_dark-bootstrap-progress-circular: extend($_bootstrap-progress-circular);
+
+/// Generates a dark indigo progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-progress-circular
+$_dark-indigo-progress-circular: extend($_indigo-progress-circular);
+
