@@ -32,14 +32,14 @@ $_dark-bootstrap-card: extend(
 
 /// Generates a dark indigo card schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 700)]- The card background color.
+/// @prop {Map} outline-color [igx-color: ('grays', 200)] - The outline color of an outlined type card.
 /// @requires extend
 /// @requires $_indigo-card
 $_dark-indigo-card: extend(
     $_indigo-card,
     (
-        background: (
-            igx-color: ('grays', 700)
+        outline-color: (
+            igx-color: ('grays', 200)
         ),
     )
 );

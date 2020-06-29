@@ -137,11 +137,11 @@ $_bootstrap-card: extend(
 /// @type {Map}
 /// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
 /// @prop {Map} header-text-color [igx-color: ('grays', 900)] - The text color of the card title.
-/// @prop {Map} subtitle-text-color [igx-color: ('grays', 900)] - The text color of the card subtitle.
+/// @prop {Map} subtitle-text-color [igx-color: ('grays', 500)] - The text color of the card subtitle.
 /// @prop {Map} content-text-color [igx-color: ('grays', 700)] - The text color of the card content.
 /// @prop {Map} actions-text-color [igx-color: ('grays', 600)] - The text color of the card buttons.
-/// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} resting-elevation [4] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [6] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} border-radius [3px] - The border-radius used for card.
 /// @requires {function} extend
 /// @requires {map} $_light-card
@@ -163,7 +163,7 @@ $_indigo-card: extend(
         ),
 
         subtitle-text-color: (
-            igx-color: ('grays', 900)
+            igx-color: ('grays', 500)
         ),
 
         content-text-color: (
@@ -175,3 +175,4 @@ $_indigo-card: extend(
         ),
     )
 );
+
