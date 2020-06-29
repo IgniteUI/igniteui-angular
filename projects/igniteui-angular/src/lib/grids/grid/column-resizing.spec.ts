@@ -390,7 +390,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize(true);
             fixture.detectChanges();
 
-            expect(parseInt(column.width, 10)).toEqual(111);
+            expect(column.width).toEqual('112px');
         }));
 
         it('should autosize pinned column programmatically.', fakeAsync(/** height/width setter rAF */() => {
