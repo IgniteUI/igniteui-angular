@@ -61,3 +61,44 @@ $_dark-bootstrap-switch: extend(
     $_bootstrap-switch,
     $_base-dark-switch
 );
+
+/// Generates a dark indigo switch schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-switch
+$_dark-indigo-switch: extend(
+    $_indigo-switch,
+    (
+        border-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        border-hover-color:(
+            igx-color: ('grays', 700)
+        ),
+
+        border-disabled-color:(
+            igx-color: ('grays', 400)
+        ),
+
+        border-on-color: #fff,
+
+        border-on-hover-color: #fff,
+
+        thumb-on-color: (
+            igx-color: 'surface'
+        ),
+
+        thumb-off-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        track-on-color: #fff,
+
+        track-off-color: transparent,
+
+        label-disabled-color: (
+            igx-color: ('grays', 400)
+        )
+    ),
+);
