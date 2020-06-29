@@ -470,7 +470,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-tabs [$_dark-bootstrap-tabs],
 /// @property {map} igx-time-picker [$_dark-bootstrap-time-picker],
 /// @property {map} igx-toast [$_dark-indigo-toast],
-/// @property {map} igx-tooltip [$_dark-bootstrap-tooltip]
+/// @property {map} igx-tooltip [$_dark-indigo-tooltip]
 $dark-indigo-schema: (
     igx-avatar: $_dark-indigo-avatar,
     igx-action-strip: $_dark-indigo-action-strip,
@@ -527,6 +527,6 @@ $dark-indigo-schema: (
     igx-tabs: $_dark-bootstrap-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-indigo-toast,
-    igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-tooltip: $_dark-indigo-tooltip,
     igx-watermark: $_dark-bootstrap-watermark
 );
