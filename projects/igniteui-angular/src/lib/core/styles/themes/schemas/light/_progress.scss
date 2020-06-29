@@ -92,6 +92,25 @@ $_bootstrap-progress-linear: extend(
     )
 );
 
+/// Generates an indigo progress-linear schema.
+/// @type {Map}
+/// @property {map} track-color [igx-color: ('grays', 300)] - The main track color.
+/// @property {color} stripes-color [rgba(#fff, .45)] - The track stripes color.
+/// @requires {function} extend
+/// @requires $_light-progress-linear
+$_indigo-progress-linear: extend(
+    $_light-progress-linear,
+    (
+        variant: 'indigo-design',
+
+        track-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        stripes-color: rgba(#fff, .45),
+    )
+);
+
 /// Generates a light progress-circular schema.
 /// @type {Map}
 ///
@@ -141,6 +160,22 @@ $_bootstrap-progress-circular: extend(
 
         track-color: (
             igx-color: ('grays', 200)
+        ),
+    )
+);
+
+/// Generates an indigo progress-circular schema.
+/// @type {Map}
+/// @property {map} track-color [igx-color: ('grays', 300)] - The main track color.
+/// @requires {function} extend
+/// @requires $_light-progress-circular
+$_indigo-progress-circular: extend(
+    $_light-progress-circular,
+    (
+        variant: 'indigo-design',
+
+        track-color: (
+            igx-color: ('grays', 300)
         ),
     )
 );

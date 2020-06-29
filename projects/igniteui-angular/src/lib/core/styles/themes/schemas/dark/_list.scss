@@ -52,3 +52,24 @@ $_dark-bootstrap-list: extend(
     )
 );
 
+/// Generates a dark indigo list schema
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-list
+$_dark-indigo-list: extend(
+    $_indigo-list,
+    (
+        header-text-color: #fff,
+
+        item-background-hover: (
+            igx-color: ('primary', 500),
+            rgba: .5
+        ),
+
+        item-background-active: (
+            igx-color: ('primary', 500),
+            rgba: .5
+        )
+    )
+)
+
