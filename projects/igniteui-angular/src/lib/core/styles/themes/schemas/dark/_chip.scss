@@ -36,3 +36,26 @@ $_dark-fluent-chip: extend($_fluent-chip, $_base-dark-chip);
 /// @requires $_bootstrap-chip
 /// @requires $_base-dark-chip
 $_dark-bootstrap-chip: extend($_bootstrap-chip, $_base-dark-chip);
+
+/// Generates a dark indigo chip schema based on a mix of $_indigo-chip and $_base-dark-chip.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-chip
+/// @requires $_base-dark-chip
+$_dark-indigo-chip: extend(
+    $_indigo-chip,
+    $_base-dark-chip,
+    (
+        background: (
+            igx-color: ('grays', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-background: (
+            igx-color: ('grays', 300)
+        ),
+    )
+);
