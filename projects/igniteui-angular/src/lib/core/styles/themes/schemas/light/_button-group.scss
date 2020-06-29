@@ -255,16 +255,15 @@ $_indigo-button-group: extend(
         ),
 
         disabled-background-color: (
-            igx-color: ('primary', 500),
-            rgba: .4
+            igx-color: ('grays', 100)
         ),
 
-        disabled-text-color: #fff,
+        disabled-text-color: (
+            igx-color: ('grays', 400)
+        ),
 
         item-disabled-border: (
-            igx-color: ('primary', 400),
-            rgba: .4
-        )
+            igx-color: ('grays', 100)
+        ),
     )
 );
-
