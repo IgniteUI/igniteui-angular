@@ -35,3 +35,29 @@ $_dark-fluent-expansion-panel: extend($_fluent-expansion-panel, $_base-dark-expa
 /// @requires $_bootstrap-expansion-panel
 /// @requires $_base-dark-expansion-panel
 $_dark-bootstrap-expansion-panel: extend($_bootstrap-expansion-panel, $_base-dark-expansion-panel);
+
+/// Generates a dark indigo expansion panel schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-expansion-panel
+$_dark-indigo-expansion-panel: extend(
+    $_indigo-expansion-panel,
+    (
+        header-background: (
+            igx-color: 'surface'
+        ),
+
+        body-background: (
+            igx-color: 'surface'
+        ),
+
+        header-title-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        header-focus-background: (
+            igx-color: ('primary', 500),
+            rgba: .5
+        )
+    )
+);
