@@ -28,7 +28,7 @@ describe('Update 6.0.1', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update submodule imports', done => {
+    it('should update submodule imports', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.ts',
             `import { IgxGridComponent } from 'igniteui-angular/main';` +
@@ -40,7 +40,8 @@ describe('Update 6.0.1', () => {
             `import { } from 'igniteui-angular';` +
             `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular/grid';`
         );
-        const tree = schematicRunner.runSchematic('migration-02', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-02', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
             `import { IgxGridComponent } from 'igniteui-angular';` +
             `import { IgxCsvExporterService } from 'igniteui-angular';` +
@@ -50,6 +51,5 @@ describe('Update 6.0.1', () => {
             `import { } from 'igniteui-angular';` +
             `import { IgxGridModule, IgxGridAPIService } from 'igniteui-angular';`
         );
-        done();
     });
 });

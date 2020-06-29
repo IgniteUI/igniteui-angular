@@ -29,27 +29,27 @@ describe('Update 6.0.0', () => {
     });
 
     // tslint:disable:arrow-parens
-    it('should update igx-tab-bar selector', done => {
+    it('should update igx-tab-bar selector', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             '<igx-tab-bar> <content> </igx-tab-bar>'
         );
 
-        const tree = schematicRunner.runSchematic('migration-01', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-01', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual('<igx-bottom-nav> <content> </igx-bottom-nav>');
-        done();
     });
 
-    it('should remove igxForRemote directive', done => {
+    it('should remove igxForRemote directive', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<tag attr igxForRemote="true" attr2><tag attr [igxForRemote]="true">`
         );
 
-        const tree = schematicRunner.runSchematic('migration-01', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-01', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual('<tag attr attr2><tag attr>');
-        done();
     });
 });

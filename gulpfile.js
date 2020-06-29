@@ -135,7 +135,9 @@ module.exports.copySchematics = (cb) => {
 };
 
 const typedocBuildTheme = (cb) => {
-    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
+    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH,
+    "--tsconfig",
+    "tsconfig.base.json"], { stdio: 'inherit', shell: true });
     cb();
 };
 typedocBuildTheme.displayName = 'typedoc-build:theme';
@@ -208,7 +210,9 @@ function typedocBuildDocsJA (cb) {
             TYPEDOC.TEMPLATE_STRINGS_PATH,
             '--warns',
             '--localize',
-            'jp'], { stdio: 'inherit', shell: true });
+            'jp',
+            "--tsconfig",
+            "tsconfig.base.json"], { stdio: 'inherit', shell: true });
 
         cb();
 }
@@ -217,7 +221,9 @@ function typedocBuildDocsEN (cb) {
         spawnSync('typedoc', [
             TYPEDOC.PROJECT_PATH,
             '--localize',
-            'en'], { stdio: 'inherit', shell: true});
+            'en',
+            "--tsconfig",
+            "tsconfig.base.json"], { stdio: 'inherit', shell: true});
 
         cb();
 }
