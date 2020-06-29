@@ -1754,7 +1754,8 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public autosize(byHeader = false) {
         if (!this.columnGroup) {
-            this.width = !byHeader ? this.getLargestCellWidth() : Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b);
+            this.width = !byHeader ? this.getLargestCellWidth() :
+                (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
             this.grid.reflow();
         }
     }
@@ -1792,7 +1793,12 @@ export class IgxColumnComponent implements AfterContentInit {
         const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
-        return { width: headerWidth, padding: headerPadding};
+
+        // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
+        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
+        const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
+
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
     }
 
     /**
@@ -1821,7 +1827,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
-                parseFloat(cellStyle.borderRightWidth);
+                parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
 
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
