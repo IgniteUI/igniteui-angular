@@ -244,6 +244,7 @@
                 max-width: rem(32px);
                 // important is needed to override the typography margins
                 margin: rem(7.5px) auto !important;
+
                 igx-icon {
                     margin-#{$left}: 0;
                 }
