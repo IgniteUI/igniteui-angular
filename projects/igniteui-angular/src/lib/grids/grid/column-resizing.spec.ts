@@ -424,19 +424,19 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
         }));
+
         it('should resize columns with % width.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
             const headers = GridFunctions.getColumnHeaders(fixture);
-    
             expect(grid.columns[0].width).toBe('25%');
-    
+
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
             tick(200);
             fixture.detectChanges();
-    
+
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with 100px, which is 25%
@@ -445,65 +445,65 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             expect(grid.columns[0].width).toBe('50%');
         }));
-    
+
         it('should resize columns with % width and % maxWidth.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
             const headers = GridFunctions.getColumnHeaders(fixture);
             grid.columns[0].maxWidth = '30%';
             expect(grid.columns[0].width).toBe('25%');
-    
+
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
             tick(200);
             fixture.detectChanges();
-    
+
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with +100px, which is 25%
             UIInteractions.simulateMouseEvent('mousemove', resizer, startPos + 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, startPos + 100, 5);
             fixture.detectChanges();
-    
+
             expect(grid.columns[0].width).toBe(grid.columns[0].maxWidth);
         }));
-    
+
         it('should resize columns with % width and % minWidth.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
             const headers = GridFunctions.getColumnHeaders(fixture);
             grid.columns[0].minWidth = '10%';
             expect(grid.columns[0].width).toBe('25%');
-    
+
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
             tick(200);
             fixture.detectChanges();
-    
+
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             // resize with -100px
             UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
             fixture.detectChanges();
-    
+
             expect(grid.columns[0].width).toBe(grid.columns[0].minWidth);
         }));
-    
+
         it('should resize columns with % width and pixel maxWidth.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
             const headers = GridFunctions.getColumnHeaders(fixture);
             grid.columns[0].maxWidth = '200px';
             expect(grid.columns[0].width).toBe('25%');
-    
+
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
             tick(200);
             fixture.detectChanges();
-    
+
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             expect(resizer).toBeDefined();
             // resize with +200px, which is 50%
@@ -512,38 +512,31 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             expect(grid.columns[0].width).toBe('50%');
         }));
-    
+
         it('should resize columns with % width and pixel minWidth.', fakeAsync(() => {
-    
-            const fixture = TestBed.createComponent(ColPercentageGridComponent);
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
             grid.height = null;
             fixture.detectChanges();
             const headers = GridFunctions.getColumnHeaders(fixture);
             // minWidth is 12.5% of the grid width - 400px
             grid.columns[0].minWidth = '50px';
             expect(grid.columns[0].width).toBe('25%');
-    
+
             const headerResArea = headers[0].parent.children[2].nativeElement;
             const startPos = headerResArea.getBoundingClientRect().x;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, startPos, 5);
             tick(200);
             fixture.detectChanges();
-    
+
             const resizer = GridFunctions.getResizer(fixture).nativeElement;
             // resize with -100px
             UIInteractions.simulateMouseEvent('mousemove', resizer, startPos - 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, startPos - 100, 5);
             fixture.detectChanges();
-    
+
             expect(grid.columns[0].width).toBe('12.5%');
         }));
-    
+
         it('should autosize column with % width programmatically.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(ColPercentageGridComponent);
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
             grid.height = null;
             fixture.detectChanges();
             expect(grid.columns[0].width).toBe('25%');
@@ -551,11 +544,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             expect(grid.columns[0].width).toBe('21%');
         }));
-    
+
         it('should autosize column with % width on double click.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(ColPercentageGridComponent);
-            fixture.detectChanges();
-            const grid = fixture.componentInstance.grid;
             grid.height = null;
             fixture.detectChanges();
             expect(grid.columns[0].width).toBe('25%');
