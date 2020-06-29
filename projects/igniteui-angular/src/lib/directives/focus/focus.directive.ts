@@ -63,7 +63,7 @@ export class IgxFocusDirective {
      */
     trigger() {
         if (this.focusState) {
-            requestAnimationFrame(() => this.nativeElement.focus());
+            requestAnimationFrame(() => this.nativeElement.focus({ preventScroll: true}));
         }
     }
 }

@@ -143,6 +143,43 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').hidden).toBeTruthy();
         });
 
+        it('verify visible column indexes when hide/show a column', () => {
+
+            expect(grid.getColumnByName('ID').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('CompanyName').visibleIndex).toBe(1);
+            expect(grid.getColumnByName('ContactName').visibleIndex).toBe(2);
+            expect(grid.getColumnByName('ContactTitle').visibleIndex).toBe(3);
+            // show PostalCode
+            grid.getColumnByName('PostalCode').hidden = false;
+            fixture.detectChanges();
+
+            expect(grid.getColumnByName('ID').visibleIndex).toBe(1);
+            expect(grid.getColumnByName('CompanyName').visibleIndex).toBe(2);
+            expect(grid.getColumnByName('ContactName').visibleIndex).toBe(3);
+            expect(grid.getColumnByName('ContactTitle').visibleIndex).toBe(6);
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(4);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(5);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(7);
+
+            // hide PostalCode
+            grid.getColumnByName('PostalCode').hidden = true;
+            fixture.detectChanges();
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(-1);
+
+            // show PostalCode
+            grid.getColumnByName('PostalCode').hidden = false;
+            fixture.detectChanges();
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(4);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(5);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(7);
+        });
+
+
         it('should work with horizontal virtualization when some groups are hidden/shown.', async() => {
             const uniqueGroups = [
                 {

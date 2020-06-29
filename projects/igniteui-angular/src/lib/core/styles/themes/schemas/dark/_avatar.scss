@@ -23,3 +23,9 @@ $_dark-fluent-avatar: extend($_fluent-avatar);
 /// @requires {function} extend
 /// @requires $_bootstrap-avatar
 $_dark-bootstrap-avatar: extend($_bootstrap-avatar);
+
+/// Generates a dark indigo avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-avatar
+$_dark-indigo-avatar: extend($_indigo-avatar);

@@ -27,7 +27,7 @@ describe('Update 7.0.2', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should remove .forRoot() from imports', done => {
+    it('should remove .forRoot() from imports', async () => {
         appTree.create(
             '/testSrc/appPrefix/module/test.module.ts',
             `@NgModule({
@@ -45,7 +45,8 @@ describe('Update 7.0.2', () => {
             })
             export class AppModule { }`);
 
-        const tree = schematicRunner.runSchematic('migration-07', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-07', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/module/test.module.ts'))
             .toEqual(
             `@NgModule({
@@ -62,7 +63,5 @@ describe('Update 7.0.2', () => {
                 bootstrap: [AppComponent]
             })
             export class AppModule { }`);
-
-        done();
     });
 });
