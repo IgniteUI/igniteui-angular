@@ -35,6 +35,8 @@
         $splitter-schema: $schema;
     }
 
+    $theme: apply-palette($splitter-schema, $palette);
+
     $border-radius-handle: round-borders(
         if($border-radius, $border-radius, map-get($splitter-schema, 'border-radius')), 0, 2px
     );
@@ -71,6 +73,8 @@
     $hitbox-size: 4px;
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, .24);
+
+    $variant: map-get($theme, 'variant');
 
     %handle-area {
         position: absolute;
@@ -117,6 +121,10 @@
         // Remove the default browser outline styles
         outline: transparent solid 1px;
         box-shadow: inset 0 0 0 1px --var($theme, 'focus-color');
+
+        @if $variant == 'indigo-design' {
+            background: --var($theme, 'focus-color');
+        }
     }
 
     %igx-splitter-bar--vertical {
