@@ -57,6 +57,7 @@
     "@types/source-map": "0.5.2",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.11",
+    "core-js-pure": "^3.6.5",
     "hammerjs": "^2.0.8",
     "igniteui-trial-watermark": "^1.0.3",
     "jszip": "^3.4.0",

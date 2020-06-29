@@ -219,7 +219,7 @@ export class WorksheetFile implements IExcelFile {
         if (!worksheetData.isTreeGridData) {
             rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}>`;
         } else {
-            const originalData = worksheetData.data[i].originalRowData;
+            const originalData = worksheetData.data[i - 1].originalRowData;
             const sCollapsed = (!originalData.expanded) ? '' : (originalData.expanded === true) ? '' : ` collapsed="1"`;
             const sHidden = (originalData.parent && this.hasCollapsedParent(originalData)) ? ` hidden="1"` : '';
             const rowOutlineLevel = originalData.level ? originalData.level : 0;

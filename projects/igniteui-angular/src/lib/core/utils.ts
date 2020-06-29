@@ -2,7 +2,7 @@ import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import ResizeObserver from 'resize-observer-polyfill';
-import { setImmediate } from 'core-js';
+import { setImmediate } from 'core-js-pure';
 
 /**
  * @hidden
