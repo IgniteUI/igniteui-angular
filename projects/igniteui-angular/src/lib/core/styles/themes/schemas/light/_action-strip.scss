@@ -52,7 +52,7 @@ $_fluent-action-strip: extend(
 
 /// Generates a bootstrap action strip schema.
 /// @type {Map}
-/// @prop {Number} border-radius [4px] - The border radius fraction, between 0-1 to be used for action strip actions container.
+/// @prop {Number} border-radius [4px] - The border radius used for action strip actions container.
 /// @requires {function} extend
 /// @requires $_light-action-strip
 $_bootstrap-action-strip: extend(
@@ -65,7 +65,22 @@ $_bootstrap-action-strip: extend(
 
 /// Generates a indigo action strip schema.
 /// @type {Map}
+/// @prop {Color} $color [#fff] - The color used for the actions icons.
+/// @prop {Map} actions-background [igx-color: ('primary')] - The color used for actions background.
+/// @prop {Number} border-radius [3px] - The border radius used for action strip actions container.
 /// @requires {function} extend
 /// @requires $_light-action-strip
-$_indigo-action-strip: extend($_light-action-strip);
+$_indigo-action-strip: extend(
+    $_light-action-strip,
+    $_indigo-shape-action-strip,
+    (
+        variant: 'indigo-design',
+
+        actions-background: (
+            igx-color: ('primary')
+        ),
+
+        color: #fff,
+    )
+);
 

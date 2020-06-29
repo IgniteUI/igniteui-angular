@@ -77,6 +77,8 @@
         compact: 0 rem(12px)
     );
 
+    $variant: map-get($theme, variant);
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
@@ -96,27 +98,25 @@
         z-index: 9999;
     }
 
-    %action-icons-density {
-        [igxButton='icon'] {
-            width: rem(28px);
-            height: rem(28px);
+    %action-icons {
+        width: rem(28px);
+        height: rem(28px);
 
-            igx-icon {
-                width: rem(14px);
-                height: rem(14px);
-                font-size: rem(14px);
-            }
+        igx-icon {
+            width: rem(14px);
+            height: rem(14px);
+            font-size: rem(14px);
         }
     }
 
-    %igx-action-strip--cosy{
+    %igx-action-strip--cosy {
+        @extend %action-icons;
         padding: map-get($padding, 'cosy');
-        @extend %action-icons-density;
     }
 
-    %igx-action-strip--compact{
+    %igx-action-strip--compact {
+        @extend %action-icons;
         padding: map-get($padding, 'compact');
-        @extend %action-icons-density;
     }
 
     %igx-action-strip__editing-actions,
@@ -143,6 +143,16 @@
 
         igx-icon {
             color: --var($theme, 'color');
+        }
+
+        [igxButton='icon'] {
+            @if $variant == 'indigo-design' {
+                border-radius: --var($theme, 'actions-border-radius');
+            }
+        }
+
+        [disabld='true']{
+            color: deeppink;
         }
     }
 
