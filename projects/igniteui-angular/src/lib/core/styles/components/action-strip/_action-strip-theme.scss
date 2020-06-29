@@ -98,24 +98,26 @@
         z-index: 9999;
     }
 
-    %action-icons {
-        width: rem(28px);
-        height: rem(28px);
+    %action-icons-density {
+        [igxButton='icon'] {
+            width: rem(28px);
+            height: rem(28px);
 
-        igx-icon {
-            width: rem(14px);
-            height: rem(14px);
-            font-size: rem(14px);
+            igx-icon {
+                width: rem(14px);
+                height: rem(14px);
+                font-size: rem(14px);
+            }
         }
     }
 
     %igx-action-strip--cosy {
-        @extend %action-icons;
+        @extend %action-icons-density;
         padding: map-get($padding, 'cosy');
     }
 
     %igx-action-strip--compact {
-        @extend %action-icons;
+        @extend %action-icons-density;
         padding: map-get($padding, 'compact');
     }
 
@@ -149,10 +151,6 @@
             @if $variant == 'indigo-design' {
                 border-radius: --var($theme, 'actions-border-radius');
             }
-        }
-
-        [disabld='true']{
-            color: deeppink;
         }
     }
 
