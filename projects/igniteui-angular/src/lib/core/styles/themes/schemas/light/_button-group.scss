@@ -222,7 +222,9 @@ $_indigo-button-group: extend(
             igx-color: ('primary', 500),
         ),
 
-        item-text-color: #fff,
+        item-text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
         item-border-color: (
             igx-color: ('primary', 400),
@@ -232,13 +234,17 @@ $_indigo-button-group: extend(
             igx-color: ('primary', 400),
         ),
 
-        item-hover-text-color: #fff,
+        item-hover-text-color: (
+            igx-contrast-color: ('primary', 400)
+        ),
 
         item-selected-background: (
             igx-color: ('primary', 400)
         ),
 
-        item-selected-text-color: #fff,
+        item-selected-text-color: (
+            igx-contrast-color: ('primary', 400)
+        ),
 
         item-selected-border-color: (
             igx-color: ('primary', 400),
