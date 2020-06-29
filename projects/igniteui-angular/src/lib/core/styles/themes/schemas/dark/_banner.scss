@@ -28,3 +28,9 @@ $_dark-bootstrap-banner: extend(
         banner-background: #333,
     )
 );
+
+/// Generates a dark indigo banner schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-banner
+$_dark-indigo-banner: extend($_indigo-banner);
