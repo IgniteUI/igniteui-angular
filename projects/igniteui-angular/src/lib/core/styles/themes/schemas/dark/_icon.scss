@@ -32,8 +32,12 @@ $_dark-fluent-icon: extend(
 
 /// Generates a dark bootstrap icon schema.
 /// @type {Map}
-/// @property {Color} color [#fff] - The icon color.
-/// @property {map} disabled-color [igx-color: ('grays' 500)] - The icon color.
 /// @requires {function} extend
 /// @requires $_light-icon
 $_dark-bootstrap-icon: extend($_bootstrap-icon);
+
+/// Generates a dark indigo icon schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-icon
+$_dark-indigo-icon: extend($_indigo-icon);
