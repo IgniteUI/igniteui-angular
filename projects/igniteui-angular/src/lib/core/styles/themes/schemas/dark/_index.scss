@@ -419,7 +419,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-action-strip [$_dark-indigo-action-strip]
 /// @property {map} igx-badge [$_dark-bootstrap-badge],
 /// @property {map} igx-banner [$_dark-indigo-banner],
-/// @property {map} igx-bottom-nav [$_dark-bootstrap-bottom-nav],
+/// @property {map} igx-bottom-nav [$_dark-indigo-bottom-nav],
 /// @property {map} igx-button [$_dark-bootstrap-button],
 /// @property {map} igx-button-group [$_dark-bootstrap-button-group],
 /// @property {map} igx-calendar [$_dark-indigo-calendar],
@@ -476,7 +476,7 @@ $dark-indigo-schema: (
     igx-action-strip: $_dark-indigo-action-strip,
     igx-badge: $_dark-indigo-badge,
     igx-banner: $_dark-indigo-banner,
-    igx-bottom-nav: $_dark-bootstrap-bottom-nav,
+    igx-bottom-nav: $_dark-indigo-bottom-nav,
     igx-button: $_dark-indigo-button,
     igx-button-group: $_dark-bootstrap-button-group,
     igx-calendar: $_dark-indigo-calendar,
