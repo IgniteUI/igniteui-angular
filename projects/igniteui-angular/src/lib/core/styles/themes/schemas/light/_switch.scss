@@ -196,7 +196,7 @@ $_indigo-switch: extend(
         variant: 'indigo-design',
 
         border-color: (
-            igx-color: ('grays', 600)
+            igx-color: ('grays', 500)
         ),
 
         border-hover-color:(
@@ -238,4 +238,3 @@ $_indigo-switch: extend(
         )
     )
 );
-
