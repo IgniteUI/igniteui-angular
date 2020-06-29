@@ -13,7 +13,8 @@ import {
     IgxGridPagingPipe,
     IgxGridGroupingPipe,
     IgxGridSortingPipe,
-    IgxGridFilteringPipe
+    IgxGridFilteringPipe,
+    IgxGridDataMapperPipe
 } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './grid-row.component';
@@ -42,7 +43,8 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
-    IgxGridExpandableCellComponent
+    IgxGridExpandableCellComponent,
+    IgxGridDataMapperPipe
   ],
   exports: [
     IgxGridComponent,

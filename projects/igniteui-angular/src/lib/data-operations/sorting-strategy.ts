@@ -1,4 +1,4 @@
-import { cloneArray } from '../core/utils';
+import { cloneArray, resolveNestedPath } from '../core/utils';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { IGroupingExpression } from './grouping-expression.interface';
@@ -206,11 +206,12 @@ export class IgxSorting implements IGridSortingStrategy {
         return result;
     }
     protected getFieldValue(obj: any, key: string): any {
-        return obj[key];
+        return resolveNestedPath(obj, key);
     }
 }
 
 export class IgxDataRecordSorting extends IgxSorting {
+    // R.K. TODO: Check how will this interact with the tree grid
     protected getFieldValue(obj: any, key: string): any {
         return obj.data[key];
     }

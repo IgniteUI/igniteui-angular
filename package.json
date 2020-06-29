@@ -60,6 +60,7 @@
     "hammerjs": "^2.0.8",
     "igniteui-trial-watermark": "^1.0.3",
     "jszip": "^3.4.0",
+    "lodash.merge": "^4.6.2",
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.5.4",
     "tslib": "^2.0.0",

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isEqual, mergeObjects } from '../core/utils';
+import { cloneArray, isEqual, reverseMapper } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -17,7 +17,7 @@ import { IRowToggleEventArgs } from './common/events';
 import {
     ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
 } from '../core/utils';
-import { first, debounceTime } from 'rxjs/operators';
+import * as merge from 'lodash.merge';
 /**
  * @hidden
  */
@@ -159,7 +159,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.summaryService.clearSummaryCache(args);
-        this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
+        this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, reverseMapper(cell.column.field, args.newValue));
         if (this.grid.primaryKey === cell.column.field) {
              if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
@@ -195,7 +195,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
+            merge(rowValueInDataSource, rowNewValue);
         }
     }
 

@@ -383,3 +383,38 @@ export function compareMaps(map1: Map<any, any>, map2: Map<any, any>): boolean {
     }
     return match;
 }
+
+// TODO: RK. Clean up and document before the final PR
+
+export function resolveNestedPath(obj: any, key: string) {
+    const parts = key?.split('.') ?? [];
+    let current = obj[parts.shift()];
+    parts.forEach(part => {
+        if (current) {
+            current = current[part];
+        }
+    });
+    return current;
+}
+
+export function reverseMapper(key: string, value: any) {
+    const parts = key?.split('.') ?? [];
+    let _key = parts.shift();
+    const obj = {};
+    let mapping;
+
+    // Initial binding for first level bindings
+    obj[_key] = value;
+    mapping = obj;
+
+    parts.forEach(part => {
+        // Start building the hierarchy
+        mapping[_key] = {};
+        // Go down a level
+        mapping = mapping[_key];
+        // Bind the value and move the key
+        mapping[part] = value;
+        _key = part;
+    });
+    return obj;
+}

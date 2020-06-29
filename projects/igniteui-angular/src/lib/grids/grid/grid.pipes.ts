@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
@@ -150,5 +150,13 @@ export class IgxGridFilteringPipe implements PipeTransform {
         const result = DataUtil.filter(cloneArray(collection), state);
         grid.setFilteredData(result, pinned);
         return result;
+    }
+}
+
+@Pipe({ name: 'dataMapper' })
+export class IgxGridDataMapperPipe implements PipeTransform {
+
+    transform(data: any[], field: string, _: number) {
+        return resolveNestedPath(data, field);
     }
 }
