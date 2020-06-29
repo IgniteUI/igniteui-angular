@@ -36,6 +36,7 @@
 /// @param {Number} $border-width [null] - The border width used for drop-down component.
 /// @param {Color} $border-color [null] - The border color used for drop-down component.
 /// @param {border-radius} $border-radius [null] - The border radius used for drop-down component.
+/// @param {border-radius} $item-border-radius [null] - The border radius used for drop-down items.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -51,6 +52,7 @@
     $elevations: $elevations,
 
     $border-radius: null,
+    $item-border-radius: null,
 
     $background-color: null,
     $header-text-color: null,
@@ -91,6 +93,10 @@
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($drop-down-schema, 'border-radius')), 0, 20px
+    );
+
+    $item-border-radius: round-borders(
+        if($item-border-radius, $item-border-radius, map-get($drop-down-schema, 'item-border-radius')), 0, 20px
     );
 
     @if not($item-text-color) and $background-color {
@@ -167,6 +173,7 @@
         palette: $palette,
         background-color: $background-color,
         border-radius: $border-radius,
+        item-border-radius: $item-border-radius,
         header-text-color: $header-text-color,
         item-text-color: $item-text-color,
         hover-item-text-color: $hover-item-text-color,
@@ -257,6 +264,7 @@
         color: --var($theme, 'item-text-color');
         cursor: pointer;
         padding: map-get($item-padding, 'comfortable');
+        border-radius: --var($theme, 'item-border-radius');
 
         &:focus {
             outline: 0;

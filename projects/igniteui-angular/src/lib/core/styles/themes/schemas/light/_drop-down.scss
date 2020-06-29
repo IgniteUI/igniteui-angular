@@ -28,6 +28,7 @@
 /// @prop {Number} $border-width [0] - The border width used for drop-down component.
 /// @prop {Map} $border-color [igx-color: ('grays', 300)] - The border color used for drop-down component.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
+/// @prop {Number} item-border-radius [0] - The border radius used for the drop-down items.
 /// @requires {function} extend
 /// @requires {map} $_default-shape-drop-down
 /// @requires {map} $_default-elevation-drop-down
@@ -244,6 +245,7 @@ $_bootstrap-drop-down: extend(
 /// @prop {Map} disabled-item-text-color [igx-color: ('grays', 700), rgba: .4] - The drop-down disabled item text color.
 /// @prop {Number} elevation [3] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [2px] - The border radius used for drop-down component.
+/// @prop {Number} item-border-radius [2px] - The border radius used for the drop-down items.
 /// @requires {function} extend
 /// @requires {Map} $_light-drop-down
 $_indigo-drop-down: extend(
@@ -251,6 +253,8 @@ $_indigo-drop-down: extend(
     $_indigo-shape-drop-down,
     $_indigo-elevation-drop-down,
     (
+        variant: 'indigo-design',
+
         header-text-color: (
             igx-color: ('primary', 500)
         ),

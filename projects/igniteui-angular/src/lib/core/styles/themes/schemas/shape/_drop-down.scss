@@ -7,25 +7,31 @@
 /// @type Map
 $_default-shape-drop-down: (
     border-radius: .2,
+    item-border-radius: 0,
 );
 
 $_round-shape-drop-down: (
     border-radius: 1,
+    item-border-radius: 0,
 );
 
 $_square-shape-drop-down: (
     border-radius: 0%,
+    item-border-radius: 0%,
 );
 
 /// @type Map
 $_fluent-shape-drop-down: (
     border-radius: 2px,
+    item-border-radius: 0,
 );
 
 $_bootstrap-shape-drop-down: (
     border-radius: 4px,
+    item-border-radius: 0,
 );
 
 $_indigo-shape-drop-down: (
     border-radius: 2px,
+    item-border-radius: 2px,
 );
