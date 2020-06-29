@@ -28,6 +28,8 @@ $_dark-bootstrap-snackbar: extend($_bootstrap-snackbar);
 /// Generates a dark indigo snackbar schema.
 /// @type {Map}
 /// @property {Map} background [igx-color: ('grays', 400)] - The background color used in the snackbar.
+/// @property {Map} text-color [#fff] - The text color used in the snackbar.
+/// @property {Map} button-color [#fff] - The button color used in the snackbar.
 /// @requires {function} extend
 /// @requires $_indigo-snackbar
 $_dark-indigo-snackbar: extend(
@@ -35,6 +37,11 @@ $_dark-indigo-snackbar: extend(
     (
         background: (
             igx-color: ('grays', 400)
-        )
+        ),
+
+        text-color: #fff,
+
+
+        button-color: #fff
     )
 );
