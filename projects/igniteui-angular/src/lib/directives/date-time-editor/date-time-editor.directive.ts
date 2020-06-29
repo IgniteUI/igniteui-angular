@@ -1,12 +1,12 @@
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges
+  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, DoCheck
 } from '@angular/core';
 import {
   ControlValueAccessor,
   Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
-import { formatDate, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { KEYS } from '../../core/utils';
@@ -51,12 +51,15 @@ import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-
     { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
   ]
 })
-export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, Validator, ControlValueAccessor {
+export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, DoCheck, Validator, ControlValueAccessor {
   /**
    * Locale settings used for value formatting.
    *
    * @remarks
    * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+   * If a `locale` is set, it must be registered via `registerLocaleData`.
+   * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+   * If it is not registered, `Intl` will be used for formatting.
    *
    * @example
    * ```html
@@ -192,6 +195,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private _format: string;
   private document: Document;
   private _isFocused: boolean;
+  private _inputFormat: string;
   private _minValue: string | Date;
   private _maxValue: string | Date;
   private _oldValue: Date | string;
@@ -245,14 +249,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['inputFormat'] || changes['locale']) {
-      const defPlaceholder = this.inputFormat || DatePickerUtil.getDefaultInputFormat(this.locale);
-      this._inputDateParts = DatePickerUtil.parseDateTimeFormat(this.inputFormat);
-      this.inputFormat = this._inputDateParts.map(p => p.format).join('');
-      if (!this.nativeElement.placeholder) {
-        this.renderer.setAttribute(this.nativeElement, 'placeholder', defPlaceholder);
-      }
-      // TODO: fill in partial dates?
-      this.updateMask();
+      this.updateInputFormat();
+    }
+  }
+
+  /** @hidden @internal */
+  public ngDoCheck(): void {
+    if (this._inputFormat !== this.inputFormat) {
+      this.updateInputFormat();
     }
   }
 
@@ -402,7 +406,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       }
       const format = this.displayFormat || this.inputFormat;
       if (format) {
-        this.inputValue = formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+        this.inputValue = DatePickerUtil.formatDate(this.value, format.replace('tt', 'aa'), this.locale);
       } else {
         // TODO: formatter function?
         this.inputValue = this.value.toLocaleString();
@@ -419,6 +423,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     return mask;
+  }
+
+  private updateInputFormat(): void {
+    const defPlaceholder = this.inputFormat || DatePickerUtil.getDefaultInputFormat(this.locale);
+    this._inputDateParts = DatePickerUtil.parseDateTimeFormat(this.inputFormat);
+    this.inputFormat = this._inputDateParts.map(p => p.format).join('');
+    if (!this.nativeElement.placeholder || this._inputFormat !== this.inputFormat) {
+      this.renderer.setAttribute(this.nativeElement, 'placeholder', defPlaceholder);
+    }
+    // TODO: fill in partial dates?
+    this.updateMask();
+    this._inputFormat = this.inputFormat;
   }
 
   // TODO: move isDate to utils
