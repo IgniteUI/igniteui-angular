@@ -1919,14 +1919,14 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            this._calcWidth = parseInt(colWidth, 10) / 100 * grid.calcWidth;
+            this._calcWidth = parseFloat(colWidth) / 100 * grid.calcWidth;
         } else if (!colWidth) {
             // no width
             this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**
