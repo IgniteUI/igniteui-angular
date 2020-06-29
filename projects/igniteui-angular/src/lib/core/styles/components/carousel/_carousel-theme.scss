@@ -310,7 +310,9 @@
 
         &::after {
             background: --var($theme, 'indicator-active-dot-color');
-            @include animation('scale-in-center' .15s $ease-out-quad forwards);
+            @if $variant != 'indigo-design' {
+                @include animation('scale-in-center' .15s $ease-out-quad forwards);
+            }
         }
     }
 
