@@ -434,7 +434,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} data-chart [$_dark-bootstrap-data-chart]
 /// @property {Map} doughnut-chart [$_dark-bootstrap-doughnut-chart]
 /// @property {map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
-/// @property {map} igx-divider [$_dark-bootstrap-divider],
+/// @property {map} igx-divider [$_dark-indigo-divider],
 /// @property {map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-bootstrap-linear-gauge]
@@ -491,7 +491,7 @@ $dark-indigo-schema: (
     data-chart: $_dark-bootstrap-data-chart,
     doughnut-chart: $_dark-bootstrap-doughnut-chart,
     igx-date-range: $_dark-bootstrap-date-range-picker,
-    igx-divider: $_dark-bootstrap-divider,
+    igx-divider: $_dark-indigo-divider,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
     linear-gauge: $_dark-bootstrap-linear-gauge,
