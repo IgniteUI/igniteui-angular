@@ -33,3 +33,17 @@ $_fluent-icon: extend($_light-icon);
 /// @requires {function} extend
 /// @requires {map} $_light-icon
 $_bootstrap-icon: extend($_light-icon);
+
+/// Generates an indigo icon schema.
+/// @type {Map}
+/// @property {Map} disabled-color [igx-color: ('grays', 400)] - The disabled icon color.
+/// @requires {function} extend
+/// @requires {map} $_light-icon
+$_indigo-icon: extend(
+    $_light-icon,
+    (
+        disabled-color: (
+            igx-color: ('grays', 400)
+        )
+    )
+);
