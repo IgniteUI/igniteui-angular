@@ -245,3 +245,11 @@ export class IgxGridRowPinningPipe implements PipeTransform {
         });
     }
 }
+
+@Pipe({ name: 'dataMapper' })
+export class IgxGridDataMapperPipe implements PipeTransform {
+
+    transform(data: any[], field: string, _: number) {
+        return resolveNestedPath(data, field);
+    }
+}
