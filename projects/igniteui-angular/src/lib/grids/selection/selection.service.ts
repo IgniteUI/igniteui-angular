@@ -496,7 +496,7 @@ export class IgxGridSelectionService {
 
     pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
         // https://www.w3.org/TR/pointerevents/#the-button-property
-        this.dragMode = event.buttons === 1 && event.button === -1;
+        this.dragMode = event.buttons === 1 && (event.button === -1 || event.button === 0);
         if (!this.dragMode) {
             return false;
         }
@@ -510,7 +510,7 @@ export class IgxGridSelectionService {
         }
 
         this.pointerState.ctrl ? this.selectRange(node, this.pointerState, this.temp) :
-            this.dragSelect(node, this.pointerState);
+        this.dragSelect(node, this.pointerState);
         return true;
     }
 

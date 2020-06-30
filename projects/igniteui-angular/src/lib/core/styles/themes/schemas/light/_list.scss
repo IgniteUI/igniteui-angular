@@ -173,3 +173,102 @@ $_bootstrap-list: extend(
     )
 );
 
+/// Generates an indigo list schema.
+/// @type {Map}
+///
+/// @property {Map} header-text-color [igx-color: ('primary', 500)] - The list header text color.
+///
+/// @property {Map} item-background-hover [igx-color: ('primary', 500), rgba: .15] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('primary', 500), rgba: .15] - The active list item background color.
+///
+/// @property {Map} item-text-color [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-hover [igx-color: ('grays', 900)] - The list item text color.
+/// @property {Map} item-text-color-active [igx-color: ('grays', 900)] - The active list item text color.
+///
+/// @property {Color} item-subtitle-color [igx-color: ('grays', 600)] - The list item subtitle color.
+/// @property {Color} item-subtitle-color-hover [igx-color: ('grays', 600)] - The list item subtitle hover color.
+/// @property {Color} item-subtitle-color-active [igx-color: ('grays', 600)] - The list item subtitle active color.
+///
+/// @property {Color} item-action-color [igx-color: ('grays', 600)] - The list item action color.
+/// @property {Color} item-action-color-hover [igx-color: ('grays', 600)] - The list item action hover color.
+/// @property {Color} item-action-color-active [igx-color: ('grays', 600)] - The list item action active color.
+///
+/// @property {Color} item-thumbnail-color [igx-color: ('grays', 600)] - The list item thumbnail color.
+/// @property {Color} item-thumbnail-color-hover [igx-color: ('grays', 600)] - The list item thumbnail hover color.
+/// @property {Color} item-thumbnail-color-active [igx-color: ('grays', 600)] - The list item thumbnail active color.
+///
+/// @prop {Number} item-border-radius [2px] - The border radius used for list item.
+///
+/// @requires {function} extend
+/// @requires $_light-list
+/// @requires $_indigo-shape-list
+$_indigo-list: extend(
+    $_light-list,
+    $_indigo-shape-list,
+    (
+        variant: 'indigo-design',
+
+        header-text-color:  (
+            igx-color: ('primary', 500)
+        ),
+
+        item-background-hover: (
+            igx-color: ('primary', 500),
+            rgba: .15
+        ),
+
+        item-background-active: (
+            igx-color: ('primary', 500),
+            rgba: .15
+        ),
+
+        item-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-text-color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-action-color : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-action-color-hover : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-action-color-active : (
+            igx-color: ('grays', 600)
+        ),
+
+        item-subtitle-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-subtitle-color-hover: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-subtitle-color-active: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-thumbnail-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-thumbnail-color-hover: (
+            igx-color: ('grays', 600)
+        ),
+
+        item-thumbnail-color-active: (
+            igx-color: ('grays', 600)
+        )
+    )
+);
+
