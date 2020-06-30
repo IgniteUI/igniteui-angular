@@ -73,7 +73,7 @@ $_bootstrap-expansion-panel: extend($_light-expansion-panel, $_bootstrap-shape-e
 /// @prop {Map} header-description-color [igx-color: ('grays', 700)] - The panel header description text color.
 /// @prop {Map} header-icon-color [igx-color: ('grays', 600)] - The panel header icon color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The panel disabled text color.
-/// @prop {Number} border-radius [3пь] - The border radius used for expansion-panel.
+/// @prop {Number} border-radius [3px] - The border radius used for expansion-panel.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-expansion-panel
