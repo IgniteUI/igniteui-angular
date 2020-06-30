@@ -2,7 +2,7 @@ import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, resolveNestedPath } from '../../core/utils';
 import { GridType } from './grid.interface';
 import { DatePipe, DecimalPipe } from '@angular/common';
 
@@ -15,7 +15,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: { [prop: string]: any }, value: any, data: any, field: string, index: number): string {
+    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -24,7 +24,8 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
-            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field, value, index) : callbackOrValue;
+            const apply = typeof callbackOrValue === 'function' ?
+                callbackOrValue(data, field, resolveNestedPath(data, field), index) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
@@ -43,7 +44,7 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    transform(styles: { [prop: string]: any }, value: any, data: any, field: string, index: number): { [prop: string]: any } {
+    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number): { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
@@ -51,7 +52,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         for (const prop of Object.keys(styles)) {
             const res = styles[prop];
-            css[prop] = typeof res === 'function' ? res(data, field, value, index) : res;
+            css[prop] = typeof res === 'function' ? res(data, field, resolveNestedPath(data, field), index) : res;
         }
 
         return css;

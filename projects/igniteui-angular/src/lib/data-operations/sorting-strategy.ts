@@ -165,7 +165,7 @@ export class IgxSorting implements IGridSortingStrategy {
                 expression: expressions[level],
                 level,
                 records: cloneArray(group),
-                value: group[0][expressions[level].fieldName],
+                value: this.getFieldValue(group[0], expressions[level].fieldName),
                 groupParent: parent,
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
