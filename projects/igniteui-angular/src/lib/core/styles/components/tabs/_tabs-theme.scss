@@ -485,7 +485,9 @@
         background: --var($theme, 'button-background');
         color: --var($theme, 'button-color');
         outline: 0;
-        box-shadow: igx-elevation($elevations, 4);
+        @if not $indigo-theme {
+            box-shadow: igx-elevation($elevations, 4);
+        }
 
         &:hover {
             background: --var($theme, 'button-hover-background');
