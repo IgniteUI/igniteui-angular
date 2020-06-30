@@ -170,3 +170,71 @@ $_bootstrap-switch: extend(
     )
 );
 
+/// Generates an indigo switch schema.
+/// @type {Map}
+///
+/// @property {map} thumb-on-color [#fff] - The color of the thumb when the switch is on.
+/// @property {map} track-on-color [igx-color: ('primary', 500)] - The color of the track when the switch is on.
+/// @property {map} thumb-off-color [igx-color: ('grays', 600)] - The color of the thumb when the switch is off.
+/// @property {map} track-off-color [transparent] - The color of the track when the switch is off.
+/// @property {map} thumb-disabled-color [igx-color: ('grays', 300)] - The color of the thumb when the switch is disabled.
+/// @property {map} track-disabled-color [transparent] - The color of the track when the switch is disabled.
+///
+/// @property {color} border-color [igx-color: ('grays', 600)] - The border color of the switch.
+/// @property {color} border-hover-color [igx-color: ('grays', 600)] - The border color of the switch on hover.
+/// @property {color} border-disabled-color [igx-color: ('grays', 300)] - The border color of the disabled switch.
+/// @property {color} border-on-color [igx-color: ('primary', 500)] - The border color of the on-switch.
+/// @property {color} border-on-hover-color [igx-color: ('primary', 500)] - The border color of the  on-switch.
+///
+///@requires $_light-switch
+///@requires $_indigo-shape-switch
+
+$_indigo-switch: extend(
+    $_light-switch,
+    $_indigo-shape-switch,
+    (
+        variant: 'indigo-design',
+
+        border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        border-hover-color:(
+            igx-color: ('grays', 500)
+        ),
+
+        border-disabled-color:(
+            igx-color: ('grays', 300)
+        ),
+
+        border-on-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        border-on-hover-color:(
+            igx-color: ('primary', 500)
+        ),
+
+        thumb-on-color: #fff,
+
+        thumb-off-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        track-on-color: (
+            igx-color: ('primary', 500),
+        ),
+
+        track-off-color: transparent,
+
+        track-disabled-color: transparent,
+
+        thumb-disabled-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        label-disabled-color: (
+            igx-color: ('grays', 300)
+        )
+    )
+);
