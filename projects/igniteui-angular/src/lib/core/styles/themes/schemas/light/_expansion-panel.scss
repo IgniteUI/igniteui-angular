@@ -67,6 +67,14 @@ $_bootstrap-expansion-panel: extend($_light-expansion-panel, $_bootstrap-shape-e
 
 // Generates an indigo expansion panel schema.
 /// @type {Map}
+///
+/// @prop {Map} header-focus-background [igx-color: ('primary', 500), rgba: .15] - The panel header focus background color.
+/// @prop {Map} header-title-color [igx-color: ('grays', 900)] - The panel header title text color.
+/// @prop {Map} header-description-color [igx-color: ('grays', 700)] - The panel header description text color.
+/// @prop {Map} header-icon-color [igx-color: ('grays', 600)] - The panel header icon color.
+/// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The panel disabled text color.
+/// @prop {Number} border-radius [3пь] - The border radius used for expansion-panel.
+///
 /// @requires {function} extend
 /// @requires {Map} $_light-expansion-panel
 /// @requires {Map} $_indigo-shape-expansion-panel
@@ -80,6 +88,10 @@ $_indigo-expansion-panel: extend(
 
         header-description-color: (
             igx-color: ('grays', 700)
+        ),
+
+        header-icon-color: (
+            igx-color: ('grays', 600)
         ),
 
         header-focus-background: (
