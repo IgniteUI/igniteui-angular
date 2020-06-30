@@ -45,3 +45,10 @@ $_dark-bootstrap-drop-down: extend(
         hover-item-text-color: #fff,
     )
 );
+
+/// Generates a dark indigo drop-down schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_indigo-drop-down
+/// @requires extend
+$_dark-indigo-drop-down: extend($_indigo-drop-down);

@@ -25,15 +25,34 @@ $_dark-splitter: extend(
     )
 );
 
-/// Generates a fluent splitter schema.
+/// Generates a dark fluent splitter schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-splitter
 $_dark-fluent-splitter: extend($_fluent-splitter);
 
-/// Generates a bootstrap splitter schema.
+/// Generates a dark bootstrap splitter schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-splitter
 $_dark-bootstrap-splitter: extend($_bootstrap-splitter);
+
+/// Generates a dark indigo splitter schema.
+/// @type {Map}
+/// @property {Map} $handle-color [igx-color: 'surface'] - The color for the bar drag handle.
+/// @property {Map} $expander-color [igx-color: 'surface'] - The color for the bar drag handle.
+/// @requires {function} extend
+/// @requires $_indigo-splitter
+$_dark-indigo-splitter: extend(
+    $_indigo-splitter,
+    (
+        handle-color: (
+            igx-color: 'surface',
+        ),
+
+        expander-color: (
+            igx-color: 'surface',
+        ),
+    )
+);
 
