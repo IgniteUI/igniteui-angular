@@ -137,9 +137,17 @@
         }
     }
 
-    igx-action-icon {
+    [igxNavbarAction] {
         display: flex;
         align-items: center;
+    }
+
+    [igxNavbarTitle] {
+        display: flex;
+        align-items: center;
+        font-size: $navbar-title-fz;
+        line-height: $navbar-title-lh;
+        user-select: none;
     }
 }
 
