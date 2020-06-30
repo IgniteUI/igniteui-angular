@@ -63,7 +63,7 @@ $_bootstrap-action-strip: extend(
     )
 );
 
-/// Generates a indigo action strip schema.
+/// Generates an indigo action strip schema.
 /// @type {Map}
 /// @prop {Color} $color [#fff] - The color used for the actions icons.
 /// @prop {Map} actions-background [igx-color: ('primary')] - The color used for actions background.
@@ -83,4 +83,3 @@ $_indigo-action-strip: extend(
         color: #fff,
     )
 );
-
