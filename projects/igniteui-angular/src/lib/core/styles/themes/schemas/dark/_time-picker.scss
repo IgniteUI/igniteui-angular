@@ -25,3 +25,9 @@ $_dark-fluent-time-picker: extend($_fluent-time-picker);
 /// @requires $_bootstrap-time-picker
 $_dark-bootstrap-time-picker: extend($_bootstrap-time-picker);
 
+/// Generates a dark indigo time-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-time-picker
+$_dark-indigo-time-picker: extend($_indigo-time-picker);
+
