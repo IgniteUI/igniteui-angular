@@ -75,14 +75,14 @@
         "igniteui-trial-watermark": "^1.0.3"
     },
     "peerDependencies": {
-        "@angular/common": "^9.0.0",
-        "@angular/core": "^9.0.0",
-        "@angular/animations": "^9.0.0",
-        "@angular/forms": "^9.0.0",
+        "@angular/common": "^10.0.0",
+        "@angular/core": "^10.0.0",
+        "@angular/animations": "^10.0.0",
+        "@angular/forms": "^10.0.0",
         "web-animations-js": "^2.3.2"
     },
     "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~9.1.510"
+        "@igniteui/angular-schematics": "~10.0.600"
     },
     "ng-update": {
         "migrations": "./migrations/migration-collection.json"
