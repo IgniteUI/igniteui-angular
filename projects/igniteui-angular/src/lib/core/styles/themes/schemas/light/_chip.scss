@@ -212,7 +212,18 @@ $_bootstrap-chip: extend(
 ///
 /// @prop {Number} ghost-elevation [0] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
 /// @prop {Number} border-radius [3px] - The border radius fraction used for chip component.
-///
+/// @prop {Color} text-color [#fff] - The chip text color.
+/// @prop {Map} background [igx-color: ('grays', 600)] - The chip background color.
+/// @prop {Color} hover-text-color [#fff] - The chip text hover color.
+/// @prop {Map} hover-background [igx-color: ('grays', 800)] - The chip hover background color.
+/// @prop {Color} focus-text-color [#fff] The focused chip text color.
+/// @prop {Map} focus-background [igx-color: ('grays', 800)] The focused chip background color.
+/// @prop {Map} selected-text-color [igx-contrast-color: ('primary', 500)] - The selected chip text color.
+/// @prop {Map} selected-background [igx-color: ('primary', 500)] - The selected chip background color.
+/// @prop {Map} hover-selected-text-color [igx-contrast-color: ('primary', 400)] - The selected chip hover text color.
+/// @prop {Map} hover-selected-background [igx-color: ('primary', 400)] - The selected chip hover background color.
+/// @prop {Map} focus-selected-text-color [igx-contrast-color: ('primary', 400)] - The selected chip text focus color.
+/// @prop {Map} focus-selected-background [igx-color: ('primary', 400)] - The selected chip focus background color.
 /// @requires {function} extend
 /// @requires {map} $_light-chip
 /// @requires {map} $_indigo-shape-chip
@@ -242,19 +253,25 @@ $_indigo-chip: extend(
             igx-color: ('grays', 800)
         ),
 
-        selected-text-color: #fff,
+        selected-text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
         selected-background: (
             igx-color: ('primary', 500)
         ),
 
-        hover-selected-text-color: #fff,
+        hover-selected-text-color: (
+            igx-contrast-color: ('primary', 400)
+        ),
 
         hover-selected-background: (
             igx-color: ('primary', 400)
         ),
 
-        focus-selected-text-color: #fff,
+        focus-selected-text-color: (
+            igx-contrast-color: ('primary', 400)
+        ),
 
         focus-selected-background: (
             igx-color: ('primary', 400)
