@@ -17,12 +17,12 @@ import { IgxIconModule } from '../icon/public_api';
  */
 @Directive({
     // tslint:disable-next-line:directive-selector
-    selector: '[igxNavbarAction]'
+    selector: 'igx-navbar-action,[igxNavbarAction]'
 })
 export class IgxNavbarActionDirective { }
 
 @Directive({
-    selector: '[igxNavbarTitle]',
+    selector: 'igx-navbar-title,[igxNavbarTitle]',
 
 })
 export class IgxNavbarTitleDirective { }
