@@ -808,15 +808,14 @@
         $type-scale: $indigo-type-scale
     );
 
-
     @include igx-card-typography($indigo-type-scale, $categories: (
         title: 'h5'
     ));
 
     @include igx-theme(
         $palette: igx-palette(
-                $primary,
-                $secondary,
+            $primary,
+            $secondary,
             $surface: if($surface != #fff, $surface, #fff),
             $grays: #060716,
         ),
@@ -854,8 +853,8 @@
 
     @include igx-theme(
         $palette: igx-palette(
-                $primary,
-                $secondary,
+            $primary,
+            $secondary,
             $surface: if($surface != #3b3d47, $surface, #3b3d47),
             $grays: #fff
         ),
