@@ -48,9 +48,7 @@ export class IgxForOfSyncService {
     }
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class IgxForOfScrollSyncService {
     private _masterScroll: Map<string, VirtualHelperBaseDirective> = new Map<string, any>();
     public setScrollMaster(dir: string, scroll: VirtualHelperBaseDirective) {
