@@ -25,6 +25,14 @@
                 "selector": "igx-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "<igx-action-icon",
+            "replaceWith": "<igx-icon igxActionIcon"
+        },
+        {
+            "name": "IgxActionIconDirective",
+            "replaceWith": "IgxNavbarActionDirective"
         }
     ]
 }
