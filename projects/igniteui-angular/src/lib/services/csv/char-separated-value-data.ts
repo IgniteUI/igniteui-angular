@@ -85,23 +85,26 @@ export class CharSeparatedValueData {
     }
 
     private processDataRecords(currentData, keys, escapeChars) {
-        let dataRecords = '';
-        for (const row of currentData) {
-            dataRecords += this.processRecord(row, keys, escapeChars);
+        const dataRecords = new Array(currentData.length);
+
+        for (let i = 0; i < currentData.length; i++) {
+            const row = currentData[i]
+            dataRecords[i] = this.processRecord(row, keys, escapeChars);
         }
 
-        return dataRecords;
+        return dataRecords.join('');
     }
 
     private processDataRecordsAsync(currentData, keys, escapeChars, done: (result: string) => void) {
-        let dataRecords = '';
+        const dataRecords = new Array(currentData.length);
+
         yieldingLoop(currentData.length, 1000,
             (i) => {
                 const row = currentData[i];
-                dataRecords += this.processRecord(row, keys, escapeChars);
+                dataRecords[i] = this.processRecord(row, keys, escapeChars);
             },
             () => {
-                done(dataRecords);
+                done(dataRecords.join(''));
             });
     }
 
