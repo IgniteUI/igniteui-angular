@@ -9,7 +9,8 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The Auto strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on.
 
 ### New Features
-
+- `IgxColumn` 
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
 
 ## 10.0.0
 
