@@ -172,3 +172,46 @@ $_bootstrap-tabs: extend(
     )
 );
 
+/// Generates a indigo tabs schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tabs
+$_indigo-tabs: extend(
+    $_light-tabs,
+    (
+        variant: 'indigo-design',
+
+        item-hover-background: transparent,
+
+        item-active-background: transparent,
+
+        item-text-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        item-hover-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-active-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-active-icon-color: (
+            igx-color: ('primary', 400)
+        ),
+
+        indicator-color: (
+            igx-color: ('primary', 400)
+        ),
+
+        border-color:  (
+            igx-color: ('grays', 300)
+        ),
+
+        border-color--hover:  (
+            igx-color: ('grays', 300)
+        ),
+    )
+);
+

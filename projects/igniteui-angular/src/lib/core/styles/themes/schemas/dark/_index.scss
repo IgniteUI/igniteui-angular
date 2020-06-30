@@ -467,7 +467,7 @@ $dark-bootstrap-schema: (
 /// @property {map} sparkline [$_dark-bootstrap-sparkline],
 /// @property {map} igx-splitter [$_dark-indigo-splitter],
 /// @property {map} igx-switch [$_dark-indigo-switch],
-/// @property {map} igx-tabs [$_dark-bootstrap-tabs],
+/// @property {map} igx-tabs [$_dark-indigo-tabs],
 /// @property {map} igx-time-picker [$_dark-bootstrap-time-picker],
 /// @property {map} igx-toast [$_dark-indigo-toast],
 /// @property {map} igx-tooltip [$_dark-indigo-tooltip]
@@ -524,7 +524,7 @@ $dark-indigo-schema: (
     sparkline: $_dark-bootstrap-sparkline,
     igx-splitter: $_dark-indigo-splitter,
     igx-switch: $_dark-indigo-switch,
-    igx-tabs: $_dark-bootstrap-tabs,
+    igx-tabs: $_dark-indigo-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-indigo-toast,
     igx-tooltip: $_dark-indigo-tooltip,
