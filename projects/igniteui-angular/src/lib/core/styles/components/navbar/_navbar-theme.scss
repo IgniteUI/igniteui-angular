@@ -137,16 +137,14 @@
         }
     }
 
-    [igxNavbarAction] {
+    igx-navbar-action, [igxNavbarAction] {
         display: flex;
         align-items: center;
     }
 
-    [igxNavbarTitle] {
+    igx-navbar-title, [igxNavbarTitle] {
         display: flex;
         align-items: center;
-        font-size: $navbar-title-fz;
-        line-height: $navbar-title-lh;
         user-select: none;
     }
 }
