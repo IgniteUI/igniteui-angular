@@ -211,8 +211,8 @@ export class IgxSorting implements IGridSortingStrategy {
 }
 
 export class IgxDataRecordSorting extends IgxSorting {
-    // R.K. TODO: Check how will this interact with the tree grid
+
     protected getFieldValue(obj: any, key: string): any {
-        return obj.data[key];
+        return resolveNestedPath(obj.data, key);
     }
 }

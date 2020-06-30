@@ -2,11 +2,10 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IRowToggleEventArgs } from '../common/events';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
-import { mergeObjects } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
+import * as merge from 'lodash.merge';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
@@ -181,7 +180,8 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            mergeObjects(rowValueInDataSource, rowNewValue);
+            // mergeObjects(rowValueInDataSource, rowNewValue);
+            merge(rowValueInDataSource, rowNewValue);
         }
     }
 
