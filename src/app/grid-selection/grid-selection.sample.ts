@@ -57,7 +57,7 @@ export class GridSelectionComponent implements AfterViewInit {
     }
 
     toggle() {
-        const currentSelection = this.grid1.selectedRows();
+        const currentSelection = this.grid1.selectedRows;
         if (currentSelection !== undefined) {
             const currentSelectionSet = new Set(currentSelection);
             if (currentSelectionSet.has(1) && currentSelectionSet.has(2) && currentSelectionSet.has(5)) {
@@ -69,7 +69,7 @@ export class GridSelectionComponent implements AfterViewInit {
     }
 
     toggleAll() {
-        if ((this.grid1.selectedRows() || []).length === 0) {
+        if ((this.grid1.selectedRows || []).length === 0) {
             this.grid1.selectAllRows();
         } else {
             this.grid1.deselectAllRows();
@@ -94,7 +94,7 @@ export class GridSelectionComponent implements AfterViewInit {
     }
 
     deleteSectedRow() {
-        const r = this.grid1.selectedRows()[0];
+        const r = this.grid1.selectedRows[0];
         this.grid1.deleteRow(r[this.grid1.primaryKey]);
     }
 }

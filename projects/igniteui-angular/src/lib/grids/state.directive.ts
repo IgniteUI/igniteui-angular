@@ -380,7 +380,7 @@ export class IgxGridStateDirective {
     }
 
     private getRowSelection(): IGridState {
-        const selection = this.grid.selectedRows();
+        const selection = this.grid.selectedRows;
         return { rowSelection: selection };
     }
 
