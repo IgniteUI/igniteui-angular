@@ -143,6 +143,11 @@
     @return $rgba;
 }
 
+/// alias hexrbga
+@function to-opaque($rgba, $background: #fff) {
+    @return hexrgba($rgba, $background);
+}
+
 /// Returns a contrast color for a passed color.
 /// @access public
 /// @group Palettes
@@ -428,6 +433,8 @@
         @if function-exists($fn) {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
                 $result: call(get-function($fn), $extra, $args...);
+            } @else if ($fn == 'hexrgba' or $fn == 'to-opaque') and type-of($args) == 'map' {
+                $result: call(get-function($fn), $result, resolve-value($ctx: $args, $extra: $extra));
             } @else if $result != null {
                 $result: call(get-function($fn), $result, $args...);
             } @else {

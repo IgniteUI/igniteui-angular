@@ -332,7 +332,7 @@ $light-indigo-schema: (
     igx-grid-summary: $_bootstrap-grid-summary,
     igx-grid-toolbar: $_bootstrap-grid-toolbar,
     igx-highlight: $_bootstrap-highlight,
-    igx-icon: $_bootstrap-icon,
+    igx-icon: $_indigo-icon,
     igx-input-group: $_bootstrap-input-group,
     igx-list: $_indigo-list,
     geo-map: $_bootstrap-geo-map,
@@ -353,8 +353,8 @@ $light-indigo-schema: (
     igx-switch: $_indigo-switch,
     igx-tabs: $_bootstrap-tabs,
     igx-time-picker: $_bootstrap-time-picker,
-    igx-toast: $_bootstrap-toast,
-    igx-tooltip: $_bootstrap-tooltip,
+    igx-toast: $_indigo-toast,
+    igx-tooltip: $_indigo-tooltip,
     igx-watermark: $_bootstrap-watermark
 );
 

@@ -448,7 +448,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-grid-summary [$_dark-bootstrap-grid-summary],
 /// @property {map} igx-grid-toolbar [$_dark-bootstrap-grid-toolbar],
 /// @property {map} igx-highlight [$_dark-bootstrap-highlight],
-/// @property {map} igx-icon [$_dark-bootstrap-icon],
+/// @property {map} igx-icon [$_dark-indigo-icon],
 /// @property {map} igx-input-group [$_dark-bootstrap-input-group],
 /// @property {map} igx-list [$_dark-indigo-list],
 /// @property {Map} geo-map [$_dark-bootstrap-geo-map]
@@ -469,8 +469,8 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-switch [$_dark-indigo-switch],
 /// @property {map} igx-tabs [$_dark-bootstrap-tabs],
 /// @property {map} igx-time-picker [$_dark-bootstrap-time-picker],
-/// @property {map} igx-toast [$_dark-bootstrap-toast],
-/// @property {map} igx-tooltip [$_dark-bootstrap-tooltip]
+/// @property {map} igx-toast [$_dark-indigo-toast],
+/// @property {map} igx-tooltip [$_dark-indigo-tooltip]
 $dark-indigo-schema: (
     igx-avatar: $_dark-indigo-avatar,
     igx-action-strip: $_dark-indigo-action-strip,
@@ -505,7 +505,7 @@ $dark-indigo-schema: (
     igx-grid-summary: $_dark-bootstrap-grid-summary,
     igx-grid-toolbar: $_dark-bootstrap-grid-toolbar,
     igx-highlight: $_dark-bootstrap-highlight,
-    igx-icon: $_dark-bootstrap-icon,
+    igx-icon: $_dark-indigo-icon,
     igx-input-group: $_dark-bootstrap-input-group,
     igx-list: $_dark-indigo-list,
     geo-map: $_dark-bootstrap-geo-map,
@@ -526,7 +526,7 @@ $dark-indigo-schema: (
     igx-switch: $_dark-indigo-switch,
     igx-tabs: $_dark-bootstrap-tabs,
     igx-time-picker: $_dark-bootstrap-time-picker,
-    igx-toast: $_dark-bootstrap-toast,
-    igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-toast: $_dark-indigo-toast,
+    igx-tooltip: $_dark-indigo-tooltip,
     igx-watermark: $_dark-bootstrap-watermark
 );

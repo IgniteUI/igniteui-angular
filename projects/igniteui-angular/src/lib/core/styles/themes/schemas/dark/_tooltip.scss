@@ -23,3 +23,22 @@ $_dark-fluent-tooltip: extend($_fluent-tooltip);
 /// @requires {function} extend
 /// @requires $_bootstrap-tooltip
 $_dark-bootstrap-tooltip: extend($_bootstrap-tooltip);
+
+/// Generates a dark indigo tooltip schema.
+/// @type {Map}
+///
+/// @property {map} background [#fff] - The background color of the tooltip.
+/// @property {map} text-color [text-color: (igx-color: 'surface')] - The text color of the tooltip.
+///
+/// @requires {function} extend
+/// @requires $_indigo-tooltip
+$_dark-indigo-tooltip: extend(
+    $_indigo-tooltip,
+    (
+        background: #fff,
+
+        text-color: (
+            igx-color: 'surface'
+        )
+    )
+);
