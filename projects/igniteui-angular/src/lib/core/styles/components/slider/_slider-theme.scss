@@ -110,6 +110,7 @@
         material: 2px,
         fluent: 4px,
         bootstrap: 5px,
+        indigo-design: 2px
     ), $variant);
 
     // Slide ticks
@@ -123,6 +124,7 @@
         material: 0,
         fluent: 2px,
         bootstrap: 1px,
+        indigo-design: 0
     ), $variant);
 
     // Slider Thumb
@@ -140,12 +142,14 @@
         material: block,
         fluent: none,
         bootstrap: none,
+        indigo-design: block,
     ), $variant);
 
     $dot-size: map-get((
         material: 12px,
         fluent: 16px,
         bootstrap: 14px,
+        indigo-design: 14px
     ), $variant);
 
     %igx-slider-display {
