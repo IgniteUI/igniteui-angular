@@ -430,7 +430,14 @@
 
     %igx-tabs__header-menu-item--disabled {
         outline: 0;
-        opacity: .5;
+        @if not $indigo-theme {
+            opacity: .5;
+        } @else  {
+            %igx-tabs__header-menu-item-icon,
+            %igx-tabs__item-label {
+                opacity: .4;
+            }
+        }
         cursor: default;
         pointer-events: none;
     }
