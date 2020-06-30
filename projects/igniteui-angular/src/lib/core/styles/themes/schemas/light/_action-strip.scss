@@ -80,6 +80,8 @@ $_indigo-action-strip: extend(
             igx-color: ('primary')
         ),
 
-        color: #fff,
+        color: (
+            igx-contrast-color: 'primary'
+        ),
     )
 );
