@@ -52,7 +52,7 @@ export interface IGridStateOptions {
     rowPinning?: boolean;
     pinningConfig?: boolean;
     expansion?: boolean;
-    inheritance?: boolean;
+    rowIslands?: boolean;
 }
 
 export interface IColumnState {
@@ -82,7 +82,7 @@ export type GridFeatures = keyof IGridStateOptions;
 export interface Feature {
     getFeatureState: (context: IgxGridStateDirective) => IGridState;
     restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | ISortingExpression[] |
-        IGroupingState | FilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
+        IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
 }
 
 @Directive({
@@ -93,7 +93,7 @@ export class IgxGridStateDirective {
     /**
      * @hidden @internal
      */
-    public features: string[] = [];
+    public features: GridFeatures[] = [];
     /**
      * @hidden @internal
      */
@@ -114,7 +114,7 @@ export class IgxGridStateDirective {
         columnSelection: true,
         rowPinning: true,
         expansion: true,
-        inheritance: true
+        rowIslands: true
     };
 
     /**
@@ -136,7 +136,7 @@ export class IgxGridStateDirective {
         if (!(this.grid instanceof IgxGridComponent)) {
             delete this._options.groupBy;
         } else {
-            delete this._options.inheritance;
+            delete this._options.rowIslands;
         }
     }
 
@@ -162,7 +162,7 @@ export class IgxGridStateDirective {
      * let state = this.state(false) // returns `IGridState` object
      * ```
      */
-    public getState(serialize = true, features?: string | string[]): IGridState | string  {
+    public getState(serialize = true, features?: GridFeatures | GridFeatures[]): IGridState | string  {
         let state: IGridState | string;
         this.currGrid = this.grid;
         this.state = state = this.buildState(features) as IGridState;
@@ -184,7 +184,7 @@ export class IgxGridStateDirective {
      * this.state.setState(gridState);
      * ```
      */
-    public setState(state: IGridState | string, features?: string | string[]) {
+    public setState(state: IGridState | string, features?: GridFeatures | GridFeatures[]) {
         if (typeof state === 'string') {
             state = JSON.parse(state) as IGridState;
         }
@@ -197,12 +197,11 @@ export class IgxGridStateDirective {
      * Builds an IGridState object.
      * @hidden @internal
      */
-    public buildState(keys?: string | string[]): IGridState {
+    public buildState(keys?: GridFeatures | GridFeatures[]): IGridState {
         this.applyFeatures(keys);
         let gridState = {} as IGridState;
         this.features.forEach(f => {
             if (this.options[f]) {
-                f = f === 'inheritance' ? 'rowIslands' : f;
                 if (!(this.grid instanceof IgxGridComponent) && f === 'groupBy') {
                     return;
                 }
@@ -218,11 +217,10 @@ export class IgxGridStateDirective {
      * The method that calls corresponding methods to restore features from the passed IGridState object.
      * @hidden @internal
      */
-    public restoreGridState(state: IGridState, features?: string | string[]) {
+    public restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         this.applyFeatures(features);
         this.features.forEach(f => {
             if (this.options[f]) {
-                f = f === 'inheritance' ? 'rowIslands' : f;
                 const featureState = state[f];
                 if (featureState) {
                     const feature = this.getFeature(f);
@@ -235,14 +233,14 @@ export class IgxGridStateDirective {
     /**
      * Returns a collection of all grid features.
      */
-    private applyFeatures(keys?: string | string[]) {
+    private applyFeatures(keys?: GridFeatures | GridFeatures[]) {
         this.features = [];
         if (!keys) {
             for (const key of Object.keys(this.options)) {
-                this.features.push(key);
+                this.features.push(key as GridFeatures);
             }
         } else if (Array.isArray(keys)) {
-            this.features = [...keys as string[]];
+            this.features = [...keys as GridFeatures[]];
         } else {
             this.features.push(keys);
         }
