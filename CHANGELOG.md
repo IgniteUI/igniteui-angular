@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
     - Added support for `IgxTreeGrid` and `IgxHierarchicalGrid` (including child grids)
+- `IgxColumn` 
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
 
 ## 10.0.0
 
