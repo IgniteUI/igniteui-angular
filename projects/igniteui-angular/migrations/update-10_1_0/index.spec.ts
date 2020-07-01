@@ -28,7 +28,7 @@ describe('Update 10.1.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update DropPosition.None', done => {
+    it('should update DropPosition.None', async() => {
         const origFileContent =
             `import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
@@ -63,9 +63,8 @@ describe('Update 10.1.0', () => {
             '/testSrc/appPrefix/component/drop.component.ts',
             origFileContent);
 
-        const tree = schematicRunner.runSchematic('migration-16', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-16', {}, appTree).toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/drop.component.ts'))
             .toEqual(expectedFileContent);
-        done();
     });
 });
