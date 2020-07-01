@@ -126,7 +126,7 @@ $_bootstrap-time-picker: extend(
 /// @prop {Map} header-background [igx-color: ('primary', 500)] - The header background color of a time picker.
 /// @prop {Map} header-hour-text-color [igx-contrast-color: ('primary', 500)] - The header hour text color of a time picker.
 /// @prop {Map} header-time-period-color [igx-contrast-color: ('primary', 500)] - The header AM/PM text color of a time picker.
-/// @prop {Number} border-radius [4px] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} border-radius [3px] - The border radius fraction used for the overall shape of the time-picker.
 /// @prop {Number} active-item-border-radius [20px] - The border-radius used for the highlight of the active item in the time-picker.
 /// @requires {function} extend
 /// @requires $_light-time-picker
