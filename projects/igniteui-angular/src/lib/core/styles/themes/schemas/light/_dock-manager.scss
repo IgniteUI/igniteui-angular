@@ -285,3 +285,75 @@ $_bootstrap-dock-manager: extend(
     )
 );
 
+/// Generates an Indigo dock-manager schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-dock-manager
+$_indigo-dock-manager: extend(
+    $_light-dock-manager, (
+        primary-color: (
+            igx-color: (grays, 100),
+            hexrgba: (),
+        ),
+        border-color: (
+            igx-color: surface,
+        ),
+        button-text: (
+            igx-color: primary,
+        ),
+        context-menu-background-active: (
+            igx-color: primary,
+        ),
+        context-menu-color-active: (
+            igx-contrast-color: primary,
+        ),
+        context-menu-color: (
+            igx-color: (grays, 700),
+        ),
+        joystick-background: (
+            igx-color: (primary, 50),
+        ),
+        joystick-background-active: (
+            igx-color: primary,
+        ),
+        joystick-border-color: (
+            igx-color: (primary, 50),
+        ),
+        joystick-icon-color: (
+            igx-color: primary,
+        ),
+        joystick-icon-color-active: (
+            igx-contrast-color: primary,
+        ),
+        pane-content-background: (
+            igx-color: surface,
+        ),
+        pinned-header-background: (
+            igx-color: (grays, 100),
+            hexrgba: (),
+        ),
+        splitter-background: (
+            igx-color: (grays,300),
+            hexrgba: (),
+        ),
+        splitter-handle: (
+            igx-color: surface,
+        ),
+        tab-background-active: (
+            igx-color: surface,
+        ),
+        tab-background: (
+            igx-color: (grays, 100),
+            hexrgba: (),
+        ),
+        tab-text-active: (
+            igx-color: (grays, 900),
+        ),
+        tab-text: (
+            igx-color: (grays, 700),
+        ),
+        text-color: (
+            igx-color: (grays, 900),
+        ),
+    )
+);

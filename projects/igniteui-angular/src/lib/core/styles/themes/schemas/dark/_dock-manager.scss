@@ -220,3 +220,63 @@ $_dark-bootstrap-dock-manager: extend(
         ),
     )
 );
+
+/// Generates a dark Indigo dock-manager schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_indigo-dock-manager
+$_dark-indigo-dock-manager: extend(
+    $_indigo-dock-manager, (
+        primary-color: (
+            igx-color: surface,
+        ),
+        border-color: (
+            igx-color: (grays, 100),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        button-text: (
+            igx-color: (primary, 200),
+        ),
+        context-menu-background: (
+            igx-color: (grays, 300),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        joystick-background: (
+            igx-color: (grays, 300),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        joystick-border-color: (
+            igx-color: surface,
+        ),
+        joystick-icon-color: (
+            igx-contrast-color: surface,
+        ),
+        pane-content-background: (
+            igx-color: (grays, 100),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        pinned-header-background: (
+            igx-color: surface,
+        ),
+        splitter-background: (
+            igx-color: (grays,300),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        splitter-handle: (
+            igx-color: surface,
+        ),
+        tab-background-active: (
+            gx-color: (grays, 100),
+            hexrgba: #3b3d47,
+            //to-opaque: surface,
+        ),
+        tab-background: (
+            igx-color: surface,
+        ),
+    )
+);
