@@ -222,13 +222,15 @@ export class IgxGridStateDirective {
         this.applyFeatures(keys);
         let gridState = {} as IGridState;
         this.features.forEach(f => {
-            f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
-            if (!(this.grid instanceof IgxGridComponent) && f === FlatGridFeatures.GROUP_BY) {
-                return;
+            if (this.options[f]) {
+                f = f === 'inheritance' ? GridFeatures.ROW_ISLANDS : f;
+                if (!(this.grid instanceof IgxGridComponent) && f === FlatGridFeatures.GROUP_BY) {
+                    return;
+                }
+                const feature = this.getFeature(f);
+                const featureState: IGridState = feature.getFeatureState(this);
+                gridState = Object.assign(gridState, featureState);
             }
-            const feature = this.getFeature(f);
-            const featureState: IGridState = feature.getFeatureState(this);
-            gridState = Object.assign(gridState, featureState);
         });
         return gridState;
     }
