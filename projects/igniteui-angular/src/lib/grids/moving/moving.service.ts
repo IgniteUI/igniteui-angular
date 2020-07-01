@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IgxColumnComponent } from '../columns/column.component';
 
 /**
- * This enumeration is used to configure whether the pinning position is set before or after
+ * This enumeration is used to configure whether the drop position is set before or after
  * the target.
  */
 export enum DropPosition {
