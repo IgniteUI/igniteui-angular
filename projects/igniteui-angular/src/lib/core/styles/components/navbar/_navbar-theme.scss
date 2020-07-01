@@ -137,12 +137,14 @@
         }
     }
 
-    igx-navbar-action, [igxNavbarAction] {
+    igx-navbar-action,
+    [igxNavbarAction] {
         display: flex;
         align-items: center;
     }
 
-    igx-navbar-title, [igxNavbarTitle] {
+    igx-navbar-title,
+    [igxNavbarTitle] {
         display: flex;
         align-items: center;
         user-select: none;
