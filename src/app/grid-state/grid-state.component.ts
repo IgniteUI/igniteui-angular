@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } 
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxHierarchicalGridComponent, IgxExpansionPanelComponent, IgxGridBaseDirective,
-  IGridStateOptions, IgxTreeGridComponent, GridFeatures, FlatGridFeatures } from 'igniteui-angular';
+  IGridStateOptions, IgxTreeGridComponent, GridFeatures } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { Router, NavigationStart } from '@angular/router';
 import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
@@ -42,18 +42,18 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public gridState: IGridState;
   public serialize = true;
   public templatedIcon = false;
-  public features = [
-    { key: GridFeatures.ADVANCED_FILTERING, shortName: 'Adv Filt' },
-    { key: GridFeatures.CELL_SELECTION, shortName: 'Cell Sel' },
-    { key: GridFeatures.COLUMNS, shortName: 'Columns' } ,
-    { key: GridFeatures.COLUMN_SELECTION, shortName: 'Cols Sel' },
-    { key: GridFeatures.EXPANSION, shortName: 'Expansion' },
-    { key: GridFeatures.FILTERING, shortName: 'Filt' },
-    { key: GridFeatures.PAGING, shortName: 'Paging' },
-    { key: GridFeatures.ROW_PINNING, shortName: 'Row Pining' },
-    { key: GridFeatures.ROW_SELECTION, shortName: 'Row Sel' },
-    { key: GridFeatures.SORTING, shortName: 'Sorting' },
-    { key: FlatGridFeatures.GROUP_BY, shortName: 'GroupBy'}
+  public features: { key: GridFeatures, shortName: string }[] = [
+    { key: 'advancedFiltering', shortName: 'Adv Filt' },
+    { key: 'cellSelection', shortName: 'Cell Sel' },
+    { key: 'columns', shortName: 'Columns' } ,
+    { key: 'columnSelection', shortName: 'Cols Sel' },
+    { key: 'expansion', shortName: 'Expansion' },
+    { key: 'filtering', shortName: 'Filt' },
+    { key: 'paging', shortName: 'Paging' },
+    { key: 'rowPinning', shortName: 'Row Pining' },
+    { key: 'rowSelection', shortName: 'Row Sel' },
+    { key: 'sorting', shortName: 'Sorting' },
+    { key: 'groupBy', shortName: 'GroupBy'}
   ];
 
   public options: IGridStateOptions = {
