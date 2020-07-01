@@ -54,7 +54,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             rowSelection: true,
             columnSelection: true,
             expansion: true,
-            inheritance: true
+            rowIslands: true
         };
 
         const state = fix.componentInstance.state;
@@ -81,7 +81,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             rowSelection: true,
             columnSelection: true,
             expansion: true,
-            inheritance: false
+            rowIslands: false
         };
 
         const state = fix.componentInstance.state;
@@ -150,7 +150,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             expect(childGrid.state['paging']).toBeFalsy();
         });
 
-        gridState = state.getState(false, ['filtering', 'sorting', 'paging', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['filtering', 'sorting', 'paging', 'rowIslands']) as IGridState;
         expect(gridState['sorting']).toBeFalsy();
         expect(gridState['paging']).toBeFalsy();
     });
@@ -162,10 +162,10 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
         const initialState = HelperFunctions.buildStateString(grid, 'filtering', emptyFiltering, emptyFiltering);
 
-        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        let gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
-        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
@@ -181,17 +181,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
         filteringStateObject.columns = fix.componentInstance.childColumns;
 
-        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        let gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(JSON.stringify(filteringStateObject));
-        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyFilteringExpressions(childGrid.grid.filteringExpressionsTree, childGrid.state);
         });
-        gridState = state.getState(true, ['filtering', 'inheritance']);
+        gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
     });
 
@@ -207,17 +207,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
         filteringStateObject.columns = fix.componentInstance.childColumns;
 
-        let gridState = state.getState(true, ['filtering', 'inheritance']);
+        let gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(filteringStateObject);
-        gridState = state.getState(false, ['filtering', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyFilteringExpressions(childGrid.grid.filteringExpressionsTree, childGrid.state);
         });
-        gridState = state.getState(true, ['filtering', 'inheritance']);
+        gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
     });
 
@@ -228,7 +228,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const emptySorting = '[]';
         let initialState = HelperFunctions.buildStateString(grid, 'sorting', emptySorting, emptySorting);
 
-        let gridState = state.getState(true, ['sorting', 'inheritance']);
+        let gridState = state.getState(true, ['sorting', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         grid.sortingExpressions = [
@@ -240,17 +240,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         initialState = HelperFunctions.buildStateString(grid, 'sorting', sorting, emptySorting, emptySorting);
         const sortingState = HelperFunctions.buildStateString(grid, 'sorting', sorting, sorting);
 
-        gridState = state.getState(true, ['sorting', 'inheritance']);
+        gridState = state.getState(true, ['sorting', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(sortingState);
-        gridState = state.getState(false, ['sorting', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['sorting', 'rowIslands']) as IGridState;
         HelperFunctions.verifySortingExpressions(grid.sortingExpressions, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifySortingExpressions(childGrid.grid.sortingExpressions, childGrid.state);
         });
-        gridState = state.getState(true, ['sorting', 'inheritance']);
+        gridState = state.getState(true, ['sorting', 'rowIslands']);
         expect(gridState).toBe(sortingState);
     });
 
@@ -267,17 +267,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const sortingState = HelperFunctions.buildStateString(grid, 'sorting', sorting, sorting);
         const sortingStateObject = JSON.parse(sortingState) as IGridState;
 
-        let gridState = state.getState(true, ['sorting', 'inheritance']);
+        let gridState = state.getState(true, ['sorting', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(sortingStateObject);
-        gridState = state.getState(false, ['sorting', 'inheritance']);
+        gridState = state.getState(false, ['sorting', 'rowIslands']);
         HelperFunctions.verifySortingExpressions(grid.sortingExpressions, gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifySortingExpressions(childGrid.grid.sortingExpressions, childGrid.state);
         });
-        gridState = state.getState(true, ['sorting', 'inheritance']);
+        gridState = state.getState(true, ['sorting', 'rowIslands']);
         expect(gridState).toBe(sortingState);
     });
 
@@ -287,17 +287,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const initialState = '{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
         const pagingState = '{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"5","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"6","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
 
-        let gridState = state.getState(true, ['paging', 'inheritance']);
+        let gridState = state.getState(true, ['paging', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(pagingState);
-        gridState = state.getState(false, ['paging', 'inheritance']);
+        gridState = state.getState(false, ['paging', 'rowIslands']);
         HelperFunctions.verifyPaging(grid.pagingState, gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyPaging(childGrid.grid.pagingState, childGrid.state);
         });
-        gridState = state.getState(true, ['paging', 'inheritance']);
+        gridState = state.getState(true, ['paging', 'rowIslands']);
         expect(gridState).toBe(pagingState);
     });
 
@@ -309,18 +309,18 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const filtering = '{"filteringOperands":[{"fieldName":"ProductName","condition":{"name":"contains","isUnary":false,"iconName":"contains"},"searchVal":"A0","ignoreCase":true},{"fieldName":"ID","condition":{"name":"lessThan","isUnary":false,"iconName":"less_than"},"searchVal":3,"ignoreCase":true}],"operator":0,"type":1}';
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
 
-        let gridState = state.getState(true, ['advancedFiltering', 'inheritance']);
+        let gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(filteringState);
-        gridState = state.getState(false, ['advancedFiltering', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['advancedFiltering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyAdvancedFilteringExpressions(grid.advancedFilteringExpressionsTree, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyAdvancedFilteringExpressions(childGrid.grid.advancedFilteringExpressionsTree, childGrid.state);
         });
 
-        gridState = state.getState(true, ['advancedFiltering', 'inheritance']);
+        gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
     });
 
@@ -333,17 +333,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const filteringState = HelperFunctions.buildStateString(grid, 'advancedFiltering', filtering, filtering);
         const filteringStateObject = JSON.parse(filteringState) as IGridState;
 
-        let gridState = state.getState(true, ['advancedFiltering', 'inheritance']);
+        let gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(filteringStateObject);
-        gridState = state.getState(false, ['advancedFiltering', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['advancedFiltering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyAdvancedFilteringExpressions(grid.advancedFilteringExpressionsTree, gridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyAdvancedFilteringExpressions(childGrid.grid.advancedFilteringExpressionsTree, childGrid.state);
         });
-        gridState = state.getState(true, ['advancedFiltering', 'inheritance']);
+        gridState = state.getState(true, ['advancedFiltering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
     });
 
@@ -356,17 +356,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const cellSelection = '[{"rowStart":0,"rowEnd":2,"columnStart":1,"columnEnd":3}]';
         const cellSelectionState = HelperFunctions.buildStateString(grid, 'cellSelection', cellSelection, cellSelection);
 
-        let gridState = state.getState(true, ['cellSelection', 'inheritance']);
+        let gridState = state.getState(true, ['cellSelection', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(cellSelectionState);
-        gridState = state.getState(false, ['cellSelection', 'inheritance']);
+        gridState = state.getState(false, ['cellSelection', 'rowIslands']);
         HelperFunctions.verifyCellSelection(grid.getSelectedRanges(), gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyCellSelection(childGrid.grid.getSelectedRanges(), childGrid.state);
         });
-        gridState = state.getState(true, ['cellSelection', 'inheritance']);
+        gridState = state.getState(true, ['cellSelection', 'rowIslands']);
         expect(gridState).toBe(cellSelectionState);
     });
 
@@ -379,17 +379,17 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const childRowSelection = '["00","01"]';
         const rowSelectionState = HelperFunctions.buildStateString(grid, 'rowSelection', rowSelection, childRowSelection);
 
-        let gridState = state.getState(true, ['rowSelection', 'inheritance']);
+        let gridState = state.getState(true, ['rowSelection', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(rowSelectionState);
-        gridState = state.getState(false, ['rowSelection', 'inheritance']);
+        gridState = state.getState(false, ['rowSelection', 'rowIslands']);
         HelperFunctions.verifyRowSelection(grid.selectedRows(), gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyRowSelection(childGrid.grid.selectedRows(), childGrid.state);
         });
-        gridState = state.getState(true, ['rowSelection', 'inheritance']);
+        gridState = state.getState(true, ['rowSelection', 'rowIslands']);
         expect(gridState).toBe(rowSelectionState);
     });
 
@@ -405,18 +405,18 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const childExpansion = '[["00",true]]';
         let expansionState = HelperFunctions.buildStateString(grid, 'expansion', expansion, childExpansion, emptyExpansionState);
 
-        let gridState = state.getState(true, ['expansion', 'inheritance']);
+        let gridState = state.getState(true, ['expansion', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(expansionState);
         expansionState = HelperFunctions.buildStateString(grid, 'expansion', expansion, childExpansion, emptyExpansionState);
-        gridState = state.getState(false, ['expansion', 'inheritance']);
+        gridState = state.getState(false, ['expansion', 'rowIslands']);
         HelperFunctions.verifyExpansionStates(grid.expansionStates, gridState as IGridState);
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         gridsCollection.forEach(childGrid => {
             HelperFunctions.verifyExpansionStates(childGrid.grid.expansionStates, childGrid.state);
         });
-        gridState = state.getState(true, ['expansion', 'inheritance']);
+        gridState = state.getState(true, ['expansion', 'rowIslands']);
         expect(gridState).toBe(expansionState);
     });
 
@@ -430,20 +430,20 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         const newColumns = '[{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"363px","header":"Product Name","resizable":false,"searchable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","groupable":false,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"363px","header":"ID","resizable":false,"searchable":true}]';
         const newColumnsState = HelperFunctions.buildStateString(grid, 'columns', newColumns, newColumns);
 
-        let gridState = state.getState(true, ['columns', 'inheritance']);
+        let gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(initialState);
 
         state.setState(newColumnsState);
         await wait();
         fix.detectChanges();
 
-        gridState = state.getState(false, ['columns', 'inheritance']) as IGridState;
+        gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
         HelperFunctions.verifyColumns(JSON.parse(newColumnsState).columns, gridState);
         // const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
         // gridsCollection.forEach(childGrid => {
         //     HelperFunctions.verifyColumns(childGrid.grid.columns, childGrid.state);
         // });
-        // gridState = state.getState(true, ['columns', 'inheritance']);
+        // gridState = state.getState(true, ['columns', 'rowIslands']);
         // expect(gridState).toBe(newColumnsState);
     });
 });
