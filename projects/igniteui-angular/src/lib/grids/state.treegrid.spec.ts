@@ -45,7 +45,7 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
             cellSelection: true,
             rowSelection: true,
             columnSelection: true,
-            inheritance: true,
+            rowIslands: true,
             expansion: true
         };
 
