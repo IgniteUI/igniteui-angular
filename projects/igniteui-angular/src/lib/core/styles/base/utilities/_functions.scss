@@ -2,7 +2,6 @@
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-
 /// Converts pixels to relative values (em).
 /// @access public
 /// @param {number|string} $pixels - The pixel value to be converted.
@@ -143,23 +142,46 @@
     @return $rgba;
 }
 
+/// alias hexrbga
+@function to-opaque($rgba, $background: #fff) {
+    @return hexrgba($rgba, $background);
+}
+
 /// Returns a contrast color for a passed color.
 /// @access public
 /// @group Palettes
-/// @param {Color} $color - The color used to return a contrast color for.
+/// @param {Color} $background - The background color used to return a contrast/forground color for.
+/// @param {Color} $foreground - The foreground color used in case it has enough contrast against the provided background.
+/// @param {String} $contrast - The contrast level according to WCAG 2.0 standards.
 /// @returns {Color} - Returns either white or black depending on the luminance of the input color.
-@function text-contrast($color) {
-    @if type-of($color) == 'color' {
-        $lightContrast: contrast($color, white);
-        $darkContrast: contrast($color, black);
+/// @link https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html
+@function text-contrast($background, $foreground: white, $contrast: 'AAA') {
+    @if type-of($foreground) == 'color' and type-of($background) == 'color' {
+        $level: map-get((
+            'A': 3,
+            'AA': 4.5,
+            'AAA': 7
+        ), $contrast);
 
-        @if ($lightContrast > $darkContrast) {
-            @return white;
-        } @else {
-            @return black;
+        @if $level == null {
+            @error "$contrast must be 'A', 'AA', or 'AAA'";
         }
+
+        @if contrast($background, $foreground) >= $level {
+            @return $foreground;
+        } @else {
+            $lightContrast: contrast($background, white);
+            $darkContrast: contrast($background, black);
+
+            @if ($lightContrast > $darkContrast) {
+                @return white;
+            } @else {
+                @return black;
+            }
+        }
+    } @else {
+        @error 'Expected color for $background/$foreground but got #{$background}/#{$foreground}';
     }
-    @return $color;
 }
 
 /// Retrieves a contrast text color for a given color from a color palette.
@@ -171,7 +193,7 @@
 /// @requires igx-color
 /// @requires text-contrast
 /// @requires hexrgba
-/// @returns {Color} [#fff] - Returns white if now palette, color and/or variant matches found.
+/// @returns {Color} [#fff] - Returns white if no palette, color and/or variant matches found.
 @function igx-contrast-color($palette, $color, $variant: 500) {
     $_color: igx-color($palette, $color, $variant);
     @if $_color {
@@ -428,6 +450,8 @@
         @if function-exists($fn) {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
                 $result: call(get-function($fn), $extra, $args...);
+            } @else if ($fn == 'hexrgba' or $fn == 'to-opaque') and type-of($args) == 'map' {
+                $result: call(get-function($fn), $result, resolve-value($ctx: $args, $extra: $extra));
             } @else if $result != null {
                 $result: call(get-function($fn), $result, $args...);
             } @else {

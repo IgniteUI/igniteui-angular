@@ -16,8 +16,9 @@
 /// @prop {Map} button-arrow-color [igx-color: ('grays', 700)] - The previous/next buttons idle arrow color.
 /// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 900)] - The previous/next buttons hover arrow color.
 /// @prop {Map} button-disabled-arrow-color [igx-color: ('grays' 400)] - The previous/next buttons disabled color.
-/// @prop {Color} indicator-dot-color [#fff] - The active indicator dot color.
+/// @prop {Color} indicator-dot-color [transparent] - The idle indicator dot color.
 /// @prop {Color} indicator-border-color [#fff] - The idle indicator border color.
+/// @prop {Color} indicator-active-dot-color [#fff] - The active indicator dot color.
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
 ///
@@ -50,8 +51,9 @@ $_light-carousel: extend(
             igx-color: ('grays' 400)
         ),
 
-        indicator-dot-color: #fff,
+        indicator-dot-color: transparent,
         indicator-border-color: #fff,
+        indicator-active-dot-color: #fff,
         indicator-active-border-color: #fff,
     )
 );
@@ -63,14 +65,65 @@ $_light-carousel: extend(
 /// @requires {map} $_fluent-shape-carousel
 /// @requires {map} $_fluent-elevation-carousel
 /// @see $default-palette
-$_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel, $_fluent-elevation-carousel);
+$_fluent-carousel: extend(
+    $_light-carousel,
+    $_square-shape-carousel,
+    $_fluent-elevation-carousel
+);
 
 /// Generates a bootstrap carousel schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-carousel
 /// @see $bootstrap-palette
-$_bootstrap-carousel: extend($_light-carousel, $_bootstrap-shape-carousel, $_fluent-elevation-carousel, (
-    variant: 'bootstrap'
-));
+$_bootstrap-carousel: extend(
+    $_light-carousel,
+    $_bootstrap-shape-carousel,
+    $_fluent-elevation-carousel, (
+        variant: 'bootstrap'
+    )
+);
+
+/// Generates an indigo carousel schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-carousel
+$_indigo-carousel: extend(
+    $_light-carousel,
+    $_square-shape-carousel,
+    $_indigo-elevation-carousel, (
+        variant: 'indigo-design',
+
+        button-background: (
+            igx-color: #fff,
+            rgba: .4
+        ),
+
+        button-arrow-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        button-hover-background: (
+            igx-color: #fff,
+            rgba: .65,
+        ),
+
+        button-hover-arrow-color: (
+            igx-color: ('grays', 700)
+        ),
+
+        button-disabled-background: transparent,
+
+        button-disabled-arrow-color:  (
+            igx-color: ('grays' 400),
+        ),
+
+        indicator-dot-color: (
+            igx-color: #fff,
+            rgba: .6
+        ),
+
+        indicator-active-dot-color: #fff,
+    )
+);
 

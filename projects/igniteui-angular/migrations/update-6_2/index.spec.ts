@@ -28,29 +28,29 @@ describe('Update 6.2.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update igxDatePicker selector', done => {
+    it('should update igxDatePicker selector', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-datePicker></igx-datePicker>`
         );
-        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-05', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<igx-date-picker></igx-date-picker>`);
-        done();
     });
 
-    it('should remove igx-combo height property', done => {
+    it('should remove igx-combo height property', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-combo [height]="200px"></igx-combo>`
         );
-        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-05', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<igx-combo></igx-combo>`);
-        done();
     });
 
-    it('should move igx-icon name property value between element tags only for material fontSet', done => {
+    it('should move igx-icon name property value between element tags only for material fontSet', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-icon fontSet='material' name='phone'></igx-icon>
@@ -59,23 +59,23 @@ describe('Update 6.2.0', () => {
 <igx-icon fontSet="svg-icons" name="my-icon"></igx-icon>`
         );
 
-        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-05', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<igx-icon fontSet='material'>phone</igx-icon>
 <igx-icon fontSet="material-icons">{{getName()}}</igx-icon>
 <igx-icon>accessory</igx-icon>
 <igx-icon fontSet="svg-icons" name="my-icon"></igx-icon>`);
-        done();
     });
 
-    it('should rename igx-grid onEditDone event', done => {
+    it('should rename igx-grid onEditDone event', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html',
             `<igx-grid (onEditDone)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`
         );
-        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-05', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
             .toEqual(`<igx-grid (onCellEdit)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`);
-        done();
     });
 });

@@ -28,7 +28,7 @@ describe('Update 6.2.1', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it('should update Sass files', done => {
+    it('should update Sass files', async () => {
         appTree.create(
             '/testSrc/appPrefix/style.scss',
 `$dark-chip-theme: igx-chip-theme(
@@ -40,7 +40,8 @@ describe('Update 6.2.1', () => {
     $selected-chip-hover-background: gray
 );`
         );
-        const tree = schematicRunner.runSchematic('migration-06', {}, appTree);
+        const tree = await schematicRunner.runSchematicAsync('migration-06', {}, appTree)
+            .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/style.scss'))
             .toEqual(
 `$dark-chip-theme: igx-chip-theme(
@@ -50,6 +51,5 @@ describe('Update 6.2.1', () => {
     $hover-selected-background: gray
 );`
             );
-        done();
     });
 });
