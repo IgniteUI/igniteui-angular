@@ -9,6 +9,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `message` property has been deprecated. You can use place the message in the snackbar content or pass it as parameter to the show method instead.
     - An optional string parameter `message` has been added to `show()` method.
+
+### New Features
+- `IgxColumn`
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+
 ## 10.0.0
 
 ### General
