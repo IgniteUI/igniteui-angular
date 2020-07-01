@@ -438,6 +438,44 @@ export class IgxColumnComponent implements AfterContentInit {
     @WatchColumnChanges()
     @Input()
     public maxWidth: string;
+
+    /**
+     * @hidden
+     */
+    get maxWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
+    }
+
+    /**
+     * @hidden
+     */
+    get maxWidthPercent() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
+    }
+
+    /**
+     * @hidden
+     */
+    get minWidthPx() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+    }
+
+    /**
+     * @hidden
+     */
+    get minWidthPercent() {
+        const gridAvailableSize = this.grid.calcWidth;
+        const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
+        return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+    }
+
+
     /**
      * Sets/gets the minimum `width` of the column.
      * Default value is `88`;
@@ -1753,10 +1791,28 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public autosize(byHeader = false) {
         if (!this.columnGroup) {
-            this.width = !byHeader ? this.getLargestCellWidth() :
-                (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
+            const size = this.getAutoSize(byHeader);
+            this.width = size;
             this.grid.reflow();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getAutoSize(byHeader = false) {
+        const size = !byHeader ? this.getLargestCellWidth() :
+            (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
+        const gridAvailableSize = this.grid.calcWidth;
+        let newWidth;
+        const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            const percentageSize =  parseFloat(size) / gridAvailableSize * 100;
+            newWidth = percentageSize + '%';
+        } else {
+            newWidth = size;
+        }
+        return newWidth;
     }
 
     /**
@@ -1879,14 +1935,14 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            this._calcWidth = parseInt(colWidth, 10) / 100 * grid.calcWidth;
+            this._calcWidth = parseFloat(colWidth) / 100 * grid.calcWidth;
         } else if (!colWidth) {
             // no width
             this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
-        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+        this.calcPixelWidth = parseFloat(this._calcWidth);
     }
 
     /**

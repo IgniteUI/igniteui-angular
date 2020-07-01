@@ -3552,7 +3552,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasColumnLayouts) {
             return '';
         }
-        const colWidth = parseInt(column.calcWidth, 10);
+        const colWidth = parseFloat(column.calcWidth);
         const minWidth = this.defaultHeaderGroupMinWidth;
 
         if (colWidth < minWidth) {
