@@ -7,7 +7,9 @@ import {
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective
+    IgxExcelStyleSelectingTemplateDirective,
+    IgxExcelStyleConditionalFilterTemplateDirective,
+    IgxExcelStyleSearchTemplateDirective
 } from './grid.excel-style-filtering.component';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { IgxExcelStyleColumnMovingComponent } from './excel-style-column-moving.component';
@@ -51,6 +53,8 @@ import { IgxSelectModule } from './../../../select/select.module';
         IgxExcelStyleMovingTemplateDirective,
         IgxExcelStylePinningTemplateDirective,
         IgxExcelStyleSelectingTemplateDirective,
+        IgxExcelStyleConditionalFilterTemplateDirective,
+        IgxExcelStyleSearchTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleSearchFilterPipe
     ],
@@ -61,6 +65,8 @@ import { IgxSelectModule } from './../../../select/select.module';
         IgxExcelStyleMovingTemplateDirective,
         IgxExcelStylePinningTemplateDirective,
         IgxExcelStyleSelectingTemplateDirective,
+        IgxExcelStyleConditionalFilterTemplateDirective,
+        IgxExcelStyleSearchTemplateDirective,
         IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleDateExpressionComponent
     ],

@@ -90,6 +90,20 @@ export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
+@Directive({
+    selector: '[igxExcelStyleConditionalFilter]'
+})
+export class IgxExcelStyleConditionalFilterTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
+@Directive({
+    selector: '[igxExcelStyleSearch]'
+})
+export class IgxExcelStyleSearchTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
+
 /**
  * A component used for presenting Excel style filtering UI for a specific column.
  * It is used internally in the Grid, but could also be hosted in a container outside of it.
@@ -318,6 +332,18 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    @ViewChild('defaultExcelStyleConditionalFilterTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleConditionalFilterTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultExcelStyleSearchTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleSearchTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
     public isColumnPinnable: boolean;
 
     /**
@@ -403,10 +429,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-        requestAnimationFrame(() => {
-            this.excelStyleSearch.searchInput.nativeElement.focus();
-        });
-
+        if (this.excelStyleSearch) {
+            requestAnimationFrame(() => {
+                this.excelStyleSearch.searchInput.nativeElement.focus();
+            });
+        }
         this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
         });
@@ -877,6 +904,28 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             return this.grid.excelStyleSelectingTemplateDirective.template;
         } else {
             return this.defaultExcelStyleSelectingTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get conditionalFilterTemplate() {
+        if (this.grid.excelStyleConditionalFilterTemplateDirective) {
+            return this.grid.excelStyleConditionalFilterTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleConditionalFilterTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    get searchTemplate() {
+        if (this.grid.excelStyleSearchTemplateDirective) {
+            return this.grid.excelStyleSearchTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleSearchTemplate;
         }
     }
 

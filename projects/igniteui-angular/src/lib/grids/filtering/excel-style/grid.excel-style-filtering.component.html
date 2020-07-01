@@ -53,6 +53,28 @@
     </div>
 </ng-template>
 
+<ng-template #defaultExcelStyleConditionalFilterTemplate>
+    <div tabindex="0"
+        class="igx-excel-filter__actions-filter"
+        (keydown)="onTextFilterKeyDown($event)"
+        (click)="onTextFilterClick($event)"
+        [igxDropDownItemNavigation]="subMenu" >
+        <span>{{ subMenuText }}</span>
+        <igx-icon>keyboard_arrow_right</igx-icon>
+    </div>
+</ng-template>
+
+<ng-template #defaultExcelStyleSearchTemplate>
+    <igx-excel-style-search #excelStyleSearch
+        class="igx-excel-filter__menu-main"
+        [column]="column"
+        [data]="listData"
+        [grid]="grid"
+        [inline]="inline"
+        [displayDensity]="grid.displayDensity">
+    </igx-excel-style-search>
+</ng-template>
+
 <article #dropdown
     *ngIf="column"
     class="igx-excel-filter__menu"
@@ -128,26 +150,10 @@
             <igx-icon>clear</igx-icon>
         </div>
 
-        <div
-            tabindex="0"
-            class="igx-excel-filter__actions-filter"
-            (keydown)="onTextFilterKeyDown($event)"
-            (click)="onTextFilterClick($event)"
-            [igxDropDownItemNavigation]="subMenu" >
-            <span>{{ subMenuText }}</span>
-            <igx-icon>keyboard_arrow_right</igx-icon>
-    </div>
+        <ng-container *ngTemplateOutlet="conditionalFilterTemplate"></ng-container>
     </section>
 
-    <igx-excel-style-search
-        class="igx-excel-filter__menu-main"
-        #excelStyleSearch
-        [column]="column"
-        [data]="listData"
-        [grid]="grid"
-        [inline]="inline"
-        [displayDensity]="grid.displayDensity">
-    </igx-excel-style-search>
+    <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
 
     <footer class="igx-excel-filter__menu-footer">
         <button igxButton [displayDensity]="grid.displayDensity" (click)="cancel()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>

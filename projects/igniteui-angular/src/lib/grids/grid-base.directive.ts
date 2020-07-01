@@ -97,7 +97,9 @@ import {
     IgxExcelStylePinningTemplateDirective,
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective,
-    IgxExcelStyleSelectingTemplateDirective
+    IgxExcelStyleSelectingTemplateDirective,
+    IgxExcelStyleConditionalFilterTemplateDirective,
+    IgxExcelStyleSearchTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
@@ -1497,6 +1499,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
     public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxExcelStyleConditionalFilterTemplateDirective, { read: IgxExcelStyleConditionalFilterTemplateDirective, static: true })
+    public excelStyleConditionalFilterTemplateDirective: IgxExcelStyleConditionalFilterTemplateDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxExcelStyleSearchTemplateDirective, { read: IgxExcelStyleSearchTemplateDirective, static: true })
+    public excelStyleSearchTemplateDirective: IgxExcelStyleSearchTemplateDirective;
 
     /**
      * @hidden @internal

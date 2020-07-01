@@ -1139,6 +1139,12 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
         <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
         <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
         <ng-template igxExcelStyleSelecting><div class="esf-custom-column-selection">Column Selection Template</div></ng-template>
+        <ng-template igxExcelStyleConditionalFilter>
+            <div class="esf-custom-conditional-filter">Conditional Filter Template</div>
+        </ng-template>
+        <ng-template igxExcelStyleSearch>
+            <div class="esf-custom-search">Search Template</div>
+        </ng-template>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {

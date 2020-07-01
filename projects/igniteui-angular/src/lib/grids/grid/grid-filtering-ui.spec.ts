@@ -4379,6 +4379,14 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 // Verify column selection custom template application.
                 expect(excelMenu.querySelector('.esf-custom-column-selection')).not.toBeNull();
                 expect(GridFunctions.getExcelFilteringColumnSelectionContainer(fix, excelMenu)).toBeNull();
+
+                // Verify custom conditional filter template is used.
+                expect(excelMenu.querySelector('.esf-custom-conditional-filter')).not.toBeNull();
+                expect(GridFunctions.getExcelFilteringConditionalFilterContainer(fix, excelMenu)).toBeNull();
+
+                // Verify custom search template is used.
+                expect(excelMenu.querySelector('.esf-custom-search')).not.toBeNull();
+                expect(GridFunctions.getExcelFilteringSearchContainer(fix, excelMenu)).toBeNull();
             }
         }));
     });

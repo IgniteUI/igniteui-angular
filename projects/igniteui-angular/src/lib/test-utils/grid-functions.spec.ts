@@ -1113,6 +1113,16 @@ export class GridFunctions {
             excelMenu.querySelector('.igx-excel-filter__actions-selected');
     }
 
+    public static getExcelFilteringConditionalFilterContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('.igx-excel-filter__actions-filter');
+    }
+
+    public static getExcelFilteringSearchContainer(fix: ComponentFixture<any>, menu = null): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+        return excelMenu.querySelector('igx-excel-style-search');
+    }
+
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
         const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
         const loadingIndicator = searchComponent.querySelector('.igx-excel-filter__loading');
