@@ -9,7 +9,7 @@
             <strong>Enable/Disable fields</strong>
             <igx-switch [checked]="true" id="enableDisable" (click)="disableFields()"></igx-switch>
             <strong>Enable/Disable Required</strong>
-            <igx-switch (click)="toggleRequired()"></igx-switch>
+            <igx-switch [checked]="false" (click)="toggleRequired()"></igx-switch>
 
         </div>
         <div class="form__fields">
@@ -18,7 +18,7 @@
                 <igx-prefix>
                     <igx-icon>search</igx-icon>
                 </igx-prefix>
-                <input name="inputTest" [required]="isRequired" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
+                <input name="inputTest" #input value="{{inputValue}}" [(ngModel)]="inputValue" igxInput placeholder="Search" [disabled]="isDisabled"/>
                 <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
@@ -73,32 +73,6 @@
             </igx-input-group>
             <br>
 
-            <!-- Read only -->
-            <igx-input-group [displayDensity]="density" [type]="inputType">
-                <label igxLabel>Read only input field</label>
-                <input readonly [disabled]="isDisabled" [required]="isRequired" igxInput value="read-only" type="text" placeholder="Placeholder"/>
-            </igx-input-group>
-            <br>
-
-            <!-- Select field -->
-            <igx-select #select1
-                        [displayDensity]="density"
-                        [placeholder]="'Pick One'"
-                        [value]="value"
-                        [disabled]="isDisabled"
-                        [type]="inputType">
-                <label igxLabel>Input type select</label>
-                <igx-prefix igxPrefix>
-                    <igx-icon fontSet="material">favorite</igx-icon>
-                </igx-prefix>
-                <igx-select-item>None</igx-select-item>
-                <igx-select-item [value]="1">Sofia</igx-select-item>
-                <igx-select-item [value]="2">London</igx-select-item>
-                <igx-select-item [value]="3">Paris</igx-select-item>
-                <igx-select-item [value]="4">New York</igx-select-item>
-            </igx-select>
-            <br>
-
             <!-- date field -->
             <igx-date-picker [value]="date">
                 <ng-template
@@ -116,6 +90,31 @@
                     </igx-input-group>
                 </ng-template>
             </igx-date-picker>
+            <br>
+
+            <!-- Read only -->
+            <igx-input-group [displayDensity]="density" [type]="inputType">
+                <label igxLabel>Read only input field</label>
+                <input readonly [disabled]="isDisabled" igxInput value="read-only" type="text" placeholder="Placeholder"/>
+            </igx-input-group>
+            <br>
+
+            <!-- Select field -->
+            <igx-select #select1
+                        [displayDensity]="density"
+                        [placeholder]="'Pick One'"
+                        [disabled]="isDisabled"
+                        [type]="inputType">
+                <label igxLabel>Input type select</label>
+                <igx-prefix igxPrefix>
+                    <igx-icon fontSet="material">favorite</igx-icon>
+                </igx-prefix>
+                <igx-select-item>None</igx-select-item>
+                <igx-select-item>Sofia</igx-select-item>
+                <igx-select-item>London</igx-select-item>
+                <igx-select-item>Paris</igx-select-item>
+                <igx-select-item>New York</igx-select-item>
+            </igx-select>
             <br>
         </div>
     </form>
