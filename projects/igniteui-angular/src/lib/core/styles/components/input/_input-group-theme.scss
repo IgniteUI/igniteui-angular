@@ -264,7 +264,8 @@
 
     $transition-timing: .25s $ease-out-cubic;
 
-    $indigo-theme: map-get($theme, 'variant') == 'indigo-design';
+    $variant: map-get($theme, variant);
+    $indigo-theme: $variant == 'indigo-design';
 
     $required-symbol: '*';
     $required-symbol-margin: 2px;
@@ -445,23 +446,23 @@
 
     %form-group-bundle--box {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        background: --var($theme, 'box-background');
+        box-shadow: inset 0 -2px 0 0 --var($theme, 'idle-bottom-line-color');
 
-        @if not $indigo-theme {
+        %form-group-label--box + %form-group-input--box {
+            transform: translateY(0);
+        }
+    }
+
+    %form-group-bundle--indigo {
+        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        background: transparent;
+        transition: background $transition-timing, box-shadow $transition-timing;
+        box-shadow: inset 0 -1px 0 0 --var($theme, 'idle-bottom-line-color');
+
+        &:hover,
+        &:focus {
             background: --var($theme, 'box-background');
-            box-shadow: inset 0 -2px 0 0 --var($theme, 'idle-bottom-line-color');
-
-            %form-group-label--box + %form-group-input--box {
-                transform: translateY(0);
-            }
-        } @else {
-            background: transparent;
-            transition: background $transition-timing, box-shadow $transition-timing;
-            box-shadow: inset 0 -1px 0 0 --var($theme, 'idle-bottom-line-color');
-
-            &:hover,
-            &:focus {
-                background: --var($theme, 'box-background');
-            }
         }
     }
 
@@ -479,7 +480,7 @@
 
     %form-group-bundle--hover {
         cursor: pointer;
-        @if not $indigo-theme{
+        @if not $indigo-theme {
             box-shadow: inset 0 -2px 0 0 --var($theme, 'hover-bottom-line-color');
         } @else {
             box-shadow: inset 0 -1px 0 0 --var($theme, 'hover-bottom-line-color');
@@ -715,6 +716,7 @@
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
         position: relative;
+        align-items: stretch;
     }
 
     %form-group-bundle--fluent--hover {
@@ -755,11 +757,14 @@
 
     %form-group-bundle-main--fluent {
         padding-#{$left}: rem(8px);
+        align-self: center;
     }
 
     igx-prefix + %form-group-bundle-main--fluent,
     [igx-prefix] + %form-group-bundle-main--fluent {
-        padding-#{$left}: 0;
+        @if $variant != 'fluent' {
+            padding-#{$left}: 0;
+        }
     }
 
     %fluent-placeholder-label {
@@ -949,6 +954,7 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -959,10 +965,6 @@
         border-top: rem(3px) solid transparent;
         padding-bottom: rem(3px);
 
-        &:not([type='date']) {
-            line-height: 0 !important; /* resets typography styles */
-        }
-
         &::-webkit-input-placeholder {
             line-height: normal;
         }
@@ -970,7 +972,6 @@
         &::placeholder {
             color: --var($theme, 'placeholder-color');
             opacity: 1;
-            line-height: normal; /* Fix placeholder position in Safari */
         }
     }
 

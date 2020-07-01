@@ -605,7 +605,7 @@
         }
 
         @include e(bundle) {
-            @extend %form-group-bundle--box !optional;
+            @extend %form-group-bundle--indigo !optional;
         }
 
         @include e(bundle-main) {
