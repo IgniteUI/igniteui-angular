@@ -61,4 +61,5 @@ $_dark-bootstrap-input-group: extend(
 /// @requires $_light-input-group
 /// @requires $_base-dark-input-group
 /// @see $default-palette
-$_dark-indigo-input-group: extend($_light-input-group, $_base-dark-input-group);
+$_dark-indigo-input-group: extend($_light-input-group);
+

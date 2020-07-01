@@ -29,7 +29,7 @@ export class InputGroupSampleComponent implements OnInit {
         ];
 
         this.inputTypes = [
-            { selected: this.inputType === 'line', type: 'line', label: 'Line', togglable: true},
+            { selected: true, type: 'line', label: 'Line', togglable: true},
             { selected: this.inputType === 'border', type: 'border', label: 'Border', togglable: true},
             { selected: this.inputType === 'box', type: 'box', label: 'Box', togglable: true},
             { selected: this.inputType === 'fluent', type: 'fluent', label: 'Fluent', togglable: true},
@@ -56,7 +56,6 @@ export class InputGroupSampleComponent implements OnInit {
         if (this.isDisabled === false) {
             this.isDisabledLabel = 'Disabled';
             this.isDisabled = true;
-            this.isRequired = false;
         } else if (this.isDisabled === true) {
             this.isDisabledLabel = 'Enabled';
             this.isDisabled = false;
