@@ -212,9 +212,9 @@ export class IgxSnackbarComponent {
      * this.snackbar.show();
      * ```
      */
-    public show(msg?: string): void {
+    public show(message?: string): void {
         clearTimeout(this.timeoutId);
-        if (msg !== undefined) { this.snackbarMessage = msg; }
+        if (message !== undefined) { this.snackbarMessage = message; }
         setTimeout(this.timeoutId);
         this.isVisible = true;
 

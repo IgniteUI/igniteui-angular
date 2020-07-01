@@ -3,12 +3,17 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 10.1.0
+
+### New Features
+- `IgxColumn`
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
 - `IgxToast`
-    - `message` property has been deprecated. You can use place the message in the toast content or pass it as parameter to the show method instead.
+    - `message` property has been deprecated. You can place the *message text* in the toast content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
 - `IgxSnackbar`
-    - `message` property has been deprecated. You can use place the message in the snackbar content or pass it as parameter to the show method instead.
+    - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
+
 ## 10.0.0
 
 ### General
