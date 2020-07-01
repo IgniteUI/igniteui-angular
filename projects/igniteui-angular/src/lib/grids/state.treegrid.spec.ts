@@ -57,6 +57,25 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
     });
 
+    it('getState should return corect IGridState object when options are not default', () => {
+        const options = {
+            sorting: false,
+            paging: false
+        };
+        fix.detectChanges();
+        const state = fix.componentInstance.state;
+        state.options = options;
+        fix.detectChanges();
+
+        let gridState = state.getState(false) as IGridState;
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['groupBy']).toBeFalsy();
+
+        gridState = state.getState(false, ['filtering', 'sorting', 'groupBy']) as IGridState;
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['groupBy']).toBeFalsy();
+    });
+
     it('getState should return corect JSON string', () => {
         // tslint:disable-next-line:max-line-length
         const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":true,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":true,"hidden":false,"dataType":"string","hasSummary":false,"field":"Name","width":"150px","header":"Name","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,"movable":false,"hidden":false,"dataType":"date","hasSummary":true,"field":"Hire Date","width":"140px","header":"Hire Date","resizable":true,"searchable":true,"selectable":true},{"pinned":false,"sortable":true,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,"movable":false,"hidden":false,"dataType":"number","hasSummary":false,"field":"Age","width":"110px","header":"Age","resizable":false,"searchable":true,"selectable":true}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":18,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}';
@@ -88,7 +107,6 @@ describe('IgxTreeGridState - input properties #tGrid', () => {
         const paging = grid.pagingState;
         const sorting = grid.sortingExpressions;
         const filtering = grid.filteringExpressionsTree;
-        const advancedFiltering = grid.advancedFilteringExpressionsTree;
 
         const gridState = state.getState(false) as IGridState;
         HelperFunctions.verifyPaging(paging, gridState);

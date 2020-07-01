@@ -132,24 +132,27 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
         grid = fix.componentInstance.hgrid;
-        const filtering = grid.filteringExpressionsTree;
-        const sorting = grid.sortingExpressions;
 
         const optionsInput = {
-            filtering: false,
-            advancedFiltering: true,
+            paging: false,
             sorting: false
         };
 
         state.options = optionsInput;
 
         let gridState = state.getState(false) as IGridState;
-        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
-        HelperFunctions.verifySortingExpressions(sorting, gridState);
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['paging']).toBeFalsy();
 
-        gridState = state.getState(false, ['filtering', 'sorting']) as IGridState;
-        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
-        HelperFunctions.verifySortingExpressions(sorting, gridState);
+        const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
+        gridsCollection.forEach(childGrid => {
+            expect(childGrid.state['sorting']).toBeFalsy();
+            expect(childGrid.state['paging']).toBeFalsy();
+        });
+
+        gridState = state.getState(false, ['filtering', 'sorting', 'paging', 'inheritance']) as IGridState;
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['paging']).toBeFalsy();
     });
 
     it('getState should return correct filtering state', () => {

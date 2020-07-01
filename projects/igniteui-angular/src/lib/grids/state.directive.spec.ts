@@ -137,20 +137,14 @@ describe('IgxGridState - input properties #grid', () => {
         const fix = TestBed.createComponent(IgxGridStateWithOptionsComponent);
         fix.detectChanges();
         const state = fix.componentInstance.state;
-        const grid = fix.componentInstance.grid;
-        const pagingState = grid.pagingState;
-        const filtering = grid.filteringExpressionsTree;
-        const sorting = grid.sortingExpressions;
 
         let gridState = state.getState(false) as IGridState;
-        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
-        HelperFunctions.verifySortingExpressions(sorting, gridState);
-        HelperFunctions.verifyPaging(pagingState, gridState);
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['groupBy']).toBeFalsy();
 
-        gridState = state.getState(false, ['filtering', 'sorting', 'paging']) as IGridState;
-        HelperFunctions.verifyFilteringExpressions(filtering, gridState);
-        HelperFunctions.verifySortingExpressions(sorting, gridState);
-        HelperFunctions.verifyPaging(pagingState, gridState);
+        gridState = state.getState(false, ['filtering', 'sorting', 'groupBy']) as IGridState;
+        expect(gridState['sorting']).toBeFalsy();
+        expect(gridState['groupBy']).toBeFalsy();
     });
 
     it('getState should return corect filtering state', () => {
