@@ -43,12 +43,12 @@
 <ng-template #defTemplate>
     <igx-input-group (click)="open()">
         <input #singleInput igxInput type="text" readonly
-            [placeholder]="this.value ? '' : appliedFormat"
+            [placeholder]="this.value ? '' : singleInputFormat"
             role="combobox"
             aria-haspopup="grid"
             [attr.aria-expanded]="!toggle.collapsed"
             [attr.aria-labelledby]="this.label?.id"
-            [value]="this.value | dateRange: this.inputFormat : this.locale"
+            [value]="this.value | dateRange: this.appliedFormat : this.locale : this.formatter"
         />
 
         <igx-prefix *ngIf="!this.toggleComponents.length">

@@ -64,3 +64,34 @@ $_bootstrap-snackbar: extend(
     )
 );
 
+/// Generates an indigo snackbar schema.
+/// @type {Map}
+///
+/// @property {Map} background [igx-color: ('grays', 600)] - The background color used in the snackbar.
+/// @property {Map} text-color [igx-color: ('grays', 600), text-contrast: ()] - The text color used in the snackbar.
+/// @property {Map} button-color [igx-color: ('grays', 600), text-contrast: ()] - The button color used in the snackbar.
+/// @property {Number} border-radius [6px] - The border radius used for the snackbar component.
+///
+/// @requires {function} extend
+/// @requires $_light-snackbar
+/// @requires $_indigo-shape-snackbar
+$_indigo-snackbar: extend(
+    $_light-snackbar,
+    $_indigo-shape-snackbar,
+    (
+        background: (
+            igx-color: ('grays', 600)
+        ),
+
+        text-color: (
+            igx-color: ('grays', 600),
+            text-contrast: ()
+        ),
+
+        button-color: (
+            igx-color: ('grays', 600),
+            text-contrast: ()
+        )
+    )
+);
+

@@ -63,3 +63,22 @@ $_bootstrap-toast: extend(
     )
 );
 
+/// Generates an indigo toast schema.
+/// @type {Map}
+///
+/// @property {map} text-color [#fff] - The text-color used for the toast.
+/// @property {Number} border-radius [24px] - The border radius used for the toast component.
+///
+/// @requires {function} extend
+/// @requires $_light-toast
+/// @requires $_indigo-shape-toast
+$_indigo-toast: extend(
+    $_light-toast,
+    $_indigo-shape-toast,
+    (
+        variant: 'indigo-design',
+
+        text-color: #fff
+    )
+);
+

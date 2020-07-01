@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.1.0
+
+### New Features
+- `IgxColumn` 
+    - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+
 ## 10.0.0
 
 ### General
