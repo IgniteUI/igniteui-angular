@@ -5,24 +5,21 @@
 ////
 
 /// @type Map
-$_default-shape-chip: (
-    border-radius: 1,
-);
-
 $_round-shape-chip: (
     border-radius: 1,
 );
 
+/// @type Map
 $_square-shape-chip: (
     border-radius: 0%,
 );
 
 /// @type Map
-$_fluent-shape-chip: (
-    border-radius: 1,
+$_bootstrap-shape-chip: (
+    border-radius: .25
 );
 
 /// @type Map
-$_bootstrap-shape-chip: (
-    border-radius: .25
+$_indigo-shape-chip: (
+    border-radius: 3px
 );
