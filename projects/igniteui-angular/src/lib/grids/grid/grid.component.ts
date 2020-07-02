@@ -26,6 +26,7 @@ import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
+import { IgxGridIconService } from '../common/grid-icon.service';
 
 let NEXT_ID = 0;
 
@@ -67,7 +68,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        IgxRowIslandAPIService
+        IgxRowIslandAPIService,
+        IgxGridIconService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
