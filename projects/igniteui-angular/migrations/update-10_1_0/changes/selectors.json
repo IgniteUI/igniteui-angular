@@ -3,8 +3,8 @@
     "changes": [
         {
             "type": "component",
-            "selector": "<igx-action-icon>",
-            "replaceWith": "<igx-navbar-action>"
+            "selector": "igx-action-icon",
+            "replaceWith": "igx-navbar-action"
         }
     ]
 }
