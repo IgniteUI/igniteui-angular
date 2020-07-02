@@ -1,4 +1,4 @@
-import { Component, ViewChild, NgModule, ElementRef, EventEmitter } from '@angular/core';
+import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { IgxHourItemDirective, IgxItemListDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
@@ -1668,24 +1669,51 @@ describe('IgxTimePicker', () => {
             expect(dummyInput).toEqual(document.activeElement);
         }));
 
-        fit('Disabled style for time outside min and max values', fakeAsync(() => {
+        fit('should apply disabled style for time outside the min and max values', fakeAsync(() => {
             fixture.detectChanges();
+            timePicker.format = 'hh:mm:ss tt';
+            const date = new Date(2018, 10, 27, 9, 50, 58);
 
             timePicker.minValue = '09:15:10 AM';
             timePicker.maxValue = '11:15:10 AM';
-            timePicker.itemsDelta = { hours: 1, minutes: 5, seconds: 5 };
-            // timePicker.value = new Date(2018, 11, 27, 4, 50, 0, 0);
-            // timePicker.value.setHours
+
+            // timePicker.minValue = '06:45:57 AM';
+            // timePicker.maxValue = '6:55:59 PM';
+
+            fixture.detectChanges();
+            const minValue = timePicker.convertMinMaxValue(timePicker.minValue);
+            const maxValue = timePicker.convertMinMaxValue(timePicker.maxValue);
+            fixture.detectChanges();
+            timePicker.value = date;
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
             UIInteractions.simulateClickAndSelectEvent(iconTime);
-            tick();
+            fixture.detectChanges();
+            const hoursList = fixture.debugElement.queryAll(By.directive(IgxHourItemDirective));
+            const minutesList = fixture.debugElement.queryAll(By.directive(IgxMinuteItemDirective));
+            const secondsList = fixture.debugElement.queryAll(By.directive(IgxSecondsItemDirective));
+            const ampmList = fixture.debugElement.queryAll(By.directive(IgxAmPmItemDirective));
+
+            let hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '09')).injector.get(IgxHourItemDirective);
+            fixture.detectChanges();
+            let minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '55')).injector.get(IgxMinuteItemDirective);
+            fixture.detectChanges();
+            let secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '58')).injector.get(IgxSecondsItemDirective);
             fixture.detectChanges();
 
-            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
-            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
-            const secondColumn = dom.query(By.css('.igx-time-picker__secondList'));
-            const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+            expect(hoursListItem.applyDisabledStyleForHours).toBe(false);
+            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(false);
+            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(false);
+
+            hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '06')).injector.get(IgxHourItemDirective);
+            fixture.detectChanges();
+            minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '35')).injector.get(IgxMinuteItemDirective);
+            fixture.detectChanges();
+            secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '55')).injector.get(IgxSecondsItemDirective);
+            fixture.detectChanges();
+            expect(hoursListItem.applyDisabledStyleForHours).toBe(true);
+            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(true);
+            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(true);
         }));
     });
 
@@ -2268,7 +2296,7 @@ export class IgxTimePickerRetemplatedComponent { }
     `
 })
 export class IgxTimePickerDropDownComponent {
-    itemsDelta = { hours: 1, minutes: 5 };
+    itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
