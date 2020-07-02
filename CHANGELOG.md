@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 10.1.0
 
+### General
+- `igxCombo`
+    - **Behavioral Change** - Change default positioning strategy from `ConnectedPositioningStrategy` to `AutoPositionStrategy`. The [`Auto`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html#auto) strategy will initially try to show the element like the Connected strategy does. If the element goes out of the viewport Auto will flip the starting point and the direction, i.e. if the direction is 'bottom', it will switch it to 'top' and so on. If after flipping direction the content goes out of the view, auto strategy will revert to initial start point and direction and will push the content into the view. Note after pushing the content it may hide the combo's input.
+
 ### New Features
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
