@@ -15,6 +15,7 @@ import {
     Output
 } from '@angular/core';
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from '../animations/main';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -101,6 +102,7 @@ export class IgxSnackbarComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-snackbar-${NEXT_ID++}`;
+
     /**
      * Sets/gets the `message` attribute.
      * ```html
@@ -110,7 +112,15 @@ export class IgxSnackbarComponent {
      * let message =  this.snackbar.message;
      * ```
      */
-    @Input() public message: string;
+    @DeprecateProperty(`'message' property is deprecated.
+    You can use place the message in the snackbar content or pass a message parameter to the show method instead.`)
+    @Input()
+    public set message(value: string) {
+        this.snackbarMessage = value;
+    }
+    public get message() {
+        return this.snackbarMessage;
+    }
 
     /**
      * Enables/Disables the visibility of the snackbar.
@@ -182,6 +192,13 @@ export class IgxSnackbarComponent {
      * ```
      */
     @Output() public animationDone = new EventEmitter<AnimationEvent>();
+
+    /**
+     * @hidden
+     * @internal
+     */
+    snackbarMessage = '';
+
     /**
      * @hidden
      */
@@ -195,8 +212,9 @@ export class IgxSnackbarComponent {
      * this.snackbar.show();
      * ```
      */
-    public show(): void {
+    public show(message?: string): void {
         clearTimeout(this.timeoutId);
+        if (message !== undefined) { this.snackbarMessage = message; }
         setTimeout(this.timeoutId);
         this.isVisible = true;
 
