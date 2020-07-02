@@ -132,8 +132,22 @@ describe('IgxToast', () => {
         expect(toast.onShown.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHiding.emit).toHaveBeenCalledTimes(1);
         expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
-
     });
+
+    it('can set message through show method', fakeAsync(() => {
+        toast.displayTime = 100;
+        toast.autoHide = false;
+
+        toast.show('Custom Message');
+        tick(100);
+        fixture.detectChanges();
+
+        expect(toast.isVisible).toBeTruthy();
+        expect(toast.animationState).toBe('visible');
+        expect(toast.autoHide).toBeFalsy();
+        expect(toast.toastMessage).toBe('Custom Message');
+        expect(fixture.nativeElement.querySelector('igx-toast:first-child').innerText).toBe('Custom Message');
+    }));
 });
 
 @Component({
