@@ -56,6 +56,9 @@ $_dark-bootstrap-input-group: extend(
 
 /// Generates an dark indigo input-group schema
 /// @type {Map}
+/// @prop {map} success-secondary-color [igx-color: ('success'), rgba: .3, hexrgba: #fff] - The success color used in the valid state.
+/// @prop {map} warning-secondary-color [igx-color: ('warn'), rgba: .3, hexrgba: #fff] - The warning color used in the warning state.
+/// @prop {map} error-secondary-color [igx-color: ('error'), rgba: .3, hexrgba: #fff] - The error color used in the error state.
 /// @requires {function} extend
 /// @requires $_indigo-input-group
 /// @see $default-palette
@@ -63,6 +66,24 @@ $_dark-indigo-input-group: extend(
     $_indigo-input-group,
     (
         search-background: transparent,
+
+        success-secondary-color: (
+            igx-color: ('success'),
+            rgba: .7,
+            hexrgba: #fff
+        ),
+
+        warning-secondary-color: (
+            igx-color: ('warn'),
+            rgba: .7,
+            hexrgba: #fff
+        ),
+
+        error-secondary-color: (
+            igx-color: ('error'),
+            rgba: .7,
+            hexrgba: #fff
+        ),
     )
 );
 

@@ -363,7 +363,6 @@
         }
     }
 
-
     @include mx(border, cosy) {
         @extend %form-group-display--no-margin-cosy !optional;
 
@@ -657,17 +656,42 @@
         }
     }
 
-    @include mx(indigo, disabled) {
-        @include e(bundle) {
-            @extend %form-group-bundle--box-disabled !optional;
-        }
-    }
-
     @include mx(indigo, focused) {
         @include e(bundle) {
             @extend %indigo--box-focused !optional;
         }
     }
+
+    @include mx(indigo, valid) {
+        @include e(bundle) {
+            @extend %form-group-bundle-success--indigo !optional;
+        }
+    }
+
+    @include mx(indigo, invalid) {
+        @include e(bundle) {
+            @extend %form-group-bundle-error--indigo !optional;
+
+            &:hover {
+                @extend %form-group-bundle-error--fluent--hover !optional;
+            }
+        }
+    }
+
+    @include mx(indigo, disabled) {
+        @include e(bundle) {
+            @extend %form-group-bundle--box-disabled !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--disabled !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-helper--indigo--disabled !optional;
+        }
+    }
+
     // Indigo Theme End //
 
     // Bootstrap Theme Start //

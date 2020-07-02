@@ -11,7 +11,6 @@ export class InputGroupSampleComponent implements OnInit {
     public inputValue: any;
     public isRequired = false;
     public isDisabled = false;
-    public isDisabledLabel = 'Enabled';
     public alignment = ButtonGroupAlignment.vertical;
     public density = 'comfortable';
     public displayDensities;
@@ -54,10 +53,8 @@ export class InputGroupSampleComponent implements OnInit {
 
     public disableFields() {
         if (this.isDisabled === false) {
-            this.isDisabledLabel = 'Disabled';
             this.isDisabled = true;
         } else if (this.isDisabled === true) {
-            this.isDisabledLabel = 'Enabled';
             this.isDisabled = false;
         }
     }
