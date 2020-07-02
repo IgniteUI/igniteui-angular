@@ -88,7 +88,7 @@ export class CharSeparatedValueData {
         const dataRecords = new Array(currentData.length);
 
         for (let i = 0; i < currentData.length; i++) {
-            const row = currentData[i]
+            const row = currentData[i];
             dataRecords[i] = this.processRecord(row, keys, escapeChars);
         }
 
