@@ -207,6 +207,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _advancedFilteringOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
+        closeOnEsc: true,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
 
@@ -6195,6 +6196,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const overlaySettings: OverlaySettings = {
                 outlet: this.loadingOutlet,
                 closeOnOutsideClick: false,
+                closeOnEsc: true,
                 positionStrategy: new ContainerPositionStrategy()
             };
             if (!this._loadingId) {

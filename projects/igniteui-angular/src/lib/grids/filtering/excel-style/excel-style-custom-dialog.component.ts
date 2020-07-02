@@ -60,6 +60,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     private _customDialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
+        closeOnEsc: true,
         positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };

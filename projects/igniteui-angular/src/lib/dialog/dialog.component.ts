@@ -83,6 +83,15 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._isModal = val;
     }
 
+    get closeOnEscapeKey() {
+        return this._closeOnEscapeKey;
+    }
+
+    set closeOnEscapeKey(val: boolean) {
+        this._overlayDefaultSettings.closeOnEsc = val;
+        this._closeOnEscapeKey = val;
+    }
+
     /**
      * An @Input property controlling the `title` of the dialog.
      * ```html
@@ -301,6 +310,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
     private _overlayDefaultSettings: OverlaySettings;
     private _closeOnOutsideSelect = false;
+    private _closeOnEscapeKey = true;
     private _isModal = true;
     protected destroy$ = new Subject<boolean>();
 
@@ -404,6 +414,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
             positionStrategy: new GlobalPositionStrategy(this._positionSettings),
             scrollStrategy: new NoOpScrollStrategy(),
             modal: this.isModal,
+            closeOnEsc: true,
             closeOnOutsideClick: this.closeOnOutsideSelect
         };
     }
@@ -503,7 +514,6 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         }
 
     }
-
 }
 
 export interface IDialogEventArgs extends IBaseEventArgs {
