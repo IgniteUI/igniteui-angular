@@ -78,7 +78,7 @@
         },
         "migration-16": {
             "version": "10.1.0",
-            "description": "Updates Ignite UI for Angular from v9.0.x to v10.1.0",
+            "description": "Updates Ignite UI for Angular from v10.0.x to v10.1.0",
             "factory": "./update-10_1_0"
         }
     }
