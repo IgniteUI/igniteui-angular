@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxColumn` 
     - Added `byHeader` parameter to the `autosize` method which specifies if the autosizing should be based only on the header content width.
+- `IgxNavbar`:
+    - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;    
 
 ## 10.0.0
 
