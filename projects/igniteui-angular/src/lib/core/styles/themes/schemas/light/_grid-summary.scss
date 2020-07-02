@@ -95,7 +95,8 @@ $_indigo-grid-summary: extend(
         variant: 'indigo-design',
 
         background-color: (
-            igx-color: ('primary', 100)
+            igx-color: ('grays', 100),
+            to-opaque: ()
         ),
 
         border-color: (
@@ -103,8 +104,10 @@ $_indigo-grid-summary: extend(
         ),
 
         pinned-border-color: (
-            igx-color: ('primary', 50)
-        )
+            igx-color: ('primary', 500)
+        ),
+
+        pinned-border-width: rem(4px)
     )
 );
 

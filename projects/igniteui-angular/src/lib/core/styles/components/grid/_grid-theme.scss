@@ -1409,6 +1409,11 @@
     %grid-cell--pinned-last {
         border-#{$right}: map-get($cell-pin, 'style') map-get($cell-pin, 'color') !important;
 
+        %igx-grid__filtering-cell,
+        %grid-cell-header {
+            border-#{$right}: none;
+        }
+
         &%grid-cell--editing {
             border-#{$right}: map-get($cell-pin, 'style') --var($theme, 'cell-selected-background') !important;
         }
@@ -1557,6 +1562,12 @@
         %igx-grid__th--selected,
         %igx-grid__th--selectable {
             @extend %grid-cell--active
+        }
+
+        %igx-grid__filtering-cell,
+        %grid-cell-header {
+            border-right: none;
+            border-bottom: none;
         }
     }
 

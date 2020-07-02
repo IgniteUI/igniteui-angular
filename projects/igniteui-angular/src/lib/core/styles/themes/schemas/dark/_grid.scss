@@ -238,5 +238,208 @@ $_dark-bootstrap-grid: extend(
 ///
 /// @requires {function} extend
 /// @requires $_indigo-grid
-$_dark-indigo-grid: extend($_indigo-grid);
+$_dark-indigo-grid: extend(
+    $_indigo-grid,
+    (
+        header-background: (
+            igx-color: 'surface',
+        ),
+
+        header-text-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        header-selected-background: (
+            igx-color: 'primary',
+        ),
+
+        header-selected-text-color: (
+            igx-contrast-color: 'primary',
+        ),
+
+        sorted-header-icon-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        sortable-header-icon-hover-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        header-border-color: (
+            igx-color: ('grays', 100)
+        ),
+
+        filtering-header-background: (
+            igx-color: ('grays', 100),
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        filtering-header-text-color: (
+            igx-color: ('grays', 100),
+            to-opaque: (
+                igx-color: 'surface',
+            ),
+            text-contrast: ()
+        ),
+
+        content-background: (
+            igx-color: 'surface',
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 200),
+        ),
+
+        drop-area-background: (
+            igx-color: ('grays', 200)
+        ),
+
+        drop-area-text-color: (
+            igx-color: ('grays', 200),
+            to-opaque: (
+                igx-color: 'surface',
+            ),
+            text-contrast: (),
+            rgba: .87
+        ),
+
+        drop-area-icon-color: (
+            igx-color: ('grays', 200),
+            to-opaque: (
+                igx-color: 'surface',
+            ),
+            text-contrast: (),
+            rgba: .87
+        ),
+
+        row-odd-background: (
+            igx-color: ('grays', 100),
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        row-even-background: (
+            igx-color: ('grays', 100),
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        row-border-color: (
+            igx-color: ('grays', 100),
+        ),
+
+        row-hover-background: (
+            igx-color: ('primary', 100),
+            rgba: .12,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        row-hover-text-color: (
+            igx-color: ('primary', 100),
+            rgba: .12,
+            to-opaque: (
+                igx-color: 'surface',
+            ),
+            text-contrast: (),
+        ),
+
+        row-selected-background: (
+            igx-color: ('primary', 500),
+        ),
+
+        row-selected-hover-background: (
+            igx-color: ('primary', 400),
+        ),
+
+        row-selected-text-color: (
+            igx-contrast-color: ('primary', 500),
+        ),
+
+        row-selected-hover-text-color: (
+            igx-contrast-color: ('primary', 400),
+        ),
+
+        group-row-background: (
+            igx-color: 'surface',
+        ),
+
+        group-row-selected-background: (
+            igx-color: ('primary', 100),
+            rgba: .12,
+            to-opaque: (
+                igx-color: 'surface',
+            )
+        ),
+
+        group-label-column-name-text: (
+            igx-contrast-color: 'surface',
+        ),
+
+        group-label-icon: (
+            igx-contrast-color: 'surface',
+        ),
+
+        group-label-text: (
+            igx-color: ('grays', 700)
+        ),
+
+        expand-icon-hover-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        filtering-row-background: (
+            igx-color: 'surface',
+        ),
+
+        cell-selected-background: (
+            igx-color: ('grays', 200),
+        ),
+
+        cell-selected-text-color: (
+            igx-color: ('grays', 200),
+            to-opaque: (
+                igx-color: 'surface',
+            ),
+            text-contrast: ()
+        ),
+
+        cell-active-border-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        cell-editing-background: (
+            igx-color: 'surface',
+        ),
+
+        grouparea-background: (
+            igx-color: 'surface',
+        ),
+
+        grouparea-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        root-summaries-background: (
+            igx-color: 'surface',
+        ),
+
+        root-summaries-text-color: (
+            igx-contrast-color: 'surface',
+        ),
+
+        body-summaries-background: (
+            igx-color: 'surface',
+        ),
+
+        body-summaries-text-color: (
+            igx-contrast-color: 'surface',
+        ),
+    )
+);
 

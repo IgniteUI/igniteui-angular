@@ -72,11 +72,12 @@ $_indigo-pagination: extend(
         ),
 
         background-color: (
-            igx-color: ('primary', 100)
+            igx-color: ('grays', 100),
+            hexrgba: ()
         ),
 
         border-color: (
-            igx-color: ('primary', 50)
+            igx-color: ('grays', 100)
         )
     )
 );

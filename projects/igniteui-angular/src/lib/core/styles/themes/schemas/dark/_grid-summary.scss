@@ -29,5 +29,28 @@ $_dark-bootstrap-grid-summary: extend($_bootstrap-grid-summary);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_indigo-grid-summary
-$_dark-indigo-grid-summary: extend($_indigo-grid-summary);
+$_dark-indigo-grid-summary: extend(
+    $_indigo-grid-summary,
+    (
+        background-color: (
+            igx-color: 'surface',
+        ),
+
+        label-color: (
+            igx-color: ('primary', 200),
+        ),
+
+        result-color: (
+            igx-color: 'surface',
+        ),
+
+        focus-background-color: (
+            igx-color: ('grays', 100)
+        ),
+
+        pinned-border-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
 

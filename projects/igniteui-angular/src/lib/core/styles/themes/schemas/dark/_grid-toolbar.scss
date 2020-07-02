@@ -41,4 +41,12 @@ $_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid
 /// @requires {function} extend
 /// @requires $_indigo-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
-$_dark-indigo-grid-toolbar: extend($_indigo-grid-toolbar, $_base-dark-grid-toolbar);
+$_dark-indigo-grid-toolbar: extend(
+    $_indigo-grid-toolbar,
+    $_base-dark-grid-toolbar,
+    (
+        background-color: (
+            igx-color: 'surface',
+        )
+    )
+);
