@@ -13,8 +13,8 @@ import { IGroupByExpandState } from '../data-operations/groupby-expand-state.int
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
-import { IPinningConfig } from './public_api';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
+import { IPinningConfig } from './grid.common';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -79,7 +79,7 @@ export interface IColumnState {
 
 export type GridFeatures = keyof IGridStateOptions;
 
-export interface Feature {
+interface Feature {
     getFeatureState: (context: IgxGridStateDirective) => IGridState;
     restoreFeatureState: (context: IgxGridStateDirective, state: IColumnState[] | IPagingState | ISortingExpression[] |
         IGroupingState | IFilteringExpressionsTree | GridSelectionRange[] | IPinningConfig | any[]) => void;
@@ -90,18 +90,9 @@ export interface Feature {
 })
 export class IgxGridStateDirective {
 
-    /**
-     * @hidden @internal
-     */
-    public features: GridFeatures[] = [];
-    /**
-     * @hidden @internal
-     */
-    public state: IGridState;
-    /**
-     * @hidden @internal
-     */
-    public currGrid: IgxGridBaseDirective;
+    private featureKeys: GridFeatures[] = [];
+    private state: IGridState;
+    private currGrid: IgxGridBaseDirective;
     private _options: IGridStateOptions = {
         columns: true,
         filtering: true,
@@ -115,6 +106,245 @@ export class IgxGridStateDirective {
         rowPinning: true,
         expansion: true,
         rowIslands: true
+    };
+    private FEATURES = {
+        sorting:  {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const sortingState = context.currGrid.sortingExpressions;
+                sortingState.forEach(s => {
+                    delete s.strategy;
+                    delete s.owner;
+                });
+                return { sorting: sortingState };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: ISortingExpression[]): void {
+                context.currGrid.sortingExpressions = state;
+            }
+        },
+        filtering: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const filteringState = context.currGrid.filteringExpressionsTree;
+                if (filteringState) {
+                    delete filteringState.owner;
+                    for (const item of filteringState.filteringOperands) {
+                        delete (item as IFilteringExpressionsTree).owner;
+                    }
+                }
+                return { filtering: filteringState };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
+                const filterTree = context.createExpressionsTreeFromObject(state);
+                context.currGrid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
+            }
+        },
+        advancedFiltering: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const filteringState = context.currGrid.advancedFilteringExpressionsTree;
+                let advancedFiltering: any;
+                if (filteringState) {
+                    delete filteringState.owner;
+                    for (const item of filteringState.filteringOperands) {
+                        delete (item as IFilteringExpressionsTree).owner;
+                    }
+                    advancedFiltering = filteringState;
+                } else {
+                    advancedFiltering = {};
+                }
+                return { advancedFiltering: advancedFiltering };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
+                const filterTree = context.createExpressionsTreeFromObject(state);
+                context.currGrid.advancedFilteringExpressionsTree = filterTree as FilteringExpressionsTree;
+            }
+        },
+        columns: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => {
+                    return {
+                        pinned: c.pinned,
+                        sortable: c.sortable,
+                        filterable: c.filterable,
+                        editable: c.editable,
+                        sortingIgnoreCase: c.sortingIgnoreCase,
+                        filteringIgnoreCase: c.filteringIgnoreCase,
+                        headerClasses: c.headerClasses,
+                        headerGroupClasses: c.headerGroupClasses,
+                        maxWidth: c.maxWidth,
+                        groupable: c.groupable,
+                        movable: c.movable,
+                        hidden: c.hidden,
+                        dataType: c.dataType,
+                        hasSummary: c.hasSummary,
+                        field: c.field,
+                        width: c.width,
+                        header: c.header,
+                        resizable: c.resizable,
+                        searchable: c.searchable,
+                        selectable: c.selectable
+                    };
+                });
+                return { columns: gridColumns };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: IColumnState[]): void {
+                const newColumns = [];
+                const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
+                state.forEach((colState) => {
+                    const ref = factory.create(context.viewRef.injector);
+                    Object.assign(ref.instance, colState);
+                    ref.changeDetectorRef.detectChanges();
+                    newColumns.push(ref.instance);
+                });
+                context.currGrid.columnList.reset(newColumns);
+                context.currGrid.columnList.notifyOnChanges();
+            }
+        },
+        groupBy: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const grid = context.currGrid as IgxGridComponent;
+                const groupingExpressions = grid.groupingExpressions;
+                groupingExpressions.forEach(expr => {
+                    delete expr.strategy;
+                });
+                const expansionState = grid.groupingExpansionState;
+                const groupsExpanded = grid.groupsExpanded;
+
+                return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: IGroupingState): void {
+                const grid = context.currGrid as IgxGridComponent;
+                grid.groupingExpressions = state.expressions as IGroupingExpression[];
+                if (grid.groupsExpanded !== state.defaultExpanded) {
+                    grid.toggleAllGroupRows();
+                } else {
+                    grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
+                }
+            }
+        },
+        paging: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const pagingState = context.currGrid.pagingState;
+                return { paging: pagingState };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: IPagingState): void {
+                if (context.currGrid.perPage !== state.recordsPerPage) {
+                    context.currGrid.perPage = state.recordsPerPage;
+                    context.currGrid.cdr.detectChanges();
+                }
+                context.currGrid.page = state.index;
+            }
+        },
+        rowSelection: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const selection = context.currGrid.selectedRows();
+                return { rowSelection: selection };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+                context.currGrid.selectRows(state);
+            }
+        },
+        cellSelection: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const selection = context.currGrid.getSelectedRanges().map(range => {
+                    return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
+                });
+                return { cellSelection: selection };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: GridSelectionRange[]): void {
+                state.forEach(r => {
+                    const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
+                    context.currGrid.selectRange(range);
+                });
+            }
+        },
+        columnSelection: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const selection = context.currGrid.selectedColumns().map(c => c.field);
+                return { columnSelection: selection };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: string[]): void {
+                context.currGrid.deselectAllColumns();
+                context.currGrid.selectColumns(state);
+            }
+        },
+        rowPinning: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const pinned = context.currGrid.pinnedRows.map(x => x.rowID);
+                return { rowPinning: pinned };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+                // clear current state.
+                context.currGrid.pinnedRows.forEach(row => row.unpin());
+                state.forEach(rowID => context.currGrid.pinRow(rowID));
+            }
+        },
+        pinningConfig: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                return { pinningConfig: context.currGrid.pinning };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: IPinningConfig): void {
+                context.currGrid.pinning = state;
+            }
+        },
+        expansion: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const expansionStates = Array.from(context.currGrid.expansionStates);
+                return { expansion: expansionStates };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
+                const expansionStates = new Map<any, boolean>(state);
+                context.currGrid.expansionStates = expansionStates;
+            }
+        },
+        rowIslands: {
+            getFeatureState(context: IgxGridStateDirective): IGridState {
+                const childGridStates: IGridStateCollection[] = [];
+                const rowIslands = (context.currGrid as any).allLayoutList;
+                if (rowIslands) {
+                    rowIslands.forEach(rowIsland => {
+                        const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                        childGrids.forEach(chGrid => {
+                            const parentRowID = this.getParentRowID(chGrid);
+                            context.currGrid = chGrid;
+                            if (context.currGrid) {
+                                const childGridState = context.buildState(context.featureKeys) as IGridState;
+                                childGridStates.push({ id: `${rowIsland.id}`, parentRowID: parentRowID, state: childGridState });
+                            }
+                        });
+                    });
+                }
+                context.currGrid = context.grid;
+                return { rowIslands: childGridStates };
+            },
+            restoreFeatureState(context: IgxGridStateDirective, state: any): void {
+                const rowIslands = (context.currGrid as any).allLayoutList;
+                if (rowIslands) {
+                    rowIslands.forEach(rowIsland => {
+                        const childGrids = rowIsland.rowIslandAPI.getChildGrids();
+                        childGrids.forEach(chGrid => {
+                            const parentRowID = this.getParentRowID(chGrid);
+                            context.currGrid = chGrid;
+                            const childGridState = state.find(st => st.id === rowIsland.id && st.parentRowID === parentRowID);
+                            if (childGridState && context.currGrid) {
+                                context.restoreGridState(childGridState.state, context.featureKeys);
+                            }
+                        });
+                    });
+                }
+                context.currGrid = context.grid;
+            },
+            /**
+             * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
+             */
+            getParentRowID(grid: IgxHierarchicalGridComponent) {
+                let childGrid, childRow;
+                while (grid.parent) {
+                    childRow = grid.childRow;
+                    childGrid = grid;
+                    grid = grid.parent;
+                }
+                return grid.hgridAPI.getParentRowId(childGrid);
+            }
+        }
     };
 
     /**
@@ -145,8 +375,8 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() public grid: IgxGridBaseDirective,
-        public resolver: ComponentFactoryResolver,
-        public viewRef: ViewContainerRef) { }
+        private resolver: ComponentFactoryResolver,
+        private viewRef: ViewContainerRef) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
@@ -195,12 +425,11 @@ export class IgxGridStateDirective {
 
     /**
      * Builds an IGridState object.
-     * @hidden @internal
      */
-    public buildState(keys?: GridFeatures | GridFeatures[]): IGridState {
+    private buildState(keys?: GridFeatures | GridFeatures[]): IGridState {
         this.applyFeatures(keys);
         let gridState = {} as IGridState;
-        this.features.forEach(f => {
+        this.featureKeys.forEach(f => {
             if (this.options[f]) {
                 if (!(this.grid instanceof IgxGridComponent) && f === 'groupBy') {
                     return;
@@ -215,11 +444,10 @@ export class IgxGridStateDirective {
 
     /**
      * The method that calls corresponding methods to restore features from the passed IGridState object.
-     * @hidden @internal
      */
-    public restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
+    private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         this.applyFeatures(features);
-        this.features.forEach(f => {
+        this.featureKeys.forEach(f => {
             if (this.options[f]) {
                 const featureState = state[f];
                 if (featureState) {
@@ -234,23 +462,22 @@ export class IgxGridStateDirective {
      * Returns a collection of all grid features.
      */
     private applyFeatures(keys?: GridFeatures | GridFeatures[]) {
-        this.features = [];
+        this.featureKeys = [];
         if (!keys) {
             for (const key of Object.keys(this.options)) {
-                this.features.push(key as GridFeatures);
+                this.featureKeys.push(key as GridFeatures);
             }
         } else if (Array.isArray(keys)) {
-            this.features = [...keys as GridFeatures[]];
+            this.featureKeys = [...keys as GridFeatures[]];
         } else {
-            this.features.push(keys);
+            this.featureKeys.push(keys);
         }
     }
 
     /**
      * This method builds a FilteringExpressionsTree from a provided object.
-     * @hidden @internal
      */
-    public createExpressionsTreeFromObject(exprTreeObject: FilteringExpressionsTree): FilteringExpressionsTree {
+    private createExpressionsTreeFromObject(exprTreeObject: FilteringExpressionsTree): FilteringExpressionsTree {
         if (!exprTreeObject || !exprTreeObject.filteringOperands) {
             return null;
         }
@@ -288,9 +515,8 @@ export class IgxGridStateDirective {
 
     /**
      * Returns the filtering logic function for a given dataType and condition (contains, greaterThan, etc.)
-     * @hidden @internal
      */
-    public generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
+    private generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
         let filters;
         switch (dataType) {
             case DataType.Boolean:
@@ -318,247 +544,10 @@ export class IgxGridStateDirective {
     }
 
     private getFeature(key: string): Feature {
-        const feature: Feature = FEATURES[key];
+        const feature: Feature = this.FEATURES[key];
         return feature;
     }
 }
-const FEATURES = {
-    sorting:  {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const sortingState = context.currGrid.sortingExpressions;
-            sortingState.forEach(s => {
-                delete s.strategy;
-                delete s.owner;
-            });
-            return { sorting: sortingState };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: ISortingExpression[]): void {
-            context.currGrid.sortingExpressions = state;
-        }
-    },
-    filtering: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const filteringState = context.currGrid.filteringExpressionsTree;
-            delete filteringState.owner;
-            for (const item of filteringState.filteringOperands) {
-                delete (item as IFilteringExpressionsTree).owner;
-            }
-            return { filtering: filteringState };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
-            const filterTree = context.createExpressionsTreeFromObject(state);
-            context.currGrid.filteringExpressionsTree = filterTree as FilteringExpressionsTree;
-        }
-    },
-    advancedFiltering: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const filteringState = context.currGrid.advancedFilteringExpressionsTree;
-            let advancedFiltering: any;
-            if (filteringState) {
-                delete filteringState.owner;
-                for (const item of filteringState.filteringOperands) {
-                    delete (item as IFilteringExpressionsTree).owner;
-                }
-                advancedFiltering = filteringState;
-            } else {
-                advancedFiltering = {};
-            }
-            return { advancedFiltering: advancedFiltering };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: FilteringExpressionsTree): void {
-            const filterTree = context.createExpressionsTreeFromObject(state);
-            context.currGrid.advancedFilteringExpressionsTree = filterTree as FilteringExpressionsTree;
-        }
-    },
-    columns: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const gridColumns: IColumnState[] = context.currGrid.columns.map((c) => {
-                return {
-                    pinned: c.pinned,
-                    sortable: c.sortable,
-                    filterable: c.filterable,
-                    editable: c.editable,
-                    sortingIgnoreCase: c.sortingIgnoreCase,
-                    filteringIgnoreCase: c.filteringIgnoreCase,
-                    headerClasses: c.headerClasses,
-                    headerGroupClasses: c.headerGroupClasses,
-                    maxWidth: c.maxWidth,
-                    groupable: c.groupable,
-                    movable: c.movable,
-                    hidden: c.hidden,
-                    dataType: c.dataType,
-                    hasSummary: c.hasSummary,
-                    field: c.field,
-                    width: c.width,
-                    header: c.header,
-                    resizable: c.resizable,
-                    searchable: c.searchable,
-                    selectable: c.selectable
-                };
-            });
-            return { columns: gridColumns };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: IColumnState[]): void {
-            const newColumns = [];
-            const factory = context.resolver.resolveComponentFactory(IgxColumnComponent);
-            state.forEach((colState) => {
-                const ref = factory.create(context.viewRef.injector);
-                Object.assign(ref.instance, colState);
-                ref.changeDetectorRef.detectChanges();
-                newColumns.push(ref.instance);
-            });
-            context.currGrid.columnList.reset(newColumns);
-            context.currGrid.columnList.notifyOnChanges();
-        }
-    },
-    groupBy: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const grid = context.currGrid as IgxGridComponent;
-            const groupingExpressions = grid.groupingExpressions;
-            groupingExpressions.forEach(expr => {
-                delete expr.strategy;
-            });
-            const expansionState = grid.groupingExpansionState;
-            const groupsExpanded = grid.groupsExpanded;
-
-            return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: IGroupingState): void {
-            const grid = context.currGrid as IgxGridComponent;
-            grid.groupingExpressions = state.expressions as IGroupingExpression[];
-            if (grid.groupsExpanded !== state.defaultExpanded) {
-                grid.toggleAllGroupRows();
-            } else {
-                grid.groupingExpansionState = state.expansion as IGroupByExpandState[];
-            }
-        }
-    },
-    paging: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const pagingState = context.currGrid.pagingState;
-            return { paging: pagingState };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: IPagingState): void {
-            if (context.currGrid.perPage !== state.recordsPerPage) {
-                context.currGrid.perPage = state.recordsPerPage;
-                context.currGrid.cdr.detectChanges();
-            }
-            context.currGrid.page = state.index;
-        }
-    },
-    rowSelection: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const selection = context.currGrid.selectedRows();
-            return { rowSelection: selection };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
-            context.currGrid.selectRows(state);
-        }
-    },
-    cellSelection: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const selection = context.currGrid.getSelectedRanges().map(range => {
-                return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
-            });
-            return { cellSelection: selection };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: GridSelectionRange[]): void {
-            state.forEach(r => {
-                const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
-                context.currGrid.selectRange(range);
-            });
-        }
-    },
-    columnSelection: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const selection = context.currGrid.selectedColumns().map(c => c.field);
-            return { columnSelection: selection };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: string[]): void {
-            context.currGrid.deselectAllColumns();
-            context.currGrid.selectColumns(state);
-        }
-    },
-    rowPinning: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const pinned = context.currGrid.pinnedRows.map(x => x.rowID);
-            return { rowPinning: pinned };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
-            // clear current state.
-            context.currGrid.pinnedRows.forEach(row => row.unpin());
-            state.forEach(rowID => context.currGrid.pinRow(rowID));
-        }
-    },
-    pinningConfig: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            return { pinningConfig: context.currGrid.pinning };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: IPinningConfig): void {
-            context.currGrid.pinning = state;
-        }
-    },
-    expansion: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const expansionStates = Array.from(context.currGrid.expansionStates);
-            return { expansion: expansionStates };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: any[]): void {
-            const expansionStates = new Map<any, boolean>(state);
-            context.currGrid.expansionStates = expansionStates;
-        }
-    },
-    rowIslands: {
-        getFeatureState(context: IgxGridStateDirective): IGridState {
-            const childGridStates: IGridStateCollection[] = [];
-            const rowIslands = (context.currGrid as any).allLayoutList;
-            if (rowIslands) {
-                rowIslands.forEach(rowIsland => {
-                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
-                    childGrids.forEach(chGrid => {
-                        const parentRowID = this.getParentRowID(chGrid);
-                        context.currGrid = chGrid;
-                        if (context.currGrid) {
-                            const childGridState = context.buildState(context.features) as IGridState;
-                            childGridStates.push({ id: `${rowIsland.id}`, parentRowID: parentRowID, state: childGridState });
-                        }
-                    });
-                });
-            }
-            context.currGrid = context.grid;
-            return { rowIslands: childGridStates };
-        },
-        restoreFeatureState(context: IgxGridStateDirective, state: any): void {
-            const rowIslands = (context.currGrid as any).allLayoutList;
-            if (rowIslands) {
-                rowIslands.forEach(rowIsland => {
-                    const childGrids = rowIsland.rowIslandAPI.getChildGrids();
-                    childGrids.forEach(chGrid => {
-                        const parentRowID = this.getParentRowID(chGrid);
-                        context.currGrid = chGrid;
-                        const childGridState = state.find(st => st.id === rowIsland.id && st.parentRowID === parentRowID);
-                        if (childGridState && context.currGrid) {
-                            context.restoreGridState(childGridState.state, context.features);
-                        }
-                    });
-                });
-            }
-            context.currGrid = context.grid;
-        },
-        /**
-         * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
-         */
-        getParentRowID(grid: IgxHierarchicalGridComponent) {
-            let childGrid, childRow;
-            while (grid.parent) {
-                childRow = grid.childRow;
-                childGrid = grid;
-                grid = grid.parent;
-            }
-            return grid.hgridAPI.getParentRowId(childGrid);
-        }
-    }
-};
 
 /**
  * @hidden
