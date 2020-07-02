@@ -36,7 +36,6 @@ import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IgxGridIconService } from '../common/grid-icon.service';
 
 let NEXT_ID = 0;
 
@@ -59,8 +58,7 @@ export interface HierarchicalStateRecord {
         IgxHierarchicalGridNavigationService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        IgxRowIslandAPIService,
-        IgxGridIconService
+        IgxRowIslandAPIService
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective

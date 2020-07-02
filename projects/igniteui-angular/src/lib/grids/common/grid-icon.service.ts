@@ -6,7 +6,9 @@ import { GridSVGIcon } from './grid.interface';
 /**
  * @hidden
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class IgxGridIconService {
 
     private iconsMap = new Map<GridIconsFeature, GridSVGIcon[]>();

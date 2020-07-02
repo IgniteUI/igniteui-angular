@@ -37,7 +37,6 @@ import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { IgxGridIconService } from '../common/grid-icon.service';
 
 let NEXT_ID = 0;
 
@@ -72,8 +71,7 @@ let NEXT_ID = 0;
         IgxFilteringService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        IgxRowIslandAPIService,
-        IgxGridIconService
+        IgxRowIslandAPIService
     ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
