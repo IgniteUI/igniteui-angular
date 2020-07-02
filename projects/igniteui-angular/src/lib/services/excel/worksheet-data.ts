@@ -11,8 +11,8 @@ export class WorksheetData {
     private _isSpecialData: boolean;
 
     constructor(private _data: any[], public options: IgxExcelExporterOptions, public indexOfLastPinnedColumn,
-                public sort: any, public isTreeGridData = false) {
-        this.initializeData();
+                public sort: any, public isTreeGridData = false, public columnWidths: number[]) {
+        this.initializeData(columnWidths);
     }
 
     public get data() {
@@ -43,7 +43,7 @@ export class WorksheetData {
         return this._dataDictionary;
     }
 
-    private initializeData() {
+    private initializeData(columnWidths: number[]) {
         if (!this._data || this._data.length === 0) {
             return;
         }
@@ -60,6 +60,6 @@ export class WorksheetData {
         this._columnCount = this._keys.length;
         this._rowCount = this._data.length + 1;
 
-        this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth);
+        this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth, columnWidths);
     }
 }

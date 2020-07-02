@@ -15,7 +15,6 @@ export class WorksheetDataDictionary {
     private _keysAreValid: boolean;
 
     private _counter: number;
-    private _calculateColumnWidth: boolean;
     private _columnWidths: number[];
     private _context: any;
 
@@ -25,18 +24,19 @@ export class WorksheetDataDictionary {
     public stringsCount: number;
 
     // TODO Switch to fixed column width since auto-calculation takes a lot of time
-    constructor(columnCount: number, columnWidth: number) {
+    constructor(columnCount: number, columnWidth: number, columnWidthsList: number[]) {
         this._dictionary = {};
         this._widthsDictionary = {};
         this._counter = 0;
         this.dirtyKeyCollections();
 
-        this._calculateColumnWidth = !columnWidth;
         this._columnWidths = new Array<number>(columnCount);
         this._columnTypeInfo = new Array<boolean>(columnCount);
 
-        if (!this._calculateColumnWidth) {
+        if (columnWidth) {
             this._columnWidths.fill(columnWidth);
+        } else {
+            this._columnWidths = columnWidthsList;
         }
 
         this.stringsCount = 0;
@@ -67,12 +67,6 @@ export class WorksheetDataDictionary {
             this.stringsCount ++;
         } else {
             this.hasNonStringValues = true;
-        }
-
-        if (this._calculateColumnWidth) {
-            const width = this.getTextWidth(value);
-            const maxWidth = Math.max(this._columnWidths[column] || 0, width);
-            this._columnWidths[column] = maxWidth;
         }
 
         return isSavedAsString ? this.getSanitizedValue(sanitizedValue) : -1;

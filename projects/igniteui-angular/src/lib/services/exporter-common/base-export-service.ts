@@ -69,6 +69,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
 export abstract class IgxBaseExporter {
     private _columnList: any[];
     private flatRecords = [];
+    private _columnWidthList: number[];
 
     protected _isTreeGrid = false;
     protected _indexOfLastPinnedColumn = -1;
@@ -96,6 +97,10 @@ export abstract class IgxBaseExporter {
      */
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
+    public get columnWidthList() {
+        return this._columnWidthList;
+    }
+
     /**
      * Method for exporting IgxGrid component's data.
      * ```typescript
@@ -110,6 +115,7 @@ export abstract class IgxBaseExporter {
 
         const columns = grid.columnList.toArray();
         this._columnList = new Array<any>(columns.length);
+        this._columnWidthList = new Array<any>(columns.length);
 
         const hiddenColumns = [];
         let lastVisbleColumnIndex = -1;
@@ -118,6 +124,7 @@ export abstract class IgxBaseExporter {
             const columnHeader = column.header !== '' ? column.header : column.field;
             const exportColumn = !column.hidden || options.ignoreColumnsVisibility;
             const index = options.ignoreColumnsOrder ? column.index : column.visibleIndex;
+            const columnWidth = Number(column.width.slice(0, -2));
 
             const columnInfo = {
                 header: columnHeader,
@@ -129,6 +136,7 @@ export abstract class IgxBaseExporter {
 
             if (index !== -1) {
                 this._columnList[index] = columnInfo;
+                this._columnWidthList[index] = columnWidth;
                 lastVisbleColumnIndex = Math.max(lastVisbleColumnIndex, index);
             } else {
                 hiddenColumns.push(columnInfo);
