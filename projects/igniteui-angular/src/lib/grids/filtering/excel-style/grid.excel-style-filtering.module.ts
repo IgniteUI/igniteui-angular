@@ -21,10 +21,10 @@ import { IgxGridPipesModule } from '../../common/grid-pipes.module';
 import { IgxButtonModule } from '../../../directives/button/button.directive';
 import { IgxButtonGroupModule } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDatePickerModule } from '../../../date-picker/date-picker.component';
-import { IgxIconModule } from '../../../icon/index';
+import { IgxIconModule } from '../../../icon/public_api';
 import { IgxRippleModule } from '../../../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../../../input-group/input-group.component';
-import { IgxDropDownModule } from '../../../drop-down/index';
+import { IgxDropDownModule } from '../../../drop-down/public_api';
 import { IgxForOfModule } from '../../../directives/for-of/for_of.directive';
 import { IgxCheckboxModule } from '../../../checkbox/checkbox.component';
 import { IgxFilterModule } from '../../../directives/filter/filter.directive';
@@ -32,6 +32,7 @@ import { IgxToggleModule } from '../../../directives/toggle/toggle.directive';
 import { IgxListModule } from '../../../list/list.component';
 import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
 import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
+import { IgxSelectModule } from './../../../select/select.module';
 
 /**
  * @hidden
@@ -79,7 +80,8 @@ import { IgxProgressBarModule } from '../../../progressbar/progressbar.component
         IgxFilterModule,
         IgxToggleModule,
         IgxListModule,
-        IgxProgressBarModule
+        IgxProgressBarModule,
+        IgxSelectModule,
     ],
     entryComponents: [
         IgxGridExcelStyleFilteringComponent

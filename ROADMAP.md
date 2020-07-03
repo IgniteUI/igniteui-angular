@@ -2,18 +2,12 @@
 
 # Current Milestone
 
-## Milestone 11 (Due by April 30th, 2020)
+## Milestone 12 (Due by August, 2020)
 
-1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
-2. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
-3. Keyboard Navigation Enhancement [#6755](https://github.com/IgniteUI/igniteui-angular/issues/6755)
-4. Column freezing/Pinning on the right (igx-grid) [#5879](https://github.com/IgniteUI/igniteui-angular/issues/5879)
-5. Column Selection for IgxGrid [#6578](https://github.com/IgniteUI/igniteui-angular/issues/6578)
-6. Splitter [#6639](https://github.com/IgniteUI/igniteui-angular/issues/6639)
-7. Row Pinning IgxGrid [#6640](https://github.com/IgniteUI/igniteui-angular/issues/6640)
-8. Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
-9. Slider does not support RTL [#5212](https://github.com/igniteui/igniteui-angular/issues/5212)
-10. Circular Progress Indicator does not support RTL [#5903](https://github.com/igniteui/igniteui-angular/issues/5903)
+1. Accept ISO 8601 Date-only string as input for igx-calendar and igx-datepicker [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
+2. igxCombo has to include caseSensitive property in filter search [#7282](https://github.com/IgniteUI/igniteui-angular/issues/7282)
+3. igxCombo default positioning strategy [#7225](https://github.com/IgniteUI/igniteui-angular/issues/7225)
+To Be Updated
 
 
 ## Going down the road
@@ -22,6 +16,22 @@
 2. Visual Cell merging
 3. RTL Support across Ignite UI for Angular components
 # Previous Milestones 
+
+## Milestone 11 (Released June 2nd, 2020)
+
+1.  **[DONE]** Dock Manger - Public Preview [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
+2.  **[DONE]** Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
+3.  **[DONE]** Keyboard Navigation Enhancement [#6755](https://github.com/IgniteUI/igniteui-angular/issues/6755)
+4.  **[DONE]** Column freezing/Pinning on the right (igx-grid) [#5879](https://github.com/IgniteUI/igniteui-angular/issues/5879)
+5.  **[DONE]** Column Selection for IgxGrid [#6578](https://github.com/IgniteUI/igniteui-angular/issues/6578)
+6.  **[DONE]** Splitter [#6639](https://github.com/IgniteUI/igniteui-angular/issues/6639)
+7.  **[DONE]** Row Pinning IgxGrid [#6640](https://github.com/IgniteUI/igniteui-angular/issues/6640)
+8.  **[DONE]** Data Analysis Directive [#1752](https://github.com/IgniteUI/igniteui-angular-samples/issues/1752)
+9.  **[DONE]** Slider does not support RTL [#5212](https://github.com/igniteui/igniteui-angular/issues/5212)
+10.  **[DONE]** Circular Progress Indicator does not support RTL [#5903](https://github.com/igniteui/igniteui-angular/issues/5903)
+11.  **[DONE]** Action Strip [#6941](https://github.com/IgniteUI/igniteui-angular/issues/6941)
+12.  **[DONE]** Theme igx-component scrollbars [#6675](https://github.com/IgniteUI/igniteui-angular/issues/6675)
+13.  **[DONE]** Use CSS variables by default [#6803](https://github.com/IgniteUI/igniteui-angular/issues/6675)
 
 ## Milestone 10 (Released February 10th, 2020)
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -12,7 +12,7 @@ import {
     styleUrls: ['hierarchical-grid.sample.css'],
     templateUrl: 'hierarchical-grid.sample.html'
 })
-export class HierarchicalGridSampleComponent {
+export class HierarchicalGridSampleComponent implements AfterViewInit {
     localData = [];
     localData1 = [];
     data1 = [];
@@ -161,7 +161,6 @@ export class HierarchicalGridSampleComponent {
     }
 
     public changeData() {
-        debugger;
         if (this.localData1 === this.data1) {
             this.localData1 = this.data2;
         } else {

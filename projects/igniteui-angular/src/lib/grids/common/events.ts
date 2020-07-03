@@ -1,5 +1,5 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_api';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IGridDataBindable, GridType } from './grid.interface';
@@ -7,6 +7,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxRowDirective } from '../row.directive';
+import { ColumnType } from './column.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -26,9 +27,12 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs 
         columnID: any,
         rowIndex: number
     };
+    rowData: any;
     oldValue: any;
     newValue?: any;
     event?: Event;
+    column?: ColumnType;
+    owner?: IgxGridBaseDirective & GridType;
 }
 
 export interface IPinColumnEventArgs extends IBaseEventArgs {

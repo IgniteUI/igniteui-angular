@@ -135,7 +135,9 @@ module.exports.copySchematics = (cb) => {
 };
 
 const typedocBuildTheme = (cb) => {
-    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
+    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH,
+    "--tsconfig",
+    path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true });
     cb();
 };
 typedocBuildTheme.displayName = 'typedoc-build:theme';
@@ -178,13 +180,26 @@ const TYPEDOC = {
 };
 
 function typedocBuildExportFn(cb) {
-    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-json", TYPEDOC.EXPORT_JSON_PATH, "--tags", "--params"],
+    spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        "--generate-json",
+        TYPEDOC.EXPORT_JSON_PATH,
+        "--tags",
+        "--params",
+        "--tsconfig",
+        path.join(__dirname,"tsconfig.base.json")],
         { stdio: 'inherit', shell: true });
     cb();
 }
 
 function typedocImportJsonFn(cb) {
-    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-from-json", TYPEDOC.EXPORT_JSON_PATH, "--warns"],
+    spawnSync('typedoc', [
+        TYPEDOC.PROJECT_PATH,
+        "--generate-from-json",
+        TYPEDOC.EXPORT_JSON_PATH,
+        "--warns",
+        "--tsconfig",
+        path.join(__dirname,"tsconfig.base.json")],
         { stdio: 'inherit', shell: true});
     cb();
 }
@@ -208,7 +223,9 @@ function typedocBuildDocsJA (cb) {
             TYPEDOC.TEMPLATE_STRINGS_PATH,
             '--warns',
             '--localize',
-            'jp'], { stdio: 'inherit', shell: true });
+            'jp',
+            "--tsconfig",
+            path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true });
 
         cb();
 }
@@ -217,7 +234,9 @@ function typedocBuildDocsEN (cb) {
         spawnSync('typedoc', [
             TYPEDOC.PROJECT_PATH,
             '--localize',
-            'en'], { stdio: 'inherit', shell: true});
+            'en',
+            "--tsconfig",
+            path.join(__dirname,"tsconfig.base.json")], { stdio: 'inherit', shell: true});
 
         cb();
 }

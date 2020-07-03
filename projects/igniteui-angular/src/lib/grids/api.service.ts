@@ -144,6 +144,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const args = cell.createEditEventArgs();
 
+        // TODO: emit onCellEdit after value is updated - issue #7304
         this.grid.onCellEdit.emit(args);
         if (args.cancel) {
             return args;
@@ -231,6 +232,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
+        // TODO: emit onRowEdit after value is updated - issue #7304
         grid.onRowEdit.emit(args);
 
         if (args.cancel) {
@@ -546,10 +548,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return false;
     }
 
-    public atInexistingPage(): boolean {
-        return this.grid.totalPages - 1 > this.grid.page;
-    }
-
     public get_row_expansion_state(record: any): boolean {
         const grid = this.grid;
         const states = grid.expansionStates;
@@ -588,12 +586,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
-        const eventKey = event && (event as any).key ? (event as any).key.toLowerCase() : null;
-        if (eventKey && this.isToggleKey(eventKey)) {
-            (this.grid as any).zone.onStable.pipe(debounceTime(30)).pipe(first()).subscribe(() => {
-                this.focusActiveCell(rowID);
-            });
-        }
     }
 
     public get_rec_by_id(rowID) {
@@ -606,18 +598,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
-    }
-
-    private focusActiveCell(rowID) {
-        // persist focused cell
-        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const el = this.grid.selectionService.activeElement;
-        if (isVirtualized && el) {
-            const cell = this.get_cell_by_key(rowID, this.grid.visibleColumns[el.column].field);
-            if (cell) {
-                cell.nativeElement.focus();
-            }
-        }
     }
 
 }

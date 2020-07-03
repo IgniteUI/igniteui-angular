@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
 import { IgxComboComponent, IComboSelectionChangeEventArgs,
-    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
-    scaleInCenter, scaleOutCenter, ElasticPositionStrategy
+    DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
 } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
@@ -34,11 +34,10 @@ const complex = [{
     styleUrls: ['combo.sample.css']
 })
 export class ComboSampleComponent implements OnInit, AfterViewInit {
-    private overlaySettings: OverlaySettings[] = [null, null, null];
-    private width = '160px';
-    @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
+    private overlaySettings: OverlaySettings[] = [null, null, null, null];
+    @ViewChild('playgroundCombo', { static: true }) public igxCombo: IgxComboComponent;
+    @ViewChild('playgroundCombo', { read: ElementRef, static: true }) private comboRef: ElementRef;
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
-    @ViewChild(IgxComboComponent, { read: ElementRef, static: true }) private comboRef: ElementRef;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
@@ -168,12 +167,17 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                 verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
                 horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
             modal: false,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: true
         };
         this.overlaySettings[2] = {
             positionStrategy: new GlobalPositionStrategy({ openAnimation: scaleInCenter, closeAnimation: scaleOutCenter }),
             modal: true,
-            closeOnOutsideClick: true,
+            closeOnOutsideClick: true
+        };
+        this.overlaySettings[3] = {
+            positionStrategy: new ConnectedPositioningStrategy({ target: this.comboRef.nativeElement }),
+            modal: false,
+            closeOnOutsideClick: true
         };
     }
 

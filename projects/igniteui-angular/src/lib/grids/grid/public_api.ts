@@ -1,4 +1,4 @@
-export * from '../index';
+export * from '../public_api';
 export * from './groupby-row.component';
 export * from './grid.component';
 export * from './grid.directives';

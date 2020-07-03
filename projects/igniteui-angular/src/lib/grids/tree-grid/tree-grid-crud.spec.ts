@@ -1,18 +1,17 @@
 
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
 
-const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 
@@ -368,11 +367,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
                 tick(16);
                 const rowComponent = treeGrid.getRowByKey(999);
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 147,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 4);
@@ -396,11 +398,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.updateRow(newRow, 299);
                 fix.detectChanges();
 
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 299,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -424,11 +429,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(299).update(newRow);
                 fix.detectChanges();
 
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 299,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -446,19 +454,23 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 6, 'Age', '25');
                 verifyRowsCount(fix, 3, 10);
 
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
                 treeGrid.updateCell(newCellValue, 299, 'Age');
                 fix.detectChanges();
 
-                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                // TODO: onCellEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    column: cellComponent.column,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -476,19 +488,24 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 6, 'Age', '25');
                 verifyRowsCount(fix, 3, 10);
 
+                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(299, 'Age').value;
                 const newCellValue = 18;
                 treeGrid.getCellByKey(299, 'Age').update(newCellValue);
                 fix.detectChanges();
 
-                const cellComponent = treeGrid.getCellByKey(299, 'Age');
+                // TODO: onCellEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    column: cellComponent.column,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -524,11 +541,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(1);
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 1,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -556,11 +576,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(999);
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 1,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -587,11 +610,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(888);
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -615,11 +641,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
 
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -646,11 +675,14 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(4); // original component: Name = 'Jack Simon'
+                // TODO: onRowEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
                     rowID: 7,
+                    rowData: newRow,
                     oldValue: oldRow,
                     newValue: newRow,
-                    cancel: false
+                    cancel: false,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Jack Simon');
                 verifyCellValue(fix, 5, 'Name', 'New Name');
@@ -670,19 +702,24 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
                 const newCellValue = 'Michael Myers';
                 treeGrid.updateCell(newCellValue, 7, 'Name');
                 fix.detectChanges();
 
-                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                // TODO: onCellEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    column: cellComponent.column,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
@@ -700,6 +737,8 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
+                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+
                 // Update cell on level 3
                 const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
                 const newCellValue = 'Michael Myers';
@@ -707,13 +746,16 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.getCellByKey(7, 'Name').update(newCellValue);
                 fix.detectChanges();
 
-                const cellComponent = treeGrid.getCellByKey(7, 'Name');
+                // TODO: onCellEdit should emit updated rowData - issue #7304
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
                     rowID: cellComponent.cellID.rowID,
                     cellID: cellComponent.cellID,
+                    rowData: cellComponent.rowData,
                     oldValue: oldCellValue,
                     newValue: newCellValue,
-                    cancel: false
+                    cancel: false,
+                    column: cellComponent.column,
+                    owner: treeGrid
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
@@ -1091,24 +1133,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 3, 6);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(147);
-                    expect(args.data.Name).toBe('John Winchester');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
         });
 
@@ -1194,24 +1240,28 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyProcessedTreeGridRecordsCount(fix, 5, 7);
             });
 
-            it('should emit an event when deleting row by ID', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row by ID', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 treeGrid.deleteRow(someRow.rowID);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
-            it('should emit an event when deleting row through the row object', (done) => {
-                treeGrid.onRowDeleted.pipe(first()).subscribe((args) => {
-                    expect(args.data.ID).toBe(1);
-                    expect(args.data.Name).toBe('Casey Houston');
-                    done();
-                });
+            it('should emit an event when deleting row through the row object', () => {
+                spyOn(treeGrid.onRowDeleted, 'emit').and.callThrough();
+
+                const row = treeGrid.data[0];
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
+                fix.detectChanges();
+
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledTimes(1);
+                expect(treeGrid.onRowDeleted.emit).toHaveBeenCalledWith({ data: row });
             });
 
             it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by ID)', () => {

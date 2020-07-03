@@ -15,7 +15,7 @@ import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.componen
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { KEYS } from '../../../core/utils';
-import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
+import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
@@ -1064,6 +1064,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick() {
+        this.grid.endEdit(false);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -1083,6 +1084,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public applyChanges() {
+        this.grid.endEdit(false);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }

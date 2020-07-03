@@ -1,4 +1,3 @@
-import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
@@ -21,16 +20,16 @@ import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, IBaseEvent
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxIconModule } from '../icon/index';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/index';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
-import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
+import { OverlaySettings, AbsoluteScrollStrategy, AutoPositionStrategy } from '../services/public_api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -156,7 +155,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _onTouchedCallback: () => void = noop;
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(),
+        positionStrategy: new AutoPositionStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true

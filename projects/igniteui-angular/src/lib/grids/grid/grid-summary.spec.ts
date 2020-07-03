@@ -9,7 +9,7 @@ import {
     IgxSummaryOperand,
     IgxSummaryResult,
     IgxGridGroupByRowComponent
-} from './index';
+} from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
@@ -26,6 +26,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
@@ -46,7 +47,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByComponent,
                 SummariesGroupByTransactionsComponent
             ],
-            imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -556,7 +557,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 colUnitsInStock.movable = true;
                 fix.detectChanges();
 
-                grid.moveColumn(colUnitsInStock, colProductID);
+                grid.moveColumn(colUnitsInStock, colProductID, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
@@ -1684,6 +1685,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '31', '43', '74', '37']);
 
             grid.clearGrouping('OnPTO');
+            fix.detectChanges();
             verifyBaseSummaries(fix);
             verifySummariesForParentID17(fix, 3);
             verifySummariesForParentID19(fix, 6);

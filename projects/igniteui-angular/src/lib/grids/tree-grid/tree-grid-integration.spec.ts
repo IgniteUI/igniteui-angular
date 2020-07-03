@@ -2,7 +2,7 @@ import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angul
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridRowComponent } from './public_api';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
@@ -20,8 +20,10 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../grid';
+import { IgxGridCellComponent } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
+import { DropPosition } from '../moving/moving.service';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -830,7 +832,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(trans.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transParams = { id: addedRowId_1, type: 'add', newValue: newRow };
+            const transParams: HierarchicalTransaction = {
+                id: addedRowId_1,
+                type: TransactionType.ADD,
+                newValue: newRow
+            };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
             expect(treeGrid.records.get(addedRowId_1).level).toBe(0);
@@ -961,7 +967,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transParams = { id: addedRowId, type: 'add', newValue: newRow };
+            const transParams: HierarchicalTransaction = {
+                id: addedRowId,
+                type: TransactionType.ADD,
+                newValue: newRow
+            };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
@@ -1009,7 +1019,12 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transParams = { id: addedRowId, path: [parentRow.rowID], newValue: newRow, type: 'add' };
+            const transParams: HierarchicalTransaction = {
+                id: addedRowId,
+                path: [parentRow.rowID],
+                newValue: newRow,
+                type: TransactionType.ADD
+            };
             expect(trans.add).toHaveBeenCalledWith(transParams, null);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
@@ -1055,7 +1070,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transParams = { id: addedRowId, type: 'add', newValue: newRow };
+            const transParams: HierarchicalTransaction = { id: addedRowId, type: TransactionType.ADD, newValue: newRow };
             expect(trans.add).toHaveBeenCalledWith(transParams);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
@@ -1103,11 +1118,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
-            const transPasrams = {
+            const transPasrams: HierarchicalTransaction = {
                 id: addedRowId,
                 path: [treeGrid.getRowByIndex(0).rowID, parentRow.rowID],
                 newValue: newRow,
-                type: 'add'
+                type: TransactionType.ADD
             };
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
 
@@ -1494,7 +1509,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             const thirdColumnField = treeGrid.columns[2].field;
 
-            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0]);
+            treeGrid.moveColumn(treeGrid.columns[2], treeGrid.columns[0], DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
             const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, thirdColumnField);

@@ -4,6 +4,7 @@
         class="igx-grid__summaries-patch"
         [style.min-width.px]="grid.summariesMargin"
         [style.flex-basis.px]="grid.summariesMargin"
+        (pointerdown)="$event.preventDefault()"
         ></div>
     </ng-container>
     <ng-container *ngIf="pinnedColumns.length > 0 && grid.isPinningToStart">

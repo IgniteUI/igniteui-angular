@@ -1,5 +1,6 @@
 # Ignite UI for Angular - from Infragistics
 
+![Node.js CI](https://github.com/IgniteUI/igniteui-angular/workflows/Node.js%20CI/badge.svg)
 [![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-angular.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-angular)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
@@ -202,11 +203,16 @@ Developer support is provided as part of the commercial, paid-for license via [I
 Community support for open source usage of this product is available at [StackOverflow](https://stackoverflow.com/questions/tagged/ignite-ui-angular).
 
 ## License
-This project is released under the Apache License, version 2.0.  This is a commercial product, requiring a valid paid-for license for commercial use.  This product is free to use for non-commercial applications, like non-profits and educational usage.
+This is a commercial product, requiring a valid paid-for license for commercial use.  
+This product is free to use for non-commercial educational use for students in K through 12 grades or University programs, and for educators to use in a classroom setting as examples / tools in their curriculum.
+In order for us to verify your eligibility for free usage, please [register for trial](https://Infragistics.com/Angular) and open a support ticket with a request for free license.
 
-To acquire a license for commercial usage, please register for a trial and acquire a license at [Infragistics.com/Angular](https://www.infragistics.com/products/ignite-ui-angular/getting-started).
+To acquire a license for commercial usage, please [register for trial](https://Infragistics.com/Angular) and refer to the purchasing options in the pricing section on the product page.  
 
-© Copyright 2017 INFRAGISTICS. All Rights Reserved.  The Infragistics Ultimate license & copyright applies to this distribution.  For information on that license, please go to our website [here](https://www.infragistics.com/legal/license).
+© Copyright 2020 INFRAGISTICS. All Rights Reserved. 
+The Infragistics Ultimate license & copyright applies to this distribution. 
+For information on that license, please go to our website [https://www.infragistics.com/legal/license](https://www.infragistics.com/legal/license).
+
 
 
 

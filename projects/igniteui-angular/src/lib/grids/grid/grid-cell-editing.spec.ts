@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs } from './index';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs } from './public_api';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -264,6 +264,44 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(editCell.nativeElement.value).toBe('test');
             expect(firstCell.editMode).toBeTruthy();
         }));
+
+        it('should end cell editing when clearing or applying advanced filter', () => {
+            const cell = grid.getCellByColumn(0, 'fullName');
+
+            // Enter cell edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fixture);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(false);
+
+            // Close the dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fixture);
+            fixture.detectChanges();
+
+            // Enter cell edit mode
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fixture.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            // Open Advanced Filtering dialog.
+            grid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fixture);
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(false);
+        });
     });
 
     describe('Scroll, pin and blur', () => {
@@ -519,12 +557,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it(`Should properly emit 'onCellEditEnter' event`, () => {
             spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
             expect(cell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', cancel: false };
+            let cellArgs: IGridEditEventArgs = {
+                rowID: cell.row.rowID,
+                cellID: cell.cellID,
+                rowData: initialRowData,
+                oldValue: 'John Brown',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
@@ -535,7 +582,16 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBeFalsy();
             cell = grid.getCellByColumn(0, 'age');
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, cancel: false };
+            initialRowData = {...cell.rowData};
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 20,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeTruthy();
@@ -547,25 +603,43 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 e.cancel = true;
             });
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
             expect(cell.editMode).toBeFalsy();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
 
-            let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', cancel: true };
+            let cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 'John Brown',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
 
             // press enter on a cell
             cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
             UIInteractions.simulateClickAndSelectEvent(cell);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, cancel: true };
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 20,
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
             expect(cell.editMode).toBeFalsy();
@@ -588,7 +662,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false };
+            // TODO: onCellEdit should emit updated rowData - issue #7304
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: cell.rowData,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -602,7 +686,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, newValue: 1, cancel: false };
+            // TODO: onCellEdit should emit updated rowData - issue #7304
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: cell.rowData,
+                oldValue: 20,
+                newValue: 1,
+                cancel: false,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
         });
@@ -614,6 +708,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             });
             let cellArgs: IGridEditEventArgs;
             let cell = grid.getCellByColumn(0, 'fullName');
+            let initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -627,7 +722,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true };
+            // TODO: onCellEdit should emit updated rowData - issue #7304
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -635,6 +740,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe('John Brown');
 
             cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.rowData};
             expect(cell.editMode).toBe(true);
             editTemplate = fixture.debugElement.query(By.css('input'));
             UIInteractions.clickAndSendInputElementValue(editTemplate, 1);
@@ -644,7 +750,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('enter', gridContent);
             fixture.detectChanges();
 
-            cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 20, newValue: '1', cancel: true };
+            // TODO: onCellEdit should emit updated rowData - issue #7304
+            cellArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 20,
+                newValue: '1',
+                cancel: true,
+                column: cell.column,
+                owner: grid
+            };
             expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
             expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -729,6 +845,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it(`Should properly emit 'onCellEditCancel' event`, () => {
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');
+            const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -744,7 +861,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: false,
+                column: cell.column,
+                owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
@@ -758,6 +881,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 e.cancel = true;
             });
             const cell = grid.getCellByColumn(0, 'fullName');
+            const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
@@ -767,13 +891,19 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.clickAndSendInputElementValue(editTemplate, 'New Name');
             fixture.detectChanges();
 
-           // press escape on edited cell
-           UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
-           fixture.detectChanges();
+            // press escape on edited cell
+            UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
+            fixture.detectChanges();
 
             const cellArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true
+                rowID: cell.row.rowID,
+                rowData: initialRowData,
+                oldValue: 'John Brown',
+                newValue: 'New Name',
+                cancel: true,
+                column: cell.column,
+                owner: grid
             };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);

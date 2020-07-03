@@ -9,12 +9,12 @@ import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/columns/column.component';
-import { IgxTransactionService } from '../services';
+import { IgxTransactionService } from '../services/public_api';
 import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { IgxGridComponent } from '../grids/grid';
+import { IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -586,6 +586,7 @@ export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
 export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
     colGroups = [
         {
+            field: 'group1',
             group: 'group1',
             pinned: true,
             columns: [
@@ -596,6 +597,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
             ]
         },
         {
+            field: 'group2',
             group: 'group2',
             columns: [
                 { field: 'Country', rowStart: 1, colStart: 1, colEnd: 4, rowEnd: 3 },
@@ -1158,6 +1160,9 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
                     [filterCellTemplate]="filterTemplate"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
                     [filterable]="filterable" [resizable]="resizable" dataType="date" [filterCellTemplate]="filterTemplate">
+        </igx-column>
+        <igx-column width="100px" field="Licensed" [filterable]="filterable"
+                    [resizable]="resizable" dataType="boolean">
         </igx-column>
     </igx-grid>
     <ng-template #filterTemplate igxFilterCellTemplate let-column="column">

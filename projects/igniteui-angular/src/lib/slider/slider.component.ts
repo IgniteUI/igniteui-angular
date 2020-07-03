@@ -1351,6 +1351,8 @@ export class IgxSliderComponent implements
         } else {
             this.value = (value as number) - ((value as number) % this.step);
         }
+
+        this._cdr.detectChanges();
     }
 
     private updateTrack() {
@@ -1416,13 +1418,13 @@ export class IgxSliderComponent implements
     public setValue(value: number | IRangeSliderValue) {
         if (!this.isRange) {
             this.upperValue = value as number - (value as number % this.step);
+            this._onChangeCallback(this.upperValue);
         } else {
             value = this.validateInitialValue(value as IRangeSliderValue);
             this.upperValue = (value as IRangeSliderValue).upper;
             this.lowerValue = (value as IRangeSliderValue).lower;
+            this._onChangeCallback({lower: this.lowerValue, upper: this.upperValue});
         }
-
-        this._onChangeCallback(this.value);
     }
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {

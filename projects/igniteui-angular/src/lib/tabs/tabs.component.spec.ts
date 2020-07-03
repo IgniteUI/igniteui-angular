@@ -6,7 +6,7 @@ import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down';
+import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -563,8 +563,8 @@ describe('IgxTabs', () => {
         let theTabs;
 
         beforeEach(async(() => {
-            router = TestBed.get(Router);
-            location = TestBed.get(Location);
+            router = TestBed.inject(Router);
+            location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabsRoutingTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -771,7 +771,7 @@ describe('IgxTabs', () => {
         let theTabs;
 
         beforeEach(async(() => {
-            router = TestBed.get(Router);
+            router = TestBed.inject(Router);
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();

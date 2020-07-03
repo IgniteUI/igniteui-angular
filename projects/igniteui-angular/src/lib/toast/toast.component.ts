@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 import {
     Component,
     ElementRef,
@@ -13,9 +14,22 @@ import {
     Output
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
+
+/**
+ * Enumeration for toast position
+ * Can be:
+ * Bottom
+ * Middle
+ * Top
+ */
+export enum IgxToastPosition {
+    Bottom,
+    Middle,
+    Top
+}
+
 /**
  * **Ignite UI for Angular Toast** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)
@@ -192,10 +206,26 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     public isVisibleChange = new EventEmitter<boolean>();
 
     /**
-     * @hidden
+     * @deprecated Place your message in the toast content instead.
+     * Sets/gets the message that will be shown by the toast.
+     * ```html
+     * <igx-toast [message] = "Notification"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastMessage = this.toast.message;
+     * ```
+     * @memberof IgxToastComponent
      */
+    @DeprecateProperty(`'message' property is deprecated.
+    You can use place the message in the toast content or pass it as parameter to the show method instead.`)
     @Input()
-    public message = '';
+    public set message(value: string) {
+        this.toastMessage = value;
+    }
+
+    public get message() {
+        return this.toastMessage;
+    }
 
     /**
      * Sets/gets the position of the toast.
@@ -224,6 +254,12 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
 
     /**
      * @hidden
+     * @internal
+     */
+    toastMessage = '';
+
+    /**
+     * @hidden
      */
     private timeoutId: number;
 
@@ -239,8 +275,9 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * ```
      * @memberof IgxToastComponent
      */
-    public show(): void {
+    public show(message?: string): void {
         clearInterval(this.timeoutId);
+        if (message !== undefined) { this.toastMessage = message; }
         this.onShowing.emit(this);
         this.isVisible = true;
         this.animationState = 'visible';
@@ -338,19 +375,6 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
             this.navService.remove(this.id);
         }
     }
-}
-
-/**
- * Enumeration for toast position
- * Can be:
- * Bottom
- * Middle
- * Top
- */
-export enum IgxToastPosition {
-    Bottom,
-    Middle,
-    Top
 }
 
 /**

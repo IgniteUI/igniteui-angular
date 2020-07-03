@@ -7,7 +7,7 @@ import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
 } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
@@ -40,7 +40,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
-import { SplitterSampleComponent } from './splitter/slitter.sample';
+import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -126,6 +126,12 @@ import { GridColumnSelectionSampleComponent, GridColumnSelectionFilterPipe } fro
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinning.sample';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
+import {
+    HierarchicalGridRemoteVirtualizationComponent
+} from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { HierarchicalRemoteService } from './hierarchical-grid-remote-virtualization/hierarchical-remote.service';
+import { IgxGridHierarchicalPipe } from 'igniteui-angular';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -222,6 +228,7 @@ const components = [
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
     HierarchicalGridRemoteSampleComponent,
+    HierarchicalGridRemoteVirtualizationComponent,
     HierarchicalGridUpdatingSampleComponent,
     DisplayFormatPipe,
     InputFormatPipe,
@@ -240,7 +247,8 @@ const components = [
     AboutComponent,
     ReactiveFormSampleComponent,
     DateRangeSampleComponent,
-    GridRemotePagingSampleComponent
+    GridRemotePagingSampleComponent,
+    GridVirtualizationScrollSampleComponent
 ];
 
 @NgModule({
@@ -271,6 +279,9 @@ const components = [
     providers: [
         LocalService,
         RemoteService,
+        HierarchicalRemoteService,
+        GridBaseAPIService,
+        IgxGridHierarchicalPipe,
         IgxExcelExporterService,
         IgxIconService,
         IgxCsvExporterService,

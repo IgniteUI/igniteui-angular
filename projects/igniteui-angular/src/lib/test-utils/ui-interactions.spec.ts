@@ -1,4 +1,4 @@
-import { HorizontalAlignment, VerticalAlignment, Point } from '../services';
+import { HorizontalAlignment, VerticalAlignment, Point } from '../services/public_api';
 import { DebugElement } from '@angular/core';
 
 export function wait(ms = 0) {
@@ -249,11 +249,7 @@ export class UIInteractions {
             clientX: x,
             clientY: y
         };
-
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(new MouseEvent(eventName, options));
-            resolve();
-        });
+        element.dispatchEvent(new MouseEvent(eventName, options));
     }
 
     public static createPointerEvent(eventName: string, point: Point) {

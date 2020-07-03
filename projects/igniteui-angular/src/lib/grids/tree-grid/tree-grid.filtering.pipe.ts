@@ -7,7 +7,7 @@ import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective } from '../grid';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 
 /** @hidden */
@@ -80,14 +80,14 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         this.resetFilteredOutProperty(grid.records);
 
         if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
-            grid.setFilterData(null, pinned);
+            grid.setFilteredData(null, pinned);
             return hierarchyData;
         }
 
         const result = this.filter(hierarchyData, state);
         const filteredData: any[] = [];
         this.expandAllRecursive(grid, result, grid.expansionStates, filteredData);
-        grid.setFilterData(filteredData, pinned);
+        grid.setFilteredData(filteredData, pinned);
 
         return result;
     }

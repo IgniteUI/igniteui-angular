@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DisplayDensity } from '../core/density';
-import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/public_api';
 import { IgxSelectionAPIService } from '../core/selection';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -2827,7 +2827,7 @@ class IgxComboInTemplatedFormComponent {
 @Injectable()
 export class LocalService {
     public getData() {
-        const fakeData = Observable.create(obs => {
+        const fakeData = new Observable(obs => {
             setTimeout(() => {
                 obs.next(this.generateData());
                 obs.complete();
@@ -2862,7 +2862,7 @@ export class IgxComboBindingTestComponent {
     public items = [];
     constructor(private localService: LocalService) {
         this.localService.getData().subscribe(
-            (data) => {
+            (data: any[]) => {
                 this.items = data;
             }
         );

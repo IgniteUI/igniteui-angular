@@ -257,8 +257,8 @@ describe('IgxBottomNav', () => {
         let theTabs;
 
         beforeEach(async(() => {
-            router = TestBed.get(Router);
-            location = TestBed.get(Location);
+            router = TestBed.inject(Router);
+            location = TestBed.inject(Location);
             fixture = TestBed.createComponent(TabBarRoutingTestComponent);
             bottomNav = fixture.componentInstance.bottomNavComp;
             fixture.detectChanges();

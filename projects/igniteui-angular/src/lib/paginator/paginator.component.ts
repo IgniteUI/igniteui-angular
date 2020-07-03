@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { IgxSelectModule } from '../select/index';
-import { IgxIconModule } from '../icon/index';
+import { OverlaySettings } from '../services/public_api';
+import { IgxSelectModule } from '../select/public_api';
+import { IgxIconModule } from '../icon/public_api';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
@@ -22,6 +23,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     public totalPages: number;
     private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
+    private _overlaySettings: OverlaySettings = {};
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions;
@@ -163,6 +165,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public dropdownHidden = false;
 
     /**
+     * An @Input property that sets custom OverlaySettings.
+     * ```html
+     * <igx-paginator [overlaySettings] = "customOverlaySettings"></igx-paginator>
+     * ```
+     */
+    @Input()
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings;
+    }
+
+    public set overlaySettings(value: OverlaySettings) {
+        this._overlaySettings = Object.assign({}, this._overlaySettings, value);
+    }
+
+    /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
      */
@@ -202,13 +219,31 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public prepositionPage = CurrentResourceStrings.PaginatorResStrings.igx_paginator_pager_text;
 
     /**
-     * An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
+     * Emitted when `perPage` property value of the paginator is changed.
+     * @example
+     * ```html
+     * <igx-paginator (perPageChange)="onPerPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPerPageChange(perPage: number) {
+     *   this.perPage = perPage;
+     * }
+     * ```
      */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
     /**
-     * An event that is emitted when the paginating is used.
+     * Emitted after the current page is changed.
+     * @example
+     * ```html
+     * <igx-paginator (pageChange)="onPageChange($event)"></igx-paginator>
+     * ```
+     * ```typescript
+     * public onPageChange(page: number) {
+     *   this.currentPage = page;
+     * }
+     * ```
      */
     @Output()
     public pageChange = new EventEmitter<number>();

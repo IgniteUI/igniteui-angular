@@ -2,9 +2,9 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, tick } from '@angular/core/testing';
-import { IgxInputDirective } from '../input-group';
+import { IgxInputDirective } from '../input-group/public_api';
 import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
-import { IgxChipComponent } from '../chips';
+import { IgxChipComponent } from '../chips/public_api';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
@@ -15,13 +15,13 @@ import {
     IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridBaseDirective
-} from '../grids/grid';
+} from '../grids/grid/public_api';
 import { ControlsFunction } from './controls-functions.spec';
 import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
-const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
+const SUMMARY_CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -46,6 +46,7 @@ const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const ACTIVE_HEADER_CLASS = 'igx-grid__th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const CELL_ACTIVE_CSS_CLASS = 'igx-grid__td--active';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
@@ -86,6 +87,8 @@ export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
 export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
 export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-paginator__pager';
+const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
+const RESIZE_AREA_CLASS = '.igx-grid__th-resize-handle';
 
 export class GridFunctions {
 
@@ -292,7 +295,7 @@ export class GridFunctions {
     }
 
     public static verifyUnpinnedAreaWidth(grid: IgxGridBaseDirective, expectedWidth: number, includeScrolllWidth = true) {
-        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollWidth)) :
+        const tolerans = includeScrolllWidth ? Math.abs(expectedWidth - (grid.unpinnedWidth + grid.scrollSize)) :
                                                Math.abs(expectedWidth - grid.unpinnedWidth);
         expect(tolerans).toBeLessThanOrEqual(1);
     }
@@ -1945,6 +1948,14 @@ export class GridFunctions {
             });
         });
     }
+
+    public static getHeaderResizeArea(header: DebugElement): DebugElement {
+         return  header.parent.query(By.css(RESIZE_AREA_CLASS));
+    }
+
+    public static getResizer(fix): DebugElement {
+        return  fix.debugElement.query(By.css(RESIZE_LINE_CLASS));
+   }
 }
 export class GridSummaryFunctions {
     public static getRootSummaryRow(fix): DebugElement {
@@ -2045,7 +2056,7 @@ export class GridSummaryFunctions {
         const summaryRow = typeof row === 'number' ?
             GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, row) : row;
         const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-        const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
+        const hasClass = summ.nativeElement.classList.contains(SUMMARY_CELL_ACTIVE_CSS_CLASS);
         expect(hasClass === active).toBeTruthy();
     }
 
@@ -2130,6 +2141,11 @@ export class GridSelectionFunctions {
     public static verifyCellSelected(cell, selected = true) {
         expect(cell.selected).toBe(selected);
         expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
+    }
+
+    public static verifyCellActive(cell, active = true) {
+        expect(cell.active).toBe(active);
+        expect(cell.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS)).toBe(active);
     }
 
     // Check the grid selected cell and cell in in the onSelection function

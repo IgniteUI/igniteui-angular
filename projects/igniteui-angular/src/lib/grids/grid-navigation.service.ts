@@ -146,7 +146,7 @@ export class IgxGridNavigationService {
         const shift = event.shiftKey;
         const alt = event.altKey;
 
-        this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt);
+        this.performHeaderKeyCombination(this.currentActiveColumn, key, shift, ctrl, alt, event);
         if (shift || alt || (ctrl && (key.includes('down') || key.includes('down')))) { return; }
         !this.grid.hasColumnGroups ? this.horizontalNav(event, key, -1) : this.handleMCHeaderNav(key, ctrl);
     }
@@ -171,7 +171,9 @@ export class IgxGridNavigationService {
     }
 
     focusTbody(event) {
-        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > this.grid.dataView.length - 1) {
+        const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
+        if (gridRows < 1) { this.activeNode = null; return; }
+        if (!this.activeNode || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             this.activeNode = { row: 0, column: 0 };
             this.grid.navigateTo(0, 0, (obj) => {
                 this.grid.clearCellSelection();
@@ -181,7 +183,8 @@ export class IgxGridNavigationService {
     }
 
     focusFirstCell(header = true) {
-        if (this.activeNode && (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
+        if (this.grid.dataView.length && this.activeNode &&
+            (this.activeNode.row === -1 || this.activeNode.row === this.grid.dataView.length)) { return; }
         this.activeNode = { row: header ? -1 : this.grid.dataView.length, column: 0,
                 level: this.grid.hasColumnLayouts ? 1 : 0, mchCache: { level: 0, visibleIndex: 0} };
         this.performHorizontalScrollToCell(0);
@@ -358,6 +361,7 @@ export class IgxGridNavigationService {
     }
 
     protected findLastDataRowIndex(): number {
+        if ((this.grid as any).totalItemCount) { return (this.grid as any).totalItemCount - 1;  }
         let i = this.grid.dataView.length;
         while (i--) {
             if (this.isDataRow(i)) {
@@ -375,12 +379,13 @@ export class IgxGridNavigationService {
     }
 
     protected isValidPosition(rowIndex: number, colIndex: number): boolean {
-        if (rowIndex < 0 || colIndex < 0 || this.grid.dataView.length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
+        const length = (this.grid as any).totalItemCount ?? this.grid.dataView.length;
+        if (rowIndex < 0 || colIndex < 0 || length - 1 < rowIndex || this.lastColumnIndex < colIndex) {
             return false;
         }
         return this.activeNode.column !== colIndex && !this.isDataRow(rowIndex, true) ? false : true;
     }
-    protected performHeaderKeyCombination(column, key, shift, ctrl, alt) {
+    protected performHeaderKeyCombination(column, key, shift, ctrl, alt, event) {
         let direction =  this.grid.sortingExpressions.find(expr => expr.fieldName === column.field)?.dir;
         if (ctrl && key.includes('up') && column.sortable && !column.columnGroup) {
             direction = direction === SortingDirection.Asc ? SortingDirection.None : SortingDirection.Asc;

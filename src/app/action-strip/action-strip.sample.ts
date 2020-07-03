@@ -1,12 +1,12 @@
-import {Component, ViewChild} from '@angular/core';
-import {IgxActionStripComponent, IgxGridComponent, DisplayDensity} from 'igniteui-angular';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { IgxActionStripComponent, IgxGridComponent, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     selector: 'app-action-strip-sample',
     styleUrls: ['action-strip.sample.scss'],
     templateUrl: `action-strip.sample.html`
 })
-export class ActionStripSampleComponent {
+export class ActionStripSampleComponent implements OnInit {
     @ViewChild('actionstrip') actionStrip: IgxActionStripComponent;
     @ViewChild('actionstrip1') actionStrip1: IgxActionStripComponent;
     @ViewChild('grid1', { static: true }) grid1: IgxGridComponent;
@@ -17,6 +17,9 @@ export class ActionStripSampleComponent {
     public cosy = DisplayDensity.cosy;
     public compact = DisplayDensity.compact;
     public displayDensity = this.comfortable;
+
+    data: any[];
+    columns: any[];
 
     doSomeAction() {
         this.result = `Clicked ${this.counter++} times`;
@@ -31,15 +34,15 @@ export class ActionStripSampleComponent {
     }
 
     onMouseOver(event, grid, actionStrip) {
-        if (event.target.nodeName.toLowerCase() === "igx-grid-cell") {
-            const rowIndex = parseInt(event.target.attributes["data-rowindex"].value, 10);
+        if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {
+            const rowIndex = parseInt(event.target.attributes['data-rowindex'].value, 10);
             const row = grid.getRowByIndex(rowIndex);
             actionStrip.show(row);
         }
     }
 
     onMouseLeave(actionstrip, event?) {
-        if (!event || event.relatedTarget.nodeName.toLowerCase() !== "igx-drop-down-item") {
+        if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {
             actionstrip.hide();
         }
     }
@@ -47,9 +50,6 @@ export class ActionStripSampleComponent {
     setDensity(density: DisplayDensity) {
         this.displayDensity = density;
     }
-
-    data: any[];
-    columns: any[];
 
     ngOnInit(): void {
         this.columns = [
