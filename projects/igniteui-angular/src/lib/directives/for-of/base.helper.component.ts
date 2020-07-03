@@ -20,6 +20,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     public destroyed;
 
     private _afterViewInit = false;
+    private _scrollNativeSize: number;
 
     ngAfterViewInit() {
         this._afterViewInit = true;
@@ -29,7 +30,9 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
     }
-    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) {
+        this._scrollNativeSize = this.calculateScrollNativeSize();
+     }
 
     get nativeElement() {
         return this.elementRef.nativeElement;
@@ -54,6 +57,10 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     }
 
     public get scrollNativeSize() {
+        return this._scrollNativeSize;
+    }
+
+    public calculateScrollNativeSize() {
         const div = document.createElement('div');
         const style = div.style;
         style.width = '100px';
