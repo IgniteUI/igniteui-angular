@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs } from '../common/events';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +26,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;
@@ -152,11 +152,14 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         const row = grid.rowList.toArray()[0];
+        // TODO: onRowEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: 1,
+            rowData: { index: 200, value: 200 },
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
-            cancel: false
+            cancel: false,
+            owner: grid
         };
 
         expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
@@ -172,12 +175,17 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         const cell = grid.getCellByColumn(0, 'index');
+
+        // TODO: onCellEdit should emit updated rowData - issue #7304
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
             cellID: cell.cellID,
+            rowData: { index: 200, value: 1 },
             oldValue: 1,
             newValue: 200,
-            cancel: false
+            cancel: false,
+            column: cell.column,
+            owner: grid
         };
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);

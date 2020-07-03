@@ -33,12 +33,12 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     }));
 
     describe('Hiding ', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        });
+        }));
 
         it('should allow setting a whole group as hidden/shown.', () => {
 
@@ -142,6 +142,43 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactName').hidden).toBeTruthy();
             expect(grid.getColumnByName('ContactTitle').hidden).toBeTruthy();
         });
+
+        it('verify visible column indexes when hide/show a column', () => {
+
+            expect(grid.getColumnByName('ID').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('CompanyName').visibleIndex).toBe(1);
+            expect(grid.getColumnByName('ContactName').visibleIndex).toBe(2);
+            expect(grid.getColumnByName('ContactTitle').visibleIndex).toBe(3);
+            // show PostalCode
+            grid.getColumnByName('PostalCode').hidden = false;
+            fixture.detectChanges();
+
+            expect(grid.getColumnByName('ID').visibleIndex).toBe(1);
+            expect(grid.getColumnByName('CompanyName').visibleIndex).toBe(2);
+            expect(grid.getColumnByName('ContactName').visibleIndex).toBe(3);
+            expect(grid.getColumnByName('ContactTitle').visibleIndex).toBe(6);
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(4);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(5);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(7);
+
+            // hide PostalCode
+            grid.getColumnByName('PostalCode').hidden = true;
+            fixture.detectChanges();
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(-1);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(-1);
+
+            // show PostalCode
+            grid.getColumnByName('PostalCode').hidden = false;
+            fixture.detectChanges();
+            expect(grid.getColumnByName('PostalCode').visibleIndex).toBe(0);
+            expect(grid.getColumnByName('City').visibleIndex).toBe(4);
+            expect(grid.getColumnByName('Country').visibleIndex).toBe(5);
+            expect(grid.getColumnByName('Address').visibleIndex).toBe(7);
+        });
+
 
         it('should work with horizontal virtualization when some groups are hidden/shown.', async() => {
             const uniqueGroups = [
@@ -366,7 +403,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Pinning ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutPinningTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -735,7 +772,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
                 }
             ];
             fixture.componentInstance.colGroups = uniqueGroups;
-            fixture.componentInstance.grid.width = (800 + grid.scrollWidth) + 'px';
+            fixture.componentInstance.grid.width = (800 + grid.scrollSize) + 'px';
             fixture.detectChanges();
 
             // pin group3
@@ -770,7 +807,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Filtering ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutFilteringTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -813,7 +850,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('GroupBy ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -883,7 +920,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
         const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
 
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -1051,7 +1088,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should correctly resize column while there is another column that does not have width set', async() => {
-            grid.width = 1500 + grid.scrollWidth + 'px';
+            grid.width = 1500 + grid.scrollSize + 'px';
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
@@ -1093,7 +1130,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
         });
 
         it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
-            grid.width = 1500 + grid.scrollWidth + 'px';
+            grid.width = 1500 + grid.scrollSize + 'px';
             fixture.detectChanges();
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
@@ -1140,7 +1177,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     });
 
     describe('Selection ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;

@@ -2,7 +2,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
 import { IPathSegment } from './hierarchical-grid-base.directive';
-import { IgxGridBaseDirective, GridBaseAPIService } from '../grid';
+import { IgxGridBaseDirective, GridBaseAPIService } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { Injectable } from '@angular/core';
 
@@ -102,8 +102,13 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         let inState;
         if (record.childGridsData !== undefined) {
             const ri = record.rowID;
-            const rec = this.grid.primaryKey ? this.get_rec_by_id(ri) : ri;
-            inState = !!super.get_row_expansion_state(rec);
+            const states = this.grid.expansionStates;
+            const expanded = states.get(ri);
+            if (expanded !== undefined) {
+                return expanded;
+            } else {
+                return this.grid.getDefaultExpandState(record);
+            }
         } else {
             inState = !!super.get_row_expansion_state(record);
         }

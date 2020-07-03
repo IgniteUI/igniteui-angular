@@ -16,7 +16,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './columns/column.component';
-import { TransactionType } from '../services';
+import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -248,7 +248,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     /**
      * @hidden
      */
-    public dragging = false;
+    public get dragging() {
+        return this.grid.dragRowID === this.rowID;
+    }
 
     // TODO: Refactor
     public get inEditMode(): boolean {
@@ -369,7 +371,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         if (crudService.inEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
-        const row = new IgxRow(this.rowID, this.index, this.rowData);
+        const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }

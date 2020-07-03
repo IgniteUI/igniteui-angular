@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from './index';
+import { IgxGridModule } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -20,7 +20,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
 
 
@@ -137,7 +137,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         });
 
-        it('should remove all rows if data becomes null/undefined.', async () => {
+        it('should remove all rows if data becomes null/undefined.', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.instance;
@@ -150,7 +150,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.rowList.length).toEqual(0);
             expect(noRecordsSpan).toBeTruthy();
             expect(noRecordsSpan.nativeElement.innerText).toBe('Grid has no data.');
-        });
+        }));
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
@@ -1416,7 +1416,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // check virtualization cache is valid
             const virtDir = grid.getRowByIndex(0).virtDirRow;
-            expect(virtDir.getSizeAt(0)).toEqual(Math.floor(0.7 * grid.unpinnedWidth));
+            expect(virtDir.getSizeAt(0)).toEqual(expectedWidth);
             expect(virtDir.getSizeAt(1)).toEqual(136);
             expect(virtDir.getSizeAt(2)).toEqual(136);
 
@@ -1614,10 +1614,10 @@ describe('IgxGrid Component Tests #grid', () => {
             }).compileComponents();
         }));
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
-        });
+        }));
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
             const grid = fix.componentInstance.grid3;
@@ -1627,7 +1627,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
             await wait(100);
-            grid.cdr.detectChanges();
+            fix.detectChanges();
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
@@ -1655,7 +1655,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
             grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
 
@@ -1742,6 +1742,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const footerContent = footer.textContent.trim();
 
             expect(footerContent).toEqual('Custom content');
+            const grid = fix.componentInstance.grid;
+
+            const expectedHeight = parseInt(grid.height, 10) - grid.theadRow.nativeElement.offsetHeight - grid.scrollSize - 100;
+            expect(expectedHeight - grid.calcHeight).toBeLessThanOrEqual(1);
         });
     });
 
@@ -2129,15 +2133,19 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
 @Component({
     template:
         `<div>
-        <igx-grid #grid [data]="data" [displayDensity]="'compact'" [autoGenerate]="true"
-            [paging]="true" [perPage]="5">
+        <igx-grid #grid [data]="data" height='300px' [displayDensity]="'compact'" [autoGenerate]="true"
+            >
             <igx-grid-footer>
-            Custom content
+                <div style='height:100px;'>
+                Custom content
+                </div>
             </igx-grid-footer>
         </igx-grid>
         </div>`
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 @Component({
     template:

@@ -7,14 +7,18 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.compo
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/public_api';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxCalendarModule } from '../calendar';
+import { IgxCalendarModule } from '../calendar/public_api';
 import { InteractionMode } from '../core/enums';
 import { DateRangeType } from '../core/dates/dateRange';
-import { OverlayCancelableEventArgs, OverlayEventArgs, OverlayClosingEventArgs, HorizontalAlignment, VerticalAlignment } from '../services';
+import {
+    OverlayCancelableEventArgs,
+    OverlayClosingEventArgs,
+    OverlayEventArgs
+} from '../services/public_api';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -126,6 +130,22 @@ describe('IgxDatePicker', () => {
             const disabledGroup = dom.query(By.css('.igx-input-group--disabled'));
             expect(disabledGroup).toBeDefined();
             expect(inputGroup.nativeElement.classList.contains('igx-input-group--disabled')).toBeTruthy();
+        });
+
+        it('should not be able to toggle & clear when disabled', () => {
+            const date = new Date();
+            datePicker.value = date;
+            datePicker.disabled = true;
+            fixture.detectChanges();
+            expect(datePicker.collapsed).toBeTruthy();
+
+            datePicker.openDialog();
+            fixture.detectChanges();
+            expect(datePicker.collapsed).toBeTruthy();
+
+            datePicker.clear();
+            fixture.detectChanges();
+            expect(datePicker.value).toEqual(date);
         });
 
         it('When labelVisability is set to false the label should not be visible', () => {

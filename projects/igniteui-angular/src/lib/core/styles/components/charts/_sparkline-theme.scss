@@ -1,0 +1,102 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $brush [null] - Sets the sparkline brush.
+/// @param {Number} $line-thickness [null] - Sets the line thickness of the sparkline.
+/// @param {Color} $marker-brush [null] - Sets the marker brush of the sparkline.
+/// @param {Color} $marker-size [null] - Sets the marker size of the sparkline.
+/// @param {Color} $first-marker-brush [null] - Sets the first marker brush of the sparkline.
+/// @param {Number} $first-marker-size [null] - Sets the first marker size of the sparkline.
+/// @param {Color} $last-marker-brush [null] - Sets the last marker brush of the sparkline.
+/// @param {Number} $last-marker-size [null] - Sets the last marker size of the sparkline.
+/// @param {Color} $low-marker-brush [null] - Sets the low marker brush of the sparkline.
+/// @param {Number} $low-marker-size [null] - Sets the low marker size of the sparkline.
+/// @param {Color} $high-marker-brush [null] - Sets the high marker brush of the sparkline.
+/// @param {Number} $high-marker-size [null] - Sets the high marker size of the sparkline.
+/// @param {Color} $negative-brush [null] - Sets the negative brush of the sparkline.
+/// @param {Color} $negative-marker-brush [null] - Sets the negative marker brush of the sparkline.
+/// @param {Number} $negative marker-size [null] - Sets the negative marker size of the sparkline.
+/// @param {Color} $trend-line-brush [null] - Sets the trendline brush of the sparkline.
+/// @param {Color} $trend-line-thickness [null] - Sets the thickness of the sparkline's trendline.
+/// @param {Color} $horizontal-axis-brush [null] - Sets the horizontal axis line brush of the sparkline.
+/// @param {Color} $vertical-axis-brush [null] - Sets the vertical axis line brush of the sparkline.
+/// @param {Color} $normal-range-fill [null] - Sets the normal range brush of the sparkline.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss
+///   $my-sparkline-theme: igx-sparkline-theme($brushes: (orange, blue, pink));
+///   // Pass the theme to the igx-css-vars mixin
+///   @include igx-css-vars($my-sparkline-theme);
+@function igx-sparkline-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $brush: null,
+    $line-thickness: null,
+    $marker-brush: null,
+    $marker-size: null,
+    $first-marker-brush: null,
+    $first-marker-size: null,
+    $last-marker-brush: null,
+    $last-marker-size: null,
+    $low-marker-brush: null,
+    $low-marker-size: null,
+    $high-marker-brush: null,
+    $high-marker-size: null,
+    $negative-brush: null,
+    $negative-marker-brush: null,
+    $negative-marker-size: null,
+    $trend-line-brush: null,
+    $trend-line-thickness: null,
+    $horizontal-axis-brush: null,
+    $vertical-axis-brush: null,
+    $normal-range-fill: null,
+) {
+    $name: 'sparkline';
+    $sparkline-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $sparkline-schema: map-get($schema, $name);
+    } @else {
+        $sparkline-schema: $schema;
+    }
+
+    $theme: apply-palette($sparkline-schema, $palette);
+
+    @return extend(
+        $theme,
+        (
+            name: $name,
+            brush: $brush,
+            line-thickness: $line-thickness,
+            marker-brush: $marker-brush,
+            marker-size: $marker-size,
+            first-marker-brush: $first-marker-brush,
+            first-marker-size: $first-marker-size,
+            last-marker-brush: $last-marker-brush,
+            last-marker-size: $last-marker-size,
+            low-marker-brush: $low-marker-brush,
+            low-marker-size: $low-marker-size,
+            high-marker-brush: $high-marker-brush,
+            high-marker-size: $high-marker-size,
+            negative-brush: $negative-brush,
+            negative-marker-brush: $negative-marker-brush,
+            negative-marker-size: $negative-marker-size,
+            trend-line-brush: $trend-line-brush,
+            trend-line-thickness: $trend-line-thickness,
+            horizontal-axis-brush: $horizontal-axis-brush,
+            vertical-axis-brush: $vertical-axis-brush,
+            normal-range-fill: $normal-range-fill,
+        )
+    );
+}
+

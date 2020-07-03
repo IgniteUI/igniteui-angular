@@ -160,7 +160,7 @@ export class IgxGridGroupByRowComponent {
     }
 
 
-    @HostListener('click')
+    @HostListener('pointerdown')
     public activate() {
         this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row = this.index :
             this.grid.navigation.activeNode = {row: this.index};
@@ -205,7 +205,7 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     get dataType(): any {
-        const column = this.grid.getColumnByName(this.groupRow.expression.fieldName);
+        const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
     }
 }

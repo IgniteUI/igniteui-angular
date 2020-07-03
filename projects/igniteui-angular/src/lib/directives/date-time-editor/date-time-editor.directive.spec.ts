@@ -6,8 +6,9 @@ import { async, fakeAsync, TestBed, tick, } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import {ControlsFunction} from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxDateTimeEditor', () => {
@@ -17,7 +18,7 @@ describe('IgxDateTimeEditor', () => {
             ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
-        const ngControl = {
+        const ngModel = {
             control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
             valid: false,
             statusChanges: new EventEmitter(),
@@ -26,8 +27,8 @@ describe('IgxDateTimeEditor', () => {
         let inputFormat: string;
         let inputDate: string;
         function initializeDateTimeEditor(control?: NgControl) {
-            const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale, injector);
+            // const injector = { get: () => control };
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -331,6 +332,7 @@ describe('IgxDateTimeEditor', () => {
     });
 
     describe('Integration tests', () => {
+        const dateTimeOptions = {day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
         let fixture;
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
@@ -351,36 +353,6 @@ describe('IgxDateTimeEditor', () => {
                 inputElement = fixture.debugElement.query(By.css('input'));
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
             });
-            // 'dd/MM/yyyy HH:mm:ss';
-            function formatFullDateTime(date: Date): string {
-                const year = `${date.getFullYear()}`.padStart(4, '0');
-                const month = `${date.getMonth()}`.padStart(2, '0');
-                const day = `${date.getDate()}`.padStart(2, '0');
-                const fullDate = [day, month, year].join('/');
-                const hours = `${date.getHours()}`.padStart(2, '0');
-                const minutes = `${date.getMinutes()}`.padStart(2, '0');
-                const seconds = `${date.getSeconds()}`.padStart(2, '0');
-                const fullTime = [hours, minutes, seconds].join(':');
-                return `${fullDate} ${fullTime}`;
-            }
-            function formatFullDate(date: Date): string {
-                return date.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-            }
-            function formatLongDate(date: Date): string {
-                const result = date.toLocaleString('en-US', { month: 'long', day: 'numeric' });
-                const year = date.getFullYear();
-                return `${result}, ${year}`;
-            }
-            function formatLongTime(date: Date): string {
-                const result = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
-                const offset = date.getTimezoneOffset();
-                const tz = (offset > 0 ? '-' : '+') + (Math.abs(offset) / 60);
-                return `${result} GMT${tz}`;
-            }
-            function formatShortTime(date: Date): string {
-                const result = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-                return result;
-            }
             it('should correctly display input format during user input', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
@@ -417,8 +389,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('8_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                const date = new Date(2000, 1, 8, 0, 0, 0);
-                let result = formatFullDateTime(date);
+                const date = new Date(2000, 0, 8, 0, 0, 0);
+                let result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -432,7 +404,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 date.setFullYear(2005);
                 date.setDate(1);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -446,7 +418,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 date.setFullYear(2000);
                 date.setHours(3);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should not accept invalid date and time parts.', () => {
@@ -497,8 +469,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/0000 __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                const date = new Date(2000, 1, 1, 0, 0, 0);
-                let result = formatFullDateTime(date);
+                const date = new Date(2000, 0, 1, 0, 0, 0);
+                let result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -511,7 +483,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date.setFullYear(2005);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -524,7 +496,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date.setFullYear(2016);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -537,7 +509,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date.setFullYear(169);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/169,/g, '0169');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should support different display and input formats.', () => {
@@ -550,7 +522,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 let date = new Date(2000, 0, 9, 0, 0, 0);
-                let result = formatLongDate(date);
+                const options = { month: 'long', day: 'numeric' };
+                let result = `${ControlsFunction.formatDate(date, options)}, ${date.getFullYear()}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -564,11 +537,9 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/169_ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(169, 1, 1, 0, 0, 0);
-                const year = date.getFullYear();
-                const month = `${date.getMonth()}`.padStart(2, '0');
-                const day = `${date.getDate()}`.padStart(2, '0');
-                result = [day, month, year].join('/');
+                date = new Date(169, 0, 1, 0, 0, 0);
+                const customOptions = {day: '2-digit', month: '2-digit', year: 'numeric' };
+                result = ControlsFunction.formatDate(date, customOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should support long and short date formats', () => {
@@ -581,7 +552,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 let date = new Date(2000, 0, 9, 0, 0, 0);
-                let result = formatLongDate(date);
+                const longDateOptions = { month: 'long', day: 'numeric' };
+                let result = `${ControlsFunction.formatDate(date, longDateOptions)}, ${date.getFullYear()}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -595,7 +567,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                result = date.toLocaleDateString('en', { day: 'numeric', month: 'numeric', year: '2-digit' });
+                const shortDateOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
+                result = ControlsFunction.formatDate(date, shortDateOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -609,7 +582,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('9_/__/____ __:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                result = formatFullDate(date);
+                const fullDateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+                result = ControlsFunction.formatDate(date, fullDateOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -624,7 +598,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(0, 0, 0, 1, 0, 0);
-                result = formatShortTime(date);
+                const shortTimeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+                result = ControlsFunction.formatDate(date, shortTimeOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -639,16 +614,20 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(0, 0, 0, 2, 0, 0);
-                result = formatLongTime(date);
+                const longTimeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+                result = ControlsFunction.formatDate(date, longTimeOptions);
+                const offset = date.getTimezoneOffset();
+                const tz = (offset > 0 ? '-' : '+') + (Math.abs(offset) / 60);
+                result = `${result} GMT${tz}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
                 // default format
-                const date = new Date(2003, 4, 5, 0, 0, 0);
+                const date = new Date(2003, 3, 5, 0, 0, 0);
                 fixture.componentInstance.date = new Date(2003, 3, 5, 0, 0, 0);
                 fixture.detectChanges();
                 tick();
-                let result = formatFullDateTime(date);
+                let result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 // custom format
@@ -658,22 +637,22 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('1', inputElement);
                 date.setDate(15);
-                result = formatFullDateTime(date);
+                result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date.setMonth(3);
-                const resultDate =
-                    date.toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-                        .replace(/,/g, '');
-                result = `${resultDate} ${formatShortTime(date)}`;
+                const shortTimeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+                const dateOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                const resultDate = ControlsFunction.formatDate(date, dateOptions, 'en-GB').replace(/,/g, '');
+                result = `${resultDate} ${ControlsFunction.formatDate(date, shortTimeOptions)}`;
                 expect(inputElement.nativeElement.value).toEqual(result);
             }));
             it('should convert dates correctly on paste when different display and input formats are set.', () => {
                 // display format = input format
                 let date = new Date(2020, 10, 10, 10, 10, 10);
-                let inputDate = formatFullDateTime(date);
+                let inputDate = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
@@ -689,8 +668,8 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                let year = (date.getFullYear().toString()).slice(-2);
-                const result = [date.getDate(), date.getMonth(), year].join('/');
+                const shortDateOptions = {day: 'numeric', month: 'numeric', year: '2-digit'};
+                const result = ControlsFunction.formatDate(date, shortDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 inputDate = '6/7/28';
@@ -716,23 +695,23 @@ describe('IgxDateTimeEditor', () => {
 
                 date = new Date(2028, 7, 16, 0, 0, 0);
                 inputDate = '16/07/28';
-                const month = `${date.getMonth()}`.padStart(2, '0');
-                year = (date.getFullYear().toString()).slice(-2);
-                inputDate = [date.getDate(), month, year].join('/');
+                const longDateOptions = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                inputDate = [date.getDate(), month, date.getFullYear()].join('/');
+                longDateOptions.year = 'numeric';
+                inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
             it('should clear input date on clear()', fakeAsync(() => {
-                const date = new Date(2003, 4, 5);
-                fixture.componentInstance.date = new Date(2003, 3, 5);
+                const date = new Date(2003, 3, 5);
+                fixture.componentInstance.date = date;
                 fixture.detectChanges();
                 tick();
-                const result = formatFullDateTime(date);
+                const result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 dateTimeEditorDirective.clear();
@@ -740,10 +719,10 @@ describe('IgxDateTimeEditor', () => {
             }));
             it('should move the caret to the start/end of the portion with CTRL + arrow left/right keys.', fakeAsync(() => {
                 const date = new Date(2003, 4, 5);
-                fixture.componentInstance.date = new Date(2003, 3, 5);
+                fixture.componentInstance.date = date;
                 fixture.detectChanges();
                 tick();
-                const result = formatFullDateTime(date);
+                const result = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
                 const inputHTMLElement = inputElement.nativeElement as HTMLInputElement;
@@ -812,7 +791,7 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
 
                 let date = new Date(2009, 10, 10, 10, 10, 10);
-                let inputDate = formatFullDateTime(date);
+                let inputDate = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
@@ -828,8 +807,8 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulateTyping('27', inputElement, 8, 8);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(2027, 1, 1, 0, 0, 0);
-                inputDate = formatFullDateTime(date);
+                date = new Date(2027, 0, 1, 0, 0, 0);
+                inputDate = ControlsFunction.formatDate(date, dateTimeOptions, 'en-GB').replace(/,/g, '');
                 expect(inputElement.nativeElement.value).toEqual(inputDate);
             });
             it('should be able to customize prompt char.', () => {
@@ -865,8 +844,8 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
 
-                const year = (newDate.getFullYear().toString()).slice(-2);
-                const result = [newDate.getDate(), newDate.getMonth() + 1, year].join('/');
+                const options = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                const result = ControlsFunction.formatDate(newDate, options, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(newDate);

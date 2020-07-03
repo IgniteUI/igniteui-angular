@@ -248,6 +248,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Remote Virtualization'
         },
         {
+            link: '/gridScrollVirtualization',
+            icon: 'view_column',
+            name: 'Grid Remote Virtualization with Scroll'
+        },
+        {
             link: '/gridRemotePaging',
             icon: 'view_column',
             name: 'Grid Remote Paging'
@@ -403,7 +408,11 @@ export class AppComponent implements OnInit {
         }, {
             link: '/hierarchicalGridRemote',
             icon: 'swap_vert',
-            name: 'Hierarchical Grid Remote'
+            name: 'Hierarchical Grid Remote Load on Demand'
+        }, {
+            link: '/hierarchicalGridRemoteVirtualization',
+            icon: 'swap_vert',
+            name: 'Hierarchical Grid Remote Virtualization'
         }, {
             link: '/hierarchicalGridUpdating',
             icon: 'edit',

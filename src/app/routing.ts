@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AvatartSampleComponent } from './avatar/avatar.sample';
 import { BadgeSampleComponent } from './badge/badge.sample';
 import { ButtonSampleComponent } from './button/button.sample';
@@ -23,7 +23,7 @@ import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
 import { ProgressbarSampleComponent } from './progressbar/progressbar.sample';
 import { RippleSampleComponent } from './ripple/ripple.sample';
 import { SliderSampleComponent } from './slider/slider.sample';
-import { SplitterSampleComponent } from './splitter/slitter.sample';
+import { SplitterSampleComponent } from './splitter/splitter.sample';
 import { SnackbarSampleComponent } from './snackbar/snackbar.sample';
 import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
@@ -102,6 +102,10 @@ import { GridRowPinningSampleComponent } from './grid-row-pinning/grid-row-pinni
 import { ReactiveFormSampleComponent } from './reactive-from/reactive-form-sample.component';
 import { DateRangeSampleComponent } from './date-range/date-range.sample';
 import { ActionStripSampleComponent } from './action-strip/action-strip.sample';
+import {
+    HierarchicalGridRemoteVirtualizationComponent
+} from './hierarchical-grid-remote-virtualization/hierarchical-grid-remote-virtualization';
+import { GridVirtualizationScrollSampleComponent } from './grid-remote-virtualization-with-scroll/grid-remote-virtualization-scroll.sample';
 
 const appRoutes = [
     {
@@ -435,6 +439,10 @@ const appRoutes = [
         component: GridRowEditSampleComponent
     },
     {
+        path: 'gridScrollVirtualization',
+        component: GridVirtualizationScrollSampleComponent
+    },
+    {
         path: 'treeGrid',
         component: TreeGridSampleComponent
     },
@@ -455,6 +463,9 @@ const appRoutes = [
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
+    }, {
+        path: 'hierarchicalGridRemoteVirtualization',
+        component: HierarchicalGridRemoteVirtualizationComponent
     }, {
         path: 'hierarchicalGridUpdating',
         component: HierarchicalGridUpdatingSampleComponent
