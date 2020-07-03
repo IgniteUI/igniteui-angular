@@ -1669,7 +1669,7 @@ describe('IgxTimePicker', () => {
             expect(dummyInput).toEqual(document.activeElement);
         }));
 
-        fit('should apply disabled style for time outside the min and max values', fakeAsync(() => {
+        it('should apply disabled style for time outside the min and max values', fakeAsync(() => {
             fixture.detectChanges();
             timePicker.format = 'hh:mm:ss tt';
             const date = new Date(2018, 10, 27, 9, 50, 58);
