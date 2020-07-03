@@ -90,9 +90,9 @@
 @mixin igx-navbar($theme) {
     @include igx-root-css-vars($theme);
 
-    $navbar-padding: 0 em(16px);
-    $navbar-title-fz: em(18px, 16px);
-    $navbar-title-lh: em(18px, 16px);
+    $navbar-padding: 0 rem(16px);
+    $navbar-title-fz: rem(18px, 16px);
+    $navbar-title-lh: rem(18px, 16px);
     $navbar-title-margin: 0;
     $left: if-ltr(left, right);
 
@@ -111,17 +111,23 @@
         z-index: 4;
     }
 
+    %igx-navbar-part {
+        display: flex;
+        align-items: center;
+    }
+
     %igx-navbar-title {
         margin: $navbar-title-margin;
+        flex-grow: 1;
+        user-select: text;
     }
 
     %igx-navbar-bundle {
-        display: flex;
-        align-items: center;
+        @extend %igx-navbar-part;
         user-select: none;
 
         > * + * {
-            margin-#{$left}: 16px;
+            margin-#{$left}: rem(16px);
         }
     }
 
@@ -137,17 +143,26 @@
         }
     }
 
+    %igx-navbar-left {
+        @extend %igx-navbar-bundle;
+        @extend %igx-navbar-icon-display;
+        flex-grow: 1;
+    }
+
+    %igx-navbar-right {
+        @extend %igx-navbar-bundle;
+        @extend %igx-navbar-icon-display;
+    }
+
     igx-navbar-action,
     [igxNavbarAction] {
-        display: flex;
-        align-items: center;
+        @extend %igx-navbar-part;
     }
 
     igx-navbar-title,
     [igxNavbarTitle] {
-        display: flex;
-        align-items: center;
-        user-select: none;
+        @extend %igx-navbar-part;
+        @extend %igx-navbar-title;
     }
 }
 
