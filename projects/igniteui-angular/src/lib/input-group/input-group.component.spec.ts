@@ -20,7 +20,7 @@ const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable'
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 
-fdescribe('IgxInputGroup', () => {
+describe('IgxInputGroup', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
