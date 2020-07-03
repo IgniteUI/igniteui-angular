@@ -59,7 +59,7 @@ describe('Update 10.1.0', () => {
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.ts'))
             .toEqual(
-                `import { IgxNavbarActionDirective } from 'igniteui-angular';
+            `import { IgxNavbarActionDirective } from 'igniteui-angular';
             export class TestNavbar {
             @ViewChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
             private actionIcon: IgxNavbarActionDirective; }`);

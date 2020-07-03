@@ -22,8 +22,8 @@ import { IgxIconModule } from '../icon/public_api';
 export class IgxNavbarActionDirective { }
 
 @Directive({
-    selector: 'igx-navbar-title,[igxNavbarTitle]',
-
+    // tslint:disable-next-line:directive-selector
+    selector: 'igx-navbar-title,[igxNavbarTitle]'
 })
 export class IgxNavbarTitleDirective { }
 

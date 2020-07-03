@@ -149,10 +149,10 @@ describe('IgxNavbar', () => {
             const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
             const customContent = leftArea.query(By.directive(IgxNavbarActionDirective));
             expect(customContent).not.toBeNull('Custom action icon content is not found on the left.');
+
             const leftAreaLeft = (<HTMLElement>leftArea.nativeElement).getBoundingClientRect().left;
             const customContentLeft = (<HTMLElement>customContent.nativeElement).getBoundingClientRect().left;
             expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
-
         }));
     });
 
