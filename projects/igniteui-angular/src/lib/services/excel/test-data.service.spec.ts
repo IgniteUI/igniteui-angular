@@ -615,7 +615,7 @@ export class FileContentData {
             case null:
             case 0:
                 wsDataColSettings =
-                    `<cols><col min="1" max="1" width="8.34" customWidth="1"/></cols>`;
+                    `<cols><col min="1" max="1" width="227.85" customWidth="1"/></cols>`;
                 break;
         }
 

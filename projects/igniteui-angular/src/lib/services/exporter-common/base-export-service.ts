@@ -66,6 +66,8 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     skipFormatter: boolean;
 }
 
+const DEFAULT_COLUMN_WIDTH = 8.43;
+
 export abstract class IgxBaseExporter {
     private _columnList: any[];
     private flatRecords = [];
@@ -171,6 +173,7 @@ export abstract class IgxBaseExporter {
         if (!this._columnList || this._columnList.length === 0) {
             const keys = ExportUtilities.getKeysFromData(data);
             this._columnList = keys.map((k) => ({ header: k, field: k, skip: false }));
+            this._columnWidthList = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
         }
 
         let skippedPinnedColumnsCount = 0;
