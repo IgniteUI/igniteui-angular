@@ -2732,7 +2732,7 @@ describe('igxOverlay', () => {
             button.dispatchEvent(new MouseEvent('click'));
         }));
 
-        it('Should closes the component when esc key is pressed.', fakeAsync(() => {
+        it('Should close the component when esc key is pressed.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             const overlay = fixture.componentInstance.overlay;
             const overlaySettings: OverlaySettings = {
@@ -2759,6 +2759,35 @@ describe('igxOverlay', () => {
             expect(overlayWrapper).toBeTruthy();
             overlayWrapper.dispatchEvent(escEvent);
             tick();
+        }));
+
+        it('Should not close the component when esc key is pressed and closeOnEsc is false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                modal: true,
+                closeOnEsc: false,
+                positionStrategy: new GlobalPositionStrategy()
+            };
+            const targetButton = 'Escape';
+            const escEvent = new KeyboardEvent('keydown', {
+                key: targetButton
+            });
+
+            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            tick();
+
+            let overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+            overlayWrapper.addEventListener('keydown', (event: KeyboardEvent) => {
+                if (event.key === targetButton) {
+                    overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
+                }
+            });
+            overlayWrapper.dispatchEvent(escEvent);
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayWrapper).toBeTruthy();
         }));
 
         // Test #1883 #1820
