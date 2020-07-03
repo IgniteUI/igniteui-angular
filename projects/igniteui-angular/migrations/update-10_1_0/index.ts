@@ -5,7 +5,6 @@ import {
 } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import {  getIdentifierPositions } from '../common/tsUtils';
-import * as ts from 'typescript';
 
 const version = '10.1.0';
 
@@ -14,7 +13,7 @@ export default function(): Rule {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
         const update = new UpdateChanges(__dirname, host, context);
-        // update.applyChanges();
+        update.applyChanges();
 
         // replace DropPosition.None with DropPosition.AfterDropTarget
         for (const entryPath of update.tsFiles) {
