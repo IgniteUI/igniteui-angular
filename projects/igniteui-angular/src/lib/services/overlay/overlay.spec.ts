@@ -399,7 +399,7 @@ describe('igxOverlay', () => {
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
         }));
 
-        xit('Should properly set style on position method call - GlobalPosition.', () => {
+        it('Should properly set style on position method call - GlobalPosition.', () => {
             const mockParent = document.createElement('div');
             const mockItem = document.createElement('div');
             mockParent.appendChild(mockItem);
@@ -1602,7 +1602,7 @@ describe('igxOverlay', () => {
             document.body.removeChild(wrapperElement);
         });
 
-        xit('Should position component based on element and start point when connected position strategy is used.', () => {
+        it('Should position component based on element and start point when connected position strategy is used.', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             fixture.detectChanges();
 
@@ -1781,7 +1781,7 @@ describe('igxOverlay', () => {
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
 
-        xit('Should display each shown component based on the options specified if the component fits into the visible window.',
+        it('Should display each shown component based on the options specified if the component fits into the visible window.',
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
@@ -1846,7 +1846,7 @@ describe('igxOverlay', () => {
                 });
             }));
 
-        xit(`Should reposition the component and render it correctly in the window, even when the rendering options passed
+        it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
             should result in otherwise a partially hidden component. No scrollbars should appear.`,
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
@@ -2252,7 +2252,7 @@ describe('igxOverlay', () => {
             expect(rect.left).toEqual(expectedLeft);
         }));
 
-        xit('Should display each shown component based on the options specified if the component fits into the visible window.',
+        it('Should display each shown component based on the options specified if the component fits into the visible window.',
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
@@ -2332,7 +2332,7 @@ describe('igxOverlay', () => {
                 });
             }));
 
-        xit(`Should reposition the component and render it correctly in the window, even when the rendering options passed
+        it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
         should result in otherwise a partially hidden component.No scrollbars should appear.`,
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
