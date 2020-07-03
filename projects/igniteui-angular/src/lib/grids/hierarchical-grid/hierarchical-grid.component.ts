@@ -36,7 +36,6 @@ import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
