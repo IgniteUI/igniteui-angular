@@ -17,7 +17,7 @@
 /// @prop {Color} joystick-border-color [#424242] - Sets the border color of the joystick.
 /// @prop {Color} joystick-icon-color-active [#fff] - Sets the color of the active joystick icons.
 /// @prop {Color} pane-content-background [#212121] - Sets the background color of the content panes.
-/// @prop {Color} primary-color [#111] - Sets the base dock manager color as well as the pane headers and tabs background colors.
+/// @prop {Color} background-color [#111] - Sets the base dock manager color as well as the pane headers and tabs background colors.
 /// @prop {Color} splitter-background [#000] - Sets the background color for the splitters.
 /// @prop {Color} tab-background-active [#212121] - Sets the background color for active tabs.
 /// @prop {Color} text-color [rgba(255, 255, 255, .7)] - Sets the text color for most elements in the dock manager. Used as the default joystick icon color.
@@ -28,7 +28,7 @@ $_dark-dock-manager: extend(
             igx-color: (grays, 400),
             hexrgba: #000,
         ),
-        primary-color: (
+        background-color: (
             igx-color: (grays, 200),
             hexrgba: #000,
         ),
@@ -86,7 +86,7 @@ $_dark-fluent-dock-manager: extend(
             rgba: .5,
             hexrgba: #000,
         ),
-        primary-color: (
+        background-color: (
             igx-color: surface,
             rgba: .85,
             hexrgba: #000,
@@ -171,7 +171,7 @@ $_dark-bootstrap-dock-manager: extend(
             rgba: .33,
             hexrgba: #000,
         ),
-        primary-color: (
+        background-color: (
             igx-color: surface,
             rgba: .33,
             hexrgba: #000,

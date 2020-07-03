@@ -7,6 +7,7 @@
 /// Generates a light dock-manager schema.
 /// @type {Map}
 /// @prop {Color} accent-color [#fff] - Sets the pinned header background color, the joystick background and border colors, as well as the context menu background color.
+/// @prop {Color} active-color [igx-color: 'primary'] - Sets the active text and border colors for tabs, panes, and menus.
 /// @prop {Color} border-color [#F3F5F7] - Sets the global border color in the dock manager. Also sets the pane content background and the context menu active background colors.
 /// @prop {Color} button-text [rgba(0, 0, 0, .72)] - Sets the button text color.
 /// @prop {Color} context-menu-background [null] - Sets the background color for context menus.
@@ -28,7 +29,7 @@
 /// @prop {Color} pane-header-text [null] - Sets the text color for pane headers.
 /// @prop {Color} pinned-header-background [null] - Sets the background colors of pinned headers.
 /// @prop {Color} pinned-header-text [null] - Sets the text colors of pinned headers.
-/// @prop {Color} primary-color [#E5E7E9] - Sets the base dock manager color as well as the pane headers and tabs background colors.
+/// @prop {Color} background-color [#E5E7E9] - Sets the base dock manager color as well as the pane headers and tabs background colors.
 /// @prop {Color} splitter-background [#d3d6d9] - Sets the background color for the splitters.
 /// @prop {Color} splitter-handle [null] - Sets the background color for the splitter handles.
 /// @prop {Color} tab-background [null] - Sets the background color for tabs.
@@ -43,7 +44,7 @@ $_light-dock-manager: (
     active-color: (
         igx-color: primary,
     ),
-    primary-color: null,
+    background-color: null,
     border-color: (
         igx-color: (primary, 100),
         rgba: .1,
@@ -110,7 +111,7 @@ $_light-dock-manager: (
 /// @requires $_light-dock-manager
 $_fluent-dock-manager: extend(
     $_light-dock-manager, (
-        primary-color: (
+        background-color: (
             igx-color: (grays, 50),
             hexrgba: (),
         ),
@@ -203,7 +204,7 @@ $_fluent-dock-manager: extend(
 /// @requires $_bootstrap-shape-dock-manager
 $_bootstrap-dock-manager: extend(
     $_light-dock-manager, (
-        primary-color: (
+        background-color: (
             igx-color: (grays, 100),
             hexrgba: (),
         ),
