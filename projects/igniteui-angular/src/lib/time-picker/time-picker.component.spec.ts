@@ -12,7 +12,7 @@ import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxHourItemDirective, IgxItemListDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
+import { IgxHourItemDirective, IgxMinuteItemDirective, IgxSecondsItemDirective, IgxAmPmItemDirective } from './time-picker.directives';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
@@ -1677,17 +1677,10 @@ describe('IgxTimePicker', () => {
             timePicker.minValue = '09:15:10 AM';
             timePicker.maxValue = '11:15:10 AM';
 
-            // timePicker.minValue = '06:45:57 AM';
-            // timePicker.maxValue = '6:55:59 PM';
-
-            fixture.detectChanges();
-            const minValue = timePicker.convertMinMaxValue(timePicker.minValue);
-            const maxValue = timePicker.convertMinMaxValue(timePicker.maxValue);
             fixture.detectChanges();
             timePicker.value = date;
 
-            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
-            UIInteractions.simulateClickAndSelectEvent(iconTime);
+            timePicker.openDialog();
             fixture.detectChanges();
             const hoursList = fixture.debugElement.queryAll(By.directive(IgxHourItemDirective));
             const minutesList = fixture.debugElement.queryAll(By.directive(IgxMinuteItemDirective));
@@ -1695,25 +1688,54 @@ describe('IgxTimePicker', () => {
             const ampmList = fixture.debugElement.queryAll(By.directive(IgxAmPmItemDirective));
 
             let hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '09')).injector.get(IgxHourItemDirective);
-            fixture.detectChanges();
             let minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '55')).injector.get(IgxMinuteItemDirective);
-            fixture.detectChanges();
             let secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '58')).injector.get(IgxSecondsItemDirective);
+            let ampmListItem = (ampmList.find(t => t.nativeElement.innerHTML === 'AM')).injector.get(IgxAmPmItemDirective);
+
+            expect(hoursListItem.applyDisabledStyleForHours).toBe(false);
+            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(false);
+            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(false);
+            expect(ampmListItem.applyDisabledStyleForAmPm).toBe(false);
+
+            timePicker.scrollAmPmIntoView('PM');
+            fixture.detectChanges();
+            ampmListItem = (ampmList.find(t => t.nativeElement.innerHTML === 'PM')).injector.get(IgxAmPmItemDirective);
+
+            expect(hoursListItem.applyDisabledStyleForHours).toBe(true);
+            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(true);
+            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(true);
+            expect(ampmListItem.applyDisabledStyleForAmPm).toBe(true);
+
+            hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '06')).injector.get(IgxHourItemDirective);
+            minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '35')).injector.get(IgxMinuteItemDirective);
+            secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '55')).injector.get(IgxSecondsItemDirective);
+
+            expect(hoursListItem.applyDisabledStyleForHours).toBe(true);
+            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(true);
+            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(true);
+            expect(ampmListItem.applyDisabledStyleForAmPm).toBe(true);
+
+            timePicker.minValue = '06:45:57 AM';
+            timePicker.maxValue = '06:55:59 AM';
+
+            hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '06')).injector.get(IgxHourItemDirective);
+            minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '50')).injector.get(IgxMinuteItemDirective);
+            secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '58')).injector.get(IgxSecondsItemDirective);
+            ampmListItem = (ampmList.find(t => t.nativeElement.innerHTML === 'AM')).injector.get(IgxAmPmItemDirective);
+
+            timePicker.scrollHourIntoView('06');
+            fixture.detectChanges();
+            timePicker.scrollMinuteIntoView('50');
+            fixture.detectChanges();
+            timePicker.scrollSecondsIntoView('58');
+            fixture.detectChanges();
+            timePicker.scrollAmPmIntoView('AM');
             fixture.detectChanges();
 
             expect(hoursListItem.applyDisabledStyleForHours).toBe(false);
             expect(minutesListItem.applyDisabledStyleForMinutes).toBe(false);
             expect(secondsListItem.applyDisabledStyleForSeconds).toBe(false);
-
-            hoursListItem = (hoursList.find(t => t.nativeElement.innerHTML === '06')).injector.get(IgxHourItemDirective);
-            fixture.detectChanges();
-            minutesListItem = (minutesList.find(t => t.nativeElement.innerHTML === '35')).injector.get(IgxMinuteItemDirective);
-            fixture.detectChanges();
-            secondsListItem = (secondsList.find(t => t.nativeElement.innerHTML === '55')).injector.get(IgxSecondsItemDirective);
-            fixture.detectChanges();
-            expect(hoursListItem.applyDisabledStyleForHours).toBe(true);
-            expect(minutesListItem.applyDisabledStyleForMinutes).toBe(true);
-            expect(secondsListItem.applyDisabledStyleForSeconds).toBe(true);
+            expect(ampmListItem.applyDisabledStyleForAmPm).toBe(false);
         }));
     });
 

@@ -271,7 +271,7 @@ export class IgxHourItemDirective {
         if (this.minValueDate === undefined || this.maxValueDate === undefined) {
             return false;
         }
-        let hour = parseInt(this.value);
+        let hour = parseInt(this.value, 10);
         if (this.selectedAmPm === 'PM') {
             hour += 12;
         }
@@ -339,8 +339,8 @@ export class IgxMinuteItemDirective {
         if (this.minValueDate === undefined || this.maxValueDate === undefined) {
             return false;
         }
-        const minute = parseInt(this.value);
-        let hour = parseInt(this.selectedHour);
+        const minute = parseInt(this.value, 10);
+        let hour = parseInt(this.selectedHour, 10);
         if (this.selectedAmPm === 'PM') {
             hour += 12;
         }
@@ -412,9 +412,9 @@ export class IgxSecondsItemDirective {
         if (this.minValueDate === undefined || this.maxValueDate === undefined) {
             return false;
         }
-        const minute = parseInt(this.selectedMinute);
-        let hour = parseInt(this.selectedHour);
-        const second = parseInt(this.value);
+        const minute = parseInt(this.selectedMinute, 10);
+        let hour = parseInt(this.selectedHour, 10);
+        const second = parseInt(this.value, 10);
         if (this.selectedAmPm === 'PM') {
             hour += 12;
         }
@@ -487,9 +487,9 @@ export class IgxAmPmItemDirective {
         if (this.minValueDate === undefined || this.maxValueDate === undefined) {
             return false;
         }
-        const minute = parseInt(this.selectedMinute);
-        let hour = parseInt(this.selectedHour);
-        const second = parseInt(this.selectedSecond);
+        const minute = parseInt(this.selectedMinute, 10);
+        let hour = parseInt(this.selectedHour, 10);
+        const second = parseInt(this.selectedSecond, 10);
         const amPM = this.value;
         if (amPM === 'PM') {
             hour += 12;
