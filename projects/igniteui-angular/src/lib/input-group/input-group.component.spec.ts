@@ -20,7 +20,7 @@ const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable'
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 
-describe('IgxInputGroup', () => {
+fdescribe('IgxInputGroup', () => {
     configureTestSuite();
     beforeAll(async(() => {
         TestBed.configureTestingModule({
@@ -344,7 +344,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
-    expect(component.isTypeIndigo).toBe(isBox);
+    expect(component.isTypeIndigo).toBe(isIndigo);
     expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
     expect(component.isTypeFluentSearch).toBe(isFluentSearch);
