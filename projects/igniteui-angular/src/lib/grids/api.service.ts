@@ -17,7 +17,7 @@ import { IRowToggleEventArgs } from './common/events';
 import {
     ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS
 } from '../core/utils';
-import * as merge from 'lodash.merge';
+import merge from 'lodash.merge';
 /**
  * @hidden
  */

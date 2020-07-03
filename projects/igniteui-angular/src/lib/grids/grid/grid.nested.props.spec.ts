@@ -125,6 +125,8 @@ describe('Grid - nested data source properties', () => {
             grid = fixture.componentInstance;
         });
 
+        afterEach(() => fixture.destroy());
+
         it('should support column API with complex field', () => {
             setupData(DATA);
 

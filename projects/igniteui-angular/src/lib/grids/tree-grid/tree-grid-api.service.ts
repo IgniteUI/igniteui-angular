@@ -5,7 +5,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { Injectable } from '@angular/core';
 import { ColumnType } from '../common/column.interface';
-import * as merge from 'lodash.merge';
+import merge from 'lodash.merge';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
