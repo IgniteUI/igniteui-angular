@@ -31,7 +31,6 @@ describe('IgxSnackbar', () => {
 
     it('should properly initialize properties', () => {
         expect(snackbar.id).toContain('igx-snackbar-');
-        expect(snackbar.message).toBeUndefined();
         expect(snackbar.actionText).toBeUndefined();
         expect(snackbar.displayTime).toBe(4000);
         expect(snackbar.autoHide).toBeTruthy();
@@ -115,8 +114,7 @@ describe('IgxSnackbar with custom content', () => {
 
     it('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';
-        snackbar.message = 'Item shown';
-        snackbar.isVisible = true;
+        snackbar.show('Item shown');
         fixture.detectChanges();
 
         const messageEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
@@ -135,6 +133,25 @@ describe('IgxSnackbar with custom content', () => {
         const buttonRect = (<HTMLElement>button.nativeElement).getBoundingClientRect();
         expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
         expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
+    });
+
+    it('should be able to set a message though show method', () => {
+        snackbar.autoHide = false;
+        fixture.componentInstance.text = 'Retry';
+        fixture.detectChanges();
+
+        snackbar.show('The message was not send. Would you like to retry?');
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.querySelector('.igx-snackbar__message').innerText)
+        .toBe('The message was not send. Would you like to retry? Custom content');
+
+        snackbar.show('Another Message?!');
+        fixture.detectChanges();
+
+        expect(snackbar.isVisible).toBe(true);
+        expect(fixture.nativeElement.querySelector('.igx-snackbar__message').innerText)
+        .toBe('Another Message?! Custom content');
     });
 });
 
