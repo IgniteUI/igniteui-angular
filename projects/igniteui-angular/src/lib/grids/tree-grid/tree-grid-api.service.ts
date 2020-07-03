@@ -9,6 +9,7 @@ import * as merge from 'lodash.merge';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
+
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
         const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
@@ -180,7 +181,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             };
             grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            // mergeObjects(rowValueInDataSource, rowNewValue);
             merge(rowValueInDataSource, rowNewValue);
         }
     }
