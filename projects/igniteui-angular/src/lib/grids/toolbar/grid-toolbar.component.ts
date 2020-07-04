@@ -29,10 +29,9 @@ import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position';
 import { GridType } from '../common/grid.interface';
-import { IgxIconService } from '../../icon/icon.service';
-import icons from './../filtering/svgIcons';
-
-const FILTERING_ICONS_FONT_SET = 'filtering-icons';
+import { IgxGridIconService } from '../common/grid-icon.service';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from '../pinning/pinning-icons';
+import { GridIconsFeature } from '../common/enums';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -235,7 +234,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        private iconService: IgxIconService) {
+        private iconService: IgxGridIconService) {
             super(_displayDensityOptions);
     }
 
@@ -404,11 +403,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements After
      * @internal
      */
     ngAfterViewInit() {
-        const pinnedIcons = icons.filter(icon => icon.name === 'pin' || icon.name === 'unpin');
-        for (const icon of pinnedIcons) {
-            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
-                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
-            }
-        }
+        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
     }
 }
