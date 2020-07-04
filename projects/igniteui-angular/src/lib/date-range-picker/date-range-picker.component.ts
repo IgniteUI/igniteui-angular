@@ -402,12 +402,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        closeOnEsc: true,
         modal: true
     };
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        closeOnEsc: true,
         modal: false
     };
     private onChangeCallback = (dateRange: DateRange) => { };

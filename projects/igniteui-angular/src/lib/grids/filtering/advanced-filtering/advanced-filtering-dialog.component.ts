@@ -136,7 +136,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
-        closeOnEsc: true,
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
         scrollStrategy: new CloseScrollStrategy()
     };
@@ -147,7 +146,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public columnSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnEsc: true,
         closeOnOutsideClick: false,
         excludePositionTarget: true
     };
@@ -158,7 +156,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public conditionSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnEsc: true,
         closeOnOutsideClick: false,
         excludePositionTarget: true
     };

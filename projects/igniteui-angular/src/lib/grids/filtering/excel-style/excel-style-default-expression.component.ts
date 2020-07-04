@@ -43,7 +43,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public dropDownOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         modal: false,
-        closeOnEsc: true,
         closeOnOutsideClick: true,
         excludePositionTarget: true
     };

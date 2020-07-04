@@ -90,7 +90,6 @@ export class IgxFilteringService implements OnDestroy {
         this._filterMenuOverlaySettings = {
             closeOnOutsideClick: true,
             modal: false,
-            closeOnEsc: true,
             positionStrategy: new ExcelStylePositionStrategy(this._filterMenuPositionSettings),
             scrollStrategy: new AbsoluteScrollStrategy()
         };

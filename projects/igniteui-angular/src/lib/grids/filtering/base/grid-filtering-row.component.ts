@@ -47,7 +47,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
-        closeOnEsc: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
@@ -56,7 +55,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         excludePositionTarget: true,
         closeOnOutsideClick: true,
         modal: false,
-        closeOnEsc: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };

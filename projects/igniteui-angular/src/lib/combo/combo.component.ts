@@ -156,7 +156,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new AutoPositionStrategy(),
-        closeOnEsc: true,
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true

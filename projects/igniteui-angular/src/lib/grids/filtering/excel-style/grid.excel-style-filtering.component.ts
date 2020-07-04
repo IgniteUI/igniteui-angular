@@ -209,7 +209,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private _subMenuOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
-        closeOnEsc: true,
         positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
