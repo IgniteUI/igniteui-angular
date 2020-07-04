@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - Added new property - `closeOnEsc` - in `OverlaySettings`. The overlay can now be prevented from closing, on escape keypress, by setting the property to `false`, by default it's `true`.
 - `igxDialog`
     - Added `closeOnEscapeKey` - with it, the dialog can be allowed or prevented from closing when `Esc` is pressed.
+- `IgxNavbar`:
+    - **Breaking Changes** - The `igx-action-icon` has been renamed to `igx-navbar-action`. It should get renamed in your components via `ng update`;
 ### New Features
 - `IgxGridState` directive
     - Added support for expansion states, column selection and row pinning.
@@ -23,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - `message` property has been deprecated. You can place the *message text* in the snackbar content or pass it as parameter to `show` method instead.
     - An optional string parameter `message` has been added to `show()` method.
+- `IgxNavbar`
+    - Added new `igx-navbar-title, igxNavbarTitle` directive that can be used to provide custom content for navbar title. It would override the value of `title` input property.
 
 ## 10.0.0
 
