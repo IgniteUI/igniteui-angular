@@ -88,6 +88,7 @@
 <ng-template #cellTemplate let-col>
         <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
+        [attr.aria-describedby]="this.gridID + '_' + col.field | igxStringReplace:'.':'_'"
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
@@ -119,6 +120,7 @@
 <ng-template #expandableCellTemplate let-col>
     <igx-expandable-grid-cell
         [class.igx-grid__td--pinned]="col.pinned"
+        [attr.aria-describedby]="this.gridID + '_' + col.field | igxStringReplace:'.':'_'"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
@@ -149,6 +151,7 @@
 <ng-template #mrlCellTemplate let-col>
     <igx-grid-cell
         class="igx-grid__td igx-grid__td--fw"
+        [attr.aria-describedby]="this.gridID + '_' + col.field | igxStringReplace:'.':'_'"
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
@@ -183,6 +186,7 @@
 <ng-template #mrlExpandableCellTemplate let-col>
     <igx-expandable-grid-cell
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
+        [attr.aria-describedby]="this.gridID + '_' + col.field | igxStringReplace:'.':'_'"
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"

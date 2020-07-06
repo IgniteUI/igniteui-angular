@@ -253,3 +253,11 @@ export class IgxGridDataMapperPipe implements PipeTransform {
         return resolveNestedPath(data, field);
     }
 }
+
+@Pipe({ name: 'igxStringReplace' })
+export class IgxStringReplacePipe implements PipeTransform {
+
+    transform(value: string, search: string | RegExp, replacement: string): string {
+        return value.replace(search, replacement);
+    }
+}

@@ -400,18 +400,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Returns a string containing the grid `id` and the column `field` concatenated by "_".
-     * ```typescript
-     * let describedBy = this.cell.describedBy;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    @HostBinding('attr.aria-describedby')
-    get describedby(): string {
-        return `${this.row.gridID}_${this.column.field}`;
-    }
-
-    /**
      * Gets the width of the cell.
      * ```typescript
      * let cellWidth = this.cell.width;
