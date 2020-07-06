@@ -65,4 +65,44 @@ describe('Update 10.1.0', () => {
             private actionIcon: IgxNavbarActionDirective; }`);
     });
 
+    it('should update DropPosition.None', async () => {
+        const origFileContent =
+            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+            `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
+            `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
+            `@Component({` +
+            `    providers: [RemoteService]` +
+            `})` +
+            `export class GridSampleComponent {` +
+            `    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;` +
+            `    public move() {` +
+            `        const column: IgxColumnComponent = this.grid1.columns[0];` +
+            `        const column2: IgxColumnComponent = this.grid1.columns[1];` +
+            `        this.grid1.moveColumn(col1, col2, DropPosition.None);` +
+            `    }` +
+            `}`;
+        const expectedFileContent =
+            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+            `import { IgxGridComponent, DropPosition } from "igniteui-angular";` +
+            `import { IgxColumnComponent } from "igniteui-angular";\r\n` +
+            `@Component({` +
+            `    providers: [RemoteService]` +
+            `})` +
+            `export class GridSampleComponent {` +
+            `    @ViewChild("grid1", { read: IgxGridComponent }) public grid1: IgxGridComponent;` +
+            `    public move() {` +
+            `        const column: IgxColumnComponent = this.grid1.columns[0];` +
+            `        const column2: IgxColumnComponent = this.grid1.columns[1];` +
+            `        this.grid1.moveColumn(col1, col2, DropPosition.AfterDropTarget);` +
+            `    }` +
+            `}`;
+        appTree.create(
+            '/testSrc/appPrefix/component/drop.component.ts',
+            origFileContent);
+
+        const tree = await schematicRunner.runSchematicAsync('migration-16', {}, appTree).toPromise();
+        expect(tree.readContent('/testSrc/appPrefix/component/drop.component.ts'))
+            .toEqual(expectedFileContent);
+    });
+
 });
