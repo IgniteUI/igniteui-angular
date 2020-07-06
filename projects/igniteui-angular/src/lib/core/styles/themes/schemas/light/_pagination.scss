@@ -60,8 +60,8 @@ $_bootstrap-pagination: extend($_light-pagination);
 /// Generates a indigo pagination schema.
 /// @type {Map}
 /// @prop {Map} text-color [igx-color: ('grays', 700)] - The text color.
-/// @prop {Map} background-color [igx-color: ('primary', 100), hexrgba: #fff] - The background color of the paging panel.
-/// @prop {Map} border-color [igx-color: ('primary', 100)] - The border color of the paging panel.
+/// @prop {Map} background-color [igx-color: ('grays', 100), to-opaque: ()] - The background color of the paging panel.
+/// @prop {Map} border-color [igx-color: ('grays', 100)] - The border color of the paging panel.
 /// @requires {function} extend
 /// @requires {map} $_light-pagination
 $_indigo-pagination: extend(
@@ -73,7 +73,7 @@ $_indigo-pagination: extend(
 
         background-color: (
             igx-color: ('grays', 100),
-            hexrgba: ()
+            to-opaque: ()
         ),
 
         border-color: (

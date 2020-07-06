@@ -38,6 +38,7 @@ $_dark-bootstrap-grid-toolbar: extend($_bootstrap-grid-toolbar, $_base-dark-grid
 
 /// Generates a dark indigo grid-toolbar schema.
 /// @type {Map}
+/// @property {map} background-color [igx-color: 'surface'] - The toolbar background color.
 /// @requires {function} extend
 /// @requires $_indigo-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
