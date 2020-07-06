@@ -155,7 +155,6 @@ import { showMessage } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
-let warningShown = false;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
 // In cases when grid has 1-2 rows there isn't enough space in grid body and row editing overlay should be shown above header.
 // Default row editing overlay height is higher then row height that is why the case is valid also for row with 2 rows.
@@ -3837,19 +3836,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * grid.moveColumn(compName, persDetails);
      * ```
      */
-    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
+    public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
 
         if (column === dropTarget) {
             return;
         }
         let position = pos;
-        if (position === DropPosition.None) {
-            warningShown = showMessage(
-                'DropPosition.None is deprecated.' +
-                'Use DropPosition.AfterDropTarget instead.',
-                warningShown);
-            position = DropPosition.AfterDropTarget;
-        }
         if ((column.level !== dropTarget.level) ||
             (column.topLevelParent !== dropTarget.topLevelParent)) {
             return;
@@ -3869,8 +3861,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (!this.isPinningToStart) {
                 if (pos === DropPosition.AfterDropTarget) {
                     position = DropPosition.AfterDropTarget;
-                } else {
-                    position = DropPosition.None;
                 }
             }
             this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
@@ -3893,8 +3883,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 position = DropPosition.BeforeDropTarget;
             } else if (pos === DropPosition.AfterDropTarget && fi > ti) {
                 position = DropPosition.AfterDropTarget;
-            } else {
-                position = DropPosition.None;
             }
         }
 

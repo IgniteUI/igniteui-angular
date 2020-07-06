@@ -27,6 +27,7 @@ import {
     PinOnInitAndSelectionComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxGridComponent } from './grid.component';
+import { DropPosition } from '../moving/moving.service';
 // tslint:disable: no-use-before-declare
 
 describe('IgxGrid - Column Pinning #grid', () => {
@@ -585,7 +586,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
             it('should pin an unpinned column when drag/drop it among pinned columns.', () => {
 
                 // move 'ID' column to the pinned area
-                grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'));
+                grid.moveColumn(grid.getColumnByName('ID'), grid.getColumnByName('ContactName'), DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
                 // verify column is pinned at the correct place

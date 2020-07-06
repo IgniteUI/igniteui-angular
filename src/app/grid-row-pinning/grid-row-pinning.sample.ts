@@ -13,12 +13,11 @@ import {
     IgxHierarchicalGridComponent,
     IDisplayDensityOptions,
     GridSelectionMode,
-    IPinningConfig
+    IPinningConfig,
+    GridIconsFeature
 } from 'igniteui-angular';
-import { IgxIconService } from 'projects/igniteui-angular/src/lib/icon/icon.service';
-import icons from 'projects/igniteui-angular/src/lib/grids/filtering/svgIcons';
-
-const FILTERING_ICONS_FONT_SET = 'filtering-icons';
+import { IgxGridIconService } from 'projects/igniteui-angular/src/lib/grids/common/grid-icon.service';
+import { PINNING_ICONS_FONT_SET, PINNING_ICONS} from 'projects/igniteui-angular/src/lib/grids/pinning/pinning-icons';
 
 @Component({
     selector: 'app-grid-row-pinning-sample',
@@ -26,14 +25,15 @@ const FILTERING_ICONS_FONT_SET = 'filtering-icons';
     templateUrl: 'grid-row-pinning.sample.html',
     providers: [
         { provide: IgxGridTransaction, useClass: IgxTransactionService },
-        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} }
+        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable} },
+        IgxGridIconService
     ],
 })
 
 export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
 
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions,
-                private iconService: IgxIconService,
+                private iconService: IgxGridIconService,
                 private excelExportService: IgxExcelExporterService) {
     }
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start };
@@ -187,12 +187,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        const pinnedIcons = icons.filter(icon => icon.name === 'pin' || icon.name === 'unpin');
-        for (const icon of pinnedIcons) {
-            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
-                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
-            }
-        }
+        this.iconService.registerSVGIcons(GridIconsFeature.RowPinning, PINNING_ICONS, PINNING_ICONS_FONT_SET);
     }
 
     togglePinRow(index) {
