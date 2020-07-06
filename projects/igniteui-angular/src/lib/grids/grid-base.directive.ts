@@ -1014,6 +1014,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    @Input()
+    get showSummaryOnCollapse() {
+        return this._showSummaryOnCollapse;
+    }
+
+    set showSummaryOnCollapse(value: boolean) {
+        this._showSummaryOnCollapse = value;
+        this.notifyChanges();
+    }
+
     /**
      * Gets/Sets the filtering strategy of the grid.
      * @example
@@ -2623,6 +2633,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _showSummaryOnCollapse = false;
     private _cellSelectionMode = GridSelectionMode.multiple;
     private _rowSelectionMode = GridSelectionMode.none;
     private _columnSelectionMode = GridSelectionMode.none;
