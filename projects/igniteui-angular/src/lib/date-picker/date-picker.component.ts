@@ -775,7 +775,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this._defaultDropDownOverlaySettings = {
             closeOnOutsideClick: true,
-            closeOnEsc: true,
             modal: false,
             scrollStrategy: new AbsoluteScrollStrategy(),
             positionStrategy: new AutoPositionStrategy(this._positionSettings),
