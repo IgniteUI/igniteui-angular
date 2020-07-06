@@ -61,6 +61,7 @@
 @import '../components/input/input-group-theme';
 @import '../components/icon/icon-theme';
 @import '../components/time-picker/time-picker-theme';
+@import '../components/watermark/watermark-theme';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -525,6 +526,14 @@
             $active-item-border-radius: $roundness,
             $modal-shadow: if($elevation == false, none, null),
             $dropdown-shadow: if($elevation == false, none, null),
+        ));
+    }
+
+    @if not(index($exclude, 'igx-watermark')) {
+        @include igx-watermark(igx-watermark-theme(
+            $palette,
+            $schema,
+            $border-radius: $roundness,
         ));
     }
 }
