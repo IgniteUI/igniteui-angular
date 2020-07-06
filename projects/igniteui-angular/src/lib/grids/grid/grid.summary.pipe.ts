@@ -30,16 +30,16 @@ export class IgxGridSummaryPipe implements PipeTransform {
         hasSummary: boolean,
         summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
-        id: string, pipeTrigger: number, summaryPipeTrigger: number): any[] {
+        id: string, showSummary, pipeTrigger: number, summaryPipeTrigger: number): any[] {
 
         if (!collection.data || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return collection.data;
         }
 
-        return this.addSummaryRows(id, collection, summaryPosition);
+        return this.addSummaryRows(id, collection, summaryPosition, showSummary);
     }
 
-    private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition): any[] {
+    private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const grid: IgxGridComponent = this.gridAPI.grid;
@@ -89,7 +89,9 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 }
             }
 
-            if (groupByRecord === null || !grid.isExpandedGroup(groupByRecord)) {
+            const showSummaries = showSummary ? false : (groupByRecord && !grid.isExpandedGroup(groupByRecord));
+
+            if (groupByRecord === null || showSummaries) {
                 continue;
             }
 
@@ -103,6 +105,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {
                 let lastChild = groupByRecord;
+                debugger;
 
                 while (lastChild.groups && lastChild.groups.length > 0 && grid.isExpandedGroup(lastChild)) {
                     lastChild = lastChild.groups[lastChild.groups.length - 1];
@@ -123,7 +126,6 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 groupRecords.unshift(groupByRecord);
             }
         }
-
         return recordsWithSummary;
     }
 
