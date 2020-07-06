@@ -1,33 +1,12 @@
 import {
-    AfterViewInit,
-    Component,
-    ContentChild,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    HostBinding,
-    Inject,
-    Injector,
-    Input,
-    LOCALE_ID,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Optional,
-    Output,
-    QueryList,
-    SimpleChanges,
-    TemplateRef,
-    ViewChild
+    AfterViewInit, Component, ContentChild, ContentChildren, ElementRef,
+    EventEmitter, HostBinding, Inject, Injector, Input, LOCALE_ID,
+    OnChanges, OnDestroy, OnInit, Optional, Output, QueryList,
+    SimpleChanges, TemplateRef, ViewChild
 } from '@angular/core';
 import {
-    AbstractControl,
-    ControlValueAccessor,
-    NgControl,
-    NG_VALIDATORS,
-    NG_VALUE_ACCESSOR,
-    ValidationErrors,
-    Validator
+    AbstractControl, ControlValueAccessor, NgControl,
+    NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -44,13 +23,11 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
 import { AutoPositionStrategy, OverlaySettings, PositionSettings } from '../services/public_api';
 import {
-    DateRange,
-    IgxDateRangeEndComponent,
-    IgxDateRangeInputsBaseComponent,
-    IgxDateRangeSeparatorDirective,
-    IgxDateRangeStartComponent,
-    IgxPickerToggleComponent
+    DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
+    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
 } from './date-range-picker-inputs.common';
+
+const SingleInputDatesConcatenationString = ' - ';
 
 /**
  * Provides the ability to select a range of dates from a calendar UI or editable inputs.
@@ -140,10 +117,13 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     public weekStart = WEEKDAYS.SUNDAY;
 
     /**
-     * The `locale` of the calendar.
+     * Locale settings used for value formatting and calendar.
      *
      * @remarks
-     * Default value is `"en"`.
+     * Uses Angular's `LOCALE_ID` by default. Affects both input mask and display format if those are not set.
+     * If a `locale` is set, it must be registered via `registerLocaleData`.
+     * Please refer to https://angular.io/guide/i18n#i18n-pipes.
+     * If it is not registered, `Intl` will be used for formatting.
      *
      * @example
      * ```html
@@ -374,20 +354,18 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        if (this.formatter) {
-            return this.formatter(this.value);
+        return DatePickerUtil.getLocaleDateFormat(this.locale, this.displayFormat)
+            || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+    }
+
+    /** @hidden @internal */
+    public get singleInputFormat(): string {
+        if (this.placeholder !== '') {
+            return this.placeholder;
         }
-        if (!this.hasProjectedInputs) {
-            if (this.placeholder !== '') {
-                return this.placeholder;
-            }
-            // TODO: use displayFormat - see how shortDate, longDate can be defined
-            return this.inputFormat
-                ? `${this.inputFormat} - ${this.inputFormat}`
-                : `${DatePickerUtil.DEFAULT_INPUT_FORMAT} - ${DatePickerUtil.DEFAULT_INPUT_FORMAT}`;
-        } else {
-            return this.inputFormat || DatePickerUtil.DEFAULT_INPUT_FORMAT;
-        }
+
+        const format = this.appliedFormat;
+        return `${format}${SingleInputDatesConcatenationString}${format}`;
     }
 
     /** @hidden @internal */
@@ -436,10 +414,10 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) private _locale: any,
+        @Inject(LOCALE_ID) private localeId: any,
         private _injector: Injector) {
         super(_displayDensityOptions);
-        this.locale = this.locale || this._locale;
+        this.locale = this.locale || this.localeId;
     }
 
     /**
@@ -569,28 +547,34 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     /** @hidden @internal */
     public validate(control: AbstractControl): ValidationErrors | null {
         const value: DateRange = control.value;
+        const errors = {};
         if (value) {
+            if (this.hasProjectedInputs) {
+                const startInput = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+                const endInput = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+                if (!startInput.dateTimeEditor.value) {
+                    Object.assign(errors, { 'startValue': true });
+                }
+                if (!endInput.dateTimeEditor.value) {
+                    Object.assign(errors, { 'endValue': true });
+                }
+            }
+
             const min = DatePickerUtil.parseDate(this.minValue);
             const max = DatePickerUtil.parseDate(this.maxValue);
             const start = DatePickerUtil.parseDate(value.start);
             const end = DatePickerUtil.parseDate(value.end);
-
-            if (min && start && DatePickerUtil.lessThanMinValue(start, min, false)) {
-                return { 'minValue': true };
+            if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
+                || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
+                Object.assign(errors, { 'minValue': true });
             }
-            if (min && end && DatePickerUtil.lessThanMinValue(end, min, false)) {
-                return { 'minValue': true };
-            }
-            if (max && start && DatePickerUtil.greaterThanMaxValue(start, max, false)) {
-                return { 'maxValue': true };
-            }
-            if (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false)) {
-                return { 'maxValue': true };
+            if ((max && start && DatePickerUtil.greaterThanMaxValue(start, max, false))
+                || (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false))) {
+                Object.assign(errors, { 'maxValue': true });
             }
         }
 
-        // TODO: fix what happens on blur and ensure on blur the value is either null or with both start and end filled
-        return null;
+        return Object.keys(errors).length > 0 ? errors : null;
     }
 
     /** @hidden @internal */
@@ -645,12 +629,20 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
             this.initialSetValue();
             this.updateInputs();
         });
+        this.updateDisplayFormat();
+        this.updateInputFormat();
     }
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['locale']) {
             this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+        }
+        if (changes['displayFormat'] && this.hasProjectedInputs) {
+            this.updateDisplayFormat();
+        }
+        if (changes['inputFormat'] && this.hasProjectedInputs) {
+            this.updateInputFormat();
         }
     }
 
@@ -676,14 +668,11 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     /** @hidden @internal */
     public handleClosing(event: CancelableBrowserEventArgs & IBaseEventArgs): void {
-        this.onClosing.emit(event);
-
-        if (this.value && this.value.start && !this.value.end) {
-            this.value = { start: this.value.start, end: this.value.start };
-        }
         if (this.value && !this.value.start && !this.value.end) {
             this.value = null;
         }
+
+        this.onClosing.emit(event);
 
         if (this.mode === InteractionMode.DropDown && event.event && !this.element.nativeElement.contains(event.event.target)) {
             // outside click
@@ -790,46 +779,77 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
         });
     }
 
-    private updateCalendar(): void {
-        this.calendar.disabledDates = [];
-        let minValue: Date = DatePickerUtil.parseDate(this.minValue);
+    private parseMinValue(value: string | Date): Date | null {
+        let minValue: Date = DatePickerUtil.parseDate(value);
         if (!minValue && this.hasProjectedInputs) {
             const start = this.projectedInputs.filter(i => i instanceof IgxDateRangeStartComponent)[0];
             if (start) {
                 minValue = DatePickerUtil.parseDate(start.dateTimeEditor.minValue);
             }
         }
-        if (minValue) {
-            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
-        }
 
-        let maxValue: Date = DatePickerUtil.parseDate(this.maxValue);
-        if (!maxValue && this.hasProjectedInputs) {
+        return minValue;
+    }
+
+    private parseMaxValue(value: string | Date): Date | null {
+        let maxValue: Date = DatePickerUtil.parseDate(value);
+        if (!maxValue && this.projectedInputs) {
             const end = this.projectedInputs.filter(i => i instanceof IgxDateRangeEndComponent)[0];
             if (end) {
                 maxValue = DatePickerUtil.parseDate(end.dateTimeEditor.maxValue);
             }
         }
+
+        return maxValue;
+    }
+
+    private updateCalendar(): void {
+        this.calendar.disabledDates = [];
+        const minValue = this.parseMinValue(this.minValue);
+        if (minValue) {
+            this.calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
+        }
+        const maxValue = this.parseMaxValue(this.maxValue);
         if (maxValue) {
             this.calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
         }
 
         const range: Date[] = [];
-        if (this.value) {
-            if (this.value.start) {
-                range.push(this.value.start);
+        if (this.value?.start && this.value?.end) {
+            if (DatePickerUtil.greaterThanMaxValue(this.value.start, this.value.end)) {
+                this.swapEditorDates();
             }
-            if (this.value.end) {
-                range.push(this.value.end);
+            if (this.valueInRange(this.value, minValue, maxValue)) {
+                range.push(this.value.start, this.value.end);
             }
         }
 
         if (range.length > 0) {
             this.calendar.selectDate(range);
-            this.calendar.viewDate = range[0];
         } else {
             this.calendar.deselectDate();
         }
+        this.calendar.viewDate = range[0] || new Date();
+    }
+
+    private swapEditorDates(): void {
+        if (this.hasProjectedInputs) {
+            const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
+            const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
+            [start.dateTimeEditor.value, end.dateTimeEditor.value] = [end.dateTimeEditor.value, start.dateTimeEditor.value];
+            [this.value.start, this.value.end] = [this.value.end, this.value.start];
+        }
+    }
+
+    private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
+        if (minValue && DatePickerUtil.lessThanMinValue(value.start, minValue, false)) {
+            return false;
+        }
+        if (maxValue && DatePickerUtil.greaterThanMaxValue(value.end, maxValue, false)) {
+            return false;
+        }
+
+        return true;
     }
 
     private extractRange(selection: Date[]): DateRange {
@@ -858,7 +878,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         } else {
                             this.value = { start: value, end: null };
                         }
-                        // TODO: should we check start and reset end value
                     });
                 end.dateTimeEditor.valueChange
                     .pipe(takeUntil(this.$destroy))
@@ -882,11 +901,6 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
                         if (this.collapsed) {
                             this.updateValidityOnBlur();
                         }
-                        if (this.value && !this.value.start) {
-                            this.value = null;
-                        }
-                        // TODO: if we have start and have no end should we fill end
-                        // as we do on calendar close
                     });
             });
         } else {
@@ -942,9 +956,25 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     private updateInputs(): void {
         const start = this.projectedInputs?.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
         const end = this.projectedInputs?.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
-        if (start && end && this.value) {
-            start.updateInputValue(this.value.start);
-            end.updateInputValue(this.value.end);
+        if (start && end) {
+            start.updateInputValue(this.value?.start ?? null);
+            end.updateInputValue(this.value?.end ?? null);
         }
+    }
+
+    private updateDisplayFormat(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            input.dateTimeEditor.displayFormat = this.displayFormat;
+        });
+    }
+
+    private updateInputFormat(): void {
+        this.projectedInputs.forEach(i => {
+            const input = i as IgxDateRangeInputsBaseComponent;
+            if (input.dateTimeEditor.inputFormat !== this.inputFormat) {
+                input.dateTimeEditor.inputFormat = this.inputFormat;
+            }
+        });
     }
 }
