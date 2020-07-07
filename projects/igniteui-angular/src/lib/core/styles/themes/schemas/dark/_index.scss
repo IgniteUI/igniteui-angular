@@ -449,7 +449,7 @@ $dark-bootstrap-schema: (
 /// @property {map} igx-grid-toolbar [$_dark-bootstrap-grid-toolbar],
 /// @property {map} igx-highlight [$_dark-bootstrap-highlight],
 /// @property {map} igx-icon [$_dark-indigo-icon],
-/// @property {map} igx-input-group [$_dark-bootstrap-input-group],
+/// @property {map} igx-input-group [$_dark-indigo-input-group],
 /// @property {map} igx-list [$_dark-indigo-list],
 /// @property {Map} geo-map [$_dark-bootstrap-geo-map]
 /// @property {map} igx-navbar [$_dark-indigo-navbar],
@@ -506,7 +506,7 @@ $dark-indigo-schema: (
     igx-grid-toolbar: $_dark-bootstrap-grid-toolbar,
     igx-highlight: $_dark-bootstrap-highlight,
     igx-icon: $_dark-indigo-icon,
-    igx-input-group: $_dark-bootstrap-input-group,
+    igx-input-group: $_dark-indigo-input-group,
     igx-list: $_dark-indigo-list,
     geo-map: $_dark-bootstrap-geo-map,
     igx-navbar: $_dark-indigo-navbar,
